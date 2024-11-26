@@ -2606,6 +2606,44 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
     num="10.9.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_NativeReader = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.NativeReader",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support usage of the Parquet native reader which enables direct reading of Parquet binary data into [ClickHouse] columns, bypassing the intermediate step of using the Apache Arrow library. This feature is controlled by the setting `input_format_parquet_use_native_reader`.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT * FROM file('data.parquet', Parquet) SETTINGS input_format_parquet_use_native_reader = 1;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="11.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_NativeReader_DataTypes = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.NativeReader.DataTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading all existing Parquet data types when the native reader is enabled with `input_format_parquet_use_native_reader = 1`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="11.2.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Hive = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Hive",
     version="1.0",
@@ -2619,7 +2657,7 @@ RQ_SRS_032_ClickHouse_Parquet_Hive = Requirement(
     ),
     link=None,
     level=2,
-    num="11.1",
+    num="12.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_File = Requirement(
@@ -2635,7 +2673,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_File = Requirement(
     ),
     link=None,
     level=3,
-    num="12.1.1",
+    num="13.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Column_Modular = Requirement(
@@ -2651,7 +2689,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Column_Modular = Requirement(
     ),
     link=None,
     level=3,
-    num="12.2.1",
+    num="13.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Column_Keys = Requirement(
@@ -2667,7 +2705,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Column_Keys = Requirement(
     ),
     link=None,
     level=3,
-    num="12.2.2",
+    num="13.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCM = Requirement(
@@ -2685,7 +2723,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCM = Requirement(
     ),
     link=None,
     level=3,
-    num="12.3.1",
+    num="13.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCMCTR = Requirement(
@@ -2705,7 +2743,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCMCTR = Requirement(
     ),
     link=None,
     level=3,
-    num="12.3.2",
+    num="13.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters = Requirement(
@@ -2721,7 +2759,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters = Requirement(
     ),
     link=None,
     level=3,
-    num="12.4.1",
+    num="13.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Algorythm = Requirement(
@@ -2737,7 +2775,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Algorythm = Requirement(
     ),
     link=None,
     level=4,
-    num="12.4.1.1",
+    num="13.4.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Plaintext_Footer = Requirement(
@@ -2753,7 +2791,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Plaintext_Footer = Requireme
     ),
     link=None,
     level=4,
-    num="12.4.1.2",
+    num="13.4.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
@@ -2775,7 +2813,7 @@ RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
     ),
     link=None,
     level=2,
-    num="13.1",
+    num="14.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
@@ -2791,7 +2829,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
     ),
     link=None,
     level=3,
-    num="14.1.1",
+    num="15.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
@@ -2807,7 +2845,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
     ),
     link=None,
     level=3,
-    num="14.2.1",
+    num="15.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
@@ -2823,7 +2861,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.1",
+    num="15.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
@@ -2839,7 +2877,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
     ),
     link=None,
     level=3,
-    num="14.4.1",
+    num="15.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
@@ -2855,7 +2893,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
     ),
     link=None,
     level=3,
-    num="14.5.1",
+    num="15.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Hadoop = Requirement(
@@ -2871,7 +2909,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Hadoop = Requirement(
     ),
     link=None,
     level=3,
-    num="14.6.1",
+    num="15.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy = Requirement(
@@ -2887,7 +2925,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy = Requirement(
     ),
     link=None,
     level=3,
-    num="14.7.1",
+    num="15.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Zstd = Requirement(
@@ -2903,7 +2941,7 @@ RQ_SRS_032_ClickHouse_Parquet_Compression_Zstd = Requirement(
     ),
     link=None,
     level=3,
-    num="14.8.1",
+    num="15.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
@@ -2919,7 +2957,7 @@ RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
     ),
     link=None,
     level=4,
-    num="14.9.1.1",
+    num="15.9.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL = Requirement(
@@ -2935,7 +2973,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL = Requirement(
     ),
     link=None,
     level=3,
-    num="15.1.1",
+    num="16.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File = Requirement(
@@ -2957,7 +2995,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File = Requirement(
     ),
     link=None,
     level=3,
-    num="15.2.1",
+    num="16.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat = Requirement(
@@ -2977,7 +3015,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat = 
     ),
     link=None,
     level=3,
-    num="15.2.2",
+    num="16.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3 = Requirement(
@@ -3000,7 +3038,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3 = Requirement(
     ),
     link=None,
     level=3,
-    num="15.3.1",
+    num="16.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC = Requirement(
@@ -3016,7 +3054,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC = Requirement(
     ),
     link=None,
     level=3,
-    num="15.4.1",
+    num="16.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_ODBC = Requirement(
@@ -3032,7 +3070,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_ODBC = Requirement(
     ),
     link=None,
     level=3,
-    num="15.5.1",
+    num="16.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS = Requirement(
@@ -3048,7 +3086,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS = Requirement(
     ),
     link=None,
     level=3,
-    num="15.6.1",
+    num="16.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote = Requirement(
@@ -3064,7 +3102,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote = Requirement(
     ),
     link=None,
     level=3,
-    num="15.7.1",
+    num="16.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL = Requirement(
@@ -3098,7 +3136,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL = Requirement(
     ),
     link=None,
     level=3,
-    num="15.8.1",
+    num="16.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
@@ -3114,7 +3152,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
     ),
     link=None,
     level=3,
-    num="15.9.1",
+    num="16.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_ReadableExternalTable = Requirement(
@@ -3139,7 +3177,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_ReadableExternalTable = Requirement(
     ),
     link=None,
     level=3,
-    num="16.1.1",
+    num="17.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree = Requirement(
@@ -3155,7 +3193,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree = Requirement(
     ),
     link=None,
     level=3,
-    num="16.2.1",
+    num="17.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree = Requirement(
@@ -3171,7 +3209,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree = Requi
     ),
     link=None,
     level=4,
-    num="16.2.2.1",
+    num="17.2.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree = Requirement(
@@ -3187,7 +3225,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree = Requir
     ),
     link=None,
     level=4,
-    num="16.2.3.1",
+    num="17.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_SummingMergeTree = Requirement(
@@ -3203,7 +3241,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_SummingMergeTree = Requirem
     ),
     link=None,
     level=4,
-    num="16.2.4.1",
+    num="17.2.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_AggregatingMergeTree = Requirement(
@@ -3219,7 +3257,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_AggregatingMergeTree = Requ
     ),
     link=None,
     level=4,
-    num="16.2.5.1",
+    num="17.2.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_CollapsingMergeTree = Requirement(
@@ -3235,7 +3273,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_CollapsingMergeTree = Requi
     ),
     link=None,
     level=4,
-    num="16.2.6.1",
+    num="17.2.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_VersionedCollapsingMergeTree = Requirement(
@@ -3251,7 +3289,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_VersionedCollapsingMergeTre
     ),
     link=None,
     level=4,
-    num="16.2.7.1",
+    num="17.2.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_GraphiteMergeTree = Requirement(
@@ -3267,7 +3305,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_GraphiteMergeTree = Require
     ),
     link=None,
     level=4,
-    num="16.2.8.1",
+    num="17.2.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_ODBC = Requirement(
@@ -3283,7 +3321,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_ODBC = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.1.1",
+    num="17.3.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_JDBC = Requirement(
@@ -3299,7 +3337,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_JDBC = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.2.1",
+    num="17.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL = Requirement(
@@ -3315,7 +3353,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.3.1",
+    num="17.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MongoDB = Requirement(
@@ -3331,7 +3369,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MongoDB = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.4.1",
+    num="17.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_HDFS = Requirement(
@@ -3347,7 +3385,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_HDFS = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.5.1",
+    num="17.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_S3 = Requirement(
@@ -3363,7 +3401,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_S3 = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.6.1",
+    num="17.3.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_Kafka = Requirement(
@@ -3379,7 +3417,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_Kafka = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.7.1",
+    num="17.3.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_EmbeddedRocksDB = Requirement(
@@ -3395,7 +3433,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_EmbeddedRocksDB = Require
     ),
     link=None,
     level=4,
-    num="16.3.8.1",
+    num="17.3.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL = Requirement(
@@ -3411,7 +3449,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL = Requirement(
     ),
     link=None,
     level=4,
-    num="16.3.9.1",
+    num="17.3.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory = Requirement(
@@ -3427,7 +3465,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.1",
+    num="17.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed = Requirement(
@@ -3443,7 +3481,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.2",
+    num="17.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary = Requirement(
@@ -3459,7 +3497,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.3",
+    num="17.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File = Requirement(
@@ -3475,7 +3513,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.4",
+    num="17.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
@@ -3491,7 +3529,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.5",
+    num="17.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes = Requirement(
@@ -3507,7 +3545,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes = Requirement(
     ),
     link=None,
     level=2,
-    num="17.1",
+    num="18.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_Page = Requirement(
@@ -3523,7 +3561,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_Page = Requirement(
     ),
     link=None,
     level=3,
-    num="17.2.1",
+    num="18.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter = Requirement(
@@ -3549,7 +3587,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter = Requirement(
     ),
     link=None,
     level=3,
-    num="17.3.1",
+    num="18.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes = Requirement(
@@ -3578,7 +3616,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes = Requirement(
     ),
     link=None,
     level=4,
-    num="17.3.2.1",
+    num="18.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_KeyColumnTypes = Requirement(
@@ -3603,7 +3641,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_KeyColumnTy
     ),
     link=None,
     level=5,
-    num="17.3.2.2.1",
+    num="18.3.2.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_FieldTypes = Requirement(
@@ -3629,7 +3667,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_FieldTypes 
     ),
     link=None,
     level=5,
-    num="17.3.2.3.1",
+    num="18.3.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requirement(
@@ -3645,7 +3683,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requiremen
     ),
     link=None,
     level=4,
-    num="17.3.3.1",
+    num="18.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_KeyColumnTypes = Requirement(
@@ -3675,7 +3713,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_KeyColumnType
     ),
     link=None,
     level=4,
-    num="17.3.4.1",
+    num="18.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_FieldTypes = Requirement(
@@ -3705,7 +3743,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_FieldTypes = 
     ),
     link=None,
     level=4,
-    num="17.3.5.1",
+    num="18.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
@@ -3722,7 +3760,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
     ),
     link=None,
     level=3,
-    num="17.4.1",
+    num="18.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
@@ -3744,7 +3782,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     ),
     link=None,
     level=3,
-    num="18.1.1",
+    num="19.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requirement(
@@ -3772,7 +3810,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requiremen
     ),
     link=None,
     level=3,
-    num="18.1.2",
+    num="19.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
@@ -3913,7 +3951,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
     ),
     link=None,
     level=3,
-    num="18.1.3",
+    num="19.1.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
@@ -3929,7 +3967,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     ),
     link=None,
     level=3,
-    num="18.1.4",
+    num="19.1.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
@@ -3944,7 +3982,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     ),
     link=None,
     level=3,
-    num="18.2.1",
+    num="19.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
@@ -3960,7 +3998,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="18.2.2",
+    num="19.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
@@ -3976,7 +4014,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="18.2.3",
+    num="19.2.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -4003,7 +4041,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requi
     ),
     link=None,
     level=2,
-    num="19.1",
+    num="20.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File = Requirement(
@@ -4020,7 +4058,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File = Requirement(
     ),
     link=None,
     level=2,
-    num="19.2",
+    num="20.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column = Requirement(
@@ -4037,7 +4075,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column = Requiremen
     ),
     link=None,
     level=2,
-    num="19.3",
+    num="20.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageHeader = Requirement(
@@ -4054,7 +4092,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageHeader = Requir
     ),
     link=None,
     level=2,
-    num="19.4",
+    num="20.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageData = Requirement(
@@ -4071,7 +4109,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_PageData = Requirem
     ),
     link=None,
     level=2,
-    num="19.5",
+    num="20.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Checksum = Requirement(
@@ -4087,7 +4125,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Checksum = Requirem
     ),
     link=None,
     level=2,
-    num="19.6",
+    num="20.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values = Requirement(
@@ -4108,7 +4146,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values = Requirement(
     ),
     link=None,
     level=2,
-    num="19.7",
+    num="20.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date = Requirement(
@@ -4125,7 +4163,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.1",
+    num="20.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int = Requirement(
@@ -4141,7 +4179,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.2",
+    num="20.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt = Requirement(
@@ -4157,7 +4195,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.3",
+    num="20.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt = Requirement(
@@ -4173,7 +4211,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt = Requiremen
     ),
     link=None,
     level=3,
-    num="19.7.4",
+    num="20.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt = Requirement(
@@ -4189,7 +4227,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt = Requirement
     ),
     link=None,
     level=3,
-    num="19.7.5",
+    num="20.7.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt = Requirement(
@@ -4205,7 +4243,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.6",
+    num="20.7.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt = Requirement(
@@ -4221,7 +4259,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt = Requirement
     ),
     link=None,
     level=3,
-    num="19.7.7",
+    num="20.7.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt = Requirement(
@@ -4237,7 +4275,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt = Requireme
     ),
     link=None,
     level=3,
-    num="19.7.8",
+    num="20.7.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt = Requirement(
@@ -4254,7 +4292,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt = Requiremen
     ),
     link=None,
     level=3,
-    num="19.7.9",
+    num="20.7.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS = Requirement(
@@ -4270,7 +4308,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS = Require
     ),
     link=None,
     level=3,
-    num="19.7.10",
+    num="20.7.10",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS = Requirement(
@@ -4286,7 +4324,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS = Require
     ),
     link=None,
     level=3,
-    num="19.7.11",
+    num="20.7.11",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Bool = Requirement(
@@ -4302,7 +4340,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Bool = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.12",
+    num="20.7.12",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Float = Requirement(
@@ -4318,7 +4356,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Float = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.13",
+    num="20.7.13",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Double = Requirement(
@@ -4334,7 +4372,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Double = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.14",
+    num="20.7.14",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeMS = Requirement(
@@ -4350,7 +4388,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeMS = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.15",
+    num="20.7.15",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeUS = Requirement(
@@ -4366,7 +4404,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeUS = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.16",
+    num="20.7.16",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeNS = Requirement(
@@ -4382,7 +4420,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimeNS = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.17",
+    num="20.7.17",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String = Requirement(
@@ -4398,7 +4436,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.18",
+    num="20.7.18",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Binary = Requirement(
@@ -4414,7 +4452,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Binary = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.19",
+    num="20.7.19",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_FixedLengthByteArray = Requirement(
@@ -4430,7 +4468,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_FixedLengthByteArray 
     ),
     link=None,
     level=3,
-    num="19.7.20",
+    num="20.7.20",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Decimal = Requirement(
@@ -4446,7 +4484,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Decimal = Requirement
     ),
     link=None,
     level=3,
-    num="19.7.21",
+    num="20.7.21",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_List = Requirement(
@@ -4462,7 +4500,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_List = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.22",
+    num="20.7.22",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Struct = Requirement(
@@ -4478,7 +4516,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Struct = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.23",
+    num="20.7.23",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Map = Requirement(
@@ -4494,7 +4532,7 @@ RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Map = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.24",
+    num="20.7.24",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_x86_To_ARM = Requirement(
@@ -4510,7 +4548,7 @@ RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_x86_To_ARM = Requirement(
     ),
     link=None,
     level=3,
-    num="20.1.1",
+    num="21.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_ARM_To_x86 = Requirement(
@@ -4531,7 +4569,7 @@ RQ_SRS_032_ClickHouse_Parquet_Interoperability_From_ARM_To_x86 = Requirement(
     ),
     link=None,
     level=3,
-    num="20.2.1",
+    num="21.2.1",
 )
 
 SRS032_ClickHouse_Parquet_Data_Format = Specification(
@@ -5264,573 +5302,581 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="10.9.1",
         ),
-        Heading(name="Hive Partitioning", level=1, num="11"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Hive", level=2, num="11.1"),
-        Heading(name="Parquet Encryption", level=1, num="12"),
-        Heading(name="File Encryption", level=2, num="12.1"),
+        Heading(name="Native Reader", level=1, num="11"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.NativeReader", level=2, num="11.1"),
+        Heading(name="Data Types Support", level=2, num="11.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.File", level=3, num="12.1.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.NativeReader.DataTypes",
+            level=3,
+            num="11.2.1",
         ),
-        Heading(name="Column Encryption", level=2, num="12.2"),
+        Heading(name="Hive Partitioning", level=1, num="12"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Hive", level=2, num="12.1"),
+        Heading(name="Parquet Encryption", level=1, num="13"),
+        Heading(name="File Encryption", level=2, num="13.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.File", level=3, num="13.1.1"
+        ),
+        Heading(name="Column Encryption", level=2, num="13.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Modular",
             level=3,
-            num="12.2.1",
+            num="13.2.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Keys",
             level=3,
-            num="12.2.2",
+            num="13.2.2",
         ),
-        Heading(name="Encryption Algorithms", level=2, num="12.3"),
+        Heading(name="Encryption Algorithms", level=2, num="13.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM",
             level=3,
-            num="12.3.1",
+            num="13.3.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR",
             level=3,
-            num="12.3.2",
+            num="13.3.2",
         ),
-        Heading(name="EncryptionParameters", level=2, num="12.4"),
+        Heading(name="EncryptionParameters", level=2, num="13.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters",
             level=3,
-            num="12.4.1",
+            num="13.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm",
             level=4,
-            num="12.4.1.1",
+            num="13.4.1.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer",
             level=4,
-            num="12.4.1.2",
+            num="13.4.1.2",
         ),
-        Heading(name="DESCRIBE Parquet", level=1, num="13"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=2, num="13.1"),
-        Heading(name="Compression", level=1, num="14"),
-        Heading(name="None", level=2, num="14.1"),
+        Heading(name="DESCRIBE Parquet", level=1, num="14"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=2, num="14.1"),
+        Heading(name="Compression", level=1, num="15"),
+        Heading(name="None", level=2, num="15.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None", level=3, num="14.1.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None", level=3, num="15.1.1"
         ),
-        Heading(name="Gzip", level=2, num="14.2"),
+        Heading(name="Gzip", level=2, num="15.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip", level=3, num="14.2.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip", level=3, num="15.2.1"
         ),
-        Heading(name="Brotli", level=2, num="14.3"),
+        Heading(name="Brotli", level=2, num="15.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
             level=3,
-            num="14.3.1",
+            num="15.3.1",
         ),
-        Heading(name="Lz4", level=2, num="14.4"),
+        Heading(name="Lz4", level=2, num="15.4"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=3, num="14.4.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=3, num="15.4.1"
         ),
-        Heading(name="Lz4Raw", level=2, num="14.5"),
+        Heading(name="Lz4Raw", level=2, num="15.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
             level=3,
-            num="14.5.1",
+            num="15.5.1",
         ),
-        Heading(name="Lz4Hadoop", level=2, num="14.6"),
+        Heading(name="Lz4Hadoop", level=2, num="15.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Hadoop",
             level=3,
-            num="14.6.1",
+            num="15.6.1",
         ),
-        Heading(name="Snappy", level=2, num="14.7"),
+        Heading(name="Snappy", level=2, num="15.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy",
             level=3,
-            num="14.7.1",
+            num="15.7.1",
         ),
-        Heading(name="Zstd", level=2, num="14.8"),
+        Heading(name="Zstd", level=2, num="15.8"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd", level=3, num="14.8.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd", level=3, num="15.8.1"
         ),
-        Heading(name="Unsupported Compression", level=2, num="14.9"),
-        Heading(name="Lzo", level=3, num="14.9.1"),
+        Heading(name="Unsupported Compression", level=2, num="15.9"),
+        Heading(name="Lzo", level=3, num="15.9.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
             level=4,
-            num="14.9.1.1",
+            num="15.9.1.1",
         ),
-        Heading(name="Table Functions", level=1, num="15"),
-        Heading(name="URL", level=2, num="15.1"),
+        Heading(name="Table Functions", level=1, num="16"),
+        Heading(name="URL", level=2, num="16.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL",
             level=3,
-            num="15.1.1",
+            num="16.1.1",
         ),
-        Heading(name="File", level=2, num="15.2"),
+        Heading(name="File", level=2, num="16.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File",
             level=3,
-            num="15.2.1",
+            num="16.2.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat",
             level=3,
-            num="15.2.2",
+            num="16.2.2",
         ),
-        Heading(name="S3", level=2, num="15.3"),
+        Heading(name="S3", level=2, num="16.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3",
             level=3,
-            num="15.3.1",
+            num="16.3.1",
         ),
-        Heading(name="JDBC", level=2, num="15.4"),
+        Heading(name="JDBC", level=2, num="16.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC",
             level=3,
-            num="15.4.1",
+            num="16.4.1",
         ),
-        Heading(name="ODBC", level=2, num="15.5"),
+        Heading(name="ODBC", level=2, num="16.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC",
             level=3,
-            num="15.5.1",
+            num="16.5.1",
         ),
-        Heading(name="HDFS", level=2, num="15.6"),
+        Heading(name="HDFS", level=2, num="16.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS",
             level=3,
-            num="15.6.1",
+            num="16.6.1",
         ),
-        Heading(name="Remote", level=2, num="15.7"),
+        Heading(name="Remote", level=2, num="16.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote",
             level=3,
-            num="15.7.1",
+            num="16.7.1",
         ),
-        Heading(name="MySQL", level=2, num="15.8"),
+        Heading(name="MySQL", level=2, num="16.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL",
             level=3,
-            num="15.8.1",
+            num="16.8.1",
         ),
-        Heading(name="PostgreSQL", level=2, num="15.9"),
+        Heading(name="PostgreSQL", level=2, num="16.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL",
             level=3,
-            num="15.9.1",
+            num="16.9.1",
         ),
-        Heading(name="Table Engines", level=1, num="16"),
-        Heading(name="Readable External Table", level=2, num="16.1"),
+        Heading(name="Table Engines", level=1, num="17"),
+        Heading(name="Readable External Table", level=2, num="17.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable",
             level=3,
-            num="16.1.1",
+            num="17.1.1",
         ),
-        Heading(name="MergeTree", level=2, num="16.2"),
+        Heading(name="MergeTree", level=2, num="17.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
             level=3,
-            num="16.2.1",
+            num="17.2.1",
         ),
-        Heading(name="ReplicatedMergeTree", level=3, num="16.2.2"),
+        Heading(name="ReplicatedMergeTree", level=3, num="17.2.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree",
             level=4,
-            num="16.2.2.1",
+            num="17.2.2.1",
         ),
-        Heading(name="ReplacingMergeTree", level=3, num="16.2.3"),
+        Heading(name="ReplacingMergeTree", level=3, num="17.2.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree",
             level=4,
-            num="16.2.3.1",
+            num="17.2.3.1",
         ),
-        Heading(name="SummingMergeTree", level=3, num="16.2.4"),
+        Heading(name="SummingMergeTree", level=3, num="17.2.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree",
             level=4,
-            num="16.2.4.1",
+            num="17.2.4.1",
         ),
-        Heading(name="AggregatingMergeTree", level=3, num="16.2.5"),
+        Heading(name="AggregatingMergeTree", level=3, num="17.2.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree",
             level=4,
-            num="16.2.5.1",
+            num="17.2.5.1",
         ),
-        Heading(name="CollapsingMergeTree", level=3, num="16.2.6"),
+        Heading(name="CollapsingMergeTree", level=3, num="17.2.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree",
             level=4,
-            num="16.2.6.1",
+            num="17.2.6.1",
         ),
-        Heading(name="VersionedCollapsingMergeTree", level=3, num="16.2.7"),
+        Heading(name="VersionedCollapsingMergeTree", level=3, num="17.2.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree",
             level=4,
-            num="16.2.7.1",
+            num="17.2.7.1",
         ),
-        Heading(name="GraphiteMergeTree", level=3, num="16.2.8"),
+        Heading(name="GraphiteMergeTree", level=3, num="17.2.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree",
             level=4,
-            num="16.2.8.1",
+            num="17.2.8.1",
         ),
-        Heading(name="Integration Engines", level=2, num="16.3"),
-        Heading(name="ODBC Engine", level=3, num="16.3.1"),
+        Heading(name="Integration Engines", level=2, num="17.3"),
+        Heading(name="ODBC Engine", level=3, num="17.3.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC",
             level=4,
-            num="16.3.1.1",
+            num="17.3.1.1",
         ),
-        Heading(name="JDBC Engine", level=3, num="16.3.2"),
+        Heading(name="JDBC Engine", level=3, num="17.3.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC",
             level=4,
-            num="16.3.2.1",
+            num="17.3.2.1",
         ),
-        Heading(name="MySQL Engine", level=3, num="16.3.3"),
+        Heading(name="MySQL Engine", level=3, num="17.3.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL",
             level=4,
-            num="16.3.3.1",
+            num="17.3.3.1",
         ),
-        Heading(name="MongoDB Engine", level=3, num="16.3.4"),
+        Heading(name="MongoDB Engine", level=3, num="17.3.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB",
             level=4,
-            num="16.3.4.1",
+            num="17.3.4.1",
         ),
-        Heading(name="HDFS Engine", level=3, num="16.3.5"),
+        Heading(name="HDFS Engine", level=3, num="17.3.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS",
             level=4,
-            num="16.3.5.1",
+            num="17.3.5.1",
         ),
-        Heading(name="S3 Engine", level=3, num="16.3.6"),
+        Heading(name="S3 Engine", level=3, num="17.3.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3",
             level=4,
-            num="16.3.6.1",
+            num="17.3.6.1",
         ),
-        Heading(name="Kafka Engine", level=3, num="16.3.7"),
+        Heading(name="Kafka Engine", level=3, num="17.3.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka",
             level=4,
-            num="16.3.7.1",
+            num="17.3.7.1",
         ),
-        Heading(name="EmbeddedRocksDB Engine", level=3, num="16.3.8"),
+        Heading(name="EmbeddedRocksDB Engine", level=3, num="17.3.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB",
             level=4,
-            num="16.3.8.1",
+            num="17.3.8.1",
         ),
-        Heading(name="PostgreSQL Engine", level=3, num="16.3.9"),
+        Heading(name="PostgreSQL Engine", level=3, num="17.3.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL",
             level=4,
-            num="16.3.9.1",
+            num="17.3.9.1",
         ),
-        Heading(name="Special Engines", level=2, num="16.4"),
+        Heading(name="Special Engines", level=2, num="17.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory",
             level=3,
-            num="16.4.1",
+            num="17.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed",
             level=3,
-            num="16.4.2",
+            num="17.4.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary",
             level=3,
-            num="16.4.3",
+            num="17.4.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File",
             level=3,
-            num="16.4.4",
+            num="17.4.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL",
             level=3,
-            num="16.4.5",
+            num="17.4.5",
         ),
-        Heading(name="Indexes", level=1, num="17"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Indexes", level=2, num="17.1"),
-        Heading(name="Page", level=2, num="17.2"),
+        Heading(name="Indexes", level=1, num="18"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Indexes", level=2, num="18.1"),
+        Heading(name="Page", level=2, num="18.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Page", level=3, num="17.2.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Page", level=3, num="18.2.1"
         ),
-        Heading(name="Bloom Filter", level=2, num="17.3"),
+        Heading(name="Bloom Filter", level=2, num="18.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter",
             level=3,
-            num="17.3.1",
+            num="18.3.1",
         ),
-        Heading(name="Parquet Column Types Support", level=3, num="17.3.2"),
+        Heading(name="Parquet Column Types Support", level=3, num="18.3.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes",
             level=4,
-            num="17.3.2.1",
+            num="18.3.2.1",
         ),
         Heading(
             name="Only Considering Parquet Structure When Using Key Column Types",
             level=4,
-            num="17.3.2.2",
+            num="18.3.2.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes",
             level=5,
-            num="17.3.2.2.1",
+            num="18.3.2.2.1",
         ),
         Heading(
             name="Only Considering Parquet Structure When Using Field Types",
             level=4,
-            num="17.3.2.3",
+            num="18.3.2.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes",
             level=5,
-            num="17.3.2.3.1",
+            num="18.3.2.3.1",
         ),
         Heading(
             name="Columns With Complex Datatypes That Have Bloom Filter Applied on Them",
             level=3,
-            num="17.3.3",
+            num="18.3.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex",
             level=4,
-            num="17.3.3.1",
+            num="18.3.3.1",
         ),
         Heading(
-            name="Consistent Output When Using Key Column Types", level=3, num="17.3.4"
+            name="Consistent Output When Using Key Column Types", level=3, num="18.3.4"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes",
             level=4,
-            num="17.3.4.1",
+            num="18.3.4.1",
         ),
-        Heading(name="Consistent Output When Using Field Types", level=3, num="17.3.5"),
+        Heading(name="Consistent Output When Using Field Types", level=3, num="18.3.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes",
             level=4,
-            num="17.3.5.1",
+            num="18.3.5.1",
         ),
-        Heading(name="Dictionary", level=2, num="17.4"),
+        Heading(name="Dictionary", level=2, num="18.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary",
             level=3,
-            num="17.4.1",
+            num="18.4.1",
         ),
-        Heading(name="Metadata", level=1, num="18"),
-        Heading(name="ParquetFormat", level=2, num="18.1"),
+        Heading(name="Metadata", level=1, num="19"),
+        Heading(name="ParquetFormat", level=2, num="19.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
             level=3,
-            num="18.1.1",
+            num="19.1.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output",
             level=3,
-            num="18.1.2",
+            num="19.1.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content",
             level=3,
-            num="18.1.3",
+            num="19.1.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax",
             level=3,
-            num="18.1.4",
+            num="19.1.4",
         ),
-        Heading(name="Metadata Types", level=2, num="18.2"),
+        Heading(name="Metadata Types", level=2, num="19.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="18.2.1"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="18.2.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.2.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="18.2.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="19.2.2"
         ),
-        Heading(name="Error Recovery", level=1, num="19"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.2.3"
+        ),
+        Heading(name="Error Recovery", level=1, num="20"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber",
-            level=2,
-            num="19.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File",
-            level=2,
-            num="19.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column",
-            level=2,
-            num="19.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader",
-            level=2,
-            num="19.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData",
-            level=2,
-            num="19.5",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum",
-            level=2,
-            num="19.6",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values",
-            level=2,
-            num="19.7",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date",
-            level=3,
-            num="19.7.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int",
-            level=3,
-            num="19.7.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt",
-            level=3,
-            num="19.7.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt",
-            level=3,
-            num="19.7.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt",
-            level=3,
-            num="19.7.5",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt",
-            level=3,
-            num="19.7.6",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt",
-            level=3,
-            num="19.7.7",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt",
-            level=3,
-            num="19.7.8",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt",
-            level=3,
-            num="19.7.9",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS",
-            level=3,
-            num="19.7.10",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS",
-            level=3,
-            num="19.7.11",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool",
-            level=3,
-            num="19.7.12",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float",
-            level=3,
-            num="19.7.13",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double",
-            level=3,
-            num="19.7.14",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS",
-            level=3,
-            num="19.7.15",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS",
-            level=3,
-            num="19.7.16",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS",
-            level=3,
-            num="19.7.17",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String",
-            level=3,
-            num="19.7.18",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary",
-            level=3,
-            num="19.7.19",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray",
-            level=3,
-            num="19.7.20",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal",
-            level=3,
-            num="19.7.21",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List",
-            level=3,
-            num="19.7.22",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct",
-            level=3,
-            num="19.7.23",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map",
-            level=3,
-            num="19.7.24",
-        ),
-        Heading(name="Interoperability Between ARM and x86", level=1, num="20"),
-        Heading(
-            name="Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine",
             level=2,
             num="20.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM",
-            level=3,
-            num="20.1.1",
-        ),
-        Heading(
-            name="Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine",
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File",
             level=2,
             num="20.2",
         ),
         Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column",
+            level=2,
+            num="20.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader",
+            level=2,
+            num="20.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData",
+            level=2,
+            num="20.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum",
+            level=2,
+            num="20.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values",
+            level=2,
+            num="20.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date",
+            level=3,
+            num="20.7.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int",
+            level=3,
+            num="20.7.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt",
+            level=3,
+            num="20.7.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt",
+            level=3,
+            num="20.7.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt",
+            level=3,
+            num="20.7.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt",
+            level=3,
+            num="20.7.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt",
+            level=3,
+            num="20.7.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt",
+            level=3,
+            num="20.7.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt",
+            level=3,
+            num="20.7.9",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS",
+            level=3,
+            num="20.7.10",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS",
+            level=3,
+            num="20.7.11",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool",
+            level=3,
+            num="20.7.12",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float",
+            level=3,
+            num="20.7.13",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double",
+            level=3,
+            num="20.7.14",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS",
+            level=3,
+            num="20.7.15",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS",
+            level=3,
+            num="20.7.16",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS",
+            level=3,
+            num="20.7.17",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String",
+            level=3,
+            num="20.7.18",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary",
+            level=3,
+            num="20.7.19",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray",
+            level=3,
+            num="20.7.20",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal",
+            level=3,
+            num="20.7.21",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List",
+            level=3,
+            num="20.7.22",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct",
+            level=3,
+            num="20.7.23",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map",
+            level=3,
+            num="20.7.24",
+        ),
+        Heading(name="Interoperability Between ARM and x86", level=1, num="21"),
+        Heading(
+            name="Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine",
+            level=2,
+            num="21.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM",
+            level=3,
+            num="21.1.1",
+        ),
+        Heading(
+            name="Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine",
+            level=2,
+            num="21.2",
+        ),
+        Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86",
             level=3,
-            num="20.2.1",
+            num="21.2.1",
         ),
     ),
     requirements=(
@@ -5973,6 +6019,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion,
         RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction,
+        RQ_SRS_032_ClickHouse_Parquet_NativeReader,
+        RQ_SRS_032_ClickHouse_Parquet_NativeReader_DataTypes,
         RQ_SRS_032_ClickHouse_Parquet_Hive,
         RQ_SRS_032_ClickHouse_Parquet_Encryption_File,
         RQ_SRS_032_ClickHouse_Parquet_Encryption_Column_Modular,
@@ -6283,174 +6331,178 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 10.8.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
     * 10.9 [Type Conversion](#type-conversion)
         * 10.9.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
-* 11 [Hive Partitioning](#hive-partitioning)
-    * 11.1 [RQ.SRS-032.ClickHouse.Parquet.Hive](#rqsrs-032clickhouseparquethive)
-* 12 [Parquet Encryption](#parquet-encryption)
-    * 12.1 [File Encryption](#file-encryption)
-        * 12.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.File](#rqsrs-032clickhouseparquetencryptionfile)
-    * 12.2 [Column Encryption](#column-encryption)
-        * 12.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Modular](#rqsrs-032clickhouseparquetencryptioncolumnmodular)
-        * 12.2.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Keys](#rqsrs-032clickhouseparquetencryptioncolumnkeys)
-    * 12.3 [Encryption Algorithms](#encryption-algorithms)
-        * 12.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcm)
-        * 12.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcmctr)
-    * 12.4 [EncryptionParameters](#encryptionparameters)
-        * 12.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters](#rqsrs-032clickhouseparquetencryptionparameters)
-            * 12.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
-            * 12.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
-* 13 [DESCRIBE Parquet](#describe-parquet)
-    * 13.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
-* 14 [Compression](#compression)
-    * 14.1 [None](#none)
-        * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
-    * 14.2 [Gzip](#gzip)
-        * 14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
-    * 14.3 [Brotli](#brotli)
-        * 14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli](#rqsrs-032clickhouseparquetcompressionbrotli)
-    * 14.4 [Lz4](#lz4)
-        * 14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
-    * 14.5 [Lz4Raw](#lz4raw)
-        * 14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
-    * 14.6 [Lz4Hadoop](#lz4hadoop)
-        * 14.6.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Hadoop](#rqsrs-032clickhouseparquetcompressionlz4hadoop)
-    * 14.7 [Snappy](#snappy)
-        * 14.7.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy](#rqsrs-032clickhouseparquetcompressionsnappy)
-    * 14.8 [Zstd](#zstd)
-        * 14.8.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
-    * 14.9 [Unsupported Compression](#unsupported-compression)
-        * 14.9.1 [Lzo](#lzo)
-            * 14.9.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
-* 15 [Table Functions](#table-functions)
-    * 15.1 [URL](#url)
-        * 15.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
-    * 15.2 [File](#file)
-        * 15.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File](#rqsrs-032clickhouseparquettablefunctionsfile)
-        * 15.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
-    * 15.3 [S3](#s3)
-        * 15.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
-    * 15.4 [JDBC](#jdbc)
-        * 15.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
-    * 15.5 [ODBC](#odbc)
-        * 15.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC](#rqsrs-032clickhouseparquettablefunctionsodbc)
-    * 15.6 [HDFS](#hdfs)
-        * 15.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
-    * 15.7 [Remote](#remote)
-        * 15.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
-    * 15.8 [MySQL](#mysql)
-        * 15.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL](#rqsrs-032clickhouseparquettablefunctionsmysql)
-    * 15.9 [PostgreSQL](#postgresql)
-        * 15.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
-* 16 [Table Engines](#table-engines)
-    * 16.1 [Readable External Table](#readable-external-table)
-        * 16.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable](#rqsrs-032clickhouseparquettableenginesreadableexternaltable)
-    * 16.2 [MergeTree](#mergetree)
-        * 16.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
-        * 16.2.2 [ReplicatedMergeTree](#replicatedmergetree)
-            * 16.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
-        * 16.2.3 [ReplacingMergeTree](#replacingmergetree)
-            * 16.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
-        * 16.2.4 [SummingMergeTree](#summingmergetree)
-            * 16.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
-        * 16.2.5 [AggregatingMergeTree](#aggregatingmergetree)
-            * 16.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
-        * 16.2.6 [CollapsingMergeTree](#collapsingmergetree)
-            * 16.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
-        * 16.2.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
-            * 16.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
-        * 16.2.8 [GraphiteMergeTree](#graphitemergetree)
-            * 16.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
-    * 16.3 [Integration Engines](#integration-engines)
-        * 16.3.1 [ODBC Engine](#odbc-engine)
-            * 16.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
-        * 16.3.2 [JDBC Engine](#jdbc-engine)
-            * 16.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
-        * 16.3.3 [MySQL Engine](#mysql-engine)
-            * 16.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
-        * 16.3.4 [MongoDB Engine](#mongodb-engine)
-            * 16.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
-        * 16.3.5 [HDFS Engine](#hdfs-engine)
-            * 16.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
-        * 16.3.6 [S3 Engine](#s3-engine)
-            * 16.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
-        * 16.3.7 [Kafka Engine](#kafka-engine)
-            * 16.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
-        * 16.3.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
-            * 16.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
-        * 16.3.9 [PostgreSQL Engine](#postgresql-engine)
-            * 16.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
-    * 16.4 [Special Engines](#special-engines)
-        * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
-        * 16.4.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
-        * 16.4.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
-        * 16.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
-        * 16.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
-* 17 [Indexes](#indexes)
-    * 17.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes](#rqsrs-032clickhouseparquetindexes)
-    * 17.2 [Page](#page)
-        * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
-    * 17.3 [Bloom Filter](#bloom-filter)
-        * 17.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
-        * 17.3.2 [Parquet Column Types Support](#parquet-column-types-support)
-            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
-            * 17.3.2.2 [Only Considering Parquet Structure When Using Key Column Types](#only-considering-parquet-structure-when-using-key-column-types)
-                * 17.3.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorekeycolumntypes)
-            * 17.3.2.3 [Only Considering Parquet Structure When Using Field Types](#only-considering-parquet-structure-when-using-field-types)
-                * 17.3.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorefieldtypes)
-        * 17.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
-            * 17.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
-        * 17.3.4 [Consistent Output When Using Key Column Types](#consistent-output-when-using-key-column-types)
-            * 17.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputkeycolumntypes)
-        * 17.3.5 [Consistent Output When Using Field Types](#consistent-output-when-using-field-types)
-            * 17.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputfieldtypes)
-    * 17.4 [Dictionary](#dictionary)
-        * 17.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
-* 18 [Metadata](#metadata)
-    * 18.1 [ParquetFormat](#parquetformat)
-        * 18.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
-        * 18.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-        * 18.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
-        * 18.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-    * 18.2 [Metadata Types](#metadata-types)
-        * 18.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
-        * 18.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
-        * 18.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
-* 19 [Error Recovery](#error-recovery)
-    * 19.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
-    * 19.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
-    * 19.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatacolumn)
-    * 19.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapageheader)
-    * 19.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapagedata)
-    * 19.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatachecksum)
-    * 19.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalues)
-        * 19.7.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdate)
-        * 19.7.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesint)
-        * 19.7.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbigint)
-        * 19.7.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluessmallint)
-        * 19.7.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestinyint)
-        * 19.7.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesuint)
-        * 19.7.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesubigint)
-        * 19.7.8 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesusmallint)
-        * 19.7.9 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesutinyint)
-        * 19.7.10 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampus)
-        * 19.7.11 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampms)
-        * 19.7.12 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbool)
-        * 19.7.13 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfloat)
-        * 19.7.14 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdouble)
-        * 19.7.15 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimems)
-        * 19.7.16 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimeus)
-        * 19.7.17 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimens)
-        * 19.7.18 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstring)
-        * 19.7.19 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbinary)
-        * 19.7.20 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfixedlengthbytearray)
-        * 19.7.21 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdecimal)
-        * 19.7.22 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalueslist)
-        * 19.7.23 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstruct)
-        * 19.7.24 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesmap)
-* 20 [Interoperability Between ARM and x86](#interoperability-between-arm-and-x86)
-    * 20.1 [Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine](#importing-and-exporting-parquet-files-on-arm-that-were-generated-on-x86-machine)
-        * 20.1.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM](#rqsrs-032clickhouseparquetinteroperabilityfromx86toarm)
-    * 20.2 [Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine](#importing-and-exporting-parquet-files-on-x86-that-were-generated-on-arm-machine)
-        * 20.2.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86](#rqsrs-032clickhouseparquetinteroperabilityfromarmtox86)
+* 11 [Native Reader](#native-reader)
+    * 11.1 [RQ.SRS-032.ClickHouse.Parquet.NativeReader](#rqsrs-032clickhouseparquetnativereader)
+    * 11.2 [Data Types Support](#data-types-support)
+        * 11.2.1 [RQ.SRS-032.ClickHouse.Parquet.NativeReader.DataTypes](#rqsrs-032clickhouseparquetnativereaderdatatypes)
+* 12 [Hive Partitioning](#hive-partitioning)
+    * 12.1 [RQ.SRS-032.ClickHouse.Parquet.Hive](#rqsrs-032clickhouseparquethive)
+* 13 [Parquet Encryption](#parquet-encryption)
+    * 13.1 [File Encryption](#file-encryption)
+        * 13.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.File](#rqsrs-032clickhouseparquetencryptionfile)
+    * 13.2 [Column Encryption](#column-encryption)
+        * 13.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Modular](#rqsrs-032clickhouseparquetencryptioncolumnmodular)
+        * 13.2.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Keys](#rqsrs-032clickhouseparquetencryptioncolumnkeys)
+    * 13.3 [Encryption Algorithms](#encryption-algorithms)
+        * 13.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcm)
+        * 13.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcmctr)
+    * 13.4 [EncryptionParameters](#encryptionparameters)
+        * 13.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters](#rqsrs-032clickhouseparquetencryptionparameters)
+            * 13.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
+            * 13.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
+* 14 [DESCRIBE Parquet](#describe-parquet)
+    * 14.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
+* 15 [Compression](#compression)
+    * 15.1 [None](#none)
+        * 15.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
+    * 15.2 [Gzip](#gzip)
+        * 15.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
+    * 15.3 [Brotli](#brotli)
+        * 15.3.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli](#rqsrs-032clickhouseparquetcompressionbrotli)
+    * 15.4 [Lz4](#lz4)
+        * 15.4.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
+    * 15.5 [Lz4Raw](#lz4raw)
+        * 15.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
+    * 15.6 [Lz4Hadoop](#lz4hadoop)
+        * 15.6.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Hadoop](#rqsrs-032clickhouseparquetcompressionlz4hadoop)
+    * 15.7 [Snappy](#snappy)
+        * 15.7.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy](#rqsrs-032clickhouseparquetcompressionsnappy)
+    * 15.8 [Zstd](#zstd)
+        * 15.8.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
+    * 15.9 [Unsupported Compression](#unsupported-compression)
+        * 15.9.1 [Lzo](#lzo)
+            * 15.9.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+* 16 [Table Functions](#table-functions)
+    * 16.1 [URL](#url)
+        * 16.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
+    * 16.2 [File](#file)
+        * 16.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File](#rqsrs-032clickhouseparquettablefunctionsfile)
+        * 16.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
+    * 16.3 [S3](#s3)
+        * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
+    * 16.4 [JDBC](#jdbc)
+        * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
+    * 16.5 [ODBC](#odbc)
+        * 16.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC](#rqsrs-032clickhouseparquettablefunctionsodbc)
+    * 16.6 [HDFS](#hdfs)
+        * 16.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
+    * 16.7 [Remote](#remote)
+        * 16.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
+    * 16.8 [MySQL](#mysql)
+        * 16.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL](#rqsrs-032clickhouseparquettablefunctionsmysql)
+    * 16.9 [PostgreSQL](#postgresql)
+        * 16.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
+* 17 [Table Engines](#table-engines)
+    * 17.1 [Readable External Table](#readable-external-table)
+        * 17.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable](#rqsrs-032clickhouseparquettableenginesreadableexternaltable)
+    * 17.2 [MergeTree](#mergetree)
+        * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
+        * 17.2.2 [ReplicatedMergeTree](#replicatedmergetree)
+            * 17.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
+        * 17.2.3 [ReplacingMergeTree](#replacingmergetree)
+            * 17.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
+        * 17.2.4 [SummingMergeTree](#summingmergetree)
+            * 17.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
+        * 17.2.5 [AggregatingMergeTree](#aggregatingmergetree)
+            * 17.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
+        * 17.2.6 [CollapsingMergeTree](#collapsingmergetree)
+            * 17.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
+        * 17.2.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
+            * 17.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
+        * 17.2.8 [GraphiteMergeTree](#graphitemergetree)
+            * 17.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
+    * 17.3 [Integration Engines](#integration-engines)
+        * 17.3.1 [ODBC Engine](#odbc-engine)
+            * 17.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
+        * 17.3.2 [JDBC Engine](#jdbc-engine)
+            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
+        * 17.3.3 [MySQL Engine](#mysql-engine)
+            * 17.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
+        * 17.3.4 [MongoDB Engine](#mongodb-engine)
+            * 17.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
+        * 17.3.5 [HDFS Engine](#hdfs-engine)
+            * 17.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
+        * 17.3.6 [S3 Engine](#s3-engine)
+            * 17.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
+        * 17.3.7 [Kafka Engine](#kafka-engine)
+            * 17.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
+        * 17.3.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
+            * 17.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
+        * 17.3.9 [PostgreSQL Engine](#postgresql-engine)
+            * 17.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
+    * 17.4 [Special Engines](#special-engines)
+        * 17.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
+        * 17.4.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
+        * 17.4.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
+        * 17.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
+        * 17.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
+* 18 [Indexes](#indexes)
+    * 18.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes](#rqsrs-032clickhouseparquetindexes)
+    * 18.2 [Page](#page)
+        * 18.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
+    * 18.3 [Bloom Filter](#bloom-filter)
+        * 18.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
+        * 18.3.2 [Parquet Column Types Support](#parquet-column-types-support)
+            * 18.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
+            * 18.3.2.2 [Only Considering Parquet Structure When Using Key Column Types](#only-considering-parquet-structure-when-using-key-column-types)
+                * 18.3.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorekeycolumntypes)
+            * 18.3.2.3 [Only Considering Parquet Structure When Using Field Types](#only-considering-parquet-structure-when-using-field-types)
+                * 18.3.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorefieldtypes)
+        * 18.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 18.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 18.3.4 [Consistent Output When Using Key Column Types](#consistent-output-when-using-key-column-types)
+            * 18.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputkeycolumntypes)
+        * 18.3.5 [Consistent Output When Using Field Types](#consistent-output-when-using-field-types)
+            * 18.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputfieldtypes)
+    * 18.4 [Dictionary](#dictionary)
+        * 18.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
+* 19 [Metadata](#metadata)
+    * 19.1 [ParquetFormat](#parquetformat)
+        * 19.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
+        * 19.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
+        * 19.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+        * 19.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 19.2 [Metadata Types](#metadata-types)
+        * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+        * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+        * 19.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+* 20 [Error Recovery](#error-recovery)
+    * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
+    * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
+    * 20.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatacolumn)
+    * 20.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapageheader)
+    * 20.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageData](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapagedata)
+    * 20.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Checksum](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatachecksum)
+    * 20.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalues)
+        * 20.7.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Date](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdate)
+        * 20.7.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Int](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesint)
+        * 20.7.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.BigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbigint)
+        * 20.7.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.SmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluessmallint)
+        * 20.7.5 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestinyint)
+        * 20.7.6 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesuint)
+        * 20.7.7 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UBigInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesubigint)
+        * 20.7.8 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.USmallInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesusmallint)
+        * 20.7.9 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.UTinyInt](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesutinyint)
+        * 20.7.10 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampus)
+        * 20.7.11 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimestampMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimestampms)
+        * 20.7.12 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Bool](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbool)
+        * 20.7.13 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Float](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfloat)
+        * 20.7.14 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Double](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdouble)
+        * 20.7.15 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeMS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimems)
+        * 20.7.16 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeUS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimeus)
+        * 20.7.17 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.TimeNS](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluestimens)
+        * 20.7.18 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.String](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstring)
+        * 20.7.19 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Binary](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesbinary)
+        * 20.7.20 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.FixedLengthByteArray](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesfixedlengthbytearray)
+        * 20.7.21 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Decimal](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesdecimal)
+        * 20.7.22 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.List](#rqsrs-032clickhouseparqueterrorrecoverycorruptvalueslist)
+        * 20.7.23 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Struct](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesstruct)
+        * 20.7.24 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Values.Map](#rqsrs-032clickhouseparqueterrorrecoverycorruptvaluesmap)
+* 21 [Interoperability Between ARM and x86](#interoperability-between-arm-and-x86)
+    * 21.1 [Importing and Exporting Parquet Files On ARM That Were Generated On x86 Machine](#importing-and-exporting-parquet-files-on-arm-that-were-generated-on-x86-machine)
+        * 21.1.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.x86.To.ARM](#rqsrs-032clickhouseparquetinteroperabilityfromx86toarm)
+    * 21.2 [Importing and Exporting Parquet Files On x86 That Were Generated On ARM Machine](#importing-and-exporting-parquet-files-on-x86-that-were-generated-on-arm-machine)
+        * 21.2.1 [RQ.SRS-032.ClickHouse.Parquet.Interoperability.From.ARM.To.x86](#rqsrs-032clickhouseparquetinteroperabilityfromarmtox86)
 
 
 ## Revision History
@@ -8230,6 +8282,26 @@ SELECT
     toDateTime(time)
 FROM file('time.parquet', Parquet);
 ```
+
+## Native Reader
+
+### RQ.SRS-032.ClickHouse.Parquet.NativeReader
+version: 1.0
+
+[ClickHouse] SHALL support usage of the Parquet native reader which enables direct reading of Parquet binary data into [ClickHouse] columns, bypassing the intermediate step of using the Apache Arrow library. This feature is controlled by the setting `input_format_parquet_use_native_reader`.
+
+For example,
+
+```sql
+SELECT * FROM file('data.parquet', Parquet) SETTINGS input_format_parquet_use_native_reader = 1;
+```
+
+### Data Types Support
+
+#### RQ.SRS-032.ClickHouse.Parquet.NativeReader.DataTypes
+version: 1.0
+
+[ClickHouse] SHALL support reading all existing Parquet data types when the native reader is enabled with `input_format_parquet_use_native_reader = 1`.
 
 ## Hive Partitioning
 
