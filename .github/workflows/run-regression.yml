@@ -677,7 +677,7 @@ jobs:
         --storage aws_s3 
         --aws-s3-bucket $AWS_BUCKET
         --aws-s3-region $AWS_DEFAULT_REGION
-        --aws-s3-key-id $AWS_ACCESS_KEY_ID
+        --aws-s3-key-id $AWS_KEY_ID
         --aws-s3-access-key $AWS_SECRET_ACCESS_KEY
         --only "/parquet/aws s3/*"
       package: ${{ inputs.package }}
