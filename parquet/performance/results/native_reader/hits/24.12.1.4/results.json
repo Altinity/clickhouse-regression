@@ -1,0 +1,1468 @@
+{
+  "native_reader": {
+    "query_0": {
+      "time_0": 0.6969590187072754,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.7177548408508301,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.7146885395050049,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_1": {
+      "time_0": 0.9303810596466064,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.9305911064147949,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.0797734260559082,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_2": {
+      "time_0": 1.1355633735656738,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 0.9143581390380859,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 0.9568731784820557,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_3": {
+      "time_0": 1.6716663837432861,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.7954044342041016,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.6576027870178223,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_4": {
+      "time_0": 2.097700595855713,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 2.071321725845337,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.1146860122680664,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_5": {
+      "time_0": 2.378453254699707,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 2.3442118167877197,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.3864126205444336,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_6": {
+      "time_0": 0.9339790344238281,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.951195240020752,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.97989821434021,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_7": {
+      "time_0": 1.0248916149139404,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.8725428581237793,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.0573065280914307,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_8": {
+      "time_0": 2.466386556625366,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.522296667098999,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 2.425503730773926,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_9": {
+      "time_0": 0.9338955879211426,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 0.9360530376434326,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 0.9480109214782715,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_10": {
+      "time_0": 1.8592536449432373,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.906087875366211,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.8454856872558594,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_11": {
+      "time_0": 1.005413293838501,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_1": 0.9191298484802246,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_2": 0.9711008071899414,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      }
+    },
+    "query_12": {
+      "time_0": 2.694427967071533,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 2.4201602935791016,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.5625762939453125,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_13": {
+      "time_0": 2.950251817703247,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 3.0045249462127686,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.2354066371917725,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_14": {
+      "time_0": 1.1101493835449219,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.06913423538208,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.0042719841003418,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_15": {
+      "time_0": 2.4423625469207764,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 2.3945586681365967,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.4239397048950195,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_16": {
+      "time_0": 4.438088893890381,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 4.507529258728027,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 4.536947965621948,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_17": {
+      "time_0": 3.6920011043548584,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 3.6930689811706543,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.6741669178009033,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_18": {
+      "time_0": 7.89959716796875,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_1": 7.851152658462524,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_2": 7.762021541595459,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      }
+    },
+    "query_19": {
+      "time_0": 1.5261526107788086,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.617201805114746,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.5425150394439697,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_20": {
+      "time_0": 3.957897663116455,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 4.104811906814575,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 3.71004056930542,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_21": {
+      "time_0": 3.9631831645965576,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 4.201467990875244,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.9530436992645264,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_22": {
+      "time_0": 5.5586442947387695,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 5.657460689544678,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 5.942174196243286,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_23": {
+      "time_0": 1.7225313186645508,
+      "memory_0": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      },
+      "time_1": 1.6036028861999512,
+      "memory_1": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      },
+      "time_2": 1.7464625835418701,
+      "memory_2": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      }
+    },
+    "query_24": {
+      "time_0": 2.1346662044525146,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.101935863494873,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 2.17741060256958,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_25": {
+      "time_0": 1.8918488025665283,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.9394145011901855,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.8465876579284668,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_26": {
+      "time_0": 2.1157002449035645,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.1704695224761963,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 2.27347731590271,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_27": {
+      "time_0": 3.7016053199768066,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 3.851496934890747,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.68499493598938,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_28": {
+      "time_0": 15.644773721694946,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 14.924829483032227,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 15.174883127212524,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_29": {
+      "time_0": 0.9815573692321777,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      },
+      "time_1": 1.0472784042358398,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      },
+      "time_2": 1.0126090049743652,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      }
+    },
+    "query_30": {
+      "time_0": 0.9419379234313965,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.9949803352355957,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 1.0450127124786377,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_31": {
+      "time_0": 1.073779821395874,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 1.0941669940948486,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.9484691619873047,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_32": {
+      "time_0": 0.9584336280822754,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 0.9962036609649658,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 0.9437699317932129,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_33": {
+      "time_0": 6.395413398742676,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 6.280280828475952,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 6.905294418334961,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_34": {
+      "time_0": 6.368836879730225,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 6.335352659225464,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 6.603154182434082,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_35": {
+      "time_0": 2.2707319259643555,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 2.2117600440979004,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.200141668319702,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_36": {
+      "time_0": 0.8760135173797607,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.9327003955841064,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.8069372177124023,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_37": {
+      "time_0": 0.8611023426055908,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.8964910507202148,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.8571743965148926,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_38": {
+      "time_0": 0.872666597366333,
+      "memory_0": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_1": 0.8875312805175781,
+      "memory_1": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_2": 0.8745834827423096,
+      "memory_2": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      }
+    },
+    "query_39": {
+      "time_0": 0.9180247783660889,
+      "memory_0": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      },
+      "time_1": 0.9258944988250732,
+      "memory_1": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      },
+      "time_2": 0.8892874717712402,
+      "memory_2": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      }
+    },
+    "query_40": {
+      "time_0": 0.9303276538848877,
+      "memory_0": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_1": 0.9265153408050537,
+      "memory_1": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_2": 0.8570261001586914,
+      "memory_2": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      }
+    },
+    "query_41": {
+      "time_0": 0.8809561729431152,
+      "memory_0": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      },
+      "time_1": 0.8951554298400879,
+      "memory_1": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      },
+      "time_2": 0.8653810024261475,
+      "memory_2": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      }
+    },
+    "query_42": {
+      "time_0": 0.8948886394500732,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.9026377201080322,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.9086430072784424,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    }
+  },
+  "regular_reader": {
+    "query_0": {
+      "time_0": 0.6015362739562988,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.7046184539794922,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.635699987411499,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_1": {
+      "time_0": 0.8370363712310791,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.7264528274536133,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.784374475479126,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_2": {
+      "time_0": 0.7634892463684082,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 0.7956645488739014,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 0.8908843994140625,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_3": {
+      "time_0": 0.9938735961914062,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.9253945350646973,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.9293172359466553,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_4": {
+      "time_0": 1.3543763160705566,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.3537359237670898,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.3169939517974854,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_5": {
+      "time_0": 1.7446420192718506,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.7280519008636475,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.7042944431304932,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_6": {
+      "time_0": 0.7571983337402344,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.7531490325927734,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.7606682777404785,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_7": {
+      "time_0": 0.7707340717315674,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.7676064968109131,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.6969935894012451,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_8": {
+      "time_0": 1.7287278175354004,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.8134198188781738,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.8101789951324463,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_9": {
+      "time_0": 1.9826726913452148,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 1.9351279735565186,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 2.0143237113952637,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_10": {
+      "time_0": 1.3582119941711426,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.2974262237548828,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.3056623935699463,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_11": {
+      "time_0": 1.297727346420288,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_1": 1.2909622192382812,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_2": 1.345094919204712,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      }
+    },
+    "query_12": {
+      "time_0": 2.1002132892608643,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.9552085399627686,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 2.045646905899048,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_13": {
+      "time_0": 2.6138756275177,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.4410438537597656,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 2.6609528064727783,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_14": {
+      "time_0": 2.2082247734069824,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.209164619445801,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 2.1200015544891357,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_15": {
+      "time_0": 1.6155037879943848,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.673156976699829,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.6285412311553955,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_16": {
+      "time_0": 3.8189542293548584,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 3.6991055011749268,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.903766632080078,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_17": {
+      "time_0": 3.034173011779785,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 2.9144716262817383,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 3.0793278217315674,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_18": {
+      "time_0": 7.047718048095703,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_1": 6.911838054656982,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      },
+      "time_2": 7.035710573196411,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823208,
+        "MemoryTrackerPeakUsage": 16823208
+      }
+    },
+    "query_19": {
+      "time_0": 0.8858630657196045,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 0.8105359077453613,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 0.8411693572998047,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_20": {
+      "time_0": 4.437343120574951,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 4.697883129119873,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 4.527829647064209,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_21": {
+      "time_0": 5.311370611190796,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 4.710474252700806,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 4.932651519775391,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_22": {
+      "time_0": 8.32521939277649,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 7.986260652542114,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 8.34261417388916,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_23": {
+      "time_0": 21.3783962726593,
+      "memory_0": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      },
+      "time_1": 21.25403118133545,
+      "memory_1": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      },
+      "time_2": 22.298691272735596,
+      "memory_2": {
+        "MemoryTrackerUsage": 21048600,
+        "MemoryTrackerPeakUsage": 21048600
+      }
+    },
+    "query_24": {
+      "time_0": 1.8695950508117676,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.844963788986206,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.8324646949768066,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_25": {
+      "time_0": 1.373159646987915,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.3249506950378418,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.402803897857666,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_26": {
+      "time_0": 1.9632899761199951,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 1.6802408695220947,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 1.8268792629241943,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_27": {
+      "time_0": 4.53217077255249,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_1": 4.9457173347473145,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      },
+      "time_2": 4.7908337116241455,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821928,
+        "MemoryTrackerPeakUsage": 16821928
+      }
+    },
+    "query_28": {
+      "time_0": 15.71343445777893,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 15.10931944847107,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 15.43964409828186,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_29": {
+      "time_0": 0.7995483875274658,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      },
+      "time_1": 0.8180203437805176,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      },
+      "time_2": 0.7422363758087158,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823080,
+        "MemoryTrackerPeakUsage": 16823080
+      }
+    },
+    "query_30": {
+      "time_0": 2.05078387260437,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 2.050043821334839,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 2.1176795959472656,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_31": {
+      "time_0": 2.8870320320129395,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 2.6743388175964355,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 2.7964727878570557,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_32": {
+      "time_0": 7.28498649597168,
+      "memory_0": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_1": 7.203861951828003,
+      "memory_1": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      },
+      "time_2": 7.121806859970093,
+      "memory_2": {
+        "MemoryTrackerUsage": 16823976,
+        "MemoryTrackerPeakUsage": 16823976
+      }
+    },
+    "query_33": {
+      "time_0": 7.248021125793457,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 7.1789374351501465,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 7.4908952713012695,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_34": {
+      "time_0": 7.520913362503052,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 7.05668044090271,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 7.557462453842163,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_35": {
+      "time_0": 1.6424593925476074,
+      "memory_0": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_1": 1.5247564315795898,
+      "memory_1": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      },
+      "time_2": 1.5250358581542969,
+      "memory_2": {
+        "MemoryTrackerUsage": 16821032,
+        "MemoryTrackerPeakUsage": 16821032
+      }
+    },
+    "query_36": {
+      "time_0": 0.8679952621459961,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 1.004528284072876,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.9850358963012695,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_37": {
+      "time_0": 0.8761742115020752,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.8532617092132568,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.9496283531188965,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    },
+    "query_38": {
+      "time_0": 0.9237377643585205,
+      "memory_0": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_1": 0.9483535289764404,
+      "memory_1": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_2": 0.9547555446624756,
+      "memory_2": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      }
+    },
+    "query_39": {
+      "time_0": 1.260491132736206,
+      "memory_0": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      },
+      "time_1": 1.1306846141815186,
+      "memory_1": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      },
+      "time_2": 1.165597677230835,
+      "memory_2": {
+        "MemoryTrackerUsage": 16827944,
+        "MemoryTrackerPeakUsage": 16827944
+      }
+    },
+    "query_40": {
+      "time_0": 0.8065836429595947,
+      "memory_0": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_1": 0.8575839996337891,
+      "memory_1": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      },
+      "time_2": 0.7369353771209717,
+      "memory_2": {
+        "MemoryTrackerUsage": 16826408,
+        "MemoryTrackerPeakUsage": 16826408
+      }
+    },
+    "query_41": {
+      "time_0": 0.7866940498352051,
+      "memory_0": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      },
+      "time_1": 0.7072455883026123,
+      "memory_1": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      },
+      "time_2": 0.6724159717559814,
+      "memory_2": {
+        "MemoryTrackerUsage": 16827432,
+        "MemoryTrackerPeakUsage": 16827432
+      }
+    },
+    "query_42": {
+      "time_0": 0.7414147853851318,
+      "memory_0": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_1": 0.7659671306610107,
+      "memory_1": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      },
+      "time_2": 0.8209681510925293,
+      "memory_2": {
+        "MemoryTrackerUsage": 16825000,
+        "MemoryTrackerPeakUsage": 16825000
+      }
+    }
+  }
+}

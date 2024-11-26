@@ -311,8 +311,18 @@
         * 17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Page](#rqsrs-032clickhouseparquetindexespage)
     * 17.3 [Bloom Filter](#bloom-filter)
         * 17.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
-        * 17.3.2 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
-            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 17.3.2 [Parquet Column Types Support](#parquet-column-types-support)
+            * 17.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
+            * 17.3.2.2 [Only Considering Parquet Structure When Using Key Column Types](#only-considering-parquet-structure-when-using-key-column-types)
+                * 17.3.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorekeycolumntypes)
+            * 17.3.2.3 [Only Considering Parquet Structure When Using Field Types](#only-considering-parquet-structure-when-using-field-types)
+                * 17.3.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorefieldtypes)
+        * 17.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 17.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 17.3.4 [Consistent Output When Using Key Column Types](#consistent-output-when-using-key-column-types)
+            * 17.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputkeycolumntypes)
+        * 17.3.5 [Consistent Output When Using Field Types](#consistent-output-when-using-field-types)
+            * 17.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputfieldtypes)
     * 17.4 [Dictionary](#dictionary)
         * 17.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 18 [Metadata](#metadata)
@@ -2587,12 +2597,107 @@ SELECT * FROM file('test.Parquet, Parquet) WHERE f32=toFloat32(-64.12787) AND fi
 > 
 > Because Bloom filters are small compared to dictionaries, they can be used for predicate pushdown even in columns with high cardinality and when space is at a premium.
 
+#### Parquet Column Types Support
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes
+version: 1.0
+
+| Supported            | Unsupported |
+|----------------------|-------------|
+| FLOAT                | BOOLEAN     |
+| DOUBLE               | UUID        |
+| STRING               | BSON        |``
+| INT and UINT         | JSON        |
+| FIXED_LEN_BYTE_ARRAY | ARRAY       |
+|                      | MAP         |
+|                      | TUPLE       |
+|                      | ARRAY       |
+|                      | ENUM        |
+|                      | INTERVAL    |
+|                      | DECIMAL     |
+|                      | TIMESTAMP   |
+
+##### Only Considering Parquet Structure When Using Key Column Types
+
+###### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes
+version: 1.0
+
+[ClickHouse] SHALL only consider the Parquet structure when utilizing Bloom filters from Parquet files and ignore the key column types.
+
+For example,
+    
+```sql
+select string_column from file('file.parquet', Parquet, 'string_column Decimal64(4, 2)') WHERE string_column = 'xyz' SETTINGS input_format_parquet_bloom_filter_push_down=true
+```
+
+[ClickHouse] SHALL utilize bloom filter and skip row groups despite the fact that `Decimal` values are not supported by ClickHouse Bloom filter implementation. 
+This happens, because the real Parquet column type of `string_column` here is `String` which is supported by ClickHouse Bloom filter implementation.
+
+##### Only Considering Parquet Structure When Using Field Types
+
+###### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes
+version: 1.0
+
+[ClickHouse] SHALL only consider the Parquet structure when utilizing Bloom filters from Parquet files and ignore the field types.
+
+For example,
+
+```sql
+SELECT * FROM file('file.parquet', Parquet) WHERE xyz = toDecimal(2, 4) SETTINGS input_format_parquet_bloom_filter_push_down=true
+```
+
+[ClickHouse] SHALL utilize bloom filter and skip row groups despite the fact that `Decimal` values are not supported by ClickHouse Bloom filter implementation. 
+This happens, because the real Parquet column type of `xyz` here is `String` which is supported by ClickHouse Bloom filter implementation.
+
+
 #### Columns With Complex Datatypes That Have Bloom Filter Applied on Them
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex
 version: 1.0
 
 [ClickHouse] SHALL support reading data from a Parquet file that has row-groups with the Bloom Filter and complex datatype columns. This allows to decrease the query runtime for queries that include reading from a parquet file with `Array`, `Map` and `Tuple` datatypes.
+
+#### Consistent Output When Using Key Column Types
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes
+version: 1.0
+
+[ClickHouse] SHALL provide the same output when reading data from a Parquet file with the query including key column type, both when `input_format_parquet_bloom_filter_push_down` is set to `true` and `false`.
+
+For example,
+
+```sql
+select string_column from file('file.parquet', Parquet, 'string_column Int64') SETTINGS input_format_parquet_bloom_filter_push_down=true
+```
+
+and
+
+```sql
+select string_column from file('file.parquet', Parquet, 'string_column Int64') SETTINGS input_format_parquet_bloom_filter_push_down=false
+```
+
+SHALL have the same output.
+
+#### Consistent Output When Using Field Types
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes
+version: 1.0
+
+[ClickHouse] SHALL provide the same output when reading data from a Parquet file with the query including field type, both when `input_format_parquet_bloom_filter_push_down` is set to `true` and `false`.
+
+For example,
+
+```sql
+SELECT * FROM file('file.parquet', Parquet) WHERE xyz = toInt32(5) SETTINGS input_format_parquet_bloom_filter_push_down=true
+```
+
+and
+
+```sql
+SELECT * FROM file('file.parquet', Parquet) WHERE xyz = toInt32(5) SETTINGS input_format_parquet_bloom_filter_push_down=false
+``` 
+
+SHALL have the same output.
 
 ### Dictionary
 
