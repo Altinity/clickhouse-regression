@@ -1,7 +1,7 @@
 from testflows.core import *
 from parquet.requirements import *
 from parquet.tests.outline import import_export
-from parquet.tests.steps import *
+from parquet.tests.steps.general import *
 from helpers.common import *
 
 

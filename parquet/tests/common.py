@@ -27,14 +27,15 @@ def generate_random_value(data_type):
     elif data_type == "BINARY":
         return bytes(random.getrandbits(8) for _ in range(random.randint(1, 16)))
     elif data_type == "FIXED_LEN_BYTE_ARRAY":
-        length = random.randint(1, 16)
-        return bytes(random.getrandbits(8) for _ in range(length))
+        return "".join(
+            random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 3))
+        )
     elif data_type == "UTF8" or data_type == "STRING":
         return "".join(
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
         )
     elif data_type == "DECIMAL":
-        return round(random.uniform(-1e6, 1e6), 2)
+        return random.randint(0, 42912)
     elif data_type == "DATE":
         return str(
             datetime.date.today() - datetime.timedelta(days=random.randint(0, 3650))
@@ -49,13 +50,26 @@ def generate_random_value(data_type):
         return None
     elif data_type == "MAP":
         return {
-            generate_random_value("UTF8"): generate_random_value("UTF8")
+            "key_value": [
+                {
+                    "key": generate_random_value("UTF8"),
+                    "value": generate_random_value("UTF8"),
+                }
+            ]
             for _ in range(3)
         }
     elif data_type == "LIST":
         return [generate_random_value("INT32") for _ in range(5)]
     elif data_type == "MAP_KEY_VALUE":
-        return {generate_random_value("UTF8"): generate_random_value("INT32")}
+        return {
+            "key_value": [
+                {
+                    "key": generate_random_value("UTF8"),
+                    "value": generate_random_value("UTF8"),
+                }
+            ]
+            for _ in range(3)
+        }
     elif data_type == "TIME":
         return str(datetime.datetime.now().time())
     elif data_type == "INTEGER":
