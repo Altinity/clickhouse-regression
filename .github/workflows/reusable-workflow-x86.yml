@@ -41,6 +41,8 @@ on:
         required: true
       AWS_REPORT_REGION:
         required: true
+      AWS_BUCKET:
+        required: true
       DOCKER_USERNAME:
         required: true
       DOCKER_PASSWORD:
