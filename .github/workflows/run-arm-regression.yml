@@ -1313,7 +1313,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
+    if: ${{ inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
     steps:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
