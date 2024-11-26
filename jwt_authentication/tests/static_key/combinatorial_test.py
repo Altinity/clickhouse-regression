@@ -12,26 +12,19 @@ random.seed(42)
 
 
 @TestStep(Given)
-def create_users(self, user_names):
-    """Create users with jwt authentication."""
-    users = []
-    for user_name in user_names:
-        user = helpers.User(user_name=user_name, auth_type="jwt")
-        user.create_user()
-        users.append(user)
-
-    return users
-
-
-@TestStep(Given)
-def create_tokens(self, user_names, token_algorithms, token_secrets):
+def create_tokens(
+    self, user_names, token_algorithms, token_secrets, expiration_minutes
+):
     """Create tokens for users."""
     tokens = []
-    for user_name, token_algorithm, token_secret in product(
-        user_names, token_algorithms, token_secrets
+    for user_name, token_algorithm, token_secret, expiration in product(
+        user_names, token_algorithms, token_secrets, expiration_minutes
     ):
         token = helpers.Token(
-            user_name=user_name, secret=token_secret, algorithm=token_algorithm
+            user_name=user_name,
+            secret=token_secret,
+            algorithm=token_algorithm,
+            expiration_minutes=expiration,
         )
         token.create_token()
         tokens.append(token)
@@ -97,6 +90,7 @@ def check_jwt_authentication(self, user_name, token, validator):
         )
         note(f"token user_name: {token.user_name}")
         note(f"user user_name: {user.user_name}")
+        note(f"expiration_minutes: {token.expiration_minutes}")
 
     with Then("check jwt authentication"):
         steps.check_clickhouse_client_jwt_login(
@@ -149,7 +143,8 @@ def jwt_authentication_combinatorics(self):
     validator_secrets = ["secret_1", "secret_2"]
     config_static_key_in_base64_values = ["true", "false"]
     static_key_in_base64_values = ["true", "false"]
-
+    expiration_minutes = [5, -5, None]
+    
     # with Given("create users with jwt authentication"):
     #     users = create_users(user_names=user_names)
 
@@ -158,6 +153,7 @@ def jwt_authentication_combinatorics(self):
             user_names=user_names,
             token_algorithms=token_algorithms,
             token_secrets=token_secrets,
+            expiration_minutes=expiration_minutes,
         )
 
     with And("create validators"):

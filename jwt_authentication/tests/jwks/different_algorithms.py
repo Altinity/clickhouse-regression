@@ -17,7 +17,7 @@ def check_jwt_auth(self, algorithm):
         steps.create_user_with_jwt_auth(user_name=user_name)
 
     with And("create private and public keys"):
-        public_key, private_key_file = steps.generate_ssh_keys(algorithm=algorithm)
+        public_key, private_key_path = steps.generate_ssh_keys(algorithm=algorithm)
 
     with When("add new validator to the config.xml"):
         validator_id = define("validator id", f"jwks_with_{algorithm}")
@@ -35,7 +35,7 @@ def check_jwt_auth(self, algorithm):
             steps.create_static_jwt(
                 user_name=user_name,
                 algorithm=algorithm,
-                private_key_path=private_key_file,
+                private_key_path=private_key_path,
                 key_id=key_id,
             ),
         )
