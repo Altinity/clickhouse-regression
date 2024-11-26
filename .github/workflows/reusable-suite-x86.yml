@@ -1,0 +1,121 @@
+name: Reusable Test Suite
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        description: "Package to test"
+        required: true
+        type: string
+      version:
+        description: "Expected version"
+        type: string
+      suite:
+        type: string
+        description: "Test suite to run."
+        default: all
+      name:
+        description: "Test run name, may be different from the suite name, must be unique."
+        type: string
+        required: true
+      output_format:
+        description: "Testflows output style."
+        type: string
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+      extra_args:
+        description: "Extra test program arguments. Default: none (empty string)."
+        type: string
+      artifact_name:
+        description: "Artifact name."
+        type: string
+      runner_type:
+        description: "Runner to use."
+        type: string
+        default: "type-cpx41"
+      timeout:
+        description: "Timeout in minutes."
+        type: number
+        default: 120
+    secrets:
+      AWS_REPORT_KEY_ID:
+        required: true
+      AWS_REPORT_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REPORT_REGION:
+        required: true
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_PASSWORD:
+        required: true
+      CHECKS_DATABASE_HOST:
+        required: true
+      CHECKS_DATABASE_USER:
+        required: true
+      CHECKS_DATABASE_PASSWORD:
+        required: true
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+  CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+  CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+  PYTHONIOENCODING: utf-8
+  args: --test-to-end
+    --no-colors
+    --local
+    --clickhouse ${{ inputs.package }}
+    ${{ inputs.version != '' && format('--clickhouse-version {0}', inputs.version) || '' }}
+    --collect-service-logs
+    --output ${{ inputs.output_format }}
+    --parallel ${{ vars.PARALLEL }}
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL job.is_scheduled="${{ github.event_name == 'schedule' }}"
+    --log raw.log ${{ inputs.extra_args }}
+  artifact_paths: |
+    ./report.html
+    ./*.log.txt
+    ./*.log
+    ./*.html
+    ./*/_instances/*.log
+    ./*/_instances/*/logs/*.log
+    ./*/*/_instances/*/logs/*.log
+    ./*/*/_instances/*.log
+  SUITE: ${{ inputs.name }}
+  JOB_NAME: ${{ inputs.name }}
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  test_suite:
+    name:  ${{ inputs.name }}
+    runs-on: [self-hosted, x86, "${{inputs.runner_type}}", image-x86-app-docker-ce]
+    timeout-minutes: ${{ inputs.timeout }}
+    steps:
+     - name: ⤵️ Checkout
+       uses: actions/checkout@v4
+       with:
+         ref: ${{ inputs.ref }}
+
+     - name: 🛠️ Setup
+       run: .github/setup.sh
+
+     - name: 🧪 Run ${{ inputs.suite }} suite
+       run: EXITCODE=0;
+          python3 -u ${{ inputs.suite }}/regression.py
+          ${{ env.args }} || EXITCODE=$?; 
+          .github/add_link_to_logs.sh; 
+          exit $EXITCODE
+
+     - name: 📝 Create and upload logs
+       if: always()
+       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+     - uses: actions/upload-artifact@v4
+       if: always()
+       with:
+         name: ${{ env.JOB_NAME }}-${{ inputs.artifact_name }}-artifacts
+         path: ${{ env.artifact_paths }}
