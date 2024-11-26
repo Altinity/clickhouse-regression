@@ -917,14 +917,14 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                 asynchronous=True,
                 name="client",
             ) as client:
-                client.app.expect("clickhouse1 :\) ")
+                client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I execute SHOW GRANTS"):
                     client.app.send(f"SHOW GRANTS")
 
                     with Then("I expect the user to have the mapped role"):
                         client.app.expect(f"{role_name}")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I execute select on the table"):
                     client.app.send(
@@ -933,7 +933,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
 
                     with Then("I expect to get no errors"):
                         client.app.expect("Ok\.")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I remove the role that grants the privilege"):
                     self.context.node.query(f"DROP ROLE {role_name}")
@@ -947,7 +947,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                         client.app.expect(
                             f"DB::Exception: {ldap_user['username']}: Not enough privileges."
                         )
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I add the role that grant the privilege back"):
                     self.context.node.query(f"CREATE ROLE {role_name}")
@@ -961,8 +961,8 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                     )
 
                     with Then("I expect to get no errors"):
-                        client.app.expect("Ok\.")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"Ok\.")
+                        client.app.expect(r"clickhouse1 :\) ")
 
 
 @TestScenario
@@ -1014,14 +1014,14 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                 asynchronous=True,
                 name="client",
             ) as client:
-                client.app.expect("clickhouse1 :\) ")
+                client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I execute SHOW GRANTS"):
                     client.app.send(f"SHOW GRANTS")
 
                     with Then("I expect the user to have the mapped role"):
                         client.app.expect(f"{role_name}")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with And(
                     "I execute select on the table when the mapped role does not provide this privilege"
@@ -1034,7 +1034,7 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                         client.app.expect(
                             f"DB::Exception: {ldap_user['username']}: Not enough privileges."
                         )
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I grant select privilege on the table to the mapped role"):
                     self.context.node.query(
@@ -1047,8 +1047,8 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                     )
 
                     with Then("I expect to get no errors"):
-                        client.app.expect("Ok\.")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"Ok\.")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I remove the privilege from the mapped role"):
                     self.context.node.query(
@@ -1064,7 +1064,7 @@ def privilege_new_and_removed(self, ldap_server, ldap_user):
                         client.app.expect(
                             f"DB::Exception: {ldap_user['username']}: Not enough privileges."
                         )
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
 
 @TestScenario
@@ -1109,14 +1109,14 @@ def role_added(self, ldap_server, ldap_user):
                 asynchronous=True,
                 name="client",
             ) as client:
-                client.app.expect("clickhouse1 :\) ")
+                client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I execute SHOW GRANTS"):
                     client.app.send(f"SHOW GRANTS")
 
                     with Then("I expect the user not to have any mapped role"):
-                        client.app.expect(f"Ok\.")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"Ok\.")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with And("I execute select on the table"):
                     client.app.send(
@@ -1127,7 +1127,7 @@ def role_added(self, ldap_server, ldap_user):
                         client.app.expect(
                             f"DB::Exception: {ldap_user['username']}: Not enough privileges."
                         )
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I add the role that grant the privilege"):
                     self.context.node.query(f"CREATE ROLE {role_name}")
@@ -1141,8 +1141,8 @@ def role_added(self, ldap_server, ldap_user):
                     )
 
                     with Then("I expect to get no errors"):
-                        client.app.expect("Ok\.")
-                        client.app.expect("clickhouse1 :\) ")
+                        client.app.expect(r"Ok\.")
+                        client.app.expect(r"clickhouse1 :\) ")
 
 
 @TestScenario
@@ -1179,7 +1179,7 @@ def role_new(self, ldap_server, ldap_user):
                 asynchronous=True,
                 name="client",
             ) as client:
-                client.app.expect("clickhouse1 :\) ")
+                client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I try to grant new role to user"):
                     self.context.node.query(
