@@ -144,7 +144,7 @@ jobs:
     secrets: inherit
     with:
       name: alter_replace_partition
-      suite: alter_replace_partition
+      suite: alter
       runner_type: type-cax51
       timeout: 300
       extra_args: ${{ inputs.extra_args }} --only "/alter/replace partition/*"
@@ -161,7 +161,7 @@ jobs:
     secrets: inherit
     with:
       name: alter_attach_partition
-      suite: alter_attach_partition
+      suite: alter
       runner_type: type-cax51
       timeout: 3000
       extra_args: ${{ inputs.extra_args }} --only "/alter/attach partition/*"
@@ -179,7 +179,7 @@ jobs:
     secrets: inherit
     with:
       name: alter_move_partition
-      suite: alter_move_partition
+      suite: alter
       runner_type: type-cax41
       timeout: 3000
       extra_args: ${{ inputs.extra_args }} --only "/alter/move partition/*"
@@ -230,10 +230,11 @@ jobs:
     secrets: inherit
     with:
       name: benchmark_minio
-      suite: benchmark_minio
+      suite: benchmark
       runner_type: type-cax51
       timeout: 180
       extra_args: ${{ inputs.extra_args }} --storage minio
+      regression_py: benchmark.py
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       ref: ${{ inputs.ref }}
