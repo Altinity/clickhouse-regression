@@ -675,10 +675,10 @@ jobs:
       timeout: 300
       extra_args: ${{ inputs.extra_args }} 
         --storage aws_s3 
-        --aws-s3-bucket $AWS_BUCKET
-        --aws-s3-region $AWS_DEFAULT_REGION
-        --aws-s3-key-id $AWS_KEY_ID
-        --aws-s3-access-key $AWS_SECRET_ACCESS_KEY
+        --aws-s3-bucket ${{ github.secrets.AWS_BUCKET }}
+        --aws-s3-region ${{ github.secrets.AWS_REGION }}
+        --aws-s3-key-id ${{ github.secrets.AWS_KEY_ID }}
+        --aws-s3-access-key ${{ github.secrets.AWS_ACCESS_KEY }}
         --only "/parquet/aws s3/*"
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
