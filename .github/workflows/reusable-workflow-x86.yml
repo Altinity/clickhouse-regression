@@ -88,602 +88,12 @@ env:
 
 jobs:
   aes_encryption:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: EXITCODE=0;
-              python3 -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  aggregate_functions:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 360
-    env:
-      SUITE: aggregate_functions
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  atomic_insert:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: atomic_insert
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  alter_replace_partition:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: alter
-      STORAGE: /replace_partition
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/replace partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-replace-partition-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  alter_attach_partition:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 3000
-    env:
-      SUITE: alter
-      STORAGE: /attach_partition
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/attach partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-attach-partition-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  alter_move_partition:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 3000
-    env:
-      SUITE: alter
-      STORAGE: /move_partition
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/move partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-move-partition-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  attach:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 3000
-    env:
-      SUITE: attach
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/attach/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  base_58:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: base_58
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: EXITCODE=0
-            python3 
-            -u ${{ env.SUITE }}/regression.py 
-            ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  benchmark_minio:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage minio
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-minio-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  clickhouse_keeper:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper
-      STORAGE: /no_ssl
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  clickhouse_keeper_ssl:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper
-      STORAGE: /ssl
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --ssl
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-ssl-artifacts
-          path: ${{ env.artifact_paths}}
-
-  clickhouse_keeper_failover:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper_failover
-      STORAGE: /failover
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  data_types:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: data_types
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  datetime64_extended_range:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: datetime64_extended_range
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  disk_level_encryption:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 240
-    env:
-      SUITE: disk_level_encryption
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  dns:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: dns
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  engines:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: engines
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  # example:
-  #   runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-  #   timeout-minutes: 180
-  #   env:
-  #     SUITE: example
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
-  #   steps:
-  #     - name: ⤵️ Checkout
-  #       uses: actions/checkout@v4
-  #       with:
-  #         ref: ${{ inputs.ref }}
-
-  #     - name: 🛠️ Setup
-  #       run: .github/setup.sh
-
-  #     - name: 🧪 Run ${{ env.SUITE }} suite
-  #       run: python3
-  #             -u ${{ env.SUITE }}/regression.py
-  #             ${{ env.args }} || EXITCODE=$?; 
-  #             .github/add_link_to_logs.sh; 
-  #             exit $EXITCODE
-
-  #     - name: 📝 Create and upload logs
-  #       if: always()
-  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-  #     - uses: actions/upload-artifact@v4
-  #       if: always()
-  #       with:
-  #         name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-  #         path: ${{ env.artifact_paths}}
-  
-  example:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
     with:
-      name: example
-      suite: example
-      artifact_name: ${{ inputs.artifact_name }}
+      name: aes_encryption
+      suite: aes_encryption
       runner_type: type-cpx41
       timeout: 180
       extra_args: ${{ inputs.extra_args }}
@@ -692,756 +102,668 @@ jobs:
       ref: ${{ inputs.ref }}
       output_format: ${{ inputs.output_format }}
       artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  aggregate_functions:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
     secrets: inherit
+    with:
+      name: aggregate_functions
+      suite: aggregate_functions
+      runner_type: type-cpx51
+      timeout: 360
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  atomic_insert:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: atomic_insert
+      suite: atomic_insert
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  alter_replace_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: alter_replace_partition
+      suite: alter_replace_partition
+      runner_type: type-cpx51
+      timeout: 300
+      extra_args: ${{ inputs.extra_args }} --only "/alter/replace partition/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+    
+  alter_attach_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: alter_attach_partition
+      suite: alter_attach_partition
+      runner_type: type-cpx51
+      timeout: 3000
+      extra_args: ${{ inputs.extra_args }} --only "/alter/attach partition/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+
+  alter_move_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: alter_move_partition
+      suite: alter_move_partition
+      runner_type: type-cpx41
+      timeout: 3000
+      extra_args: ${{ inputs.extra_args }} --only "/alter/move partition/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  attach:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: attach
+      suite: attach
+      runner_type: type-cpx41
+      timeout: 3000
+      extra_args: ${{ inputs.extra_args }} --only "/attach/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  base_58:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: base_58
+      suite: base_58
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  benchmark_minio:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: benchmark_minio
+      suite: benchmark_minio
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }} --storage minio
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  clickhouse_keeper:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: clickhouse_keeper
+      suite: clickhouse_keeper
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  clickhouse_keeper_ssl:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: clickhouse_keeper_ssl
+      suite: clickhouse_keeper
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }} --ssl
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  clickhouse_keeper_failover:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: clickhouse_keeper_failover
+      suite: clickhouse_keeper_failover
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  data_types:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: data_types
+      suite: data_types
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  datetime64_extended_range:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: datetime64_extended_range
+      suite: datetime64_extended_range
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  disk_level_encryption:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: disk_level_encryption
+      suite: disk_level_encryption
+      runner_type: type-cpx41
+      timeout: 240
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  dns:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: dns
+      suite: dns
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+
+  engines:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: engines
+      suite: engines
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
+  
+  example:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: example
+      suite: example
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   extended_precision_data_types:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: extended_precision_data_types
+      suite: extended_precision_data_types
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   functions:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: functions
+      suite: functions
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
     
   jwt_authentication:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: jwt_authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'jwt_authentication' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  # functional:
-  #   runs-on: self-hosted
-  #   env:
-  #     SUITE: clickhouse/functional
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'functional' }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: 🛠️ Setup
-  #       run: .github/setup.sh
-
-  #     - name: 🧪 Run ${{ env.SUITE }} suite
-  #       run: python3
-  #             -u ${{ env.SUITE }}/functional.py
-  #             ${{ env.args }}
-
-  #     - name: 📝 Create and upload logs
-  #       if: always()
-  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-  #     - uses: actions/upload-artifact@v4
-  #       if: always()
-  #       with:
-  #         name: clickhouse-functional-artifacts
-  #         path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: jwt_authentication
+      suite: jwt_authentication
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   kafka:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: kafka
+      suite: kafka
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   kerberos:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: kerberos
+      suite: kerberos
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   key_value:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: key_value
+      suite: key_value
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   ldap_authentication:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-authentication-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: ldap_authentication
+      suite: ldap/authentication
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   ldap_external_user_directory:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-external_user_directory-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: ldap_external_user_directory
+      suite: ldap/external_user_directory
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   ldap_role_mapping:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-role_mapping-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: ldap_role_mapping
+      suite: ldap/role_mapping
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   lightweight_delete:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: lightweight_delete
+      suite: lightweight_delete
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   memory:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 1800
-    env:
-      SUITE: memory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: memory
+      suite: memory
+      runner_type: type-cpx51
+      timeout: 1800
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   parquet:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /no_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: parquet
+      suite: parquet
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   parquet_minio:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --only "/parquet/minio/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  # parquet_minio_reusable:
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
-  #   uses: ./.github/workflows/reusable-suite-x86.yml
-  #   with:
-  #     name: parquet-minio
-  #     suite: parquet
-  #     runner_type: type-cpx41
-  #     timeout: 300
-  #     extra_args: ${{ inputs.extra_args }} --storage minio --only "/parquet/minio/*"
-  #     artifact_name: ${{ inputs.artifact_name }}
-  #     package: ${{ inputs.package }}
-  #     version: ${{ inputs.version }}
-  #     ref: ${{ inputs.ref }}
-  #     output_format: ${{ inputs.output_format }}
-  #   secrets: inherit
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: parquet_minio
+      suite: parquet
+      runner_type: type-cpx41
+      timeout: 300
+      extra_args: ${{ inputs.extra_args }} --storage minio --only "/parquet/minio/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   part_moves_between_shards:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: part_moves_between_shards
+      suite: part_moves_between_shards
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   rbac:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 540
-    env:
-      SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: rbac
+      suite: rbac
+      runner_type: type-cpx41
+      timeout: 540
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   s3_minio:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: s3
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: s3_minio
+      suite: s3
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }} --storage minio
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   selects:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: selects
+      suite: selects
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   session_timezone:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: session_timezone
+      suite: session_timezone
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   ssl_server:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 360
-    env:
-      SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: ssl_server
+      suite: ssl_server
+      runner_type: type-cpx41
+      timeout: 360
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   tiered_storage_local:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: tiered_storage_local
+      suite: tiered_storage
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   tiered_storage_minio:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-minio
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: tiered_storage_minio
+      suite: tiered_storage
+      runner_type: type-cpx51
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }} --with-minio
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
 
   window_functions:
-    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: window_functions
+      suite: window_functions
+      runner_type: type-cpx41
+      timeout: 180
+      extra_args: ${{ inputs.extra_args }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      artifact_name: ${{ inputs.artifact_name }}
