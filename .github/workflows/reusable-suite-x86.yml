@@ -18,15 +18,19 @@ on:
         description: "Test run name, may be different from the suite name, must be unique."
         type: string
         required: true
+      extra_args:
+        description: "Extra test program arguments. Default: none (empty string)."
+        type: string
       output_format:
         description: "Testflows output style."
         type: string
       ref:
         description: "Commit SHA to checkout. Default: current (empty string)."
         type: string
-      extra_args:
-        description: "Extra test program arguments. Default: none (empty string)."
+      artifact_bucket:
+        description: "Artifact S3 bucket"
         type: string
+        default: public
       artifact_name:
         description: "Artifact name."
         type: string
@@ -65,6 +69,7 @@ env:
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
   CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
   CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+  artifacts: ${{ inputs.artifact_bucket }}
   PYTHONIOENCODING: utf-8
   args: --test-to-end
     --no-colors

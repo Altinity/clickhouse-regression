@@ -691,6 +691,7 @@ jobs:
       version: ${{ inputs.version }}
       ref: ${{ inputs.ref }}
       output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
     secrets: inherit
 
   extended_precision_data_types:
