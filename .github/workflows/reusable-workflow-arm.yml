@@ -113,7 +113,7 @@ jobs:
     with:
       name: aggregate_functions
       suite: aggregate_functions
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 360
       extra_args: ${{ inputs.extra_args }}
       package: ${{ inputs.package }}
@@ -147,7 +147,7 @@ jobs:
     with:
       name: alter_replace_partition
       suite: alter
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 300
       extra_args: ${{ inputs.extra_args }} --only "/alter/replace partition/*"
       package: ${{ inputs.package }}
@@ -164,7 +164,7 @@ jobs:
     with:
       name: alter_attach_partition
       suite: alter
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 3000
       extra_args: ${{ inputs.extra_args }} --only "/alter/attach partition/*"
       package: ${{ inputs.package }}
@@ -233,7 +233,7 @@ jobs:
     with:
       name: benchmark_minio
       suite: ontime_benchmark
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 180
       extra_args: ${{ inputs.extra_args }} --storage minio
       regression_py: benchmark.py
@@ -557,7 +557,7 @@ jobs:
     with:
       name: lightweight_delete
       suite: lightweight_delete
-      runner_type: type-cax51
+      runner_type: type-cax31
       timeout: 180
       extra_args: ${{ inputs.extra_args }}
       package: ${{ inputs.package }}
@@ -574,7 +574,7 @@ jobs:
     with:
       name: memory
       suite: memory
-      runner_type: type-cax51
+      runner_type: type-cax31
       timeout: 1800
       extra_args: ${{ inputs.extra_args }}
       package: ${{ inputs.package }}
@@ -591,7 +591,7 @@ jobs:
     with:
       name: parquet
       suite: parquet
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 180
       extra_args: ${{ inputs.extra_args }}
       package: ${{ inputs.package }}
@@ -659,7 +659,7 @@ jobs:
     with:
       name: s3_minio
       suite: s3
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 180
       extra_args: ${{ inputs.extra_args }} --storage minio
       package: ${{ inputs.package }}
@@ -727,7 +727,7 @@ jobs:
     with:
       name: tiered_storage_local
       suite: tiered_storage
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 180
       extra_args: ${{ inputs.extra_args }}
       package: ${{ inputs.package }}
@@ -744,7 +744,7 @@ jobs:
     with:
       name: tiered_storage_minio
       suite: tiered_storage
-      runner_type: type-cax51
+      runner_type: type-cax41
       timeout: 180
       extra_args: ${{ inputs.extra_args }} --with-minio
       package: ${{ inputs.package }}
