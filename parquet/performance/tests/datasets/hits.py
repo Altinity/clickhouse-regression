@@ -21,7 +21,7 @@ def create_parquet_file_hits(
     with Given("I create a table populated with hits data clickhouse"):
         clickhouse_node.query(
             f"""
-            CREATE TABLE {table_name}
+            CREATE TABLE hits_test
         (
             WatchID BIGINT NOT NULL,
             JavaEnable SMALLINT NOT NULL,

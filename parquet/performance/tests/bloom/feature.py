@@ -3,7 +3,7 @@ import json
 
 from testflows.core import *
 from helpers.common import getuid
-from parquet.tests.steps import *
+from parquet.tests.steps.general import *
 
 
 def rows_read(json_data):

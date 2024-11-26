@@ -317,6 +317,16 @@ class Node(object):
 
             return int(match.group(1))
 
+        @staticmethod
+        def _remove_stack_trace(log: str) -> str:
+            """Find the index of "Stack trace" and slice the string up to that point."""
+            stack_trace_index = log.find("Stack trace")
+            return (
+                log[:stack_trace_index].strip()
+                if stack_trace_index != -1
+                else log.strip()
+            )
+
         def query(
             self,
             query_string,
@@ -330,6 +340,7 @@ class Node(object):
             messages_to_retry=None,
             retry_count=5,
             retry_delay=5,
+            stack_trace=True,
         ):
             """Execute query and return the result.
             :param query_string: query to execute.
@@ -388,6 +399,8 @@ class Node(object):
             _errorcode = self._parse_error_code(query_result)
 
             if no_checks:
+                if "🔥 Exception:" in _output and not stack_trace:
+                    _output = self._remove_stack_trace(_output)
                 return ClientQueryResult(_output, errorcode=_errorcode)
 
             if errorcode is not None:
@@ -400,6 +413,8 @@ class Node(object):
 
             if not ignore_exception:
                 if message is None or "Exception:" not in message:
+                    if not stack_trace:
+                        _output = self._remove_stack_trace(_output)
                     if "🔥 Exception:" in _output:
                         if raise_on_exception:
                             raise QueryRuntimeException(_output)
@@ -419,7 +434,10 @@ class Node(object):
             client_args = {}
 
         for arg, value in client_args.items():
-            client += f" --{arg} {value}"
+            if value == "null":
+                client += f" --{arg}"
+            else:
+                client += f" --{arg} {value}"
 
         with self.cluster.shell(self.name) as bash:
             command_context = self.command(
