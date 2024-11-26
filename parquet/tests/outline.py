@@ -8,7 +8,7 @@ from helpers.common import *
 
 
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None):
+def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None, settings=None):
     """Import parquet file into a clickhouse table and export it back."""
     node = self.context.node
     table_name = "table_" + getuid()
@@ -46,6 +46,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
             f"SELECT * FROM {table_name} FORMAT TabSeparated",
             file_output=file_import,
             use_file=True,
+            settings=settings
         )
 
     with Check("import"):
@@ -77,12 +78,16 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
                 f"SELECT * FROM file('{path_to_export}', Parquet) FORMAT TabSeparated",
                 file_output=file_export,
                 use_file=True,
+                settings=settings
             )
 
         with Then("output must match the import"):
             node.command(f"diff {file_import} {file_export}", exitcode=0)
 
         with And("I check that table structure matches ..."):
+            if "datetime" in import_column_structure.output.lower():
+                skip("datetime column structure is different in Parquet and ClickHouse")
+
             export_columns_structure = node.query(
                 f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated"
             )

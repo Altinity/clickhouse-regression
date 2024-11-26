@@ -24,7 +24,13 @@ def parquet_argparser(parser):
         "--native-parquet-reader",
         action="store_true",
         default=False,
-        help="Use native paruqet reader.",
+        help="Use native parquet reader.",
+    )
+    parser.add_argument(
+        "--stress-bloom",
+        action="store_true",
+        default=False,
+        help="Run the whole bloom filter suite with all combinations.",
     )
 
 
@@ -338,15 +344,16 @@ ffails = {
         "Multi directory globs are not introduced for these versions",
         check_clickhouse_version("<23.8"),
     ),
-    "/parquet/bloom": (
-        Skip,
-        "Not implemented yet",
-    ),
     "/parquet/*/s3/compression type/*/outline/engine/*": (
         Skip,
         "Unsupported compression type",
     ),
     "/parquet/fastparquet/*": (Skip, "Unsupported"),
+    "parquet/bloom/": (
+        Skip,
+        "Not implemented before 24.10.1",
+        check_clickhouse_version("<24.10.1"),
+    ),
 }
 
 
@@ -378,6 +385,7 @@ def regression(
     node="clickhouse1",
     with_analyzer=False,
     native_parquet_reader=False,
+    stress_bloom=False,
 ):
     """Parquet regression."""
     nodes = {
@@ -576,13 +584,6 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        if check_current_cpu("x86_64"):
-            Feature(
-                run=load("parquet.tests.bloom_filter", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
         Feature(
             run=load("parquet.tests.read_and_write", "feature"),
             parallel=True,
