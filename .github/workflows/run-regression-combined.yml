@@ -148,7 +148,7 @@ jobs:
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: x86
     
-  arm:
+  ARM:
     if: ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') }}
     uses: ./.github/workflows/reusable-workflow-arm.yml
     secrets: inherit

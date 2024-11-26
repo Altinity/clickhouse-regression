@@ -42,6 +42,10 @@ on:
         description: "Timeout in minutes."
         type: number
         default: 120
+      regression_py:
+        description: "Name of the regression script."
+        type: string
+        default: "regression.py"
     secrets:
       AWS_REPORT_KEY_ID:
         required: true
@@ -110,7 +114,7 @@ jobs:
 
      - name: 🧪 Run ${{ inputs.suite }} suite
        run: EXITCODE=0;
-          python3 -u ${{ inputs.suite }}/regression.py
+          python3 -u ${{ inputs.suite }}/${{ inputs.regression_py }}
           ${{ env.args }} || EXITCODE=$?; 
           .github/add_link_to_logs.sh; 
           exit $EXITCODE
