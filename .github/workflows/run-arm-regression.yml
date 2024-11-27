@@ -195,7 +195,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -231,7 +231,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -267,7 +267,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -305,7 +305,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -343,7 +343,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -381,7 +381,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -418,7 +418,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -454,7 +454,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -496,7 +496,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -537,7 +537,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -575,7 +575,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -612,7 +612,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -650,7 +650,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -687,7 +687,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -723,7 +723,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -759,7 +759,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -795,7 +795,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -831,7 +831,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -867,7 +867,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -903,7 +903,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -939,7 +939,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -975,7 +975,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1011,7 +1011,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1047,7 +1047,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1083,7 +1083,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1119,7 +1119,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1155,7 +1155,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1191,7 +1191,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1227,7 +1227,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1263,7 +1263,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1299,7 +1299,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1335,7 +1335,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1372,7 +1372,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1411,7 +1411,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1454,7 +1454,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1490,7 +1490,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1526,7 +1526,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1568,7 +1568,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1609,7 +1609,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1647,7 +1647,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1683,7 +1683,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1719,7 +1719,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1755,7 +1755,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1796,7 +1796,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1837,7 +1837,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1873,7 +1873,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1911,7 +1911,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1947,7 +1947,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        run: .github/upload_results_to_database.sh
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}  ${{ vars.UPLOAD_LOGS }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
