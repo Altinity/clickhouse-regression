@@ -3,6 +3,8 @@ import datetime
 import jwt
 import base64
 
+from testflows.core import *
+
 import jwt_authentication.tests.steps as steps
 
 
@@ -50,6 +52,7 @@ class Token:
             algorithm=self.algorithm,
             private_key_path=self.private_key,
             key_id=self.key_id,
+            expiration_minutes=self.expiration_minutes,
         )
         self.jwt_token = token
         return self
@@ -57,15 +60,18 @@ class Token:
 
 def model(user, token, validator):
     if user.auth_type != "jwt":
-        exitcode = 4
-        message = f"DB::Exception:"
-        return exitcode, message
+        return 4, "DB::Exception:"
 
     if token.expiration_minutes is not None:
         if token.expiration_minutes < 0:
-            exitcode = 4
-            message = "DB::Exception:"
-            return exitcode, message
+            return 4, "DB::Exception:"
 
+    for key in validator.keys:
+        if (
+            token.key_id == key["kid"]
+            and token.algorithm == key["alg"]
+            and token.user_name == user.user_name
+        ):
+            return 0, ""
 
     return 4, "DB::Exception:"

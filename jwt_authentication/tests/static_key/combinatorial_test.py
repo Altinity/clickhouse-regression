@@ -6,7 +6,7 @@ from testflows.combinatorics import product
 from helpers.common import getuid
 
 import jwt_authentication.tests.steps as steps
-import jwt_authentication.tests.static_key.helpers as helpers
+import jwt_authentication.tests.static_key.model as model
 
 random.seed(42)
 
@@ -20,7 +20,7 @@ def create_tokens(
     for user_name, token_algorithm, token_secret, expiration in product(
         user_names, token_algorithms, token_secrets, expiration_minutes
     ):
-        token = helpers.Token(
+        token = model.Token(
             user_name=user_name,
             secret=token_secret,
             algorithm=token_algorithm,
@@ -52,7 +52,7 @@ def create_validators(
             secret = steps.to_base64(secret)
 
         validator_id = f"validator_{getuid()}"
-        validator = helpers.Validator(
+        validator = model.Validator(
             validator_id=validator_id,
             algorithm=algorithm,
             secret=secret,
@@ -73,11 +73,11 @@ def check_jwt_authentication(self, user_name, token, validator):
         validator.add_to_config()
 
     with And("create user with jwt authentication"):
-        user = helpers.User(user_name=user_name, auth_type="jwt")
+        user = model.User(user_name=user_name, auth_type="jwt")
         user.create_user()
 
     with When("get expected exitcode and message from the model"):
-        exitcode, message = helpers.model(user=user, token=token, validator=validator)
+        exitcode, message = model.model(user=user, token=token, validator=validator)
 
     with And("add debug notes"):
         note(f"token algorithm: {token.algorithm}")
@@ -144,10 +144,7 @@ def jwt_authentication_combinatorics(self):
     config_static_key_in_base64_values = ["true", "false"]
     static_key_in_base64_values = ["true", "false"]
     expiration_minutes = [5, -5, None]
-    
-    # with Given("create users with jwt authentication"):
-    #     users = create_users(user_names=user_names)
-
+   
     with Given("create tokens for users"):
         tokens = create_tokens(
             user_names=user_names,

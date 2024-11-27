@@ -6,7 +6,7 @@ from testflows.combinatorics import product, combinations
 from helpers.common import getuid
 
 import jwt_authentication.tests.steps as steps
-import jwt_authentication.tests.jwks.helpers as helpers
+import jwt_authentication.tests.jwks.model as model
 
 random.seed(42)
 
@@ -20,7 +20,7 @@ def create_tokens(
     for user_name, token_algorithm, private_key_path, key_id, expiration in product(
         user_names, token_algorithms, private_key_paths, key_ids, expiration_minutes
     ):
-        token = helpers.Token(
+        token = model.Token(
             user_name=user_name,
             private_key=private_key_path,
             algorithm=token_algorithm,
@@ -59,7 +59,7 @@ def create_jwks_validators(
     # Create validators with single keys
     for key in keys:
         validator_id = f"validator_{getuid()}"
-        validator = helpers.Validator(
+        validator = model.Validator(
             validator_id=validator_id,
             keys=[key],
         )
@@ -68,7 +68,7 @@ def create_jwks_validators(
     # Create validators with pairs of keys
     for key_pair in combinations(keys, 2):
         validator_id = f"validator_{getuid()}"
-        validator = helpers.Validator(
+        validator = model.Validator(
             validator_id=validator_id,
             keys=list(key_pair),
         )
@@ -85,11 +85,11 @@ def check_jwks_authentication(self, user_name, token, validator):
         validator.add_to_config()
 
     with And("create user with jwt authentication"):
-        user = helpers.User(user_name=user_name, auth_type="jwt")
+        user = model.User(user_name=user_name, auth_type="jwt")
         user.create_user()
 
     with When("get expected exitcode and message from the model"):
-        exitcode, message = helpers.model(user=user, token=token, validator=validator)
+        exitcode, message = model.model(user=user, token=token, validator=validator)
 
     with And("add debug notes"):
         note(f"token algorithm: {token.algorithm}")
