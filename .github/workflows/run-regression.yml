@@ -1320,43 +1320,21 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
-    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /aws_s3
     if: ${{ inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --only "/parquet/aws s3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-artifacts
-          path: ${{ env.artifact_paths}}
+    uses: ./.github/workflows/reusable-suite-x86.yml
+    secrets: inherit
+    with:
+      name: parquet_aws
+      suite: parquet
+      runner_type: type-cpx51
+      timeout: 300
+      extra_args: ${{ inputs.extra_args }} --storage aws_s3 --only "/parquet/aws s3/*"
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      ref: ${{ inputs.ref }}
+      output_format: ${{ inputs.output_format }}
+      artifact_bucket: ${{ inputs.artifacts }}
+      use_credentials: aws
 
   part_moves_between_shards:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]

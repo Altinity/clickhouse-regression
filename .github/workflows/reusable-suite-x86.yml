@@ -34,6 +34,7 @@ on:
       artifact_name:
         description: "Artifact name."
         type: string
+        default: x86
       runner_type:
         description: "Runner to use."
         type: string
@@ -46,6 +47,9 @@ on:
         description: "Name of the regression script."
         type: string
         default: "regression.py"
+      use_credentials:
+        description: "Specify a set of credentials to use."
+        type: string
     secrets:
       AWS_REPORT_KEY_ID:
         required: true
@@ -67,7 +71,10 @@ on:
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+  AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
@@ -85,6 +92,7 @@ env:
     --parallel ${{ vars.PARALLEL }}
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL job.is_scheduled="${{ github.event_name == 'schedule' }}"
     --log raw.log ${{ inputs.extra_args }}
+    ${{inputs.use_credentials == 'aws' && format('--aws-s3-bucket {0} --aws-s3-region {1} --aws-s3-key-id {2}--aws-s3-access-key {3}', secrets.AWS_BUCKET, secrets.AWS_REGION, secrets.AWS_KEY_ID, secrets.AWS_ACCESS_KEY) }}
   artifact_paths: |
     ./report.html
     ./*.log.txt
@@ -94,7 +102,8 @@ env:
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
-  SUITE: ${{ inputs.name }}
+  SUITE: ${{ inputs.suite }}
+  STORAGE: ${{ inputs.name }}
   JOB_NAME: ${{ inputs.name }}
   ACTIONS_RUNNER_DEBUG: true
 
