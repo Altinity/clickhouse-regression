@@ -25,6 +25,4 @@ then
     sudo rm --recursive --force $SUITE/_instances/*/database/
     ./retry.sh 5 30 "aws s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
     ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
-    ./.github/upload_results_to_database.py -o nice-new-fails --log-file raw.log --db-name="gh-data" --db-port=9440 --secure --no-verify --table="clickhouse_regression_results" --log uploader.log
-    aws s3 cp uploader.log $SUITE_REPORT_BUCKET_PATH/uploader.log
 fi
