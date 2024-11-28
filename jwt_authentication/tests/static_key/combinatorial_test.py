@@ -6,9 +6,39 @@ from testflows.combinatorics import product
 from helpers.common import getuid
 
 import jwt_authentication.tests.steps as steps
-from jwt_authentication.tests.static_key.model import User, Validator, Token, Model
+from jwt_authentication.tests.static_key.model import (
+    User,
+    Validator,
+    Token,
+    Model,
+)
 
 random.seed(42)
+
+
+def debug_note(user, token, validator):
+    """Generate and log debug notes."""
+    note(
+        f"""
+        Debug Notes:
+        ============================
+        User Information:
+        - User Name: {user.user_name}
+
+        Token Information:
+        - Algorithm: {token.algorithm}
+        - Secret: {token.secret}
+        - User Name: {token.user_name}
+        - Expiration Minutes: {token.expiration_minutes}
+
+        Validator Information:
+        - Algorithm: {validator.algorithm}
+        - Secret: {validator.secret}
+        - Static Key in Base64: {validator.static_key_in_base64}
+        - Config Static Key in Base64: {validator.config_static_key_in_base64}
+        ============================
+        """
+    )
 
 
 @TestStep(Given)
@@ -66,9 +96,8 @@ def create_validators(
 
 @TestCheck
 @Name("check jwt authentication for given combination")
-def check_jwt_authentication(self, user_name, token, validator):
+def check_combination(self, user_name, token, validator):
     """Check jwt authentication for given combination."""
-
     with Given("add validator to the config.xml"):
         validator.add_to_config()
 
@@ -76,77 +105,42 @@ def check_jwt_authentication(self, user_name, token, validator):
         user = User(user_name=user_name, auth_type="jwt")
         user.create_user()
 
-    with When("get expected exitcode and message from the model"):
-        model = Model(user=user, token=token, validator=validator)
-        exitcode, message = model.expect()
-
     with And("add debug notes"):
-        note(f"token algorithm: {token.algorithm}")
-        note(f"validator algorithm: {validator.algorithm}")
-        note(f"token secret: {token.secret}")
-        note(f"validator secret: {validator.secret}")
-        note(f"validator static_key_in_base64: {validator.static_key_in_base64}")
-        note(
-            f"validator config_static_key_in_base64: {validator.config_static_key_in_base64}"
-        )
-        note(f"token user_name: {token.user_name}")
-        note(f"user user_name: {user.user_name}")
-        note(f"expiration_minutes: {token.expiration_minutes}")
+        debug_note(user, token, validator)
 
-    with Then("check jwt authentication"):
+    with Then("check jwt authentication with given token and validator"):
+        self.context.model = Model(user=user, token=token, validator=validator)
         steps.check_clickhouse_client_jwt_login(
             user_name=user.user_name,
             token=token.jwt_token,
-            exitcode=exitcode,
-            message=message,
+            no_checks=True,
+            use_model=True,
         )
 
 
 @TestScenario
 def jwt_authentication_combinatorics(self):
     """Check jwt authentication with static key validator."""
-    user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
-    token_algorithms = [
-        "HS256",
-        "HS384",
-        "HS512",
-        # "RS256",
-        # "RS384",
-        # "RS512",
-        # "ES256",
-        # "ES384",
-        # "ES512",
-        # "ES256K",
-        # "PS256",
-        # "PS384",
-        # "PS512",
-        # "Ed25519",
-        # "Ed448",
-    ]
-    validator_algorithms = [
-        "HS256",
-        "HS384",
-        "HS512",
-        "RS256",
-        "RS384",
-        # "RS512",
-        # "ES256",
-        # "ES384",
-        # "ES512",
-        # "ES256K",
-        # "PS256",
-        # "PS384",
-        # "PS512",
-        # "Ed25519",
-        # "Ed448",
-    ]
-    token_secrets = ["secret_1", "secret_2"]
-    validator_secrets = ["secret_1", "secret_2"]
-    config_static_key_in_base64_values = ["true", "false"]
-    static_key_in_base64_values = ["true", "false"]
-    expiration_minutes = [5, -5, None]
 
-    with Given("create tokens for users"):
+    with Given("defining parameters for tokens and validators"):
+        user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
+        token_algorithms = [
+            "HS256",
+            "HS384",
+            "HS512",
+        ]
+        validator_algorithms = [
+            "HS256",
+            "HS384",
+            "HS512",
+        ]
+        token_secrets = ["secret_1", "secret_2"]
+        validator_secrets = ["secret_1", "secret_2"]
+        config_static_key_in_base64_values = ["true", "false"]
+        static_key_in_base64_values = ["true", "false"]
+        expiration_minutes = [5, -5, None]
+
+    with And("create tokens for users"):
         tokens = create_tokens(
             user_names=user_names,
             token_algorithms=token_algorithms,
@@ -162,14 +156,17 @@ def jwt_authentication_combinatorics(self):
             static_key_in_base64_values=static_key_in_base64_values,
         )
 
-    combinations = list(product(user_names, tokens, validators))
+    with And("create all possible combinations of users, tokens, and validators"):
+        combinations = list(product(user_names, tokens, validators))
+        note(f"Total number of combinations: {len(combinations)}")
 
-    if not self.context.stress:
-        combinations = random.sample(combinations, 30)
+    with And("if stress is not enabled, select 60 random combinations"):
+        if not self.context.stress:
+            combinations = random.sample(combinations, 60)
 
     for num, combination in enumerate(combinations):
         user_name, token, validator = combination
-        Check(name=f"combination {num}", test=check_jwt_authentication)(
+        Check(name=f"combination {num}", test=check_combination)(
             user_name=user_name,
             token=token,
             validator=validator,
