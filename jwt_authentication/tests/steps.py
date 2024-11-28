@@ -209,51 +209,74 @@ def to_base64(data: str) -> str:
     return base64_data
 
 
+def get_modulus(public_key: str) -> str:
+    """Get the modulus from the public key."""
+    public_key = serialization.load_pem_public_key(public_key.encode())
+    return to_base64_url(
+        public_key.public_numbers().n.to_bytes(
+            (public_key.public_numbers().n.bit_length() + 7) // 8, byteorder="big"
+        )
+    )
+
+
+def get_exponent(public_key: str) -> str:
+    """Get the exponent from the public key."""
+    public_key = serialization.load_pem_public_key(public_key.encode())
+    return to_base64_url(
+        public_key.public_numbers().e.to_bytes(
+            (public_key.public_numbers().e.bit_length() + 7) // 8, byteorder="big"
+        )
+    )
+
+
+@TestStep(Given)
+def create_static_jwks_key_content(
+    self, algorithm: str, public_key_str: str, key_id: str = None, key_type: str = "RSA"
+) -> dict:
+    """Create static JWKS content."""
+    if key_id is None:
+        key_id = f"key_id_{getuid()}"
+
+    with By("retrieve modulus and exponent from public key"):
+        modulus = define("modulus", get_modulus(public_key_str))
+        exponent = define("exponent", get_exponent(public_key_str))
+
+    return {
+        "kty": key_type,
+        "alg": algorithm,
+        "kid": key_id,
+        "n": modulus,
+        "e": exponent,
+    }
+
+
 @TestStep(Given)
 def add_static_jwks_validator_to_config_xml(
     self,
     validator_id: str,
+    keys: list = None,
     algorithm: str = "RS256",
     key_id: str = "mykid",
     public_key_str: str = None,
+    key_type: str = "RSA",
 ):
     """Add static key validator to the config.xml."""
-    with By("retrieve modulus and exponent from public key"):
-        public_key = serialization.load_pem_public_key(
-            public_key_str.encode(),
-        )
-        modulus = define(
-            "modulus",
-            to_base64_url(
-                public_key.public_numbers().n.to_bytes(
-                    (public_key.public_numbers().n.bit_length() + 7) // 8,
-                    byteorder="big",
+    with By("create static JWKS content"):
+        if keys is None:
+            keys = [
+                create_static_jwks_key_content(
+                    algorithm=algorithm,
+                    public_key_str=public_key_str,
+                    key_id=key_id,
+                    key_type=key_type,
                 )
-            ),
-        )
-        exponent = define(
-            "exponent",
-            to_base64_url(
-                public_key.public_numbers().e.to_bytes(
-                    (public_key.public_numbers().e.bit_length() + 7) // 8,
-                    byteorder="big",
-                )
-            ),
-        )
+            ]
 
     with And("build entries and add static jwks validator to the config.xml"):
         entries = {"jwt_validators": {}}
         entries["jwt_validators"][f"{validator_id}"] = {}
         static_jwks_content = {
-            "keys": [
-                {
-                    "kty": "RSA",
-                    "alg": algorithm,
-                    "kid": key_id,
-                    "n": modulus,
-                    "e": exponent,
-                }
-            ]
+            "keys": keys,
         }
         entries["jwt_validators"][f"{validator_id}"]["static_jwks"] = json.dumps(
             static_jwks_content
@@ -272,6 +295,7 @@ def create_user_with_jwt_auth(
     user_name: str,
     node: Node = None,
     claims: dict = {},
+    cluster: str = None,
 ):
     """Create a user with JWT authentication."""
     if node is None:
@@ -279,8 +303,11 @@ def create_user_with_jwt_auth(
 
     query = f"CREATE USER {user_name} IDENTIFIED WITH JWT"
 
-    if claims:
+    if claims is not None:
         query += f" CLAIMS '{claims}'"
+
+    if cluster is not None:
+        query += f" ON CLUSTER {cluster}"
 
     try:
         node.query(query)
@@ -300,6 +327,7 @@ def check_clickhouse_client_jwt_login(
     exitcode: int = 0,
     message: str = None,
     no_checks: bool = False,
+    use_model: bool = False,
 ):
     """Check JWT authentication for the specified user with clickhouse-client."""
     if node is None:
@@ -314,10 +342,14 @@ def check_clickhouse_client_jwt_login(
             no_checks=no_checks,
         )
 
-        if exitcode == 0 and not no_checks:
-            assert res.output == user_name, error()
+    if use_model:
+        expect = self.context.model.expect()
+        expect(r=res)
 
-        return res
+    if exitcode == 0 and not no_checks:
+        assert res.output == user_name, error()
+
+    return res
 
 
 @TestStep(Then)
@@ -507,3 +539,24 @@ def expect_corrupted_token_error(self, token: str):
         "Failed to validate jwt" in res_http.output
         or "Authentication failed" in res_http.output
     ), error()
+
+
+@TestStep(Then)
+def expect_authentication_error(self, r):
+    """Expect given exitcode and message in the output."""
+    exitcode = 4
+    message = "Authentication failed: password is incorrect, or there is no user with such name."
+
+    assert r.exitcode == exitcode, f"expected exitcode {exitcode} but got {r.exitcode}"
+    assert "DB::Exception" in r.output, f"expected 'DB::Exception' in '{r.output}'"
+    assert message in r.output, f"expected '{message}' in '{r.output}'"
+
+
+@TestStep(Then)
+def expect_successful_login(self, r, user_name=None):
+    """Expect successful authentication."""
+    assert r.exitcode == 0, f"expected exitcode 0 but got {r.exitcode}"
+    assert (
+        "DB::Exception" not in r.output
+    ), f"unexpected 'DB::Exception' in '{r.output}'"
+    assert user_name in r.output, f"expected '{user_name}' in '{r.output}'"
