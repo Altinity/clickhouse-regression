@@ -1,7 +1,5 @@
-from itertools import product
-import datetime
-import jwt
-import base64
+# from testflows.core import *
+from functools import partial
 
 import jwt_authentication.tests.steps as steps
 
@@ -69,32 +67,46 @@ class Model:
 
     def expect_wrong_auth_type(self, expected_auth_type="jwt"):
         if self.user.auth_type != expected_auth_type:
-            return 4, "DB::Exception:"
+            return steps.expect_authentication_error
 
     def expect_expired_token(self):
         if self.token.expiration_minutes is not None:
             if self.token.expiration_minutes < 0:
-                return 4, "DB::Exception:"
+                return steps.expect_authentication_error
 
-    def mismatch_data_between_token_and_validator(self):
+    def expect_mismatch_token_algorithm(self):
+        if self.token.algorithm != self.validator.algorithm:
+            return steps.expect_authentication_error
+
+    def expect_mismatch_user_name(self):
+        if self.token.user_name != self.user.user_name:
+            return steps.expect_authentication_error
+
+    def expect_mismatch_base64_settings(self):
         if (
-            self.token.algorithm == self.validator.algorithm
-            and self.token.user_name == self.user.user_name
-            and self.validator.static_key_in_base64
-            == self.validator.config_static_key_in_base64
+            self.validator.static_key_in_base64
+            != self.validator.config_static_key_in_base64
         ):
-            if self.validator.static_key_in_base64 == "true":
-                if steps.to_base64(self.token.secret) == self.validator.secret:
-                    return 0, ""
-            else:
-                if self.token.secret == self.validator.secret:
-                    return 0, ""
+            return steps.expect_authentication_error
 
-        return 4, "DB::Exception:"
+    def expect_mismatch_secret(self):
+        if self.validator.static_key_in_base64 == "true":
+            if steps.to_base64(self.token.secret) != self.validator.secret:
+                return steps.expect_authentication_error
+        else:
+            if self.token.secret != self.validator.secret:
+                return steps.expect_authentication_error
 
-    def expect(self):
+    def expect_successful_login(self):
+        return partial(steps.expect_successful_login, user_name=self.user.user_name)
+
+    def expect(self, node=None):
         return (
             self.expect_expired_token()
             or self.expect_wrong_auth_type()
-            or self.mismatch_data_between_token_and_validator()
+            or self.expect_mismatch_token_algorithm()
+            or self.expect_mismatch_user_name()
+            or self.expect_mismatch_base64_settings()
+            or self.expect_mismatch_secret()
+            or self.expect_successful_login()
         )
