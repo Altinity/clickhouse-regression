@@ -59,7 +59,7 @@ def jwt_authentication_with_corrupted_token(self):
                 assert corrupted_token_flip != token, error()
 
             with And("check that user can not authenticate with corrupted token"):
-                steps.check_jwt_login_with_corrupted_token(token=corrupted_token_flip)
+                steps.expect_corrupted_token_error(token=corrupted_token_flip)
 
             with By(f"corrupting {part} by swapping two characters"):
                 corrupted_token_swap = steps.corrupt_token(
@@ -68,7 +68,7 @@ def jwt_authentication_with_corrupted_token(self):
                 assert corrupted_token_swap != token, error()
 
             with And("check that user can not authenticate with corrupted token"):
-                steps.check_jwt_login_with_corrupted_token(token=corrupted_token_swap)
+                steps.expect_corrupted_token_error(token=corrupted_token_swap)
 
 
 @TestScenario
@@ -122,7 +122,7 @@ def other_user_token(self):
             elif token == token_two:
                 steps.check_jwt_login(user_name=user_two, token=token)
             else:
-                steps.check_jwt_login_with_corrupted_token(token=token)
+                steps.expect_corrupted_token_error(token=token)
 
 
 @TestFeature
