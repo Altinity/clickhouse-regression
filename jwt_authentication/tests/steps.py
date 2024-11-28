@@ -487,7 +487,7 @@ def corrupt_token(
 
 
 @TestStep(Then)
-def check_jwt_login_with_corrupted_token(self, token: str):
+def expect_corrupted_token_error(self, token: str):
     """Check that JWT authentication fails with a corrupted token."""
 
     res_client = check_clickhouse_client_jwt_login(
