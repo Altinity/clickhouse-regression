@@ -496,7 +496,7 @@ def corrupt_segment(segment: str, swap: bool, flip: bool) -> str:
 
 
 @TestStep(Given)
-def corrupt_token(
+def corrupt_token_part(
     self, token: str, part: str = "payload", swap=False, flip=False
 ) -> str:
     """Corrupt the token by swapping two symbols or flipping a symbol
