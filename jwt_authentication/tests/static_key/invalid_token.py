@@ -53,7 +53,7 @@ def jwt_authentication_with_corrupted_token(self):
     with And("corrupt different parts of token and check that authentication fails"):
         for part in ["header", "payload", "signature"]:
             with By(f"corrupting {part} by changing one character"):
-                corrupted_token_flip = steps.corrupt_token(
+                corrupted_token_flip = steps.corrupt_token_part(
                     token=token, part=part, flip=True
                 )
                 assert corrupted_token_flip != token, error()
@@ -62,7 +62,7 @@ def jwt_authentication_with_corrupted_token(self):
                 steps.expect_corrupted_token_error(token=corrupted_token_flip)
 
             with By(f"corrupting {part} by swapping two characters"):
-                corrupted_token_swap = steps.corrupt_token(
+                corrupted_token_swap = steps.corrupt_token_part(
                     token=token, part=part, swap=True
                 )
                 assert corrupted_token_swap != token, error()
