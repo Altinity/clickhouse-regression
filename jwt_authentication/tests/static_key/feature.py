@@ -18,3 +18,6 @@ def feature(self, node="clickhouse1"):
             "jwt_authentication_combinatorics",
         )
     )
+    Feature(
+        run=load("jwt_authentication.tests.static_key.mismatch_algorithms", "feature")
+    )
