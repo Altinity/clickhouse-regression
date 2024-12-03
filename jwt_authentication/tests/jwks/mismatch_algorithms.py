@@ -34,7 +34,7 @@ def test_login_fails_with_mismatched_algorithm(self):
             "jwt",
             steps.create_static_jwt(
                 user_name=user_name,
-                algorithm="RS256",
+                algorithm="RS384",
                 private_key_path=private_key_file,
                 key_id=key_id,
             ),
