@@ -153,6 +153,69 @@ def expired_token(self):
         steps.check_jwt_login(user_name=user_name, token=token)
 
 
+@TestScenario
+def mismatch_algorithm_RSA(self):
+    """Check that login fails if the RSA algorithm of token and validator do not match."""
+    with Given("create public and private keys with RSA algorithm"):
+        validator_id = define("validator_id", f"validator_{getuid()}")
+        public_key, private_key_path = steps.generate_ssh_keys(algorithm="RS256")
+
+    with And("add new validator with RS512 algorithm to the config.xml"):
+        steps.add_static_key_validator_to_config_xml(
+            validator_id=validator_id,
+            algorithm="RS512",
+            public_key=public_key,
+        )
+
+    with When("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with And("create token with RS384 algorithm"):
+        token = steps.create_static_jwt(
+            user_name=user_name,
+            algorithm="RS384",
+            private_key_path=private_key_path,
+        )
+
+    with Then("check jwt authentication"):
+        res = steps.check_clickhouse_client_jwt_login(token=token, no_checks=True)
+        steps.expect_authentication_error(r=res)
+
+
+@TestScenario
+def mismatch_algorithm_ECDSA(self):
+    """Check that login fails if the ECDSA algorithm of key and token do not match."""
+    with Given("create public and private keys with ES256 algorithm"):
+        validator_id = define("validator_id", f"validator_{getuid()}")
+        public_key, private_key_path = steps.generate_ssh_keys(algorithm="ES256")
+
+    with And("define ES384 algorithm for validator and token creation"):
+        algorithm = define("algorithm", "ES384")
+
+    with And("add new validator with ES384 algorithm to the config.xml"):
+        steps.add_static_key_validator_to_config_xml(
+            validator_id=validator_id,
+            algorithm=algorithm,
+            public_key=public_key,
+        )
+
+    with When("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with And("create token with ES384 algorithm"):
+        token = steps.create_static_jwt(
+            user_name=user_name,
+            algorithm=algorithm,
+            private_key_path=private_key_path,
+        )
+
+    with Then("check jwt authentication"):
+        res = steps.check_clickhouse_client_jwt_login(token=token, no_checks=True)
+        steps.expect_authentication_error(r=res)
+
+
 @TestFeature
 @Name("static key sanity")
 def feature(self):
