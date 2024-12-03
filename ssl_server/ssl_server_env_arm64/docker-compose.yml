@@ -69,7 +69,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/test_files/http_app_file.py:/http_app_file.py"
 
   # dummy service which does nothing, but allows to postpone
-  # 'docker-compose up -d' till all dependecies will go healthy
+  # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
     image: hello-world
     depends_on:
