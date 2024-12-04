@@ -53,7 +53,7 @@ class Validator:
             algorithm=self.algorithm,
             secret=self.secret,
             static_key_in_base64=self.config_static_key_in_base64,
-            public_key=self.key.public_key,
+            public_key=self.key.public_key if self.key else None,
             restart=restart,
             node=node,
         )
@@ -83,7 +83,7 @@ class Token:
             secret=self.secret,
             algorithm=self.algorithm,
             expiration_minutes=self.expiration_minutes,
-            private_key_path=self.key.private_key_path,
+            private_key_path=self.key.private_key_path if self.key else None,
         )
         self.jwt_token = token
         return self
