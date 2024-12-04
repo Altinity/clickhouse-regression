@@ -32,6 +32,7 @@ def get_binary_clickhouse_binary(self, clickhouse_binary_path):
 
     return binary_path
 
+
 @TestModule
 @Name("native reader")
 @ArgumentParser(argparser)

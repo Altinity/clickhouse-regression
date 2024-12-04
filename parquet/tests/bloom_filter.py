@@ -73,9 +73,16 @@ def create_parquet_json_definition(
     option_list.update(bloom_filter())
 
     file_definition.update(options(options=option_list))
+
+    column_name = (
+        logical_type()["logicalType"].lower()
+        if logical_type()["logicalType"] != "NONE"
+        else physical_type()["physicalType"].lower()
+    )
+
     schema_values.update(
         schema_type(
-            name=logical_type()["logicalType"].lower(),
+            name=column_name,
             physical_type=physical_type(),
             logical_type=logical_type(),
             data=data,
@@ -194,7 +201,6 @@ def total_number_of_rows(self, file_name, node=None, stack_trace=None, client=Tr
         return int(data.output.strip())
 
 
-
 @TestScenario
 def read_and_write_file_with_bloom(self):
     """Read all files from a bloom directory that contains parquet files with bloom filters."""
@@ -232,8 +238,7 @@ def check_parquet_with_bloom(
 
     with Given("I get the total number of rows in the parquet file"):
         initial_rows = total_number_of_rows(
-            file_name="bloom/multi_column_bloom.gz.parquet",
-            client=False
+            file_name="bloom/multi_column_bloom.gz.parquet", client=False
         )
 
     with And(
@@ -273,7 +278,6 @@ def check_parquet_with_bloom(
                 order_by=order_by,
             )
 
-
     with Then("I check that the number of rows read is correct"):
         read_rows = rows_read(data.output.strip(), client=False)
         if bloom_filter == "true":
@@ -290,7 +294,9 @@ def check_parquet_with_bloom(
     with And(
         "I check that the data is the same when reading with bloom filter and without"
     ):
-        assert values_without_bloom.output.strip() == values_with_bloom.output.strip(), f"Data is not the same, {values_without_bloom.output.strip()} != {values_with_bloom.output.strip()}"
+        assert (
+            values_without_bloom.output.strip() == values_with_bloom.output.strip()
+        ), f"Data is not the same, {values_without_bloom.output.strip()} != {values_with_bloom.output.strip()}"
 
 
 @TestSketch(Scenario)
@@ -1255,7 +1261,6 @@ def feature(self, node="clickhouse1", number_of_inserts=1500, stress_bloom=False
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
     self.context.number_of_inserts = number_of_inserts
-
 
     if stress_bloom:
         Feature(run=logical_datatypes_field_type)
