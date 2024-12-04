@@ -1266,4 +1266,4 @@ def feature(self, node="clickhouse1", number_of_inserts=1500, stress_bloom=False
         Feature(run=logical_datatypes_field_type)
         Feature(run=logical_datatypes_key_column_type)
     else:
-        skip("Skipping tests for bloom filter")
+        Feature(run=sanity_checks)
