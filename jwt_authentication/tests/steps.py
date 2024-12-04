@@ -370,9 +370,14 @@ def check_http_https_jwt_login(
         node = self.context.node
 
     http_prefix = "https" if https else "http"
+    ignore_ssl_verification = "-k" if https else ""
+    port = 8443 if https else 8123
 
     with By(f"check jwt authentication with {http_prefix}"):
-        curl = f'curl -H "X-ClickHouse-JWT-Token: Bearer {token}" "{http_prefix}://{ip}:8123/?query=SELECT%20currentUser()"'
+        curl = (
+            f'curl {ignore_ssl_verification} -H "X-ClickHouse-JWT-Token: Bearer {token}" '
+            f'"{http_prefix}://{ip}:{port}/?query=SELECT%20currentUser()"'
+        )
         res = node.command(curl, no_checks=no_checks)
 
         if message is None and not no_checks:
@@ -407,7 +412,14 @@ def check_jwt_login(
         message=message,
         no_checks=no_checks,
     )
-    # check_http_https_jwt_login(user_name=user_name, token=token, https=True, node=node, exitcode=exitcode, message=message)
+    check_http_https_jwt_login(
+        user_name=user_name,
+        token=token,
+        https=True,
+        node=node,
+        message=message,
+        no_checks=no_checks,
+    )
 
 
 @TestStep(Given)
