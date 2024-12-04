@@ -31,14 +31,14 @@ def debug_note(user, token, validator):
         - Secret: {token.secret}
         - User Name: {token.user_name}
         - Expiration Minutes: {token.expiration_minutes}
-        - Private key algorithm: {token.key.algorithm}
+        - Private key algorithm: {token.key.algorithm if token.key else None}
 
         Validator Information:
         - Algorithm: {validator.algorithm}
         - Secret: {validator.secret}
         - Static Key in Base64: {validator.static_key_in_base64}
         - Config Static Key in Base64: {validator.config_static_key_in_base64}
-        - Public key algorithm: {validator.key.algorithm}
+        - Public key algorithm: {validator.key.algorithm if validator.key else None}
         ============================
         """
     )
