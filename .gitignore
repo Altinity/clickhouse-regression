@@ -5,3 +5,4 @@ _instances/
 .vscode/
 .idea
 integration/docker/dockerd_volume_dir/*
+binaries/
