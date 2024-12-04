@@ -8,7 +8,9 @@ from helpers.common import *
 
 
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None, settings=None):
+def import_export(
+    self, snapshot_name, import_file, snapshot_id=None, limit=None, settings=None
+):
     """Import parquet file into a clickhouse table and export it back."""
     node = self.context.node
     table_name = "table_" + getuid()
@@ -46,7 +48,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
             f"SELECT * FROM {table_name} FORMAT TabSeparated",
             file_output=file_import,
             use_file=True,
-            settings=settings
+            settings=settings,
         )
 
     with Check("import"):
@@ -78,7 +80,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
                 f"SELECT * FROM file('{path_to_export}', Parquet) FORMAT TabSeparated",
                 file_output=file_export,
                 use_file=True,
-                settings=settings
+                settings=settings,
             )
 
         with Then("output must match the import"):
