@@ -76,7 +76,9 @@ def create_static_jwt(
         or algorithm.startswith("Ed")
     ):
         if private_key_path is None:
-            raise ValueError("RSA private key path must be provided for RSA algorithms")
+            raise ValueError(
+                "Private key path must be provided for asymmetric algorithms"
+            )
         with open(
             private_key_path,
             "r",
