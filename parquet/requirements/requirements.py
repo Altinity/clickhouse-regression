@@ -3619,6 +3619,30 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes = Requirement(
     num="18.3.2.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_Operators = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| Supported Operators |\n"
+        "|---------------------|\n"
+        "| =                   |\n"
+        "| !=                  |\n"
+        "| hasAny()            |\n"
+        "| has()               |\n"
+        "| IN                  |\n"
+        "| NOT IN              |\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="18.3.3.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_KeyColumnTypes = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes",
     version="1.0",
@@ -3641,7 +3665,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_KeyColumnTy
     ),
     link=None,
     level=5,
-    num="18.3.2.2.1",
+    num="18.3.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_FieldTypes = Requirement(
@@ -3667,7 +3691,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_FieldTypes 
     ),
     link=None,
     level=5,
-    num="18.3.2.3.1",
+    num="18.3.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requirement(
@@ -3683,7 +3707,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex = Requiremen
     ),
     link=None,
     level=4,
-    num="18.3.3.1",
+    num="18.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_KeyColumnTypes = Requirement(
@@ -3713,7 +3737,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_KeyColumnType
     ),
     link=None,
     level=4,
-    num="18.3.4.1",
+    num="18.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_FieldTypes = Requirement(
@@ -3743,7 +3767,7 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_FieldTypes = 
     ),
     link=None,
     level=4,
-    num="18.3.5.1",
+    num="18.3.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
@@ -5619,49 +5643,55 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="18.3.2.1",
         ),
+        Heading(name="Supported Operators", level=3, num="18.3.3"),
         Heading(
-            name="Only Considering Parquet Structure When Using Key Column Types",
-            level=4,
-            num="18.3.2.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes",
-            level=5,
-            num="18.3.2.2.1",
-        ),
-        Heading(
-            name="Only Considering Parquet Structure When Using Field Types",
-            level=4,
-            num="18.3.2.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes",
-            level=5,
-            num="18.3.2.3.1",
-        ),
-        Heading(
-            name="Columns With Complex Datatypes That Have Bloom Filter Applied on Them",
-            level=3,
-            num="18.3.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex",
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators",
             level=4,
             num="18.3.3.1",
         ),
         Heading(
-            name="Consistent Output When Using Key Column Types", level=3, num="18.3.4"
+            name="Only Considering Parquet Structure When Using Key Column Types",
+            level=4,
+            num="18.3.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes",
+            level=5,
+            num="18.3.3.2.1",
+        ),
+        Heading(
+            name="Only Considering Parquet Structure When Using Field Types",
+            level=4,
+            num="18.3.3.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes",
+            level=5,
+            num="18.3.3.3.1",
+        ),
+        Heading(
+            name="Columns With Complex Datatypes That Have Bloom Filter Applied on Them",
+            level=3,
+            num="18.3.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex",
+            level=4,
+            num="18.3.4.1",
+        ),
+        Heading(
+            name="Consistent Output When Using Key Column Types", level=3, num="18.3.5"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes",
             level=4,
-            num="18.3.4.1",
+            num="18.3.5.1",
         ),
-        Heading(name="Consistent Output When Using Field Types", level=3, num="18.3.5"),
+        Heading(name="Consistent Output When Using Field Types", level=3, num="18.3.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes",
             level=4,
-            num="18.3.5.1",
+            num="18.3.6.1",
         ),
         Heading(name="Dictionary", level=2, num="18.4"),
         Heading(
@@ -6077,6 +6107,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Indexes_Page,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes,
+        RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_Operators,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_KeyColumnTypes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ColumnTypes_Ignore_FieldTypes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_DataTypes_Complex,
@@ -6444,16 +6475,18 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 18.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter](#rqsrs-032clickhouseparquetindexesbloomfilter)
         * 18.3.2 [Parquet Column Types Support](#parquet-column-types-support)
             * 18.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypes)
-            * 18.3.2.2 [Only Considering Parquet Structure When Using Key Column Types](#only-considering-parquet-structure-when-using-key-column-types)
-                * 18.3.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorekeycolumntypes)
-            * 18.3.2.3 [Only Considering Parquet Structure When Using Field Types](#only-considering-parquet-structure-when-using-field-types)
-                * 18.3.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorefieldtypes)
-        * 18.3.3 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
-            * 18.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
-        * 18.3.4 [Consistent Output When Using Key Column Types](#consistent-output-when-using-key-column-types)
-            * 18.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputkeycolumntypes)
-        * 18.3.5 [Consistent Output When Using Field Types](#consistent-output-when-using-field-types)
-            * 18.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputfieldtypes)
+        * 18.3.3 [Supported Operators](#supported-operators)
+            * 18.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators](#rqsrs-032clickhouseparquetindexesbloomfilteroperators)
+            * 18.3.3.2 [Only Considering Parquet Structure When Using Key Column Types](#only-considering-parquet-structure-when-using-key-column-types)
+                * 18.3.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorekeycolumntypes)
+            * 18.3.3.3 [Only Considering Parquet Structure When Using Field Types](#only-considering-parquet-structure-when-using-field-types)
+                * 18.3.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ColumnTypes.Ignore.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfiltercolumntypesignorefieldtypes)
+        * 18.3.4 [Columns With Complex Datatypes That Have Bloom Filter Applied on Them](#columns-with-complex-datatypes-that-have-bloom-filter-applied-on-them)
+            * 18.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.DataTypes.Complex](#rqsrs-032clickhouseparquetindexesbloomfilterdatatypescomplex)
+        * 18.3.5 [Consistent Output When Using Key Column Types](#consistent-output-when-using-key-column-types)
+            * 18.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.KeyColumnTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputkeycolumntypes)
+        * 18.3.6 [Consistent Output When Using Field Types](#consistent-output-when-using-field-types)
+            * 18.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.ConsistentOutput.FieldTypes](#rqsrs-032clickhouseparquetindexesbloomfilterconsistentoutputfieldtypes)
     * 18.4 [Dictionary](#dictionary)
         * 18.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 19 [Metadata](#metadata)
@@ -8767,6 +8800,21 @@ version: 1.0
 |                      | INTERVAL    |
 |                      | DECIMAL     |
 |                      | TIMESTAMP   |
+
+#### Supported Operators
+
+##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators
+version: 1.0
+
+| Supported Operators |
+|---------------------|
+| =                   |
+| !=                  |
+| hasAny()            |
+| has()               |
+| IN                  |
+| NOT IN              |
+
 
 ##### Only Considering Parquet Structure When Using Key Column Types
 
