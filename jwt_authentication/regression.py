@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 import sys
-import os
-
 from testflows.core import *
 
 append_path(sys.path, "..")
@@ -29,7 +27,8 @@ xfails = {
 }
 
 ffails = {
-    "/jwt authentication": (Skip, "Not yet implemented"),
+    "/jwt authentication/static key": (Skip, "Under development"),
+    "/jwt authentication/static jwks": (Skip, "Under development"),
 }
 
 
