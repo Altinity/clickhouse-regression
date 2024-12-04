@@ -3627,6 +3627,8 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_Operators = Requirement(
     type=None,
     uid=None,
     description=(
+        "The following operators are supported when utilizing the Bloom filter applied on Parquet files:\n"
+        "\n"
         "| Supported Operators |\n"
         "|---------------------|\n"
         "| =                   |\n"
@@ -8805,6 +8807,8 @@ version: 1.0
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators
 version: 1.0
+
+The following operators are supported when utilizing the Bloom filter applied on Parquet files:
 
 | Supported Operators |
 |---------------------|

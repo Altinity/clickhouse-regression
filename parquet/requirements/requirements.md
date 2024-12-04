@@ -2648,6 +2648,8 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Parquet.Indexes.BloomFilter.Operators
 version: 1.0
 
+The following operators are supported when utilizing the Bloom filter applied on Parquet files:
+
 | Supported Operators |
 |---------------------|
 | =                   |
