@@ -80,6 +80,45 @@ def fixed_length_decimal_legacy(self):
 
 @TestScenario
 @Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray_FLOAT16(
+        "1.0"
+    )
+)
+def float16(self):
+    """Check importing a Parquet file with the FLOAT16 logical type."""
+
+    node = self.context.node
+    table_name = "table_" + getuid()
+    expected = "[-2,-1,0,1,2,3,4,5,6,7,8,9]"
+
+    # TODO: Once ClickHouse works correctly with FLOAT16, use snapshot
+
+    with Given("I have a Parquet file with float16 logical type columns"):
+        import_file = os.path.join("datatypes", "float16.parquet")
+
+    try:
+        with And("I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name} (floatfield Float32)
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT floatfield FROM file('{import_file}', Parquet)
+                """
+            )
+
+        with Then("I read the contents of the created table"):
+            output = node.query(
+                f"SELECT groupArray(round(*)) FROM {table_name} FORMAT TSV"
+            ).output
+            assert output == expected, error()
+
+    finally:
+        with Finally("I drop the table"):
+            node.query(f"DROP TABLE IF EXISTS {table_name}")
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32("1.0"),
 )
