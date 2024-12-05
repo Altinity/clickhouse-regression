@@ -156,7 +156,7 @@ jobs:
         id: parallel_ids
         run: |
           if [ "${{ env.run_arm }}" = "true" ]; then
-            count=$((${{ inputs.repeat }}+1)/2)) # +1 to imitate ceil division
+            count=$(((${{ inputs.repeat }}+1)/2)) # +1 to imitate ceil division
           else
             count=${{ inputs.repeat }}
           fi
@@ -185,6 +185,7 @@ jobs:
             echo "parallel_ids=[]" >> $GITHUB_OUTPUT
           else
             echo parallel_ids=[\"$(seq -s '","' 1 $count)\"] >> $GITHUB_OUTPUT
+          fi
 
   x86:
     if: ${{ needs.define-matrix-x86.outputs.run_x86 == 'true' }}
