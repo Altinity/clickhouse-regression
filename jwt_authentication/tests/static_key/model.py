@@ -126,15 +126,6 @@ class Model:
         if self.token.algorithm != self.validator.algorithm:
             return steps.expect_authentication_error
 
-    def expect_mismatch_key_validator_algorithm(self):
-        if not self.validator.algorithm.startswith("RS"):
-            if self.validator.key.algorithm != self.validator.algorithm:
-                return steps.expect_authentication_error
-
-        if self.validator.algorithm.startswith("RS"):
-            if not self.validator.key.algorithm.startswith("RS"):
-                return steps.expect_authentication_error
-
     def expect_mismatch_user_name(self):
         """Check for mismatched user names."""
         if self.token.user_name != self.user.user_name:
@@ -167,6 +158,18 @@ class Model:
             ):
                 return steps.expect_authentication_error
 
+    def expect_mismatch_key_validator_algorithm(self):
+        """Check for mismatched key and validator algorithms if the algorithm
+        is asymmetric. We don't care about key if algorithm is symmetric."""
+        if self.validator.algorithm in ASYMMETRIC_ALGORITHMS:
+            if not self.validator.algorithm.startswith("RS"):
+                if self.validator.key.algorithm != self.validator.algorithm:
+                    return steps.expect_authentication_error
+
+            if self.validator.algorithm.startswith("RS"):
+                if not self.validator.key.algorithm.startswith("RS"):
+                    return steps.expect_authentication_error
+
     def expect_successful_login(self):
         """Check that if all conditions are met, the login is successful."""
         return partial(steps.expect_successful_login, user_name=self.user.user_name)
@@ -177,10 +180,10 @@ class Model:
             self.expect_expired_token()
             or self.expect_wrong_auth_type()
             or self.expect_mismatch_token_validator_algorithm()
-            or self.expect_mismatch_key_validator_algorithm()
             or self.expect_mismatch_user_name()
             or self.expect_mismatch_base64_settings()
             or self.expect_mismatch_secret()
+            or self.expect_mismatch_key_validator_algorithm()
             or self.expect_wrong_key_pair()
             or self.expect_successful_login()
         )
