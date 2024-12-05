@@ -1,0 +1,182 @@
+name: 🔬 WIP Run Suites Repeatedly
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}
+  ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64')  && ' | x86' || '' }}
+  ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') && ' | ARM' || '' }}
+  ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
+  ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        required: true
+        type: string
+        default: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
+      version:
+        description: "🎯 Expected version. Example: 23.3.1.64"
+        type: string
+        required: true
+        default: 24.3.12.76.altinitystable
+      flags:
+        description: "🚩 Flags"
+        type: choice
+        options: 
+          - "--use-keeper" 
+          - "none"
+          - "--as-binary"
+          - "--as-binary --use-keeper"
+          - "--thread-fuzzer"
+          - "--thread-fuzzer --use-keeper"
+          - "--thread-fuzzer --as-binary"
+          - "--thread-fuzzer --as-binary --use-keeper"
+          - "--with-analyzer"
+          - "--with-analyzer --use-keeper"
+          - "--with-analyzer --as-binary"
+          - "--with-analyzer --as-binary --use-keeper"
+          - "--thread-fuzzer --with-analyzer"
+          - "--thread-fuzzer --with-analyzer --use-keeper"
+          - "--thread-fuzzer --with-analyzer --as-binary"
+          - "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
+      suite:
+        description: "🧪 Test suite to run (default: all)"
+        type: choice
+        options:
+          - all_aws
+          - all_gcs
+          - aes_encryption
+          - aggregate_functions
+          - atomic_insert
+          - alter_all
+          - alter_replace_partition
+          - alter_attach_partition
+          - alter_move_partition
+          - attach
+          - base_58
+          - benchmark_all
+          - benchmark_aws
+          - benchmark_gcs
+          - benchmark_minio
+          - clickhouse_keeper
+          - clickhouse_keeper_failover
+          - data_lakes
+          - data_types
+          - datetime64_extended_range
+          - disk_level_encryption
+          - dns
+          - engines
+          - example
+          - extended_precision_data_types
+          - functions
+          - jwt_authentication
+          - kafka
+          - kerberos
+          - key_value
+          - ldap
+          - lightweight_delete
+          - memory
+          - parquet_all
+          - parquet
+          - parquet_minio
+          - parquet_s3
+          - part_moves_between_shards
+          - rbac
+          - s3_all
+          - s3_aws
+          - s3_gcs
+          - s3_minio
+          - selects
+          - session_timezone
+          - ssl_server
+          - tiered_storage_all
+          - tiered_storage_aws
+          - tiered_storage_gcs
+          - tiered_storage_local
+          - tiered_storage_minio
+          - window_functions
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: choice
+        options:
+          - public
+          - internal
+      output_format:
+        description: "📜 Testflows output style."
+        type: choice
+        options:
+          - nice-new-fails
+          - brisk-new-fails
+          - plain-new-fails
+          - pnice-new-fails
+          - new-fails
+          - classic
+          - nice
+          - fails
+          - slick
+          - brisk
+          - quiet
+          - short
+          - manual
+          - dots
+          - progress
+          - raw
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      extra_args:
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
+        type: string
+        default: ""
+      custom_run_name:
+        description: '📝 Custom run name (optional)'
+        required: false
+      repeat:
+        description: "🔁 Repeat the test suite N times"
+        type: number
+        default: 1
+
+jobs:
+  define-matrix:
+    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
+    outputs:
+      parallel_ids: ${{ steps.parallel_ids.outputs.parallel_ids }}
+
+    steps:
+      - name: Define parallel_ids
+        id: parallel_ids
+        run: |
+          echo parallel_ids=[\"$(seq -s '","' 1 ${{ inputs.repeat }})\"] >> "$GITHUB_OUTPUT"
+    
+  x86:
+    if: ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64') }}
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    secrets: inherit
+    needs: define-matrix
+    strategy:
+      matrix:
+        parallel_id: ${{fromJson(needs.define-matrix.outputs.parallel_ids)}}
+
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      suite: ${{ inputs.suite }}
+      artifacts: ${{ inputs.artifacts }}
+      output_format: ${{ inputs.output_format }}
+      ref: ${{ inputs.ref }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
+      artifact_name: ${{ matrix.parallel_id }}-x86
+    
+  # ARM:
+  #   if: ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') }}
+  #   uses: ./.github/workflows/reusable-workflow-arm.yml
+  #   secrets: inherit
+  #   with:
+  #     package: ${{ inputs.package }}
+  #     version: ${{ inputs.version }}
+  #     suite: ${{ inputs.suite }}
+  #     artifacts: ${{ inputs.artifacts }}
+  #     output_format: ${{ inputs.output_format }}
+  #     ref: ${{ inputs.ref }}
+  #     extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
+  #     artifact_name: arm
