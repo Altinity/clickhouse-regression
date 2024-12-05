@@ -1,4 +1,4 @@
-name: Workflow (Reusable) for x86
+name: 🧰 Workflow (Reusable) for x86
 
 on:
   workflow_call:
