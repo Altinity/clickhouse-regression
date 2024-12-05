@@ -193,6 +193,7 @@ jobs:
     secrets: inherit
     needs: define-matrix-x86
     strategy:
+      fail-fast: false
       matrix:
         parallel_id: ${{fromJson(needs.define-matrix-x86.outputs.parallel_ids)}}
 
@@ -212,6 +213,7 @@ jobs:
     secrets: inherit
     needs: define-matrix-arm
     strategy:
+      fail-fast: false
       matrix:
         parallel_id: ${{fromJson(needs.define-matrix-arm.outputs.parallel_ids)}}
 
