@@ -132,12 +132,13 @@ class Model:
             return steps.expect_authentication_error
 
     def expect_mismatch_base64_settings(self):
-        """Check for mismatched base64 settings if the algorithm is symmetric."""
-        if (
-            self.validator.static_key_in_base64
-            != self.validator.config_static_key_in_base64
-        ) and self.validator.algorithm in SYMMETRIC_ALGORITHMS:
-            return steps.expect_authentication_error
+        """Check for mismatched base64 settings if the algorithm is symmetric.
+        Default value for static_key_in_base64 is False (None=False)."""
+        if self.validator.algorithm in SYMMETRIC_ALGORITHMS:
+            if (self.validator.static_key_in_base64 == "true") != (
+                self.validator.config_static_key_in_base64 == "true"
+            ):
+                return steps.expect_authentication_error
 
     def expect_mismatch_secret(self):
         """Check for mismatched secrets if the algorithm is symmetric."""
