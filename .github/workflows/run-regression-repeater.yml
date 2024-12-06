@@ -136,26 +136,66 @@ on:
         type: number
         default: 1
 
+env:
+  run_x86: ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64') }}
+  run_arm: ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') }}
+
 jobs:
-  define-matrix:
+  define-matrix-x86:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
     outputs:
       parallel_ids: ${{ steps.parallel_ids.outputs.parallel_ids }}
+      run_x86: ${{ steps.set_run_x86.outputs.run_x86 }}
 
     steps:
-      - name: Define parallel_ids
+      - name: Set run_x86
+        id: set_run_x86
+        run: echo "run_x86=${{ env.run_x86 }}" >> $GITHUB_OUTPUT
+
+      - name: Define parallel_ids for x86
         id: parallel_ids
         run: |
-          echo parallel_ids=[\"$(seq -s '","' 1 ${{ inputs.repeat }})\"] >> "$GITHUB_OUTPUT"
-    
+          if [ "${{ env.run_arm }}" = "true" ]; then
+            count=$(((${{ inputs.repeat }}+1)/2)) # +1 to imitate ceil division
+          else
+            count=${{ inputs.repeat }}
+          fi
+          echo parallel_ids=[\"$(seq -s '","' 1 $count)\"] >> $GITHUB_OUTPUT
+
+  define-matrix-arm:
+    runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
+    outputs:
+      parallel_ids: ${{ steps.parallel_ids.outputs.parallel_ids }}
+      run_arm: ${{ steps.set_run_arm.outputs.run_arm }}
+
+    steps:
+      - name: Set run_arm
+        id: set_run_arm
+        run: echo "run_arm=${{ env.run_arm }}" >> $GITHUB_OUTPUT
+
+      - name: Define parallel_ids for ARM
+        id: parallel_ids
+        run: |
+          if [ "${{ env.run_x86 }}" = "true" ]; then
+            count=$((${{ inputs.repeat }}/2))
+          else
+            count=${{ inputs.repeat }}
+          fi
+          if [ $count -eq 0 ]; then
+            echo "parallel_ids=[]" >> $GITHUB_OUTPUT
+          else
+            echo parallel_ids=[\"$(seq -s '","' 1 $count)\"] >> $GITHUB_OUTPUT
+          fi
+
   x86:
-    if: ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64') }}
+    if: ${{ needs.define-matrix-x86.outputs.run_x86 == 'true' }}
     uses: ./.github/workflows/reusable-workflow-x86.yml
     secrets: inherit
-    needs: define-matrix
+    needs: define-matrix-x86
     strategy:
+      fail-fast: false
       matrix:
-        parallel_id: ${{fromJson(needs.define-matrix.outputs.parallel_ids)}}
+        parallel_id: ${{fromJson(needs.define-matrix-x86.outputs.parallel_ids)}}
 
     with:
       package: ${{ inputs.package }}
@@ -167,16 +207,22 @@ jobs:
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
       artifact_name: ${{ matrix.parallel_id }}-x86
     
-  # ARM:
-  #   if: ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') }}
-  #   uses: ./.github/workflows/reusable-workflow-arm.yml
-  #   secrets: inherit
-  #   with:
-  #     package: ${{ inputs.package }}
-  #     version: ${{ inputs.version }}
-  #     suite: ${{ inputs.suite }}
-  #     artifacts: ${{ inputs.artifacts }}
-  #     output_format: ${{ inputs.output_format }}
-  #     ref: ${{ inputs.ref }}
-  #     extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
-  #     artifact_name: arm
+  ARM:
+    if: ${{ needs.define-matrix-arm.outputs.run_arm == 'true' }}
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    secrets: inherit
+    needs: define-matrix-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        parallel_id: ${{fromJson(needs.define-matrix-arm.outputs.parallel_ids)}}
+
+    with:
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      suite: ${{ inputs.suite }}
+      artifacts: ${{ inputs.artifacts }}
+      output_format: ${{ inputs.output_format }}
+      ref: ${{ inputs.ref }}
+      extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
+      artifact_name: ${{ matrix.parallel_id }}-arm
