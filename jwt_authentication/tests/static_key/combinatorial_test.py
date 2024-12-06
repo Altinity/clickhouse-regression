@@ -140,7 +140,7 @@ def create_key_pairs(self, algorithms):
     for algorithm in algorithms:
         key = Key(algorithm=algorithm).generate_keys()
         keys.append(key)
-    return keys
+    return keys + [None]
 
 
 @TestCheck
