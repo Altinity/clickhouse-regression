@@ -24,7 +24,7 @@ def argparser(parser):
 
 @TestStep(Given)
 def get_binary_from_deb(self, source):
-    self.context.binary_path = unpack_deb(
+    return unpack_deb(
         deb_binary_path=source,
         program_name="clickhouse",
     )
@@ -33,7 +33,7 @@ def get_binary_from_deb(self, source):
 def get_binary_from_package(self, source):
     self.context.package_path = source
     if source.endswith(".deb"):
-        get_binary_from_deb(source=source)
+        return get_binary_from_deb(source=source)
     elif source.endswith(".rpm"):
         pass
     elif source.endswith(".tgz"):
@@ -56,7 +56,7 @@ def get_binary_from_http(self, url):
     package_formats = (".deb", ".rpm", ".tgz")
     binary_path = download_http_binary(url)
     if binary_path.endswith(package_formats):
-        get_binary_from_package(source=binary_path)
+        binary_path = get_binary_from_package(source=binary_path)
     else:
         binary_path = self.context.binary_path
 
@@ -74,6 +74,7 @@ def module(self, clickhouse_path=None):
             )
         elif clickhouse_path.startswith(("http://", "https://")):
             self.context.clickhouse_binary = get_binary_from_http(url=clickhouse_path)
+
 
     Feature(run=load("parquet.performance.tests.native_reader.feature", "feature"))
 
