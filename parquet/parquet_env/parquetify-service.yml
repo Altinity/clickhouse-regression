@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    init: true
     restart: always
     ports:
       - "8080:8080"

@@ -55,6 +55,9 @@ xfails = {
     "/parquet/compression/snappyplain/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
+    "/parquet/datatypes/float16": [
+        (Fail, "ClickHouse does not import FLOAT16 properly")
+    ],
     "/parquet/datatypes/manydatatypes/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
@@ -228,6 +231,11 @@ ffails = {
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/float16": (
+        Skip,
+        "Requires ClickHouse 24.11 or higher",
+        check_clickhouse_version("<24.11"),
     ),
     "/parquet/datatypes/columnwithnull*": (
         Skip,
