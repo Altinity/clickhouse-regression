@@ -232,11 +232,16 @@ def jwt_authentication_combinatorics(self):
             "Ed25519",
         ]
         user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
-        token_secrets = ["secret_1", "secret_2"]
-        validator_secrets = ["secret_1", "secret_2", None]
+        token_secrets = ["combinatorial_secret_1", "combinatorial_secret_2"]
+        validator_secrets = ["combinatorial_secret_1", "combinatorial_secret_2", None]
         config_static_key_in_base64_values = ["true", "false", None]
         static_key_in_base64_values = ["true", "false", None]
-        expiration_minutes = [5, -5, None]
+        expiration_minutes = [60 * 5, -5, None]
+        if self.context.stress:
+            expiration_minutes = [
+                -5,
+                None,
+            ]  # since test might take a long time and token can expire
 
     with And("create public and private keys for validators"):
         keys = create_key_pairs(algorithms=key_pair_algorithms)
