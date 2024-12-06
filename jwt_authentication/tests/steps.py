@@ -11,6 +11,8 @@ import subprocess
 import jwt
 from cryptography.hazmat.primitives import serialization
 
+from jwt_authentication.tests.static_key.model import Model
+
 
 from helpers.common import (
     create_xml_config_content,
@@ -364,7 +366,7 @@ def check_clickhouse_client_jwt_login(
     exitcode: int = 0,
     message: str = None,
     no_checks: bool = False,
-    use_model: bool = False,
+    use_model: Model = None,
 ):
     """Check JWT authentication for the specified user with clickhouse-client."""
     if node is None:
@@ -379,8 +381,8 @@ def check_clickhouse_client_jwt_login(
             no_checks=no_checks,
         )
 
-    if use_model:
-        expect = self.context.model.expect()
+    if use_model is not None:
+        expect = use_model.expect()
         expect(r=res)
 
     if exitcode == 0 and not no_checks:

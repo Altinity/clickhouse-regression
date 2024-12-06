@@ -161,12 +161,12 @@ def check_combination(self, user_name, token, validator, node=None):
         debug_note(user, token, validator)
 
     with Then("check jwt authentication with given token and validator"):
-        self.context.model = Model(user=user, token=token, validator=validator)
+        model = Model(user=user, token=token, validator=validator)
         steps.check_clickhouse_client_jwt_login(
             user_name=user.user_name,
             token=token.jwt_token,
             no_checks=True,
-            use_model=True,
+            use_model=model,
             node=node,
         )
 
