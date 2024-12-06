@@ -33,7 +33,7 @@ def get_binary_from_deb(self, source):
 def get_binary_from_package(self, source):
     self.context.package_path = source
     if source.endswith(".deb"):
-        get_binary_from_deb(source)
+        get_binary_from_deb(source=source)
     elif source.endswith(".rpm"):
         pass
     elif source.endswith(".tgz"):
@@ -56,7 +56,7 @@ def get_binary_from_http(self, url):
     package_formats = (".deb", ".rpm", ".tgz")
     binary_path = download_http_binary(url)
     if binary_path.endswith(package_formats):
-        get_binary_from_package(binary_path)
+        get_binary_from_package(source=binary_path)
     else:
         binary_path = self.context.binary_path
 
