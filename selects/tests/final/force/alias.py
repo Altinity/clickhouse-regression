@@ -456,8 +456,8 @@ def expression_alias_in_aggregate_function(self, node=None):
 
 
 @TestScenario
-def aggregrate_alias_from_subquery(self, node=None):
-    """Alias of aggregrate function from a subquery that contains an alias of expression used in a window function."""
+def aggregate_alias_from_subquery(self, node=None):
+    """Alias of aggregate function from a subquery that contains an alias of expression used in a window function."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
