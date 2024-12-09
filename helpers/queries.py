@@ -36,20 +36,20 @@ def optimize(
 def get_column_names(self, node: ClickHouseNode, table_name: str, timeout=30) -> list:
     """Get a list of a table's column names."""
     r = node.query(
-        f"SELECT groupArray(name) FROM system.columns WHERE table='{table_name}' FORMAT TSV",
+        f"SELECT groupArray(name) FROM system.columns WHERE table='{table_name}' FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)
+    return json.loads(r.output)[0]
 
 
 @TestStep
 def get_active_parts(self, node: ClickHouseNode, table_name: str, timeout=30) -> list:
     """Get a list of active parts in a table."""
     r = node.query(
-        f"SELECT groupArray(name) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT TSV",
+        f"SELECT groupArray(name) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -58,10 +58,10 @@ def get_active_partition_ids(
 ) -> list:
     """Get a list of active partitions in a table."""
     r = node.query(
-        f"SELECT groupArray(partition_id) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT TSV",
+        f"SELECT groupArray(partition_id) FROM system.parts WHERE table='{table_name}' and active=1 FORMAT JSONCompactEachRow",
         timeout=timeout,
     )
-    return json.loads(r.output)
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -76,11 +76,11 @@ def get_row_count(
         column = ""
 
     r = node.query(
-        f"SELECT count({column}) FROM {table_name} FORMAT TSV",
+        f"SELECT count({column}) FROM {table_name} FORMAT JSONCompactEachRow",
         exitcode=0,
         timeout=timeout,
     )
-    return int(json.loads(r.output))
+    return int(json.loads(r.output)[0])
 
 
 @TestStep
@@ -89,10 +89,10 @@ def get_projections(self, node: ClickHouseNode, table_name: str) -> list:
     Get a list of active projections for a given table.
     """
     r = node.query(
-        f"SELECT groupArray(distinct(name)) FROM system.projection_parts WHERE table='{table_name}' and active FORMAT TSV",
+        f"SELECT groupArray(distinct(name)) FROM system.projection_parts WHERE table='{table_name}' and active FORMAT JSONCompactEachRow",
         exitcode=0,
     )
-    return json.loads(r.output)
+    return json.loads(r.output)[0]
 
 
 @TestStep
@@ -101,10 +101,10 @@ def get_indexes(self, node: ClickHouseNode, table_name: str) -> list:
     Get a list of secondary indexes for a given table.
     """
     r = node.query(
-        f"SELECT groupArray(name) FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT TSV",
+        f"SELECT groupArray(name) FROM system.data_skipping_indices WHERE table='{table_name}' FORMAT JSONCompactEachRow",
         exitcode=0,
     )
-    return json.loads(r.output)
+    return json.loads(r.output)[0]
 
 
 @TestStep
