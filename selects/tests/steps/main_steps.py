@@ -1212,6 +1212,7 @@ def insert(
         if distributed:
             node.query("system stop merges")
             for i in range(range_value):
+                note(f"_____insert # {i}_____")
                 node.query(
                     f"INSERT INTO {table_name} VALUES {insert_values_1}",
                     settings=[
