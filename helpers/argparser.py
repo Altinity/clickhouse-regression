@@ -1,8 +1,10 @@
 import os
 
+from testflows.core import Secret
+
 
 def argparser(parser):
-    """Default argument parser for regressions."""
+    """Default argument parser for regression."""
     parser.add_argument(
         "--local",
         action="store_true",
@@ -169,3 +171,153 @@ def CaptureClusterArgs(func):
         return func(self, cluster_args=cluster_args, **kwargs)
 
     return capture_cluster_args
+
+
+def argparser_s3(parser):
+    """Extended argument parser for suites with S3 storage."""
+    argparser(parser)
+
+    parser.add_argument(
+        "--storage",
+        action="append",
+        help="select which storage types to run tests with",
+        choices=["minio", "aws_s3", "gcs", "local"],
+        default=None,
+        dest="storages",
+    )
+
+    parser.add_argument(
+        "--minio-uri",
+        action="store",
+        help="set url for the minio connection",
+        type=Secret(name="minio_uri"),
+        default="http://minio1:9001",
+    )
+
+    parser.add_argument(
+        "--minio-root-user",
+        action="store",
+        help="minio root user name (access key id)",
+        type=Secret(name="minio_root_user"),
+        default="minio_user",
+    )
+
+    parser.add_argument(
+        "--minio-root-password",
+        action="store",
+        help="minio root user password (secret access key)",
+        type=Secret(name="minio_root_password"),
+        default="minio123",
+    )
+
+    parser.add_argument(
+        "--aws-s3-bucket",
+        action="store",
+        help="set bucket for the aws connection",
+        type=Secret(name="aws_s3_bucket"),
+        default=os.getenv("S3_AMAZON_BUCKET"),
+    )
+
+    parser.add_argument(
+        "--aws-s3-region",
+        action="store",
+        help="set aws region for the aws connection",
+        type=Secret(name="aws_s3_region"),
+        default=os.getenv("AWS_DEFAULT_REGION"),
+    )
+
+    parser.add_argument(
+        "--aws-s3-key-id",
+        action="store",
+        help="aws s3 key id",
+        type=Secret(name="aws_s3_key_id"),
+        default=os.getenv("AWS_ACCESS_KEY_ID"),
+    )
+
+    parser.add_argument(
+        "--aws-s3-access-key",
+        action="store",
+        help="aws s3 access key",
+        type=Secret(name="aws_s3_access_key"),
+        default=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    )
+
+    parser.add_argument(
+        "--gcs-uri",
+        action="store",
+        help="set url for the gcs connection",
+        type=Secret(name="gcs_uri"),
+        default=os.getenv("GCS_URI"),
+    )
+
+    parser.add_argument(
+        "--gcs-key-id",
+        action="store",
+        help="gcs key id",
+        type=Secret(name="gcs_key_id"),
+        default=os.getenv("GCS_KEY_ID"),
+    )
+
+    parser.add_argument(
+        "--gcs-key-secret",
+        action="store",
+        help="gcs key secret",
+        type=Secret(name="gcs_key_secret"),
+        default=os.getenv("GCS_KEY_SECRET"),
+    )
+
+
+def CaptureS3Args(func):
+    """
+    Collect S3 arguments from argparser into s3_args.
+
+    Usage:
+
+        @TestModule
+        @ArgumentParser(argparser_s3)
+        @...  # other decorators
+        @CaptureClusterArgs
+        @CaptureS3Args
+        def regression(
+            self,
+            cluster_args,
+            s3_args,
+            clickhouse_version,
+            stress=None,
+            with_analyzer=False,
+        ):
+            ...
+
+    """
+
+    def capture_s3_args(
+        self,
+        storages,
+        minio_uri,
+        minio_root_user,
+        minio_root_password,
+        aws_s3_bucket,
+        aws_s3_region,
+        aws_s3_key_id,
+        aws_s3_access_key,
+        gcs_uri,
+        gcs_key_id,
+        gcs_key_secret,
+        **kwargs
+    ):
+        s3_args = {
+            "storages": storages,
+            "minio_uri": minio_uri,
+            "minio_root_user": minio_root_user,
+            "minio_root_password": minio_root_password,
+            "aws_s3_bucket": aws_s3_bucket,
+            "aws_s3_region": aws_s3_region,
+            "aws_s3_key_id": aws_s3_key_id,
+            "aws_s3_access_key": aws_s3_access_key,
+            "gcs_uri": gcs_uri,
+            "gcs_key_id": gcs_key_id,
+            "gcs_key_secret": gcs_key_secret,
+        }
+        return func(self, s3_args=s3_args, **kwargs)
+
+    return capture_s3_args

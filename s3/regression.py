@@ -8,105 +8,10 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.common import experimental_analyzer
-from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
+from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 from s3.tests.common import *
 
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
-
-
-def argparser(parser):
-    """Default argument for regressions."""
-    argparser_base(parser)
-
-    parser.add_argument(
-        "--storage",
-        action="append",
-        help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs", "local"],
-        default=None,
-        dest="storages",
-    )
-
-    parser.add_argument(
-        "--minio-uri",
-        action="store",
-        help="set url for the minio connection",
-        type=Secret(name="minio_uri"),
-        default="http://minio1:9001",
-    )
-
-    parser.add_argument(
-        "--minio-root-user",
-        action="store",
-        help="minio root user name (access key id)",
-        type=Secret(name="minio_root_user"),
-        default="minio_user",
-    )
-
-    parser.add_argument(
-        "--minio-root-password",
-        action="store",
-        help="minio root user password (secret access key)",
-        type=Secret(name="minio_root_password"),
-        default="minio123",
-    )
-
-    parser.add_argument(
-        "--aws-s3-bucket",
-        action="store",
-        help="set bucket for the aws connection",
-        type=Secret(name="aws_s3_bucket"),
-        default=os.getenv("S3_AMAZON_BUCKET"),
-    )
-
-    parser.add_argument(
-        "--aws-s3-region",
-        action="store",
-        help="set aws region for the aws connection",
-        type=Secret(name="aws_s3_region"),
-        default=os.getenv("AWS_DEFAULT_REGION"),
-    )
-
-    parser.add_argument(
-        "--aws-s3-key-id",
-        action="store",
-        help="aws s3 key id",
-        type=Secret(name="aws_s3_key_id"),
-        default=os.getenv("AWS_ACCESS_KEY_ID"),
-    )
-
-    parser.add_argument(
-        "--aws-s3-access-key",
-        action="store",
-        help="aws s3 access key",
-        type=Secret(name="aws_s3_access_key"),
-        default=os.getenv("AWS_SECRET_ACCESS_KEY"),
-    )
-
-    parser.add_argument(
-        "--gcs-uri",
-        action="store",
-        help="set url for the gcs connection",
-        type=Secret(name="gcs_uri"),
-        default=os.getenv("GCS_URI"),
-    )
-
-    parser.add_argument(
-        "--gcs-key-id",
-        action="store",
-        help="gcs key id",
-        type=Secret(name="gcs_key_id"),
-        default=os.getenv("GCS_KEY_ID"),
-    )
-
-    parser.add_argument(
-        "--gcs-key-secret",
-        action="store",
-        help="gcs key secret",
-        type=Secret(name="gcs_key_secret"),
-        default=os.getenv("GCS_KEY_SECRET"),
-    )
-
 
 xfails = {
     ":/disk/generic url": [(Fail, "not yet supported")],
@@ -566,26 +471,17 @@ def gcs_regression(
 
 @TestModule
 @Name("s3")
-@ArgumentParser(argparser)
+@ArgumentParser(argparser_s3)
 @Specifications(SRS_015_ClickHouse_S3_External_Storage)
 @XFails(xfails)
 @FFails(ffails)
 @CaptureClusterArgs
+@CaptureS3Args
 def regression(
     self,
-    cluster_args,
-    clickhouse_version,
-    storages,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
+    cluster_args: dict,
+    s3_args: dict,
+    clickhouse_version: str,
     stress=False,
     with_analyzer=False,
 ):
@@ -594,34 +490,35 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
 
+    storages = s3_args.pop("storages", None)
     if storages is None:
         storages = ["minio"]
 
     if "aws_s3" in storages:
         Feature(test=aws_s3_regression)(
             cluster_args=cluster_args,
-            bucket=aws_s3_bucket,
-            region=aws_s3_region,
-            key_id=aws_s3_key_id,
-            access_key=aws_s3_access_key,
+            bucket=s3_args["aws_s3_bucket"],
+            region=s3_args["aws_s3_region"],
+            key_id=s3_args["aws_s3_key_id"],
+            access_key=s3_args["aws_s3_access_key"],
             with_analyzer=with_analyzer,
         )
 
     if "gcs" in storages:
         Feature(test=gcs_regression)(
             cluster_args=cluster_args,
-            uri=gcs_uri,
-            key_id=gcs_key_id,
-            access_key=gcs_key_secret,
+            uri=s3_args["gcs_uri"],
+            key_id=s3_args["gcs_key_id"],
+            access_key=s3_args["gcs_key_secret"],
             with_analyzer=with_analyzer,
         )
 
     if "minio" in storages:
         Feature(test=minio_regression)(
             cluster_args=cluster_args,
-            uri=minio_uri,
-            root_user=minio_root_user,
-            root_password=minio_root_password,
+            uri=s3_args["minio_uri"],
+            root_user=s3_args["minio_root_user"],
+            root_password=s3_args["minio_root_password"],
             with_analyzer=with_analyzer,
         )
 
