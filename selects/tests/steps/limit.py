@@ -104,12 +104,13 @@ def limit_result_check_with_alias(self, table, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT id*10 as new_id FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
-                f" LIMIT 1 FORMAT JSONEachRow;",
+                f"SELECT id*10 as new_id FROM  {table.name} {'FINAL' if table.final_modifier_available else ''} "
+                "ORDER BY id LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT id*10 as new_id FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
+                f"SELECT id*10 as new_id FROM  {table.name} ORDER BY id "
+                "LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
