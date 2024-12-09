@@ -8,7 +8,11 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster, create_cluster
 from helpers.common import check_clickhouse_version
-from s3.regression import argparser as argparser_base, CaptureClusterArgs
+from helpers.argparser import (
+    argparser_s3 as argparser_base,
+    CaptureClusterArgs,
+    CaptureS3Args,
+)
 
 from s3.tests.common import *
 
@@ -25,7 +29,7 @@ xfails = {
         (
             Fail,
             "strange and rare error on 23.8",
-            lambda test: check_clickhouse_version(">23.8")(test)
+            lambda test: check_clickhouse_version(">=23.8")(test)
             and check_clickhouse_version("<24")(test),
             ".*Cannot assign requested address.*",
         )
@@ -55,23 +59,14 @@ def argparser(parser):
 @XFails(xfails)
 @FFails(ffails)
 @CaptureClusterArgs
+@CaptureS3Args
 def regression(
     self,
-    cluster_args,
-    clickhouse_version,
-    storages,
-    stress,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
-    format,
+    cluster_args: dict,
+    s3_args: dict,
+    clickhouse_version: str,
+    stress: bool,
+    format: str,
     with_analyzer=False,
     node="clickhouse1",
 ):
@@ -87,8 +82,17 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
 
+    storages = s3_args.pop("storages", None)
     if storages is None:
         storages = ["minio"]
+
+    aws_s3_access_key = s3_args.get("aws_s3_access_key")
+    aws_s3_key_id = s3_args.get("aws_s3_key_id")
+    aws_s3_bucket = s3_args.get("aws_s3_bucket")
+    aws_s3_region = s3_args.get("aws_s3_region")
+    gcs_uri = s3_args.get("gcs_uri")
+    gcs_key_id = s3_args.get("gcs_key_id")
+    gcs_key_secret = s3_args.get("gcs_key_secret")
 
     for storage in storages:
         environ = {}

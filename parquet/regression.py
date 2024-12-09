@@ -9,7 +9,11 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from s3.regression import argparser, CaptureClusterArgs
+from helpers.argparser import (
+    argparser_s3,
+    CaptureClusterArgs,
+    CaptureS3Args,
+)
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
@@ -18,7 +22,7 @@ from parquet.tests.common import start_minio, parquet_test_columns
 
 
 def parquet_argparser(parser):
-    argparser(parser)
+    argparser_s3(parser)
 
     parser.add_argument(
         "--native-parquet-reader",
@@ -374,22 +378,13 @@ ffails = {
 @Specifications(SRS032_ClickHouse_Parquet_Data_Format)
 @Requirements(RQ_SRS_032_ClickHouse_Parquet("1.0"))
 @CaptureClusterArgs
+@CaptureS3Args
 def regression(
     self,
-    cluster_args,
-    clickhouse_version,
-    storages,
-    stress,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
+    cluster_args: dict,
+    s3_args: dict,
+    stress: bool,
+    clickhouse_version: str,
     node="clickhouse1",
     with_analyzer=False,
     native_parquet_reader=False,
@@ -606,11 +601,17 @@ def regression(
         )
         join()
 
+    storages = s3_args.pop("storages", None)
     if storages is None:
         pass
 
     else:
         if "aws_s3" in storages:
+            aws_s3_access_key = s3_args.get("aws_s3_access_key")
+            aws_s3_key_id = s3_args.get("aws_s3_key_id")
+            aws_s3_bucket = s3_args.get("aws_s3_bucket")
+            aws_s3_region = s3_args.get("aws_s3_region")
+
             with Given("I make sure the S3 credentials are set"):
                 if aws_s3_access_key == None:
                     fail("AWS S3 access key needs to be set")
