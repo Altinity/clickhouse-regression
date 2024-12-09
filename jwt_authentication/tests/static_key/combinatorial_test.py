@@ -76,7 +76,9 @@ def create_tokens(
     for user_name, token_algorithm, key, expiration in product(
         user_names, asymmetrical_algorithms, keys, expiration_minutes
     ):
-        if steps.algorithm_from_same_group(token_algorithm, key.algorithm):
+        if steps.algorithm_from_same_group(
+            token_algorithm, key.algorithm if key else ""
+        ):
             token = Token(
                 user_name=user_name,
                 algorithm=token_algorithm,
