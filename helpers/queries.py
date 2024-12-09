@@ -10,6 +10,10 @@ from testflows.connect.shell import Command
 
 from helpers.cluster import ClickHouseNode
 
+# The use of JSONCompactEachRow with groupArray has the following benefits:
+# 1. groupArray keeps the output on one line, for concise logs.
+# 2. JSONCompactEachRow ensures that the output can be parsed as JSON.
+# The extra [0] could be avoided with TSV format, but that does not guarantee valid JSON.
 
 @TestStep(When)
 def sync_replica(
