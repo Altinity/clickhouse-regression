@@ -45,6 +45,51 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/logs/:/var/log/clickhouse-server/"
+  
+  clickhouse6:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse6
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/logs/:/var/log/clickhouse-server/"
+  
+  clickhouse7:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse7
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/logs/:/var/log/clickhouse-server/"
+    
+  clickhouse8:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse8
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/logs/:/var/log/clickhouse-server/"
+
+  clickhouse9:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse9
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/logs/:/var/log/clickhouse-server/"
+    
+  clickhouse10:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse10
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/logs/:/var/log/clickhouse-server/"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
@@ -60,5 +105,15 @@ services:
       clickhouse4:
         condition: service_healthy
       clickhouse5:
+        condition: service_healthy
+      clickhouse6:
+        condition: service_healthy
+      clickhouse7:
+        condition: service_healthy
+      clickhouse8:
+        condition: service_healthy
+      clickhouse9:
+        condition: service_healthy
+      clickhouse10:
         condition: service_healthy
 

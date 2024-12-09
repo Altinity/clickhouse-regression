@@ -47,7 +47,18 @@ def regression(
 ):
     """Run tests for JWT authentication in Clickhouse."""
     nodes = {
-        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4", "clickhouse5"),
+        "clickhouse": (
+            "clickhouse1",
+            "clickhouse2",
+            "clickhouse3",
+            "clickhouse4",
+            "clickhouse5",
+            "clickhouse6",
+            "clickhouse7",
+            "clickhouse8",
+            "clickhouse9",
+            "clickhouse10",
+        ),
     }
 
     self.context.clickhouse_version = clickhouse_version
@@ -68,6 +79,11 @@ def regression(
     self.context.node3 = self.context.cluster.node("clickhouse3")
     self.context.node4 = self.context.cluster.node("clickhouse4")
     self.context.node5 = self.context.cluster.node("clickhouse5")
+    self.context.node6 = self.context.cluster.node("clickhouse6")
+    self.context.node7 = self.context.cluster.node("clickhouse7")
+    self.context.node8 = self.context.cluster.node("clickhouse8")
+    self.context.node9 = self.context.cluster.node("clickhouse9")
+    self.context.node10 = self.context.cluster.node("clickhouse10")
 
     Scenario(run=load("jwt_authentication.tests.static_key.feature", "feature"))
     Scenario(run=load("jwt_authentication.tests.jwks.feature", "feature"))
