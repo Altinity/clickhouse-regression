@@ -4,8 +4,7 @@ from testflows.core import *
 
 append_path(sys.path, ".")
 
-from helpers.argparser import CaptureClusterArgs
-from s3.regression import argparser
+from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 
 ffails = {
     "tiered_storage": (
@@ -18,23 +17,13 @@ ffails = {
 @TestModule
 @Name("clickhouse")
 @FFails(ffails)
-@ArgumentParser(argparser)
+@ArgumentParser(argparser_s3)
 @CaptureClusterArgs
+@CaptureS3Args
 def regression(
     self,
     cluster_args,
     clickhouse_version,
-    storages,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
     use_specific_version=None,
     node="clickhouse1",
     stress=None,
@@ -50,20 +39,10 @@ def regression(
 
     s3_args = {
         **cluster_args,
+        **s3_args,
         "clickhouse_version": clickhouse_version,
         "stress": stress,
         "with_analyzer": with_analyzer,
-        "storages": storages,
-        "minio_uri": minio_uri,
-        "gcs_uri": gcs_uri,
-        "aws_s3_region": aws_s3_region,
-        "aws_s3_bucket": aws_s3_bucket,
-        "minio_root_user": minio_root_user,
-        "minio_root_password": minio_root_password,
-        "aws_s3_access_key": aws_s3_access_key,
-        "aws_s3_key_id": aws_s3_key_id,
-        "gcs_key_secret": gcs_key_secret,
-        "gcs_key_id": gcs_key_id,
     }
 
     # FIXME: Remove use_specific_version and move it to the test level
