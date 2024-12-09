@@ -7,7 +7,11 @@ append_path(sys.path, "../..")
 
 from helpers.cluster import create_cluster
 from helpers.common import check_clickhouse_version, experimental_analyzer
-from s3.regression import argparser as argparser_base, CaptureClusterArgs
+from helpers.argparser import (
+    argparser_s3 as argparser_base,
+    CaptureClusterArgs,
+    CaptureS3Args,
+)
 from s3.tests.common import start_minio
 
 xfails = {
@@ -246,22 +250,13 @@ def gcs(
 @XFails(xfails)
 @FFails(ffails)
 @CaptureClusterArgs
+@CaptureS3Args
 def regression(
     self,
-    cluster_args,
-    clickhouse_version,
-    storages,
-    minio_uri,
-    gcs_uri,
-    aws_s3_region,
-    aws_s3_bucket,
-    minio_root_user,
-    minio_root_password,
-    aws_s3_access_key,
-    aws_s3_key_id,
-    gcs_key_secret,
-    gcs_key_id,
-    stress,
+    cluster_args: dict,
+    s3_args: dict,
+    clickhouse_version: str,
+    stress: bool,
     with_analyzer=False,
     unsafe=False,
 ):
@@ -272,6 +267,7 @@ def regression(
     self.context.stress = stress
     self.context.unsafe = unsafe
 
+    storages = s3_args.pop("storages", None)
     if storages is None:
         storages = ["minio"]
 
@@ -280,30 +276,29 @@ def regression(
         with_analyzer=with_analyzer,
     )
 
-    if "aws_s3" in storages:
-        Module(test=aws_s3)(
-            bucket=aws_s3_bucket,
-            region=aws_s3_region,
-            key_id=aws_s3_key_id,
-            access_key=aws_s3_access_key,
-            **module_args,
-        )
-
-    if "gcs" in storages:
-        Module(test=gcs)(
-            uri=gcs_uri,
-            key_id=gcs_key_id,
-            access_key=gcs_key_secret,
-            **module_args,
-        )
-
-    if "minio" in storages:
-        Module(test=minio)(
-            uri=minio_uri,
-            root_user=minio_root_user,
-            root_password=minio_root_password,
-            **module_args,
-        )
+    for storage in storages:
+        if storage == "aws_s3":
+            Module(test=aws_s3)(
+                bucket=s3_args["aws_s3_bucket"],
+                region=s3_args["aws_s3_region"],
+                key_id=s3_args["aws_s3_key_id"],
+                access_key=s3_args["aws_s3_access_key"],
+                **module_args,
+            )
+        elif storage == "gcs":
+            Module(test=gcs)(
+                uri=s3_args["gcs_uri"],
+                key_id=s3_args["gcs_key_id"],
+                access_key=s3_args["gcs_key_secret"],
+                **module_args,
+            )
+        elif storage == "minio":
+            Module(test=minio)(
+                uri=s3_args["minio_uri"],
+                root_user=s3_args["minio_root_user"],
+                root_password=s3_args["minio_root_password"],
+                **module_args,
+            )
 
     if "local" in storages:
         Module(test=local_storage)(
