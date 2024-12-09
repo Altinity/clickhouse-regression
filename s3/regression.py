@@ -597,39 +597,33 @@ def regression(
     if storages is None:
         storages = ["minio"]
 
-    storage_module = None
-
     if "aws_s3" in storages:
-        storage_module = aws_s3_regression
-        storage_module_kwargs = dict(
+        Feature(test=aws_s3_regression)(
+            cluster_args=cluster_args,
             bucket=aws_s3_bucket,
             region=aws_s3_region,
             key_id=aws_s3_key_id,
             access_key=aws_s3_access_key,
+            with_analyzer=with_analyzer,
         )
 
-    elif "gcs" in storages:
-        storage_module = gcs_regression
-        storage_module_kwargs = dict(
+    if "gcs" in storages:
+        Feature(test=gcs_regression)(
+            cluster_args=cluster_args,
             uri=gcs_uri,
             key_id=gcs_key_id,
             access_key=gcs_key_secret,
+            with_analyzer=with_analyzer,
         )
 
-    else:  # "minio" in storages
-        storage_module = minio_regression
-        storage_module_kwargs = dict(
+    if "minio" in storages:
+        Feature(test=minio_regression)(
+            cluster_args=cluster_args,
             uri=minio_uri,
             root_user=minio_root_user,
             root_password=minio_root_password,
+            with_analyzer=with_analyzer,
         )
-
-    assert storage_module is not None
-    Feature(test=storage_module)(
-        cluster_args=cluster_args,
-        with_analyzer=with_analyzer,
-        **storage_module_kwargs,
-    )
 
 
 if main():
