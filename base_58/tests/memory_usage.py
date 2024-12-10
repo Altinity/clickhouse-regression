@@ -120,28 +120,32 @@ def memory_usage_for_constant_input(self, node=None):
         assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
         assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
 
-    for attempt in retries(timeout=100, delay=10):
+    for attempt in retries(timeout=100, delay=10, interval=10):
         with attempt:
             with When("I remember memory usages"):
                 r = node.query(
                     f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1000' FORMAT TabSeparated"
                 )
                 b58_encode_memory_usage = int(r.output)
+                assert b58_encode_memory_usage > 0, error()
 
                 r = node.query(
                     f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1001' FORMAT TabSeparated"
                 )
                 b64_encode_memory_usage = int(r.output)
+                assert b64_encode_memory_usage > 0, error()
 
                 r = node.query(
                     f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1002' FORMAT TabSeparated"
                 )
                 b58_decode_memory_usage = int(r.output)
+                assert b58_decode_memory_usage > 0, error()
 
                 r = node.query(
                     f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1003' FORMAT TabSeparated"
                 )
                 b64_decode_memory_usage = int(r.output)
+                assert b64_decode_memory_usage > 0, error()
 
             with Then("I check memory usages are similar"):
                 assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
