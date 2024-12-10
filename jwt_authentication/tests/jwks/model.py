@@ -1,8 +1,3 @@
-from itertools import product
-import datetime
-import jwt
-import base64
-
 from testflows.core import *
 
 import jwt_authentication.tests.steps as steps
@@ -58,20 +53,35 @@ class Token:
         return self
 
 
-def model(user, token, validator):
-    if user.auth_type != "jwt":
-        return 4, "DB::Exception:"
+class Model:
+    def __init__(self, user, token, validator):
+        self.user = user
+        self.token = token
+        self.validator = validator
 
-    if token.expiration_minutes is not None:
-        if token.expiration_minutes < 0:
+    def expect_wrong_auth_type(self, expected_auth_type="jwt"):
+        if self.user.auth_type != expected_auth_type:
             return 4, "DB::Exception:"
 
-    for key in validator.keys:
-        if (
-            token.key_id == key["kid"]
-            and token.algorithm == key["alg"]
-            and token.user_name == user.user_name
-        ):
-            return 0, ""
+    def expect_expired_token(self):
+        if self.token.expiration_minutes is not None:
+            if self.token.expiration_minutes < 0:
+                return 4, "DB::Exception:"
 
-    return 4, "DB::Exception:"
+    def mismatch_data_between_token_and_validator(self):
+        for key in self.validator.keys:
+            if (
+                self.token.key_id == key["kid"]
+                and self.token.algorithm == key["alg"]
+                and self.token.user_name == self.user.user_name
+            ):
+                return 0, ""
+
+        return 4, "DB::Exception:"
+
+    def expect(self):
+        return (
+            self.expect_expired_token()
+            or self.expect_wrong_auth_type()
+            or self.mismatch_data_between_token_and_validator()
+        )

@@ -6,7 +6,12 @@ from testflows.combinatorics import product, combinations
 from helpers.common import getuid
 
 import jwt_authentication.tests.steps as steps
-import jwt_authentication.tests.jwks.model as model
+from jwt_authentication.tests.jwks.model import (
+    User,
+    Validator,
+    Token,
+    Model,
+)
 
 random.seed(42)
 
@@ -20,7 +25,7 @@ def create_tokens(
     for user_name, token_algorithm, private_key_path, key_id, expiration in product(
         user_names, token_algorithms, private_key_paths, key_ids, expiration_minutes
     ):
-        token = model.Token(
+        token = Token(
             user_name=user_name,
             private_key=private_key_path,
             algorithm=token_algorithm,
@@ -29,7 +34,7 @@ def create_tokens(
         )
         token.create_token()
         tokens.append(token)
-    
+
     return tokens
 
 
@@ -59,7 +64,7 @@ def create_jwks_validators(
     # Create validators with single keys
     for key in keys:
         validator_id = f"validator_{getuid()}"
-        validator = model.Validator(
+        validator = Validator(
             validator_id=validator_id,
             keys=[key],
         )
@@ -68,7 +73,7 @@ def create_jwks_validators(
     # Create validators with pairs of keys
     for key_pair in combinations(keys, 2):
         validator_id = f"validator_{getuid()}"
-        validator = model.Validator(
+        validator = Validator(
             validator_id=validator_id,
             keys=list(key_pair),
         )
@@ -85,17 +90,21 @@ def check_jwks_authentication(self, user_name, token, validator):
         validator.add_to_config()
 
     with And("create user with jwt authentication"):
-        user = model.User(user_name=user_name, auth_type="jwt")
+        user = User(user_name=user_name, auth_type="jwt")
         user.create_user()
 
     with When("get expected exitcode and message from the model"):
-        exitcode, message = model.model(user=user, token=token, validator=validator)
+        model = Model(user=user, token=token, validator=validator)
+        exitcode, message = model.expect()
 
     with And("add debug notes"):
         note(f"token algorithm: {token.algorithm}")
         note(f"token user_name: {token.user_name}")
         note(f"user user_name: {user.user_name}")
         note(f"expiration_minutes: {token.expiration_minutes}")
+        note(f"token key_id: {token.key_id}")
+        keys = [(key["kid"], key["alg"]) for key in validator.keys]
+        note(keys)
 
     with Then("check jwt authentication"):
         steps.check_clickhouse_client_jwt_login(
@@ -120,15 +129,15 @@ def feature(self):
         "RS384",
         "RS512",
     ]
-    expiration_minutes = [5, -5, None]
+    expiration_minutes = [60 * 5, -5, None]
 
     public_keys, private_key_paths = [], []
 
     with By("create keys"):
-        public_key, private_key_path = steps.generate_ssh_keys(algorithm="RS256")
-
-    public_keys.append(public_key)
-    private_key_paths.append(private_key_path)
+        for _ in range(1):
+            public_key, private_key_path = steps.generate_ssh_keys(algorithm="RS256")
+            public_keys.append(public_key)
+            private_key_paths.append(private_key_path)
 
     with And("create validators"):
         validators, key_ids = create_jwks_validators(
@@ -148,7 +157,7 @@ def feature(self):
     combinations = list(product(user_names, tokens, validators))
 
     if not self.context.stress:
-        combinations = random.sample(combinations, 30)
+        combinations = random.sample(combinations, 200)
 
     for num, combination in enumerate(combinations):
         user_name, token, validator = combination
