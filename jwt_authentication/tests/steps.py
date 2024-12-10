@@ -89,6 +89,7 @@ def create_static_jwt(
         algorithm.startswith("RS")
         or algorithm.startswith("ES")
         or algorithm.startswith("Ed")
+        or algorithm.startswith("PS")
     ):
         if private_key_path is None:
             raise ValueError(
