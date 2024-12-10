@@ -373,7 +373,10 @@ def zero_copy_replication(self, uri, bucket_prefix):
 
     with And("I have merge tree configuration set to use zero copy replication"):
         if check_clickhouse_version(">=21.8")(self):
-            settings = {"allow_remote_fs_zero_copy_replication": "1"}
+            settings = {
+                "allow_remote_fs_zero_copy_replication": "1",
+                "disable_freeze_partition_for_zero_copy_replication": "0",
+            }
         else:
             settings = {"allow_s3_zero_copy_replication": "1"}
 
