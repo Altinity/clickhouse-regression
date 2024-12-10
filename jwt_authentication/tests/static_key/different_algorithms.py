@@ -56,9 +56,9 @@ def check_static_key_asymmetric_algorithms(self):
         "ES384",
         "ES512",
         "ES256K",
-        # "PS256",
-        # "PS384",
-        # "PS512",
+        "PS256",
+        "PS384",
+        "PS512",
         "Ed25519",
         "Ed448",
     ]
