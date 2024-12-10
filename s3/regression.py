@@ -196,7 +196,8 @@ ffails = {
     ),
     ":/orphans/zero copy replication/:reeze:": (
         Skip,
-        "freeze not enabled with zero copy replication",
+        "freeze not enabled with zero copy replication <24.10",
+        check_clickhouse_version("<24.10"),
     ),
     ":/alter/:/update delete": (
         Skip,
@@ -215,8 +216,8 @@ ffails = {
     ),
     ":/alter/zero cop:/freeze": (
         Skip,
-        "not supported <24",
-        check_clickhouse_version("<24"),
+        "not supported <24.10",
+        check_clickhouse_version("<24.10"),
     ),
     ":/alter/zero cop:/d:": (
         Skip,
