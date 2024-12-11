@@ -18,7 +18,7 @@ random.seed(42)
 
 
 def debug_note(user, token, validator):
-    """Generate and log debug notes."""
+    """Generate and log debug notes for a given user, token, and validator."""
     note(
         f"""
         Debug Notes:
@@ -53,7 +53,7 @@ def create_tokens(
     expiration_minutes,
     keys,
 ):
-    """Create tokens for users."""
+    """Create tokens by combining given parameters and return a list of generated tokens."""
     tokens = []
 
     symmetrical_algorithms = [alg for alg in token_algorithms if alg.startswith("HS")]
@@ -272,7 +272,7 @@ def jwt_authentication_combinatorics(self):
 
     with And("if stress is not enabled, select 60 random combinations"):
         if not self.context.stress:
-            combinations = random.sample(combinations, 100)
+            combinations = random.sample(combinations, 60)
 
     with And("define nodes and split combinations between them"):
         nodes = [
