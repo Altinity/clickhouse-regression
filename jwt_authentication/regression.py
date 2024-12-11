@@ -84,6 +84,7 @@ def regression(
     self.context.node8 = self.context.cluster.node("clickhouse8")
     self.context.node9 = self.context.cluster.node("clickhouse9")
     self.context.node10 = self.context.cluster.node("clickhouse10")
+    self.context.nodes = [self.context.cluster.node(node) for node in nodes["clickhouse"]]
 
     Scenario(run=load("jwt_authentication.tests.static_key.feature", "feature"))
     Scenario(run=load("jwt_authentication.tests.jwks.feature", "feature"))
