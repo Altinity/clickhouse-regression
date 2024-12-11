@@ -8,23 +8,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 
 
-xfails = {
-    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check ES256K algorithm": [
-        (Fail, "ES256K algorithm is not working, need to investigate")
-    ],
-    "/jwt authentication/static key/different algorithms/adding validator asymmetric algorithm/check Ed448 algorithm": [
-        (
-            Fail,
-            "Ed448 algorithm is not working, need to investigate",
-        )
-    ],
-    "/jwt authentication/static jwks/feature/mismatched algorithms": [
-        (Fail, "Needs investigation")
-    ],
-    "/jwt authentication/static key/invalid token/login with invalid token": [
-        (Fail, "Unexpected LOGICAL_ERROR")
-    ],
-}
+xfails = {}
 
 ffails = {
     "/jwt authentication/static key": (Skip, "Under development"),
