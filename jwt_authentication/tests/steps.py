@@ -271,23 +271,32 @@ def get_exponent(public_key: str) -> str:
 
 @TestStep(Given)
 def create_static_jwks_key_content(
-    self, algorithm: str, public_key_str: str, key_id: str = None, key_type: str = "RSA"
+    self,
+    algorithm: str = None,
+    public_key_str: str = None,
+    key_id: str = None,
+    key_type: str = None,
 ) -> dict:
     """Create static JWKS content."""
-    if key_id is None:
-        key_id = f"key_id_{getuid()}"
+    result = {}
 
     with By("retrieve modulus and exponent from public key"):
-        modulus = define("modulus", get_modulus(public_key_str))
-        exponent = define("exponent", get_exponent(public_key_str))
+        if public_key_str is not None:
+            modulus = define("modulus", get_modulus(public_key_str))
+            exponent = define("exponent", get_exponent(public_key_str))
+            result["n"] = modulus
+            result["e"] = exponent
 
-    return {
-        "kty": key_type,
-        "alg": algorithm,
-        "kid": key_id,
-        "n": modulus,
-        "e": exponent,
-    }
+    if key_type is None:
+        result["kty"] = key_type
+
+    if algorithm is not None:
+        result["alg"] = algorithm
+
+    if key_id is not None:
+        result["kid"] = key_id
+
+    return result
 
 
 @TestStep(Given)
@@ -299,8 +308,12 @@ def add_static_jwks_validator_to_config_xml(
     key_id: str = "mykid",
     public_key_str: str = None,
     key_type: str = "RSA",
+    node: Node = None,
 ):
     """Add static key validator to the config.xml."""
+    if node is None:
+        node = self.context.node
+
     with By("create static JWKS content"):
         if keys is None:
             keys = [
@@ -326,6 +339,7 @@ def add_static_jwks_validator_to_config_xml(
             entries=entries,
             config_d_dir="/etc/clickhouse-server/config.d",
             preprocessed_name="config.xml",
+            node=node,
         )
 
 
