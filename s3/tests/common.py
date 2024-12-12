@@ -1145,7 +1145,6 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
 
             elif self.context.storage == "aws_s3":
                 cluster = current().context.cluster
-
                 cluster.command(
                     "aws",
                     f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive",
@@ -1205,19 +1204,17 @@ def S3_type_disk_parameters(uri, access_key_id, secret_access_key, disk_settings
 
 
 def azure_blob_type_disk_parameters(
-    uri, container_name, account_name, account_key, disk_settings=None
+    storage_account_url, container_name, account_name, account_key, disk_settings=None
 ):
     """Return dict of disk parameters for an Azure Blob Storage disk."""
 
     disk_settings = disk_settings or {}
     return {
         "type": "azure_blob_storage",
-        "storage_account_url": uri,
+        "storage_account_url": storage_account_url,
         "container_name": container_name,
         "account_name": account_name,
         "account_key": account_key,
-        # "skip_access_check": "false",
-        # "container_already_exists": "false",
         **disk_settings,
     }
 
@@ -1228,19 +1225,19 @@ def default_s3_and_local_disk(
 ):
     """Default settings for s3 and local disks."""
 
-    uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
     with Given("parameters for an external disk"):
         if self.context.storage == "azure":
             external_disk = azure_blob_type_disk_parameters(
-                uri,
+                self.context.azure_storage_account_url,
                 self.context.azure_container_name,
                 self.context.azure_account_name,
                 self.context.azure_account_key,
                 disk_settings,
             )
         else:
+            uri = uri or self.context.uri
             external_disk = S3_type_disk_parameters(
                 uri,
                 self.context.access_key_id,
@@ -1294,19 +1291,19 @@ def default_s3_and_local_volume(
 ):
     """Default settings for s3 and local volumes."""
 
-    uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
     with Given("parameters for an external disk"):
         if self.context.storage == "azure":
             external_disk = azure_blob_type_disk_parameters(
-                uri,
+                self.context.azure_storage_account_url,
                 self.context.azure_container_name,
                 self.context.azure_account_name,
                 self.context.azure_account_key,
                 disk_settings,
             )
         else:
+            uri = uri or self.context.uri
             external_disk = S3_type_disk_parameters(
                 uri,
                 self.context.access_key_id,
@@ -1370,14 +1367,17 @@ def default_s3_disk_and_volume(
     with Given("parameters for an external disk"):
         if self.context.storage == "azure":
             external_disk = azure_blob_type_disk_parameters(
-                uri,
+                self.context.azure_storage_account_url,
                 self.context.azure_container_name,
                 self.context.azure_account_name,
                 self.context.azure_account_key,
             )
         else:
+            uri = uri or self.context.uri
             external_disk = S3_type_disk_parameters(
-                uri, access_key_id, secret_access_key
+                uri,
+                self.context.access_key_id,
+                self.context.secret_access_key,
             )
 
     with And("disk configuration for a blob storage disk"):

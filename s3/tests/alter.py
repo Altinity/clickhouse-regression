@@ -757,11 +757,14 @@ def feature(self, uri, bucket_prefix):
     cluster = self.context.cluster
     self.context.ch_nodes = [cluster.node(n) for n in cluster.nodes["clickhouse"]]
 
-    with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(
-            bucket_prefix=f"{bucket_prefix}/backup_bucket"
-        )
-        self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+    if self.context.storage != "azure":
+        with Given("a temporary s3 path"):
+            temp_s3_path = temporary_bucket_path(
+                bucket_prefix=f"{bucket_prefix}/backup_bucket"
+            )
+            self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
+    else:
+        self.context.uri = uri
 
     with Given("I have base S3 disks configured"):
         default_s3_disk_and_volume(restart=True)
