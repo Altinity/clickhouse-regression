@@ -118,11 +118,13 @@ def verify_rows_read(
     condition_2,
 ):
     """Verify the number of rows read from the parquet file."""
+    condition_names = {">": "greater_than", "<": "less_than", ">=": "greater_than_or_equal", "<=": "less_than_or_equal", "!=": "not_equal", "=": "equal", "IN": "in", "NOT IN": "not_in"}
+
     read_rows = rows_read(data.output, client=False)
     snapshot(
         f"rows_read: {read_rows}, initial_rows: {initial_rows}, file_structure: {file_structure.output}, "
         f"condition: {condition}",
-        name=f"{snapshot_name}_{condition_1}_{condition_2}",
+        name=f"{snapshot_name}_{condition_names[condition_1]}_{condition_names[condition_2]}",
         id=self.context.snapshot_id,
         # mode=snapshot.CHECK,
     )
