@@ -1191,6 +1191,35 @@ def allow_s3_truncate(node):
                         pass
 
 
+def S3_type_disk_parameters(uri, access_key_id, secret_access_key, disk_settings=None):
+    """Return dict of disk parameters for an S3 disk."""
+
+    disk_settings = disk_settings or {}
+    return {
+        "type": "s3",
+        "endpoint": uri,
+        "access_key_id": access_key_id,
+        "secret_access_key": secret_access_key,
+        **disk_settings,
+    }
+
+
+def azure_blob_type_disk_parameters(
+    uri, container_name, account_name, account_key, disk_settings=None
+):
+    """Return dict of disk parameters for an Azure Blob Storage disk."""
+
+    disk_settings = disk_settings or {}
+    return {
+        "type": "azure_blob_storage",
+        "storage_account_url": uri,
+        "container_name": container_name,
+        "account_name": account_name,
+        "account_key": account_key,
+        **disk_settings,
+    }
+
+
 @TestStep(Given)
 def default_s3_and_local_disk(
     self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
@@ -1200,16 +1229,18 @@ def default_s3_and_local_disk(
     uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    with Given("parameters for an external disk"):
+        external_disk = S3_type_disk_parameters(
+            uri,
+            self.context.access_key_id,
+            self.context.secret_access_key,
+            disk_settings,
+        )
+
+    with And("disk configuration for a blob storage disk"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-                **disk_settings,
-            },
+            "external": external_disk,
         }
         if check_clickhouse_version(">=22.8")(self):
             disks["s3_cache"] = {
@@ -1255,16 +1286,18 @@ def default_s3_and_local_volume(
     uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    with Given("parameters for an external disk"):
+        external_disk = S3_type_disk_parameters(
+            uri,
+            self.context.access_key_id,
+            self.context.secret_access_key,
+            disk_settings,
+        )
+
+    with And("disk configuration for a blob storage disk"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-                **disk_settings,
-            },
+            "external": external_disk,
         }
         if check_clickhouse_version(">=22.8")(self):
             disks["s3_cache"] = {
@@ -1312,15 +1345,17 @@ def default_s3_disk_and_volume(
     if settings is None:
         settings = {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    with Given("parameters for an external disk"):
+        external_disk = S3_type_disk_parameters(
+            uri,
+            self.context.access_key_id,
+            self.context.secret_access_key,
+        )
+
+    with And("disk configuration for a blob storage disk"):
         if check_clickhouse_version(">=22.8")(self):
             disks = {
-                disk_name: {
-                    "type": "s3",
-                    "endpoint": f"{uri}",
-                    "access_key_id": f"{self.context.access_key_id}",
-                    "secret_access_key": f"{self.context.secret_access_key}",
-                },
+                disk_name: external_disk,
                 "s3_cache": {
                     "type": "cache",
                     "disk": disk_name,

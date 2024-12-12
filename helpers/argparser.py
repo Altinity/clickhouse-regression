@@ -181,7 +181,7 @@ def argparser_s3(parser):
         "--storage",
         action="append",
         help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs", "local"],
+        choices=["minio", "aws_s3", "gcs", "local", "azure"],
         default=None,
         dest="storages",
     )
