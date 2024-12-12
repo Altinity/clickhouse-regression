@@ -66,15 +66,13 @@ def gcs(self, uri):
 
 @TestFeature
 @Name("sanity")
-def azure(self, uri):
+def azure(self):
     """Check that S3 storage is working correctly by
     storing data using different S3 policies.
     """
 
     with Given("I update the config to have s3 and local disks"):
-        default_s3_disk_and_volume(
-            uri=uri, disk_name="azure", policy_name="azure_external"
-        )
+        default_s3_disk_and_volume(disk_name="azure", policy_name="azure_external")
 
     Scenario(
         run=sanity, examples=Examples("policy", [("default",), ("azure_external",)])

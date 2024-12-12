@@ -764,7 +764,7 @@ def feature(self, uri, bucket_prefix):
             )
             self.context.uri = f"{uri}{temp_s3_path}/backup_bucket/"
     else:
-        self.context.uri = uri
+        self.context.uri = None
 
     with Given("I have base S3 disks configured"):
         default_s3_disk_and_volume(restart=True)

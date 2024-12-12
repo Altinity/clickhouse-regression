@@ -30,10 +30,12 @@ def define_s3_disk_storage_configuration(
 
     assert len(disk_names) == len(buckets)
 
-    if access_key_id is None:
-        access_key_id = self.context.access_key_id
-    if secret_access_key is None:
-        secret_access_key = self.context.secret_access_key
+    if self.context.storage != "azure":
+        if access_key_id is None:
+            access_key_id = self.context.access_key_id
+        if secret_access_key is None:
+            secret_access_key = self.context.secret_access_key
+
     if options is None:
         options = {}
 
@@ -41,12 +43,18 @@ def define_s3_disk_storage_configuration(
         disks = {"default": {"keep_free_space_bytes": "1024"}}
 
         for disk_name, bucket in zip(disk_names, buckets):
-            disks[disk_name] = {
-                "type": "s3",
-                "endpoint": f"{uri}{bucket}/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            }
+            if self.context.storage == "azure":
+                disks[disk_name] = azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    self.context.azure_container_name,
+                    self.context.azure_account_name,
+                    self.context.azure_account_key,
+                )
+            else:
+                disks[disk_name] = s3_type_disk_parameters(
+                    f"{uri}{bucket}/", access_key_id, secret_access_key
+                )
+
             if check_clickhouse_version(">=22.8")(self):
                 disks[f"{disk_name}_cached"] = (
                     {
@@ -1681,8 +1689,6 @@ def alter_move(self, node="clickhouse1"):
     """
     cluster = self.context.cluster
     prefix = "/var/lib/clickhouse/disks"
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     policies = None
 
@@ -1698,13 +1704,20 @@ def alter_move(self, node="clickhouse1"):
             "jbod1": {"path": "/jbod1/"},
             "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
             "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
         }
+        if self.context.storage == "azure":
+            disks["external"] = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+            )
+        else:
+            access_key_id = self.context.access_key_id
+            secret_access_key = self.context.secret_access_key
+            disks["external"] = s3_type_disk_parameters(
+                uri, access_key_id, secret_access_key
+            )
 
         if hasattr(self.context, "s3_options"):
             disks["external"].update(self.context.s3_options)
@@ -1903,8 +1916,6 @@ def default_move_factor(self, node="clickhouse1"):
     is reached then in the background the parts are moved to the external volume.
     """
     cluster = self.context.cluster
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     policies = None
 
@@ -1920,13 +1931,20 @@ def default_move_factor(self, node="clickhouse1"):
             "jbod1": {"path": "/jbod1/"},
             "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
             "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
         }
+        if self.context.storage == "azure":
+            disks["external"] = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+            )
+        else:
+            access_key_id = self.context.access_key_id
+            secret_access_key = self.context.secret_access_key
+            disks["external"] = s3_type_disk_parameters(
+                uri, access_key_id, secret_access_key
+            )
 
         if hasattr(self.context, "s3_options"):
             disks["external"].update(self.context.s3_options)
@@ -2050,8 +2068,6 @@ def download_appropriate_disk(self, nodes=None):
     other node syncs up.
     """
     cluster = self.context.cluster
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     policies = None
 
@@ -2070,13 +2086,20 @@ def download_appropriate_disk(self, nodes=None):
             "jbod1": {"path": "/jbod1/"},
             "jbod2": {"path": "/jbod2/", "keep_free_space_bytes": "10485760"},
             "jbod3": {"path": "/jbod3/", "keep_free_space_ratio": "0.5"},
-            "external": {
-                "type": "s3",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
         }
+        if self.context.storage == "azure":
+            disks["external"] = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+            )
+        else:
+            access_key_id = self.context.access_key_id
+            secret_access_key = self.context.secret_access_key
+            disks["external"] = s3_type_disk_parameters(
+                uri, access_key_id, secret_access_key
+            )
 
         if hasattr(self.context, "s3_options"):
             disks["external"].update(self.context.s3_options)
@@ -2500,11 +2523,15 @@ def ssec(self, uri, bucket_prefix):
 def disk_tests(self, uri, bucket_prefix):
     """Test S3 and S3 compatible storage through storage disks."""
 
-    with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
+    if self.context.storage != "azure":
+        with Given("a temporary s3 path"):
+            temp_s3_path = temporary_bucket_path(bucket_prefix=f"{bucket_prefix}/disk")
 
-        self.context.uri = f"{uri}disk/{temp_s3_path}/"
-        self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+            self.context.uri = f"{uri}disk/{temp_s3_path}/"
+            self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+    else:
+        self.context.uri = None
+        self.context.bucket_path = None
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
@@ -2531,6 +2558,13 @@ def gcs(self, uri, bucket_prefix):
             add_batch_delete_option()
 
     disk_tests(uri=uri, bucket_prefix=bucket_prefix)
+
+
+@TestFeature
+@Name("disk")
+def azure(self):
+
+    disk_tests(uri=None, bucket_prefix=None)
 
 
 @TestFeature
