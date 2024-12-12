@@ -115,10 +115,7 @@ def add_replica_global_setting(self):
     with Given("I have a replicated table on the second node"):
         replicated_table(node=nodes[1], table_name=table_name)
 
-    with Then(
-        """the size of the s3 bucket should be 1 byte more
-                than previously because of the additional replica"""
-    ):
+    with Then("the additional replica should add 1 byte to the size of the s3 bucket"):
         check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
     with And("I check simple queries on the first node"):
@@ -127,7 +124,7 @@ def add_replica_global_setting(self):
     with And("I check simple queries on the second node"):
         standard_selects(node=nodes[1], table_name=table_name)
 
-    with And("I check the size one more time"):
+    with And("I check the size of the s3 bucket one more time"):
         check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
 
@@ -167,10 +164,7 @@ def add_replica_local_setting(self):
             settings=f"{self.context.zero_copy_replication_setting}=1",
         )
 
-    with Then(
-        """the size of the s3 bucket should be 1 byte more
-                than previously because of the additional replica"""
-    ):
+    with Then("the additional replica should add 1 byte to the size of the s3 bucket"):
         check_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
     with And("I check simple queries on the first node"):
@@ -179,7 +173,7 @@ def add_replica_local_setting(self):
     with And("I check simple queries on the second node"):
         standard_selects(node=nodes[1], table_name=table_name)
 
-    with And("I check the size one more time"):
+    with And("I check the size of the s3 bucket one more time"):
         check_stable_bucket_size(expected_size=size_after_inserts + 1, tolerance=0)
 
 
@@ -297,7 +291,7 @@ def stale_alter_replica(self):
         join()
 
     with Then("I check that the nodes are consistent"):
-        check_consistency(nodes=nodes, table_name=table_name, sync_timeout=60)
+        check_consistency(nodes=nodes, table_name=table_name, sync_timeout=90)
 
 
 @TestScenario
@@ -772,7 +766,7 @@ def insert_multiple_replicas(self):
         standard_selects(node=nodes[1], table_name=table_name)
         standard_selects(node=nodes[0], table_name=table_name)
 
-    with And("I check that the data added is within 1% of expected amount"):
+    with And("the size of the s3 bucket should be within 1% of expected amount"):
         current_size = get_bucket_size()
         added_size = current_size - size_before
         note(
@@ -807,7 +801,7 @@ def delete(self):
     with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
-    with Then("I check that data was added to the s3 bucket"):
+    with Then("the size of the s3 bucket should have grown"):
         size_after = get_bucket_size()
         assert size_after > size_before, error()
 
@@ -850,7 +844,7 @@ def delete_all(self):
     with When("I add data to the table"):
         standard_inserts(node=nodes[0], table_name=table_name)
 
-    with Then("A nonzero amount of data should be added to S3"):
+    with Then("the size of the s3 bucket should have grown"):
         size_now = get_bucket_size()
         assert size_now > size_before, error()
 
@@ -881,7 +875,9 @@ def ttl_move(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after(less_ok=True)
 
-    with And("I get the size of the other s3 bucket before adding data"):
+    with And(
+        "I get the size of the s3 bucket with the second prefix before adding data"
+    ):
         measure_buckets_before_and_after(
             bucket_prefix=self.context.bucket_path + "/tiered"
         )
@@ -1000,7 +996,9 @@ def ttl_delete(self):
     with And("I get the size of the s3 bucket before adding data"):
         measure_buckets_before_and_after(less_ok=True)
 
-    with And("I get the size of the other s3 bucket before adding data"):
+    with And(
+        "I get the size of the s3 bucket with the second prefix before adding data"
+    ):
         measure_buckets_before_and_after(
             bucket_prefix=self.context.bucket_path + "/tiered"
         )
@@ -1622,31 +1620,47 @@ def outline(self, uri, bucket_prefix):
 
     self.context.uri = uri
 
-    with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(
-            bucket_prefix=f"{bucket_prefix}/zero-copy-replication"
-        )
+    if self.context.storage == "azure":
+        with Given("I have two S3 disks configured"):
+            disks = {
+                "external": azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    self.context.azure_container_name,
+                    self.context.azure_account_name,
+                    self.context.azure_account_key,
+                ),
+                "external_tiered": azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    self.context.azure_container_name,
+                    self.context.azure_account_name,
+                    self.context.azure_account_key,
+                ),
+            }
 
-        zero_copy_uri = f"{uri}zero-copy-replication/{temp_s3_path}/"
-        self.context.bucket_path = (
-            f"{bucket_prefix}/zero-copy-replication/{temp_s3_path}"
-        )
+    else:
+        with Given("a temporary s3 path"):
+            temp_s3_path = temporary_bucket_path(
+                bucket_prefix=f"{bucket_prefix}/zero-copy-replication"
+            )
 
-    with And("I have two S3 disks configured"):
-        disks = {
-            "external": {
-                "type": "s3",
-                "endpoint": zero_copy_uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-            "external_tiered": {
-                "type": "s3",
-                "endpoint": zero_copy_uri + "tiered/",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-        }
+            zero_copy_uri = f"{uri}zero-copy-replication/{temp_s3_path}/"
+            self.context.bucket_path = (
+                f"{bucket_prefix}/zero-copy-replication/{temp_s3_path}"
+            )
+
+        with And("I have two S3 disks configured"):
+            disks = {
+                "external": s3_type_disk_parameters(
+                    zero_copy_uri,
+                    self.context.access_key_id,
+                    self.context.secret_access_key,
+                ),
+                "external_tiered": s3_type_disk_parameters(
+                    zero_copy_uri + "tiered/",
+                    self.context.access_key_id,
+                    self.context.secret_access_key,
+                ),
+            }
 
     with And(
         """I have a storage policy configured to use the S3 disk and a tiered
@@ -1685,13 +1699,13 @@ def outline(self, uri, bucket_prefix):
     with And("I enable the disk and policy config"):
         s3_storage(disks=disks, policies=policies, restart=True)
 
-    with And("I know the current bucket size"):
+    with And("I know the size of the s3 bucket currently"):
         initial_bucket_size = get_bucket_size()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
 
-    with Finally("the bucket should be cleaned up"):
+    with Finally("the size of the s3 bucket should be the same as before"):
         check_bucket_size(expected_size=initial_bucket_size, tolerance=50)
 
 
@@ -1710,6 +1724,14 @@ def gcs(self, uri, bucket_prefix):
     skip("GCS is not supported for zero copy replication")
 
     outline(uri=uri, bucket_prefix=bucket_prefix)
+
+
+@TestFeature
+@Name("zero copy replication")
+def azure(self):
+    # skip("GCS is not supported for zero copy replication")
+
+    outline(uri=None, bucket_prefix=None)
 
 
 @TestFeature

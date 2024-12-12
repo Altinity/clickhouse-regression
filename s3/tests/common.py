@@ -1190,7 +1190,7 @@ def allow_s3_truncate(node):
                         pass
 
 
-def S3_type_disk_parameters(uri, access_key_id, secret_access_key, disk_settings=None):
+def s3_type_disk_parameters(uri, access_key_id, secret_access_key, disk_settings=None):
     """Return dict of disk parameters for an S3 disk."""
 
     disk_settings = disk_settings or {}
@@ -1238,7 +1238,7 @@ def default_s3_and_local_disk(
             )
         else:
             uri = uri or self.context.uri
-            external_disk = S3_type_disk_parameters(
+            external_disk = s3_type_disk_parameters(
                 uri,
                 self.context.access_key_id,
                 self.context.secret_access_key,
@@ -1304,7 +1304,7 @@ def default_s3_and_local_volume(
             )
         else:
             uri = uri or self.context.uri
-            external_disk = S3_type_disk_parameters(
+            external_disk = s3_type_disk_parameters(
                 uri,
                 self.context.access_key_id,
                 self.context.secret_access_key,
@@ -1374,7 +1374,7 @@ def default_s3_disk_and_volume(
             )
         else:
             uri = uri or self.context.uri
-            external_disk = S3_type_disk_parameters(
+            external_disk = s3_type_disk_parameters(
                 uri,
                 self.context.access_key_id,
                 self.context.secret_access_key,

@@ -1171,6 +1171,15 @@ def gcs(self, uri, bucket_prefix):
 
 
 @TestFeature
+@Name("backup")
+def azure(self):
+    """Test manual backup and metadata back up with azure storage."""
+
+    for scenario in loads(current_module(), Scenario):
+        Scenario(run=scenario)
+
+
+@TestFeature
 @Requirements(RQ_SRS_015_S3_Backup_MinIOBackup("1.0"))
 @Name("backup")
 def minio(self, uri, bucket_prefix):

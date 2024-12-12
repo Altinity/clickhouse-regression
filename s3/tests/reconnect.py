@@ -155,6 +155,17 @@ def gcs(self, uri):
 
 
 @TestFeature
+@Name("reconnect")
+def azure(self):
+    """Check that ClickHouse reconnects to azure."""
+
+    self.context.uri = None
+
+    for scenario in loads(current_module(), Scenario):
+        Scenario(run=scenario)
+
+
+@TestFeature
 @Requirements(RQ_SRS_015_S3_AutomaticReconnects_MinIO("1.0"))
 @Name("reconnect")
 def minio(self, uri):
