@@ -440,18 +440,21 @@ def azure_regression(
     container_name = os.getenv("AZURE_CONTAINER_NAME")
     account_name = os.getenv("AZURE_ACCOUNT_NAME")
 
-    # uri = f"https://{account_name}.blob.core.windows.net/{container_name}/"
+    # uri = f"https://{account_name}.blob.core.windows.net/{container_name}"
 
     # Default config for azurite
     account_name = "devstoreaccount1"
     storage_key = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="
     container_name = "cont"
-    uri = f"http://azurite:10000/{account_name}/"
+    uri = container_name
+
+    azure_storage_account_url = f"http://azurite:10000/{account_name}"
 
     bucket_prefix = "data"
 
     self.context.storage = "azure"
-    self.context.uri = uri
+    self.context.azure_storage_account_url = azure_storage_account_url
+    # self.context.uri = uri
     self.context.azure_account_name = account_name
     self.context.azure_account_key = storage_key
     self.context.azure_container_name = container_name
@@ -478,6 +481,9 @@ def azure_regression(
                 )
 
         Feature(test=load("s3.tests.sanity", "azure"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
         # Feature(test=load("s3.tests.table_function", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
@@ -486,10 +492,7 @@ def azure_regression(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
         # Feature(test=load("s3.tests.disk_invalid", "azure"))(uri=uri)
-        # Feature(test=load("s3.tests.alter", "feature"))(
-        #     uri=uri, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         # Feature(test=load("s3.tests.zero_copy_replication", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
@@ -500,7 +503,7 @@ def azure_regression(
         # Feature(test=load("s3.tests.orphans", "feature"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
-        # Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
         # Feature(test=load("s3.tests.table_function_performance", "azure"))(uri=uri)
 
 
