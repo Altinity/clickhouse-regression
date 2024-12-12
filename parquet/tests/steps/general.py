@@ -231,3 +231,11 @@ def count_rows_in_parquet(self, file_name, node=None):
         )
 
     return int(output.output.strip())
+
+def rows_read(json_data, client=True):
+    """Get the number of rows read from the json data."""
+    if client:
+        data = json_data[-1]
+    else:
+        data = int(json.loads(json_data)["statistics"]["rows_read"])
+    return data

@@ -13,7 +13,7 @@ from parquet.tests.steps.bloom_filter import *
 from parquet.tests.steps.general import (
     select_from_parquet,
     parquetify,
-    get_parquet_structure,
+    get_parquet_structure, rows_read,
 )
 
 
@@ -167,17 +167,8 @@ def get_all_columns(self, table_name, database, node=None):
         node = self.context.node
 
     node.query(
-        f"SELECT arrayStringConcat(groupArray(name), ',') AS column_names FROM system.columns WHERE database = 'default' AND table = 'users';"
+        f"SELECT arrayStringConcat(groupArray(name), ',') AS column_names FROM system.columns WHERE database = '{database}' AND table = '{table_name}';"
     )
-
-
-def rows_read(json_data, client=True):
-    """Get the number of rows read from the json data."""
-    if client:
-        data = json_data[-1]
-    else:
-        data = int(json.loads(json_data)["statistics"]["rows_read"])
-    return data
 
 
 @TestStep(Given)
