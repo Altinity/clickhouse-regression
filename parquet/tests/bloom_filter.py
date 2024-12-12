@@ -13,83 +13,11 @@ from parquet.tests.steps.bloom_filter import *
 from parquet.tests.steps.general import (
     select_from_parquet,
     parquetify,
-    get_parquet_structure, rows_read,
+    get_parquet_structure,
+    rows_read,
+    create_parquet_json_definition,
+    save_json_definition,
 )
-
-
-class JSONEncoder(json.JSONEncoder):
-    """
-    Custom JSON encoder:
-        - Supports DateTime serialization.
-        - Supports Date serialization.
-        - Supports bytes serialization.
-        - Supports Decimal serialization.
-    """
-
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return obj.isoformat()
-        if isinstance(obj, datetime.date):
-            return obj.isoformat()
-        if isinstance(obj, bytes):
-            try:
-                return obj.decode("utf-8")
-            except UnicodeDecodeError:
-                return base64.b64encode(obj).decode("ascii")
-        if isinstance(obj, Decimal):
-            return str(obj)
-        return super().default(obj)
-
-
-@TestStep(Given)
-def save_json_definition(self, path, file_definition):
-    """Save the JSON file definition."""
-    with open(path, "w") as json_file:
-        json.dump(file_definition, json_file, cls=JSONEncoder, indent=2)
-
-
-@TestStep(Given)
-def create_parquet_json_definition(
-    self,
-    schema_type,
-    writer_version,
-    physical_type,
-    logical_type,
-    compression_value,
-    parquet_file,
-    data,
-):
-    """Create the JSON definition for the parquet file."""
-    file_definition = {}
-    option_list = {}
-    schema_values = {}
-
-    file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
-    option_list.update(writer_version())
-    option_list.update(compression_value())
-    option_list.update(row_group_size(size=256))
-    option_list.update(page_size(size=1024))
-    option_list.update(encodings())
-    option_list.update(bloom_filter())
-
-    file_definition.update(options(options=option_list))
-
-    column_name = (
-        logical_type()["logicalType"].lower()
-        if logical_type()["logicalType"] != "NONE"
-        else physical_type()["physicalType"].lower()
-    )
-
-    schema_values.update(
-        schema_type(
-            name=column_name,
-            physical_type=physical_type(),
-            logical_type=logical_type(),
-            data=data,
-        )
-    )
-    file_definition.update(schema(schema=schema_values))
-    return file_definition
 
 
 @TestStep(Given)
@@ -127,6 +55,7 @@ def prepare_parquet_file(
         compression_value=compression_value,
         parquet_file=parquet_file,
         data=data,
+        enable_bloom_filter="all",
     )
     snapshot_name = (
         f"{file_definition['options']['compression']}_{physical_type()['physicalType']}_"
@@ -408,8 +337,11 @@ def copy_parquet_to_user_files(self, parquet_file):
 
 
 @TestStep(Given)
-def get_total_rows(self, parquet_file, client):
+def get_total_rows(self, parquet_file, client=None):
     """Get the total number of rows in the parquet file."""
+    if client is None:
+        client = self.context.node
+
     return total_number_of_rows(file_name=parquet_file, node=client, stack_trace=False)
 
 
