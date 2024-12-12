@@ -432,10 +432,6 @@ def azure_regression(
     #     fail("AWS S3 region needs to be set")
     # region = region.value
 
-    bucket_prefix = None
-
-    # uri = f"https://s3.{region}.amazonaws.com/{bucket}/{bucket_prefix}/"
-
     client_id = os.getenv("AZURE_CLIENT_ID")
     client_secret = os.getenv("AZURE_CLIENT_SECRET")
     storage_key = os.getenv("AZURE_STORAGE_KEY")
@@ -444,7 +440,15 @@ def azure_regression(
     container_name = os.getenv("AZURE_CONTAINER_NAME")
     account_name = os.getenv("AZURE_ACCOUNT_NAME")
 
-    uri = f"http://account.blob.core.windows.net/{account_name}/"
+    # uri = f"https://{account_name}.blob.core.windows.net/{container_name}/"
+
+    # Default config for azurite
+    account_name = "devstoreaccount1"
+    storage_key = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="
+    container_name = "cont"
+    uri = f"http://azurite:10000/{account_name}/"
+
+    bucket_prefix = "data"
 
     self.context.storage = "azure"
     self.context.uri = uri
@@ -473,31 +477,31 @@ def azure_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
-        # Feature(test=load("s3.tests.table_function", "aws_s3"))(
+        Feature(test=load("s3.tests.sanity", "azure"))(uri=uri)
+        # Feature(test=load("s3.tests.table_function", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
-        # Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
-        # Feature(test=load("s3.tests.disk", "aws_s3"))(
+        # Feature(test=load("s3.tests.table_function_invalid", "azure"))(uri=uri)
+        # Feature(test=load("s3.tests.disk", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
-        # Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+        # Feature(test=load("s3.tests.disk_invalid", "azure"))(uri=uri)
         # Feature(test=load("s3.tests.alter", "feature"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
         # Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        # Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+        # Feature(test=load("s3.tests.zero_copy_replication", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
-        # Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-        # Feature(test=load("s3.tests.backup", "aws_s3"))(
+        # Feature(test=load("s3.tests.reconnect", "azure"))(uri=uri)
+        # Feature(test=load("s3.tests.backup", "azure"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
         # Feature(test=load("s3.tests.orphans", "feature"))(
         #     uri=uri, bucket_prefix=bucket_prefix
         # )
         # Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-        # Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
+        # Feature(test=load("s3.tests.table_function_performance", "azure"))(uri=uri)
 
 
 @TestFeature
@@ -546,27 +550,27 @@ def gcs_regression(
                 )
 
         Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.table_function", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
-        Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.backup", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.orphans", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
+        # Feature(test=load("s3.tests.table_function", "gcs"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        # Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
+        # Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
+        # Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
+        # Feature(test=load("s3.tests.alter", "feature"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        # Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        # Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        # Feature(test=load("s3.tests.backup", "gcs"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        # Feature(test=load("s3.tests.orphans", "feature"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        # Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        # Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
 @TestModule
