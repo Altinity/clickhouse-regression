@@ -1,6 +1,11 @@
 version: '2.3'
 
 services:
+  zookeeper1:
+    extends:
+      file: ../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
+
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -9,6 +14,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -18,6 +26,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -27,7 +38,10 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
-  
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
   clickhouse4:
     extends:
       file: clickhouse-service.yml
@@ -90,6 +104,18 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/logs/:/var/log/clickhouse-server/"
+  
+  jwks_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
@@ -116,4 +142,5 @@ services:
         condition: service_healthy
       clickhouse10:
         condition: service_healthy
-
+      zookeeper1:
+        condition: service_healthy
