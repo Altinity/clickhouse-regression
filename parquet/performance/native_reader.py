@@ -6,7 +6,12 @@ from testflows.core import *
 
 append_path(sys.path, "../..")
 
-from helpers.cluster import get_binary_from_docker_container, download_http_binary, unpack_deb, unpack_tgz
+from helpers.cluster import (
+    get_binary_from_docker_container,
+    download_http_binary,
+    unpack_deb,
+    unpack_tgz,
+)
 
 
 def argparser(parser):
@@ -22,12 +27,14 @@ def argparser(parser):
         default="docker://clickhouse/clickhouse-server:head",
     )
 
+
 @TestStep(Given)
 def get_binary_from_deb(self, source):
     return unpack_deb(
         deb_binary_path=source,
         program_name="clickhouse",
     )
+
 
 @TestStep(Given)
 def get_binary_from_package(self, source):
@@ -41,6 +48,7 @@ def get_binary_from_package(self, source):
             unpack_tgz(source), "usr/bin", "clickhouse"
         )
 
+
 @TestStep(Given)
 def get_binary_clickhouse_binary(self, clickhouse_binary_path):
     """Get the ClickHouse binary from the docker container."""
@@ -49,6 +57,7 @@ def get_binary_clickhouse_binary(self, clickhouse_binary_path):
     )
 
     return binary_path
+
 
 @TestStep(Given)
 def get_binary_from_http(self, url):
@@ -61,6 +70,8 @@ def get_binary_from_http(self, url):
         binary_path = self.context.binary_path
 
     return binary_path
+
+
 @TestModule
 @Name("native reader")
 @ArgumentParser(argparser)
@@ -74,7 +85,6 @@ def module(self, clickhouse_path=None):
             )
         elif clickhouse_path.startswith(("http://", "https://")):
             self.context.clickhouse_binary = get_binary_from_http(url=clickhouse_path)
-
 
     Feature(run=load("parquet.performance.tests.native_reader.feature", "feature"))
 
