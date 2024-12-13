@@ -43,6 +43,7 @@ def regression(
             "clickhouse9",
             "clickhouse10",
         ),
+        "jwks_server": ("jwks_server",),
     }
 
     self.context.clickhouse_version = clickhouse_version
@@ -61,14 +62,9 @@ def regression(
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.node4 = self.context.cluster.node("clickhouse4")
-    self.context.node5 = self.context.cluster.node("clickhouse5")
-    self.context.node6 = self.context.cluster.node("clickhouse6")
-    self.context.node7 = self.context.cluster.node("clickhouse7")
-    self.context.node8 = self.context.cluster.node("clickhouse8")
-    self.context.node9 = self.context.cluster.node("clickhouse9")
-    self.context.node10 = self.context.cluster.node("clickhouse10")
-    self.context.nodes = [self.context.cluster.node(node) for node in nodes["clickhouse"]]
+    self.context.nodes = [
+        self.context.cluster.node(node) for node in nodes["clickhouse"]
+    ]
 
     Scenario(run=load("jwt_authentication.tests.static_key.feature", "feature"))
     Scenario(run=load("jwt_authentication.tests.jwks.feature", "feature"))
