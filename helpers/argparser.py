@@ -265,6 +265,27 @@ def argparser_s3(parser):
         type=Secret(name="gcs_key_secret"),
         default=os.getenv("GCS_KEY_SECRET"),
     )
+    parser.add_argument(
+        "--azure-account-name",
+        action="store",
+        help="azure account name",
+        type=Secret(name="azure_account_name"),
+        default=os.getenv("AZURE_ACCOUNT_NAME"),
+    )
+    parser.add_argument(
+        "--azure-storage-key",
+        action="store",
+        help="azure storage key",
+        type=Secret(name="azure_storage_key"),
+        default=os.getenv("AZURE_STORAGE_KEY"),
+    )
+    parser.add_argument(
+        "--azure-container",
+        action="store",
+        help="azure container",
+        type=Secret(name="azure_container"),
+        default=os.getenv("AZURE_CONTAINER_NAME"),
+    )
 
 
 def CaptureS3Args(func):
@@ -303,6 +324,9 @@ def CaptureS3Args(func):
         gcs_uri,
         gcs_key_id,
         gcs_key_secret,
+        azure_account_name,
+        azure_storage_key,
+        azure_container,
         **kwargs
     ):
         s3_args = {
@@ -317,6 +341,9 @@ def CaptureS3Args(func):
             "gcs_uri": gcs_uri,
             "gcs_key_id": gcs_key_id,
             "gcs_key_secret": gcs_key_secret,
+            "azure_account_name": azure_account_name,
+            "azure_storage_key": azure_storage_key,
+            "azure_container": azure_container,
         }
         return func(self, s3_args=s3_args, **kwargs)
 

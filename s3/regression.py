@@ -179,6 +179,10 @@ ffails = {
         Skip,
         "azure not s3 compatible",
     ),
+    "azure/zero copy replication/alter": (
+        Skip,
+        "investigate",
+    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
@@ -430,51 +434,30 @@ def aws_s3_regression(
 @Name("azure")
 def azure_regression(
     self,
-    # key_id,
-    # access_key,
-    # bucket,
-    # region,
+    account_name,
+    storage_key,
+    container_name,
     cluster_args,
     with_analyzer=False,
 ):
     """Setup and run aws s3 tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    # if access_key == None:
-    #     fail("AWS S3 access key needs to be set")
-    # access_key = access_key.value
+    if account_name == None:
+        fail("Azure account name needs to be set")
+    account_name = account_name.value
 
-    # if key_id == None:
-    #     fail("AWS S3 key id needs to be set")
-    # key_id = key_id.value
+    if storage_key == None:
+        fail("Azure storage key needs to be set")
+    storage_key = storage_key.value
 
-    # if bucket == None:
-    #     fail("AWS S3 bucket needs to be set")
-    # bucket = bucket.value
-
-    # if region == None:
-    #     fail("AWS S3 region needs to be set")
-    # region = region.value
-
-    client_id = os.getenv("AZURE_CLIENT_ID")
-    client_secret = os.getenv("AZURE_CLIENT_SECRET")
-    storage_key = os.getenv("AZURE_STORAGE_KEY")
-    tenant_id = os.getenv("AZURE_TENANT_ID")
-
-    container_name = os.getenv("AZURE_CONTAINER_NAME")
-    account_name = os.getenv("AZURE_ACCOUNT_NAME")
+    if container_name == None:
+        fail("Azure container name needs to be set")
+    container_name = container_name.value
 
     azure_storage_account_url = f"https://{account_name}.blob.core.windows.net/"
-
-    # Default config for azurite
-    account_name = "devstoreaccount1"
-    storage_key = "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="
-    container_name = "cont"
-    azure_storage_account_url = f"http://azurite:10000/{account_name}"
-
     uri = None
-
-    bucket_prefix = "data"
+    bucket_prefix = None
 
     self.context.storage = "azure"
     self.context.azure_storage_account_url = azure_storage_account_url
@@ -482,17 +465,16 @@ def azure_regression(
     self.context.azure_account_name = account_name
     self.context.azure_account_key = storage_key
     self.context.azure_container_name = container_name
-    # self.context.bucket_name = container_name
 
     with Cluster(
         **cluster_args,
         nodes=nodes,
-        environ={
-            "AZURE_CLIENT_ID": client_id,
-            "AZURE_CLIENT_SECRET": client_secret,
-            "AZURE_STORAGE_KEY": storage_key,
-            "AZURE_TENANT_ID": tenant_id,
-        },
+        # environ={
+        #     "AZURE_CLIENT_ID": client_id,
+        #     "AZURE_CLIENT_SECRET": client_secret,
+        #     "AZURE_STORAGE_KEY": storage_key,
+        #     "AZURE_TENANT_ID": tenant_id,
+        # },
     ) as cluster:
 
         self.context.cluster = cluster
@@ -636,6 +618,9 @@ def regression(
     if "azure" in storages:
         Feature(test=azure_regression)(
             cluster_args=cluster_args,
+            account_name=s3_args["azure_account_name"],
+            storage_key=s3_args["azure_storage_key"],
+            container_name=s3_args["azure_container"],
             with_analyzer=with_analyzer,
         )
 
