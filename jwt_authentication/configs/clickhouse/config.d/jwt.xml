@@ -5,5 +5,8 @@
             <static_key>my_secret</static_key>
             <static_key_in_base64>false</static_key_in_base64>
         </single_key_validator>
+        <jwks_server>
+            <uri>http://jwks_server:8080/.well-known/jwks.json</uri>
+        </jwks_server>
     </jwt_validators>
 </clickhouse>
