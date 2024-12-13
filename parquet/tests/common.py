@@ -14,6 +14,8 @@ from s3.tests.common import *
 
 
 def generate_random_value(data_type):
+    data_type = data_type.upper()
+
     if data_type == "INT32":
         return random.randint(-2147483648, 2147483647)
     elif data_type == "INT64":
@@ -30,7 +32,7 @@ def generate_random_value(data_type):
         return "".join(
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 3))
         )
-    elif data_type == "UTF8" or data_type == "STRING":
+    elif data_type == "UTF8" or data_type == "STRING" or data_type == "ENUM":
         return "".join(
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
         )
@@ -44,8 +46,6 @@ def generate_random_value(data_type):
         return str(datetime.datetime.now().time())
     elif data_type == "TIMESTAMP_MILLIS" or data_type == "TIMESTAMP_MICROS":
         return str(datetime.datetime.now())
-    elif data_type == "ENUM":
-        return random.choice(["A", "B", "C", "D"])
     elif data_type == "NONE":
         return None
     elif data_type == "MAP":
@@ -100,7 +100,24 @@ def generate_random_value(data_type):
 
 
 def generate_values(data_type, count):
+    """Generate a list of random values for the given data type."""
     return [generate_random_value(data_type) for _ in range(count)]
+
+
+def generate_unique_value(data_type, existing_values, max_attempts=3000):
+    """
+    Generate a value for the given data type that is not in existing_values.
+    For complex non-hashable structures (like dict), we do a linear membership check.
+    """
+    for _ in range(max_attempts):
+        val = generate_random_value(data_type)
+
+        if val not in existing_values:
+            return val
+
+    raise ValueError(
+        f"Could not find a unique value for data_type {data_type} after {max_attempts} attempts."
+    )
 
 
 class CreateParquetStructure:

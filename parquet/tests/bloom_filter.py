@@ -14,82 +14,10 @@ from parquet.tests.steps.general import (
     select_from_parquet,
     parquetify,
     get_parquet_structure,
+    rows_read,
+    create_parquet_json_definition,
+    save_json_definition,
 )
-
-
-class JSONEncoder(json.JSONEncoder):
-    """
-    Custom JSON encoder:
-        - Supports DateTime serialization.
-        - Supports Date serialization.
-        - Supports bytes serialization.
-        - Supports Decimal serialization.
-    """
-
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return obj.isoformat()
-        if isinstance(obj, datetime.date):
-            return obj.isoformat()
-        if isinstance(obj, bytes):
-            try:
-                return obj.decode("utf-8")
-            except UnicodeDecodeError:
-                return base64.b64encode(obj).decode("ascii")
-        if isinstance(obj, Decimal):
-            return str(obj)
-        return super().default(obj)
-
-
-@TestStep(Given)
-def save_json_definition(self, path, file_definition):
-    """Save the JSON file definition."""
-    with open(path, "w") as json_file:
-        json.dump(file_definition, json_file, cls=JSONEncoder, indent=2)
-
-
-@TestStep(Given)
-def create_parquet_json_definition(
-    self,
-    schema_type,
-    writer_version,
-    physical_type,
-    logical_type,
-    compression_value,
-    parquet_file,
-    data,
-):
-    """Create the JSON definition for the parquet file."""
-    file_definition = {}
-    option_list = {}
-    schema_values = {}
-
-    file_definition.update(parquet_file_name(filename=f"{parquet_file}"))
-    option_list.update(writer_version())
-    option_list.update(compression_value())
-    option_list.update(row_group_size(size=256))
-    option_list.update(page_size(size=1024))
-    option_list.update(encodings())
-    option_list.update(bloom_filter())
-
-    file_definition.update(options(options=option_list))
-
-    column_name = (
-        logical_type()["logicalType"].lower()
-        if logical_type()["logicalType"] != "NONE"
-        else physical_type()["physicalType"].lower()
-    )
-
-    schema_values.update(
-        schema_type(
-            name=column_name,
-            physical_type=physical_type(),
-            logical_type=logical_type(),
-            data=data,
-        )
-    )
-    file_definition.update(schema(schema=schema_values))
-    return file_definition
 
 
 @TestStep(Given)
@@ -127,6 +55,7 @@ def prepare_parquet_file(
         compression_value=compression_value,
         parquet_file=parquet_file,
         data=data,
+        enable_bloom_filter="all",
     )
     snapshot_name = (
         f"{file_definition['options']['compression']}_{physical_type()['physicalType']}_"
@@ -167,17 +96,8 @@ def get_all_columns(self, table_name, database, node=None):
         node = self.context.node
 
     node.query(
-        f"SELECT arrayStringConcat(groupArray(name), ',') AS column_names FROM system.columns WHERE database = 'default' AND table = 'users';"
+        f"SELECT arrayStringConcat(groupArray(name), ',') AS column_names FROM system.columns WHERE database = '{database}' AND table = '{table_name}';"
     )
-
-
-def rows_read(json_data, client=True):
-    """Get the number of rows read from the json data."""
-    if client:
-        data = json_data[-1]
-    else:
-        data = int(json.loads(json_data)["statistics"]["rows_read"])
-    return data
 
 
 @TestStep(Given)
@@ -417,8 +337,11 @@ def copy_parquet_to_user_files(self, parquet_file):
 
 
 @TestStep(Given)
-def get_total_rows(self, parquet_file, client):
+def get_total_rows(self, parquet_file, client=None):
     """Get the total number of rows in the parquet file."""
+    if client is None:
+        client = self.context.node
+
     return total_number_of_rows(file_name=parquet_file, node=client, stack_trace=False)
 
 
@@ -735,6 +658,45 @@ def key_column_type_conversions_with_bloom_filter(self, logical_type, statements
         conversions=clickhouse_datatypes,
         check=check_all_key_column_type_conversions,
     )
+
+
+@TestScenario
+def supported_expressions(self):
+    """Check which expressions are supported for bloom filter evaluation."""
+    conditions = ["=", "!=", "IN", "NOT IN", ">", "<", ">=", "<="]
+    file_path = os.path.join("bloom", "int_150_row_groups.parquet")
+    for i in conditions:
+        with Given(
+            "I read from the parquet when bloom filter pushdown is enabled",
+            description=f"expression: {i}",
+        ):
+
+            condition = (
+                f"WHERE int8 {i} '3760'"
+                if i not in ["IN", "NOT IN"]
+                else f"WHERE int8 {i} ['3760', '3761']"
+            )
+
+            data = select_from_parquet(
+                file_name=file_path,
+                statement="*",
+                condition=condition,
+                format="Json",
+                settings="input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false,use_cache_for_count_from_files=false",
+            )
+
+        with When("I get total number of rows of the file"):
+            initial_rows = total_number_of_rows(file_name=file_path, client=False)
+
+        with And("I get rows read"):
+            read_rows = rows_read(data.output.strip(), client=False)
+
+        with Then(
+            "I check that the number of rows read is lower then the total number of rows of a file"
+        ):
+            assert (
+                read_rows < initial_rows
+            ), f"rows read {read_rows} is not less than total rows {initial_rows}"
 
 
 @TestSketch(Scenario)
@@ -1136,6 +1098,7 @@ def sanity_checks(self):
     Scenario(run=read_bloom_filter_parquet_files)
     Scenario(run=read_bloom_filter_parquet_files_native_reader)
     Scenario(run=native_reader_array_bloom)
+    Scenario(run=supported_expressions)
 
 
 @TestSuite

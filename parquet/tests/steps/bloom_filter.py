@@ -643,6 +643,35 @@ logical_types = [
     no_logical_type,
 ]
 
+simple_logical_types = [
+    utf8,
+    decimal,
+    date,
+    time_millis,
+    time_micros,
+    timestamp_millis,
+    timestamp_micros,
+    enum,
+    string,
+    time,
+    integer,
+    json_type,
+    bson,
+    uuid,
+    interval,
+    float16,
+    uint8,
+    uint16,
+    uint32,
+    uint64,
+    int8,
+    int16,
+    int32,
+    int64,
+    no_logical_type,
+]
+
+complex_logical_types = [map, list, map_key_value]
 
 clickhouse_datatypes = [
     "JSON",
