@@ -118,7 +118,16 @@ def verify_rows_read(
     condition_2,
 ):
     """Verify the number of rows read from the parquet file."""
-    condition_names = {">": "greater_than", "<": "less_than", ">=": "greater_than_or_equal", "<=": "less_than_or_equal", "!=": "not_equal", "=": "equal", "IN": "in", "NOT IN": "not_in"}
+    condition_names = {
+        ">": "greater_than",
+        "<": "less_than",
+        ">=": "greater_than_or_equal",
+        "<=": "less_than_or_equal",
+        "!=": "not_equal",
+        "=": "equal",
+        "IN": "in",
+        "NOT IN": "not_in",
+    }
 
     read_rows = rows_read(data.output, client=False)
     snapshot(
