@@ -204,7 +204,7 @@ jobs:
       artifact_name: ${{ matrix.parallel_id }}-x86
     
   ARM:
-    if: ${{ needs.define-matrix-arm.outputs.run_arm == 'true' }}
+    if: ${{ needs.define-matrix.outputs.run_arm == 'true' }}
     uses: ./.github/workflows/reusable-workflow-arm.yml
     secrets: inherit
     needs: define-matrix
