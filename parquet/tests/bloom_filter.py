@@ -660,6 +660,45 @@ def key_column_type_conversions_with_bloom_filter(self, logical_type, statements
     )
 
 
+@TestScenario
+def supported_expressions(self):
+    """Check which expressions are supported for bloom filter evaluation."""
+    conditions = ["=", "!=", "IN", "NOT IN", ">", "<", ">=", "<="]
+    file_path = os.path.join("bloom", "int_150_row_groups.parquet")
+    for i in conditions:
+        with Given(
+            "I read from the parquet when bloom filter pushdown is enabled",
+            description=f"expression: {i}",
+        ):
+
+            condition = (
+                f"WHERE int8 {i} '3760'"
+                if i not in ["IN", "NOT IN"]
+                else f"WHERE int8 {i} ['3760', '3761']"
+            )
+
+            data = select_from_parquet(
+                file_name=file_path,
+                statement="*",
+                condition=condition,
+                format="Json",
+                settings="input_format_parquet_bloom_filter_push_down=true,input_format_parquet_filter_push_down=false,use_cache_for_count_from_files=false",
+            )
+
+        with When("I get total number of rows of the file"):
+            initial_rows = total_number_of_rows(file_name=file_path, client=False)
+
+        with And("I get rows read"):
+            read_rows = rows_read(data.output.strip(), client=False)
+
+        with Then(
+            "I check that the number of rows read is lower then the total number of rows of a file"
+        ):
+            assert (
+                read_rows < initial_rows
+            ), f"rows read {read_rows} is not less than total rows {initial_rows}"
+
+
 @TestSketch(Scenario)
 @Flags(TE)
 def utf8_to_field_type(self):
@@ -1059,6 +1098,7 @@ def sanity_checks(self):
     Scenario(run=read_bloom_filter_parquet_files)
     Scenario(run=read_bloom_filter_parquet_files_native_reader)
     Scenario(run=native_reader_array_bloom)
+    Scenario(run=supported_expressions)
 
 
 @TestSuite
