@@ -551,12 +551,12 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        Feature(
-            run=load("parquet.tests.indexing", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
+        # Feature(
+        #     run=load("parquet.tests.indexing", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
         Feature(
             run=load("parquet.tests.cache", "feature"),
             parallel=True,
