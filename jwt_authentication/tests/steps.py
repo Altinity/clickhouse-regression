@@ -355,13 +355,15 @@ def create_user_with_jwt_auth(
     if node is None:
         node = self.context.node
 
-    query = f"CREATE USER {user_name} IDENTIFIED WITH JWT"
-
-    if claims is not None:
-        query += f" CLAIMS '{claims}'"
+    query = f"CREATE USER {user_name} "
 
     if cluster is not None:
-        query += f" ON CLUSTER {cluster}"
+        query += f"ON CLUSTER {cluster} "
+
+    query += "IDENTIFIED WITH JWT "
+
+    if claims is not None:
+        query += f"CLAIMS '{claims}' "
 
     try:
         node.query(query)
