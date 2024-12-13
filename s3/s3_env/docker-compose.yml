@@ -138,11 +138,6 @@ services:
       - proxy1
       - proxy2
 
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite
-    ports:
-      - "10000:10000"
-
   proxy1:
     image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
