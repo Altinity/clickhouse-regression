@@ -1145,7 +1145,6 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
 
             elif self.context.storage == "aws_s3":
                 cluster = current().context.cluster
-
                 cluster.command(
                     "aws",
                     f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive",
@@ -1191,25 +1190,65 @@ def allow_s3_truncate(node):
                         pass
 
 
+def s3_type_disk_parameters(uri, access_key_id, secret_access_key, disk_settings=None):
+    """Return dict of disk parameters for an S3 disk."""
+
+    disk_settings = disk_settings or {}
+    return {
+        "type": "s3",
+        "endpoint": uri,
+        "access_key_id": access_key_id,
+        "secret_access_key": secret_access_key,
+        **disk_settings,
+    }
+
+
+def azure_blob_type_disk_parameters(
+    storage_account_url, container_name, account_name, account_key, disk_settings=None
+):
+    """Return dict of disk parameters for an Azure Blob Storage disk."""
+
+    disk_settings = disk_settings or {}
+    return {
+        "type": "azure_blob_storage",
+        "storage_account_url": storage_account_url,
+        "container_name": container_name,
+        "account_name": account_name,
+        "account_key": account_key,
+        **disk_settings,
+    }
+
+
 @TestStep(Given)
 def default_s3_and_local_disk(
     self, restart=True, uri=None, policy_name="default_and_external", disk_settings=None
 ):
     """Default settings for s3 and local disks."""
 
-    uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    with Given("parameters for an external disk"):
+        if self.context.storage == "azure":
+            external_disk = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+                disk_settings,
+            )
+        else:
+            uri = uri or self.context.uri
+            external_disk = s3_type_disk_parameters(
+                uri,
+                self.context.access_key_id,
+                self.context.secret_access_key,
+                disk_settings,
+            )
+
+    with And("disk configuration for a blob storage disk"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-                **disk_settings,
-            },
+            "external": external_disk,
         }
         if check_clickhouse_version(">=22.8")(self):
             disks["s3_cache"] = {
@@ -1252,19 +1291,30 @@ def default_s3_and_local_volume(
 ):
     """Default settings for s3 and local volumes."""
 
-    uri = uri or self.context.uri
     disk_settings = disk_settings or {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    with Given("parameters for an external disk"):
+        if self.context.storage == "azure":
+            external_disk = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+                disk_settings,
+            )
+        else:
+            uri = uri or self.context.uri
+            external_disk = s3_type_disk_parameters(
+                uri,
+                self.context.access_key_id,
+                self.context.secret_access_key,
+                disk_settings,
+            )
+
+    with And("disk configuration for a blob storage disk"):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": uri,
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-                **disk_settings,
-            },
+            "external": external_disk,
         }
         if check_clickhouse_version(">=22.8")(self):
             disks["s3_cache"] = {
@@ -1305,22 +1355,35 @@ def default_s3_disk_and_volume(
     """Setup disk configuration and storage policy for s3 disk and volume with the given parameters."""
     if uri is None:
         uri = self.context.uri
-    if access_key_id is None:
-        access_key_id = self.context.access_key_id
-    if secret_access_key is None:
-        secret_access_key = self.context.secret_access_key
     if settings is None:
         settings = {}
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
+    if self.context.storage != "azure":
+        if access_key_id is None:
+            access_key_id = self.context.access_key_id
+        if secret_access_key is None:
+            secret_access_key = self.context.secret_access_key
+
+    with Given("parameters for an external disk"):
+        if self.context.storage == "azure":
+            external_disk = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+            )
+        else:
+            uri = uri or self.context.uri
+            external_disk = s3_type_disk_parameters(
+                uri,
+                self.context.access_key_id,
+                self.context.secret_access_key,
+            )
+
+    with And("disk configuration for a blob storage disk"):
         if check_clickhouse_version(">=22.8")(self):
             disks = {
-                disk_name: {
-                    "type": "s3",
-                    "endpoint": f"{uri}",
-                    "access_key_id": f"{self.context.access_key_id}",
-                    "secret_access_key": f"{self.context.secret_access_key}",
-                },
+                disk_name: external_disk,
                 "s3_cache": {
                     "type": "cache",
                     "disk": disk_name,
@@ -1331,14 +1394,7 @@ def default_s3_disk_and_volume(
                 },
             }
         else:
-            disks = {
-                disk_name: {
-                    "type": "s3",
-                    "endpoint": f"{uri}",
-                    "access_key_id": f"{self.context.access_key_id}",
-                    "secret_access_key": f"{self.context.secret_access_key}",
-                }
-            }
+            disks = {disk_name: external_disk}
 
         if hasattr(self.context, "s3_options"):
             disks[disk_name].update(self.context.s3_options)

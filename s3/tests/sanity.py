@@ -49,3 +49,31 @@ def minio(self, uri):
     Scenario(
         run=sanity, examples=Examples("policy", [("default",), ("minio_external",)])
     )
+
+
+@TestFeature
+@Name("sanity")
+def gcs(self, uri):
+    """Check that S3 storage is working correctly by
+    storing data using different S3 policies.
+    """
+
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(uri=uri, disk_name="gcs", policy_name="gcs_external")
+
+    Scenario(run=sanity, examples=Examples("policy", [("default",), ("gcs_external",)]))
+
+
+@TestFeature
+@Name("sanity")
+def azure(self):
+    """Check that S3 storage is working correctly by
+    storing data using different S3 policies.
+    """
+
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume(disk_name="azure", policy_name="azure_external")
+
+    Scenario(
+        run=sanity, examples=Examples("policy", [("default",), ("azure_external",)])
+    )

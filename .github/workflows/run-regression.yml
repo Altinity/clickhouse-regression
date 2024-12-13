@@ -82,6 +82,7 @@ on:
           - rbac
           - s3_all
           - s3_aws
+          - s3_azure
           - s3_gcs
           - s3_minio
           - selects
@@ -1624,6 +1625,48 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-aws-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_azure:
+    runs-on: [self-hosted, x86, type-cpx51, image-x86-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: s3
+      STORAGE: /azure
+    if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage azure
+              --azure-account-name ${{ secrets.AZURE_ACCOUNT_NAME }}
+              --azure-storage-key ${{ secrets.AZURE_STORAGE_KEY }}
+              --azure-container ${{ secrets.AZURE_CONTAINER_NAME }}
+              ${{ env.args }} || EXITCODE=$?;
+              .github/add_link_to_logs.sh;
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 5
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-azure-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
