@@ -225,6 +225,7 @@ def create_parquet_json_definition(
     row_group_size_bytes=256,
     page_size_bytes=1024,
     enable_bloom_filter=False,
+    column_name = None,
 ):
     """Create the JSON definition for the parquet file."""
     file_definition = {}
@@ -243,11 +244,12 @@ def create_parquet_json_definition(
 
     file_definition.update(options(options=option_list))
 
-    column_name = (
-        logical_type()["logicalType"].lower()
-        if logical_type()["logicalType"] != "NONE"
-        else physical_type()["physicalType"].lower()
-    )
+    if column_name is None:
+        column_name = (
+            logical_type()["logicalType"].lower()
+            if logical_type()["logicalType"] != "NONE"
+            else physical_type()["physicalType"].lower()
+        )
 
     schema_values.update(
         schema_type(
