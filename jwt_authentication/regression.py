@@ -72,6 +72,7 @@ def regression(
 
     Scenario(run=load("jwt_authentication.tests.static_key.feature", "feature"))
     Scenario(run=load("jwt_authentication.tests.jwks.feature", "feature"))
+    Scenario(run=load("jwt_authentication.tests.dynamic_jwks.feature", "feature"))
 
 
 if main():
