@@ -155,6 +155,34 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
+    "azure/:/:/:/:he size of the s3 bucket*": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/:/:/:he size of the s3 bucket*": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/:/:he size of the s3 bucket*": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/disk/environment credentials": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/disk/:ports": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/zero copy replication/metadata": (
+        Skip,
+        "azure not s3 compatible",
+    ),
+    "azure/zero copy replication/alter": (
+        Skip,
+        "investigate",
+    ),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
@@ -403,6 +431,78 @@ def aws_s3_regression(
 
 
 @TestFeature
+@Name("azure")
+def azure_regression(
+    self,
+    account_name,
+    storage_key,
+    container_name,
+    cluster_args,
+    with_analyzer=False,
+):
+    """Setup and run aws s3 tests."""
+    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+
+    if account_name == None:
+        fail("Azure account name needs to be set")
+    account_name = account_name.value
+
+    if storage_key == None:
+        fail("Azure storage key needs to be set")
+    storage_key = storage_key.value
+
+    if container_name == None:
+        fail("Azure container name needs to be set")
+    container_name = container_name.value
+
+    azure_storage_account_url = f"https://{account_name}.blob.core.windows.net/"
+    uri = None
+    bucket_prefix = None
+
+    self.context.storage = "azure"
+    self.context.azure_storage_account_url = azure_storage_account_url
+    self.context.uri = uri
+    self.context.azure_account_name = account_name
+    self.context.azure_account_key = storage_key
+    self.context.azure_container_name = container_name
+
+    with Cluster(
+        **cluster_args,
+        nodes=nodes,
+        # environ={
+        #     "AZURE_CLIENT_ID": client_id,
+        #     "AZURE_CLIENT_SECRET": client_secret,
+        #     "AZURE_STORAGE_KEY": storage_key,
+        #     "AZURE_TENANT_ID": tenant_id,
+        # },
+    ) as cluster:
+
+        self.context.cluster = cluster
+        self.context.node = cluster.node("clickhouse1")
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
+
+        Feature(test=load("s3.tests.sanity", "azure"))()
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk", "azure"))()
+        # Feature(test=load("s3.tests.disk_invalid", "azure"))()
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
+        Feature(test=load("s3.tests.reconnect", "azure"))()
+        Feature(test=load("s3.tests.backup", "azure"))()
+        # Feature(test=load("s3.tests.orphans", "feature"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+
+
+@TestFeature
 @Name("gcs")
 def gcs_regression(
     self,
@@ -447,6 +547,7 @@ def gcs_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.table_function", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix
         )
@@ -511,6 +612,15 @@ def regression(
             uri=s3_args["gcs_uri"],
             key_id=s3_args["gcs_key_id"],
             access_key=s3_args["gcs_key_secret"],
+            with_analyzer=with_analyzer,
+        )
+
+    if "azure" in storages:
+        Feature(test=azure_regression)(
+            cluster_args=cluster_args,
+            account_name=s3_args["azure_account_name"],
+            storage_key=s3_args["azure_storage_key"],
+            container_name=s3_args["azure_container"],
             with_analyzer=with_analyzer,
         )
 
