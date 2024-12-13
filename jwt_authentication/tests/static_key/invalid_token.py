@@ -15,13 +15,8 @@ def jwt_authentication_with_invalid_token(self):
         user_name = f"jwt_user_{getuid()}"
         steps.create_user_with_jwt_auth(user_name=user_name)
 
-    with Then("check jwt authentication with None instead of correct token"):
-        steps.check_jwt_login(
-            user_name=user_name,
-            token=None,
-            exitcode=131,
-            message=(f"DB::Exception: Failed to validate jwt."),
-        )
+    with Then("check jwt authentication with 'abc instead of correct token"):
+        steps.expect_corrupted_token_error(token="abc")
 
 
 @TestScenario
@@ -42,7 +37,7 @@ def jwt_authentication_with_corrupted_token(self):
         user_name = f"jwt_user_{getuid()}"
         steps.create_user_with_jwt_auth(user_name=user_name)
 
-    with When("create token"):
+    with When("create jwt for this user"):
         token = steps.create_static_jwt(
             user_name=user_name, secret=secret, algorithm=algorithm
         )
@@ -73,7 +68,7 @@ def jwt_authentication_with_corrupted_token(self):
 
 @TestScenario
 @Name("using other user's token parts")
-def other_user_token(self):
+def other_users_token(self):
     """Check that user can not use other user's token parts to authenticate."""
     with Given("defining parameters for new validator"):
         validator_id = define("validator_id", "new_validator")
@@ -87,11 +82,11 @@ def other_user_token(self):
 
     with When("create two users with jwt authentication"):
         user_one = f"jwt_user_one_{getuid()}"
-        steps.create_user_with_jwt_auth(user_name=user_one)
         user_two = f"jwt_user_two_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_one)
         steps.create_user_with_jwt_auth(user_name=user_two)
 
-    with When("create tokens for both users"):
+    with When("create tokens for both users with the same secret and algorithm"):
         token_one = steps.create_static_jwt(
             user_name=user_one, secret=secret, algorithm=algorithm
         )
@@ -99,7 +94,9 @@ def other_user_token(self):
             user_name=user_two, secret=secret, algorithm=algorithm
         )
 
-    with When("create all possible combinations of tokens"):
+    with When(
+        "split these two tokens into three parts and combine them in all possible ways"
+    ):
         token_one_header, token_one_payload, token_one_signature = token_one.split(".")
         token_two_header, token_two_payload, token_two_signature = token_two.split(".")
 
@@ -115,7 +112,7 @@ def other_user_token(self):
             ],
         )
 
-    with Then("check jwt authentication with all possible combinations of tokens"):
+    with Then("check that jwt authentication succeeds only with original tokens"):
         for token in all_combinations:
             if token == token_one:
                 steps.check_jwt_login(user_name=user_one, token=token)
@@ -132,4 +129,4 @@ def feature(self):
 
     Scenario(run=jwt_authentication_with_invalid_token)
     Scenario(run=jwt_authentication_with_corrupted_token)
-    Scenario(run=other_user_token)
+    Scenario(run=other_users_token)
