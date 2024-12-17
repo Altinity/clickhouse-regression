@@ -7,7 +7,6 @@ import argparse
 import os
 from datetime import datetime
 from pprint import pprint
-
 import requests
 from clickhouse_driver import Client
 
@@ -407,7 +406,7 @@ class ResultUploader:
                 port=db_port,
                 secure="y" if secure else None,
                 verify=verify,
-                settings={"insert_block_size": 1048576 // 4},
+                settings={"insert_block_size": 1024},
             )
 
         with When("inserting test results"):
