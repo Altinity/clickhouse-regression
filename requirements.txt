@@ -20,3 +20,4 @@ pyspark==3.5.3
 delta-spark==3.2.1
 pyiceberg==0.7.1
 PyJWT==2.3.0
+cryptography==44.0.0
