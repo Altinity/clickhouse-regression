@@ -407,7 +407,7 @@ class ResultUploader:
                 port=db_port,
                 secure="y" if secure else None,
                 verify=verify,
-                settings={"insert_block_size": 1048576 // 2},
+                settings={"insert_block_size": 1048576 // 4},
             )
 
         with When("inserting test results"):
