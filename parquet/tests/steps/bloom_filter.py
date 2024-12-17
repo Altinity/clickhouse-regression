@@ -427,6 +427,24 @@ def fixed_len_byte_array_physical(self, length=3):
 
 
 @TestStep(Given)
+def fixed_len_byte_array_physical_2(self):
+    """Entry for FIXED_LEN_BYTE_ARRAY physical type with length of 2 bytes."""
+    return fixed_len_byte_array_physical(length=2)
+
+
+@TestStep(Given)
+def fixed_len_byte_array_physical_16(self):
+    """Entry for FIXED_LEN_BYTE_ARRAY physical type with length of 16 bytes."""
+    return fixed_len_byte_array_physical(length=16)
+
+
+@TestStep(Given)
+def fixed_len_byte_array_physical_12(self):
+    """Entry for FIXED_LEN_BYTE_ARRAY physical type with length of 12 bytes."""
+    return fixed_len_byte_array_physical(length=12)
+
+
+@TestStep(Given)
 def no_logical_type(self):
     """Entry for no logical type."""
     return {"logicalType": "NONE"}
@@ -672,6 +690,42 @@ simple_logical_types = [
 ]
 
 complex_logical_types = [map, list, map_key_value]
+
+
+physical_to_logical_annotation = {
+    binary_physical: [string, json_type, bson, enum, decimal],
+    fixed_len_byte_array_physical_16: [uuid],
+    fixed_len_byte_array_physical_2: [float16],
+    int32_physical: [
+        int8,
+        int16,
+        int32,
+        decimal,
+        date,
+        time_millis,
+        uint8,
+        uint16,
+        uint32,
+    ],
+    int64: [
+        decimal,
+        time,
+        time_millis,
+        int8,
+        int16,
+        int32,
+        int64,
+        timestamp_millis,
+        timestamp_micros,
+        uint8,
+        uint16,
+        uint32,
+        uint64,
+    ],
+    fixed_len_byte_array_physical_12: [interval],
+    int96_physical: [no_logical_type],
+}
+
 
 clickhouse_datatypes = [
     "JSON",
