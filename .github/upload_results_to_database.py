@@ -411,7 +411,7 @@ class ResultUploader:
 
         with When("inserting test results"):
             settings = {
-                "send_logs_level": "warning",
+                "send_logs_level": "info",
                 "input_format_null_as_default": True,
             }
 
