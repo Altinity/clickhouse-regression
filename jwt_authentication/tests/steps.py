@@ -344,18 +344,105 @@ def add_static_jwks_validator_to_config_xml(
 
 
 @TestStep(Given)
+def update_json_content(
+    self, keys, node=None, url="http://jwks_server:8080/parameters"
+):
+    """Update JWKS content on the server."""
+    if node is None:
+        node = self.context.node
+
+    json_data = json.dumps(keys)
+
+    curl_command = (
+        "curl "
+        "--request POST "
+        "--header 'Content-Type: application/json' "
+        f"--data '{json_data}' "
+        f"{url}"
+    )
+
+    result = node.command(curl_command)
+
+    note(result.output)
+
+
+@TestStep(Given)
+def add_dynamic_jwks_validator_to_config_xml(
+    self,
+    validator_id: str = None,
+    keys: list = None,
+    algorithm: str = "RS256",
+    key_id: str = "mykid",
+    public_key_str: str = None,
+    key_type: str = "RSA",
+    node: Node = None,
+    uri=None,
+):
+    """Add static key validator to the config.xml."""
+    if node is None:
+        node = self.context.node
+
+    with By("create keys content"):
+        if keys is None:
+            keys = [
+                create_static_jwks_key_content(
+                    algorithm=algorithm,
+                    public_key_str=public_key_str,
+                    key_id=key_id,
+                    key_type=key_type,
+                )
+            ]
+
+    if uri is not None:
+        with By("build entries and add dynamic jwks validator to the config.xml"):
+            if validator_id is None:
+                validator_id = f"jwks_server_{getuid()}"
+
+            entries = {"jwt_validators": {}}
+            entries["jwt_validators"][f"{validator_id}"] = {"uri": uri}
+
+            change_clickhouse_config(
+                entries=entries,
+                config_d_dir="/etc/clickhouse-server/config.d",
+                preprocessed_name="config.xml",
+                node=node,
+            )
+
+    with And("update JSON content"):
+        jwks_content = define(
+            "jwks content",
+            {
+                "keys": keys,
+            },
+        )
+        update_json_content(keys=jwks_content, node=node)
+
+    with And("check that handle was updated"):
+        curl_command = f"curl http://jwks_server:8080/.well-known/jwks.json"
+        result = node.command(curl_command)
+        note(result.output)
+        note(jwks_content)
+        for retry in retries(10, delay=1):
+            with retry:
+                assert result.output == json.dumps(jwks_content), error()
+
+
+@TestStep(Given)
 def create_user_with_jwt_auth(
     self,
     user_name: str,
     node: Node = None,
     claims: dict = {},
     cluster: str = None,
+    if_not_exists: bool = False,
 ):
     """Create a user with JWT authentication."""
     if node is None:
         node = self.context.node
 
-    query = f"CREATE USER {user_name} "
+    if_not_exists = "IF NOT EXISTS" if if_not_exists else ""
+
+    query = f"CREATE USER {if_not_exists} {user_name} "
 
     if cluster is not None:
         query += f"ON CLUSTER {cluster} "
