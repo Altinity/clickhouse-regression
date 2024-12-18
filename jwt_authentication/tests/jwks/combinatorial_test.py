@@ -128,7 +128,7 @@ def create_ssh_key_pairs(self, number=1):
 
 @TestCheck
 def check_jwks_authentication(self, user_name, token, validator, node=None):
-    """Verify JWT authentication using a static key validator.
+    """Verify JWT authentication using a static JWKS validator.
     Adds the validator to the config, creates a user, and
     validates the JWT token against the ClickHouse client.
     """
@@ -168,7 +168,7 @@ def run_combinations(self, node, node_index):
 @TestScenario
 @Name("static jwks combinatorial test")
 def feature(self):
-    """Check JWT authentication using static key validators."""
+    """Check JWT authentication using static JWKS with combinatorial testing."""
 
     token_algorithms = [
         "RS256",
@@ -182,6 +182,11 @@ def feature(self):
     ]
     user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
     expiration_minutes = [60 * 5, -5, None]
+    if self.context.stress:
+        expiration_minutes = [
+            -5,
+            None,
+        ]  # since test might take a long time and token can expire
 
     with Given("create pairs of ssh keys"):
         ssh_keys = create_ssh_key_pairs(number=2)
