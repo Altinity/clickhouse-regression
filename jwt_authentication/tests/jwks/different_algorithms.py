@@ -4,8 +4,6 @@ from helpers.common import getuid
 from jwt_authentication.requirements import *
 import jwt_authentication.tests.steps as steps
 
-from cryptography.hazmat.primitives import serialization
-
 
 @TestCheck
 def check_jwt_auth(self, algorithm):
