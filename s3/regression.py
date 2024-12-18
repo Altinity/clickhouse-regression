@@ -50,7 +50,7 @@ xfails = {
     ":/backup/:/metadata non restorable schema": [
         (Fail, "send_metadata is deprecated")
     ],
-    ":/zero copy replication/the bucket should be cleaned up": [
+    ":/zero copy replication/the size of the s3 bucket should be the same as before": [
         (Fail, "Data cleanup needs investigation")
     ],
     "aws s3/backup/:/:": [
