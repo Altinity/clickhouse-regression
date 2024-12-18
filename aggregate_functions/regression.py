@@ -452,8 +452,8 @@ xfails = {
     "/aggregate functions/deltaSumTimestamp/*": [
         (
             Fail,
-            "xfail until https://github.com/ClickHouse/ClickHouse/pull/71790 in some version",
-            check_clickhouse_version("<25.1"),
+            "https://github.com/ClickHouse/ClickHouse/pull/71790",
+            check_clickhouse_version("<25.2"),
         )
     ],
     "/aggregate functions/state/deltaSumTimestampState/*": [
