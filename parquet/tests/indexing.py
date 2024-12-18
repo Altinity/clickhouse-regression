@@ -231,14 +231,22 @@ def bloom_filter_and_min_max_evaluation(self):
     """Check that the bloom filer and min/max evaluation work together when reading from a Parquet file."""
     conditions = ["=", "!=", "IN", "NOT IN", ">", "<", ">=", "<="]
 
+    conditions_1 = either(*conditions)
+    conditions_2 = either(*conditions)
+    compressions = either(*compression)
+    schema_types = either(*schema_type)
+    writer_versions = either(*writer_version)
+    physical_type = either(*physical_types)
+    logical_type = either(*simple_logical_types)
+
     check_bloom_and_min_max_evaluation(
-        schema_type=either(*schema_type),
-        writer_version=either(*writer_version),
-        physical_type=either(*physical_types),
-        logical_type=either(*simple_logical_types),
-        compression_value=either(*compression),
-        condition_1=either(*conditions),
-        condition_2=either(*conditions),
+        schema_type=schema_types,
+        writer_version=writer_versions,
+        physical_type=physical_type,
+        logical_type=logical_type,
+        compression_value=compressions,
+        condition_1=conditions_1,
+        condition_2=conditions_2,
     )
 
 
