@@ -7,6 +7,8 @@ import argparse
 import os
 from datetime import datetime
 from pprint import pprint
+from logging.config import dictConfig
+
 import requests
 from clickhouse_driver import Client
 
@@ -585,4 +587,26 @@ def upload(
 
 
 if main():
+    # Configure logging for clickhouse_driver
+    dictConfig(
+        {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "standard": {
+                    "format": "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
+                },
+            },
+            "handlers": {
+                "default": {
+                    "level": "INFO",
+                    "formatter": "standard",
+                    "class": "logging.StreamHandler",
+                },
+            },
+            "loggers": {
+                "": {"handlers": ["default"], "level": "INFO", "propagate": True},
+            },
+        }
+    )
     upload()
