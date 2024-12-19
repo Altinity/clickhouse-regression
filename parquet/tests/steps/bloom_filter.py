@@ -628,7 +628,9 @@ physical_types = [
     float_physical,
     double_physical,
     binary_physical,
-    fixed_len_byte_array_physical,
+    fixed_len_byte_array_physical_2,
+    fixed_len_byte_array_physical_16,
+    fixed_len_byte_array_physical_12,
 ]
 logical_types = [
     utf8,
@@ -693,9 +695,9 @@ complex_logical_types = [map, list, map_key_value]
 
 
 physical_to_logical_annotation = {
-    binary_physical: [string, json_type, bson, enum, decimal],
-    fixed_len_byte_array_physical_16: [uuid],
-    fixed_len_byte_array_physical_2: [float16],
+    binary_physical: [string, json_type, bson, enum, decimal, no_logical_type],
+    fixed_len_byte_array_physical_16: [uuid, no_logical_type],
+    fixed_len_byte_array_physical_2: [float16, no_logical_type],
     int32_physical: [
         int8,
         int16,
@@ -706,8 +708,9 @@ physical_to_logical_annotation = {
         uint8,
         uint16,
         uint32,
+        no_logical_type,
     ],
-    int64: [
+    int64_physical: [
         decimal,
         time,
         time_millis,
@@ -721,9 +724,13 @@ physical_to_logical_annotation = {
         uint16,
         uint32,
         uint64,
+        no_logical_type,
     ],
-    fixed_len_byte_array_physical_12: [interval],
+    fixed_len_byte_array_physical_12: [interval, no_logical_type],
     int96_physical: [no_logical_type],
+    boolean_physical: [no_logical_type],
+    float_physical: [no_logical_type],
+    double_physical: [no_logical_type],
 }
 
 

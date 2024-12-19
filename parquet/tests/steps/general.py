@@ -225,7 +225,7 @@ def create_parquet_json_definition(
     row_group_size_bytes=256,
     page_size_bytes=1024,
     enable_bloom_filter=False,
-    column_name = None,
+    column_name=None,
 ):
     """Create the JSON definition for the parquet file."""
     file_definition = {}
