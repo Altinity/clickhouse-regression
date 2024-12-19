@@ -10,3 +10,8 @@ def feature(self):
         run=load("jwt_authentication.tests.dynamic_jwks.sanity", "feature")
     )
     Feature(run=load("jwt_authentication.tests.dynamic_jwks.combinatorial_test", "feature"))
+    Feature(
+        run=load(
+            "jwt_authentication.tests.dynamic_jwks.authentication_methods", "feature"
+        )
+    )
