@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives import serialization
 def test_login_fails_with_mismatched_algorithm(self):
     """Check that login fails when jwt algorithm does not match the one
     specified for the validator in config.xml."""
-    with When("create user with jwt authentication"):
+    with Given("create user with jwt authentication"):
         user_name = f"jwt_user_{getuid()}"
         steps.create_user_with_jwt_auth(user_name=user_name)
 
