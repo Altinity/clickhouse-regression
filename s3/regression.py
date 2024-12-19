@@ -175,6 +175,10 @@ ffails = {
         Skip,
         "azure not s3 compatible",
     ),
+    "azure/invalid disk/access failed skip check": (
+        XFail,
+        "Not working, needs investigation",
+    ),
     "azure/zero copy replication/metadata": (
         Skip,
         "azure not s3 compatible",
@@ -491,7 +495,7 @@ def azure_regression(
             uri=uri, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.disk", "azure"))()
-        # Feature(test=load("s3.tests.disk_invalid", "azure"))()
+        Feature(test=load("s3.tests.disk_invalid", "azure"))()
         Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
         Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
         Feature(test=load("s3.tests.reconnect", "azure"))()
