@@ -667,29 +667,29 @@ version: 1.0
 #### RQ.SRS-042.JWT.GrafanaIntegration.Support
 version: 1.0  
 
-[Grafana] SHALL support forwarding the same JWT token used to authenticate a user in Grafana to ClickHouse when making requests to the ClickHouse data source. This behavior SHALL be configurable by enabling the "Forward OAuth Identity" option in the Grafana data source settings.
+[Grafana] SHALL support forwarding the same JWT token used to authenticate a user in [Grafana] to ClickHouse when making requests to the ClickHouse data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.
 
 #### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled
 version: 1.0  
 
-When the "Forward OAuth Identity" option is enabled in Grafana, [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.
+When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.
 
 #### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled
 version: 1.0  
 
-When the "Forward OAuth Identity" option is disabled in Grafana, [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
+When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
 
 #### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration
 version: 1.0  
 
-[ClickHouse] SHALL validate JWT tokens forwarded by Grafana. The tokens MUST be validated using the JWT validators configured in the jwt_validators section of config.xml.
+[ClickHouse] SHALL validate JWT tokens forwarded by [Grafana]. The tokens MUST be validated using the JWT validators configured in the `jwt_validators` section of `config.xml` file.
 
 ### Expired Token Handling
 
 #### RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration
 version: 1.0  
 
-[ClickHouse] SHALL reject expired JWT tokens sent by Grafana.
+[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
