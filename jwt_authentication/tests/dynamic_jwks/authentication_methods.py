@@ -12,7 +12,7 @@ def change_authentication_method(self):
 
     node = self.context.node
 
-    with When("create user with jwt authentication"):
+    with Given("create user with jwt authentication"):
         user_name = f"jwt_user_{getuid()}"
         steps.create_user_with_jwt_auth(user_name=user_name)
 
@@ -65,7 +65,7 @@ def not_jwt_authentication(self):
 
     node = self.context.node
 
-    with When("create user with password authentication"):
+    with Given("create user with password authentication"):
         user_name = f"password_user_{getuid()}"
         password = "some_password"
         node.query(
@@ -103,8 +103,32 @@ def not_jwt_authentication(self):
         steps.expect_jwt_authentication_error(token=token)
 
 
+@TestScenario
+def login_without_token(self):
+    """Check that jwt authentication fails when user tries to login without token."""
+
+    with Given("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with When("add some validator to the config.xml"):
+        key_id = f"some_key_id_{getuid()}"
+        algorithm = "RS384"
+        public_key, _ = steps.generate_ssh_keys()
+        steps.add_dynamic_jwks_validator_to_config_xml(
+            validator_id="jwks_with_RS384_algorithm",
+            algorithm=algorithm,
+            public_key_str=public_key,
+            key_id=key_id,
+        )
+
+    with Then("check login without token"):
+        steps.check_clickhouse_client_password_login(user_name=user_name, password="")
+
+
 @TestFeature
 def feature(self):
     """Check that jwt authentication fails when user's authentication method is not jwt."""
     Scenario(run=change_authentication_method)
     Scenario(run=not_jwt_authentication)
+    Scenario(run=login_without_token)
