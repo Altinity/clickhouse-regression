@@ -20,7 +20,7 @@ from parquet.tests.steps.bloom_filter import (
     physical_types,
     logical_types,
     compression,
-    simple_logical_types,
+    simple_logical_types, physical_to_logical_annotation,
 )
 from parquet.tests.steps.general import (
     parquetify,
@@ -153,7 +153,16 @@ def check_bloom_and_min_max_evaluation(
     """Check that bloom filter and min/max indexes are evaluated when used together."""
     node = self.context.node
 
-    with Given("I generate a Parquet file"):
+    with Given("I check if logical and physical type combination is correct"):
+        skip_test = False
+
+        if logical_type not in physical_to_logical_annotation[physical_type]:
+            skip_test = True
+
+    with And("I generate a Parquet file"):
+        if skip_test:
+            skip("Logical type is not supported for the physical type")
+
         (
             file_definition,
             parquetify_exitcode,
@@ -171,17 +180,26 @@ def check_bloom_and_min_max_evaluation(
         parquet_file = file_definition["fileName"]
 
     with When("I copy the parquet file to the user files directory"):
+        if skip_test:
+            skip("Logical type is not supported for the physical type")
+
         if parquetify_exitcode != 0:
             skip("Incorrect JSON file structure")
 
         copy_parquet_to_user_files(parquet_file=parquet_file)
 
     with And("I get the total number of rows in the parquet file"):
+        if skip_test:
+            skip("Logical type is not supported for the physical type")
+
         if parquetify_exitcode != 0:
             skip("Incorrect JSON file structure")
         initial_rows = total_number_of_rows(file_name=parquet_file, client=False)
 
     with And("I run a query with the bloom filter and min/max indexes"):
+        if skip_test:
+            skip("Logical type is not supported for the physical type")
+
         if parquetify_exitcode != 0:
             skip("Incorrect JSON file structure")
 
@@ -213,6 +231,9 @@ def check_bloom_and_min_max_evaluation(
         file_structure = get_file_structure(parquet_file=parquet_file)
 
     with Then("I check the number of rows read"):
+        if skip_test:
+            skip("Logical type is not supported for the physical type")
+
         if parquetify_exitcode != 0:
             skip("Incorrect JSON file structure")
         verify_rows_read(
@@ -231,14 +252,22 @@ def bloom_filter_and_min_max_evaluation(self):
     """Check that the bloom filer and min/max evaluation work together when reading from a Parquet file."""
     conditions = ["=", "!=", "IN", "NOT IN", ">", "<", ">=", "<="]
 
+    conditions_1 = either(*conditions)
+    conditions_2 = either(*conditions)
+    compressions = either(*compression)
+    schema_types = either(*schema_type)
+    writer_versions = either(*writer_version)
+    physical_type = either(*physical_types)
+    logical_type = either(*simple_logical_types)
+
     check_bloom_and_min_max_evaluation(
-        schema_type=either(*schema_type),
-        writer_version=either(*writer_version),
-        physical_type=either(*physical_types),
-        logical_type=either(*simple_logical_types),
-        compression_value=either(*compression),
-        condition_1=either(*conditions),
-        condition_2=either(*conditions),
+        schema_type=schema_types,
+        writer_version=writer_versions,
+        physical_type=physical_type,
+        logical_type=logical_type,
+        compression_value=compressions,
+        condition_1=conditions_1,
+        condition_2=conditions_2,
     )
 
 
