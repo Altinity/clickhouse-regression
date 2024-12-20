@@ -113,7 +113,25 @@ xfails = {
     ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
-    ":/combinatoric table/:": [(Fail, "Unstable test")],
+    ":/combinatoric table/:n_cols=2000:part_type=compact": [
+        (
+            Fail,
+            "Compact parts require too much memory with 2000 columns",
+            always,
+            ".*MEMORY_LIMIT_EXCEEDED.*",
+        )
+    ],
+    ":/combinatoric table/engine=VersionedCollapsingMergeTree,replicated=True,n_cols=2000,n_tables=3,part_type=wide": [
+        (
+            Fail,
+            "Needs investigation, MEMORY_LIMIT_EXCEEDED",
+            always,
+            ".*MEMORY_LIMIT_EXCEEDED.*",
+        )
+    ],
+    ":/combinatoric table/engine=CollapsingMergeTree,replicated=True,n_cols=500,n_tables=3,part_type=compact": [
+        (Fail, "Needs investigation, rows not appearing")
+    ],
     ":/invalid table function/invalid region": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/59084")
     ],
