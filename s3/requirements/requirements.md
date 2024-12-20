@@ -22,11 +22,12 @@
       * 4.1.11.1 [RQ.SRS-015.S3.Backup.MinIOBackup](#rqsrs-015s3backupminiobackup)
       * 4.1.11.2 [RQ.SRS-015.S3.Backup.AWSS3Backup](#rqsrs-015s3backupawss3backup)
       * 4.1.11.3 [RQ.SRS-015.S3.Backup.GCSBackup](#rqsrs-015s3backupgcsbackup)
-      * 4.1.11.4 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
-      * 4.1.11.5 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
-      * 4.1.11.6 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
-      * 4.1.11.7 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
-      * 4.1.11.8 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
+      * 4.1.11.4 [RQ.SRS-015.S3.Backup.AzureBackup](#rqsrs-015s3backupazurebackup)
+      * 4.1.11.5 [RQ.SRS-015.S3.Backup.StoragePolicies](#rqsrs-015s3backupstoragepolicies)
+      * 4.1.11.6 [RQ.SRS-015.S3.Backup.AlterFreeze](#rqsrs-015s3backupalterfreeze)
+      * 4.1.11.7 [RQ.SRS-015.S3.Backup.AlterDetach](#rqsrs-015s3backupalterdetach)
+      * 4.1.11.8 [RQ.SRS-015.S3.Backup.AlterAttach](#rqsrs-015s3backupalterattach)
+      * 4.1.11.9 [RQ.SRS-015.S3.Backup.Cleanup](#rqsrs-015s3backupcleanup)
     * 4.1.12 [Metadata](#metadata)
       * 4.1.12.1 [RQ.SRS-015.S3.Metadata](#rqsrs-015s3metadata)
       * 4.1.12.2 [RQ.SRS-015.S3.Metadata.Revisions](#rqsrs-015s3metadatarevisions)
@@ -44,10 +45,12 @@
     * 4.1.14 [RQ.SRS-015.S3.AWS](#rqsrs-015s3aws)
     * 4.1.15 [RQ.SRS-015.S3.MinIO](#rqsrs-015s3minio)
     * 4.1.16 [RQ.SRS-015.S3.GCS](#rqsrs-015s3gcs)
-    * 4.1.17 [Automatic Reconnects](#automatic-reconnects)
-      * 4.1.17.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
-      * 4.1.17.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
-      * 4.1.17.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
+    * 4.1.17 [RQ.SRS-015.S3.Azure](#rqsrs-015s3azure)
+    * 4.1.18 [Automatic Reconnects](#automatic-reconnects)
+      * 4.1.18.1 [RQ.SRS-015.S3.AutomaticReconnects.GCS](#rqsrs-015s3automaticreconnectsgcs)
+      * 4.1.18.2 [RQ.SRS-015.S3.AutomaticReconnects.AWS](#rqsrs-015s3automaticreconnectsaws)
+      * 4.1.18.3 [RQ.SRS-015.S3.AutomaticReconnects.MinIO](#rqsrs-015s3automaticreconnectsminio)
+      * 4.1.18.4 [RQ.SRS-015.S3.AutomaticReconnects.Azure](#rqsrs-015s3automaticreconnectsazure)
   * 4.2 [Users](#users)
     * 4.2.1 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache](#rqsrs-015s3userconfigurationcache228enablefilesystemcache)
     * 4.2.2 [RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations](#rqsrs-015s3userconfigurationcache228enablefilesystemcacheonwriteoperations)
@@ -139,19 +142,22 @@
     * 4.9.1 [RQ.SRS-015.S3.GCS.Disk.Configuration](#rqsrs-015s3gcsdiskconfiguration)
     * 4.9.2 [RQ.SRS-015.S3.GCS.TableFunction](#rqsrs-015s3gcstablefunction)
     * 4.9.3 [RQ.SRS-015.S3.GCS.AllowS3ZeroCopyReplication](#rqsrs-015s3gcsallows3zerocopyreplication)
-  * 4.10 [Settings](#settings)
-    * 4.10.1 [RQ.SRS-015.S3.Settings.MaxThreads](#rqsrs-015s3settingsmaxthreads)
-    * 4.10.2 [RQ.SRS-015.S3.Settings.MaxDownloadThreads](#rqsrs-015s3settingsmaxdownloadthreads)
-    * 4.10.3 [RQ.SRS-015.S3.Settings.MaxDownloadBufferSize](#rqsrs-015s3settingsmaxdownloadbuffersize)
-    * 4.10.4 [RQ.SRS-015.S3.Settings.PartitionBy](#rqsrs-015s3settingspartitionby)
-    * 4.10.5 [RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor](#rqsrs-015s3settingss3uploadpartsizemultiplyfactor)
-    * 4.10.6 [RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold](#rqsrs-015s3settingss3uploadpartsizemultiplypartscountthreshold)
-  * 4.11 [Performance](#performance)
-    * 4.11.1 [RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert](#rqsrs-015s3performanceperformttlmoveoninsert)
-    * 4.11.2 [RQ.SRS-015.S3.Performance.Glob](#rqsrs-015s3performanceglob)
-    * 4.11.3 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select](#rqsrs-015s3performanceallows3zerocopyreplicationselect)
-    * 4.11.4 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert](#rqsrs-015s3performanceallows3zerocopyreplicationinsert)
-    * 4.11.5 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3performanceallows3zerocopyreplicationalter)
+  * 4.10 [Azure](#azure)
+    * 4.10.1 [RQ.SRS-015.S3.Azure.Disk.Configuration](#rqsrs-015s3azurediskconfiguration)
+    * 4.10.2 [RQ.SRS-015.S3.Azure.AllowS3ZeroCopyReplication](#rqsrs-015s3azureallows3zerocopyreplication)
+  * 4.11 [Settings](#settings)
+    * 4.11.1 [RQ.SRS-015.S3.Settings.MaxThreads](#rqsrs-015s3settingsmaxthreads)
+    * 4.11.2 [RQ.SRS-015.S3.Settings.MaxDownloadThreads](#rqsrs-015s3settingsmaxdownloadthreads)
+    * 4.11.3 [RQ.SRS-015.S3.Settings.MaxDownloadBufferSize](#rqsrs-015s3settingsmaxdownloadbuffersize)
+    * 4.11.4 [RQ.SRS-015.S3.Settings.PartitionBy](#rqsrs-015s3settingspartitionby)
+    * 4.11.5 [RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor](#rqsrs-015s3settingss3uploadpartsizemultiplyfactor)
+    * 4.11.6 [RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold](#rqsrs-015s3settingss3uploadpartsizemultiplypartscountthreshold)
+  * 4.12 [Performance](#performance)
+    * 4.12.1 [RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert](#rqsrs-015s3performanceperformttlmoveoninsert)
+    * 4.12.2 [RQ.SRS-015.S3.Performance.Glob](#rqsrs-015s3performanceglob)
+    * 4.12.3 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select](#rqsrs-015s3performanceallows3zerocopyreplicationselect)
+    * 4.12.4 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert](#rqsrs-015s3performanceallows3zerocopyreplicationinsert)
+    * 4.12.5 [RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter](#rqsrs-015s3performanceallows3zerocopyreplicationalter)
 * 5 [References](#references)
 
 ## Revision History
@@ -292,6 +298,11 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support manual backups of tables that use gcs storage.
+
+##### RQ.SRS-015.S3.Backup.AzureBackup
+version: 1.0
+
+[ClickHouse] SHALL support manual backups of tables that use azure storage.
 
 ##### RQ.SRS-015.S3.Backup.StoragePolicies
 version: 1.0
@@ -444,6 +455,11 @@ version: 1.0
 
 [ClickHouse] SHALL support [S3] external storage using Google Cloud Storage.
 
+#### RQ.SRS-015.S3.Azure
+version: 1.0
+
+[ClickHouse] SHALL support external disks using [Azure Blob Storage].
+
 #### Automatic Reconnects
 
 ##### RQ.SRS-015.S3.AutomaticReconnects.GCS
@@ -460,6 +476,11 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support automatically reconnecting to MinIO if the network connection has been interrupted.
+
+##### RQ.SRS-015.S3.AutomaticReconnects.Azure
+version: 1.0
+
+[ClickHouse] SHALL support automatically reconnecting to Azure if the network connection has been interrupted.
 
 ### Users
 
@@ -1251,6 +1272,37 @@ version: 1.0
 using replicated tables with the ReplicatedMergeTree engine and the
 `<allow_s3_zero_copy_replication>` parameter set to 1.
 
+### Azure
+
+#### RQ.SRS-015.S3.Azure.Disk.Configuration
+version: 1.0
+
+[ClickHouse] SHALL support configuration of [Azure Blob Storage] disks
+with syntax similar to the following:
+
+``` xml
+<yandex>
+  <storage_configuration>
+    <disks>
+      <azure_disk>
+          <type>azure_blob_storage</type>
+          <storage_account_url>http://myaccount.blob.core.windows.net</storage_account_url>
+          <container_name>my-container</container_name>
+          <account_name>*****</account_name>
+          <account_key>*****</account_key>
+      </azure_disk>
+    </disks>
+...
+</yandex>
+```
+
+#### RQ.SRS-015.S3.Azure.AllowS3ZeroCopyReplication
+version: 1.0
+
+[ClickHouse] SHALL support importing and exporting data to/from [Azure Blob Storage]
+using replicated tables with the ReplicatedMergeTree engine and the
+`<allow_s3_zero_copy_replication>` parameter set to 1.
+
 ### Settings
 
 #### RQ.SRS-015.S3.Settings.MaxThreads
@@ -1347,3 +1399,4 @@ it is not set.
 [GitLab Repository]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/blob/master/QA_SRS_015_ClickHouse_S3_Support.md
 [Revision History]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/commits/master/QA_SRS_015_ClickHouse_S3_Support.md
 [S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[Azure Blob Storage]: https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction
