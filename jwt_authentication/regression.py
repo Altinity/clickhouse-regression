@@ -13,6 +13,7 @@ xfails = {}
 ffails = {
     "/jwt authentication/static key": (Skip, "Under development"),
     "/jwt authentication/static jwks": (Skip, "Under development"),
+    "/jwt authentication/dynamic jwks": (Skip, "Under development"),
 }
 
 
