@@ -170,6 +170,9 @@ services:
       minio1:
         condition: service_healthy
 
+  # azure-client:
+  #   image: mcr.microsoft.com/azure-cli:cbl-mariner2.0
+
   zookeeper1:
     extends:
       file: ../../docker-compose/zookeeper-service.yml

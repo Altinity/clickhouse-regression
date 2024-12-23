@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from random import choice
+import random
 
 from testflows.core import *
 from testflows.combinatorics import CoveringArray
@@ -106,7 +106,10 @@ def check_table_combination(
     nodes = self.context.ch_nodes
     storage_policy = "external"
     tables = []
-    n_rows = 10000
+    insert_size = 5_000_000
+    n_rows = insert_size // n_cols
+
+    my_random = random.Random(42)
 
     for i in range(n_tables):
         with Given(f"table#{i} created with the parameter combination"):
@@ -124,7 +127,7 @@ def check_table_combination(
 
     for i, table in enumerate(tables):
         if replicated:
-            insert_node = choice(nodes)
+            insert_node = my_random.choice(nodes)
 
         with Given(f"data is inserted into table#{i} on {insert_node.name}"):
             insert_node.query(
@@ -135,7 +138,8 @@ def check_table_combination(
                     1 AS ver,
                     * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
                 LIMIT {n_rows}
-                """
+                """,
+                timeout=180,
             )
 
         for node in query_nodes:
@@ -172,8 +176,5 @@ def feature(self, uri):
     for table_config in CoveringArray(
         table_configurations, strength=covering_array_strength
     ):
-        if table_config["n_cols"] > 500 and table_config["part_type"] != "unspecified":
-            continue
-
         title = ",".join([f"{k}={v}" for k, v in table_config.items()])
         Scenario(title, test=check_table_combination)(**table_config)

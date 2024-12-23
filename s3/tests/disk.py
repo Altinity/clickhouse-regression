@@ -2561,6 +2561,7 @@ def gcs(self, uri, bucket_prefix):
 
 
 @TestFeature
+@Requirements(RQ_SRS_015_S3_Azure("1.0"), RQ_SRS_015_S3_Azure_Disk_Configuration("1.0"))
 @Name("disk")
 def azure(self):
 
