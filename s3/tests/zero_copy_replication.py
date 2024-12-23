@@ -1727,9 +1727,9 @@ def gcs(self, uri, bucket_prefix):
 
 
 @TestFeature
+@Requirements(RQ_SRS_015_S3_Azure_AllowS3ZeroCopyReplication("1.0"))
 @Name("zero copy replication")
 def azure(self):
-    # skip("GCS is not supported for zero copy replication")
 
     outline(uri=None, bucket_prefix=None)
 

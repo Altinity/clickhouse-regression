@@ -11,31 +11,24 @@ from s3.requirements import *
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Invalid("1.0"))
 def invalid_type(self, invalid_type):
     """Check that invalid S3 disk types are not allowed."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
-    uri = self.context.uri
     disks = None
     policies = None
     disk_name = "external"
 
     with Given(
-        """I have a disk configuration with a S3 storage disk with invalid
-               disk type"""
+        "I have a disk configuration with a storage disk with invalid disk type"
     ):
         disks = {
             "default": {"keep_free_space_bytes": "1024"},
             f"{disk_name}": {
-                "type": f"{invalid_type}",
-                "endpoint": f"{uri}",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
+                "type": invalid_type,
             },
         }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
             "default": {"volumes": {"default": {"disk": "default"}}},
-            "external": {"volumes": {"external": {"disk": f"{disk_name}"}}},
+            "external": {"volumes": {"external": {"disk": disk_name}}},
         }
 
     invalid_s3_storage_config(
@@ -53,14 +46,24 @@ def empty_endpoint(self):
     disks = None
     policies = None
 
-    with Given(
-        """I have a disk configuration with a S3 storage disk with empty
-               string as endpoint"""
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {"type": "s3", "endpoint": ""},
-        }
+    if self.context.storage == "azure":
+        with Given(
+            """I have a disk configuration with a azure storage disk with empty
+                string as storage_account_url"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": {"type": "azure_blob_storage", "storage_account_url": ""},
+            }
+    else:
+        with Given(
+            """I have a disk configuration with a S3 storage disk with empty
+                string as endpoint"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": {"type": "s3", "endpoint": ""},
+            }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -68,32 +71,48 @@ def empty_endpoint(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
-    invalid_s3_storage_config(
-        disks, policies, message="DB::Exception: Host is empty in S3 URI", tail=300
-    )
+    if self.context.storage == "azure":
+        message = "DB::Exception: Blob Storage URL is not valid"
+    else:
+        message = "DB::Exception: Host is empty in S3 URI"
+
+    invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_Configuration_Invalid("1.0"))
 def invalid_endpoint(self):
     """Check that an invalid URI for the S3 disk endpoint is not allowed."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     disks = None
     policies = None
 
-    with Given(
-        "I have a disk configuration with a S3 storage disk with invalid endpoint URI"
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": "https://unknown-website/data/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-            },
-        }
+    if self.context.storage == "azure":
+        with Given(
+            """I have a disk configuration with an Azure storage disk with invalid
+                storage_account_url"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": azure_blob_type_disk_parameters(
+                    "https://unknown-website/data",
+                    self.context.azure_container_name,
+                    self.context.azure_account_name,
+                    self.context.azure_account_key,
+                ),
+            }
+
+    else:
+        with Given(
+            "I have a disk configuration with a S3 storage disk with invalid endpoint URI"
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": s3_type_disk_parameters(
+                    "https://unknown-website/data/",
+                    self.context.access_key_id,
+                    self.context.secret_access_key,
+                ),
+            }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -101,10 +120,13 @@ def invalid_endpoint(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
-    if check_clickhouse_version("<23.8")(self):
-        message = "DB::Exception: No key in S3 uri"
+    if self.context.storage == "azure":
+        message = "Couldn't resolve host name"
     else:
-        message = "Cannot resolve host (unknown-website)"
+        if check_clickhouse_version("<23.8")(self):
+            message = "DB::Exception: No key in S3 uri"
+        else:
+            message = "Cannot resolve host (unknown-website)"
 
     invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
@@ -119,28 +141,52 @@ def access_failed(self):
     disks = None
     policies = None
 
-    with Given(
-        """I have a disk configuration with a S3 storage disk with
+    if self.context.storage == "azure":
+        with Given(
+            """I have a disk configuration with an Azure storage disk with
                a bucket with no access, and the skip_access_check parameter
                set to 0"""
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
-                "skip_access_check": "0",
-            },
-        }
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    "unknown-container",
+                    "unknown-account",
+                    "dW5rbm93bi1rZXk=",
+                    disk_settings={"skip_access_check": "0"},
+                ),
+            }
+
+    else:
+        with Given(
+            """I have a disk configuration with a S3 storage disk with
+               a bucket with no access, and the skip_access_check parameter
+               set to 0"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": {
+                    "type": "s3",
+                    "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
+                    "skip_access_check": "0",
+                },
+            }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-    message = (
-        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
-    )
+
+    if self.context.storage == "azure":
+        message = "Server failed to authenticate"
+    else:
+        message = (
+            "AccessDenied"
+            if check_clickhouse_version(">=23.8")(self)
+            else "Access Denied"
+        )
     invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
@@ -156,19 +202,38 @@ def access_failed_skip_check(self):
     policies = None
     node = current().context.node
 
-    with Given(
-        """I have a disk configuration with a S3 storage disk with a
-               bucket with no access and the skip_access_check parameter set
-               to 1"""
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
-                "skip_access_check": "1",
-            },
-        }
+    if self.context.storage == "azure":
+        with Given(
+            """I have a disk configuration with an Azure storage disk with
+                a container with no access and the skip_access_check parameter set
+                to 1"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    "unknown-container",
+                    "unknown-account",
+                    "dW5rbm93bi1rZXk=",
+                    disk_settings={"skip_access_check": "1"},
+                ),
+            }
+
+    else:
+
+        with Given(
+            """I have a disk configuration with a S3 storage disk with a
+                bucket with no access and the skip_access_check parameter set
+                to 1"""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": {
+                    "type": "s3",
+                    "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
+                    "skip_access_check": "1",
+                },
+            }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -240,26 +305,48 @@ def access_default(self):
     disks = None
     policies = None
 
-    with Given(
-        """I have a disk configuration with a S3 storage disk with
-               a bucket with no access."""
-    ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            "external": {
-                "type": "s3",
-                "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
-            },
-        }
+    if self.context.storage == "azure":
+        with Given(
+            """I have a disk configuration with an Azure storage disk with
+                a container with no access."""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": azure_blob_type_disk_parameters(
+                    self.context.azure_storage_account_url,
+                    "unknown-container",
+                    "unknown-account",
+                    "dW5rbm93bi1rZXk=",
+                ),
+            }
+
+    else:
+        with Given(
+            """I have a disk configuration with a S3 storage disk with
+                a bucket with no access."""
+        ):
+            disks = {
+                "default": {"keep_free_space_bytes": "1024"},
+                "external": {
+                    "type": "s3",
+                    "endpoint": "https://s3.us-west-2.amazonaws.com/shyiko-playground-1/data/",
+                },
+            }
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
             "default": {"volumes": {"default": {"disk": "default"}}},
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
-    message = (
-        "AccessDenied" if check_clickhouse_version(">=23.8")(self) else "Access Denied"
-    )
+
+    if self.context.storage == "azure":
+        message = "Server failed to authenticate"
+    else:
+        message = (
+            "AccessDenied"
+            if check_clickhouse_version(">=23.8")(self)
+            else "Access Denied"
+        )
     invalid_s3_storage_config(disks, policies, message=message, tail=300)
 
 
@@ -281,16 +368,23 @@ def cache_path_conflict(self):
                and key provided through environment variables, cache_path set to
                same as metadata path"""
     ):
-        disks = {
-            "default": {"keep_free_space_bytes": "1024"},
-            f"{disk_name}": {
-                "type": "s3",
-                "endpoint": f"{uri}/",
-                "access_key_id": f"{access_key_id}",
-                "secret_access_key": f"{secret_access_key}",
-                "cache_path": f"/var/lib/clickhouse/disks/{disk_name}/",
-            },
-        }
+        disks = {"default": {"keep_free_space_bytes": "1024"}}
+        disk_settings = {"cache_path": f"/var/lib/clickhouse/disks/{disk_name}/"}
+        if self.context.storage == "azure":
+            disks[disk_name] = azure_blob_type_disk_parameters(
+                self.context.azure_storage_account_url,
+                self.context.azure_container_name,
+                self.context.azure_account_name,
+                self.context.azure_account_key,
+                disk_settings=disk_settings,
+            )
+        else:
+            disks[disk_name] = s3_type_disk_parameters(
+                uri=uri,
+                access_key_id=access_key_id,
+                secret_access_key=secret_access_key,
+                disk_settings=disk_settings,
+            )
 
     with And("I have a storage policy configured to use the S3 disk"):
         policies = {
@@ -332,6 +426,15 @@ def aws_s3(self, uri):
 def gcs(self, uri):
 
     self.context.uri = uri
+
+    outline()
+
+
+@TestFeature
+@Name("invalid disk")
+def azure(self):
+
+    self.context.uri = None
 
     outline()
 

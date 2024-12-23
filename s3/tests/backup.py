@@ -1172,6 +1172,7 @@ def gcs(self, uri, bucket_prefix):
 
 @TestFeature
 @Name("backup")
+@Requirements(RQ_SRS_015_S3_Backup_AzureBackup("1.0"))
 def azure(self):
     """Test manual backup and metadata back up with azure storage."""
 
