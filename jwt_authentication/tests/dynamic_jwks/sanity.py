@@ -12,6 +12,7 @@ def curl_with_jwt(token, ip, https=False):
 
 
 @TestFeature
+@Name("check dynamic jwks")
 def check_dynamic_jwks(self):
     steps.create_user_with_jwt_auth(user_name="jwt_user")
     node = self.context.node
