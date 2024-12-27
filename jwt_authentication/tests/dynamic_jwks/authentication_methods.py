@@ -127,6 +127,7 @@ def login_without_token(self):
 
 
 @TestFeature
+@Name("authentication methods")
 def feature(self):
     """Check that jwt authentication fails when user's authentication method is not jwt."""
     Scenario(run=change_authentication_method)
