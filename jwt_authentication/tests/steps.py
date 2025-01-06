@@ -496,6 +496,40 @@ def check_clickhouse_client_jwt_login(
 
 
 @TestStep(Then)
+def check_clickhouse_client_password_login(
+    self,
+    user_name: str,
+    password: str = "",
+    node: Node = None,
+    exitcode: int = 0,
+    message: str = None,
+    no_checks: bool = False,
+):
+    """Check password authentication for the specified user with clickhouse-client."""
+    if node is None:
+        node = self.context.node
+
+    with By("check jwt authentication with clickhouse-client"):
+        res = node.query(
+            "SELECT currentUser()",
+            settings=[("password", password), ("user", user_name)],
+            exitcode=exitcode,
+            message=message,
+            no_checks=no_checks,
+        )
+
+    if exitcode == 0 and not no_checks:
+        assert res.output == user_name, error()
+
+    if exitcode != 0:
+        assert "DB::Exception" in res.output, error()
+        assert message in res.output, error()
+        assert res.exitcode == exitcode, error()
+
+    return res
+
+
+@TestStep(Then)
 def check_http_https_jwt_login(
     self,
     token: str,
@@ -563,6 +597,23 @@ def check_jwt_login(
     )
 
 
+@TestStep(Then)
+def expect_jwt_authentication_error(self, token):
+    """Expect that JWT authentication fails."""
+    res = check_clickhouse_client_jwt_login(
+        token=token,
+        no_checks=True,
+    )
+    exitcode = 4
+    message = "Authentication failed: password is incorrect, or there is no user with such name."
+
+    assert (
+        res.exitcode == exitcode
+    ), f"expected exitcode {exitcode} but got {res.exitcode}"
+    assert "DB::Exception" in res.output, f"expected 'DB::Exception' in '{res.output}'"
+    assert message in res.output, f"expected '{message}' in '{res.output}'"
+
+
 @TestStep(Given)
 def generate_ssh_keys(self, key_type: str = None, algorithm: str = "RS256"):
     """Generate SSH keys and return the public key and private key file path."""
@@ -611,17 +662,19 @@ def generate_ssh_keys(self, key_type: str = None, algorithm: str = "RS256"):
                 os.remove(public_key_file)
 
 
-def flip_symbol(segment: str) -> str:
-    """Flip a specified number of symbols in a Base64 URL-encoded segment."""
-    base64_url_chars = (
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-    )
-    index = random.randrange(len(segment))
-    new_symbol = random.choice(base64_url_chars.replace(segment[index], ""))
+def flip_symbol(segment: str, index=None) -> str:
+    """Flip one symbol in the given segment. If index is not specified, choose a random index."""
+    segment_chars = set(segment)
+
+    if index is None:
+        index = random.randrange(len(segment))
+
+    available_chars = segment_chars - {segment[index]}
+    new_symbol = random.choice(list(available_chars))
     return segment[:index] + new_symbol + segment[index + 1 :]
 
 
-def swap_two_random_symbols(segment: str) -> str:
+def swap_two_random_symbols(segment: str, idx1=None, idx2=None) -> str:
     """Swap two random symbols in the given segment, ensuring the swap changes the segment."""
     if len(segment) < 2:
         return segment
@@ -633,7 +686,9 @@ def swap_two_random_symbols(segment: str) -> str:
     segment_list = list(segment)
 
     while True:
-        idx1, idx2 = random.sample(range(len(segment_list)), 2)
+        if idx1 is None or idx2 is None:
+            idx1, idx2 = random.sample(range(len(segment_list)), 2)
+
         if segment_list[idx1] != segment_list[idx2]:
             break
 
@@ -641,18 +696,31 @@ def swap_two_random_symbols(segment: str) -> str:
     return "".join(segment_list)
 
 
-def corrupt_segment(segment: str, swap: bool, flip: bool) -> str:
+def corrupt_segment(
+    segment: str, swap: bool, flip: bool, flip_idx=None, swap_idx1=None, swap_idx2=None
+) -> str:
     """Corrupt a segment by swapping or flipping symbols."""
     if flip:
-        segment = flip_symbol(segment)
+        note("Flipping a symbol")
+        segment = flip_symbol(segment=segment, index=flip_idx)
     if swap:
-        segment = swap_two_random_symbols(segment)
+        note("Swapping two symbols")
+        segment = swap_two_random_symbols(
+            segment=segment, idx1=swap_idx1, idx2=swap_idx2
+        )
     return segment
 
 
 @TestStep(Given)
 def corrupt_token_part(
-    self, token: str, part: str = "payload", swap=False, flip=False
+    self,
+    token: str,
+    part: str = "payload",
+    swap=False,
+    flip=False,
+    flip_idx=None,
+    swap_idx1=None,
+    swap_idx2=None,
 ) -> str:
     """Corrupt the token by swapping two symbols or flipping a symbol
     in the specified part."""
@@ -660,11 +728,32 @@ def corrupt_token_part(
     header, payload, signature = token.split(".")
 
     if part == "header":
-        header = corrupt_segment(header, swap, flip)
+        header = corrupt_segment(
+            segment=header,
+            swap=swap,
+            flip=flip,
+            flip_idx=flip_idx,
+            swap_idx1=swap_idx1,
+            swap_idx2=swap_idx2,
+        )
     elif part == "payload":
-        payload = corrupt_segment(payload, swap, flip)
+        payload = corrupt_segment(
+            segment=payload,
+            swap=swap,
+            flip=flip,
+            flip_idx=flip_idx,
+            swap_idx1=swap_idx1,
+            swap_idx2=swap_idx2,
+        )
     elif part == "signature":
-        signature = corrupt_segment(signature, swap, flip)
+        signature = corrupt_segment(
+            segment=signature,
+            swap=swap,
+            flip=flip,
+            flip_idx=flip_idx,
+            swap_idx1=swap_idx1,
+            swap_idx2=swap_idx2,
+        )
     else:
         raise ValueError(
             "Invalid part specified. Choose 'header', 'payload', or 'signature'."
@@ -715,3 +804,41 @@ def expect_successful_login(self, r, user_name=None):
         "DB::Exception" not in r.output
     ), f"unexpected 'DB::Exception' in '{r.output}'"
     assert user_name in r.output, f"expected '{user_name}' in '{r.output}'"
+
+
+def flip_bits(binary_string, idx=None, n=None):
+    """
+    Flips bits in a binary string. If an index is provided, flips only the bit at that index.
+    If n is provided, flips n random bits."""
+    binary_list = list(binary_string)
+
+    if idx is not None:
+        if 0 <= idx < len(binary_list):
+            binary_list[idx] = "1" if binary_list[idx] == "0" else "0"
+        else:
+            raise ValueError("Index out of range.")
+
+    if n is not None:
+        for _ in range(n):
+            idx = random.randint(0, len(binary_list) - 1)
+            binary_list[idx] = "1" if binary_list[idx] == "0" else "0"
+
+    return "".join(binary_list)
+
+
+def base64_to_binary(base64_str):
+    """Converts a Base64-encoded string into a binary sequence (0 and 1)."""
+    padded_base64_str = base64_str + "=" * (4 - len(base64_str) % 4)
+    byte_data = base64.urlsafe_b64decode(padded_base64_str)
+
+    binary_sequence = "".join(f"{byte:08b}" for byte in byte_data)
+    return binary_sequence
+
+
+def binary_to_base64(binary_sequence):
+    """Converts a binary sequence (0 and 1) back into a Base64-encoded string."""
+    byte_data = bytes(
+        int(binary_sequence[i : i + 8], 2) for i in range(0, len(binary_sequence), 8)
+    )
+    base64_str = base64.urlsafe_b64encode(byte_data).rstrip(b"=").decode("utf-8")
+    return base64_str
