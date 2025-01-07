@@ -400,7 +400,7 @@ class ResultUploader:
         with And("a list of all test results"):
             rows = self.iter_formatted_test_results(common_attributes)
             rows = list(rows)
-            note(f"Inserting {len(rows)} records")
+            note(f"There are {len(rows)} records to insert")
 
         with And("a database client"):
             client = Client(
