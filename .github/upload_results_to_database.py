@@ -397,8 +397,10 @@ class ResultUploader:
         with And("common attributes for this test run"):
             common_attributes = self.get_common_attributes()
 
-        with And("an iterator of all test results"):
+        with And("a list of all test results"):
             rows = self.iter_formatted_test_results(common_attributes)
+            rows = list(rows)
+            note(f"Inserting {len(rows)} records")
 
         with And("a database client"):
             client = Client(
