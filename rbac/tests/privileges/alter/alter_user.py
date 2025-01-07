@@ -83,7 +83,7 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
 
             with Then("I check the user can't alter a user"):
                 node.query(
-                    f"ALTER USER {alter_user_name}",
+                    f"ALTER USER {alter_user_name} RENAME TO {alter_user_name}",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
@@ -97,7 +97,8 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
 
             with Then("I check the user can alter a user"):
                 node.query(
-                    f"ALTER USER {alter_user_name}", settings=[("user", f"{user_name}")]
+                    f"ALTER USER {alter_user_name} RENAME TO {alter_user_name}",
+                    settings=[("user", f"{user_name}")],
                 )
 
     with Scenario("ALTER USER on cluster"):
@@ -112,14 +113,14 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
             with Then("I check the user can alter a user"):
                 if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
                     node.query(
-                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster",
+                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster RENAME TO {alter_user_name}",
                         settings=[("user", f"{user_name}")],
                         exitcode=exitcode,
                         message=message,
                     )
                 else:
                     node.query(
-                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster",
+                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster RENAME TO {alter_user_name}",
                         settings=[("user", f"{user_name}")],
                     )
 
@@ -129,7 +130,7 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
                 if check_clickhouse_version(">=24.4")(self) and privilege != "ALL":
                     grant_cluster(user=grant_target_name, node=node)
                     node.query(
-                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster",
+                        f"ALTER USER {alter_user_name} ON CLUSTER sharded_cluster RENAME TO {alter_user_name}",
                         settings=[("user", f"{user_name}")],
                     )
 
@@ -150,7 +151,7 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
 
             with Then("I check the user can't alter a user"):
                 node.query(
-                    f"ALTER USER {alter_user_name}",
+                    f"ALTER USER {alter_user_name} RENAME TO {alter_user_name}",
                     settings=[("user", user_name)],
                     exitcode=exitcode,
                     message=message,
