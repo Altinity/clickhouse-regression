@@ -39,7 +39,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup("user0"):
             with When("I alter user"):
-                node.query("ALTER USER user0")
+                node.query("ALTER USER user0 RENAME TO user0")
 
     with Scenario(
         "I alter user that does not exist without if exists, throws exception",
@@ -47,7 +47,9 @@ def feature(self, node="clickhouse1"):
     ):
         with When("I run alter user command, expecting error 192"):
             exitcode, message = errors.user_not_found_in_disk(name="user0")
-            node.query(f"ALTER USER user0", exitcode=exitcode, message=message)
+            node.query(
+                f"ALTER USER user0 RENAME TO user0", exitcode=exitcode, message=message
+            )
 
     with Scenario(
         "I alter user with if exists",
@@ -55,7 +57,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup("user0"):
             with When(f"I alter user with if exists"):
-                node.query(f"ALTER USER IF EXISTS user0")
+                node.query(f"ALTER USER IF EXISTS user0 RENAME TO user0")
 
     with Scenario(
         "I alter user that does not exist with if exists",
@@ -65,7 +67,7 @@ def feature(self, node="clickhouse1"):
         with Given("I don't have a user"):
             node.query(f"DROP USER IF EXISTS {user}")
         with When(f"I alter user {user} with if exists"):
-            node.query(f"ALTER USER IF EXISTS {user}")
+            node.query(f"ALTER USER IF EXISTS {user} RENAME TO {user}")
         del user
 
     with Scenario(
@@ -75,7 +77,7 @@ def feature(self, node="clickhouse1"):
         with Given("I have a user on a cluster"):
             node.query("CREATE USER OR REPLACE user0 ON CLUSTER sharded_cluster")
         with When("I alter user on a cluster"):
-            node.query("ALTER USER user0 ON CLUSTER sharded_cluster")
+            node.query("ALTER USER user0 ON CLUSTER sharded_cluster RENAME TO user0")
         with Finally("I drop user from cluster"):
             node.query("DROP USER IF EXISTS user0 ON CLUSTER sharded_cluster")
 
