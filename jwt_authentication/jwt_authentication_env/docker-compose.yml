@@ -106,9 +106,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/logs/:/var/log/clickhouse-server/"
   
   jwks_server:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: altinitybuilds/jwt_authentication:1.0
     ports:
       - "8080:8080"
     healthcheck:
