@@ -7,10 +7,10 @@ import argparse
 import os
 from datetime import datetime
 from pprint import pprint
-from logging.config import dictConfig
+import asyncio
 
 import requests
-from clickhouse_driver import Client
+import asynch
 
 from testflows.core import *
 from testflows._core.transform.log.pipeline import ResultsLogPipeline
@@ -73,6 +73,7 @@ CREATE TABLE clickhouse_regression_results ON CLUSTER '{cluster}'
     `use_keeper` Bool,
     `thread_fuzzer` Bool,
     `with_analyzer` Bool,
+    `scheduled` Bool,
     `stress` Bool,
     `commit_hash` String,
     `job_url` LowCardinality(String),
@@ -82,7 +83,7 @@ CREATE TABLE clickhouse_regression_results ON CLUSTER '{cluster}'
     `result` LowCardinality(String),
     `test_name` String,
     `result_reason` String,
-    `result_message` String,
+    `result_message` String
 )
 ENGINE = ReplicatedMergeTree('/clickhouse/{cluster}/tables/gh-data/clickhouse_regression_results', '{replica}')
 ORDER BY start_time
@@ -257,7 +258,7 @@ class ResultUploader:
         """
         This is a fallback if test_attributes report.url does not exist.
         """
-        return os.getenv(REPORT_URL_VAR)
+        return os.getenv(REPORT_URL_VAR, "")
 
     def read_raw_log(self, log_lines=None):
         """
@@ -326,10 +327,10 @@ class ResultUploader:
         common_attributes = {}
 
         for key, value in table_schema_attr_map["pr_info"].items():
-            common_attributes[key] = self.pr_info.get(value, None)
+            common_attributes[key] = self.pr_info.get(value, "")
 
         for key, value in table_schema_attr_map["test_attributes"].items():
-            common_attributes[key] = self.test_attributes.get(value, None)
+            common_attributes[key] = self.test_attributes.get(value, "")
 
         if common_attributes["report_url"] is None:
             url = self.report_url()
@@ -338,7 +339,7 @@ class ResultUploader:
             common_attributes["report_url"] = url
 
         for key in table_schema_attr_map["test_results"].keys():
-            common_attributes[key] = None
+            common_attributes[key] = ""
 
         return common_attributes
 
@@ -350,7 +351,10 @@ class ResultUploader:
             row = common_attributes.copy()
             for schema_attr, test_attr in table_schema_attr_map["test_results"].items():
                 if test_attr in test_result:
-                    row[schema_attr] = test_result[test_attr]
+                    value = test_result[test_attr]
+                    if value is None:
+                        value = ""
+                    row[schema_attr] = value
             yield row
 
     def write_csv(self):
@@ -371,7 +375,7 @@ class ResultUploader:
             for test_result in self.iter_formatted_test_results(common_attributes):
                 writer.writerow(test_result)
 
-    def upload_results(
+    async def upload_results(
         self,
         db,
         table,
@@ -383,7 +387,7 @@ class ResultUploader:
         verify=None,
     ):
 
-        with Given("database credentials"):
+        async with Given("database credentials"):
             if db_host is None:
                 db_host = os.getenv(DATABASE_HOST_VAR)
                 assert db_host, "Failed to get database host from environment"
@@ -394,38 +398,32 @@ class ResultUploader:
             if db_password is None:
                 db_password = os.getenv(DATABASE_PASSWORD_VAR, "")
 
-        with And("common attributes for this test run"):
+        async with And("common attributes for this test run"):
             common_attributes = self.get_common_attributes()
 
-        with And("a list of all test results"):
+        async with And("a list of all test results"):
             rows = self.iter_formatted_test_results(common_attributes)
             rows = list(rows)
             note(f"There are {len(rows)} records to insert")
 
-        with And("a database client"):
-            client = Client(
-                db_host,
-                user=db_user,
-                password=db_password,
-                port=db_port,
-                secure="y" if secure else None,
-                verify=verify,
-                settings={"insert_block_size": 1024},
-            )
+        try:
+            async with Given("a database client"):
+                client = await asynch.connect(
+                    host=db_host,
+                    user=db_user,
+                    password=db_password,
+                    port=db_port,
+                    secure=secure,
+                    verify=verify,
+                )
 
-        with When("inserting test results"):
-            settings = {
-                "send_logs_level": "information",
-                "input_format_null_as_default": True,
-            }
-
-            r = client.execute(
-                f"INSERT INTO `{db}`.{table} VALUES",
-                rows,
-                types_check=self.debug,
-                settings=settings,
-            )
-            note(f"Inserted {r} records")
+            async with Then("inserting test results"):
+                async with client.cursor(cursor=asynch.cursors.DictCursor) as cursor:
+                    r = await cursor.execute(f"INSERT INTO `{db}`.{table} VALUES", rows)
+                note(f"Inserted {r} records")
+        finally:
+            async with Finally("closing database client"):
+                await client.close()
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
@@ -511,19 +509,22 @@ class ResultUploader:
         if self.debug:
             with And("printing debug info"):
                 pprint(self.pr_info, indent=2)
+                pprint(self.get_common_attributes(), indent=2)
                 pprint(self.test_attributes, indent=2)
                 pprint(self.test_results[-1], indent=2)
 
         with And("uploading results"):
-            self.upload_results(
-                db=db,
-                table=table,
-                db_host=db_host,
-                db_user=db_user,
-                db_password=db_password,
-                db_port=db_port,
-                secure=secure,
-                verify=verify,
+            asyncio.run(
+                self.upload_results(
+                    db=db,
+                    table=table,
+                    db_host=db_host,
+                    db_user=db_user,
+                    db_password=db_password,
+                    db_port=db_port,
+                    secure=secure,
+                    verify=verify,
+                )
             )
 
 
@@ -589,26 +590,4 @@ def upload(
 
 
 if main():
-    # Configure logging for clickhouse_driver
-    dictConfig(
-        {
-            "version": 1,
-            "disable_existing_loggers": False,
-            "formatters": {
-                "standard": {
-                    "format": "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
-                },
-            },
-            "handlers": {
-                "default": {
-                    "level": "INFO",
-                    "formatter": "standard",
-                    "class": "logging.StreamHandler",
-                },
-            },
-            "loggers": {
-                "": {"handlers": ["default"], "level": "INFO", "propagate": True},
-            },
-        }
-    )
     upload()
