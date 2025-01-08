@@ -452,29 +452,29 @@ xfails = {
     "/aggregate functions/deltaSumTimestamp/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/pull/71790",
-            check_clickhouse_version("<25.2"),
+            "https://github.com/ClickHouse/ClickHouse/issues/72189",
+            check_clickhouse_version(">=24.11"),
         )
     ],
     "/aggregate functions/state/deltaSumTimestampState/*": [
         (
             Fail,
-            "xfail until https://github.com/ClickHouse/ClickHouse/pull/71790 in some version",
-            check_clickhouse_version("<25.1"),
+            "https://github.com/ClickHouse/ClickHouse/issues/72189",
+            check_clickhouse_version(">=24.11"),
         )
     ],
-    '/aggregate functions/finalizeAggregation/deltaSumTimestamp_finalizeAggregation_Merge/*': [
+    "/aggregate functions/finalizeAggregation/deltaSumTimestamp_finalizeAggregation_Merge/*": [
         (
             Fail,
-            "xfail until https://github.com/ClickHouse/ClickHouse/pull/71790 in some version",
-            check_clickhouse_version("<25.1"),
+            "https://github.com/ClickHouse/ClickHouse/issues/72189",
+            check_clickhouse_version(">=24.11"),
         )
     ],
-    '/aggregate functions/merge/deltaSumTimestampMerge/*': [
+    "/aggregate functions/merge/deltaSumTimestampMerge/*": [
         (
             Fail,
-            "xfail until https://github.com/ClickHouse/ClickHouse/pull/71790 in some version",
-            check_clickhouse_version("<25.1"),
+            "https://github.com/ClickHouse/ClickHouse/issues/72189",
+            check_clickhouse_version(">=24.11"),
         )
     ],
 }

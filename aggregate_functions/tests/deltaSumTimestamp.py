@@ -1,4 +1,4 @@
-from helpers.tables import is_numeric
+from helpers.tables import is_numeric, is_nullable
 from helpers.tables import common_columns
 
 from aggregate_functions.tests.steps import *
@@ -39,9 +39,15 @@ def scenario(
     if table is None:
         table = self.context.table
 
+    exitcode, message = None, None
+    if check_clickhouse_version(">=24.11")(self):
+        exitcode, message = 43, "DB::Exception: Illegal type"
+
     with Check("constant"):
         execute_query(
-            f"SELECT {func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))"
+            f"SELECT {func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Check("zero rows"):
@@ -56,17 +62,21 @@ def scenario(
 
     with Check("some negative values"):
         execute_query(
-            f"SELECT {func.format(params='toInt64(number-5),toInt64(number+10)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)"
+            f"SELECT {func.format(params='toInt64(number-5),toInt64(number+10)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)",
         )
 
     with Check("NULL value handling"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Check("single NULL value"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))",
+            exitcode=exitcode,
+            message=message,
         )
 
     with Check("inf, -inf, nan"):
@@ -93,6 +103,11 @@ def scenario(
                     if col in common_columns()
                     and is_numeric(
                         col.datatype, decimal=False, date=True, datetime=True
+                    )
+                    and (
+                        not is_nullable(col.datatype)
+                        if check_clickhouse_version(">=24.11")(self)
+                        else True
                     )
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
