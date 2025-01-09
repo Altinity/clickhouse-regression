@@ -40,7 +40,10 @@ def scenario(
         table = self.context.table
 
     exitcode, message = None, None
-    if check_clickhouse_version(">=24.11")(self):
+    if (
+        check_clickhouse_version(">=24.11")(self)
+        and func == "deltaSumTimestamp({params})"
+    ):
         exitcode, message = 43, "DB::Exception: Illegal type"
 
     with Check("constant"):
@@ -103,11 +106,6 @@ def scenario(
                     if col in common_columns()
                     and is_numeric(
                         col.datatype, decimal=False, date=True, datetime=True
-                    )
-                    and (
-                        not is_nullable(col.datatype)
-                        if check_clickhouse_version(">=24.11")(self)
-                        else True
                     )
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
