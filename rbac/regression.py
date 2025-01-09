@@ -233,6 +233,20 @@ xfails = {
     "/rbac/multiple authentication methods/ssh key/multiple ssh keys exceeding limit/*": [
         (Fail, issue_70898),
     ],
+    "/rbac/privileges/alter user/alter user granted directly/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/74372",
+            check_clickhouse_version(">=25.1"),
+        ),
+    ],
+    "/rbac/privileges/alter user/alter user granted via role/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/74372",
+            check_clickhouse_version(">=25.1"),
+        ),
+    ],
 }
 
 xflags = {
