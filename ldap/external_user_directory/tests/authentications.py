@@ -7,6 +7,8 @@ from testflows.asserts import error
 from ldap.external_user_directory.tests.common import *
 from ldap.external_user_directory.requirements import *
 
+from helpers.common import check_clickhouse_version
+
 servers = {
     "openldap1": {
         "host": "openldap1",
@@ -1572,7 +1574,6 @@ def user_lookup_priority(self, server):
     self.context.ldap_node = self.context.cluster.node(server)
 
     message = "DB::Exception: {username}: Authentication failed"
-    exitcode = 4
 
     users = {
         "default": {"username": "default", "password": "userdefault"},
@@ -1587,6 +1588,11 @@ def user_lookup_priority(self, server):
         ]
     ):
         with rbac_users({"cn": "local", "userpassword": "local"}):
+            exitcode = 4
+            if check_clickhouse_version(">=25.1")(
+                self
+            ):  # https://github.com/ClickHouse/ClickHouse/pull/72198
+                exitcode = 194
             with When(
                 "I try to login as 'default' user which is also defined in users.xml it should fail"
             ):
@@ -1599,6 +1605,7 @@ def user_lookup_priority(self, server):
             with When(
                 "I try to login as 'local' user which is also defined in local storage it should fail"
             ):
+                exitcode = 4
                 login_and_execute_query(
                     **users["local"],
                     exitcode=exitcode,
