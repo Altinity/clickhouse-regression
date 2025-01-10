@@ -122,11 +122,78 @@ def other_users_token(self):
                 steps.expect_corrupted_token_error(token=token)
 
 
+@TestScenario
+def corrupt_token_by_swap_bits(self):
+    """Corrupt token by swapping every bit in header, payload and signature
+    and check that authentication with corrupted token fails."""
+    with Given("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with And("add new validator to the config.xml"):
+        validator_id = define("validator_id", "new_validator")
+        algorithm = define("algorithm", "HS256")
+        secret = define("secret", "another_secret")
+        steps.add_static_key_validator_to_config_xml(
+            validator_id=validator_id, algorithm=algorithm, secret=secret
+        )
+
+    with When("create token and split it to parts"):
+        token = define(
+            "jwt",
+            steps.create_static_jwt(
+                user_name=user_name,
+                algorithm="HS256",
+                secret=secret,
+            ),
+        )
+        header, payload, signature = token.split(".")
+
+    with Then("check that user can authenticate with correct token"):
+        steps.check_jwt_login(user_name=user_name, token=token)
+
+    with And(
+        "convert header to binary, swap bits and try to login with corrupted token"
+    ):
+        header_bin = steps.base64_to_binary(header)
+        for idx in range(len(header_bin)):
+            corrupted_header_bin = steps.flip_bits(header_bin, idx)
+            corrupted_header = steps.binary_to_base64(corrupted_header_bin)
+            corrupted_token = ".".join([corrupted_header, payload, signature])
+            note(f"Corrupted token: {corrupted_token}")
+            note(f"Original token: {token}")
+            steps.expect_corrupted_token_error(token=corrupted_token)
+
+    with And(
+        "convert payload to binary, swap bits and try to login with corrupted token"
+    ):
+        payload_bin = steps.base64_to_binary(payload)
+        for idx in range(len(payload_bin)):
+            corrupted_payload_bin = steps.flip_bits(payload_bin, idx)
+            corrupted_payload = steps.binary_to_base64(corrupted_payload_bin)
+            corrupted_token = ".".join([header, corrupted_payload, signature])
+            note(f"Corrupted token: {corrupted_token}")
+            note(f"Original token: {token}")
+            steps.expect_corrupted_token_error(token=corrupted_token)
+
+    with And(
+        "convert signature to binary, swap bits and try to login with corrupted token"
+    ):
+        signature_bin = steps.base64_to_binary(signature)
+        for idx in range(len(signature_bin)):
+            corrupted_signature_bin = steps.flip_bits(signature_bin, idx)
+            corrupted_signature = steps.binary_to_base64(corrupted_signature_bin)
+            corrupted_token = ".".join([header, payload, corrupted_signature])
+            note(f"Corrupted token: {corrupted_token}")
+            note(f"Original token: {token}")
+            steps.expect_corrupted_token_error(token=corrupted_token)
+
+
 @TestFeature
 @Name("invalid token")
 def feature(self):
     """Sanity check jwt authentication with static key validator."""
-
     Scenario(run=jwt_authentication_with_invalid_token)
     Scenario(run=jwt_authentication_with_corrupted_token)
     Scenario(run=other_users_token)
+    Scenario(run=corrupt_token_by_swap_bits)
