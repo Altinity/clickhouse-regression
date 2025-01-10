@@ -88,9 +88,6 @@ def create_tokens(
             token.create_token()
             tokens.append(token)
 
-    # for i in range(10):
-    #     corrupted_token = tokens[i]
-
     return tokens
 
 
@@ -199,12 +196,11 @@ def jwt_authentication_combinatorics(self):
             "ES384",
             "ES512",
             "Ed25519",
-            # ---need to investigate why they are not working---
-            # "ES256K",
-            # "PS256",
-            # "PS384",
-            # "PS512",
-            # "Ed448",
+            "ES256K",
+            "PS256",
+            "PS384",
+            "PS512",
+            "Ed448",
         ]
         validator_algorithms = [
             "HS256",
@@ -217,21 +213,21 @@ def jwt_authentication_combinatorics(self):
             "ES384",
             "ES512",
             "Ed25519",
-            # ---need to investigate why they are not working---
-            # "ES256K",
-            # "PS256",
-            # "PS384",
-            # "PS512",
-            # "Ed448",
+            "ES256K",
+            "PS256",
+            "PS384",
+            "PS512",
+            "Ed448",
+            None,
         ]
-        key_pair_algorithms = [
-            "RS256",
-            "RS384",
-            "RS512",
+        ssh_key_pair_algorithms = [
+            "RS256",  # no other RSA and PS algorithms in list since ssh keys for them are the same
             "ES256",
             "ES384",
             "ES512",
             "Ed25519",
+            "ES256K",
+            "Ed448",
         ]
         user_names = [f"user1_{getuid()}", f"user2_{getuid()}"]
         token_secrets = ["combinatorial_secret_1", "combinatorial_secret_2"]
@@ -246,7 +242,7 @@ def jwt_authentication_combinatorics(self):
             ]  # since test might take a long time and token can expire
 
     with And("create public and private keys for validators"):
-        keys = create_key_pairs(algorithms=key_pair_algorithms)
+        keys = create_key_pairs(algorithms=ssh_key_pair_algorithms)
 
     with And("create tokens for users"):
         tokens = create_tokens(
