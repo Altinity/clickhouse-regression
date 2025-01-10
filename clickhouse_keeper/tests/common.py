@@ -836,6 +836,11 @@ def add_trusted_ca_certificate(
 
     try:
         with By("copying certificate to node", description=f"{node}:{path}"):
+
+            # DEBUG
+            node.command(f"ls -ld {directory}")
+            node.command(f"echo 'test' > {directory}/test.txt")
+
             copy(
                 dest_node=node, src_path=certificate, dest_path=path, bash=bash, eof=eof
             )
