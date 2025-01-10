@@ -120,6 +120,7 @@ def check_static_key_symmetric_algorithms(self):
 
 @TestFeature
 @Name("different algorithms")
+@Requirements(RQ_SRS_042_JWT_StaticKey_SupportedAlgorithms("1.0"))
 def feature(self):
     """Check static key jwt authentication with different algorithms."""
     Scenario(run=check_static_key_symmetric_algorithms)

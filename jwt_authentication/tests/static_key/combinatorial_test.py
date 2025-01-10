@@ -275,18 +275,7 @@ def jwt_authentication_combinatorics(self):
             combinations = random.sample(combinations, 60)
 
     with And("define nodes and split combinations between them"):
-        nodes = [
-            self.context.node,
-            self.context.node2,
-            self.context.node3,
-            self.context.node4,
-            self.context.node5,
-            self.context.node6,
-            self.context.node7,
-            self.context.node8,
-            self.context.node9,
-            self.context.node10,
-        ]
+        nodes = self.context.nodes
         split_combinations = [combinations[i :: len(nodes)] for i in range(len(nodes))]
 
     with Pool(10) as executor:
