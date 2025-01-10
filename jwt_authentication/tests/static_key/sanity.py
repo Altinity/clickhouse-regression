@@ -188,10 +188,10 @@ def expired_token(self):
 def mismatch_algorithm_RSA(self):
     """Check that login fails if the RSA algorithm of token and validator do not match."""
     with Given("create public and private keys with RSA algorithm"):
-        validator_id = define("validator_id", f"validator_{getuid()}")
         public_key, private_key_path = steps.generate_ssh_keys(algorithm="RS384")
 
     with And("add new validator with RS512 algorithm to the config.xml"):
+        validator_id = define("validator_id", f"validator_{getuid()}")
         steps.add_static_key_validator_to_config_xml(
             validator_id=validator_id,
             algorithm="RS512",
@@ -207,6 +207,60 @@ def mismatch_algorithm_RSA(self):
             user_name=user_name,
             algorithm="RS384",
             private_key_path=private_key_path,
+        )
+
+    with Then("check that jwt authentication is failing"):
+        steps.expect_jwt_authentication_error(token=token)
+
+
+@TestScenario
+def no_algorithm_in_validator_RS(self):
+    """Check that login fails if the algorithm is not specified in the validator."""
+
+    with Given("add new validator without algorithm to the config.xml"):
+        validator_id = define("validator_id", f"validator_{getuid()}")
+        public_key, private_key_path = steps.generate_ssh_keys(algorithm="RS384")
+        steps.add_static_key_validator_to_config_xml(
+            validator_id=validator_id,
+            public_key=public_key,
+            algorithm=None,
+        )
+
+    with When("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with And("create token with RS384 algorithm"):
+        token = steps.create_static_jwt(
+            user_name=user_name,
+            algorithm="RS384",
+            private_key_path=private_key_path,
+        )
+
+    with Then("check that jwt authentication is failing"):
+        steps.expect_jwt_authentication_error(token=token)
+
+
+@TestScenario
+def no_algorithm_in_validator_with_secret(self):
+    """Check that login fails if the algorithm is not specified in the validator."""
+
+    with Given("add new validator without algorithm to the config.xml"):
+        validator_id = define("validator_id", f"validator_{getuid()}")
+        secret = "no_algorithm_secret"
+        steps.add_static_key_validator_to_config_xml(
+            validator_id=validator_id,
+            secret=secret,
+            algorithm=None,
+        )
+
+    with When("create user with jwt authentication"):
+        user_name = f"jwt_user_{getuid()}"
+        steps.create_user_with_jwt_auth(user_name=user_name)
+
+    with And("create token with RS384 algorithm"):
+        token = steps.create_static_jwt(
+            user_name=user_name, algorithm="HS256", secret=secret
         )
 
     with Then("check that jwt authentication is failing"):
@@ -249,7 +303,6 @@ def mismatch_algorithm_ECDSA(self):
     RQ_SRS_042_JWT_UserAuthentication_ClickhouseClient("1.0"),
     RQ_SRS_042_JWT_UserAuthentication_HTTPClient("1.0"),
     RQ_SRS_042_JWT_SubClaimValidation("1.0"),
-    RQ_SRS_042_JWT_StaticKey("1.0"),
 )
 def feature(self):
     """Sanity check for jwt authentication with static key validator."""

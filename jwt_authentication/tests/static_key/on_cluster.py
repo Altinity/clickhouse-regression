@@ -9,8 +9,7 @@ import jwt_authentication.tests.steps as steps
 @Name("jwt authentication on cluster")
 def jwt_auth_on_cluster(self):
     """Check that user created with jwt authentication on cluster
-    can login with jwt on all nodes.
-    """
+    can login with jwt on all nodes."""
     nodes = [self.context.node, self.context.node2, self.context.node3]
     with Given("defining parameters for new validator"):
         validator_id = define("validator_id", "validator_1")
