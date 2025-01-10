@@ -8,7 +8,7 @@ from jwt_authentication.requirements import *
 @Requirements(
     RQ_SRS_042_JWT_StaticKey("1.0"),
 )
-def feature(self, node="clickhouse1"):
+def feature(self):
     """Check jwt authentication with static key validator."""
 
     Feature(run=load("jwt_authentication.tests.static_key.sanity", "feature"))
