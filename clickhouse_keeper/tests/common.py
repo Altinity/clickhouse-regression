@@ -865,7 +865,7 @@ def add_trusted_ca_certificate(
         yield path
     finally:
         with Finally("I remove CA certificate from being trusted by the system"):
-            node.command(f"rm -rf {path}")
+            node.command(f"rm -f {path}")
             if rhel_mode:
                 node.command("update-ca-trust extract")
             else:
