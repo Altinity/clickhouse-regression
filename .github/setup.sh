@@ -7,13 +7,17 @@ export RUNNER_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile
 env
 uname -i
 
+echo "::group::Apt Update"
 sudo rm -rf /var/lib/apt/lists/*
 sudo rm -rf /var/cache/debconf
 sudo rm -rf /tmp/*
 
-echo "Install Python modules..."
 sudo apt-get clean
 sudo apt-get update
+echo "::endgroup::"
+
+echo "::group::Python Setup"
+echo "Install Python modules..."
 sudo apt-get install -y python3.12-venv
 
 echo "Create and activate Python virtual environment..."
@@ -22,8 +26,9 @@ source venv/bin/activate
 echo PATH=$PATH >>$GITHUB_ENV
 
 ./retry.sh 60 2 "pip install -r requirements.txt"
+echo "::endgroup::"
 
-echo "Set up zram..."
+echo "::group::Set up ZRAM"
 sudo apt-get install -y linux-modules-extra-$(uname -r)
 sudo modprobe zram
 MemTotal=$(grep -Po "(?<=MemTotal:)\s+\d+" /proc/meminfo) # KiB
@@ -32,7 +37,9 @@ ZRAM_SIZE=$(($MemTotal / 1024 / 1024 * $Percent / 100)) # Convert to GiB
 ./retry.sh 30 2 sudo zramctl --size ${ZRAM_SIZE}GiB --algorithm zstd /dev/zram0
 sudo mkswap /dev/zram0 && sudo swapon -p 100 /dev/zram0
 sudo sysctl vm.swappiness=100 # optional, makes zram usage more aggressive
+echo "::endgroup::"
 
+echo "::group::Docker Setup"
 echo "Install docker-compose..."
 sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -55,8 +62,9 @@ if [[ $clickhouse_path == "docker"* ]]; then
     docker stop $pid
   fi
 fi
+echo "::endgroup::"
 
-echo "Generate upload paths..."
+echo "::group::Generate upload paths..."
 if [[ $artifacts == 'internal' ]]; then
   artifact_s3_bucket_path="altinity-internal-test-reports"
   artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
@@ -114,3 +122,5 @@ echo "SUITE_LOG_FILE_PREFIX_URL=$SUITE_LOG_FILE_PREFIX_URL" >>$GITHUB_ENV
 
 SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/$analyzer/$keeper_or_zookeeper/$thread_fuzzer/$SUITE$STORAGE
 echo "SUITE_REPORT_BUCKET_PATH=$SUITE_REPORT_BUCKET_PATH" >>$GITHUB_ENV
+
+echo "::endgroup::"
