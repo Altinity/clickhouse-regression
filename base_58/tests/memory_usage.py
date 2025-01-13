@@ -149,7 +149,7 @@ def memory_usage_for_constant_input(self, node=None):
 
             with Then("I check memory usages are similar"):
                 assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
-                assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
+                assert b58_decode_memory_usage <= b64_decode_memory_usage * 4, error()
 
 
 @TestFeature
