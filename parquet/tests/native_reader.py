@@ -23,6 +23,9 @@ from parquet.tests.steps.bloom_filter import (
     schema_type,
     writer_version,
     clickhouse_datatypes,
+    integers,
+    int32_physical,
+    int64_physical,
 )
 from parquet.tests.steps.general import select_from_parquet
 from parquet.tests.steps.arrow import *
@@ -166,7 +169,7 @@ def handle_conversion_error(
 
 
 @TestCheck
-def check_boolean(
+def check_datatypes(
     self,
     schema_type,
     writer_version,
@@ -175,7 +178,7 @@ def check_boolean(
     compression_value,
     key_column,
 ):
-    """Check that the ClickHouse can read a Parquet file with boolean column when native reader is enabled."""
+    """Check that the ClickHouse can read a Parquet file with given column type when native reader is enabled."""
     with Given("I prepare the parquet file"):
         json_file_name, parquet_file, column_name, data = prepare_parquet_file(
             schema_type=schema_type,
@@ -215,7 +218,7 @@ def check_boolean(
 
         with And("checking that the data with and without native reader is the same"):
             if not check_conversion:
-                skip(f"Incorrect conversion boolean to {key_column}")
+                skip(f"Incorrect conversion {column_name} to {key_column}")
 
             assert (
                 data_without_native_reader.output.strip()
@@ -230,13 +233,38 @@ def boolean_support(self):
     schema_types = [required, optional]
     key_columns = clickhouse_datatypes
     key_columns.append(None)
-    check_boolean(
+    check_datatypes(
         schema_type=either(*schema_types),
         writer_version=either(*writer_version),
         physical_type=boolean_physical,
         logical_type=no_logical_type,
         compression_value=either(*compression),
         key_column=either(*key_columns),
+    )
+
+
+@TestSketch
+@Flags(TE)
+def integer_support(self):
+    """Check that the ClickHouse can read a Parquet file with integer column when native reader is enabled."""
+    schema_types = [required, optional]
+    key_columns = clickhouse_datatypes
+    key_columns.append(None)
+
+    key_columns = either(*key_columns)
+    schemas = either(*schema_types)
+    writer_versions = either(*writer_version)
+    physical_types = either(*[int32_physical, int64_physical])
+    logical_types = either(*integers)
+    compressions = either(*compression)
+
+    check_datatypes(
+        schema_type=schemas,
+        writer_version=writer_versions,
+        physical_type=physical_types,
+        logical_type=logical_types,
+        compression_value=compressions,
+        key_column=key_columns,
     )
 
 
@@ -282,4 +310,6 @@ def feature(self, node="clickhouse1"):
     self.context.parquet_output_path = "/parquet-files"
 
     Scenario(run=boolean_support)
+    Scenario(run=integer_support)
     Scenario(run=page_header_v2)
+
