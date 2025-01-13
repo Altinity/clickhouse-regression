@@ -153,7 +153,7 @@ env:
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log
     ${{ inputs.flags != 'none' && inputs.flags || ''}}
     ${{ inputs.extra_args }}
@@ -178,7 +178,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -215,10 +215,13 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
+
+      - name: Collect telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
 
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
@@ -252,7 +255,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -290,7 +293,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -329,7 +332,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -368,7 +371,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -406,7 +409,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -444,7 +447,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -483,7 +486,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -526,7 +529,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -568,7 +571,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -607,7 +610,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -645,7 +648,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -684,7 +687,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -721,7 +724,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
       
       - name: Set up JDK 11
         uses: actions/setup-java@v3
@@ -769,7 +772,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -806,7 +809,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -843,7 +846,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -880,7 +883,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -917,7 +920,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -954,7 +957,10 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Collect telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -991,7 +997,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1028,7 +1034,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1065,7 +1071,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1102,7 +1108,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1139,7 +1145,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1176,7 +1182,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1213,7 +1219,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1250,7 +1256,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1287,7 +1293,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1324,7 +1330,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1361,7 +1367,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1399,7 +1405,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1437,7 +1443,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1477,7 +1483,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1520,7 +1526,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1557,7 +1563,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1595,7 +1601,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1638,7 +1644,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1680,7 +1686,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1722,7 +1728,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1760,7 +1766,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1797,7 +1803,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1834,7 +1840,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1872,7 +1878,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1914,7 +1920,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1955,7 +1961,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1993,7 +1999,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -2031,7 +2037,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
