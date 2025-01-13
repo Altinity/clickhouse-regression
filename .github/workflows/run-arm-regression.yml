@@ -1341,7 +1341,7 @@ jobs:
 
   memory:
     runs-on: [self-hosted, arm64, type-cax31, image-arm-app-docker-ce]
-    timeout-minutes: 1800
+    timeout-minutes: 600
     env:
       SUITE: memory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}

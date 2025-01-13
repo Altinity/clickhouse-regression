@@ -239,7 +239,7 @@ jobs:
 
   alter_attach_partition:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 3000
+    timeout-minutes: 600
     env:
       SUITE: alter
       STORAGE: /attach_partition
@@ -278,7 +278,7 @@ jobs:
 
   alter_move_partition:
     runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
-    timeout-minutes: 3000
+    timeout-minutes: 600
     env:
       SUITE: alter
       STORAGE: /move_partition
@@ -317,7 +317,7 @@ jobs:
 
   attach:
     runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
-    timeout-minutes: 3000
+    timeout-minutes: 600
     env:
       SUITE: attach
     if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
