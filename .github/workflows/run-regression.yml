@@ -959,6 +959,10 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
+      - name: ⏩ Fast-forward current branch
+        if: ${{ inputs.ref != '' }}
+        run: git pull origin $(git rev-parse --abbrev-ref HEAD)
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
