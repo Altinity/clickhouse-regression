@@ -488,6 +488,7 @@ The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 ### Backup `clickhouse-backup`
 
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.8-lts/clickhouse-backup/
+Results (ACM): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.8-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
