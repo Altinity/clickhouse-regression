@@ -97,7 +97,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: $(git rev-parse HEAD)
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
