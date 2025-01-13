@@ -4,8 +4,11 @@ set -x
 
 export RUNNER_IP=$(hostname -I | cut -d ' ' -f 1)
 export RUNNER_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$RUNNER_IP"
-env
 uname -i
+
+echo "::group::Print env"
+env
+echo "::endgroup::"
 
 echo "::group::Apt Update"
 sudo rm -rf /var/lib/apt/lists/*
