@@ -12,7 +12,7 @@ def scenario(self, node="clickhouse1"):
     node = self.context.cluster.node(node)
 
     with When("I execute query select 1"):
-        r = node.query("SELECT 1 FORMAT TabSeparated").output.strip()
+        r = node.query("SELECT 2 FORMAT TabSeparated").output.strip()
 
     with Then("the result should be 1"):
         assert r == "1", error()
