@@ -121,9 +121,9 @@ on:
           - progress
           - raw
       ref:
-        description: "Commit SHA to checkout. Default: latest (HEAD)."
+        description: "Commit SHA to checkout. Default: current (empty string)."
         type: string
-        default: "HEAD"
+        default: ""
       extra_args:
         description: "🎛️ Extra test program arguments. Default: none (empty string)."
         type: string
