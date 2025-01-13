@@ -220,6 +220,9 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
+      - name: Collect telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
+
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
