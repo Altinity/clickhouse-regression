@@ -80,13 +80,15 @@
         * 12.3.1 [RQ.SRS-042.JWT.Security.TokenBlacklisting](#rqsrs-042jwtsecuritytokenblacklisting)
     * 12.4 [Token Refresh On Re-Authentication](#token-refresh-on-re-authentication)
         * 12.4.1 [RQ.SRS-042.JWT.Security.TokenRefreshOnReAuthentication](#rqsrs-042jwtsecuritytokenrefreshonreauthentication)
-    * 12.5 [Grafana Integration Support](#grafana-integration-support)
-        * 12.5.1 [RQ.SRS-042.JWT.GrafanaIntegration.Support](#rqsrs-042jwtgrafanaintegrationsupport)
-        * 12.5.2 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityenabled)
-        * 12.5.3 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentitydisabled)
-        * 12.5.4 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityclickhouseintegration)
-    * 12.6 [Expired Token Handling](#expired-token-handling)
-        * 12.6.1 [RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration](#rqsrs-042jwtgrafanaintegrationtokenexpiration)
+    * 12.5 [OAuth Identity Forwarding](#oauth-identity-forwarding)
+        * 12.5.1 [RQ.SRS-042.JWT.OAuthIntegration.Support](#rqsrs-042jwtoauthintegrationsupport)
+    * 12.6 [Grafana Integration Support](#grafana-integration-support)
+        * 12.6.1 [RQ.SRS-042.JWT.GrafanaIntegration.Support](#rqsrs-042jwtgrafanaintegrationsupport)
+        * 12.6.2 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityenabled)
+        * 12.6.3 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentitydisabled)
+        * 12.6.4 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityclickhouseintegration)
+    * 12.7 [Expired Token Handling](#expired-token-handling)
+        * 12.7.1 [RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration](#rqsrs-042jwtgrafanaintegrationtokenexpiration)
 
 
 ## Introduction
@@ -660,6 +662,27 @@ version: 1.0
 version: 1.0  
 
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
+
+### OAuth Identity Forwarding
+
+#### RQ.SRS-042.JWT.OAuthIntegration.Support
+version: 1.0
+
+[ClickHouse] SHALL support integration with OAuth providers for authentication using JWT tokens. The supported providers SHALL include but are not limited to:
+
+- Dex
+- Keycloak
+- Google
+- Okta
+- Auth0
+- Microsoft Entra ID
+- AWS Cognito
+- GitHub
+- GitLab
+- Ping Identity
+
+
+Only Dex is supported in the first version of JWT authentication in ClickHouse.
 
 
 ### Grafana Integration Support
