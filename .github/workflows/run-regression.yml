@@ -957,7 +957,7 @@ jobs:
       - name: ⤵️ Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref || github.ref }}
+          ref: ${{ inputs.ref }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
