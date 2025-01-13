@@ -529,7 +529,7 @@ def create_ca_certificate(
     with stashed.filepath(
         outfile,
         id=stashed.hash(
-            key,
+            os.path.basename(key),
             passphrase,
             common_name,
             type,
@@ -601,7 +601,7 @@ def create_certificate_signing_request(
     with stashed.filepath(
         outfile,
         id=stashed.hash(
-            key,
+            os.path.basename(key),
             passphrase,
             common_name,
             hash,
@@ -670,7 +670,9 @@ def sign_intermediate_ca_certificate(
 
     with stashed.filepath(
         outfile,
-        id=stashed.hash(csr, ca_config, ca_passphrase, type, hash, days),
+        id=stashed.hash(
+            os.path.basename(csr), ca_config, ca_passphrase, type, hash, days
+        ),
         use_stash=use_stash,
     ) as stash:
         try:
@@ -719,7 +721,15 @@ def sign_certificate(
 
     with stashed.filepath(
         outfile,
-        id=stashed.hash(csr, ca_certificate, ca_key, ca_passphrase, type, hash, days),
+        id=stashed.hash(
+            os.path.basename(csr),
+            ca_certificate,
+            ca_key,
+            ca_passphrase,
+            type,
+            hash,
+            days,
+        ),
         use_stash=use_stash,
     ) as stash:
         try:
@@ -850,7 +860,7 @@ def add_trusted_ca_certificate(
         yield path
     finally:
         with Finally("I remove CA certificate from being trusted by the system"):
-            node.command(f"rm -rf {path}")
+            node.command(f"rm -f {path}")
             if rhel_mode:
                 node.command("update-ca-trust extract")
             else:
