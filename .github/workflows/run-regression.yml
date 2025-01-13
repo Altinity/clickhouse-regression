@@ -959,6 +959,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Collect telemetry
+        uses: catchpoint/workflow-telemetry-action@v2
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
