@@ -2,7 +2,7 @@ version: "2.3"
 
 services:
   zookeeper:
-    image: clickhouse-regression-zookeeper-node:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
+    image: clickhouse-regression/zookeeper-node:${CLICKHOUSE_TESTS_ZOOKEEPER_VERSION:-3.8.4}
     pull_policy: never
     build:
       context: .
