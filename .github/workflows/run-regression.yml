@@ -220,9 +220,6 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: Collect telemetry
-        uses: catchpoint/workflow-telemetry-action@v2
-
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
@@ -351,7 +348,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -958,9 +955,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
-
-      - name: Collect telemetry
-        uses: catchpoint/workflow-telemetry-action@v2
 
       - name: 🛠️ Setup
         run: .github/setup.sh
