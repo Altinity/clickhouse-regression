@@ -42,91 +42,91 @@ The original source of the specification: https://github.com/apache/iceberg/blob
     * 4.4 [File System Operations](#file-system-operations)
         * 4.4.1 [RQ.Iceberg.FileSystemOperations](#rqicebergfilesystemoperations)
 * 5 [Specification](#specification)
-        * 5.4.1 [Terms](#terms)
-        * 5.4.2 [Writer requirements](#writer-requirements)
-        * 5.4.3 [RQ.Iceberg.WriterRequirements](#rqicebergwriterrequirements)
-        * 5.4.4 [Writing data files](#writing-data-files)
-            * 5.4.4.1 [RQ.Iceberg.WritingDataFiles](#rqicebergwritingdatafiles)
-    * 5.5 [Schemas and Data Types](#schemas-and-data-types)
-        * 5.5.1 [RQ.Iceberg.SchemasAndDataTypes](#rqicebergschemasanddatatypes)
-        * 5.5.2 [Nested Types](#nested-types)
-            * 5.5.2.1 [RQ.Iceberg.NestedTypes](#rqicebergnestedtypes)
-        * 5.5.3 [Primitive Types](#primitive-types)
-            * 5.5.3.1 [RQ.Iceberg.PrimitiveTypes](#rqicebergprimitivetypes)
-        * 5.5.4 [Default values](#default-values)
-            * 5.5.4.1 [RQ.Iceberg.DefaultValues](#rqicebergdefaultvalues)
-        * 5.5.5 [Schema Evolution](#schema-evolution)
-            * 5.5.5.1 [RQ.Iceberg.SchemaEvolution](#rqicebergschemaevolution)
-            * 5.5.5.2 [Column Projection](#column-projection)
-                * 5.5.5.2.1 [RQ.Iceberg.ColumnProjection](#rqicebergcolumnprojection)
-        * 5.5.6 [Identifier Field IDs](#identifier-field-ids)
-            * 5.5.6.1 [RQ.Iceberg.IndentifierFieldIDs](#rqicebergindentifierfieldids)
-        * 5.5.7 [Reserved Field IDs](#reserved-field-ids)
-            * 5.5.7.1 [RQ.Iceberg.ReservedFieldIDs](#rqicebergreservedfieldids)
-        * 5.5.8 [Row Lineage](#row-lineage)
-            * 5.5.8.1 [RQ.Iceberg.RowLineage](#rqicebergrowlineage)
-            * 5.5.8.2 [Row lineage assignment](#row-lineage-assignment)
-            * 5.5.8.3 [Row lineage example](#row-lineage-example)
-            * 5.5.8.4 [Enabling Row Lineage for Non-empty Tables](#enabling-row-lineage-for-non-empty-tables)
-    * 5.6 [Partitioning](#partitioning)
-        * 5.6.1 [RQ.Iceberg.Partitioning](#rqicebergpartitioning)
-        * 5.6.2 [Partition Transforms](#partition-transforms)
-            * 5.6.2.1 [RQ.Iceberg.PartitionTransforms](#rqicebergpartitiontransforms)
-        * 5.6.3 [Bucket Transform Details](#bucket-transform-details)
-            * 5.6.3.1 [RQ.Iceberg.BucketTransform](#rqicebergbuckettransform)
-        * 5.6.4 [Truncate Transform Details](#truncate-transform-details)
-            * 5.6.4.1 [RQ.Iceberg.TruncateTransform](#rqicebergtruncatetransform)
-        * 5.6.5 [Partition Evolution](#partition-evolution)
-            * 5.6.5.1 [RQ.Iceberg.PartitionEvolution](#rqicebergpartitionevolution)
-    * 5.7 [Sorting](#sorting)
-        * 5.7.1 [RQ.Iceberg.Sorting](#rqicebergsorting)
-    * 5.8 [Manifests](#manifests)
-        * 5.8.1 [RQ.Iceberg.Manifest](#rqicebergmanifest)
-        * 5.8.2 [Manifest Entry Fields](#manifest-entry-fields)
-            * 5.8.2.1 [RQ.Iceberg.Manifest.EntryFields](#rqicebergmanifestentryfields)
-        * 5.8.3 [Sequence Number Inheritance](#sequence-number-inheritance)
-            * 5.8.3.1 [RQ.Iceberg.Manifest.SequenceNumberInheritance](#rqicebergmanifestsequencenumberinheritance)
-        * 5.8.4 [First Row ID Inheritance](#first-row-id-inheritance)
-            * 5.8.4.1 [RQ.Iceberg.Manifest.FirstRowIDInheritance](#rqicebergmanifestfirstrowidinheritance)
-    * 5.9 [Snapshots](#snapshots)
-        * 5.9.1 [RQ.Iceberg.Snapshot](#rqicebergsnapshot)
-        * 5.9.2 [Snapshot Row IDs](#snapshot-row-ids)
-            * 5.9.2.1 [RQ.Iceberg.Snapshot.RowIDs](#rqicebergsnapshotrowids)
-    * 5.10 [Manifest Lists](#manifest-lists)
-        * 5.10.1 [RQ.Iceberg.ManifestList](#rqicebergmanifestlist)
-        * 5.10.2 [First Row ID Assignment](#first-row-id-assignment)
-            * 5.10.2.1 [RQ.Iceberg.ManifestList.FirstRowIDAssignment](#rqicebergmanifestlistfirstrowidassignment)
-    * 5.11 [Scan Planning](#scan-planning)
-        * 5.11.2.1 [RQ.Iceberg.ScanPlanning](#rqicebergscanplanning)
-    * 5.12 [Snapshot References](#snapshot-references)
-        * 5.12.1 [RQ.Iceberg.SnapshotReferences](#rqicebergsnapshotreferences)
-    * 5.13 [Snapshot Retention Policy](#snapshot-retention-policy)
-        * 5.13.1 [RQ.Iceberg.SnapshotRetentionPolicy](#rqicebergsnapshotretentionpolicy)
-    * 5.14 [Table Metadata](#table-metadata)
-        * 5.14.1 [RQ.Iceberg.TableMetadata](#rqicebergtablemetadata)
-        * 5.14.2 [Table Metadata Fields](#table-metadata-fields)
-            * 5.14.2.1 [RQ.Iceberg.TableMetadata.Fields](#rqicebergtablemetadatafields)
-        * 5.14.3 [Table Statistics](#table-statistics)
-            * 5.14.3.1 [RQ.Iceberg.TableMetadata.TableStatistics](#rqicebergtablemetadatatablestatistics)
-        * 5.14.4 [Partition Statistics](#partition-statistics)
-            * 5.14.4.1 [RQ.Iceberg.TableMetadata.PartitionStatistics](#rqicebergtablemetadatapartitionstatistics)
-            * 5.14.4.2 [Partition Statistics File](#partition-statistics-file)
-    * 5.15 [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry)
-        * 5.15.1 [RQ.Iceberg.CommitConflictResolutionAndRetry](#rqicebergcommitconflictresolutionandretry)
-        * 5.15.2 [File System Tables](#file-system-tables)
-            * 5.15.2.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables](#rqicebergcommitconflictresolutionandretryfilesystemtables)
-        * 5.15.3 [Metastore Tables](#metastore-tables)
-            * 5.15.3.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables](#rqicebergcommitconflictresolutionandretrymetastoretables)
-    * 5.16 [Delete Formats](#delete-formats)
-        * 5.16.1 [RQ.Iceberg.DeleteFormats](#rqicebergdeleteformats)
-        * 5.16.2 [Deletion Vectors](#deletion-vectors)
-            * 5.16.2.1 [RQ.Iceberg.DeleteFormats.DeleteVectors](#rqicebergdeleteformatsdeletevectors)
-        * 5.16.3 [Position Delete Files](#position-delete-files)
-            * 5.16.3.1 [RQ.Iceberg.DeleteFormats.PositionDeleteFiles](#rqicebergdeleteformatspositiondeletefiles)
-        * 5.16.4 [Equality Delete Files](#equality-delete-files)
-            * 5.16.4.1 [RQ.Iceberg.DeleteFormats.EqualityDeleteFiles](#rqicebergdeleteformatsequalitydeletefiles)
-        * 5.16.5 [Delete File Stats](#delete-file-stats)
-            * 5.16.5.1 [RQ.Iceberg.DeleteFormats.DeleteFileStats](#rqicebergdeleteformatsdeletefilestats)
+    * 5.1 [Terms](#terms)
+    * 5.2 [Writer requirements](#writer-requirements)
+        * 5.2.1 [RQ.Iceberg.WriterRequirements](#rqicebergwriterrequirements)
+    * 5.3 [Writing data files](#writing-data-files)
+        * 5.3.1 [RQ.Iceberg.WritingDataFiles](#rqicebergwritingdatafiles)
+    * 5.4 [Schemas and Data Types](#schemas-and-data-types)
+        * 5.4.1 [RQ.Iceberg.SchemasAndDataTypes](#rqicebergschemasanddatatypes)
+    * 5.5 [Nested Types](#nested-types)
+        * 5.5.1 [RQ.Iceberg.NestedTypes](#rqicebergnestedtypes)
+    * 5.6 [Primitive Types](#primitive-types)
+        * 5.6.1 [RQ.Iceberg.PrimitiveTypes](#rqicebergprimitivetypes)
+    * 5.7 [Default values](#default-values)
+        * 5.7.1 [RQ.Iceberg.DefaultValues](#rqicebergdefaultvalues)
+    * 5.8 [Schema Evolution](#schema-evolution)
+        * 5.8.1 [RQ.Iceberg.SchemaEvolution](#rqicebergschemaevolution)
+        * 5.8.2 [Column Projection](#column-projection)
+            * 5.8.2.1 [RQ.Iceberg.ColumnProjection](#rqicebergcolumnprojection)
+    * 5.9 [Identifier Field IDs](#identifier-field-ids)
+        * 5.9.1 [RQ.Iceberg.IndentifierFieldIDs](#rqicebergindentifierfieldids)
+    * 5.10 [Reserved Field IDs](#reserved-field-ids)
+        * 5.10.1 [RQ.Iceberg.ReservedFieldIDs](#rqicebergreservedfieldids)
+    * 5.11 [Row Lineage](#row-lineage)
+        * 5.11.1 [RQ.Iceberg.RowLineage](#rqicebergrowlineage)
+        * 5.11.2 [Row lineage assignment](#row-lineage-assignment)
+        * 5.11.3 [Row lineage example](#row-lineage-example)
+        * 5.11.4 [Enabling Row Lineage for Non-empty Tables](#enabling-row-lineage-for-non-empty-tables)
+    * 5.12 [Partitioning](#partitioning)
+        * 5.12.1 [RQ.Iceberg.Partitioning](#rqicebergpartitioning)
+        * 5.12.2 [Partition Transforms](#partition-transforms)
+            * 5.12.2.1 [RQ.Iceberg.PartitionTransforms](#rqicebergpartitiontransforms)
+        * 5.12.3 [Bucket Transform Details](#bucket-transform-details)
+            * 5.12.3.1 [RQ.Iceberg.BucketTransform](#rqicebergbuckettransform)
+        * 5.12.4 [Truncate Transform Details](#truncate-transform-details)
+            * 5.12.4.1 [RQ.Iceberg.TruncateTransform](#rqicebergtruncatetransform)
+        * 5.12.5 [Partition Evolution](#partition-evolution)
+            * 5.12.5.1 [RQ.Iceberg.PartitionEvolution](#rqicebergpartitionevolution)
+    * 5.13 [Sorting](#sorting)
+        * 5.13.1 [RQ.Iceberg.Sorting](#rqicebergsorting)
+    * 5.14 [Manifests](#manifests)
+        * 5.14.1 [RQ.Iceberg.Manifest](#rqicebergmanifest)
+        * 5.14.2 [Manifest Entry Fields](#manifest-entry-fields)
+            * 5.14.2.1 [RQ.Iceberg.Manifest.EntryFields](#rqicebergmanifestentryfields)
+        * 5.14.3 [Sequence Number Inheritance](#sequence-number-inheritance)
+            * 5.14.3.1 [RQ.Iceberg.Manifest.SequenceNumberInheritance](#rqicebergmanifestsequencenumberinheritance)
+        * 5.14.4 [First Row ID Inheritance](#first-row-id-inheritance)
+            * 5.14.4.1 [RQ.Iceberg.Manifest.FirstRowIDInheritance](#rqicebergmanifestfirstrowidinheritance)
+    * 5.15 [Snapshots](#snapshots)
+        * 5.15.1 [RQ.Iceberg.Snapshot](#rqicebergsnapshot)
+        * 5.15.2 [Snapshot Row IDs](#snapshot-row-ids)
+            * 5.15.2.1 [RQ.Iceberg.Snapshot.RowIDs](#rqicebergsnapshotrowids)
+    * 5.16 [Manifest Lists](#manifest-lists)
+        * 5.16.1 [RQ.Iceberg.ManifestList](#rqicebergmanifestlist)
+        * 5.16.2 [First Row ID Assignment](#first-row-id-assignment)
+            * 5.16.2.1 [RQ.Iceberg.ManifestList.FirstRowIDAssignment](#rqicebergmanifestlistfirstrowidassignment)
+    * 5.17 [Scan Planning](#scan-planning)
+        * 5.17.1 [RQ.Iceberg.ScanPlanning](#rqicebergscanplanning)
+    * 5.18 [Snapshot References](#snapshot-references)
+        * 5.18.1 [RQ.Iceberg.SnapshotReferences](#rqicebergsnapshotreferences)
+    * 5.19 [Snapshot Retention Policy](#snapshot-retention-policy)
+        * 5.19.1 [RQ.Iceberg.SnapshotRetentionPolicy](#rqicebergsnapshotretentionpolicy)
+    * 5.20 [Table Metadata](#table-metadata)
+        * 5.20.1 [RQ.Iceberg.TableMetadata](#rqicebergtablemetadata)
+        * 5.20.2 [Table Metadata Fields](#table-metadata-fields)
+            * 5.20.2.1 [RQ.Iceberg.TableMetadata.Fields](#rqicebergtablemetadatafields)
+        * 5.20.3 [Table Statistics](#table-statistics)
+            * 5.20.3.1 [RQ.Iceberg.TableMetadata.TableStatistics](#rqicebergtablemetadatatablestatistics)
+        * 5.20.4 [Partition Statistics](#partition-statistics)
+            * 5.20.4.1 [RQ.Iceberg.TableMetadata.PartitionStatistics](#rqicebergtablemetadatapartitionstatistics)
+            * 5.20.4.2 [Partition Statistics File](#partition-statistics-file)
+    * 5.21 [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry)
+        * 5.21.1 [RQ.Iceberg.CommitConflictResolutionAndRetry](#rqicebergcommitconflictresolutionandretry)
+        * 5.21.2 [File System Tables](#file-system-tables)
+            * 5.21.2.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables](#rqicebergcommitconflictresolutionandretryfilesystemtables)
+        * 5.21.3 [Metastore Tables](#metastore-tables)
+            * 5.21.3.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables](#rqicebergcommitconflictresolutionandretrymetastoretables)
+    * 5.22 [Delete Formats](#delete-formats)
+        * 5.22.1 [RQ.Iceberg.DeleteFormats](#rqicebergdeleteformats)
+        * 5.22.2 [Deletion Vectors](#deletion-vectors)
+            * 5.22.2.1 [RQ.Iceberg.DeleteFormats.DeleteVectors](#rqicebergdeleteformatsdeletevectors)
+        * 5.22.3 [Position Delete Files](#position-delete-files)
+            * 5.22.3.1 [RQ.Iceberg.DeleteFormats.PositionDeleteFiles](#rqicebergdeleteformatspositiondeletefiles)
+        * 5.22.4 [Equality Delete Files](#equality-delete-files)
+            * 5.22.4.1 [RQ.Iceberg.DeleteFormats.EqualityDeleteFiles](#rqicebergdeleteformatsequalitydeletefiles)
+        * 5.22.5 [Delete File Stats](#delete-file-stats)
+            * 5.22.5.1 [RQ.Iceberg.DeleteFormats.DeleteFileStats](#rqicebergdeleteformatsdeletefilestats)
 * 6 [Appendix A: Format-specific Requirements](#appendix-a-format-specific-requirements)
     * 6.1 [Avro](#avro)
         * 6.1.1 [RQ.Iceberg.Avro](#rqicebergavro)
@@ -297,7 +297,7 @@ Tables do not require rename, except for tables that use atomic rename to implem
 
 ## Specification
 
-#### Terms
+### Terms
 
 * **Schema** -- Names and types of fields in a table.
 * **Partition spec** -- A definition of how partition values are derived from data fields.
@@ -307,7 +307,7 @@ Tables do not require rename, except for tables that use atomic rename to implem
 * **Data file** -- A file that contains rows of a table.
 * **Delete file** -- A file that encodes rows of a table that are deleted by position or data values.
 
-#### Writer requirements
+### Writer requirements
 
 #### RQ.Iceberg.WriterRequirements
 version: 1.0
@@ -337,9 +337,9 @@ If a later version is not shown, the requirement for a version is not changed fr
 
 Readers may be more strict for metadata JSON files because the JSON files are not reused and will always match the table version. Required fields that were not present in or were optional in prior versions may be handled as required fields. For example, a v2 table that is missing `last-sequence-number` can throw an exception.
 
-#### Writing data files
+### Writing data files
 
-##### RQ.Iceberg.WritingDataFiles
+#### RQ.Iceberg.WritingDataFiles
 version: 1.0
 
 All columns must be written to data files even if they introduce redundancy with metadata stored in manifest files (e.g. columns with identity partition transforms). Writing all columns provides a backup in case of corruption or bugs in the metadata layer.
@@ -355,9 +355,9 @@ A table's **schema** is a list of named columns. All data types are either primi
 
 For the representations of these types in Avro, ORC, and Parquet file formats, see Appendix A.
 
-#### Nested Types
+### Nested Types
 
-##### RQ.Iceberg.NestedTypes
+#### RQ.Iceberg.NestedTypes
 version: 1.0
 
 A **`struct`** is a tuple of typed values. Each field in the tuple is named and has an integer id that is unique in the table schema. Each field can be either optional or required, meaning that values can (or cannot) be null. Fields may be any type. Fields may have an optional comment or doc string. Fields can have [default values](#default-values).
@@ -366,9 +366,9 @@ A **`list`** is a collection of values with some element type. The element field
 
 A **`map`** is a collection of key-value pairs with a key type and a value type. Both the key field and value field each have an integer id that is unique in the table schema. Map keys are required and map values can be either optional or required. Both map keys and map values may be any type, including nested types.
 
-#### Primitive Types
+### Primitive Types
 
-##### RQ.Iceberg.PrimitiveTypes
+#### RQ.Iceberg.PrimitiveTypes
 version: 1.0
 
 Supported primitive types are defined in the table below. Primitive types added after v1 have an "added by" version that is the first spec version in which the type is allowed. For example, nanosecond-precision timestamps are part of the v3 spec; using v3 types in v1 or v2 tables can break forward compatibility.
@@ -402,9 +402,9 @@ Notes:
 For details on how to serialize a schema to JSON, see Appendix C.
 
 
-#### Default values
+### Default values
 
-##### RQ.Iceberg.DefaultValues
+#### RQ.Iceberg.DefaultValues
 version: 1.0
 
 Default values can be tracked for struct fields (both nested structs and the top-level schema's struct). There can be two defaults with a field:
@@ -421,9 +421,9 @@ All columns of `unknown` type must default to null. Non-null values for `initial
 Default values are attributes of fields in schemas and serialized with fields in the JSON format. See [Appendix C](#appendix-c-json-serialization).
 
 
-#### Schema Evolution
+### Schema Evolution
 
-##### RQ.Iceberg.SchemaEvolution
+#### RQ.Iceberg.SchemaEvolution
 version: 1.0
 
 Schemas may be evolved by type promotion or adding, deleting, renaming, or reordering fields in structs (both nested structs and the top-level schema’s struct).
@@ -473,9 +473,9 @@ Struct evolution requires the following rules for default values:
 * If a field value is missing from a struct's `write-default`, the field's `write-default` must be used for the field
 
 
-##### Column Projection
+#### Column Projection
 
-###### RQ.Iceberg.ColumnProjection
+##### RQ.Iceberg.ColumnProjection
 version: 1.0
 
 Columns in Iceberg data files are selected by field id. The table schema's column names and order may change after a data file is written, and projection must be done using field ids.
@@ -508,9 +508,9 @@ Field mapping fields are constrained by the following rules:
 
 For details on serialization, see [Appendix C](#name-mapping-serialization).
 
-#### Identifier Field IDs
+### Identifier Field IDs
 
-##### RQ.Iceberg.IndentifierFieldIDs
+#### RQ.Iceberg.IndentifierFieldIDs
 version: 1.0
 
 A schema can optionally track the set of primitive fields that identify rows in a table, using the property `identifier-field-ids` (see JSON encoding in Appendix C).
@@ -520,9 +520,9 @@ Two rows are the "same"---that is, the rows represent the same entity---if the i
 Identifier fields may be nested in structs but cannot be nested within maps or lists. Float, double, and optional fields cannot be used as identifier fields and a nested field cannot be used as an identifier field if it is nested in an optional struct, to avoid null values in identifiers.
 
 
-#### Reserved Field IDs
+### Reserved Field IDs
 
-##### RQ.Iceberg.ReservedFieldIDs
+#### RQ.Iceberg.ReservedFieldIDs
 version: 1.0
 
 Iceberg tables must not use field ids greater than 2147483447 (`Integer.MAX_VALUE - 200`). This id range is reserved for metadata columns that can be used in user data schemas, like the `_file` column that holds the file path in which a row was stored.
@@ -542,9 +542,9 @@ The set of metadata columns is:
 | **`2147483543  _row_id`**        | `long`        | A unique long assigned when row-lineage is enabled, see [Row Lineage](#row-lineage)                    |
 | **`2147483542  _last_updated_sequence_number`**   | `long`        | The sequence number which last updated this row when row-lineage is enabled [Row Lineage](#row-lineage) |
 
-#### Row Lineage
+### Row Lineage
 
-##### RQ.Iceberg.RowLineage
+#### RQ.Iceberg.RowLineage
 version: 1.0
 
 In v3 and later, an Iceberg table can track row lineage fields for all newly created rows.  Row lineage is enabled by setting the field `row-lineage` to true in the table's metadata. When enabled, engines must maintain the `next-row-id` table field and the following row-level fields when writing data files:
@@ -557,7 +557,7 @@ These fields are assigned and updated by inheritance because the commit sequence
 When row lineage is enabled, new snapshots cannot include [Equality Deletes](#equality-delete-files). Row lineage is incompatible with equality deletes because lineage values must be maintained, but equality deletes are used to avoid reading existing data before writing changes.
 
 
-##### Row lineage assignment
+#### Row lineage assignment
 
 Row lineage fields are written when row lineage is enabled. When not enabled, row lineage fields (`_row_id` and `_last_updated_sequence_number`) must not be written to data files. The rest of this section applies when row lineage is enabled.
 
@@ -578,7 +578,7 @@ When an existing row is moved to a different data file for any reason, writers a
 3. If the write has not modified the row, the existing non-null `_last_updated_sequence_number` value must be copied to the new data file
 
 
-##### Row lineage example
+#### Row lineage example
 
 This example demonstrates how `_row_id` and `_last_updated_sequence_number` are assigned for a snapshot when row lineage is enabled. This starts with a table with row lineage enabled and a `next-row-id` of 1000.
 
@@ -619,7 +619,7 @@ Files `data2` and `data3` are written with `null` for `first_row_id` and are ass
 When the new snapshot is committed, the table's `next-row-id` must also be updated (even if the new snapshot is not in the main branch). Because 225 rows were added (`added1`: 100 + `added2`: 0 + `added3`: 125), the new value is 1,000 + 225 = 1,225:
 
 
-##### Enabling Row Lineage for Non-empty Tables
+#### Enabling Row Lineage for Non-empty Tables
 
 Any snapshot without the field `first-row-id` does not have any lineage information and values for `_row_id` and `_last_updated_sequence_number` cannot be assigned accurately.  
 

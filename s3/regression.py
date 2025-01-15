@@ -137,12 +137,28 @@ xfails = {
             Fail,
             "Times out, needs investigation",
             always,
+            ".*TIMEOUT_EXCEEDED*",
+        ),
+    ],
+    "gcs/combinatoric table/:": [
+        (
+            Error,
+            "Times out, needs investigation",
+            always,
             ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
         ),
     ],
     "azure/combinatoric table/:": [
         (
             Fail,
+            "Times out, needs investigation",
+            always,
+            ".*TIMEOUT_EXCEEDED*",
+        ),
+    ],
+    "azure/combinatoric table/:": [
+        (
+            Error,
             "Times out, needs investigation",
             always,
             ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
