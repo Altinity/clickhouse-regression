@@ -132,6 +132,22 @@ xfails = {
     ":/combinatoric table/engine=CollapsingMergeTree,replicated=True,n_cols=500,n_tables=3,part_type=compact": [
         (Fail, "Needs investigation, rows not appearing")
     ],
+    "gcs/combinatoric table/:": [
+        (
+            Fail,
+            "Times out, needs investigation",
+            always,
+            ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
+        ),
+    ],
+    "azure/combinatoric table/:": [
+        (
+            Fail,
+            "Times out, needs investigation",
+            always,
+            ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
+        ),
+    ],
     ":/invalid table function/invalid region": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/59084")
     ],
