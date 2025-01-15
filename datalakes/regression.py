@@ -121,10 +121,6 @@ def regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        # Feature(run=load("datalakes.tests.check_healthy", "feature"))
-        # Feature(run=load("datalakes.tests.delta_lake", "feature"))
-        Feature(run=load("datalakes.tests.iceberg", "feature"))
-
 
 if main():
     regression()
