@@ -123,7 +123,12 @@ def login_without_token(self):
         )
 
     with Then("check login without token"):
-        steps.check_clickhouse_client_password_login(user_name=user_name, password="")
+        steps.check_clickhouse_client_password_login(
+            user_name=user_name,
+            password="",
+            exitcode=4,
+            message=f"DB::Exception: {user_name}: Authentication failed: password is incorrect, or there is no user with such name.",
+        )
 
 
 @TestFeature

@@ -195,7 +195,7 @@ def feature(self):
         combinations = list(product(user_names, tokens, validators))
         note(f"Total number of combinations: {len(combinations)}")
 
-    with And("if stress is not enabled, select 60 random combinations"):
+    with And("if stress is not enabled, select 200 random combinations"):
         if not self.context.stress:
             combinations = random.sample(combinations, 200)
 
