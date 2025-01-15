@@ -514,3 +514,173 @@ The system SHALL support equality delete files to mark rows as deleted based on 
 The system SHALL collect statistics for delete files to optimize query planning and execution.
 
 - **Statistics Collection:** Collect metrics such as the number of deleted rows and affected partitions to aid in efficient query processing.
+
+### Appendix A: Format-specific Requirements
+
+#### Avro
+
+**Version:** 1.0
+
+The system SHALL support Avro as a data file format with specific requirements to ensure compatibility and performance.
+
+- **Schema Mapping:** Implement a mapping between Iceberg types and Avro types to maintain data consistency.
+
+- **Metadata Storage:** Store Iceberg-specific metadata within Avro files to facilitate schema evolution and partitioning.
+
+- **Compression Support:** Support various compression codecs in Avro files to optimize storage and performance.
+
+#### Parquet
+
+**Version:** 1.0
+
+The system SHALL support Parquet as a data file format with specific requirements to ensure compatibility and performance.
+
+- **Schema Mapping:** Implement a mapping between Iceberg types and Parquet types to maintain data consistency.
+
+- **Column Projection:** Support efficient column projection in Parquet files to enhance query performance.
+
+- **Statistics Collection:** Collect and store column-level statistics in Parquet files to facilitate query optimization.
+
+#### ORC
+
+**Version:** 1.0
+
+The system SHALL support ORC as a data file format with specific requirements to ensure compatibility and performance.
+
+- **Schema Mapping:** Implement a mapping between Iceberg types and ORC types to maintain data consistency.
+
+- **Predicate Pushdown:** Enable predicate pushdown in ORC files to improve query efficiency.
+
+- **Compression Support:** Support various compression codecs in ORC files to optimize storage and performance.
+
+### Appendix B: 32-bit Hash Requirements
+
+**Version:** 1.0
+
+The system SHALL implement a 32-bit hash function for partitioning and bucketing operations to distribute data evenly.
+
+- **Hash Function Specification:** Use the 32-bit Murmur3 hash function, x86 variant, seeded with 0, as the standard hash function.
+
+- **Consistency Across Languages:** Ensure that the hash function produces consistent results across different programming languages and platforms.
+
+- **Application in Partitioning:** Apply the hash function in partitioning schemes, such as bucketing, to achieve uniform data distribution.
+
+### Appendix C: JSON Serialization
+
+#### Schemas
+
+**Version:** 1.0
+
+The system SHALL serialize table schemas into JSON format to ensure consistent schema representation across different platforms and tools.
+
+- **Schema Serialization:** Each schema is represented as a JSON object containing fields such as `type`, `schema-id`, `fields`, and `name`.
+
+- **Field Representation:** Fields within the schema are represented as JSON objects with attributes like `id`, `name`, `required`, `type`, and `doc`.
+
+#### Partition Specs
+
+**Version:** 1.0
+
+The system SHALL serialize partition specifications into JSON format to define how table data is partitioned.
+
+- **Partition Spec Serialization:** Each partition spec is represented as a JSON object containing `spec-id` and a list of `fields`.
+
+- **Field Representation:** Fields within the partition spec include attributes such as `name`, `transform`, `source-id`, and `field-id`.
+
+#### Sort Orders
+
+**Version:** 1.0
+
+The system SHALL serialize sort order definitions into JSON format to specify the sorting of data within partitions.
+
+- **Sort Order Serialization:** Each sort order is represented as a JSON object containing `order-id` and a list of `fields`.
+
+- **Field Representation:** Fields within the sort order include attributes like `transform`, `direction`, `null-order`, and `source-id`.
+
+#### Table Metadata and Snapshots
+
+**Version:** 1.0
+
+The system SHALL serialize table metadata and snapshot information into JSON format to maintain the state and history of the table.
+
+- **Table Metadata Serialization:** Table metadata is represented as a JSON object containing attributes such as `format-version`, `table-uuid`, `location`, `last-sequence-number`, `last-updated-ms`, `current-schema-id`, `schemas`, `partition-specs`, `default-spec-id`, `sort-orders`, `default-sort-order-id`, `properties`, `current-snapshot-id`, `snapshots`, and `snapshot-log`.
+
+- **Snapshot Representation:** Each snapshot is represented as a JSON object with attributes like `snapshot-id`, `parent-snapshot-id`, `sequence-number`, `timestamp-ms`, `manifest-list`, and `summary`.
+
+#### Name Mapping Serialization
+
+**Version:** 1.0
+
+The system SHALL serialize name mappings into JSON format to map field names to field IDs, facilitating schema evolution and compatibility.
+
+- **Name Mapping Serialization:** Name mappings are represented as a JSON object containing a list of field mapping objects, each with attributes such as `field-id`, `names`, and `type`.
+
+
+### Appendix D: Single-value Serialization
+
+#### Binary Single-value Serialization
+
+**Version:** 1.0
+
+The system SHALL implement binary single-value serialization to encode individual data values into a compact binary format.
+
+- **Serialization Format:** Utilize a consistent binary encoding scheme for all supported data types to ensure efficient storage and transmission.
+
+- **Compatibility:** Ensure that the binary serialization format is compatible across different platforms and programming languages to facilitate interoperability.
+
+#### JSON Single-value Serialization
+
+**Version:** 1.0
+
+The system SHALL implement JSON single-value serialization to encode individual data values into a JSON format.
+
+- **Serialization Format:** Use standard JSON encoding rules for all supported data types to ensure readability and ease of use.
+
+- **Compatibility:** Ensure that the JSON serialization format is compatible across different platforms and programming languages to facilitate interoperability.
+
+### Appendix E: Format Version Changes
+
+#### Version 3
+
+**Version:** 1.0
+
+The system SHALL incorporate the changes introduced in Iceberg specification version 3 to extend data types and metadata structures, adding new capabilities.
+
+- **New Data Types:** Support for nanosecond timestamp with timezone and unknown data types.
+
+- **Default Value Support:** Implement default value support for columns to handle missing or unspecified data.
+
+- **Multi-argument Transforms:** Enable multi-argument transforms for partitioning and sorting to provide more flexible data organization.
+
+- **Row Lineage Tracking:** Introduce row lineage tracking to maintain data provenance and facilitate auditing.
+
+- **Binary Deletion Vectors:** Implement binary deletion vectors to efficiently manage row-level deletions.
+
+#### Version 2
+
+**Version:** 1.0
+
+The system SHALL incorporate the changes introduced in Iceberg specification version 2 to add row-level updates and deletes for analytic tables with immutable files.
+
+- **Delete Files:** Introduce delete files to encode rows that are deleted in existing data files, allowing for row-level deletes without rewriting data files.
+
+- **Stricter Writer Requirements:** Enforce stricter requirements for writers to ensure data consistency and integrity.
+
+
+### Appendix F: Implementation Notes
+
+#### Point in Time Reads (Time Travel)
+
+**Version:** 1.0
+
+The system SHALL support point-in-time reads, commonly referred to as time travel, enabling users to query historical data states by accessing specific snapshots or table versions.
+
+- **Snapshot-based Access:** Allow users to query the table as it existed at a particular snapshot ID or timestamp. :contentReference[oaicite:0]{index=0}
+
+- **SQL Syntax Support:** Implement SQL clauses such as `TIMESTAMP AS OF` and `VERSION AS OF` to facilitate time travel queries. :contentReference[oaicite:1]{index=1}
+
+- **Branch and Tag References:** Enable time travel to the head of a branch or a specific tag, allowing users to access named versions of the table. :contentReference[oaicite:2]{index=2}
+
+- **Schema Consistency:** Ensure that time travel queries utilize the appropriate schema corresponding to the specified snapshot or version to maintain data consistency. :contentReference[oaicite:3]{index=3}
+
+- **API Integration:** Provide support for time travel in various APIs, including DataFrame and SQL interfaces, to offer flexibility in accessing historical data. :contentReference[oaicite:4]{index=4}
