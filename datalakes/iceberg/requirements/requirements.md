@@ -6,27 +6,27 @@ This document outlines the software requirements for the Apache Iceberg table fo
 
 ## Requirements
 
-### RQ.ICEBERG.SPEC.FormatVersioning
+### RQ.Iceberg.FormatVersioning
 version: 1.0  
 
 The system SHALL support multiple versions of the table specification to ensure compatibility and feature evolution.
 
-### RQ.ICEBERG.SPEC.FormatVersioning.V1
+### RQ.Iceberg.FormatVersioning.V1
 version: 1.0  
 
 The system SHALL implement Version 1 of the Iceberg specification, defining management of large analytic tables using immutable file formats.
 
-### RQ.ICEBERG.SPEC.FormatVersioning.V2
+### RQ.Iceberg.FormatVersioning.V2
 version: 1.0  
 
 The system SHALL implement Version 2 of the Iceberg specification, adding support for row-level updates and deletes for analytic tables with immutable files.
 
-### RQ.ICEBERG.SPEC.FormatVersioning.V3
+### RQ.Iceberg.FormatVersioning.V3
 version: 1.0  
 
 The system SHALL implement Version 3 of the Iceberg specification, extending data types and metadata structures to add new capabilities, including new data types, default value support for columns, multi-argument transforms for partitioning and sorting, and row lineage tracking.
 
-### RQ.ICEBERG.SPEC.Goals
+### RQ.Iceberg.Goals
 version: 1.0  
 
 The system SHALL achieve the following goals:
@@ -45,32 +45,32 @@ The system SHALL achieve the following goals:
 
 - **Formats:** Support underlying data file formats that adhere to identical schema evolution rules and types, offering both read-optimized and write-optimized formats.
 
-### RQ.ICEBERG.SPEC.Overview
+### RQ.Iceberg.Overview
 version: 1.0  
 
 The system SHALL manage table state through metadata files, tracking individual data files instead of directories, enabling in-place data file creation and explicit commits.
 
-### RQ.ICEBERG.SPEC.OptimisticConcurrency
+### RQ.Iceberg.OptimisticConcurrency
 version: 1.0  
 
 The system SHALL implement optimistic concurrency control, allowing atomic swaps of table metadata files to provide serializable isolation without requiring locks for readers.
 
-### RQ.ICEBERG.SPEC.SequenceNumbers
+### RQ.Iceberg.SequenceNumbers
 version: 1.0  
 
 The system SHALL assign a unique sequence number to every successful commit, establishing the relative age of data and delete files.
 
-### RQ.ICEBERG.SPEC.RowLevelDeletes
+### RQ.Iceberg.RowLevelDeletes
 version: 1.0  
 
 The system SHALL support row-level deletes stored in delete files, encoded either as position deletes (marking a row deleted by data file path and row position) or equality deletes (marking a row deleted by one or more column values).
 
-### RQ.ICEBERG.SPEC.FileSystemOperations
+### RQ.Iceberg.FileSystemOperations
 version: 1.0  
 
 The system SHALL ensure compatibility with object stores by treating data and metadata files as immutable once written, not requiring random-access writes, and minimizing the need for file renames, except for atomic renames during commit operations for new metadata files.
 
-### RQ.ICEBERG.SPEC.Terms
+### RQ.Iceberg.Terms
 version: 1.0  
 
 The system SHALL define the following terms:
@@ -89,7 +89,7 @@ The system SHALL define the following terms:
 
 - **Delete File:** A file that encodes rows of a table that are deleted by position or data values.
 
-### RQ.ICEBERG.SPEC.WriterRequirements
+### RQ.Iceberg.WriterRequirements
 version: 1.0  
 
 The system SHALL enforce the following writer requirements based on table version:
@@ -102,12 +102,12 @@ The system SHALL enforce the following writer requirements based on table versio
 
 Writers MUST adhere to these requirements when adding metadata files to a table.
 
-### RQ.ICEBERG.SPEC.WritingDataFiles
+### RQ.Iceberg.WritingDataFiles
 version: 1.0  
 
 The system SHALL require that all columns be written to data files, even if they introduce redundancy with metadata stored in manifest files (e.g., columns with identity partition transforms).
 
-### RQ.ICEBERG.SPEC.SchemasAndDataTypes
+### RQ.Iceberg.SchemasAndDataTypes
 version: 1.0  
 
 The system SHALL support the following data types:
@@ -148,22 +148,22 @@ The system SHALL support the following data types:
 
   - **Map<K, V>:** A map with keys and values of any data type.
 
-### RQ.ICEBERG.SPEC.DefaultValues
+### RQ.Iceberg.DefaultValues
 version: 1.0  
 
 The system SHALL support default values for columns, allowing new columns to be added with specified default values without requiring existing data files to be rewritten.
 
-### RQ.ICEBERG.SPEC.SchemaEvolution
+### RQ.Iceberg.SchemaEvolution
 version: 1.0  
 
 The system SHALL support full schema evolution, including safe column add, drop, reorder, and rename operations, even in nested structures.
 
-### RQ.ICEBERG.SPEC.ColumnProjection
+### RQ.Iceberg.ColumnProjection
 version: 1.0  
 
 The system SHALL support column projection, enabling queries to read only the necessary columns from data files, improving read performance.
 
-### RQ.ICEBERG.SPEC.IdentifierFieldIDs
+### RQ.Iceberg.IdentifierFieldIDs
 version: 1.0  
 
 The system SHALL support the definition of identifier fields within a table schema to uniquely identify rows.
@@ -172,14 +172,14 @@ The system SHALL support the definition of identifier fields within a table sche
 
 - **Constraints:** Identifier fields must be of required primitive types and cannot be of type float or double due to complexities with NaN and -0 values. :contentReference[oaicite:1]{index=1}
 
-### RQ.ICEBERG.SPEC.ReservedFieldIDs
+### RQ.Iceberg.ReservedFieldIDs
 version: 1.0  
 
 The system SHALL reserve specific field IDs for internal use to prevent conflicts.
 
 - **Reserved IDs:** Certain field IDs are reserved for system use and must not be assigned to user-defined fields.
 
-### RQ.ICEBERG.SPEC.RowLineage
+### RQ.Iceberg.RowLineage
 version: 1.0  
 
 The system SHALL support row lineage tracking to monitor the creation and modification of individual rows.
@@ -188,21 +188,21 @@ The system SHALL support row lineage tracking to monitor the creation and modifi
 
   - **_row_id:** A unique long identifier for every row within the table. :contentReference[oaicite:2]{index=2}
 
-### RQ.ICEBERG.SPEC.RowLineageAssignment
+### RQ.Iceberg.RowLineageAssignment
 version: 1.0  
 
 The system SHALL assign unique row IDs to each row when row lineage is enabled.
 
 - **Assignment Mechanism:** When row lineage is enabled, each row must be assigned a unique `_row_id` to facilitate tracking.
 
-### RQ.ICEBERG.SPEC.RowLineageExample
+### RQ.Iceberg.RowLineageExample
 version: 1.0  
 
 The system's documentation SHALL provide examples demonstrating row lineage implementation.
 
 - **Example Scenario:** An example should illustrate how `_row_id` is assigned and utilized in tracking row modifications.
 
-### RQ.ICEBERG.SPEC.EnablingRowLineageForNonEmptyTables
+### RQ.Iceberg.EnablingRowLineageForNonEmptyTables
 version: 1.0  
 
 The system SHALL provide mechanisms to enable row lineage tracking for non-empty tables without data inconsistency.
@@ -210,7 +210,7 @@ The system SHALL provide mechanisms to enable row lineage tracking for non-empty
 - **Enabling Procedure:** To enable row lineage for existing tables, the system must ensure that all existing rows are assigned unique `_row_id` values without altering data integrity.
 
 
-### RQ.ICEBERG.SPEC.Partitioning
+### RQ.Iceberg.Partitioning
 version: 1.0  
 
 The system SHALL support partitioning to optimize query performance by dividing data into segments based on specified criteria.
@@ -219,14 +219,14 @@ The system SHALL support partitioning to optimize query performance by dividing 
 
 - **Flexible Partitioning:** With a separation between physical and logical, Iceberg tables can evolve partition schemes over time as data volume changes. :contentReference[oaicite:1]{index=1}
 
-### RQ.ICEBERG.SPEC.PartitionTransforms
+### RQ.Iceberg.PartitionTransforms
 version: 1.0  
 
 The system SHALL support various partition transforms to facilitate flexible data organization.
 
 - **Supported Transforms:** Iceberg supports partition transforms such as YEAR, MONTH, DAY, HOUR, BUCKET, and TRUNCATE. :contentReference[oaicite:2]{index=2}
 
-### RQ.ICEBERG.SPEC.BucketTransformDetails
+### RQ.Iceberg.BucketTransformDetails
 version: 1.0  
 
 The system SHALL implement bucket partition transforms using a 32-bit hash of the source value.
@@ -235,28 +235,28 @@ The system SHALL implement bucket partition transforms using a 32-bit hash of th
 
 - **Parameterization:** Transforms are parameterized by a number of buckets, N. :contentReference[oaicite:4]{index=4}
 
-### RQ.ICEBERG.SPEC.TruncateTransformDetails
+### RQ.Iceberg.TruncateTransformDetails
 version: 1.0  
 
 The system SHALL implement truncate partition transforms to partition data by truncating column values.
 
 - **Truncate Transformation:** Effective for partitioning data with predictable ranges or fixed-length values, such as product codes or zip codes. :contentReference[oaicite:5]{index=5}
 
-### RQ.ICEBERG.SPEC.PartitionEvolution
+### RQ.Iceberg.PartitionEvolution
 version: 1.0  
 
 The system SHALL support partition evolution, allowing changes to the partition layout without rewriting existing data files.
 
 - **Partition Evolution Feature:** Old data files can remain partitioned by the old partition layout, while newly added data files are partitioned based on the new layout. :contentReference[oaicite:6]{index=6}
 
-### RQ.ICEBERG.SPEC.Sorting
+### RQ.Iceberg.Sorting
 version: 1.0  
 
 The system SHALL support sorting mechanisms to organize data within partitions for optimized query performance.
 
 - **Sorting Configuration:** Iceberg allows configuring sorting strategies to enhance data retrieval efficiency.
 
-### RQ.ICEBERG.SPEC.Manifests
+### RQ.Iceberg.Manifests
 version: 1.0  
 
 The system SHALL utilize manifest files to track data and delete files within a table.
@@ -265,28 +265,28 @@ The system SHALL utilize manifest files to track data and delete files within a 
 
 - **Manifest Content Types:** Manifests can track different types of files, such as data files or delete files. :contentReference[oaicite:1]{index=1}
 
-### RQ.ICEBERG.SPEC.ManifestEntryFields
+### RQ.Iceberg.ManifestEntryFields
 version: 1.0  
 
 The system SHALL define specific fields within manifest entries to describe the status and metadata of tracked files.
 
 - **Manifest Entry Structure:** Each entry in a manifest includes fields such as status, snapshot ID, sequence number, and data file information. :contentReference[oaicite:2]{index=2}
 
-### RQ.ICEBERG.SPEC.SequenceNumberInheritance
+### RQ.Iceberg.SequenceNumberInheritance
 version: 1.0  
 
 The system SHALL ensure that sequence numbers are inherited appropriately by manifests and data files to maintain the correct order of operations.
 
 - **Sequence Number Assignment:** When a snapshot is created for a commit, it is optimistically assigned the next sequence number, which is then inherited by all manifests, data files, and delete files associated with that snapshot. :contentReference[oaicite:3]{index=3}
 
-### RQ.ICEBERG.SPEC.FirstRowIDInheritance
+### RQ.Iceberg.FirstRowIDInheritance
 version: 1.0  
 
 The system SHALL ensure that the first row ID is inherited appropriately by manifests and data files to maintain row-level tracking.
 
 - **First Row ID Assignment:** When row-level tracking is enabled, each data file is assigned a unique first row ID, which is inherited by associated manifests to facilitate row-level operations.
 
-### RQ.ICEBERG.SPEC.Snapshots
+### RQ.Iceberg.Snapshots
 version: 1.0  
 
 The system SHALL support snapshots to represent the state of a table at a specific point in time.
@@ -295,14 +295,14 @@ The system SHALL support snapshots to represent the state of a table at a specif
 
 - **Snapshot Management:** Snapshots are managed through metadata files that track changes over time, allowing for operations like rollback and time travel queries. :contentReference[oaicite:5]{index=5}
 
-### RQ.ICEBERG.SPEC.SnapshotRowIDs
+### RQ.Iceberg.SnapshotRowIDs
 version: 1.0  
 
 The system SHALL assign unique row IDs within snapshots to facilitate row-level operations and tracking.
 
 - **Row ID Assignment in Snapshots:** Each row within a snapshot is assigned a unique row ID to enable precise row-level tracking and operations.
 
-### RQ.ICEBERG.SPEC.ManifestLists
+### RQ.Iceberg.ManifestLists
 version: 1.0  
 
 The system SHALL utilize manifest lists to manage collections of manifest files associated with a snapshot.
@@ -311,14 +311,14 @@ The system SHALL utilize manifest lists to manage collections of manifest files 
 
 - **Manifest List Management:** Manifest lists store metadata about manifests, including partition stats and data file counts, to optimize query planning and execution.
 
-### RQ.ICEBERG.SPEC.FirstRowIDAssignment
+### RQ.Iceberg.FirstRowIDAssignment
 version: 1.0  
 
 The system SHALL assign a unique first row ID to each data file to facilitate row-level tracking and operations.
 
 - **First Row ID Definition:** The first row ID is a unique identifier assigned to the first row in a data file, enabling row-level lineage and operations.
 
-### RQ.ICEBERG.SPEC.ScanPlanning
+### RQ.Iceberg.ScanPlanning
 version: 1.0  
 
 The system SHALL implement efficient scan planning to identify the necessary data files for a query, ensuring optimal performance.
@@ -327,7 +327,7 @@ The system SHALL implement efficient scan planning to identify the necessary dat
 
 - **Data Filtering:** Apply query predicates to partition data and column-level statistics to eliminate non-matching data files during planning. :contentReference[oaicite:1]{index=1}
 
-### RQ.ICEBERG.SPEC.SnapshotReferences
+### RQ.Iceberg.SnapshotReferences
 version: 1.0  
 
 The system SHALL support snapshot references, including branches and tags, to manage different versions of table data.
@@ -336,7 +336,7 @@ The system SHALL support snapshot references, including branches and tags, to ma
 
 - **Tags:** Enable named references to specific snapshots for consistent access. :contentReference[oaicite:3]{index=3}
 
-### RQ.ICEBERG.SPEC.SnapshotRetentionPolicy
+### RQ.Iceberg.SnapshotRetentionPolicy
 version: 1.0  
 
 The system SHALL implement a snapshot retention policy to manage the lifecycle of snapshots and associated data files.
@@ -345,35 +345,35 @@ The system SHALL implement a snapshot retention policy to manage the lifecycle o
 
 - **Retention Configuration:** Allow configuration of retention settings, such as maximum snapshot age and minimum number of snapshots to retain. :contentReference[oaicite:5]{index=5}
 
-### RQ.ICEBERG.SPEC.TableMetadata
+### RQ.Iceberg.TableMetadata
 version: 1.0  
 
 The system SHALL maintain comprehensive table metadata to track schema, partitioning, properties, and snapshots.
 
 - **Metadata Structure:** Store table metadata in a structured format, including fields like `current-schema-id`, `current-snapshot-id`, and `partition-specs`. :contentReference[oaicite:6]{index=6}
 
-### RQ.ICEBERG.SPEC.TableMetadataFields
+### RQ.Iceberg.TableMetadataFields
 version: 1.0  
 
 The system SHALL define specific fields within table metadata to accurately represent the table's state and configuration.
 
 - **Field Definitions:** Include fields such as `location`, `last-updated-ms`, `schemas`, `snapshots`, and `properties` in the table metadata. :contentReference[oaicite:7]{index=7}
 
-### RQ.ICEBERG.SPEC.TableStatistics
+### RQ.Iceberg.TableStatistics
 version: 1.0  
 
 The system SHALL collect and maintain table-level statistics to facilitate query optimization and performance tuning.
 
 - **Statistics Collection:** Gather metrics like row counts, data file counts, and size on disk to provide insights into table characteristics.
 
-### RQ.ICEBERG.SPEC.PartitionStatistics
+### RQ.Iceberg.PartitionStatistics
 version: 1.0  
 
 The system SHALL collect and maintain statistics for each partition to enable efficient query planning and execution.
 
 - **Partition Metrics:** Track metrics such as partition value ranges, null counts, and distinct counts for columns within each partition.
 
-### RQ.ICEBERG.SPEC.PartitionStatisticsFile
+### RQ.Iceberg.PartitionStatisticsFile
 version: 1.0  
 
 The system SHALL store partition statistics in a dedicated file to facilitate efficient access and management.
@@ -384,14 +384,14 @@ This SRS document captures the key requirements from the specified sections of t
 
 ### Commit Conflict Resolution and Retry
 
-#### RQ.ICEBERG.SPEC.CommitConflictResolution
+#### RQ.Iceberg.CommitConflictResolution
 version: 1.0  
 
 The system SHALL implement optimistic concurrency control to handle commit conflicts, ensuring that only one commit succeeds when multiple commits occur simultaneously.
 
 - **Conflict Handling:** When two commits happen concurrently based on the same table version, only one commit will succeed. :contentReference[oaicite:0]{index=0}
 
-#### RQ.ICEBERG.SPEC.CommitRetryMechanism
+#### RQ.Iceberg.CommitRetryMechanism
 version: 1.0  
 
 The system SHALL provide a mechanism to retry failed commits by applying them to the latest table metadata version.
@@ -400,7 +400,7 @@ The system SHALL provide a mechanism to retry failed commits by applying them to
 
 ### File System Tables
 
-#### RQ.ICEBERG.SPEC.FileSystemTablesSupport
+#### RQ.Iceberg.FileSystemTablesSupport
 version: 1.0  
 
 The system SHALL support tables stored directly in a file system, managing metadata and data files without relying on an external metastore.
@@ -409,7 +409,7 @@ The system SHALL support tables stored directly in a file system, managing metad
 
 ### Metastore Tables
 
-#### RQ.ICEBERG.SPEC.MetastoreTablesSupport
+#### RQ.Iceberg.MetastoreTablesSupport
 version: 1.0  
 
 The system SHALL support tables that utilize an external metastore for metadata management, enabling integration with systems like Hive.
@@ -418,7 +418,7 @@ The system SHALL support tables that utilize an external metastore for metadata 
 
 ### Delete Formats
 
-#### RQ.ICEBERG.SPEC.DeleteFormatsSupport
+#### RQ.Iceberg.DeleteFormatsSupport
 version: 1.0  
 
 The system SHALL support multiple delete formats to handle row-level deletions efficiently.
@@ -427,7 +427,7 @@ The system SHALL support multiple delete formats to handle row-level deletions e
 
 ### Deletion Vectors
 
-#### RQ.ICEBERG.SPEC.DeletionVectorsSupport
+#### RQ.Iceberg.DeletionVectorsSupport
 version: 1.0  
 
 The system SHALL implement deletion vectors to track deleted rows within data files without rewriting the files.
@@ -436,7 +436,7 @@ The system SHALL implement deletion vectors to track deleted rows within data fi
 
 ### Position Delete Files
 
-#### RQ.ICEBERG.SPEC.PositionDeleteFilesSupport
+#### RQ.Iceberg.PositionDeleteFilesSupport
 version: 1.0  
 
 The system SHALL support position delete files to mark specific row positions in data files as deleted.
@@ -445,7 +445,7 @@ The system SHALL support position delete files to mark specific row positions in
 
 ### Equality Delete Files
 
-#### RQ.ICEBERG.SPEC.EqualityDeleteFilesSupport
+#### RQ.Iceberg.EqualityDeleteFilesSupport
 version: 1.0  
 
 The system SHALL support equality delete files to mark rows as deleted based on column values.
@@ -454,7 +454,7 @@ The system SHALL support equality delete files to mark rows as deleted based on 
 
 ### Delete File Stats
 
-#### RQ.ICEBERG.SPEC.DeleteFileStatsCollection
+#### RQ.Iceberg.DeleteFileStatsCollection
 version: 1.0  
 
 The system SHALL collect statistics for delete files to optimize query planning and execution.
