@@ -7,6 +7,8 @@ append_path(sys.path, "..")
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
 
+from jwt_authentication.requirements.requirements import *
+
 
 xfails = {}
 
@@ -20,6 +22,7 @@ ffails = {
 @TestFeature
 @Name("jwt authentication")
 @FFails(ffails)
+@Specifications(SRS_042_JWT_Authentication_in_ClickHouse)
 @XFails(xfails)
 @ArgumentParser(argparser)
 @CaptureClusterArgs
