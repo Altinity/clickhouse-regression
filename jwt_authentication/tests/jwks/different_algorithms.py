@@ -56,6 +56,7 @@ def jwks_with_different_algorithms(self):
 
 @TestFeature
 @Name("static JWKS")
+@Requirements(RQ_SRS_042_JWT_StaticJWKS_SupportedAlgorithms("1.0"))
 def feature(self):
-    """Sanity check jwt authentication with static jwks."""
+    """Check jwt authentication with static jwks validator with different algorithms."""
     Scenario(run=jwks_with_different_algorithms)
