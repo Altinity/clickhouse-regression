@@ -20,11 +20,156 @@ The original source of the specification: https://github.com/apache/iceberg/blob
 > See the License for the specific language governing permissions and
 > limitations under the License.
 
+## Table of Contents
+
+* 1 [Introduction](#introduction)
+* 2 [Format Versioning](#format-versioning)
+    * 2.1 [RQ.Iceberg.Versioning](#rqicebergversioning)
+    * 2.2 [Version 1: Analytic Data Tables](#version-1-analytic-data-tables)
+        * 2.2.1 [RQ.Iceberg.Versioning.Version1](#rqicebergversioningversion1)
+    * 2.3 [Version 2: Row-level Deletes](#version-2-row-level-deletes)
+        * 2.3.1 [RQ.Iceberg.Versioning.Version2](#rqicebergversioningversion2)
+    * 2.4 [Version 3: Extended Types and Capabilities](#version-3-extended-types-and-capabilities)
+        * 2.4.1 [RQ.Iceberg.Versioning.Version3](#rqicebergversioningversion3)
+* 3 [Goals](#goals)
+* 4 [Overview](#overview)
+    * 4.1 [Optimistic Concurrency](#optimistic-concurrency)
+        * 4.1.1 [RQ.Iceberg.Concurrency](#rqicebergconcurrency)
+    * 4.2 [Sequence Numbers](#sequence-numbers)
+        * 4.2.1 [RQ.Iceberg.SequenceNumbers](#rqicebergsequencenumbers)
+    * 4.3 [Row-level Deletes](#row-level-deletes)
+        * 4.3.1 [RQ.Iceberg.RowLevelDeletes](#rqicebergrowleveldeletes)
+    * 4.4 [File System Operations](#file-system-operations)
+        * 4.4.1 [RQ.Iceberg.FileSystemOperations](#rqicebergfilesystemoperations)
+* 5 [Specification](#specification)
+        * 5.4.1 [Terms](#terms)
+        * 5.4.2 [Writer requirements](#writer-requirements)
+        * 5.4.3 [RQ.Iceberg.WriterRequirements](#rqicebergwriterrequirements)
+        * 5.4.4 [Writing data files](#writing-data-files)
+            * 5.4.4.1 [RQ.Iceberg.WritingDataFiles](#rqicebergwritingdatafiles)
+    * 5.5 [Schemas and Data Types](#schemas-and-data-types)
+        * 5.5.1 [RQ.Iceberg.SchemasAndDataTypes](#rqicebergschemasanddatatypes)
+        * 5.5.2 [Nested Types](#nested-types)
+            * 5.5.2.1 [RQ.Iceberg.NestedTypes](#rqicebergnestedtypes)
+        * 5.5.3 [Primitive Types](#primitive-types)
+            * 5.5.3.1 [RQ.Iceberg.PrimitiveTypes](#rqicebergprimitivetypes)
+        * 5.5.4 [Default values](#default-values)
+            * 5.5.4.1 [RQ.Iceberg.DefaultValues](#rqicebergdefaultvalues)
+        * 5.5.5 [Schema Evolution](#schema-evolution)
+            * 5.5.5.1 [RQ.Iceberg.SchemaEvolution](#rqicebergschemaevolution)
+            * 5.5.5.2 [Column Projection](#column-projection)
+                * 5.5.5.2.1 [RQ.Iceberg.ColumnProjection](#rqicebergcolumnprojection)
+        * 5.5.6 [Identifier Field IDs](#identifier-field-ids)
+            * 5.5.6.1 [RQ.Iceberg.IndentifierFieldIDs](#rqicebergindentifierfieldids)
+        * 5.5.7 [Reserved Field IDs](#reserved-field-ids)
+            * 5.5.7.1 [RQ.Iceberg.ReservedFieldIDs](#rqicebergreservedfieldids)
+        * 5.5.8 [Row Lineage](#row-lineage)
+            * 5.5.8.1 [RQ.Iceberg.RowLineage](#rqicebergrowlineage)
+            * 5.5.8.2 [Row lineage assignment](#row-lineage-assignment)
+            * 5.5.8.3 [Row lineage example](#row-lineage-example)
+            * 5.5.8.4 [Enabling Row Lineage for Non-empty Tables](#enabling-row-lineage-for-non-empty-tables)
+    * 5.6 [Partitioning](#partitioning)
+        * 5.6.1 [RQ.Iceberg.Partitioning](#rqicebergpartitioning)
+        * 5.6.2 [Partition Transforms](#partition-transforms)
+            * 5.6.2.1 [RQ.Iceberg.PartitionTransforms](#rqicebergpartitiontransforms)
+        * 5.6.3 [Bucket Transform Details](#bucket-transform-details)
+            * 5.6.3.1 [RQ.Iceberg.BucketTransform](#rqicebergbuckettransform)
+        * 5.6.4 [Truncate Transform Details](#truncate-transform-details)
+            * 5.6.4.1 [RQ.Iceberg.TruncateTransform](#rqicebergtruncatetransform)
+        * 5.6.5 [Partition Evolution](#partition-evolution)
+            * 5.6.5.1 [RQ.Iceberg.PartitionEvolution](#rqicebergpartitionevolution)
+    * 5.7 [Sorting](#sorting)
+        * 5.7.1 [RQ.Iceberg.Sorting](#rqicebergsorting)
+    * 5.8 [Manifests](#manifests)
+        * 5.8.1 [RQ.Iceberg.Manifest](#rqicebergmanifest)
+        * 5.8.2 [Manifest Entry Fields](#manifest-entry-fields)
+            * 5.8.2.1 [RQ.Iceberg.Manifest.EntryFields](#rqicebergmanifestentryfields)
+        * 5.8.3 [Sequence Number Inheritance](#sequence-number-inheritance)
+            * 5.8.3.1 [RQ.Iceberg.Manifest.SequenceNumberInheritance](#rqicebergmanifestsequencenumberinheritance)
+        * 5.8.4 [First Row ID Inheritance](#first-row-id-inheritance)
+            * 5.8.4.1 [RQ.Iceberg.Manifest.FirstRowIDInheritance](#rqicebergmanifestfirstrowidinheritance)
+    * 5.9 [Snapshots](#snapshots)
+        * 5.9.1 [RQ.Iceberg.Snapshot](#rqicebergsnapshot)
+        * 5.9.2 [Snapshot Row IDs](#snapshot-row-ids)
+            * 5.9.2.1 [RQ.Iceberg.Snapshot.RowIDs](#rqicebergsnapshotrowids)
+    * 5.10 [Manifest Lists](#manifest-lists)
+        * 5.10.1 [RQ.Iceberg.ManifestList](#rqicebergmanifestlist)
+        * 5.10.2 [First Row ID Assignment](#first-row-id-assignment)
+            * 5.10.2.1 [RQ.Iceberg.ManifestList.FirstRowIDAssignment](#rqicebergmanifestlistfirstrowidassignment)
+    * 5.11 [Scan Planning](#scan-planning)
+        * 5.11.2.1 [RQ.Iceberg.ScanPlanning](#rqicebergscanplanning)
+    * 5.12 [Snapshot References](#snapshot-references)
+        * 5.12.1 [RQ.Iceberg.SnapshotReferences](#rqicebergsnapshotreferences)
+    * 5.13 [Snapshot Retention Policy](#snapshot-retention-policy)
+        * 5.13.1 [RQ.Iceberg.SnapshotRetentionPolicy](#rqicebergsnapshotretentionpolicy)
+    * 5.14 [Table Metadata](#table-metadata)
+        * 5.14.1 [RQ.Iceberg.TableMetadata](#rqicebergtablemetadata)
+        * 5.14.2 [Table Metadata Fields](#table-metadata-fields)
+            * 5.14.2.1 [RQ.Iceberg.TableMetadata.Fields](#rqicebergtablemetadatafields)
+        * 5.14.3 [Table Statistics](#table-statistics)
+            * 5.14.3.1 [RQ.Iceberg.TableMetadata.TableStatistics](#rqicebergtablemetadatatablestatistics)
+        * 5.14.4 [Partition Statistics](#partition-statistics)
+            * 5.14.4.1 [RQ.Iceberg.TableMetadata.PartitionStatistics](#rqicebergtablemetadatapartitionstatistics)
+            * 5.14.4.2 [Partition Statistics File](#partition-statistics-file)
+    * 5.15 [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry)
+        * 5.15.1 [RQ.Iceberg.CommitConflictResolutionAndRetry](#rqicebergcommitconflictresolutionandretry)
+        * 5.15.2 [File System Tables](#file-system-tables)
+            * 5.15.2.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables](#rqicebergcommitconflictresolutionandretryfilesystemtables)
+        * 5.15.3 [Metastore Tables](#metastore-tables)
+            * 5.15.3.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables](#rqicebergcommitconflictresolutionandretrymetastoretables)
+    * 5.16 [Delete Formats](#delete-formats)
+        * 5.16.1 [RQ.Iceberg.DeleteFormats](#rqicebergdeleteformats)
+        * 5.16.2 [Deletion Vectors](#deletion-vectors)
+            * 5.16.2.1 [RQ.Iceberg.DeleteFormats.DeleteVectors](#rqicebergdeleteformatsdeletevectors)
+        * 5.16.3 [Position Delete Files](#position-delete-files)
+            * 5.16.3.1 [RQ.Iceberg.DeleteFormats.PositionDeleteFiles](#rqicebergdeleteformatspositiondeletefiles)
+        * 5.16.4 [Equality Delete Files](#equality-delete-files)
+            * 5.16.4.1 [RQ.Iceberg.DeleteFormats.EqualityDeleteFiles](#rqicebergdeleteformatsequalitydeletefiles)
+        * 5.16.5 [Delete File Stats](#delete-file-stats)
+            * 5.16.5.1 [RQ.Iceberg.DeleteFormats.DeleteFileStats](#rqicebergdeleteformatsdeletefilestats)
+* 6 [Appendix A: Format-specific Requirements](#appendix-a-format-specific-requirements)
+    * 6.1 [Avro](#avro)
+        * 6.1.1 [RQ.Iceberg.Avro](#rqicebergavro)
+    * 6.2 [Parquet](#parquet)
+        * 6.2.1 [RQ.Iceberg.Parquet](#rqicebergparquet)
+    * 6.3 [ORC](#orc)
+        * 6.3.1 [RQ.Iceberg.ORC](#rqicebergorc)
+* 7 [Appendix B: 32-bit Hash Requirements](#appendix-b-32-bit-hash-requirements)
+    * 7.1 [RQ.Iceberg.32bitHash](#rqiceberg32bithash)
+* 8 [Appendix C: JSON serialization](#appendix-c-json-serialization)
+    * 8.1 [RQ.Iceberg.JSONSerialization](#rqicebergjsonserialization)
+    * 8.2 [Schemas](#schemas)
+    * 8.3 [Partition Specs](#partition-specs)
+        * 8.3.1 [RQ.Iceberg.JSONSerialization.PartitionSpecs](#rqicebergjsonserializationpartitionspecs)
+    * 8.4 [Sort Orders](#sort-orders)
+        * 8.4.1 [RQ.Iceberg.JSONSerialization.SortOrders](#rqicebergjsonserializationsortorders)
+    * 8.5 [Table Metadata and Snapshots](#table-metadata-and-snapshots)
+        * 8.5.1 [RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots](#rqicebergjsonserializationtablemetadataandsnapshots)
+    * 8.6 [Name Mapping Serialization](#name-mapping-serialization)
+        * 8.6.1 [RQ.Iceberg.JSONSerialization.NameMappingSerialization](#rqicebergjsonserializationnamemappingserialization)
+* 9 [Appendix D: Single-value serialization](#appendix-d-single-value-serialization)
+    * 9.1 [RQ.Iceberg.SingleValueSerialization](#rqicebergsinglevalueserialization)
+    * 9.2 [Binary single-value serialization](#binary-single-value-serialization)
+        * 9.2.1 [RQ.Iceberg.SingleValueSerialization.Binary](#rqicebergsinglevalueserializationbinary)
+    * 9.3 [JSON single-value serialization](#json-single-value-serialization)
+        * 9.3.1 [RQ.Iceberg.SingleValueSerialization.JSON](#rqicebergsinglevalueserializationjson)
+* 10 [Appendix E: Format version changes](#appendix-e-format-version-changes)
+    * 10.1 [Version 3](#version-3)
+        * 10.1.1 [RQ.Iceberg.FormatVersionChanges.Version3](#rqicebergformatversionchangesversion3)
+    * 10.2 [Version 2](#version-2)
+        * 10.2.1 [RQ.Iceberg.FormatVersionChanges.Version2](#rqicebergformatversionchangesversion2)
+* 11 [Appendix F: Implementation Notes](#appendix-f-implementation-notes)
+    * 11.1 [Point in Time Reads (Time Travel)](#point-in-time-reads-time-travel)
+        * 11.1.1 [RQ.Iceberg.PointInTimeReads](#rqicebergpointintimereads)
+
 ## Introduction
 
 This is a specification for the Iceberg table format that is designed to manage a large, slow-changing collection of files in a distributed file system or key-value store as a table.
 
 ## Format Versioning
+
+### RQ.Iceberg.Versioning
+version: 1.0
 
 Versions 1 and 2 of the Iceberg spec are complete and adopted by the community.
 
@@ -32,13 +177,23 @@ Versions 1 and 2 of the Iceberg spec are complete and adopted by the community.
 
 The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.
 
+**Version 3 is under active development and has not been formally adopted.**
+
+The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.
+
 ### Version 1: Analytic Data Tables
+
+#### RQ.Iceberg.Versioning.Version1
+version: 1.0
 
 Version 1 of the Iceberg spec defines how to manage large analytic tables using immutable file formats: Parquet, Avro, and ORC.
 
 All version 1 data and metadata files are valid after upgrading a table to version 2. [Appendix E](#version-2) documents how to default version 2 fields when reading version 1 metadata.
 
 ### Version 2: Row-level Deletes
+
+#### RQ.Iceberg.Versioning.Version2
+version: 1.0
 
 Version 2 of the Iceberg spec adds row-level updates and deletes for analytic tables with immutable files.
 
@@ -47,6 +202,9 @@ The primary change in version 2 adds delete files to encode rows that are delete
 In addition to row-level deletes, version 2 makes some requirements stricter for writers. The full set of changes are listed in [Appendix E](#version-2).
 
 ### Version 3: Extended Types and Capabilities
+
+#### RQ.Iceberg.Versioning.Version3
+version: 1.0
 
 Version 3 of the Iceberg spec extends data types and existing metadata structures to add new capabilities:
 
@@ -81,6 +239,9 @@ The manifests that make up a snapshot are stored in a manifest list file. Each m
 
 ### Optimistic Concurrency
 
+#### RQ.Iceberg.Concurrency
+version: 1.0
+
 An atomic swap of one table metadata file for another provides the basis for serializable isolation. Readers use the snapshot that was current when they load the table metadata and are not affected by changes until they refresh and pick up a new metadata location.
 
 Writers create table metadata files optimistically, assuming that the current version will not be changed before the writer's commit. Once a writer has created an update, it commits by swapping the table’s metadata file pointer from the base version to the new version.
@@ -91,6 +252,9 @@ The conditions required by a write to successfully commit determines the isolati
 
 ### Sequence Numbers
 
+#### RQ.Iceberg.SequenceNumbers
+version: 1.0
+
 The relative age of data and delete files relies on a sequence number that is assigned to every successful commit. When a snapshot is created for a commit, it is optimistically assigned the next sequence number, and it is written into the snapshot's metadata. If the commit fails and must be retried, the sequence number is reassigned and written into new snapshot metadata.
 
 All manifests, data files, and delete files created for a snapshot inherit the snapshot's sequence number. Manifest file metadata in the manifest list stores a manifest's sequence number. New data and metadata file entries are written with `null` in place of a sequence number, which is replaced with the manifest's sequence number at read time. When a data or delete file is written to a new manifest (as "existing"), the inherited sequence number is written to ensure it does not change after it is first inherited.
@@ -99,6 +263,9 @@ Inheriting the sequence number from manifest metadata allows writing a new manif
 
 
 ### Row-level Deletes
+
+#### RQ.Iceberg.RowLevelDeletes
+version: 1.0
 
 Row-level deletes are stored in delete files.
 
@@ -111,6 +278,9 @@ Like data files, delete files are tracked by partition. In general, a delete fil
 
 
 ### File System Operations
+
+#### RQ.Iceberg.FileSystemOperations
+version: 1.0
 
 Iceberg only requires that file systems support the following operations:
 
@@ -139,6 +309,9 @@ Tables do not require rename, except for tables that use atomic rename to implem
 
 #### Writer requirements
 
+#### RQ.Iceberg.WriterRequirements
+version: 1.0
+
 Some tables in this spec have columns that specify requirements for tables by version. These requirements are intended for writers when adding metadata files (including manifests files and manifest lists) to a table with the given version.
 
 | Requirement | Write behavior |
@@ -166,17 +339,26 @@ Readers may be more strict for metadata JSON files because the JSON files are no
 
 #### Writing data files
 
+##### RQ.Iceberg.WritingDataFiles
+version: 1.0
+
 All columns must be written to data files even if they introduce redundancy with metadata stored in manifest files (e.g. columns with identity partition transforms). Writing all columns provides a backup in case of corruption or bugs in the metadata layer.
 
 Writers are not allowed to commit files with a partition spec that contains a field with an unknown transform.
 
 ### Schemas and Data Types
 
+#### RQ.Iceberg.SchemasAndDataTypes
+version: 1.0
+
 A table's **schema** is a list of named columns. All data types are either primitives or nested types, which are maps, lists, or structs. A table schema is also a struct type.
 
 For the representations of these types in Avro, ORC, and Parquet file formats, see Appendix A.
 
 #### Nested Types
+
+##### RQ.Iceberg.NestedTypes
+version: 1.0
 
 A **`struct`** is a tuple of typed values. Each field in the tuple is named and has an integer id that is unique in the table schema. Each field can be either optional or required, meaning that values can (or cannot) be null. Fields may be any type. Fields may have an optional comment or doc string. Fields can have [default values](#default-values).
 
@@ -185,6 +367,9 @@ A **`list`** is a collection of values with some element type. The element field
 A **`map`** is a collection of key-value pairs with a key type and a value type. Both the key field and value field each have an integer id that is unique in the table schema. Map keys are required and map values can be either optional or required. Both map keys and map values may be any type, including nested types.
 
 #### Primitive Types
+
+##### RQ.Iceberg.PrimitiveTypes
+version: 1.0
 
 Supported primitive types are defined in the table below. Primitive types added after v1 have an "added by" version that is the first spec version in which the type is allowed. For example, nanosecond-precision timestamps are part of the v3 spec; using v3 types in v1 or v2 tables can break forward compatibility.
 
@@ -219,6 +404,9 @@ For details on how to serialize a schema to JSON, see Appendix C.
 
 #### Default values
 
+##### RQ.Iceberg.DefaultValues
+version: 1.0
+
 Default values can be tracked for struct fields (both nested structs and the top-level schema's struct). There can be two defaults with a field:
 
 * `initial-default` is used to populate the field's value for all records that were written before the field was added to the schema
@@ -234,6 +422,9 @@ Default values are attributes of fields in schemas and serialized with fields in
 
 
 #### Schema Evolution
+
+##### RQ.Iceberg.SchemaEvolution
+version: 1.0
 
 Schemas may be evolved by type promotion or adding, deleting, renaming, or reordering fields in structs (both nested structs and the top-level schema’s struct).
 
@@ -284,6 +475,9 @@ Struct evolution requires the following rules for default values:
 
 ##### Column Projection
 
+###### RQ.Iceberg.ColumnProjection
+version: 1.0
+
 Columns in Iceberg data files are selected by field id. The table schema's column names and order may change after a data file is written, and projection must be done using field ids.
 
 Values for field ids which are not present in a data file must be resolved according the following rules:
@@ -316,6 +510,9 @@ For details on serialization, see [Appendix C](#name-mapping-serialization).
 
 #### Identifier Field IDs
 
+##### RQ.Iceberg.IndentifierFieldIDs
+version: 1.0
+
 A schema can optionally track the set of primitive fields that identify rows in a table, using the property `identifier-field-ids` (see JSON encoding in Appendix C).
 
 Two rows are the "same"---that is, the rows represent the same entity---if the identifier fields are equal. However, uniqueness of rows by this identifier is not guaranteed or required by Iceberg and it is the responsibility of processing engines or data providers to enforce.
@@ -324,6 +521,9 @@ Identifier fields may be nested in structs but cannot be nested within maps or l
 
 
 #### Reserved Field IDs
+
+##### RQ.Iceberg.ReservedFieldIDs
+version: 1.0
 
 Iceberg tables must not use field ids greater than 2147483447 (`Integer.MAX_VALUE - 200`). This id range is reserved for metadata columns that can be used in user data schemas, like the `_file` column that holds the file path in which a row was stored.
 
@@ -343,6 +543,9 @@ The set of metadata columns is:
 | **`2147483542  _last_updated_sequence_number`**   | `long`        | The sequence number which last updated this row when row-lineage is enabled [Row Lineage](#row-lineage) |
 
 #### Row Lineage
+
+##### RQ.Iceberg.RowLineage
+version: 1.0
 
 In v3 and later, an Iceberg table can track row lineage fields for all newly created rows.  Row lineage is enabled by setting the field `row-lineage` to true in the table's metadata. When enabled, engines must maintain the `next-row-id` table field and the following row-level fields when writing data files:
 
@@ -428,6 +631,9 @@ and assigned `row_id` and `_last_updated_sequence_number` as if they were new ro
 
 ### Partitioning
 
+#### RQ.Iceberg.Partitioning
+version: 1.0
+
 Data files are stored in manifests with a tuple of partition values that are used in scans to filter out files that cannot contain records that match the scan’s filter predicate. Partition values for a data file must be the same for all records stored in the data file. (Manifests store data files from any partition, as long as the partition spec is the same for the data files.)
 
 Tables are configured with a **partition spec** that defines how to produce a tuple of partition values from a record. A partition spec has a list of fields that consist of:
@@ -449,6 +655,9 @@ Partition field IDs must be reused if an existing partition spec contains an equ
 
 #### Partition Transforms
 
+##### RQ.Iceberg.PartitionTransforms
+version: 1.0
+
 | Transform name    | Description                                                  | Source types                                                                                              | Result type |
 |-------------------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|-------------|
 | **`identity`**    | Source value, unmodified                                     | Any                                                                                                       | Source type |
@@ -467,6 +676,9 @@ The `void` transform may be used to replace the transform in an existing partiti
 
 #### Bucket Transform Details
 
+##### RQ.Iceberg.BucketTransform
+version: 1.0
+
 Bucket partition transforms use a 32-bit hash of the source value. The 32-bit hash implementation is the 32-bit Murmur3 hash, x86 variant, seeded with 0.
 
 Transforms are parameterized by a number of buckets [1], `N`. The hash mod `N` must produce a positive value by first discarding the sign bit of the hash value. In pseudo-code, the function is:
@@ -483,6 +695,9 @@ For hash function details by type, see Appendix B.
 
 
 #### Truncate Transform Details
+
+##### RQ.Iceberg.TruncateTransform
+version: 1.0
 
 | **Type**      | **Config**            | **Truncate specification**                                       | **Examples**                     |
 |---------------|-----------------------|------------------------------------------------------------------|----------------------------------|
@@ -502,6 +717,9 @@ Notes:
 
 #### Partition Evolution
 
+##### RQ.Iceberg.PartitionEvolution
+version: 1.0
+
 Table partitioning can be evolved by adding, removing, renaming, or reordering partition spec fields.
 
 Changing a partition spec produces a new spec identified by a unique spec ID that is added to the table's list of partition specs and may be set as the table's default spec.
@@ -518,6 +736,9 @@ In v1, partition field IDs were not tracked, but were assigned sequentially star
 
 
 ### Sorting
+
+#### RQ.Iceberg.Sorting
+version: 1.0
 
 Users can sort their data within partitions by columns to gain performance. The information on how the data is sorted can be declared per data or delete file, by a **sort order**.
 
@@ -538,6 +759,9 @@ A data or delete file is associated with a sort order by the sort order's id wit
 
 
 ### Manifests
+
+#### RQ.Iceberg.Manifest
+version: 1.0
 
 A manifest is an immutable Avro file that lists data files or delete files, along with each file’s partition data tuple, metrics, and tracking information. One or more manifest files are used to store a [snapshot](#snapshots), which tracks all of the files in a table at some point in time. Manifests are tracked by a [manifest list](#manifest-lists) for each table snapshot.
 
@@ -613,6 +837,9 @@ The column metrics maps are used when filtering to select both data and delete f
 
 #### Manifest Entry Fields
 
+##### RQ.Iceberg.Manifest.EntryFields
+version: 1.0
+
 The manifest entry fields are used to keep track of the snapshot in which files were added or logically deleted. The `data_file` struct is nested inside of the manifest entry so that it can be easily passed to job planning without the manifest entry fields.
 
 When a file is added to the dataset, its manifest entry should store the snapshot ID in which the file was added and set status to 1 (added).
@@ -631,6 +858,9 @@ Notes:
 
 #### Sequence Number Inheritance
 
+##### RQ.Iceberg.Manifest.SequenceNumberInheritance
+version: 1.0
+
 Manifests track the sequence number when a data or delete file was added to the table.
 
 When adding a new file, its data and file sequence numbers are set to `null` because the snapshot's sequence number is not assigned until the snapshot is successfully committed. When reading, sequence numbers are inherited by replacing `null` with the manifest's sequence number from the manifest list.
@@ -644,6 +874,9 @@ When reading v1 manifests with no sequence number column, sequence numbers for a
 
 #### First Row ID Inheritance
 
+##### RQ.Iceberg.Manifest.FirstRowIDInheritance
+version: 1.0
+
 Row ID inheritance is used when row lineage is enabled. When not enabled, a data file's `first_row_id` must always be set to `null`. The rest of this section applies when row lineage is enabled.
 
 When adding a new data file, its `first_row_id` field is set to `null` because it is not assigned until the snapshot is successfully committed.
@@ -653,6 +886,9 @@ When reading, the `first_row_id` is assigned by replacing `null` with the manife
 The `first_row_id` is only inherited for added data files. The inherited value must be written into the data file metadata for existing and deleted entries. The value of `first_row_id` for delete files is always `null`.
 
 ### Snapshots
+
+#### RQ.Iceberg.Snapshot
+version: 1.0
 
 A snapshot consists of the following fields:
 
@@ -688,6 +924,9 @@ Valid snapshots are stored as a list in table metadata. For serialization, see A
 
 #### Snapshot Row IDs
 
+##### RQ.Iceberg.Snapshot.RowIDs
+version: 1.0
+
 When row lineage is not enabled, `first-row-id` must be omitted. The rest of this section applies when row lineage is enabled.
 
 A snapshot's `first-row-id` is assigned to the table's current `next-row-id` on each commit attempt. If a commit is retried, the `first-row-id` must be reassigned. If a commit contains no new rows, `first-row-id` should be omitted.
@@ -696,6 +935,9 @@ The snapshot's `first-row-id` is the starting `first_row_id` assigned to manifes
 
 
 ### Manifest Lists
+
+#### RQ.Iceberg.ManifestList
+version: 1.0
 
 Snapshots are embedded in table metadata, but the list of manifests for a snapshot are stored in a separate manifest list file.
 
@@ -742,6 +984,9 @@ Notes:
 
 #### First Row ID Assignment
 
+##### RQ.Iceberg.ManifestList.FirstRowIDAssignment
+version: 1.0
+
 Row ID inheritance is used when row lineage is enabled. When not enabled, a manifest's `first_row_id` must always be set to `null`. Once enabled, row lineage cannot be disabled. The rest of this section applies when row lineage is enabled.
 
 When adding a new data manifest file, its `first_row_id` field is assigned the value of the snapshot's `first_row_id` plus the sum of `added_rows_count` for all data manifests that preceded the manifest in the manifest list.
@@ -749,6 +994,9 @@ When adding a new data manifest file, its `first_row_id` field is assigned the v
 The `first_row_id` is only assigned for new data manifests. Values for existing manifests must be preserved when writing a new manifest list. The value of `first_row_id` for delete manifests is always `null`.
 
 ### Scan Planning
+
+#### RQ.Iceberg.ScanPlanning
+version: 1.0
 
 Scans are planned by reading the manifest files for the current snapshot. Deleted entries in data and delete manifests (those marked with status "DELETED") are not used in a scan.
 
@@ -799,6 +1047,9 @@ Notes:
 
 ### Snapshot References
 
+#### RQ.Iceberg.SnapshotReferences
+version: 1.0
+
 Iceberg tables keep track of branches and tags using snapshot references. 
 Tags are labels for individual snapshots. Branches are mutable named references that can be updated by committing a new snapshot as the branch's referenced snapshot using the [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry) procedures.
 
@@ -816,6 +1067,9 @@ Valid snapshot references are stored as the values of the `refs` map in table me
 
 ### Snapshot Retention Policy
 
+#### RQ.Iceberg.SnapshotRetentionPolicy
+version: 1.0
+
 Table snapshots expire and are removed from metadata to allow removed or replaced data files to be physically deleted.
 The snapshot expiration procedure removes snapshots from table metadata and applies the table's retention policy.
 Retention policy can be configured both globally and on snapshot reference through properties `min-snapshots-to-keep`, `max-snapshot-age-ms` and `max-ref-age-ms`.
@@ -832,11 +1086,17 @@ When expiring snapshots, retention policies in table and snapshot references are
 
 ### Table Metadata
 
+#### RQ.Iceberg.TableMetadata
+version: 1.0
+
 Table metadata is stored as JSON. Each table metadata change creates a new table metadata file that is committed by an atomic operation. This operation is used to ensure that a new version of table metadata replaces the version on which it was based. This produces a linear history of table versions and ensures that concurrent writes are not lost.
 
 The atomic operation used to commit metadata depends on how tables are tracked and is not standardized by this spec. See the sections below for examples.
 
 #### Table Metadata Fields
+
+##### RQ.Iceberg.TableMetadata.Fields
+version: 1.0
 
 Table metadata consists of the following fields:
 
@@ -874,6 +1134,9 @@ When a new snapshot is added, the table's `next-row-id` should be updated to the
 
 #### Table Statistics
 
+##### RQ.Iceberg.TableMetadata.TableStatistics
+version: 1.0
+
 Table statistics files are valid [Puffin files](puffin-spec.md). Statistics are informational. A reader can choose to
 ignore statistics information. Statistics support is not required to read the table correctly. A table can contain
 many statistics files associated with different table snapshots.
@@ -901,6 +1164,9 @@ Blob metadata is a struct with the following fields:
 
 
 #### Partition Statistics
+
+##### RQ.Iceberg.TableMetadata.PartitionStatistics
+version: 1.0
 
 Partition statistics files are based on [partition statistics file spec](#partition-statistics-file). 
 Partition statistics are not required for reading or planning and readers may ignore them.
@@ -955,6 +1221,9 @@ The unified partition type looks like `Struct<field#1, field#2>`.
 
 ### Commit Conflict Resolution and Retry
 
+#### RQ.Iceberg.CommitConflictResolutionAndRetry
+version: 1.0
+
 When two commits happen at the same time and are based on the same version, only one commit will succeed. In most cases, the failed commit can be applied to the new current version of table metadata and retried. Updates verify the conditions under which they can be applied to a new version and retry if those conditions are met.
 
 *   Append operations have no requirements and can always be applied.
@@ -964,6 +1233,9 @@ When two commits happen at the same time and are based on the same version, only
 
 
 #### File System Tables
+
+##### RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables
+version: 1.0
 
 _Note: This file system based scheme to commit a metadata file is **deprecated** and will be removed in version 4 of this spec. The scheme is **unsafe** in object stores and local file systems._
 
@@ -984,6 +1256,9 @@ Notes:
 
 #### Metastore Tables
 
+##### RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables
+version: 1.0
+
 The atomic swap needed to commit new versions of table metadata can be implemented by storing a pointer in a metastore or database that is updated with a check-and-put operation [1]. The check-and-put validates that the version of the table that a write is based on is still current and then makes the new metadata from the write the current version.
 
 Each version of table metadata is stored in a metadata folder under the table’s base location using a naming scheme that includes a version and UUID: `<V>-<random-uuid>.metadata.json`. To commit a new metadata version, `V+1`, the writer performs the following steps:
@@ -1000,6 +1275,9 @@ Notes:
 
 
 ### Delete Formats
+
+#### RQ.Iceberg.DeleteFormats
+version: 1.0
 
 This section details how to encode row-level deletes in Iceberg delete files. Row-level deletes are added by v2 and are not supported in v1. Deletion vectors are added in v3 and are not supported in v2 or earlier. Position delete files must not be added to v3 tables, but existing position delete files are valid.
 
@@ -1020,6 +1298,9 @@ Both position and equality delete files allow encoding deleted row values with a
 
 #### Deletion Vectors
 
+##### RQ.Iceberg.DeleteFormats.DeleteVectors
+version: 1.0
+
 Deletion vectors identify deleted rows of a file by encoding deleted positions in a bitmap. A set bit at position P indicates that the row at position P is deleted.
 
 These vectors are stored using the `deletion-vector-v1` blob definition from the [Puffin spec][puffin-spec].
@@ -1036,6 +1317,9 @@ At most one deletion vector is allowed per data file in a snapshot. If a DV is w
 [puffin-spec]: https://iceberg.apache.org/puffin-spec/
 
 #### Position Delete Files
+
+##### RQ.Iceberg.DeleteFormats.PositionDeleteFiles
+version: 1.0
 
 Position-based delete files identify deleted rows by file and position in one or more data files, and may optionally contain the deleted row.
 
@@ -1063,6 +1347,9 @@ The rows in the delete file must be sorted by `file_path` then `pos` to optimize
 *  Sorting by `pos` allows filtering rows while scanning, to avoid keeping deletes in memory.
 
 #### Equality Delete Files
+
+##### RQ.Iceberg.DeleteFormats.EqualityDeleteFiles
+version: 1.0
 
 Equality delete files identify deleted rows in a collection of data files by one or more column values, and may optionally contain additional columns of the deleted row.
 
@@ -1116,6 +1403,9 @@ If a delete column in an equality delete file is later dropped from the table, i
 
 #### Delete File Stats
 
+##### RQ.Iceberg.DeleteFormats.DeleteFileStats
+version: 1.0
+
 Manifests hold the same statistics for delete files and data files. For delete files, the metrics describe the values that were deleted.
 
 
@@ -1123,6 +1413,9 @@ Manifests hold the same statistics for delete files and data files. For delete f
 
 
 ### Avro
+
+#### RQ.Iceberg.Avro
+version: 1.0
 
 **Data Type Mappings**
 
@@ -1182,6 +1475,9 @@ Note that the string map case is for maps where the key type is a string. Using 
 
 ### Parquet
 
+#### RQ.Iceberg.Parquet
+version: 1.0
+
 **Data Type Mappings**
 
 Values should be stored in Parquet using the types and logical type annotations in the table below. Column IDs are required to be stored as [field IDs](http://github.com/apache/parquet-format/blob/40699d05bd24181de6b1457babbee2c16dce3803/src/main/thrift/parquet.thrift#L459) on the parquet schema.
@@ -1216,6 +1512,9 @@ When reading an `unknown` column, any corresponding column must be ignored and r
 
 
 ### ORC
+
+#### RQ.Iceberg.ORC
+version: 1.0
 
 **Data Type Mappings**
 
@@ -1260,6 +1559,9 @@ Iceberg would build the desired reader schema with their schema evolution rules 
 
 ## Appendix B: 32-bit Hash Requirements
 
+### RQ.Iceberg.32bitHash
+version: 1.0
+
 The 32-bit hash implementation is 32-bit Murmur3 hash, x86 variant, seeded with 0.
 
 | Primitive type     | Hash specification                        | Test value                                 |
@@ -1299,6 +1601,8 @@ Hash results are not dependent on decimal scale, which is part of the type, not 
 
 ## Appendix C: JSON serialization
 
+### RQ.Iceberg.JSONSerialization
+version: 1.0
 
 ### Schemas
 
@@ -1339,6 +1643,9 @@ Note that default values are serialized using the JSON single-value serializatio
 
 ### Partition Specs
 
+#### RQ.Iceberg.JSONSerialization.PartitionSpecs
+version: 1.0
+
 Partition specs are serialized as a JSON object with the following fields:
 
 |Field|JSON representation|Example|
@@ -1378,6 +1685,9 @@ Older versions of the reference implementation can read tables with transforms u
 
 ### Sort Orders
 
+#### RQ.Iceberg.JSONSerialization.SortOrders
+version: 1.0
+
 Sort orders are serialized as a list of JSON object, each of which contains the following fields:
 
 |Field|JSON representation|Example|
@@ -1409,6 +1719,9 @@ The following table describes the possible values for the some of the field with
 
 ### Table Metadata and Snapshots
 
+#### RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots
+version: 1.0
+
 Table metadata is serialized as a JSON object according to the following table. Snapshots are not serialized separately. Instead, they are stored in the table metadata JSON.
 
 |Metadata field|JSON representation|Example|
@@ -1436,6 +1749,9 @@ Table metadata is serialized as a JSON object according to the following table. 
 
 ### Name Mapping Serialization
 
+#### RQ.Iceberg.JSONSerialization.NameMappingSerialization
+version: 1.0
+
 Name mapping is serialized as a list of field mapping JSON Objects which are serialized as follows
 
 |Field mapping field|JSON representation|Example|
@@ -1456,7 +1772,13 @@ Example
 
 ## Appendix D: Single-value serialization
 
+### RQ.Iceberg.SingleValueSerialization
+version: 1.0
+
 ### Binary single-value serialization
+
+#### RQ.Iceberg.SingleValueSerialization.Binary
+version: 1.0
 
 This serialization scheme is for storing single values as individual binary values in the lower and upper bounds maps of manifest files.
 
@@ -1484,6 +1806,9 @@ This serialization scheme is for storing single values as individual binary valu
 | **`map`**                    | Not supported                                                                                                |
 
 ### JSON single-value serialization
+
+#### RQ.Iceberg.SingleValueSerialization.JSON
+version: 1.0
 
  Single values are serialized as JSON by type according to the following table:
 
@@ -1513,6 +1838,9 @@ This serialization scheme is for storing single values as individual binary valu
 ## Appendix E: Format version changes
 
 ### Version 3
+
+#### RQ.Iceberg.FormatVersionChanges.Version3
+version: 1.0
 
 Default values are added to struct fields in v3.
 
@@ -1555,6 +1883,9 @@ Row-level delete changes:
     * Position delete files that contain deletes for more than one data file need to be kept in table metadata until all deletes are replaced by DVs
 
 ### Version 2
+
+#### RQ.Iceberg.FormatVersionChanges.Version2
+version: 1.0
 
 Writing v1 metadata:
 
@@ -1629,6 +1960,9 @@ Note that these requirements apply when writing data to a v2 table. Tables that 
 This section covers topics not required by the specification but recommendations for systems implementing the Iceberg specification to help maintain a uniform experience.
 
 ### Point in Time Reads (Time Travel)
+
+#### RQ.Iceberg.PointInTimeReads
+version: 1.0
 
 Iceberg supports two types of histories for tables. A history of previous "current snapshots" stored in ["snapshot-log" table metadata](#table-metadata-fields) and [parent-child lineage stored in "snapshots"](#table-metadata-fields). These two histories 
 might indicate different snapshot IDs for a specific timestamp. The discrepancies can be caused by a variety of table operations (e.g. updating the `current-snapshot-id` can be used to set the snapshot of a table to any arbitrary snapshot, which might have a lineage derived from a table branch or no lineage at all).
