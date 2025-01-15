@@ -1,0 +1,4425 @@
+# These requirements were auto generated
+# from software requirements specification (SRS)
+# document by TestFlows v2.0.241127.1225014.
+# Do not edit by hand but re-generate instead
+# using 'tfs requirements generate' command.
+from testflows.core import Specification
+from testflows.core import Requirement
+
+Heading = Specification.Heading
+
+RQ_Iceberg_Versioning = Requirement(
+    name="RQ.Iceberg.Versioning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Versions 1 and 2 of the Iceberg spec are complete and adopted by the community.\n"
+        "\n"
+        "**Version 3 is under active development and has not been formally adopted.**\n"
+        "\n"
+        "The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.\n"
+        "\n"
+        "**Version 3 is under active development and has not been formally adopted.**\n"
+        "\n"
+        "The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="4.1",
+)
+
+RQ_Iceberg_Versioning_Version1 = Requirement(
+    name="RQ.Iceberg.Versioning.Version1",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Version 1 of the Iceberg spec defines how to manage large analytic tables using immutable file formats: Parquet, Avro, and ORC.\n"
+        "\n"
+        "All version 1 data and metadata files are valid after upgrading a table to version 2. [Appendix E](#version-2) documents how to default version 2 fields when reading version 1 metadata.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.1",
+)
+
+RQ_Iceberg_Versioning_Version2 = Requirement(
+    name="RQ.Iceberg.Versioning.Version2",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Version 2 of the Iceberg spec adds row-level updates and deletes for analytic tables with immutable files.\n"
+        "\n"
+        "The primary change in version 2 adds delete files to encode rows that are deleted in existing data files. This version can be used to delete or replace individual rows in immutable data files without rewriting the files.\n"
+        "\n"
+        "In addition to row-level deletes, version 2 makes some requirements stricter for writers. The full set of changes are listed in [Appendix E](#version-2).\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.3.1",
+)
+
+RQ_Iceberg_Versioning_Version3 = Requirement(
+    name="RQ.Iceberg.Versioning.Version3",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Version 3 of the Iceberg spec extends data types and existing metadata structures to add new capabilities:\n"
+        "\n"
+        "* New data types: nanosecond timestamp(tz), unknown\n"
+        "* Default value support for columns\n"
+        "* Multi-argument transforms for partitioning and sorting\n"
+        "* Row Lineage tracking\n"
+        "* Binary deletion vectors\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.1",
+)
+
+RQ_Iceberg_Concurrency = Requirement(
+    name="RQ.Iceberg.Concurrency",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "An atomic swap of one table metadata file for another provides the basis for serializable isolation. Readers use the snapshot that was current when they load the table metadata and are not affected by changes until they refresh and pick up a new metadata location.\n"
+        "\n"
+        "Writers create table metadata files optimistically, assuming that the current version will not be changed before the writer's commit. Once a writer has created an update, it commits by swapping the table’s metadata file pointer from the base version to the new version.\n"
+        "\n"
+        "If the snapshot on which an update is based is no longer current, the writer must retry the update based on the new current version. Some operations support retry by re-applying metadata changes and committing, under well-defined conditions. For example, a change that rewrites files can be applied to a new table snapshot if all of the rewritten files are still in the table.\n"
+        "\n"
+        "The conditions required by a write to successfully commit determines the isolation level. Writers can select what to validate and can make different isolation guarantees.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.1",
+)
+
+RQ_Iceberg_SequenceNumbers = Requirement(
+    name="RQ.Iceberg.SequenceNumbers",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The relative age of data and delete files relies on a sequence number that is assigned to every successful commit. When a snapshot is created for a commit, it is optimistically assigned the next sequence number, and it is written into the snapshot's metadata. If the commit fails and must be retried, the sequence number is reassigned and written into new snapshot metadata.\n"
+        "\n"
+        "All manifests, data files, and delete files created for a snapshot inherit the snapshot's sequence number. Manifest file metadata in the manifest list stores a manifest's sequence number. New data and metadata file entries are written with `null` in place of a sequence number, which is replaced with the manifest's sequence number at read time. When a data or delete file is written to a new manifest (as \"existing\"), the inherited sequence number is written to ensure it does not change after it is first inherited.\n"
+        "\n"
+        "Inheriting the sequence number from manifest metadata allows writing a new manifest once and reusing it in commit retries. To change a sequence number for a retry, only the manifest list must be rewritten -- which would be rewritten anyway with the latest set of manifests.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.2.1",
+)
+
+RQ_Iceberg_RowLevelDeletes = Requirement(
+    name="RQ.Iceberg.RowLevelDeletes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Row-level deletes are stored in delete files.\n"
+        "\n"
+        "There are two ways to encode a row-level delete:\n"
+        "\n"
+        "* [_Position deletes_](#position-delete-files) mark a row deleted by data file path and the row position in the data file\n"
+        "* [_Equality deletes_](#equality-delete-files) mark a row deleted by one or more column values, like `id = 5`\n"
+        "\n"
+        "Like data files, delete files are tracked by partition. In general, a delete file must be applied to older data files with the same partition; see [Scan Planning](#scan-planning) for details. Column metrics can be used to determine whether a delete file's rows overlap the contents of a data file or a scan range.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.3.1",
+)
+
+RQ_Iceberg_FileSystemOperations = Requirement(
+    name="RQ.Iceberg.FileSystemOperations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Iceberg only requires that file systems support the following operations:\n"
+        "\n"
+        "* **In-place write** -- Files are not moved or altered once they are written.\n"
+        "* **Seekable reads** -- Data file formats require seek support.\n"
+        "* **Deletes** -- Tables delete files that are no longer used.\n"
+        "\n"
+        "These requirements are compatible with object stores, like S3.\n"
+        "\n"
+        "Tables do not require random-access writes. Once written, data and metadata files are immutable until they are deleted.\n"
+        "\n"
+        "Tables do not require rename, except for tables that use atomic rename to implement the commit operation for new metadata files.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.4.1",
+)
+
+RQ_Iceberg_WriterRequirements = Requirement(
+    name="RQ.Iceberg.WriterRequirements",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Some tables in this spec have columns that specify requirements for tables by version. These requirements are intended for writers when adding metadata files (including manifests files and manifest lists) to a table with the given version.\n"
+        "\n"
+        "| Requirement | Write behavior |\n"
+        "|-------------|----------------|\n"
+        "| (blank)     | The field should be omitted |\n"
+        "| _optional_  | The field can be written or omitted |\n"
+        "| _required_  | The field must be written |\n"
+        "\n"
+        "Readers should be more permissive because v1 metadata files are allowed in v2 tables (or later) so that tables can be upgraded to without rewriting the metadata tree. For manifest list and manifest files, this table shows the expected read behavior for later versions:\n"
+        "\n"
+        "| v1         | v2         | v2+ read behavior |\n"
+        "|------------|------------|-------------------|\n"
+        "|            | _optional_ | Read the field as _optional_ |\n"
+        "|            | _required_ | Read the field as _optional_; it may be missing in v1 files |\n"
+        "| _optional_ |            | Ignore the field |\n"
+        "| _optional_ | _optional_ | Read the field as _optional_ |\n"
+        "| _optional_ | _required_ | Read the field as _optional_; it may be missing in v1 files |\n"
+        "| _required_ |            | Ignore the field |\n"
+        "| _required_ | _optional_ | Read the field as _optional_ |\n"
+        "| _required_ | _required_ | Fill in a default or throw an exception if the field is missing |\n"
+        "\n"
+        "If a later version is not shown, the requirement for a version is not changed from the most recent version shown. For example, v3 uses the same requirements as v2 if a table shows only v1 and v2 requirements.\n"
+        "\n"
+        "Readers may be more strict for metadata JSON files because the JSON files are not reused and will always match the table version. Required fields that were not present in or were optional in prior versions may be handled as required fields. For example, a v2 table that is missing `last-sequence-number` can throw an exception.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.4.3",
+)
+
+RQ_Iceberg_WritingDataFiles = Requirement(
+    name="RQ.Iceberg.WritingDataFiles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "All columns must be written to data files even if they introduce redundancy with metadata stored in manifest files (e.g. columns with identity partition transforms). Writing all columns provides a backup in case of corruption or bugs in the metadata layer.\n"
+        "\n"
+        "Writers are not allowed to commit files with a partition spec that contains a field with an unknown transform.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.4.4.1",
+)
+
+RQ_Iceberg_SchemasAndDataTypes = Requirement(
+    name="RQ.Iceberg.SchemasAndDataTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "A table's **schema** is a list of named columns. All data types are either primitives or nested types, which are maps, lists, or structs. A table schema is also a struct type.\n"
+        "\n"
+        "For the representations of these types in Avro, ORC, and Parquet file formats, see Appendix A.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.5.1",
+)
+
+RQ_Iceberg_NestedTypes = Requirement(
+    name="RQ.Iceberg.NestedTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "A **`struct`** is a tuple of typed values. Each field in the tuple is named and has an integer id that is unique in the table schema. Each field can be either optional or required, meaning that values can (or cannot) be null. Fields may be any type. Fields may have an optional comment or doc string. Fields can have [default values](#default-values).\n"
+        "\n"
+        "A **`list`** is a collection of values with some element type. The element field has an integer id that is unique in the table schema. Elements can be either optional or required. Element types may be any type.\n"
+        "\n"
+        "A **`map`** is a collection of key-value pairs with a key type and a value type. Both the key field and value field each have an integer id that is unique in the table schema. Map keys are required and map values can be either optional or required. Both map keys and map values may be any type, including nested types.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.2.1",
+)
+
+RQ_Iceberg_PrimitiveTypes = Requirement(
+    name="RQ.Iceberg.PrimitiveTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Supported primitive types are defined in the table below. Primitive types added after v1 have an "added by" version that is the first spec version in which the type is allowed. For example, nanosecond-precision timestamps are part of the v3 spec; using v3 types in v1 or v2 tables can break forward compatibility.\n'
+        "\n"
+        "| Added by version | Primitive type     | Description                                                              | Requirements                                     |\n"
+        "|------------------|--------------------|--------------------------------------------------------------------------|--------------------------------------------------|\n"
+        "| [v3](#version-3) | **`unknown`**      | Default / null column type used when a more specific type is not known   | Must be optional with `null` defaults; not stored in data files |\n"
+        "|                  | **`boolean`**      | True or false                                                            |                                                  |\n"
+        "|                  | **`int`**          | 32-bit signed integers                                                   | Can promote to `long`                            |\n"
+        "|                  | **`long`**         | 64-bit signed integers                                                   |                                                  |\n"
+        "|                  | **`float`**        | [32-bit IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floating point | Can promote to double                            |\n"
+        "|                  | **`double`**       | [64-bit IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floating point |                                                  |\n"
+        "|                  | **`decimal(P,S)`** | Fixed-point decimal; precision P, scale S                                | Scale is fixed, precision must be 38 or less     |\n"
+        "|                  | **`date`**         | Calendar date without timezone or time                                   |                                                  |\n"
+        "|                  | **`time`**         | Time of day, microsecond precision, without date, timezone               |                                                  |\n"
+        "|                  | **`timestamp`**    | Timestamp, microsecond precision, without timezone                       | [1]                                              |\n"
+        "|                  | **`timestamptz`**  | Timestamp, microsecond precision, with timezone                          | [2]                                              |\n"
+        "| [v3](#version-3) | **`timestamp_ns`** | Timestamp, nanosecond precision, without timezone                        | [1]                                              |\n"
+        "| [v3](#version-3) | **`timestamptz_ns`** | Timestamp, nanosecond precision, with timezone                         | [2]                                              |\n"
+        "|                  | **`string`**       | Arbitrary-length character sequences                                     | Encoded with UTF-8 [3]                           |\n"
+        "|                  | **`uuid`**         | Universally unique identifiers                                           | Should use 16-byte fixed                         |\n"
+        "|                  | **`fixed(L)`**     | Fixed-length byte array of length L                                      |                                                  |\n"
+        "|                  | **`binary`**       | Arbitrary-length byte array                                              |                                                  |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Timestamp values _without time zone_ represent a date and time of day regardless of zone: the time value is independent of zone adjustments (`2017-11-16 17:10:34` is always retrieved as `2017-11-16 17:10:34`).\n"
+        "2. Timestamp values _with time zone_ represent a point in time: values are stored as UTC and do not retain a source time zone (`2017-11-16 17:10:34 PST` is stored/retrieved as `2017-11-17 01:10:34 UTC` and these values are considered identical).\n"
+        "3. Character strings must be stored as UTF-8 encoded byte arrays.\n"
+        "\n"
+        "For details on how to serialize a schema to JSON, see Appendix C.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.3.1",
+)
+
+RQ_Iceberg_DefaultValues = Requirement(
+    name="RQ.Iceberg.DefaultValues",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Default values can be tracked for struct fields (both nested structs and the top-level schema's struct). There can be two defaults with a field:\n"
+        "\n"
+        "* `initial-default` is used to populate the field's value for all records that were written before the field was added to the schema\n"
+        "* `write-default` is used to populate the field's value for any records written after the field was added to the schema, if the writer does not supply the field's value\n"
+        "\n"
+        "The `initial-default` is set only when a field is added to an existing schema. The `write-default` is initially set to the same value as `initial-default` and can be changed through schema evolution. If either default is not set for an optional field, then the default value is null for compatibility with older spec versions.\n"
+        "\n"
+        "The `initial-default` and `write-default` produce SQL default value behavior, without rewriting data files. SQL default value behavior when a field is added handles all existing rows as though the rows were written with the new field's default value. Default value changes may only affect future records and all known fields are written into data files. Omitting a known field when writing a data file is never allowed. The write default for a field must be written if a field is not supplied to a write. If the write default for a required field is not set, the writer must fail.\n"
+        "\n"
+        "All columns of `unknown` type must default to null. Non-null values for `initial-default` or `write-default` are invalid.\n"
+        "\n"
+        "Default values are attributes of fields in schemas and serialized with fields in the JSON format. See [Appendix C](#appendix-c-json-serialization).\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.4.1",
+)
+
+RQ_Iceberg_SchemaEvolution = Requirement(
+    name="RQ.Iceberg.SchemaEvolution",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Schemas may be evolved by type promotion or adding, deleting, renaming, or reordering fields in structs (both nested structs and the top-level schema’s struct).\n"
+        "\n"
+        "Evolution applies changes to the table's current schema to produce a new schema that is identified by a unique schema ID, is added to the table's list of schemas, and is set as the table's current schema.\n"
+        "\n"
+        "Valid primitive type promotions are:\n"
+        "\n"
+        "| Primitive type   | v1, v2 valid type promotions | v3+ valid type promotions    | Requirements |\n"
+        "|------------------|------------------------------|------------------------------|--------------|\n"
+        "| `unknown`        |                              | _any type_                   | |\n"
+        "| `int`            | `long`                       | `long`                       | |\n"
+        "| `date`           |                              | `timestamp`, `timestamp_ns`  | Promotion to `timestamptz` or `timestamptz_ns` is **not** allowed; values outside the promoted type's range must result in a runtime failure |\n"
+        "| `float`          | `double`                     | `double`                     | |\n"
+        "| `decimal(P, S)`  | `decimal(P', S)` if `P' > P` | `decimal(P', S)` if `P' > P` | Widen precision only |\n"
+        "\n"
+        "Iceberg's Avro manifest format does not store the type of lower and upper bounds, and type promotion does not rewrite existing bounds. For example, when a `float` is promoted to `double`, existing data file bounds are encoded as 4 little-endian bytes rather than 8 little-endian bytes for `double`. To correctly decode the value, the original type at the time the file was written must be inferred according to the following table:\n"
+        "\n"
+        "| Current type     | Length of bounds | Inferred type at write time |\n"
+        "|------------------|------------------|-----------------------------|\n"
+        "| `long`           | 4 bytes          | `int`                       |\n"
+        "| `long`           | 8 bytes          | `long`                      |\n"
+        "| `double`         | 4 bytes          | `float`                     |\n"
+        "| `double`         | 8 bytes          | `double`                    |\n"
+        "| `timestamp`      | 4 bytes          | `date`                      |\n"
+        "| `timestamp`      | 8 bytes          | `timestamp`                 |\n"
+        "| `timestamp_ns`   | 4 bytes          | `date`                      |\n"
+        "| `timestamp_ns`   | 8 bytes          | `timestamp_ns`              |\n"
+        "| `decimal(P, S)`  | _any_            | `decimal(P', S)`; `P' <= P` |\n"
+        "\n"
+        'Type promotion is not allowed for a field that is referenced by `source-id` or `source-ids` of a partition field if the partition transform would produce a different value after promoting the type. For example, `bucket[N]` produces different hash values for `34` and `"34"` (2017239379 != -427558391) but the same value for `34` and `34L`; when an `int` field is the source for a bucket partition field, it may be promoted to `long` but not to `string`. This may happen for the following type promotion cases:\n'
+        "\n"
+        "* `date` to `timestamp` or `timestamp_ns`\n"
+        "\n"
+        "Any struct, including a top-level schema, can evolve through deleting fields, adding new fields, renaming existing fields, reordering existing fields, or promoting a primitive using the valid type promotions. Adding a new field assigns a new ID for that field and for any nested fields. Renaming an existing field must change the name, but not the field ID. Deleting a field removes it from the current schema. Field deletion cannot be rolled back unless the field was nullable or if the current snapshot has not changed.\n"
+        "\n"
+        "Grouping a subset of a struct’s fields into a nested struct is **not** allowed, nor is moving fields from a nested struct into its immediate parent struct (`struct<a, b, c> ↔ struct<a, struct<b, c>>`). Evolving primitive types to structs is **not** allowed, nor is evolving a single-field struct to a primitive (`map<string, int> ↔ map<string, struct<int>>`).\n"
+        "\n"
+        "Struct evolution requires the following rules for default values:\n"
+        "\n"
+        "* The `initial-default` must be set when a field is added and cannot change\n"
+        "* The `write-default` must be set when a field is added and may change\n"
+        "* When a required field is added, both defaults must be set to a non-null value\n"
+        "* When an optional field is added, the defaults may be null and should be explicitly set\n"
+        "* When a new field is added to a struct with a default value, updating the struct's default is optional\n"
+        "* If a field value is missing from a struct's `initial-default`, the field's `initial-default` must be used for the field\n"
+        "* If a field value is missing from a struct's `write-default`, the field's `write-default` must be used for the field\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.5.1",
+)
+
+RQ_Iceberg_ColumnProjection = Requirement(
+    name="RQ.Iceberg.ColumnProjection",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Columns in Iceberg data files are selected by field id. The table schema's column names and order may change after a data file is written, and projection must be done using field ids.\n"
+        "\n"
+        "Values for field ids which are not present in a data file must be resolved according the following rules:\n"
+        "\n"
+        "* Return the value from partition metadata if an [Identity Transform](#partition-transforms) exists for the field and the partition value is present in the `partition` struct on `data_file` object in the manifest. This allows for metadata only migrations of Hive tables.\n"
+        "* Use `schema.name-mapping.default` metadata to map field id to columns without field id as described below and use the column if it is present.\n"
+        "* Return the default value if it has a defined `initial-default` (See [Default values](#default-values) section for more details). \n"
+        "* Return `null` in all other cases.\n"
+        "\n"
+        "For example, a file may be written with schema `1: a int, 2: b string, 3: c double` and read using projection schema `3: measurement, 2: name, 4: a`. This must select file columns `c` (renamed to `measurement`), `b` (now called `name`), and a column of `null` values called `a`; in that order.\n"
+        "\n"
+        "Tables may also define a property `schema.name-mapping.default` with a JSON name mapping containing a list of field mapping objects. These mappings provide fallback field ids to be used when a data file does not contain field id information. Each object should contain\n"
+        "\n"
+        "* `names`: A required list of 0 or more names for a field. \n"
+        "* `field-id`: An optional Iceberg field ID used when a field's name is present in `names`\n"
+        "* `fields`: An optional list of field mappings for child field of structs, maps, and lists.\n"
+        "\n"
+        "Field mapping fields are constrained by the following rules:\n"
+        "\n"
+        "* A name may contain `.` but this refers to a literal name, not a nested field. For example, `a.b` refers to a field named `a.b`, not child field `b` of field `a`. \n"
+        "* Each child field should be defined with their own field mapping under `fields`. \n"
+        "* Multiple values for `names` may be mapped to a single field ID to support cases where a field may have different names in different data files. For example, all Avro field aliases should be listed in `names`.\n"
+        "* Fields which exist only in the Iceberg schema and not in imported data files may use an empty `names` list.\n"
+        "* Fields that exist in imported files but not in the Iceberg schema may omit `field-id`.\n"
+        "* List types should contain a mapping in `fields` for `element`. \n"
+        "* Map types should contain mappings in `fields` for `key` and `value`. \n"
+        "* Struct types should contain mappings in `fields` for their child fields.\n"
+        "\n"
+        "For details on serialization, see [Appendix C](#name-mapping-serialization).\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.5.5.2.1",
+)
+
+RQ_Iceberg_IndentifierFieldIDs = Requirement(
+    name="RQ.Iceberg.IndentifierFieldIDs",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "A schema can optionally track the set of primitive fields that identify rows in a table, using the property `identifier-field-ids` (see JSON encoding in Appendix C).\n"
+        "\n"
+        'Two rows are the "same"---that is, the rows represent the same entity---if the identifier fields are equal. However, uniqueness of rows by this identifier is not guaranteed or required by Iceberg and it is the responsibility of processing engines or data providers to enforce.\n'
+        "\n"
+        "Identifier fields may be nested in structs but cannot be nested within maps or lists. Float, double, and optional fields cannot be used as identifier fields and a nested field cannot be used as an identifier field if it is nested in an optional struct, to avoid null values in identifiers.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.6.1",
+)
+
+RQ_Iceberg_ReservedFieldIDs = Requirement(
+    name="RQ.Iceberg.ReservedFieldIDs",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Iceberg tables must not use field ids greater than 2147483447 (`Integer.MAX_VALUE - 200`). This id range is reserved for metadata columns that can be used in user data schemas, like the `_file` column that holds the file path in which a row was stored.\n"
+        "\n"
+        "The set of metadata columns is:\n"
+        "\n"
+        "| Field id, name                   | Type          | Description                                                                                            |\n"
+        "|----------------------------------|---------------|--------------------------------------------------------------------------------------------------------|\n"
+        "| **`2147483646  _file`**          | `string`      | Path of the file in which a row is stored                                                              |\n"
+        "| **`2147483645  _pos`**           | `long`        | Ordinal position of a row in the source data file, starting at `0`                                     |\n"
+        "| **`2147483644  _deleted`**       | `boolean`     | Whether the row has been deleted                                                                       |\n"
+        "| **`2147483643  _spec_id`**       | `int`         | Spec ID used to track the file containing a row                                                        |\n"
+        "| **`2147483642  _partition`**     | `struct`      | Partition to which a row belongs                                                                       |\n"
+        "| **`2147483546  file_path`**      | `string`      | Path of a file, used in position-based delete files                                                    |\n"
+        "| **`2147483545  pos`**            | `long`        | Ordinal position of a row, used in position-based delete files                                         |\n"
+        "| **`2147483544  row`**            | `struct<...>` | Deleted row values, used in position-based delete files                                                |\n"
+        "| **`2147483543  _row_id`**        | `long`        | A unique long assigned when row-lineage is enabled, see [Row Lineage](#row-lineage)                    |\n"
+        "| **`2147483542  _last_updated_sequence_number`**   | `long`        | The sequence number which last updated this row when row-lineage is enabled [Row Lineage](#row-lineage) |\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.7.1",
+)
+
+RQ_Iceberg_RowLineage = Requirement(
+    name="RQ.Iceberg.RowLineage",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "In v3 and later, an Iceberg table can track row lineage fields for all newly created rows.  Row lineage is enabled by setting the field `row-lineage` to true in the table's metadata. When enabled, engines must maintain the `next-row-id` table field and the following row-level fields when writing data files:\n"
+        "\n"
+        "* `_row_id` a unique long identifier for every row within the table. The value is assigned via inheritance when a row is first added to the table and the existing value is explicitly written when the row is copied into a new file.\n"
+        "* `_last_updated_sequence_number` the sequence number of the commit that last updated a row. The value is inherited when a row is first added or modified and the existing value is explicitly written when the row is written to a different data file but not modified.\n"
+        "\n"
+        "These fields are assigned and updated by inheritance because the commit sequence number and starting row ID are not assigned until the snapshot is successfully committed. Inheritance is used to allow writing data and manifest files before values are known so that it is not necessary to rewrite data and manifest files when an optimistic commit is retried.\n"
+        "\n"
+        "When row lineage is enabled, new snapshots cannot include [Equality Deletes](#equality-delete-files). Row lineage is incompatible with equality deletes because lineage values must be maintained, but equality deletes are used to avoid reading existing data before writing changes.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.8.1",
+)
+
+RQ_Iceberg_Partitioning = Requirement(
+    name="RQ.Iceberg.Partitioning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Data files are stored in manifests with a tuple of partition values that are used in scans to filter out files that cannot contain records that match the scan’s filter predicate. Partition values for a data file must be the same for all records stored in the data file. (Manifests store data files from any partition, as long as the partition spec is the same for the data files.)\n"
+        "\n"
+        "Tables are configured with a **partition spec** that defines how to produce a tuple of partition values from a record. A partition spec has a list of fields that consist of:\n"
+        "\n"
+        "*   A **source column id** or a list of **source column ids** from the table’s schema\n"
+        "*   A **partition field id** that is used to identify a partition field and is unique within a partition spec. In v2 table metadata, it is unique across all partition specs.\n"
+        "*   A **transform** that is applied to the source column(s) to produce a partition value\n"
+        "*   A **partition name**\n"
+        "\n"
+        "The source columns, selected by ids, must be a primitive type and cannot be contained in a map or list, but may be nested in a struct. For details on how to serialize a partition spec to JSON, see Appendix C.\n"
+        "\n"
+        "Partition specs capture the transform from table data to partition values. This is used to transform predicates to partition predicates, in addition to transforming data values. Deriving partition predicates from column predicates on the table data is used to separate the logical queries from physical storage: the partitioning can change and the correct partition filters are always derived from column predicates. This simplifies queries because users don’t have to supply both logical predicates and partition predicates. For more information, see Scan Planning below.\n"
+        "\n"
+        "Partition fields that use an unknown transform can be read by ignoring the partition field for the purpose of filtering data files during scan planning. In v1 and v2, readers should ignore fields with unknown transforms while reading; this behavior is required in v3. Writers are not allowed to commit data using a partition spec that contains a field with an unknown transform.\n"
+        "\n"
+        "Two partition specs are considered equivalent with each other if they have the same number of fields and for each corresponding field, the fields have the same source column IDs, transform definition and partition name. Writers must not create a new partition spec if there already exists a compatible partition spec defined in the table.\n"
+        "\n"
+        "Partition field IDs must be reused if an existing partition spec contains an equivalent field.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.6.1",
+)
+
+RQ_Iceberg_PartitionTransforms = Requirement(
+    name="RQ.Iceberg.PartitionTransforms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| Transform name    | Description                                                  | Source types                                                                                              | Result type |\n"
+        "|-------------------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|-------------|\n"
+        "| **`identity`**    | Source value, unmodified                                     | Any                                                                                                       | Source type |\n"
+        "| **`bucket[N]`**   | Hash of value, mod `N` (see below)                           | `int`, `long`, `decimal`, `date`, `time`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`, `string`, `uuid`, `fixed`, `binary` | `int`       |\n"
+        "| **`truncate[W]`** | Value truncated to width `W` (see below)                     | `int`, `long`, `decimal`, `string`, `binary`                                                              | Source type |\n"
+        "| **`year`**        | Extract a date or timestamp year, as years from 1970         | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |\n"
+        "| **`month`**       | Extract a date or timestamp month, as months from 1970-01-01 | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |\n"
+        "| **`day`**         | Extract a date or timestamp day, as days from 1970-01-01     | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |\n"
+        "| **`hour`**        | Extract a timestamp hour, as hours from 1970-01-01 00:00:00  | `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                              | `int`       |\n"
+        "| **`void`**        | Always produces `null`                                       | Any                                                                                                       | Source type or `int` |\n"
+        "\n"
+        "All transforms must return `null` for a `null` input value.\n"
+        "\n"
+        "The `void` transform may be used to replace the transform in an existing partition field so that the field is effectively dropped in v1 tables. See partition evolution below.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.6.2.1",
+)
+
+RQ_Iceberg_BucketTransform = Requirement(
+    name="RQ.Iceberg.BucketTransform",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Bucket partition transforms use a 32-bit hash of the source value. The 32-bit hash implementation is the 32-bit Murmur3 hash, x86 variant, seeded with 0.\n"
+        "\n"
+        "Transforms are parameterized by a number of buckets [1], `N`. The hash mod `N` must produce a positive value by first discarding the sign bit of the hash value. In pseudo-code, the function is:\n"
+        "\n"
+        "```\n"
+        "  def bucket_N(x) = (murmur3_x86_32_hash(x) & Integer.MAX_VALUE) % N\n"
+        "```\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Changing the number of buckets as a table grows is possible by evolving the partition spec.\n"
+        "\n"
+        "For hash function details by type, see Appendix B.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.6.3.1",
+)
+
+RQ_Iceberg_TruncateTransform = Requirement(
+    name="RQ.Iceberg.TruncateTransform",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| **Type**      | **Config**            | **Truncate specification**                                       | **Examples**                     |\n"
+        "|---------------|-----------------------|------------------------------------------------------------------|----------------------------------|\n"
+        "| **`int`**     | `W`, width            | `v - (v % W)`\tremainders must be positive\t[1]                    | `W=10`: `1` ￫ `0`, `-1` ￫ `-10`  |\n"
+        "| **`long`**    | `W`, width            | `v - (v % W)`\tremainders must be positive\t[1]                    | `W=10`: `1` ￫ `0`, `-1` ￫ `-10`  |\n"
+        "| **`decimal`** | `W`, width (no scale) | `scaled_W = decimal(W, scale(v))` `v - (v % scaled_W)`\t\t[1, 2] | `W=50`, `s=2`: `10.65` ￫ `10.50` |\n"
+        "| **`string`**  | `L`, length           | Substring of length `L`: `v.substring(0, L)` [3]                    | `L=3`: `iceberg` ￫ `ice`         |\n"
+        "| **`binary`**  | `L`, length           | Sub array of length `L`: `v.subarray(0, L)`  [4]                    | `L=3`: `\\x01\\x02\\x03\\x04\\x05` ￫ `\\x01\\x02\\x03` |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. The remainder, `v % W`, must be positive. For languages where `%` can produce negative values, the correct truncate function is: `v - (((v % W) + W) % W)`\n"
+        "2. The width, `W`, used to truncate decimal values is applied using the scale of the decimal column to avoid additional (and potentially conflicting) parameters.\n"
+        "3. Strings are truncated to a valid UTF-8 string with no more than `L` code points.\n"
+        "4. In contrast to strings, binary values do not have an assumed encoding and are truncated to `L` bytes.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.6.4.1",
+)
+
+RQ_Iceberg_PartitionEvolution = Requirement(
+    name="RQ.Iceberg.PartitionEvolution",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table partitioning can be evolved by adding, removing, renaming, or reordering partition spec fields.\n"
+        "\n"
+        "Changing a partition spec produces a new spec identified by a unique spec ID that is added to the table's list of partition specs and may be set as the table's default spec.\n"
+        "\n"
+        "When evolving a spec, changes should not cause partition field IDs to change because the partition field IDs are used as the partition tuple field IDs in manifest files.\n"
+        "\n"
+        "In v2, partition field IDs must be explicitly tracked for each partition field. New IDs are assigned based on the last assigned partition ID in table metadata.\n"
+        "\n"
+        "In v1, partition field IDs were not tracked, but were assigned sequentially starting at 1000 in the reference implementation. This assignment caused problems when reading metadata tables based on manifest files from multiple specs because partition fields with the same ID may contain different data types. For compatibility with old versions, the following rules are recommended for partition evolution in v1 tables:\n"
+        "\n"
+        "1. Do not reorder partition fields\n"
+        "2. Do not drop partition fields; instead replace the field's transform with the `void` transform\n"
+        "3. Only add partition fields at the end of the previous partition spec\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.6.5.1",
+)
+
+RQ_Iceberg_Sorting = Requirement(
+    name="RQ.Iceberg.Sorting",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Users can sort their data within partitions by columns to gain performance. The information on how the data is sorted can be declared per data or delete file, by a **sort order**.\n"
+        "\n"
+        "A sort order is defined by a sort order id and a list of sort fields. The order of the sort fields within the list defines the order in which the sort is applied to the data. Each sort field consists of:\n"
+        "\n"
+        "*   A **source column id** or a list of **source column ids** from the table's schema\n"
+        "*   A **transform** that is used to produce values to be sorted on from the source column(s). This is the same transform as described in [partition transforms](#partition-transforms).\n"
+        "*   A **sort direction**, that can only be either `asc` or `desc`\n"
+        "*   A **null order** that describes the order of null values when sorted. Can only be either `nulls-first` or `nulls-last`\n"
+        "\n"
+        "For details on how to serialize a sort order to JSON, see Appendix C.\n"
+        "\n"
+        "Order id `0` is reserved for the unsorted order. \n"
+        "\n"
+        "Sorting floating-point numbers should produce the following behavior: `-NaN` < `-Infinity` < `-value` < `-0` < `0` < `value` < `Infinity` < `NaN`. This aligns with the implementation of Java floating-point types comparisons. \n"
+        "\n"
+        "A data or delete file is associated with a sort order by the sort order's id within [a manifest](#manifests). Therefore, the table must declare all the sort orders for lookup. A table could also be configured with a default sort order id, indicating how the new data should be sorted by default. Writers should use this default sort order to sort the data on write, but are not required to if the default order is prohibitively expensive, as it would be for streaming writes.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.7.1",
+)
+
+RQ_Iceberg_Manifest = Requirement(
+    name="RQ.Iceberg.Manifest",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "A manifest is an immutable Avro file that lists data files or delete files, along with each file’s partition data tuple, metrics, and tracking information. One or more manifest files are used to store a [snapshot](#snapshots), which tracks all of the files in a table at some point in time. Manifests are tracked by a [manifest list](#manifest-lists) for each table snapshot.\n"
+        "\n"
+        "A manifest is a valid Iceberg data file: files must use valid Iceberg formats, schemas, and column projection.\n"
+        "\n"
+        "A manifest may store either data files or delete files, but not both because manifests that contain delete files are scanned first during job planning. Whether a manifest is a data manifest or a delete manifest is stored in manifest metadata.\n"
+        "\n"
+        "A manifest stores files for a single partition spec. When a table’s partition spec changes, old files remain in the older manifest and newer files are written to a new manifest. This is required because a manifest file’s schema is based on its partition spec (see below). The partition spec of each manifest is also used to transform predicates on the table's data rows into predicates on partition values that are used during job planning to select files from a manifest.\n"
+        "\n"
+        "A manifest file must store the partition spec and other metadata as properties in the Avro file's key-value metadata:\n"
+        "\n"
+        "| v1         | v2         | Key                 | Value                                                                        |\n"
+        "|------------|------------|---------------------|------------------------------------------------------------------------------|\n"
+        "| _required_ | _required_ | `schema`            | JSON representation of the table schema at the time the manifest was written |\n"
+        "| _optional_ | _required_ | `schema-id`         | ID of the schema used to write the manifest as a string                      |\n"
+        "| _required_ | _required_ | `partition-spec`    | JSON fields representation of the partition spec used to write the manifest  |\n"
+        "| _optional_ | _required_ | `partition-spec-id` | ID of the partition spec used to write the manifest as a string              |\n"
+        "| _optional_ | _required_ | `format-version`    | Table format version number of the manifest as a string                      |\n"
+        '|            | _required_ | `content`           | Type of content files tracked by the manifest: "data" or "deletes"           |\n'
+        "\n"
+        "The schema of a manifest file is a struct called `manifest_entry` with the following fields:\n"
+        "\n"
+        "| v1         | v2         | Field id, name                | Type                                                      | Description |\n"
+        "| ---------- | ---------- |-------------------------------|-----------------------------------------------------------|-------------|\n"
+        "| _required_ | _required_ | **`0  status`**               | `int` with meaning: `0: EXISTING` `1: ADDED` `2: DELETED` | Used to track additions and deletions. Deletes are informational only and not used in scans. |\n"
+        "| _required_ | _optional_ | **`1  snapshot_id`**          | `long`                                                    | Snapshot id where the file was added, or deleted if status is 2. Inherited when null. |\n"
+        "|            | _optional_ | **`3  sequence_number`**      | `long`                                                    | Data sequence number of the file. Inherited when null and status is 1 (added). |\n"
+        "|            | _optional_ | **`4  file_sequence_number`** | `long`                                                    | File sequence number indicating when the file was added. Inherited when null and status is 1 (added). |\n"
+        "| _required_ | _required_ | **`2  data_file`**            | `data_file` `struct` (see below)                          | File path, partition tuple, metrics, ... |\n"
+        "\n"
+        "`data_file` is a struct with the following fields:\n"
+        "\n"
+        "| v1         | v2         | v3         | Field id, name                    | Type                                                                        | Description                                                                                                                                                                                                        |\n"
+        "| ---------- |------------|------------|-----------------------------------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "|            | _required_ | _required_ | **`134  content`**                | `int` with meaning: `0: DATA`, `1: POSITION DELETES`, `2: EQUALITY DELETES` | Type of content stored by the data file: data, equality deletes, or position deletes (all v1 files are data files)                                                                                                 |\n"
+        "| _required_ | _required_ | _required_ | **`100  file_path`**              | `string`                                                                    | Full URI for the file with FS scheme                                                                                                                                                                               |\n"
+        "| _required_ | _required_ | _required_ | **`101  file_format`**            | `string`                                                                    | String file format name, `avro`, `orc`, `parquet`, or `puffin`                                                                                                                                                     |\n"
+        "| _required_ | _required_ | _required_ | **`102  partition`**              | `struct<...>`                                                               | Partition data tuple, schema based on the partition spec output using partition field ids for the struct field ids                                                                                                 |\n"
+        "| _required_ | _required_ | _required_ | **`103  record_count`**           | `long`                                                                      | Number of records in this file, or the cardinality of a deletion vector                                                                                                                                            |\n"
+        "| _required_ | _required_ | _required_ | **`104  file_size_in_bytes`**     | `long`                                                                      | Total file size in bytes                                                                                                                                                                                           |\n"
+        "| _required_ |            |            | ~~**`105 block_size_in_bytes`**~~ | `long`                                                                      | **Deprecated. Always write a default in v1. Do not write in v2 or v3.**                                                                                                                                            |\n"
+        "| _optional_ |            |            | ~~**`106  file_ordinal`**~~       | `int`                                                                       | **Deprecated. Do not write.**                                                                                                                                                                                      |\n"
+        "| _optional_ |            |            | ~~**`107  sort_columns`**~~       | `list<112: int>`                                                            | **Deprecated. Do not write.**                                                                                                                                                                                      |\n"
+        "| _optional_ | _optional_ | _optional_ | **`108  column_sizes`**           | `map<117: int, 118: long>`                                                  | Map from column id to the total size on disk of all regions that store the column. Does not include bytes necessary to read other columns, like footers. Leave null for row-oriented formats (Avro)                |\n"
+        "| _optional_ | _optional_ | _optional_ | **`109  value_counts`**           | `map<119: int, 120: long>`                                                  | Map from column id to number of values in the column (including null and NaN values)                                                                                                                               |\n"
+        "| _optional_ | _optional_ | _optional_ | **`110  null_value_counts`**      | `map<121: int, 122: long>`                                                  | Map from column id to number of null values in the column                                                                                                                                                          |\n"
+        "| _optional_ | _optional_ | _optional_ | **`137  nan_value_counts`**       | `map<138: int, 139: long>`                                                  | Map from column id to number of NaN values in the column                                                                                                                                                           |\n"
+        "| _optional_ | _optional_ | _optional_ | **`111  distinct_counts`**        | `map<123: int, 124: long>`                                                  | Map from column id to number of distinct values in the column; distinct counts must be derived using values in the file by counting or using sketches, but not using methods like merging existing distinct counts |\n"
+        "| _optional_ | _optional_ | _optional_ | **`125  lower_bounds`**           | `map<126: int, 127: binary>`                                                | Map from column id to lower bound in the column serialized as binary [1]. Each value must be less than or equal to all non-null, non-NaN values in the column for the file [2]                                     |\n"
+        "| _optional_ | _optional_ | _optional_ | **`128  upper_bounds`**           | `map<129: int, 130: binary>`                                                | Map from column id to upper bound in the column serialized as binary [1]. Each value must be greater than or equal to all non-null, non-Nan values in the column for the file [2]                                  |\n"
+        "| _optional_ | _optional_ | _optional_ | **`131  key_metadata`**           | `binary`                                                                    | Implementation-specific key metadata for encryption                                                                                                                                                                |\n"
+        "| _optional_ | _optional_ | _optional_ | **`132  split_offsets`**          | `list<133: long>`                                                           | Split offsets for the data file. For example, all row group offsets in a Parquet file. Must be sorted ascending                                                                                                    |\n"
+        "|            | _optional_ | _optional_ | **`135  equality_ids`**           | `list<136: int>`                                                            | Field ids used to determine row equality in equality delete files. Required when `content=2` and should be null otherwise. Fields with ids listed in this column must be present in the delete file                |\n"
+        "| _optional_ | _optional_ | _optional_ | **`140  sort_order_id`**          | `int`                                                                       | ID representing sort order for this file [3].                                                                                                                                                                      |\n"
+        "|            |            | _optional_ | **`142  first_row_id`**           | `long`                                                                      | The `_row_id` for the first row in the data file. See [First Row ID Inheritance](#first-row-id-inheritance)                                                                                                        |\n"
+        "|            | _optional_ | _optional_ | **`143  referenced_data_file`**   | `string`                                                                    | Fully qualified location (URI with FS scheme) of a data file that all deletes reference [4]                                                                                                                        |\n"
+        "|            |            | _optional_ | **`144  content_offset`**         | `long`                                                                      | The offset in the file where the content starts [5]                                                                                                                                                                |\n"
+        "|            |            | _optional_ | **`145  content_size_in_bytes`**  | `long`                                                                      | The length of a referenced content stored in the file; required if `content_offset` is present [5]                                                                                                                 |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Single-value serialization for lower and upper bounds is detailed in Appendix D.\n"
+        "2. For `float` and `double`, the value `-0.0` must precede `+0.0`, as in the IEEE 754 `totalOrder` predicate. NaNs are not permitted as lower or upper bounds.\n"
+        "3. If sort order ID is missing or unknown, then the order is assumed to be unsorted. Only data files and equality delete files should be written with a non-null order id. [Position deletes](#position-delete-files) are required to be sorted by file and position, not a table order, and should set sort order id to null. Readers must ignore sort order id for position delete files.\n"
+        "4. Position delete metadata can use `referenced_data_file` when all deletes tracked by the entry are in a single data file. Setting the referenced file is required for deletion vectors.\n"
+        "5. The `content_offset` and `content_size_in_bytes` fields are used to reference a specific blob for direct access to a deletion vector. For deletion vectors, these values are required and must exactly match the `offset` and `length` stored in the Puffin footer for the deletion vector blob.\n"
+        "6. The following field ids are reserved on `data_file`: 141.\n"
+        "\n"
+        "The `partition` struct stores the tuple of partition values for each file. Its type is derived from the partition fields of the partition spec used to write the manifest file. In v2, the partition struct's field ids must match the ids from the partition spec.\n"
+        "\n"
+        "The column metrics maps are used when filtering to select both data and delete files. For delete files, the metrics must store bounds and counts for all deleted rows, or must be omitted. Storing metrics for deleted rows ensures that the values can be used during job planning to find delete files that must be merged during a scan.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.8.1",
+)
+
+RQ_Iceberg_Manifest_EntryFields = Requirement(
+    name="RQ.Iceberg.Manifest.EntryFields",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The manifest entry fields are used to keep track of the snapshot in which files were added or logically deleted. The `data_file` struct is nested inside of the manifest entry so that it can be easily passed to job planning without the manifest entry fields.\n"
+        "\n"
+        "When a file is added to the dataset, its manifest entry should store the snapshot ID in which the file was added and set status to 1 (added).\n"
+        "\n"
+        "When a file is replaced or deleted from the dataset, its manifest entry fields store the snapshot ID in which the file was deleted and status 2 (deleted). The file may be deleted from the file system when the snapshot in which it was deleted is garbage collected, assuming that older snapshots have also been garbage collected [1].\n"
+        "\n"
+        "Iceberg v2 adds data and file sequence numbers to the entry and makes the snapshot ID optional. Values for these fields are inherited from manifest metadata when `null`. That is, if the field is `null` for an entry, then the entry must inherit its value from the manifest file's metadata, stored in the manifest list.\n"
+        "The `sequence_number` field represents the data sequence number and must never change after a file is added to the dataset. The data sequence number represents a relative age of the file content and should be used for planning which delete files apply to a data file.\n"
+        "The `file_sequence_number` field represents the sequence number of the snapshot that added the file and must also remain unchanged upon assigning at commit. The file sequence number can't be used for pruning delete files as the data within the file may have an older data sequence number. \n"
+        "The data and file sequence numbers are inherited only if the entry status is 1 (added). If the entry status is 0 (existing) or 2 (deleted), the entry must include both sequence numbers explicitly.\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Technically, data files can be deleted when the last snapshot that contains the file as “live” data is garbage collected. But this is harder to detect and requires finding the diff of multiple snapshots. It is easier to track what files are deleted in a snapshot and delete them when that snapshot expires.  It is not recommended to add a deleted file back to a table. Adding a deleted file can lead to edge cases where incremental deletes can break table snapshots.\n"
+        "2. Manifest list files are required in v2, so that the `sequence_number` and `snapshot_id` to inherit are always available.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.8.2.1",
+)
+
+RQ_Iceberg_Manifest_SequenceNumberInheritance = Requirement(
+    name="RQ.Iceberg.Manifest.SequenceNumberInheritance",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Manifests track the sequence number when a data or delete file was added to the table.\n"
+        "\n"
+        "When adding a new file, its data and file sequence numbers are set to `null` because the snapshot's sequence number is not assigned until the snapshot is successfully committed. When reading, sequence numbers are inherited by replacing `null` with the manifest's sequence number from the manifest list.\n"
+        "It is also possible to add a new file with data that logically belongs to an older sequence number. In that case, the data sequence number must be provided explicitly and not inherited. However, the file sequence number must be always assigned when the snapshot is successfully committed.\n"
+        "\n"
+        "When writing an existing file to a new manifest or marking an existing file as deleted, the data and file sequence numbers must be non-null and set to the original values that were either inherited or provided at the commit time.\n"
+        "\n"
+        "Inheriting sequence numbers through the metadata tree allows writing a new manifest without a known sequence number, so that a manifest can be written once and reused in commit retries. To change a sequence number for a retry, only the manifest list must be rewritten.\n"
+        "\n"
+        "When reading v1 manifests with no sequence number column, sequence numbers for all files must default to 0.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.8.3.1",
+)
+
+RQ_Iceberg_Manifest_FirstRowIDInheritance = Requirement(
+    name="RQ.Iceberg.Manifest.FirstRowIDInheritance",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Row ID inheritance is used when row lineage is enabled. When not enabled, a data file's `first_row_id` must always be set to `null`. The rest of this section applies when row lineage is enabled.\n"
+        "\n"
+        "When adding a new data file, its `first_row_id` field is set to `null` because it is not assigned until the snapshot is successfully committed.\n"
+        "\n"
+        "When reading, the `first_row_id` is assigned by replacing `null` with the manifest's `first_row_id` plus the sum of `record_count` for all added data files that preceded the file in the manifest.\n"
+        "\n"
+        "The `first_row_id` is only inherited for added data files. The inherited value must be written into the data file metadata for existing and deleted entries. The value of `first_row_id` for delete files is always `null`.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.8.4.1",
+)
+
+RQ_Iceberg_Snapshot = Requirement(
+    name="RQ.Iceberg.Snapshot",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "A snapshot consists of the following fields:\n"
+        "\n"
+        "| v1         | v2         | v3         | Field                        | Description                                                                                                                        |\n"
+        "| ---------- | ---------- |------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| _required_ | _required_ | _required_ | **`snapshot-id`**            | A unique long ID                                                                                                                   |\n"
+        "| _optional_ | _optional_ | _optional_ | **`parent-snapshot-id`**     | The snapshot ID of the snapshot's parent. Omitted for any snapshot with no parent                                                  |\n"
+        "|            | _required_ | _required_ | **`sequence-number`**        | A monotonically increasing long that tracks the order of changes to a table                                                        |\n"
+        "| _required_ | _required_ | _required_ | **`timestamp-ms`**           | A timestamp when the snapshot was created, used for garbage collection and table inspection                                        |\n"
+        "| _optional_ | _required_ | _required_ | **`manifest-list`**          | The location of a manifest list for this snapshot that tracks manifest files with additional metadata                              |\n"
+        "| _optional_ |            |            | **`manifests`**              | A list of manifest file locations. Must be omitted if `manifest-list` is present                                                   |\n"
+        "| _optional_ | _required_ | _required_ | **`summary`**                | A string map that summarizes the snapshot changes, including `operation` as a _required_ field (see below)                         |\n"
+        "| _optional_ | _optional_ | _optional_ | **`schema-id`**              | ID of the table's current schema when the snapshot was created                                                                     |\n"
+        "|            |            | _optional_ | **`first-row-id`**           | The first `_row_id` assigned to the first row in the first data file in the first manifest, see [Row Lineage](#row-lineage) |\n"
+        "\n"
+        "The snapshot summary's `operation` field is used by some operations, like snapshot expiration, to skip processing certain snapshots. Possible `operation` values are:\n"
+        "\n"
+        "*   `append` -- Only data files were added and no files were removed.\n"
+        "*   `replace` -- Data and delete files were added and removed without changing table data; i.e., compaction, changing the data file format, or relocating data files.\n"
+        "*   `overwrite` -- Data and delete files were added and removed in a logical overwrite operation.\n"
+        "*   `delete` -- Data files were removed and their contents logically deleted and/or delete files were added to delete rows.\n"
+        "\n"
+        "Data and delete files for a snapshot can be stored in more than one manifest. This enables:\n"
+        "\n"
+        "*   Appends can add a new manifest to minimize the amount of data written, instead of adding new records by rewriting and appending to an existing manifest. (This is called a “fast append”.)\n"
+        "*   Tables can use multiple partition specs. A table’s partition configuration can evolve if, for example, its data volume changes. Each manifest uses a single partition spec, and queries do not need to change because partition filters are derived from data predicates.\n"
+        "*   Large tables can be split across multiple manifests so that implementations can parallelize job planning or reduce the cost of rewriting a manifest.\n"
+        "\n"
+        "Manifests for a snapshot are tracked by a manifest list.\n"
+        "\n"
+        "Valid snapshots are stored as a list in table metadata. For serialization, see Appendix C.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.9.1",
+)
+
+RQ_Iceberg_Snapshot_RowIDs = Requirement(
+    name="RQ.Iceberg.Snapshot.RowIDs",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When row lineage is not enabled, `first-row-id` must be omitted. The rest of this section applies when row lineage is enabled.\n"
+        "\n"
+        "A snapshot's `first-row-id` is assigned to the table's current `next-row-id` on each commit attempt. If a commit is retried, the `first-row-id` must be reassigned. If a commit contains no new rows, `first-row-id` should be omitted.\n"
+        "\n"
+        "The snapshot's `first-row-id` is the starting `first_row_id` assigned to manifests in the snapshot's manifest list.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.9.2.1",
+)
+
+RQ_Iceberg_ManifestList = Requirement(
+    name="RQ.Iceberg.ManifestList",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Snapshots are embedded in table metadata, but the list of manifests for a snapshot are stored in a separate manifest list file.\n"
+        "\n"
+        "A new manifest list is written for each attempt to commit a snapshot because the list of manifests always changes to produce a new snapshot. When a manifest list is written, the (optimistic) sequence number of the snapshot is written for all new manifest files tracked by the list.\n"
+        "\n"
+        "A manifest list includes summary metadata that can be used to avoid scanning all of the manifests in a snapshot when planning a table scan. This includes the number of added, existing, and deleted files, and a summary of values for each field of the partition spec used to write the manifest.\n"
+        "\n"
+        "A manifest list is a valid Iceberg data file: files must use valid Iceberg formats, schemas, and column projection.\n"
+        "\n"
+        "Manifest list files store `manifest_file`, a struct with the following fields:\n"
+        "\n"
+        "| v1         | v2         | v3         | Field id, name                   | Type                                        | Description                                                                                                                                          |\n"
+        "| ---------- | ---------- |------------|----------------------------------|---------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| _required_ | _required_ | _required_ | **`500 manifest_path`**          | `string`                                    | Location of the manifest file                                                                                                                        |\n"
+        "| _required_ | _required_ | _required_ | **`501 manifest_length`**        | `long`                                      | Length of the manifest file in bytes                                                                                                                 |\n"
+        "| _required_ | _required_ | _required_ | **`502 partition_spec_id`**      | `int`                                       | ID of a partition spec used to write the manifest; must be listed in table metadata `partition-specs`                                                |\n"
+        "|            | _required_ | _required_ | **`517 content`**                | `int` with meaning: `0: data`, `1: deletes` | The type of files tracked by the manifest, either data or delete files; 0 for all v1 manifests                                                       |\n"
+        "|            | _required_ | _required_ | **`515 sequence_number`**        | `long`                                      | The sequence number when the manifest was added to the table; use 0 when reading v1 manifest lists                                                   |\n"
+        "|            | _required_ | _required_ | **`516 min_sequence_number`**    | `long`                                      | The minimum data sequence number of all live data or delete files in the manifest; use 0 when reading v1 manifest lists                              |\n"
+        "| _required_ | _required_ | _required_ | **`503 added_snapshot_id`**      | `long`                                      | ID of the snapshot where the  manifest file was added                                                                                                |\n"
+        "| _optional_ | _required_ | _required_ | **`504 added_files_count`**      | `int`                                       | Number of entries in the manifest that have status `ADDED` (1), when `null` this is assumed to be non-zero                                           |\n"
+        "| _optional_ | _required_ | _required_ | **`505 existing_files_count`**   | `int`                                       | Number of entries in the manifest that have status `EXISTING` (0), when `null` this is assumed to be non-zero                                        |\n"
+        "| _optional_ | _required_ | _required_ | **`506 deleted_files_count`**    | `int`                                       | Number of entries in the manifest that have status `DELETED` (2), when `null` this is assumed to be non-zero                                         |\n"
+        "| _optional_ | _required_ | _required_ | **`512 added_rows_count`**       | `long`                                      | Number of rows in all of files in the manifest that have status `ADDED`, when `null` this is assumed to be non-zero                                  |\n"
+        "| _optional_ | _required_ | _required_ | **`513 existing_rows_count`**    | `long`                                      | Number of rows in all of files in the manifest that have status `EXISTING`, when `null` this is assumed to be non-zero                               |\n"
+        "| _optional_ | _required_ | _required_ | **`514 deleted_rows_count`**     | `long`                                      | Number of rows in all of files in the manifest that have status `DELETED`, when `null` this is assumed to be non-zero                                |\n"
+        "| _optional_ | _optional_ | _optional_ | **`507 partitions`**             | `list<508: field_summary>` (see below)      | A list of field summaries for each partition field in the spec. Each field in the list corresponds to a field in the manifest file’s partition spec. |\n"
+        "| _optional_ | _optional_ | _optional_ | **`519 key_metadata`**           | `binary`                                    | Implementation-specific key metadata for encryption                                                                                                  |\n"
+        "|            |            | _optional_ | **`520 first_row_id`**           | `long`                                      | The starting `_row_id` to assign to rows added by `ADDED` data files [First Row ID Assignment](#first-row-id-assignment)                               |\n"
+        "\n"
+        "`field_summary` is a struct with the following fields:\n"
+        "\n"
+        "| v1         | v2         | Field id, name          | Type          | Description |\n"
+        "| ---------- | ---------- |-------------------------|---------------|-------------|\n"
+        "| _required_ | _required_ | **`509 contains_null`** | `boolean`     | Whether the manifest contains at least one partition with a null value for the field |\n"
+        "| _optional_ | _optional_ | **`518 contains_nan`**  | `boolean`     | Whether the manifest contains at least one partition with a NaN value for the field |\n"
+        "| _optional_ | _optional_ | **`510 lower_bound`**   | `bytes`   [1] | Lower bound for the non-null, non-NaN values in the partition field, or null if all values are null or NaN [2] |\n"
+        "| _optional_ | _optional_ | **`511 upper_bound`**   | `bytes`   [1] | Upper bound for the non-null, non-NaN values in the partition field, or null if all values are null or NaN [2] |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Lower and upper bounds are serialized to bytes using the single-object serialization in Appendix D. The type of used to encode the value is the type of the partition field data.\n"
+        "2. If -0.0 is a value of the partition field, the `lower_bound` must not be +0.0, and if +0.0 is a value of the partition field, the `upper_bound` must not be -0.0.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.10.1",
+)
+
+RQ_Iceberg_ManifestList_FirstRowIDAssignment = Requirement(
+    name="RQ.Iceberg.ManifestList.FirstRowIDAssignment",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Row ID inheritance is used when row lineage is enabled. When not enabled, a manifest's `first_row_id` must always be set to `null`. Once enabled, row lineage cannot be disabled. The rest of this section applies when row lineage is enabled.\n"
+        "\n"
+        "When adding a new data manifest file, its `first_row_id` field is assigned the value of the snapshot's `first_row_id` plus the sum of `added_rows_count` for all data manifests that preceded the manifest in the manifest list.\n"
+        "\n"
+        "The `first_row_id` is only assigned for new data manifests. Values for existing manifests must be preserved when writing a new manifest list. The value of `first_row_id` for delete manifests is always `null`.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.10.2.1",
+)
+
+RQ_Iceberg_ScanPlanning = Requirement(
+    name="RQ.Iceberg.ScanPlanning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Scans are planned by reading the manifest files for the current snapshot. Deleted entries in data and delete manifests (those marked with status "DELETED") are not used in a scan.\n'
+        "\n"
+        "Manifests that contain no matching files, determined using either file counts or partition summaries, may be skipped.\n"
+        "\n"
+        "For each manifest, scan predicates, which filter data rows, are converted to partition predicates, which filter partition tuples. These partition predicates are used to select relevant data files, delete files, and deletion vector metadata. Conversion uses the partition spec that was used to write the manifest file regardless of the current partition spec.\n"
+        "\n"
+        "Scan predicates are converted to partition predicates using an _inclusive projection_: if a scan predicate matches a row, then the partition predicate must match that row’s partition. This is called _inclusive_ [1] because rows that do not match the scan predicate may be included in the scan by the partition predicate.\n"
+        "\n"
+        "For example, an `events` table with a timestamp column named `ts` that is partitioned by `ts_day=day(ts)` is queried by users with ranges over the timestamp column: `ts > X`. The inclusive projection is `ts_day >= day(X)`, which is used to select files that may have matching rows. Note that, in most cases, timestamps just before `X` will be included in the scan because the file contains rows that match the predicate and rows that do not match the predicate.\n"
+        "\n"
+        "The inclusive projection for an unknown partition transform is _true_ because the partition field is ignored and not used in filtering.\n"
+        "\n"
+        "Scan predicates are also used to filter data and delete files using column bounds and counts that are stored by field id in manifests. The same filter logic can be used for both data and delete files because both store metrics of the rows either inserted or deleted. If metrics show that a delete file has no rows that match a scan predicate, it may be ignored just as a data file would be ignored [2].\n"
+        "\n"
+        "Data files that match the query filter must be read by the scan. \n"
+        "\n"
+        'Note that for any snapshot, all file paths marked with "ADDED" or "EXISTING" may appear at most once across all manifest files in the snapshot. If a file path appears more than once, the results of the scan are undefined. Reader implementations may raise an error in this case, but are not required to do so.\n'
+        "\n"
+        "\n"
+        "Delete files and deletion vector metadata that match the filters must be applied to data files at read time, limited by the following scope rules.\n"
+        "\n"
+        "* A deletion vector must be applied to a data file when all of the following are true:\n"
+        "    - The data file's `file_path` is equal to the deletion vector's `referenced_data_file`\n"
+        "    - The data file's data sequence number is _less than or equal to_ the deletion vector's data sequence number\n"
+        "    - The data file's partition (both spec and partition values) is equal [4] to the deletion vector's partition\n"
+        "* A _position_ delete file must be applied to a data file when all of the following are true:\n"
+        "    - The data file's `file_path` is equal to the delete file's `referenced_data_file` if it is non-null\n"
+        "    - The data file's data sequence number is _less than or equal to_ the delete file's data sequence number\n"
+        "    - The data file's partition (both spec and partition values) is equal [4] to the delete file's partition\n"
+        "    - There is no deletion vector that must be applied to the data file (when added, such a vector must contain all deletes from existing position delete files)\n"
+        "* An _equality_ delete file must be applied to a data file when all of the following are true:\n"
+        "    - The data file's data sequence number is _strictly less than_ the delete's data sequence number\n"
+        "    - The data file's partition (both spec id and partition values) is equal [4] to the delete file's partition _or_ the delete file's partition spec is unpartitioned\n"
+        "\n"
+        "In general, deletes are applied only to data files that are older and in the same partition, except for two special cases:\n"
+        "\n"
+        "* Equality delete files stored with an unpartitioned spec are applied as global deletes. Otherwise, delete files do not apply to files in other partitions.\n"
+        "* Position deletes (vectors and files) must be applied to data files from the same commit, when the data and delete file data sequence numbers are equal. This allows deleting rows that were added in the same commit.\n"
+        "\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. An alternative, *strict projection*, creates a partition predicate that will match a file if all of the rows in the file must match the scan predicate. These projections are used to calculate the residual predicates for each file in a scan.\n"
+        "2. For example, if `file_a` has rows with `id` between 1 and 10 and a delete file contains rows with `id` between 1 and 4, a scan for `id = 9` may ignore the delete file because none of the deletes can match a row that will be selected.\n"
+        '3. Floating point partition values are considered equal if their IEEE 754 floating-point "single format" bit layout are equal with NaNs normalized to have only the the most significant mantissa bit set (the equivalent of calling `Float.floatToIntBits` or `Double.doubleToLongBits` in Java). The Avro specification requires all floating point values to be encoded in this format.\n'
+        "4. Unknown partition transforms do not affect partition equality. Although partition fields with unknown transforms are ignored for filtering, the result of an unknown transform is still used when testing whether partition values are equal.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.11.1",
+)
+
+RQ_Iceberg_SnapshotReferences = Requirement(
+    name="RQ.Iceberg.SnapshotReferences",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Iceberg tables keep track of branches and tags using snapshot references. \n"
+        "Tags are labels for individual snapshots. Branches are mutable named references that can be updated by committing a new snapshot as the branch's referenced snapshot using the [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry) procedures.\n"
+        "\n"
+        "The snapshot reference object records all the information of a reference including snapshot ID, reference type and [Snapshot Retention Policy](#snapshot-retention-policy).\n"
+        "\n"
+        "| v1         | v2         | Field name                   | Type      | Description |\n"
+        "| ---------- | ---------- | ---------------------------- | --------- | ----------- |\n"
+        "| _required_ | _required_ | **`snapshot-id`**            | `long`    | A reference's snapshot ID. The tagged snapshot or latest snapshot of a branch. |\n"
+        "| _required_ | _required_ | **`type`**                   | `string`  | Type of the reference, `tag` or `branch` |\n"
+        "| _optional_ | _optional_ | **`min-snapshots-to-keep`**  | `int`     | For `branch` type only, a positive number for the minimum number of snapshots to keep in a branch while expiring snapshots. Defaults to table property `history.expire.min-snapshots-to-keep`. |\n"
+        "| _optional_ | _optional_ | **`max-snapshot-age-ms`**    | `long`    | For `branch` type only, a positive number for the max age of snapshots to keep when expiring, including the latest snapshot. Defaults to table property `history.expire.max-snapshot-age-ms`. |\n"
+        "| _optional_ | _optional_ | **`max-ref-age-ms`**         | `long`    | For snapshot references except the `main` branch, a positive number for the max age of the snapshot reference to keep while expiring snapshots. Defaults to table property `history.expire.max-ref-age-ms`. The `main` branch never expires. |\n"
+        "\n"
+        "Valid snapshot references are stored as the values of the `refs` map in table metadata. For serialization, see Appendix C.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.12.1",
+)
+
+RQ_Iceberg_SnapshotRetentionPolicy = Requirement(
+    name="RQ.Iceberg.SnapshotRetentionPolicy",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table snapshots expire and are removed from metadata to allow removed or replaced data files to be physically deleted.\n"
+        "The snapshot expiration procedure removes snapshots from table metadata and applies the table's retention policy.\n"
+        "Retention policy can be configured both globally and on snapshot reference through properties `min-snapshots-to-keep`, `max-snapshot-age-ms` and `max-ref-age-ms`.\n"
+        "\n"
+        "When expiring snapshots, retention policies in table and snapshot references are evaluated in the following way:\n"
+        "\n"
+        "1. Start with an empty set of snapshots to retain\n"
+        "2. Remove any refs (other than main) where the referenced snapshot is older than `max-ref-age-ms`\n"
+        "3. For each branch and tag, add the referenced snapshot to the retained set\n"
+        "4. For each branch, add its ancestors to the retained set until:\n"
+        "    1. The snapshot is older than `max-snapshot-age-ms`, AND\n"
+        "    2. The snapshot is not one of the first `min-snapshots-to-keep` in the branch (including the branch's referenced snapshot)\n"
+        "5. Expire any snapshot not in the set of snapshots to retain.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.13.1",
+)
+
+RQ_Iceberg_TableMetadata = Requirement(
+    name="RQ.Iceberg.TableMetadata",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table metadata is stored as JSON. Each table metadata change creates a new table metadata file that is committed by an atomic operation. This operation is used to ensure that a new version of table metadata replaces the version on which it was based. This produces a linear history of table versions and ensures that concurrent writes are not lost.\n"
+        "\n"
+        "The atomic operation used to commit metadata depends on how tables are tracked and is not standardized by this spec. See the sections below for examples.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.14.1",
+)
+
+RQ_Iceberg_TableMetadata_Fields = Requirement(
+    name="RQ.Iceberg.TableMetadata.Fields",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table metadata consists of the following fields:\n"
+        "\n"
+        "| v1         | v2         | v3         | Field                       | Description                                                                                                                                                                                                                                                                                                                                                                                      |\n"
+        "| ---------- | ---------- |------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| _required_ | _required_ | _required_ | **`format-version`**        | An integer version number for the format. Currently, this can be 1 or 2 based on the spec. Implementations must throw an exception if a table's version is higher than the supported version.                                                                                                                                                                                                    |\n"
+        "| _optional_ | _required_ | _required_ | **`table-uuid`**            | A UUID that identifies the table, generated when the table is created. Implementations must throw an exception if a table's UUID does not match the expected UUID after refreshing metadata.                                                                                                                                                                                                     |\n"
+        "| _required_ | _required_ | _required_ | **`location`**              | The table's base location. This is used by writers to determine where to store data files, manifest files, and table metadata files.                                                                                                                                                                                                                                                             |\n"
+        "|            | _required_ | _required_ | **`last-sequence-number`**  | The table's highest assigned sequence number, a monotonically increasing long that tracks the order of snapshots in a table.                                                                                                                                                                                                                                                                     |\n"
+        "| _required_ | _required_ | _required_ | **`last-updated-ms`**       | Timestamp in milliseconds from the unix epoch when the table was last updated. Each table metadata file should update this field just before writing.                                                                                                                                                                                                                                            |\n"
+        "| _required_ | _required_ | _required_ | **`last-column-id`**        | An integer; the highest assigned column ID for the table. This is used to ensure columns are always assigned an unused ID when evolving schemas.                                                                                                                                                                                                                                                 |\n"
+        "| _required_ |            |            | **`schema`**                | The table’s current schema. (**Deprecated**: use `schemas` and `current-schema-id` instead)                                                                                                                                                                                                                                                                                                      |\n"
+        "| _optional_ | _required_ | _required_ | **`schemas`**               | A list of schemas, stored as objects with `schema-id`.                                                                                                                                                                                                                                                                                                                                           |\n"
+        "| _optional_ | _required_ | _required_ | **`current-schema-id`**     | ID of the table's current schema.                                                                                                                                                                                                                                                                                                                                                                |\n"
+        "| _required_ |            |            | **`partition-spec`**        | The table’s current partition spec, stored as only fields. Note that this is used by writers to partition data, but is not used when reading because reads use the specs stored in manifest files. (**Deprecated**: use `partition-specs` and `default-spec-id` instead)                                                                                                                         |\n"
+        "| _optional_ | _required_ | _required_ | **`partition-specs`**       | A list of partition specs, stored as full partition spec objects.                                                                                                                                                                                                                                                                                                                                |\n"
+        '| _optional_ | _required_ | _required_ | **`default-spec-id`**       | ID of the "current" spec that writers should use by default.                                                                                                                                                                                                                                                                                                                                     |\n'
+        "| _optional_ | _required_ | _required_ | **`last-partition-id`**     | An integer; the highest assigned partition field ID across all partition specs for the table. This is used to ensure partition fields are always assigned an unused ID when evolving specs.                                                                                                                                                                                                      |\n"
+        "| _optional_ | _optional_ | _optional_ | **`properties`**            | A string to string map of table properties. This is used to control settings that affect reading and writing and is not intended to be used for arbitrary metadata. For example, `commit.retry.num-retries` is used to control the number of commit retries.                                                                                                                                     |\n"
+        "| _optional_ | _optional_ | _optional_ | **`current-snapshot-id`**   | `long` ID of the current table snapshot; must be the same as the current ID of the `main` branch in `refs`.                                                                                                                                                                                                                                                                                      |\n"
+        "| _optional_ | _optional_ | _optional_ | **`snapshots`**             | A list of valid snapshots. Valid snapshots are snapshots for which all data files exist in the file system. A data file must not be deleted from the file system until the last snapshot in which it was listed is garbage collected.                                                                                                                                                            |\n"
+        "| _optional_ | _optional_ | _optional_ | **`snapshot-log`**          | A list (optional) of timestamp and snapshot ID pairs that encodes changes to the current snapshot for the table. Each time the current-snapshot-id is changed, a new entry should be added with the last-updated-ms and the new current-snapshot-id. When snapshots are expired from the list of valid snapshots, all entries before a snapshot that has expired should be removed.              |\n"
+        "| _optional_ | _optional_ | _optional_ | **`metadata-log`**          | A list (optional) of timestamp and metadata file location pairs that encodes changes to the previous metadata files for the table. Each time a new metadata file is created, a new entry of the previous metadata file location should be added to the list. Tables can be configured to remove oldest metadata log entries and keep a fixed-size log of the most recent entries after a commit. |\n"
+        "| _optional_ | _required_ | _required_ | **`sort-orders`**           | A list of sort orders, stored as full sort order objects.                                                                                                                                                                                                                                                                                                                                        |\n"
+        "| _optional_ | _required_ | _required_ | **`default-sort-order-id`** | Default sort order id of the table. Note that this could be used by writers, but is not used when reading because reads use the specs stored in manifest files.                                                                                                                                                                                                                                  |\n"
+        "|            | _optional_ | _optional_ | **`refs`**                  | A map of snapshot references. The map keys are the unique snapshot reference names in the table, and the map values are snapshot reference objects. There is always a `main` branch reference pointing to the `current-snapshot-id` even if the `refs` map is null.                                                                                                                              |\n"
+        "| _optional_ | _optional_ | _optional_ | **`statistics`**            | A list (optional) of [table statistics](#table-statistics).                                                                                                                                                                                                                                                                                                                                      |\n"
+        "| _optional_ | _optional_ | _optional_ | **`partition-statistics`**  | A list (optional) of [partition statistics](#partition-statistics).                                                                                                                                                                                                                                                                                                                              |\n"
+        "|            |            | _optional_ | **`row-lineage`**           | A boolean, defaulting to false, setting whether or not to track the creation and updates to rows in the table. See [Row Lineage](#row-lineage).                                                                                                                                                                                                                                                  |\n"
+        "|            |            | _optional_ | **`next-row-id`**           | A value higher than all assigned row IDs; the next snapshot's `first-row-id`. See [Row Lineage](#row-lineage).                                                                                                                                                                                                                                                                                   |\n"
+        "\n"
+        "For serialization details, see Appendix C.\n"
+        "\n"
+        "When a new snapshot is added, the table's `next-row-id` should be updated to the previous `next-row-id` plus the sum of `record_count` for all data files added in the snapshot (this is also equal to the sum of `added_rows_count` for all manifests added in the snapshot). This ensures that `next-row-id` is always higher than any assigned row ID in the table.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.14.2.1",
+)
+
+RQ_Iceberg_TableMetadata_TableStatistics = Requirement(
+    name="RQ.Iceberg.TableMetadata.TableStatistics",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table statistics files are valid [Puffin files](puffin-spec.md). Statistics are informational. A reader can choose to\n"
+        "ignore statistics information. Statistics support is not required to read the table correctly. A table can contain\n"
+        "many statistics files associated with different table snapshots.\n"
+        "\n"
+        "Statistics files metadata within `statistics` table metadata field is a struct with the following fields:\n"
+        "\n"
+        "| v1 | v2 | Field name | Type | Description |\n"
+        "|----|----|------------|------|-------------|\n"
+        "| _required_ | _required_ | **`snapshot-id`** | `string` | ID of the Iceberg table's snapshot the statistics file is associated with. |\n"
+        "| _required_ | _required_ | **`statistics-path`** | `string` | Path of the statistics file. See [Puffin file format](puffin-spec.md). |\n"
+        "| _required_ | _required_ | **`file-size-in-bytes`** | `long` | Size of the statistics file. |\n"
+        "| _required_ | _required_ | **`file-footer-size-in-bytes`** | `long` | Total size of the statistics file's footer (not the footer payload size). See [Puffin file format](puffin-spec.md) for footer definition. |\n"
+        "| _optional_ | _optional_ | **`key-metadata`** | Base64-encoded implementation-specific key metadata for encryption. |\n"
+        "| _required_ | _required_ | **`blob-metadata`** | `list<blob metadata>` (see below) | A list of the blob metadata for statistics contained in the file with structure described below. |\n"
+        "\n"
+        "Blob metadata is a struct with the following fields:\n"
+        "\n"
+        "| v1 | v2 | Field name | Type | Description |\n"
+        "|----|----|------------|------|-------------|\n"
+        "| _required_ | _required_ | **`type`** | `string` | Type of the blob. Matches Blob type in the Puffin file. |\n"
+        "| _required_ | _required_ | **`snapshot-id`** | `long` | ID of the Iceberg table's snapshot the blob was computed from. |\n"
+        "| _required_ | _required_ | **`sequence-number`** | `long` | Sequence number of the Iceberg table's snapshot the blob was computed from. |\n"
+        "| _required_ | _required_ | **`fields`** | `list<integer>` | Ordered list of fields, given by field ID, on which the statistic was calculated. |\n"
+        "| _optional_ | _optional_ | **`properties`** | `map<string, string>` | Additional properties associated with the statistic. Subset of Blob properties in the Puffin file. |\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.14.3.1",
+)
+
+RQ_Iceberg_TableMetadata_PartitionStatistics = Requirement(
+    name="RQ.Iceberg.TableMetadata.PartitionStatistics",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Partition statistics files are based on [partition statistics file spec](#partition-statistics-file). \n"
+        "Partition statistics are not required for reading or planning and readers may ignore them.\n"
+        "Each table snapshot may be associated with at most one partition statistics file.\n"
+        "A writer can optionally write the partition statistics file during each write operation, or it can also be computed on demand.\n"
+        "Partition statistics file must be registered in the table metadata file to be considered as a valid statistics file for the reader.\n"
+        "\n"
+        "`partition-statistics` field of table metadata is an optional list of structs with the following fields:\n"
+        "\n"
+        "| v1 | v2 | Field name | Type | Description |\n"
+        "|----|----|------------|------|-------------|\n"
+        "| _required_ | _required_ | **`snapshot-id`** | `long` | ID of the Iceberg table's snapshot the partition statistics file is associated with. |\n"
+        "| _required_ | _required_ | **`statistics-path`** | `string` | Path of the partition statistics file. See [Partition statistics file](#partition-statistics-file). |\n"
+        "| _required_ | _required_ | **`file-size-in-bytes`** | `long` | Size of the partition statistics file. |\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.14.4.1",
+)
+
+RQ_Iceberg_CommitConflictResolutionAndRetry = Requirement(
+    name="RQ.Iceberg.CommitConflictResolutionAndRetry",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When two commits happen at the same time and are based on the same version, only one commit will succeed. In most cases, the failed commit can be applied to the new current version of table metadata and retried. Updates verify the conditions under which they can be applied to a new version and retry if those conditions are met.\n"
+        "\n"
+        "*   Append operations have no requirements and can always be applied.\n"
+        "*   Replace operations must verify that the files that will be deleted are still in the table. Examples of replace operations include format changes (replace an Avro file with a Parquet file) and compactions (several files are replaced with a single file that contains the same rows).\n"
+        "*   Delete operations must verify that specific files to delete are still in the table. Delete operations based on expressions can always be applied (e.g., where timestamp < X).\n"
+        "*   Table schema updates and partition spec changes must validate that the schema has not changed between the base version and the current version.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.15.1",
+)
+
+RQ_Iceberg_CommitConflictResolutionAndRetry_FileSystemTables = Requirement(
+    name="RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "_Note: This file system based scheme to commit a metadata file is **deprecated** and will be removed in version 4 of this spec. The scheme is **unsafe** in object stores and local file systems._\n"
+        "\n"
+        "An atomic swap can be implemented using atomic rename in file systems that support it, like HDFS [1].\n"
+        "\n"
+        "Each version of table metadata is stored in a metadata folder under the table’s base location using a file naming scheme that includes a version number, `V`: `v<V>.metadata.json`. To commit a new metadata version, `V+1`, the writer performs the following steps:\n"
+        "\n"
+        "1. Read the current table metadata version `V`.\n"
+        "2. Create new table metadata based on version `V`.\n"
+        "3. Write the new table metadata to a unique file: `<random-uuid>.metadata.json`.\n"
+        "4. Rename the unique file to the well-known file for version `V`: `v<V+1>.metadata.json`.\n"
+        "    1. If the rename succeeds, the commit succeeded and `V+1` is the table’s current version\n"
+        "    2. If the rename fails, go back to step 1.\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. The file system table scheme is implemented in [HadoopTableOperations](../javadoc/{{ icebergVersion }}/org/apache/iceberg/hadoop/HadoopTableOperations.html).\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.15.2.1",
+)
+
+RQ_Iceberg_CommitConflictResolutionAndRetry_MetastoreTables = Requirement(
+    name="RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The atomic swap needed to commit new versions of table metadata can be implemented by storing a pointer in a metastore or database that is updated with a check-and-put operation [1]. The check-and-put validates that the version of the table that a write is based on is still current and then makes the new metadata from the write the current version.\n"
+        "\n"
+        "Each version of table metadata is stored in a metadata folder under the table’s base location using a naming scheme that includes a version and UUID: `<V>-<random-uuid>.metadata.json`. To commit a new metadata version, `V+1`, the writer performs the following steps:\n"
+        "\n"
+        "1. Create a new table metadata file based on the current metadata.\n"
+        "2. Write the new table metadata to a unique file: `<V+1>-<random-uuid>.metadata.json`.\n"
+        "3. Request that the metastore swap the table’s metadata pointer from the location of `V` to the location of `V+1`.\n"
+        "    1. If the swap succeeds, the commit succeeded. `V` was still the latest metadata version and the metadata file for `V+1` is now the current metadata.\n"
+        "    2. If the swap fails, another writer has already created `V+1`. The current writer goes back to step 1.\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. The metastore table scheme is partly implemented in [BaseMetastoreTableOperations](../javadoc/{{ icebergVersion }}/org/apache/iceberg/BaseMetastoreTableOperations.html).\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.15.3.1",
+)
+
+RQ_Iceberg_DeleteFormats = Requirement(
+    name="RQ.Iceberg.DeleteFormats",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "This section details how to encode row-level deletes in Iceberg delete files. Row-level deletes are added by v2 and are not supported in v1. Deletion vectors are added in v3 and are not supported in v2 or earlier. Position delete files must not be added to v3 tables, but existing position delete files are valid.\n"
+        "\n"
+        "There are three types of row-level deletes:\n"
+        "\n"
+        "* Deletion vectors (DVs) identify deleted rows within a single referenced data file by position in a bitmap\n"
+        "* Position delete files identify deleted rows by file location and row position (**deprecated**)\n"
+        "* Equality delete files identify deleted rows by the value of one or more columns\n"
+        "\n"
+        "Deletion vectors are a binary representation of deletes for a single data file that is more efficient at execution time than position delete files. Unlike equality or position delete files, there can be at most one deletion vector for a given data file in a snapshot. Writers must ensure that there is at most one deletion vector per data file and must merge new deletes with existing vectors or position delete files.\n"
+        "\n"
+        "Row-level delete files (both equality and position delete files) are valid Iceberg data files: files must use valid Iceberg formats, schemas, and column projection. It is recommended that these delete files are written using the table's default file format.\n"
+        "\n"
+        "Row-level delete files and deletion vectors are tracked by manifests. A separate set of manifests is used for delete files and DVs, but the same manifest schema is used for both data and delete manifests. Deletion vectors are tracked individually by file location, offset, and length within the containing file. Deletion vector metadata must include the referenced data file.\n"
+        "\n"
+        "Both position and equality delete files allow encoding deleted row values with a delete. This can be used to reconstruct a stream of changes to a table.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.16.1",
+)
+
+RQ_Iceberg_DeleteFormats_DeleteVectors = Requirement(
+    name="RQ.Iceberg.DeleteFormats.DeleteVectors",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Deletion vectors identify deleted rows of a file by encoding deleted positions in a bitmap. A set bit at position P indicates that the row at position P is deleted.\n"
+        "\n"
+        "These vectors are stored using the `deletion-vector-v1` blob definition from the [Puffin spec][puffin-spec].\n"
+        "\n"
+        'Deletion vectors support positive 64-bit positions, but are optimized for cases where most positions fit in 32 bits by using a collection of 32-bit Roaring bitmaps. 64-bit positions are divided into a 32-bit "key" using the most significant 4 bytes and a 32-bit sub-position using the least significant 4 bytes. For each key in the set of positions, a 32-bit Roaring bitmap is maintained to store a set of 32-bit sub-positions for that key.\n'
+        "\n"
+        "To test whether a certain position is set, its most significant 4 bytes (the key) are used to find a 32-bit bitmap and the least significant 4 bytes (the sub-position) are tested for inclusion in the bitmap. If a bitmap is not found for the key, then it is not set.\n"
+        "\n"
+        "Delete manifests track deletion vectors individually by the containing file location (`file_path`), starting offset of the DV blob (`content_offset`), and total length of the blob (`content_size_in_bytes`). Multiple deletion vectors can be stored in the same file. There are no restrictions on the data files that can be referenced by deletion vectors in the same Puffin file.\n"
+        "\n"
+        "At most one deletion vector is allowed per data file in a snapshot. If a DV is written for a data file, it must replace all previously written position delete files so that when a DV is present, readers can safely ignore matching position delete files.\n"
+        "\n"
+        "\n"
+        "[puffin-spec]: https://iceberg.apache.org/puffin-spec/\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.16.2.1",
+)
+
+RQ_Iceberg_DeleteFormats_PositionDeleteFiles = Requirement(
+    name="RQ.Iceberg.DeleteFormats.PositionDeleteFiles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Position-based delete files identify deleted rows by file and position in one or more data files, and may optionally contain the deleted row.\n"
+        "\n"
+        "_Note: Position delete files are **deprecated** in v3. Existing position deletes must be written to delete vectors when updating the position deletes for a data file._\n"
+        "\n"
+        "A data row is deleted if there is an entry in a position delete file for the row's file and position in the data file, starting at 0.\n"
+        "\n"
+        "Position-based delete files store `file_position_delete`, a struct with the following fields:\n"
+        "\n"
+        "| Field id, name              | Type                       | Description |\n"
+        "|-----------------------------|----------------------------|-------------|\n"
+        "| **`2147483546  file_path`** | `string`                   | Full URI of a data file with FS scheme. This must match the `file_path` of the target data file in a manifest entry |\n"
+        "| **`2147483545  pos`**       | `long`                     | Ordinal position of a deleted row in the target data file identified by `file_path`, starting at `0` |\n"
+        "| **`2147483544  row`**       | `required struct<...>` [1] | Deleted row values. Omit the column when not storing deleted rows. |\n"
+        "\n"
+        "1. When present in the delete file, `row` is required because all delete entries must include the row values.\n"
+        "\n"
+        "When the deleted row column is present, its schema may be any subset of the table schema and must use field ids matching the table.\n"
+        "\n"
+        "To ensure the accuracy of statistics, all delete entries must include row values, or the column must be omitted (this is why the column type is `required`).\n"
+        "\n"
+        "The rows in the delete file must be sorted by `file_path` then `pos` to optimize filtering rows while scanning. \n"
+        "\n"
+        "*  Sorting by `file_path` allows filter pushdown by file in columnar storage formats.\n"
+        "*  Sorting by `pos` allows filtering rows while scanning, to avoid keeping deletes in memory.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.16.3.1",
+)
+
+RQ_Iceberg_DeleteFormats_EqualityDeleteFiles = Requirement(
+    name="RQ.Iceberg.DeleteFormats.EqualityDeleteFiles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Equality delete files identify deleted rows in a collection of data files by one or more column values, and may optionally contain additional columns of the deleted row.\n"
+        "\n"
+        "Equality delete files store any subset of a table's columns and use the table's field ids. The _delete columns_ are the columns of the delete file used to match data rows. Delete columns are identified by id in the delete file [metadata column `equality_ids`](#manifests). The column restrictions for columns used in equality delete files are the same as those for [identifier fields](#identifier-field-ids) with the exception that optional columns and columns nested under optional structs are allowed (if a parent struct column is null it implies the leaf column is null).\n"
+        "\n"
+        "A data row is deleted if its values are equal to all delete columns for any row in an equality delete file that applies to the row's data file (see [`Scan Planning`](#scan-planning)).\n"
+        "\n"
+        "Each row of the delete file produces one equality predicate that matches any row where the delete columns are equal. Multiple columns can be thought of as an `AND` of equality predicates. A `null` value in a delete column matches a row if the row's value is `null`, equivalent to `col IS NULL`.\n"
+        "\n"
+        "For example, a table with the following data:\n"
+        "\n"
+        "```text\n"
+        " 1: id | 2: category | 3: name\n"
+        "-------|-------------|---------\n"
+        " 1     | marsupial   | Koala\n"
+        " 2     | toy         | Teddy\n"
+        " 3     | NULL        | Grizzly\n"
+        " 4     | NULL        | Polar\n"
+        "```\n"
+        "\n"
+        "The delete `id = 3` could be written as either of the following equality delete files:\n"
+        "\n"
+        "```text\n"
+        "equality_ids=[1]\n"
+        "\n"
+        " 1: id\n"
+        "-------\n"
+        " 3\n"
+        "```\n"
+        "\n"
+        "```text\n"
+        "equality_ids=[1]\n"
+        "\n"
+        " 1: id | 2: category | 3: name\n"
+        "-------|-------------|---------\n"
+        " 3     | NULL        | Grizzly\n"
+        "```\n"
+        "\n"
+        "The delete `id = 4 AND category IS NULL` could be written as the following equality delete file:\n"
+        "\n"
+        "```text\n"
+        "equality_ids=[1, 2]\n"
+        "\n"
+        " 1: id | 2: category | 3: name\n"
+        "-------|-------------|---------\n"
+        " 4     | NULL        | Polar\n"
+        "```\n"
+        "\n"
+        "If a delete column in an equality delete file is later dropped from the table, it must still be used when applying the equality deletes. If a column was added to a table and later used as a delete column in an equality delete file, the column value is read for older data files using normal projection rules (defaults to `null`).\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.16.4.1",
+)
+
+RQ_Iceberg_DeleteFormats_DeleteFileStats = Requirement(
+    name="RQ.Iceberg.DeleteFormats.DeleteFileStats",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Manifests hold the same statistics for delete files and data files. For delete files, the metrics describe the values that were deleted.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.16.5.1",
+)
+
+RQ_Iceberg_Avro = Requirement(
+    name="RQ.Iceberg.Avro",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "**Data Type Mappings**\n"
+        "\n"
+        "Values should be stored in Avro using the Avro types and logical type annotations in the table below.\n"
+        "\n"
+        "Optional fields, array elements, and map values must be wrapped in an Avro `union` with `null`. This is the only union type allowed in Iceberg data files.\n"
+        "\n"
+        "Optional fields must always set the Avro field default value to null.\n"
+        "\n"
+        "Maps with non-string keys must use an array representation with the `map` logical type. The array representation or Avro’s map type may be used for maps with string keys.\n"
+        "\n"
+        "|Type|Avro type|Notes|\n"
+        "|--- |--- |--- |\n"
+        "|**`unknown`**|`null` or omitted||\n"
+        "|**`boolean`**|`boolean`||\n"
+        "|**`int`**|`int`||\n"
+        "|**`long`**|`long`||\n"
+        "|**`float`**|`float`||\n"
+        "|**`double`**|`double`||\n"
+        '|**`decimal(P,S)`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": minBytesRequired(P),`<br />&nbsp;&nbsp;`"logicalType": "decimal",`<br />&nbsp;&nbsp;`"precision": P,`<br />&nbsp;&nbsp;`"scale": S }`|Stored as fixed using the minimum number of bytes for the given precision.|\n'
+        '|**`date`**|`{ "type": "int",`<br />&nbsp;&nbsp;`"logicalType": "date" }`|Stores days from 1970-01-01.|\n'
+        '|**`time`**|`{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "time-micros" }`|Stores microseconds from midnight.|\n'
+        '|**`timestamp`**      | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-micros",`<br />&nbsp;&nbsp;`"adjust-to-utc": false }` | Stores microseconds from 1970-01-01 00:00:00.000000. [1]            |\n'
+        '|**`timestamptz`**    | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-micros",`<br />&nbsp;&nbsp;`"adjust-to-utc": true }`  | Stores microseconds from 1970-01-01 00:00:00.000000 UTC. [1]        |\n'
+        '|**`timestamp_ns`**   | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-nanos",`<br />&nbsp;&nbsp;`"adjust-to-utc": false }`  | Stores nanoseconds from 1970-01-01 00:00:00.000000000. [1], [2]     |\n'
+        '|**`timestamptz_ns`** | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-nanos",`<br />&nbsp;&nbsp;`"adjust-to-utc": true }`   | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC. [1], [2] |\n'
+        "|**`string`**|`string`||\n"
+        '|**`uuid`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": 16,`<br />&nbsp;&nbsp;`"logicalType": "uuid" }`||\n'
+        '|**`fixed(L)`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": L }`||\n'
+        "|**`binary`**|`bytes`||\n"
+        "|**`struct`**|`record`||\n"
+        "|**`list`**|`array`||\n"
+        "|**`map`**|`array` of key-value records, or `map` when keys are strings (optional).|Array storage must use logical type name `map` and must store elements that are 2-field records. The first field is a non-null key and the second field is the value.|\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Avro type annotation `adjust-to-utc` is an Iceberg convention; default value is `false` if not present.\n"
+        "2. Avro logical type `timestamp-nanos` is an Iceberg convention; the Avro specification does not define this type.\n"
+        "\n"
+        "\n"
+        "**Field IDs**\n"
+        "\n"
+        "Iceberg struct, list, and map types identify nested types by ID. When writing data to Avro files, these IDs must be stored in the Avro schema to support ID-based column pruning.\n"
+        "\n"
+        "IDs are stored as JSON integers in the following locations:\n"
+        "\n"
+        "|ID|Avro schema location|Property|Example|\n"
+        "|--- |--- |--- |--- |\n"
+        '|**Struct field**|Record field object|`field-id`|`{ "type": "record", ...`<br />&nbsp;&nbsp;`"fields": [`<br />&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "l",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": ["null", "long"],`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"default": null,`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 8 }`<br />&nbsp;&nbsp;`] }`|\n'
+        '|**List element**|Array schema object|`element-id`|`{ "type": "array",`<br />&nbsp;&nbsp;`"items": "int",`<br />&nbsp;&nbsp;`"element-id": 9 }`|\n'
+        '|**String map key**|Map schema object|`key-id`|`{ "type": "map",`<br />&nbsp;&nbsp;`"values": "int",`<br />&nbsp;&nbsp;`"key-id": 10,`<br />&nbsp;&nbsp;`"value-id": 11 }`|\n'
+        "|**String map value**|Map schema object|`value-id`||\n"
+        '|**Map key, value**|Key, value fields in the element record.|`field-id`|`{ "type": "array",`<br />&nbsp;&nbsp;`"logicalType": "map",`<br />&nbsp;&nbsp;`"items": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"type": "record",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"name": "k12_v13",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"fields": [`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "key",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": "int",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 12 },`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "value",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": "string",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 13 }`<br />&nbsp;&nbsp;&nbsp;&nbsp;`] } }`|\n'
+        "\n"
+        "Note that the string map case is for maps where the key type is a string. Using Avro’s map type in this case is optional. Maps with string keys may be stored as arrays.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.1.1",
+)
+
+RQ_Iceberg_Parquet = Requirement(
+    name="RQ.Iceberg.Parquet",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "**Data Type Mappings**\n"
+        "\n"
+        "Values should be stored in Parquet using the types and logical type annotations in the table below. Column IDs are required to be stored as [field IDs](http://github.com/apache/parquet-format/blob/40699d05bd24181de6b1457babbee2c16dce3803/src/main/thrift/parquet.thrift#L459) on the parquet schema.\n"
+        "\n"
+        "Lists must use the [3-level representation](https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#lists).\n"
+        "\n"
+        "| Type               | Parquet physical type                                              | Logical type                                | Notes                                                          |\n"
+        "|--------------------|--------------------------------------------------------------------|---------------------------------------------|----------------------------------------------------------------|\n"
+        "| **`unknown`**      | None                                                               |                                             | Omit from data files                                           |\n"
+        "| **`boolean`**      | `boolean`                                                          |                                             |                                                                |\n"
+        "| **`int`**          | `int`                                                              |                                             |                                                                |\n"
+        "| **`long`**         | `long`                                                             |                                             |                                                                |\n"
+        "| **`float`**        | `float`                                                            |                                             |                                                                |\n"
+        "| **`double`**       | `double`                                                           |                                             |                                                                |\n"
+        "| **`decimal(P,S)`** | `P <= 9`: `int32`,<br />`P <= 18`: `int64`,<br />`fixed` otherwise | `DECIMAL(P,S)`                              | Fixed must use the minimum number of bytes that can store `P`. |\n"
+        "| **`date`**         | `int32`                                                            | `DATE`                                      | Stores days from 1970-01-01.                                   |\n"
+        "| **`time`**         | `int64`                                                            | `TIME_MICROS` with `adjustToUtc=false`      | Stores microseconds from midnight.                             |\n"
+        "| **`timestamp`**    | `int64`                                                            | `TIMESTAMP_MICROS` with `adjustToUtc=false` | Stores microseconds from 1970-01-01 00:00:00.000000.           |\n"
+        "| **`timestamptz`**  | `int64`                                                            | `TIMESTAMP_MICROS` with `adjustToUtc=true`  | Stores microseconds from 1970-01-01 00:00:00.000000 UTC.       |\n"
+        "| **`timestamp_ns`**   | `int64`                                                          | `TIMESTAMP_NANOS` with `adjustToUtc=false`  | Stores nanoseconds from 1970-01-01 00:00:00.000000000.         |\n"
+        "| **`timestamptz_ns`** | `int64`                                                          | `TIMESTAMP_NANOS` with `adjustToUtc=true`   | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC.     |\n"
+        "| **`string`**       | `binary`                                                           | `UTF8`                                      | Encoding must be UTF-8.                                        |\n"
+        "| **`uuid`**         | `fixed_len_byte_array[16]`                                         | `UUID`                                      |                                                                |\n"
+        "| **`fixed(L)`**     | `fixed_len_byte_array[L]`                                          |                                             |                                                                |\n"
+        "| **`binary`**       | `binary`                                                           |                                             |                                                                |\n"
+        "| **`struct`**       | `group`                                                            |                                             |                                                                |\n"
+        "| **`list`**         | `3-level list`                                                     | `LIST`                                      | See Parquet docs for 3-level representation.                   |\n"
+        "| **`map`**          | `3-level map`                                                      | `MAP`                                       | See Parquet docs for 3-level representation.                   |\n"
+        "\n"
+        "\n"
+        "When reading an `unknown` column, any corresponding column must be ignored and replaced with `null` values.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.2.1",
+)
+
+RQ_Iceberg_ORC = Requirement(
+    name="RQ.Iceberg.ORC",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "**Data Type Mappings**\n"
+        "\n"
+        "| Type               | ORC type            | ORC type attributes                                  | Notes                                                                                   |\n"
+        "|--------------------|---------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------|\n"
+        "| **`unknown`**      | None                |                                                      | Omit from data files                                                                    |\n"
+        "| **`boolean`**      | `boolean`           |                                                      |                                                                                         |\n"
+        "| **`int`**          | `int`               |                                                      | ORC `tinyint` and `smallint` would also map to **`int`**.                               |\n"
+        "| **`long`**         | `long`              |                                                      |                                                                                         |\n"
+        "| **`float`**        | `float`             |                                                      |                                                                                         |\n"
+        "| **`double`**       | `double`            |                                                      |                                                                                         |\n"
+        "| **`decimal(P,S)`** | `decimal`           |                                                      |                                                                                         |\n"
+        "| **`date`**         | `date`              |                                                      |                                                                                         |\n"
+        "| **`time`**         | `long`              | `iceberg.long-type`=`TIME`                           | Stores microseconds from midnight.                                                      |\n"
+        "| **`timestamp`**    | `timestamp`         | `iceberg.timestamp-unit`=`MICROS`                    | Stores microseconds from 2015-01-01 00:00:00.000000. [1], [2]                           |\n"
+        "| **`timestamptz`**  | `timestamp_instant` | `iceberg.timestamp-unit`=`MICROS`                    | Stores microseconds from 2015-01-01 00:00:00.000000 UTC. [1], [2]                       |\n"
+        "| **`timestamp_ns`** | `timestamp`         | `iceberg.timestamp-unit`=`NANOS`                     | Stores nanoseconds from 2015-01-01 00:00:00.000000000. [1]                              |\n"
+        "| **`timestamptz_ns`** | `timestamp_instant` | `iceberg.timestamp-unit`=`NANOS`                   | Stores nanoseconds from 2015-01-01 00:00:00.000000000 UTC. [1]                          |\n"
+        "| **`string`**       | `string`            |                                                      | ORC `varchar` and `char` would also map to **`string`**.                                |\n"
+        "| **`uuid`**         | `binary`            | `iceberg.binary-type`=`UUID`                         |                                                                                         |\n"
+        "| **`fixed(L)`**     | `binary`            | `iceberg.binary-type`=`FIXED` & `iceberg.length`=`L` | The length would not be checked by the ORC reader and should be checked by the adapter. |\n"
+        "| **`binary`**       | `binary`            |                                                      |                                                                                         |\n"
+        "| **`struct`**       | `struct`            |                                                      |                                                                                         |\n"
+        "| **`list`**         | `array`             |                                                      |                                                                                         |\n"
+        "| **`map`**          | `map`               |                                                      |                                                                                         |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. ORC's [TimestampColumnVector](https://orc.apache.org/api/hive-storage-api/org/apache/hadoop/hive/ql/exec/vector/TimestampColumnVector.html) consists of a time field (milliseconds since epoch) and a nanos field (nanoseconds within the second). Hence the milliseconds within the second are reported twice; once in the time field and again in the nanos field. The read adapter should only use milliseconds within the second from one of these fields. The write adapter should also report milliseconds within the second twice; once in the time field and again in the nanos field. ORC writer is expected to correctly consider millis information from one of the fields. More details at https://issues.apache.org/jira/browse/ORC-546\n"
+        "2. ORC `timestamp` and `timestamp_instant` values store nanosecond precision. Iceberg ORC writers for Iceberg types `timestamp` and `timestamptz` **must** truncate nanoseconds to microseconds. `iceberg.timestamp-unit` is assumed to be `MICROS` if not present.\n"
+        "\n"
+        "One of the interesting challenges with this is how to map Iceberg’s schema evolution (id based) on to ORC’s (name based). In theory, we could use Iceberg’s column ids as the column and field names, but that would be inconvenient.\n"
+        "\n"
+        'The column IDs must be stored in ORC type attributes using the key `iceberg.id`, and `iceberg.required` to store `"true"` if the Iceberg column is required, otherwise it will be optional.\n'
+        "\n"
+        "Iceberg would build the desired reader schema with their schema evolution rules and pass that down to the ORC reader, which would then use its schema evolution to map that to the writer’s schema. Basically, Iceberg would need to change the names of columns and fields to get the desired mapping.\n"
+        "\n"
+        "|Iceberg writer|ORC writer|Iceberg reader|ORC reader|\n"
+        "|--- |--- |--- |--- |\n"
+        "|`struct<a (1): int, b (2): string>`|`struct<a: int, b: string>`|`struct<a (2): string, c (3): date>`|`struct<b: string, c: date>`|\n"
+        "|`struct<a (1): struct<b (2): string, c (3): date>>`|`struct<a: struct<b:string, c:date>>`|`struct<aa (1): struct<cc (3): date, bb (2): string>>`|`struct<a: struct<c:date, b:string>>`|\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.3.1",
+)
+
+RQ_Iceberg_32bitHash = Requirement(
+    name="RQ.Iceberg.32bitHash",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The 32-bit hash implementation is 32-bit Murmur3 hash, x86 variant, seeded with 0.\n"
+        "\n"
+        "| Primitive type     | Hash specification                        | Test value                                 |\n"
+        "|--------------------|-------------------------------------------|--------------------------------------------|\n"
+        "| **`int`**          | `hashLong(long(v))`\t\t\t[1]          | `34` ￫ `2017239379`                        |\n"
+        "| **`long`**         | `hashBytes(littleEndianBytes(v))`         | `34L` ￫ `2017239379`                       |\n"
+        "| **`decimal(P,S)`** | `hashBytes(minBigEndian(unscaled(v)))`[2] | `14.20` ￫ `-500754589`                     |\n"
+        "| **`date`**         | `hashInt(daysFromUnixEpoch(v))`           | `2017-11-16` ￫ `-653330422`                |\n"
+        "| **`time`**         | `hashLong(microsecsFromMidnight(v))`      | `22:31:08` ￫ `-662762989`                  |\n"
+        "| **`timestamp`**    | `hashLong(microsecsFromUnixEpoch(v))`     | `2017-11-16T22:31:08` ￫ `-2047944441`<br />`2017-11-16T22:31:08.000001` ￫ `-1207196810` |\n"
+        "| **`timestamptz`**  | `hashLong(microsecsFromUnixEpoch(v))`     | `2017-11-16T14:31:08-08:00` ￫ `-2047944441`<br />`2017-11-16T14:31:08.000001-08:00` ￫ `-1207196810` |\n"
+        "| **`timestamp_ns`** | `hashLong(microsecsFromUnixEpoch(v))` [3] | `2017-11-16T22:31:08` ￫ `-2047944441`<br />`2017-11-16T22:31:08.000001001` ￫ `-1207196810` |\n"
+        "| **`timestamptz_ns`** | `hashLong(microsecsFromUnixEpoch(v))` [3]| `2017-11-16T14:31:08-08:00` ￫ `-2047944441`<br />`2017-11-16T14:31:08.000001001-08:00` ￫ `-1207196810` |\n"
+        "| **`string`**       | `hashBytes(utf8Bytes(v))`                 | `iceberg` ￫ `1210000089`                   |\n"
+        "| **`uuid`**         | `hashBytes(uuidBytes(v))`\t\t[4]      | `f79c3e09-677c-4bbd-a479-3f349cb785e7` ￫ `1488055340`               |\n"
+        "| **`fixed(L)`**     | `hashBytes(v)`                            | `00 01 02 03` ￫ `-188683207`               |\n"
+        "| **`binary`**       | `hashBytes(v)`                            | `00 01 02 03` ￫ `-188683207`               |\n"
+        "\n"
+        "The types below are not currently valid for bucketing, and so are not hashed. However, if that changes and a hash value is needed, the following table shall apply:\n"
+        "\n"
+        "| Primitive type     | Hash specification                        | Test value                                 |\n"
+        "|--------------------|-------------------------------------------|--------------------------------------------|\n"
+        "| **`unknown`**      | always `null`                             |                                            |\n"
+        "| **`boolean`**      | `false: hashInt(0)`, `true: hashInt(1)`   | `true` ￫ `1392991556`                      |\n"
+        "| **`float`**        | `hashLong(doubleToLongBits(double(v))` [5]| `1.0F` ￫ `-142385009`, `0.0F` ￫ `1669671676`, `-0.0F` ￫ `1669671676` |\n"
+        "| **`double`**       | `hashLong(doubleToLongBits(v))`        [5]| `1.0D` ￫ `-142385009`, `0.0D` ￫ `1669671676`, `-0.0D` ￫ `1669671676` |\n"
+        "\n"
+        "Notes:\n"
+        "\n"
+        "1. Integer and long hash results must be identical for all integer values. This ensures that schema evolution does not change bucket partition values if integer types are promoted.\n"
+        "2. Decimal values are hashed using the minimum number of bytes required to hold the unscaled value as a two’s complement big-endian; this representation does not include padding bytes required for storage in a fixed-length array.\n"
+        "Hash results are not dependent on decimal scale, which is part of the type, not the data value.\n"
+        "3. Nanosecond timestamps must be converted to microsecond precision before hashing to ensure timestamps have the same hash value.\n"
+        "4. UUIDs are encoded using big endian. The test UUID for the example above is: `f79c3e09-677c-4bbd-a479-3f349cb785e7`. This UUID encoded as a byte array is:\n"
+        "`F7 9C 3E 09 67 7C 4B BD A4 79 3F 34 9C B7 85 E7`\n"
+        "5. `doubleToLongBits` must give the IEEE 754 compliant bit representation of the double value. All `NaN` bit patterns must be canonicalized to `0x7ff8000000000000L`. Negative zero (`-0.0`) must be canonicalized to positive zero (`0.0`). Float hash values are the result of hashing the float cast to double to ensure that schema evolution does not change hash values if float types are promoted.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="9.1",
+)
+
+RQ_Iceberg_JSONSerialization = Requirement(
+    name="RQ.Iceberg.JSONSerialization",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("\n"),
+    link=None,
+    level=2,
+    num="10.1",
+)
+
+RQ_Iceberg_JSONSerialization_PartitionSpecs = Requirement(
+    name="RQ.Iceberg.JSONSerialization.PartitionSpecs",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Partition specs are serialized as a JSON object with the following fields:\n"
+        "\n"
+        "|Field|JSON representation|Example|\n"
+        "|--- |--- |--- |\n"
+        "|**`spec-id`**|`JSON int`|`0`|\n"
+        '|**`fields`**|`JSON list: [`<br />&nbsp;&nbsp;`<partition field JSON>,`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"source-id": 4,`<br />&nbsp;&nbsp;`"field-id": 1000,`<br />&nbsp;&nbsp;`"name": "ts_day",`<br />&nbsp;&nbsp;`"transform": "day"`<br />`}, {`<br />&nbsp;&nbsp;`"source-id": 1,`<br />&nbsp;&nbsp;`"field-id": 1001,`<br />&nbsp;&nbsp;`"name": "id_bucket",`<br />&nbsp;&nbsp;`"transform": "bucket[16]"`<br />`} ]`|\n'
+        "\n"
+        "Each partition field in `fields` is stored as a JSON object with the following properties.\n"
+        "\n"
+        "| V1       | V2       | V3       | Field            | JSON representation | Example      |\n"
+        "|----------|----------|----------|------------------|---------------------|--------------|\n"
+        "| required | required | omitted  | **`source-id`**  | `JSON int`          | 1            |\n"
+        "| optional | optional | required | **`source-ids`** | `JSON list of ints` | `[1,2]`      |\n"
+        "|          | required | required | **`field-id`**   | `JSON int`          | 1000         |\n"
+        "| required | required | required | **`name`**       | `JSON string`       | `id_bucket`  |\n"
+        "| required | required | required | **`transform`**  | `JSON string`       | `bucket[16]` |\n"
+        "\n"
+        "Supported partition transforms are listed below.\n"
+        "\n"
+        "|Transform or Field|JSON representation|Example|\n"
+        "|--- |--- |--- |\n"
+        '|**`identity`**|`JSON string: "identity"`|`"identity"`|\n'
+        '|**`bucket[N]`**|`JSON string: "bucket[<N>]"`|`"bucket[16]"`|\n'
+        '|**`truncate[W]`**|`JSON string: "truncate[<W>]"`|`"truncate[20]"`|\n'
+        '|**`year`**|`JSON string: "year"`|`"year"`|\n'
+        '|**`month`**|`JSON string: "month"`|`"month"`|\n'
+        '|**`day`**|`JSON string: "day"`|`"day"`|\n'
+        '|**`hour`**|`JSON string: "hour"`|`"hour"`|\n'
+        "\n"
+        "In some cases partition specs are stored using only the field list instead of the object format that includes the spec ID, like the deprecated `partition-spec` field in table metadata. The object format should be used unless otherwise noted in this spec.\n"
+        "\n"
+        "The `field-id` property was added for each partition field in v2. In v1, the reference implementation assigned field ids sequentially in each spec starting at 1,000. See Partition Evolution for more details.\n"
+        "\n"
+        "In v3 metadata, writers must use only `source-ids` because v3 requires reader support for multi-arg transforms. In v1 and v2 metadata, writers must always write `source-id`; for multi-arg transforms, writers must produce `source-ids` and set `source-id` to the first ID from the field ID list.\n"
+        "\n"
+        "Older versions of the reference implementation can read tables with transforms unknown to it, ignoring them. But other implementations may break if they encounter unknown transforms. All v3 readers are required to read tables with unknown transforms, ignoring them. Writers should not write using partition specs that use unknown transforms.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="10.3.1",
+)
+
+RQ_Iceberg_JSONSerialization_SortOrders = Requirement(
+    name="RQ.Iceberg.JSONSerialization.SortOrders",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Sort orders are serialized as a list of JSON object, each of which contains the following fields:\n"
+        "\n"
+        "|Field|JSON representation|Example|\n"
+        "|--- |--- |--- |\n"
+        "|**`order-id`**|`JSON int`|`1`|\n"
+        '|**`fields`**|`JSON list: [`<br />&nbsp;&nbsp;`<sort field JSON>,`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`  "transform": "identity",`<br />&nbsp;&nbsp;`  "source-id": 2,`<br />&nbsp;&nbsp;`  "direction": "asc",`<br />&nbsp;&nbsp;`  "null-order": "nulls-first"`<br />&nbsp;&nbsp;`}, {`<br />&nbsp;&nbsp;`  "transform": "bucket[4]",`<br />&nbsp;&nbsp;`  "source-id": 3,`<br />&nbsp;&nbsp;`  "direction": "desc",`<br />&nbsp;&nbsp;`  "null-order": "nulls-last"`<br />`} ]`|\n'
+        "\n"
+        "Each sort field in the fields list is stored as an object with the following properties:\n"
+        "\n"
+        "| V1       | V2       | V3       | Field            | JSON representation | Example     |\n"
+        "|----------|----------|----------|------------------|---------------------|-------------|\n"
+        "| required | required | required | **`transform`**  | `JSON string`       | `bucket[4]` |\n"
+        "| required | required | omitted  | **`source-id`**  | `JSON int`          | 1           |\n"
+        "|          |          | required | **`source-ids`** | `JSON list of ints` | `[1,2]`     |\n"
+        "| required | required | required | **`direction`**  | `JSON string`       | `asc`       |\n"
+        "| required | required | required | **`null-order`** | `JSON string`       | `nulls-last`|\n"
+        "\n"
+        "In v3 metadata, writers must use only `source-ids` because v3 requires reader support for multi-arg transforms. In v1 and v2 metadata, writers must always write `source-id`; for multi-arg transforms, writers must produce `source-ids` and set `source-id` to the first ID from the field ID list.\n"
+        "\n"
+        "Older versions of the reference implementation can read tables with transforms unknown to it, ignoring them. But other implementations may break if they encounter unknown transforms. All v3 readers are required to read tables with unknown transforms, ignoring them.\n"
+        "\n"
+        "The following table describes the possible values for the some of the field within sort field: \n"
+        "\n"
+        "|Field|JSON representation|Possible values|\n"
+        "|--- |--- |--- |\n"
+        '|**`direction`**|`JSON string`|`"asc", "desc"`|\n'
+        '|**`null-order`**|`JSON string`|`"nulls-first", "nulls-last"`|\n'
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="10.4.1",
+)
+
+RQ_Iceberg_JSONSerialization_TableMetadataAndSnapshots = Requirement(
+    name="RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Table metadata is serialized as a JSON object according to the following table. Snapshots are not serialized separately. Instead, they are stored in the table metadata JSON.\n"
+        "\n"
+        "|Metadata field|JSON representation|Example|\n"
+        "|--- |--- |--- |\n"
+        "|**`format-version`**|`JSON int`|`1`|\n"
+        '|**`table-uuid`**|`JSON string`|`"fb072c92-a02b-11e9-ae9c-1bb7bc9eca94"`|\n'
+        '|**`location`**|`JSON string`|`"s3://b/wh/data.db/table"`|\n'
+        "|**`last-updated-ms`**|`JSON long`|`1515100955770`|\n"
+        "|**`last-column-id`**|`JSON int`|`22`|\n"
+        "|**`schema`**|`JSON schema (object)`|`See above, read schemas instead`|\n"
+        "|**`schemas`**|`JSON schemas (list of objects)`|`See above`|\n"
+        "|**`current-schema-id`**|`JSON int`|`0`|\n"
+        "|**`partition-spec`**|`JSON partition fields (list)`|`See above, read partition-specs instead`|\n"
+        "|**`partition-specs`**|`JSON partition specs (list of objects)`|`See above`|\n"
+        "|**`default-spec-id`**|`JSON int`|`0`|\n"
+        "|**`last-partition-id`**|`JSON int`|`1000`|\n"
+        '|**`properties`**|`JSON object: {`<br />&nbsp;&nbsp;`"<key>": "<val>",`<br />&nbsp;&nbsp;`...`<br />`}`|`{`<br />&nbsp;&nbsp;`"write.format.default": "avro",`<br />&nbsp;&nbsp;`"commit.retry.num-retries": "4"`<br />`}`|\n'
+        "|**`current-snapshot-id`**|`JSON long`|`3051729675574597004`|\n"
+        '|**`snapshots`**|`JSON list of objects: [ {`<br />&nbsp;&nbsp;`"snapshot-id": <id>,`<br />&nbsp;&nbsp;`"timestamp-ms": <timestamp-in-ms>,`<br />&nbsp;&nbsp;`"summary": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"operation": <operation>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`... },`<br />&nbsp;&nbsp;`"manifest-list": "<location>",`<br />&nbsp;&nbsp;`"schema-id": "<id>"`<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"snapshot-id": 3051729675574597004,`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100955770,`<br />&nbsp;&nbsp;`"summary": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"operation": "append"`<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`"manifest-list": "s3://b/wh/.../s1.avro"`<br />&nbsp;&nbsp;`"schema-id": 0`<br />`} ]`|\n'
+        '|**`snapshot-log`**|`JSON list of objects: [`<br />&nbsp;&nbsp;`{`<br />&nbsp;&nbsp;`"snapshot-id": ,`<br />&nbsp;&nbsp;`"timestamp-ms": `<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"snapshot-id": 30517296...,`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100...`<br />`} ]`|\n'
+        '|**`metadata-log`**|`JSON list of objects: [`<br />&nbsp;&nbsp;`{`<br />&nbsp;&nbsp;`"metadata-file": ,`<br />&nbsp;&nbsp;`"timestamp-ms": `<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"metadata-file": "s3://bucket/.../v1.json",`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100...`<br />`} ]` |\n'
+        "|**`sort-orders`**|`JSON sort orders (list of sort field object)`|`See above`|\n"
+        "|**`default-sort-order-id`**|`JSON int`|`0`|\n"
+        '|**`refs`**|`JSON map with string key and object value:`<br />`{`<br />&nbsp;&nbsp;`"<name>": {`<br />&nbsp;&nbsp;`"snapshot-id": <id>,`<br />&nbsp;&nbsp;`"type": <type>,`<br />&nbsp;&nbsp;`"max-ref-age-ms": <long>,`<br />&nbsp;&nbsp;`...`<br />&nbsp;&nbsp;`}`<br />&nbsp;&nbsp;`...`<br />`}`|`{`<br />&nbsp;&nbsp;`"test": {`<br />&nbsp;&nbsp;`"snapshot-id": 123456789000,`<br />&nbsp;&nbsp;`"type": "tag",`<br />&nbsp;&nbsp;`"max-ref-age-ms": 10000000`<br />&nbsp;&nbsp;`}`<br />`}`|\n'
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="10.5.1",
+)
+
+RQ_Iceberg_JSONSerialization_NameMappingSerialization = Requirement(
+    name="RQ.Iceberg.JSONSerialization.NameMappingSerialization",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Name mapping is serialized as a list of field mapping JSON Objects which are serialized as follows\n"
+        "\n"
+        "|Field mapping field|JSON representation|Example|\n"
+        "|--- |--- |--- |\n"
+        '|**`names`**|`JSON list of strings`|`["latitude", "lat"]`|\n'
+        "|**`field-id`**|`JSON int`|`1`|\n"
+        '|**`fields`**|`JSON field mappings (list of objects)`|`[{ `<br />&nbsp;&nbsp;`"field-id": 4,`<br />&nbsp;&nbsp;`"names": ["latitude", "lat"]`<br />`}, {`<br />&nbsp;&nbsp;`"field-id": 5,`<br />&nbsp;&nbsp;`"names": ["longitude", "long"]`<br />`}]`|\n'
+        "\n"
+        "Example\n"
+        "```json\n"
+        '[ { "field-id": 1, "names": ["id", "record_id"] },\n'
+        '   { "field-id": 2, "names": ["data"] },\n'
+        '   { "field-id": 3, "names": ["location"], "fields": [\n'
+        '       { "field-id": 4, "names": ["latitude", "lat"] },\n'
+        '       { "field-id": 5, "names": ["longitude", "long"] }\n'
+        "     ] } ]\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="10.6.1",
+)
+
+RQ_Iceberg_SingleValueSerialization = Requirement(
+    name="RQ.Iceberg.SingleValueSerialization",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("\n"),
+    link=None,
+    level=2,
+    num="11.1",
+)
+
+RQ_Iceberg_SingleValueSerialization_Binary = Requirement(
+    name="RQ.Iceberg.SingleValueSerialization.Binary",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "This serialization scheme is for storing single values as individual binary values in the lower and upper bounds maps of manifest files.\n"
+        "\n"
+        "| Type                         | Binary serialization                                                                                         |\n"
+        "|------------------------------|--------------------------------------------------------------------------------------------------------------|\n"
+        "| **`unknown`**                | Not supported                                                                                                |\n"
+        "| **`boolean`**                | `0x00` for false, non-zero byte for true                                                                     |\n"
+        "| **`int`**                    | Stored as 4-byte little-endian                                                                               |\n"
+        "| **`long`**                   | Stored as 8-byte little-endian                                                                               |\n"
+        "| **`float`**                  | Stored as 4-byte little-endian                                                                               |\n"
+        "| **`double`**                 | Stored as 8-byte little-endian                                                                               |\n"
+        "| **`date`**                   | Stores days from the 1970-01-01 in an 4-byte little-endian int                                               |\n"
+        "| **`time`**                   | Stores microseconds from midnight in an 8-byte little-endian long                                            |\n"
+        "| **`timestamp`**              | Stores microseconds from 1970-01-01 00:00:00.000000 in an 8-byte little-endian long                          |\n"
+        "| **`timestamptz`**            | Stores microseconds from 1970-01-01 00:00:00.000000 UTC in an 8-byte little-endian long                      |\n"
+        "| **`timestamp_ns`**           | Stores nanoseconds from 1970-01-01 00:00:00.000000000 in an 8-byte little-endian long                        |\n"
+        "| **`timestamptz_ns`**         | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC in an 8-byte little-endian long                    |\n"
+        "| **`string`**                 | UTF-8 bytes (without length)                                                                                 |\n"
+        "| **`uuid`**                   | 16-byte big-endian value, see example in Appendix B                                                          |\n"
+        "| **`fixed(L)`**               | Binary value                                                                                                 |\n"
+        "| **`binary`**                 | Binary value (without length)                                                                                |\n"
+        "| **`decimal(P, S)`**          | Stores unscaled value as two’s-complement big-endian binary, using the minimum number of bytes for the value |\n"
+        "| **`struct`**                 | Not supported                                                                                                |\n"
+        "| **`list`**                   | Not supported                                                                                                |\n"
+        "| **`map`**                    | Not supported                                                                                                |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="11.2.1",
+)
+
+RQ_Iceberg_SingleValueSerialization_JSON = Requirement(
+    name="RQ.Iceberg.SingleValueSerialization.JSON",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        " Single values are serialized as JSON by type according to the following table:\n"
+        "\n"
+        "| Type               | JSON representation                       | Example                                    | Description                                                                                                                 |\n"
+        "| ------------------ | ----------------------------------------- | ------------------------------------------ | -- |\n"
+        "| **`boolean`**      | **`JSON boolean`**                        | `true`                                     | |\n"
+        "| **`int`**          | **`JSON int`**                            | `34`                                       | |\n"
+        "| **`long`**         | **`JSON long`**                           | `34`                                       | |\n"
+        "| **`float`**        | **`JSON number`**                         | `1.0`                                      | |\n"
+        "| **`double`**       | **`JSON number`**                         | `1.0`                                      | |\n"
+        '| **`decimal(P,S)`** | **`JSON string`**                         | `"14.20"`, `"2E+20"`                       | Stores the string representation of the decimal value, specifically, for values with a positive scale, the number of digits to the right of the decimal point is used to indicate scale, for values with a negative scale, the scientific notation is used and the exponent must equal the negated scale |\n'
+        '| **`date`**         | **`JSON string`**                         | `"2017-11-16"`                             | Stores ISO-8601 standard date |\n'
+        '| **`time`**         | **`JSON string`**                         | `"22:31:08.123456"`                        | Stores ISO-8601 standard time with microsecond precision |\n'
+        '| **`timestamp`**    | **`JSON string`**                         | `"2017-11-16T22:31:08.123456"`             | Stores ISO-8601 standard timestamp with microsecond precision; must not include a zone offset |\n'
+        "| **`timestamptz`**  | **`JSON string`**                         | `\"2017-11-16T22:31:08.123456+00:00\"`       | Stores ISO-8601 standard timestamp with microsecond precision; must include a zone offset and it must be '+00:00' |\n"
+        '| **`timestamp_ns`** | **`JSON string`**                         | `"2017-11-16T22:31:08.123456789"`          | Stores ISO-8601 standard timestamp with nanosecond precision; must not include a zone offset |\n'
+        "| **`timestamptz_ns`** | **`JSON string`**                       | `\"2017-11-16T22:31:08.123456789+00:00\"`    | Stores ISO-8601 standard timestamp with nanosecond precision; must include a zone offset and it must be '+00:00' |\n"
+        '| **`string`**       | **`JSON string`**                         | `"iceberg"`                                | |\n'
+        '| **`uuid`**         | **`JSON string`**                         | `"f79c3e09-677c-4bbd-a479-3f349cb785e7"`   | Stores the lowercase uuid string |\n'
+        '| **`fixed(L)`**     | **`JSON string`**                         | `"000102ff"`                               | Stored as a hexadecimal string |\n'
+        '| **`binary`**       | **`JSON string`**                         | `"000102ff"`                               | Stored as a hexadecimal string |\n'
+        '| **`struct`**       | **`JSON object by field ID`**             | `{"1": 1, "2": "bar"}`                     | Stores struct fields using the field ID as the JSON field name; field values are stored using this JSON single-value format |\n'
+        "| **`list`**         | **`JSON array of values`**                | `[1, 2, 3]`                                | Stores a JSON array of values that are serialized using this JSON single-value format |\n"
+        '| **`map`**          | **`JSON object of key and value arrays`** | `{ "keys": ["a", "b"], "values": [1, 2] }` | Stores arrays of keys and values; individual keys and values are serialized using this JSON single-value format |\n'
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="11.3.1",
+)
+
+RQ_Iceberg_FormatVersionChanges_Version3 = Requirement(
+    name="RQ.Iceberg.FormatVersionChanges.Version3",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Default values are added to struct fields in v3.\n"
+        "\n"
+        "* The `write-default` is a forward-compatible change because it is only used at write time. Old writers will fail because the field is missing.\n"
+        "* Tables with `initial-default` will be read correctly by older readers if `initial-default` is always null for optional fields. Otherwise, old readers will default optional columns with null. Old readers will fail to read required fields which are populated by `initial-default` because that default is not supported.\n"
+        "\n"
+        "Types `unknown`, `timestamp_ns`, and `timestamptz_ns` are added in v3.\n"
+        "\n"
+        "All readers are required to read tables with unknown partition transforms, ignoring the unsupported partition fields when filtering.\n"
+        "\n"
+        "Writing v3 metadata:\n"
+        "\n"
+        "* Partition Field and Sort Field JSON:\n"
+        "    * `source-ids` was added and is required\n"
+        "    * `source-id` is no longer required and should be omitted; always use `source-ids` instead\n"
+        "\n"
+        "Reading v1 or v2 metadata for v3:\n"
+        "\n"
+        "* Partition Field and Sort Field JSON:\n"
+        "    * `source-ids` should default to a single-value list of the value of `source-id`\n"
+        "\n"
+        "Writing v1 or v2 metadata:\n"
+        "\n"
+        "* Partition Field and Sort Field JSON:\n"
+        "    * For a single-arg transform, `source-id` should be written; if `source-ids` is also written it should be a single-element list of `source-id`\n"
+        "    * For multi-arg transforms, `source-ids` should be written; `source-id` should be set to the first element of `source-ids`\n"
+        "\n"
+        "Row-level delete changes:\n"
+        "\n"
+        "* Deletion vectors are added in v3, stored using the Puffin `deletion-vector-v1` blob type\n"
+        "* Manifests are updated to track deletion vectors:\n"
+        "    * `referenced_data_file` was added and can be used for both deletion vectors (required) and v2 position delete files that contain deletes for only one data file (optional)\n"
+        "    * `content_offset` was added and must match the deletion vector blob's offset in a Puffin file\n"
+        "    * `content_size_in_bytes` was added and must match the deletion vector blob's length in a Puffin file\n"
+        "* Deletion vectors are maintained synchronously: Writers must merge DVs (and older position delete files) to ensure there is at most one DV per data file\n"
+        "    * Readers can safely ignore position delete files if there is a DV for a data file\n"
+        "* Writers are not allowed to add new position delete files to v3 tables\n"
+        "* Existing position delete files are valid in tables that have been upgraded from v2\n"
+        "    * These position delete files must be merged into the DV for a data file when one is created\n"
+        "    * Position delete files that contain deletes for more than one data file need to be kept in table metadata until all deletes are replaced by DVs\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.1.1",
+)
+
+RQ_Iceberg_FormatVersionChanges_Version2 = Requirement(
+    name="RQ.Iceberg.FormatVersionChanges.Version2",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Writing v1 metadata:\n"
+        "\n"
+        "* Table metadata field `last-sequence-number` should not be written\n"
+        "* Snapshot field `sequence-number` should not be written\n"
+        "* Manifest list field `sequence-number` should not be written\n"
+        "* Manifest list field `min-sequence-number` should not be written\n"
+        "* Manifest list field `content` must be 0 (data) or omitted\n"
+        "* Manifest entry field `sequence_number` should not be written\n"
+        "* Manifest entry field `file_sequence_number` should not be written\n"
+        "* Data file field `content` must be 0 (data) or omitted\n"
+        "\n"
+        "Reading v1 metadata for v2:\n"
+        "\n"
+        "* Table metadata field `last-sequence-number` must default to 0\n"
+        "* Snapshot field `sequence-number` must default to 0\n"
+        "* Manifest list field `sequence-number` must default to 0\n"
+        "* Manifest list field `min-sequence-number` must default to 0\n"
+        "* Manifest list field `content` must default to 0 (data)\n"
+        "* Manifest entry field `sequence_number` must default to 0\n"
+        "* Manifest entry field `file_sequence_number` must default to 0\n"
+        "* Data file field `content` must default to 0 (data)\n"
+        "\n"
+        "Writing v2 metadata:\n"
+        "\n"
+        "* Table metadata JSON:\n"
+        "    * `last-sequence-number` was added and is required; default to 0 when reading v1 metadata\n"
+        "    * `table-uuid` is now required\n"
+        "    * `current-schema-id` is now required\n"
+        "    * `schemas` is now required\n"
+        "    * `partition-specs` is now required\n"
+        "    * `default-spec-id` is now required\n"
+        "    * `last-partition-id` is now required\n"
+        "    * `sort-orders` is now required\n"
+        "    * `default-sort-order-id` is now required\n"
+        "    * `schema` is no longer required and should be omitted; use `schemas` and `current-schema-id` instead\n"
+        "    * `partition-spec` is no longer required and should be omitted; use `partition-specs` and `default-spec-id` instead\n"
+        "* Snapshot JSON:\n"
+        "    * `sequence-number` was added and is required; default to 0 when reading v1 metadata\n"
+        "    * `manifest-list` is now required\n"
+        "    * `manifests` is no longer required and should be omitted; always use `manifest-list` instead\n"
+        "* Manifest list `manifest_file`:\n"
+        "    * `content` was added and is required; 0=data, 1=deletes; default to 0 when reading v1 manifest lists\n"
+        "    * `sequence_number` was added and is required\n"
+        "    * `min_sequence_number` was added and is required\n"
+        "    * `added_files_count` is now required\n"
+        "    * `existing_files_count` is now required\n"
+        "    * `deleted_files_count` is now required\n"
+        "    * `added_rows_count` is now required\n"
+        "    * `existing_rows_count` is now required\n"
+        "    * `deleted_rows_count` is now required\n"
+        "* Manifest key-value metadata:\n"
+        "    * `schema-id` is now required\n"
+        "    * `partition-spec-id` is now required\n"
+        "    * `format-version` is now required\n"
+        '    * `content` was added and is required (must be "data" or "deletes")\n'
+        "* Manifest `manifest_entry`:\n"
+        "    * `snapshot_id` is now optional to support inheritance\n"
+        "    * `sequence_number` was added and is optional, to support inheritance\n"
+        "    * `file_sequence_number` was added and is optional, to support inheritance\n"
+        "* Manifest `data_file`:\n"
+        "    * `content` was added and is required; 0=data, 1=position deletes, 2=equality deletes; default to 0 when reading v1 manifests\n"
+        "    * `equality_ids` was added, to be used for equality deletes only\n"
+        "    * `block_size_in_bytes` was removed (breaks v1 reader compatibility)\n"
+        "    * `file_ordinal` was removed\n"
+        "    * `sort_columns` was removed\n"
+        "\n"
+        "Note that these requirements apply when writing data to a v2 table. Tables that are upgraded from v1 may contain metadata that does not follow these requirements. Implementations should remain backward-compatible with v1 metadata requirements.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.2.1",
+)
+
+RQ_Iceberg_PointInTimeReads = Requirement(
+    name="RQ.Iceberg.PointInTimeReads",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'Iceberg supports two types of histories for tables. A history of previous "current snapshots" stored in ["snapshot-log" table metadata](#table-metadata-fields) and [parent-child lineage stored in "snapshots"](#table-metadata-fields). These two histories \n'
+        "might indicate different snapshot IDs for a specific timestamp. The discrepancies can be caused by a variety of table operations (e.g. updating the `current-snapshot-id` can be used to set the snapshot of a table to any arbitrary snapshot, which might have a lineage derived from a table branch or no lineage at all).\n"
+        "\n"
+        "When processing point in time queries implementations should use \"snapshot-log\" metadata to lookup the table state at the given point in time. This ensures time-travel queries reflect the state of the table at the provided timestamp. For example a SQL query like `SELECT * FROM prod.db.table TIMESTAMP AS OF '1986-10-26 01:21:00Z';` would find the snapshot of the Iceberg table just prior to '1986-10-26 01:21:00 UTC' in the snapshot logs and use the metadata from that snapshot to perform the scan of the table. If no  snapshot exists prior to the timestamp given or \"snapshot-log\" is not populated (it is an optional field), then systems should raise an informative error message about the missing metadata.\n"
+    ),
+    link=None,
+    level=3,
+    num="13.1.1",
+)
+
+Apache_Iceberg_Table = Specification(
+    name="Apache Iceberg™ Table",
+    description=None,
+    author=None,
+    date=None,
+    status=None,
+    approved_by=None,
+    approved_date=None,
+    approved_version=None,
+    version=None,
+    group=None,
+    type=None,
+    link=None,
+    uid=None,
+    parent=None,
+    children=None,
+    headings=(
+        Heading(name="License", level=1, num="1"),
+        Heading(name="Table of Contents", level=1, num="2"),
+        Heading(name="Introduction", level=1, num="3"),
+        Heading(name="Format Versioning", level=1, num="4"),
+        Heading(name="RQ.Iceberg.Versioning", level=2, num="4.1"),
+        Heading(name="Version 1: Analytic Data Tables", level=2, num="4.2"),
+        Heading(name="RQ.Iceberg.Versioning.Version1", level=3, num="4.2.1"),
+        Heading(name="Version 2: Row-level Deletes", level=2, num="4.3"),
+        Heading(name="RQ.Iceberg.Versioning.Version2", level=3, num="4.3.1"),
+        Heading(name="Version 3: Extended Types and Capabilities", level=2, num="4.4"),
+        Heading(name="RQ.Iceberg.Versioning.Version3", level=3, num="4.4.1"),
+        Heading(name="Goals", level=1, num="5"),
+        Heading(name="Overview", level=1, num="6"),
+        Heading(name="Optimistic Concurrency", level=2, num="6.1"),
+        Heading(name="RQ.Iceberg.Concurrency", level=3, num="6.1.1"),
+        Heading(name="Sequence Numbers", level=2, num="6.2"),
+        Heading(name="RQ.Iceberg.SequenceNumbers", level=3, num="6.2.1"),
+        Heading(name="Row-level Deletes", level=2, num="6.3"),
+        Heading(name="RQ.Iceberg.RowLevelDeletes", level=3, num="6.3.1"),
+        Heading(name="File System Operations", level=2, num="6.4"),
+        Heading(name="RQ.Iceberg.FileSystemOperations", level=3, num="6.4.1"),
+        Heading(name="Specification", level=1, num="7"),
+        Heading(name="Terms", level=3, num="7.4.1"),
+        Heading(name="Writer requirements", level=3, num="7.4.2"),
+        Heading(name="RQ.Iceberg.WriterRequirements", level=3, num="7.4.3"),
+        Heading(name="Writing data files", level=3, num="7.4.4"),
+        Heading(name="RQ.Iceberg.WritingDataFiles", level=4, num="7.4.4.1"),
+        Heading(name="Schemas and Data Types", level=2, num="7.5"),
+        Heading(name="RQ.Iceberg.SchemasAndDataTypes", level=3, num="7.5.1"),
+        Heading(name="Nested Types", level=3, num="7.5.2"),
+        Heading(name="RQ.Iceberg.NestedTypes", level=4, num="7.5.2.1"),
+        Heading(name="Primitive Types", level=3, num="7.5.3"),
+        Heading(name="RQ.Iceberg.PrimitiveTypes", level=4, num="7.5.3.1"),
+        Heading(name="Default values", level=3, num="7.5.4"),
+        Heading(name="RQ.Iceberg.DefaultValues", level=4, num="7.5.4.1"),
+        Heading(name="Schema Evolution", level=3, num="7.5.5"),
+        Heading(name="RQ.Iceberg.SchemaEvolution", level=4, num="7.5.5.1"),
+        Heading(name="Column Projection", level=4, num="7.5.5.2"),
+        Heading(name="RQ.Iceberg.ColumnProjection", level=5, num="7.5.5.2.1"),
+        Heading(name="Identifier Field IDs", level=3, num="7.5.6"),
+        Heading(name="RQ.Iceberg.IndentifierFieldIDs", level=4, num="7.5.6.1"),
+        Heading(name="Reserved Field IDs", level=3, num="7.5.7"),
+        Heading(name="RQ.Iceberg.ReservedFieldIDs", level=4, num="7.5.7.1"),
+        Heading(name="Row Lineage", level=3, num="7.5.8"),
+        Heading(name="RQ.Iceberg.RowLineage", level=4, num="7.5.8.1"),
+        Heading(name="Row lineage assignment", level=4, num="7.5.8.2"),
+        Heading(name="Row lineage example", level=4, num="7.5.8.3"),
+        Heading(
+            name="Enabling Row Lineage for Non-empty Tables", level=4, num="7.5.8.4"
+        ),
+        Heading(name="Partitioning", level=2, num="7.6"),
+        Heading(name="RQ.Iceberg.Partitioning", level=3, num="7.6.1"),
+        Heading(name="Partition Transforms", level=3, num="7.6.2"),
+        Heading(name="RQ.Iceberg.PartitionTransforms", level=4, num="7.6.2.1"),
+        Heading(name="Bucket Transform Details", level=3, num="7.6.3"),
+        Heading(name="RQ.Iceberg.BucketTransform", level=4, num="7.6.3.1"),
+        Heading(name="Truncate Transform Details", level=3, num="7.6.4"),
+        Heading(name="RQ.Iceberg.TruncateTransform", level=4, num="7.6.4.1"),
+        Heading(name="Partition Evolution", level=3, num="7.6.5"),
+        Heading(name="RQ.Iceberg.PartitionEvolution", level=4, num="7.6.5.1"),
+        Heading(name="Sorting", level=2, num="7.7"),
+        Heading(name="RQ.Iceberg.Sorting", level=3, num="7.7.1"),
+        Heading(name="Manifests", level=2, num="7.8"),
+        Heading(name="RQ.Iceberg.Manifest", level=3, num="7.8.1"),
+        Heading(name="Manifest Entry Fields", level=3, num="7.8.2"),
+        Heading(name="RQ.Iceberg.Manifest.EntryFields", level=4, num="7.8.2.1"),
+        Heading(name="Sequence Number Inheritance", level=3, num="7.8.3"),
+        Heading(
+            name="RQ.Iceberg.Manifest.SequenceNumberInheritance", level=4, num="7.8.3.1"
+        ),
+        Heading(name="First Row ID Inheritance", level=3, num="7.8.4"),
+        Heading(
+            name="RQ.Iceberg.Manifest.FirstRowIDInheritance", level=4, num="7.8.4.1"
+        ),
+        Heading(name="Snapshots", level=2, num="7.9"),
+        Heading(name="RQ.Iceberg.Snapshot", level=3, num="7.9.1"),
+        Heading(name="Snapshot Row IDs", level=3, num="7.9.2"),
+        Heading(name="RQ.Iceberg.Snapshot.RowIDs", level=4, num="7.9.2.1"),
+        Heading(name="Manifest Lists", level=2, num="7.10"),
+        Heading(name="RQ.Iceberg.ManifestList", level=3, num="7.10.1"),
+        Heading(name="First Row ID Assignment", level=3, num="7.10.2"),
+        Heading(
+            name="RQ.Iceberg.ManifestList.FirstRowIDAssignment", level=4, num="7.10.2.1"
+        ),
+        Heading(name="Scan Planning", level=2, num="7.11"),
+        Heading(name="RQ.Iceberg.ScanPlanning", level=3, num="7.11.1"),
+        Heading(name="Snapshot References", level=2, num="7.12"),
+        Heading(name="RQ.Iceberg.SnapshotReferences", level=3, num="7.12.1"),
+        Heading(name="Snapshot Retention Policy", level=2, num="7.13"),
+        Heading(name="RQ.Iceberg.SnapshotRetentionPolicy", level=3, num="7.13.1"),
+        Heading(name="Table Metadata", level=2, num="7.14"),
+        Heading(name="RQ.Iceberg.TableMetadata", level=3, num="7.14.1"),
+        Heading(name="Table Metadata Fields", level=3, num="7.14.2"),
+        Heading(name="RQ.Iceberg.TableMetadata.Fields", level=4, num="7.14.2.1"),
+        Heading(name="Table Statistics", level=3, num="7.14.3"),
+        Heading(
+            name="RQ.Iceberg.TableMetadata.TableStatistics", level=4, num="7.14.3.1"
+        ),
+        Heading(name="Partition Statistics", level=3, num="7.14.4"),
+        Heading(
+            name="RQ.Iceberg.TableMetadata.PartitionStatistics", level=4, num="7.14.4.1"
+        ),
+        Heading(name="Partition Statistics File", level=4, num="7.14.4.2"),
+        Heading(name="Commit Conflict Resolution and Retry", level=2, num="7.15"),
+        Heading(
+            name="RQ.Iceberg.CommitConflictResolutionAndRetry", level=3, num="7.15.1"
+        ),
+        Heading(name="File System Tables", level=3, num="7.15.2"),
+        Heading(
+            name="RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables",
+            level=4,
+            num="7.15.2.1",
+        ),
+        Heading(name="Metastore Tables", level=3, num="7.15.3"),
+        Heading(
+            name="RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables",
+            level=4,
+            num="7.15.3.1",
+        ),
+        Heading(name="Delete Formats", level=2, num="7.16"),
+        Heading(name="RQ.Iceberg.DeleteFormats", level=3, num="7.16.1"),
+        Heading(name="Deletion Vectors", level=3, num="7.16.2"),
+        Heading(name="RQ.Iceberg.DeleteFormats.DeleteVectors", level=4, num="7.16.2.1"),
+        Heading(name="Position Delete Files", level=3, num="7.16.3"),
+        Heading(
+            name="RQ.Iceberg.DeleteFormats.PositionDeleteFiles", level=4, num="7.16.3.1"
+        ),
+        Heading(name="Equality Delete Files", level=3, num="7.16.4"),
+        Heading(
+            name="RQ.Iceberg.DeleteFormats.EqualityDeleteFiles", level=4, num="7.16.4.1"
+        ),
+        Heading(name="Delete File Stats", level=3, num="7.16.5"),
+        Heading(
+            name="RQ.Iceberg.DeleteFormats.DeleteFileStats", level=4, num="7.16.5.1"
+        ),
+        Heading(name="Appendix A: Format-specific Requirements", level=1, num="8"),
+        Heading(name="Avro", level=2, num="8.1"),
+        Heading(name="RQ.Iceberg.Avro", level=3, num="8.1.1"),
+        Heading(name="Parquet", level=2, num="8.2"),
+        Heading(name="RQ.Iceberg.Parquet", level=3, num="8.2.1"),
+        Heading(name="ORC", level=2, num="8.3"),
+        Heading(name="RQ.Iceberg.ORC", level=3, num="8.3.1"),
+        Heading(name="Appendix B: 32-bit Hash Requirements", level=1, num="9"),
+        Heading(name="RQ.Iceberg.32bitHash", level=2, num="9.1"),
+        Heading(name="Appendix C: JSON serialization", level=1, num="10"),
+        Heading(name="RQ.Iceberg.JSONSerialization", level=2, num="10.1"),
+        Heading(name="Schemas", level=2, num="10.2"),
+        Heading(name="Partition Specs", level=2, num="10.3"),
+        Heading(
+            name="RQ.Iceberg.JSONSerialization.PartitionSpecs", level=3, num="10.3.1"
+        ),
+        Heading(name="Sort Orders", level=2, num="10.4"),
+        Heading(name="RQ.Iceberg.JSONSerialization.SortOrders", level=3, num="10.4.1"),
+        Heading(name="Table Metadata and Snapshots", level=2, num="10.5"),
+        Heading(
+            name="RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots",
+            level=3,
+            num="10.5.1",
+        ),
+        Heading(name="Name Mapping Serialization", level=2, num="10.6"),
+        Heading(
+            name="RQ.Iceberg.JSONSerialization.NameMappingSerialization",
+            level=3,
+            num="10.6.1",
+        ),
+        Heading(name="Appendix D: Single-value serialization", level=1, num="11"),
+        Heading(name="RQ.Iceberg.SingleValueSerialization", level=2, num="11.1"),
+        Heading(name="Binary single-value serialization", level=2, num="11.2"),
+        Heading(
+            name="RQ.Iceberg.SingleValueSerialization.Binary", level=3, num="11.2.1"
+        ),
+        Heading(name="JSON single-value serialization", level=2, num="11.3"),
+        Heading(name="RQ.Iceberg.SingleValueSerialization.JSON", level=3, num="11.3.1"),
+        Heading(name="Appendix E: Format version changes", level=1, num="12"),
+        Heading(name="Version 3", level=2, num="12.1"),
+        Heading(name="RQ.Iceberg.FormatVersionChanges.Version3", level=3, num="12.1.1"),
+        Heading(name="Version 2", level=2, num="12.2"),
+        Heading(name="RQ.Iceberg.FormatVersionChanges.Version2", level=3, num="12.2.1"),
+        Heading(name="Appendix F: Implementation Notes", level=1, num="13"),
+        Heading(name="Point in Time Reads (Time Travel)", level=2, num="13.1"),
+        Heading(name="RQ.Iceberg.PointInTimeReads", level=3, num="13.1.1"),
+    ),
+    requirements=(
+        RQ_Iceberg_Versioning,
+        RQ_Iceberg_Versioning_Version1,
+        RQ_Iceberg_Versioning_Version2,
+        RQ_Iceberg_Versioning_Version3,
+        RQ_Iceberg_Concurrency,
+        RQ_Iceberg_SequenceNumbers,
+        RQ_Iceberg_RowLevelDeletes,
+        RQ_Iceberg_FileSystemOperations,
+        RQ_Iceberg_WriterRequirements,
+        RQ_Iceberg_WritingDataFiles,
+        RQ_Iceberg_SchemasAndDataTypes,
+        RQ_Iceberg_NestedTypes,
+        RQ_Iceberg_PrimitiveTypes,
+        RQ_Iceberg_DefaultValues,
+        RQ_Iceberg_SchemaEvolution,
+        RQ_Iceberg_ColumnProjection,
+        RQ_Iceberg_IndentifierFieldIDs,
+        RQ_Iceberg_ReservedFieldIDs,
+        RQ_Iceberg_RowLineage,
+        RQ_Iceberg_Partitioning,
+        RQ_Iceberg_PartitionTransforms,
+        RQ_Iceberg_BucketTransform,
+        RQ_Iceberg_TruncateTransform,
+        RQ_Iceberg_PartitionEvolution,
+        RQ_Iceberg_Sorting,
+        RQ_Iceberg_Manifest,
+        RQ_Iceberg_Manifest_EntryFields,
+        RQ_Iceberg_Manifest_SequenceNumberInheritance,
+        RQ_Iceberg_Manifest_FirstRowIDInheritance,
+        RQ_Iceberg_Snapshot,
+        RQ_Iceberg_Snapshot_RowIDs,
+        RQ_Iceberg_ManifestList,
+        RQ_Iceberg_ManifestList_FirstRowIDAssignment,
+        RQ_Iceberg_ScanPlanning,
+        RQ_Iceberg_SnapshotReferences,
+        RQ_Iceberg_SnapshotRetentionPolicy,
+        RQ_Iceberg_TableMetadata,
+        RQ_Iceberg_TableMetadata_Fields,
+        RQ_Iceberg_TableMetadata_TableStatistics,
+        RQ_Iceberg_TableMetadata_PartitionStatistics,
+        RQ_Iceberg_CommitConflictResolutionAndRetry,
+        RQ_Iceberg_CommitConflictResolutionAndRetry_FileSystemTables,
+        RQ_Iceberg_CommitConflictResolutionAndRetry_MetastoreTables,
+        RQ_Iceberg_DeleteFormats,
+        RQ_Iceberg_DeleteFormats_DeleteVectors,
+        RQ_Iceberg_DeleteFormats_PositionDeleteFiles,
+        RQ_Iceberg_DeleteFormats_EqualityDeleteFiles,
+        RQ_Iceberg_DeleteFormats_DeleteFileStats,
+        RQ_Iceberg_Avro,
+        RQ_Iceberg_Parquet,
+        RQ_Iceberg_ORC,
+        RQ_Iceberg_32bitHash,
+        RQ_Iceberg_JSONSerialization,
+        RQ_Iceberg_JSONSerialization_PartitionSpecs,
+        RQ_Iceberg_JSONSerialization_SortOrders,
+        RQ_Iceberg_JSONSerialization_TableMetadataAndSnapshots,
+        RQ_Iceberg_JSONSerialization_NameMappingSerialization,
+        RQ_Iceberg_SingleValueSerialization,
+        RQ_Iceberg_SingleValueSerialization_Binary,
+        RQ_Iceberg_SingleValueSerialization_JSON,
+        RQ_Iceberg_FormatVersionChanges_Version3,
+        RQ_Iceberg_FormatVersionChanges_Version2,
+        RQ_Iceberg_PointInTimeReads,
+    ),
+    content=r"""
+# Apache Iceberg™ Table
+# Software Requirements Specification
+
+## License
+
+The original source of the specification: https://github.com/apache/iceberg/blob/main/format/spec.md
+
+> Licensed to the Apache Software Foundation (ASF) under one or more
+> contributor license agreements.  See the NOTICE file distributed with
+> this work for additional information regarding copyright ownership.
+> The ASF licenses this file to You under the Apache License, Version 2.0
+> (the "License"); you may not use this file except in compliance with
+> the License.  You may obtain a copy of the License at
+> 
+> http://www.apache.org/licenses/LICENSE-2.0
+> 
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.
+
+## Table of Contents
+
+* 1 [Introduction](#introduction)
+* 2 [Format Versioning](#format-versioning)
+    * 2.1 [RQ.Iceberg.Versioning](#rqicebergversioning)
+    * 2.2 [Version 1: Analytic Data Tables](#version-1-analytic-data-tables)
+        * 2.2.1 [RQ.Iceberg.Versioning.Version1](#rqicebergversioningversion1)
+    * 2.3 [Version 2: Row-level Deletes](#version-2-row-level-deletes)
+        * 2.3.1 [RQ.Iceberg.Versioning.Version2](#rqicebergversioningversion2)
+    * 2.4 [Version 3: Extended Types and Capabilities](#version-3-extended-types-and-capabilities)
+        * 2.4.1 [RQ.Iceberg.Versioning.Version3](#rqicebergversioningversion3)
+* 3 [Goals](#goals)
+* 4 [Overview](#overview)
+    * 4.1 [Optimistic Concurrency](#optimistic-concurrency)
+        * 4.1.1 [RQ.Iceberg.Concurrency](#rqicebergconcurrency)
+    * 4.2 [Sequence Numbers](#sequence-numbers)
+        * 4.2.1 [RQ.Iceberg.SequenceNumbers](#rqicebergsequencenumbers)
+    * 4.3 [Row-level Deletes](#row-level-deletes)
+        * 4.3.1 [RQ.Iceberg.RowLevelDeletes](#rqicebergrowleveldeletes)
+    * 4.4 [File System Operations](#file-system-operations)
+        * 4.4.1 [RQ.Iceberg.FileSystemOperations](#rqicebergfilesystemoperations)
+* 5 [Specification](#specification)
+        * 5.4.1 [Terms](#terms)
+        * 5.4.2 [Writer requirements](#writer-requirements)
+        * 5.4.3 [RQ.Iceberg.WriterRequirements](#rqicebergwriterrequirements)
+        * 5.4.4 [Writing data files](#writing-data-files)
+            * 5.4.4.1 [RQ.Iceberg.WritingDataFiles](#rqicebergwritingdatafiles)
+    * 5.5 [Schemas and Data Types](#schemas-and-data-types)
+        * 5.5.1 [RQ.Iceberg.SchemasAndDataTypes](#rqicebergschemasanddatatypes)
+        * 5.5.2 [Nested Types](#nested-types)
+            * 5.5.2.1 [RQ.Iceberg.NestedTypes](#rqicebergnestedtypes)
+        * 5.5.3 [Primitive Types](#primitive-types)
+            * 5.5.3.1 [RQ.Iceberg.PrimitiveTypes](#rqicebergprimitivetypes)
+        * 5.5.4 [Default values](#default-values)
+            * 5.5.4.1 [RQ.Iceberg.DefaultValues](#rqicebergdefaultvalues)
+        * 5.5.5 [Schema Evolution](#schema-evolution)
+            * 5.5.5.1 [RQ.Iceberg.SchemaEvolution](#rqicebergschemaevolution)
+            * 5.5.5.2 [Column Projection](#column-projection)
+                * 5.5.5.2.1 [RQ.Iceberg.ColumnProjection](#rqicebergcolumnprojection)
+        * 5.5.6 [Identifier Field IDs](#identifier-field-ids)
+            * 5.5.6.1 [RQ.Iceberg.IndentifierFieldIDs](#rqicebergindentifierfieldids)
+        * 5.5.7 [Reserved Field IDs](#reserved-field-ids)
+            * 5.5.7.1 [RQ.Iceberg.ReservedFieldIDs](#rqicebergreservedfieldids)
+        * 5.5.8 [Row Lineage](#row-lineage)
+            * 5.5.8.1 [RQ.Iceberg.RowLineage](#rqicebergrowlineage)
+            * 5.5.8.2 [Row lineage assignment](#row-lineage-assignment)
+            * 5.5.8.3 [Row lineage example](#row-lineage-example)
+            * 5.5.8.4 [Enabling Row Lineage for Non-empty Tables](#enabling-row-lineage-for-non-empty-tables)
+    * 5.6 [Partitioning](#partitioning)
+        * 5.6.1 [RQ.Iceberg.Partitioning](#rqicebergpartitioning)
+        * 5.6.2 [Partition Transforms](#partition-transforms)
+            * 5.6.2.1 [RQ.Iceberg.PartitionTransforms](#rqicebergpartitiontransforms)
+        * 5.6.3 [Bucket Transform Details](#bucket-transform-details)
+            * 5.6.3.1 [RQ.Iceberg.BucketTransform](#rqicebergbuckettransform)
+        * 5.6.4 [Truncate Transform Details](#truncate-transform-details)
+            * 5.6.4.1 [RQ.Iceberg.TruncateTransform](#rqicebergtruncatetransform)
+        * 5.6.5 [Partition Evolution](#partition-evolution)
+            * 5.6.5.1 [RQ.Iceberg.PartitionEvolution](#rqicebergpartitionevolution)
+    * 5.7 [Sorting](#sorting)
+        * 5.7.1 [RQ.Iceberg.Sorting](#rqicebergsorting)
+    * 5.8 [Manifests](#manifests)
+        * 5.8.1 [RQ.Iceberg.Manifest](#rqicebergmanifest)
+        * 5.8.2 [Manifest Entry Fields](#manifest-entry-fields)
+            * 5.8.2.1 [RQ.Iceberg.Manifest.EntryFields](#rqicebergmanifestentryfields)
+        * 5.8.3 [Sequence Number Inheritance](#sequence-number-inheritance)
+            * 5.8.3.1 [RQ.Iceberg.Manifest.SequenceNumberInheritance](#rqicebergmanifestsequencenumberinheritance)
+        * 5.8.4 [First Row ID Inheritance](#first-row-id-inheritance)
+            * 5.8.4.1 [RQ.Iceberg.Manifest.FirstRowIDInheritance](#rqicebergmanifestfirstrowidinheritance)
+    * 5.9 [Snapshots](#snapshots)
+        * 5.9.1 [RQ.Iceberg.Snapshot](#rqicebergsnapshot)
+        * 5.9.2 [Snapshot Row IDs](#snapshot-row-ids)
+            * 5.9.2.1 [RQ.Iceberg.Snapshot.RowIDs](#rqicebergsnapshotrowids)
+    * 5.10 [Manifest Lists](#manifest-lists)
+        * 5.10.1 [RQ.Iceberg.ManifestList](#rqicebergmanifestlist)
+        * 5.10.2 [First Row ID Assignment](#first-row-id-assignment)
+            * 5.10.2.1 [RQ.Iceberg.ManifestList.FirstRowIDAssignment](#rqicebergmanifestlistfirstrowidassignment)
+    * 5.11 [Scan Planning](#scan-planning)
+        * 5.11.2.1 [RQ.Iceberg.ScanPlanning](#rqicebergscanplanning)
+    * 5.12 [Snapshot References](#snapshot-references)
+        * 5.12.1 [RQ.Iceberg.SnapshotReferences](#rqicebergsnapshotreferences)
+    * 5.13 [Snapshot Retention Policy](#snapshot-retention-policy)
+        * 5.13.1 [RQ.Iceberg.SnapshotRetentionPolicy](#rqicebergsnapshotretentionpolicy)
+    * 5.14 [Table Metadata](#table-metadata)
+        * 5.14.1 [RQ.Iceberg.TableMetadata](#rqicebergtablemetadata)
+        * 5.14.2 [Table Metadata Fields](#table-metadata-fields)
+            * 5.14.2.1 [RQ.Iceberg.TableMetadata.Fields](#rqicebergtablemetadatafields)
+        * 5.14.3 [Table Statistics](#table-statistics)
+            * 5.14.3.1 [RQ.Iceberg.TableMetadata.TableStatistics](#rqicebergtablemetadatatablestatistics)
+        * 5.14.4 [Partition Statistics](#partition-statistics)
+            * 5.14.4.1 [RQ.Iceberg.TableMetadata.PartitionStatistics](#rqicebergtablemetadatapartitionstatistics)
+            * 5.14.4.2 [Partition Statistics File](#partition-statistics-file)
+    * 5.15 [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry)
+        * 5.15.1 [RQ.Iceberg.CommitConflictResolutionAndRetry](#rqicebergcommitconflictresolutionandretry)
+        * 5.15.2 [File System Tables](#file-system-tables)
+            * 5.15.2.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables](#rqicebergcommitconflictresolutionandretryfilesystemtables)
+        * 5.15.3 [Metastore Tables](#metastore-tables)
+            * 5.15.3.1 [RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables](#rqicebergcommitconflictresolutionandretrymetastoretables)
+    * 5.16 [Delete Formats](#delete-formats)
+        * 5.16.1 [RQ.Iceberg.DeleteFormats](#rqicebergdeleteformats)
+        * 5.16.2 [Deletion Vectors](#deletion-vectors)
+            * 5.16.2.1 [RQ.Iceberg.DeleteFormats.DeleteVectors](#rqicebergdeleteformatsdeletevectors)
+        * 5.16.3 [Position Delete Files](#position-delete-files)
+            * 5.16.3.1 [RQ.Iceberg.DeleteFormats.PositionDeleteFiles](#rqicebergdeleteformatspositiondeletefiles)
+        * 5.16.4 [Equality Delete Files](#equality-delete-files)
+            * 5.16.4.1 [RQ.Iceberg.DeleteFormats.EqualityDeleteFiles](#rqicebergdeleteformatsequalitydeletefiles)
+        * 5.16.5 [Delete File Stats](#delete-file-stats)
+            * 5.16.5.1 [RQ.Iceberg.DeleteFormats.DeleteFileStats](#rqicebergdeleteformatsdeletefilestats)
+* 6 [Appendix A: Format-specific Requirements](#appendix-a-format-specific-requirements)
+    * 6.1 [Avro](#avro)
+        * 6.1.1 [RQ.Iceberg.Avro](#rqicebergavro)
+    * 6.2 [Parquet](#parquet)
+        * 6.2.1 [RQ.Iceberg.Parquet](#rqicebergparquet)
+    * 6.3 [ORC](#orc)
+        * 6.3.1 [RQ.Iceberg.ORC](#rqicebergorc)
+* 7 [Appendix B: 32-bit Hash Requirements](#appendix-b-32-bit-hash-requirements)
+    * 7.1 [RQ.Iceberg.32bitHash](#rqiceberg32bithash)
+* 8 [Appendix C: JSON serialization](#appendix-c-json-serialization)
+    * 8.1 [RQ.Iceberg.JSONSerialization](#rqicebergjsonserialization)
+    * 8.2 [Schemas](#schemas)
+    * 8.3 [Partition Specs](#partition-specs)
+        * 8.3.1 [RQ.Iceberg.JSONSerialization.PartitionSpecs](#rqicebergjsonserializationpartitionspecs)
+    * 8.4 [Sort Orders](#sort-orders)
+        * 8.4.1 [RQ.Iceberg.JSONSerialization.SortOrders](#rqicebergjsonserializationsortorders)
+    * 8.5 [Table Metadata and Snapshots](#table-metadata-and-snapshots)
+        * 8.5.1 [RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots](#rqicebergjsonserializationtablemetadataandsnapshots)
+    * 8.6 [Name Mapping Serialization](#name-mapping-serialization)
+        * 8.6.1 [RQ.Iceberg.JSONSerialization.NameMappingSerialization](#rqicebergjsonserializationnamemappingserialization)
+* 9 [Appendix D: Single-value serialization](#appendix-d-single-value-serialization)
+    * 9.1 [RQ.Iceberg.SingleValueSerialization](#rqicebergsinglevalueserialization)
+    * 9.2 [Binary single-value serialization](#binary-single-value-serialization)
+        * 9.2.1 [RQ.Iceberg.SingleValueSerialization.Binary](#rqicebergsinglevalueserializationbinary)
+    * 9.3 [JSON single-value serialization](#json-single-value-serialization)
+        * 9.3.1 [RQ.Iceberg.SingleValueSerialization.JSON](#rqicebergsinglevalueserializationjson)
+* 10 [Appendix E: Format version changes](#appendix-e-format-version-changes)
+    * 10.1 [Version 3](#version-3)
+        * 10.1.1 [RQ.Iceberg.FormatVersionChanges.Version3](#rqicebergformatversionchangesversion3)
+    * 10.2 [Version 2](#version-2)
+        * 10.2.1 [RQ.Iceberg.FormatVersionChanges.Version2](#rqicebergformatversionchangesversion2)
+* 11 [Appendix F: Implementation Notes](#appendix-f-implementation-notes)
+    * 11.1 [Point in Time Reads (Time Travel)](#point-in-time-reads-time-travel)
+        * 11.1.1 [RQ.Iceberg.PointInTimeReads](#rqicebergpointintimereads)
+
+## Introduction
+
+This is a specification for the Iceberg table format that is designed to manage a large, slow-changing collection of files in a distributed file system or key-value store as a table.
+
+## Format Versioning
+
+### RQ.Iceberg.Versioning
+version: 1.0
+
+Versions 1 and 2 of the Iceberg spec are complete and adopted by the community.
+
+**Version 3 is under active development and has not been formally adopted.**
+
+The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.
+
+**Version 3 is under active development and has not been formally adopted.**
+
+The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written with an older version of the spec to ensure compatibility by not using features that are not yet implemented by processing engines.
+
+### Version 1: Analytic Data Tables
+
+#### RQ.Iceberg.Versioning.Version1
+version: 1.0
+
+Version 1 of the Iceberg spec defines how to manage large analytic tables using immutable file formats: Parquet, Avro, and ORC.
+
+All version 1 data and metadata files are valid after upgrading a table to version 2. [Appendix E](#version-2) documents how to default version 2 fields when reading version 1 metadata.
+
+### Version 2: Row-level Deletes
+
+#### RQ.Iceberg.Versioning.Version2
+version: 1.0
+
+Version 2 of the Iceberg spec adds row-level updates and deletes for analytic tables with immutable files.
+
+The primary change in version 2 adds delete files to encode rows that are deleted in existing data files. This version can be used to delete or replace individual rows in immutable data files without rewriting the files.
+
+In addition to row-level deletes, version 2 makes some requirements stricter for writers. The full set of changes are listed in [Appendix E](#version-2).
+
+### Version 3: Extended Types and Capabilities
+
+#### RQ.Iceberg.Versioning.Version3
+version: 1.0
+
+Version 3 of the Iceberg spec extends data types and existing metadata structures to add new capabilities:
+
+* New data types: nanosecond timestamp(tz), unknown
+* Default value support for columns
+* Multi-argument transforms for partitioning and sorting
+* Row Lineage tracking
+* Binary deletion vectors
+
+
+## Goals
+
+* **Serializable isolation** -- Reads will be isolated from concurrent writes and always use a committed snapshot of a table’s data. Writes will support removing and adding files in a single operation and are never partially visible. Readers will not acquire locks.
+* **Speed** -- Operations will use O(1) remote calls to plan the files for a scan and not O(n) where n grows with the size of the table, like the number of partitions or files.
+* **Scale** -- Job planning will be handled primarily by clients and not bottleneck on a central metadata store. Metadata will include information needed for cost-based optimization.
+* **Evolution** -- Tables will support full schema and partition spec evolution. Schema evolution supports safe column add, drop, reorder and rename, including in nested structures.
+* **Dependable types** -- Tables will provide well-defined and dependable support for a core set of types.
+* **Storage separation** -- Partitioning will be table configuration. Reads will be planned using predicates on data values, not partition values. Tables will support evolving partition schemes.
+* **Formats** -- Underlying data file formats will support identical schema evolution rules and types. Both read-optimized and write-optimized formats will be available.
+
+## Overview
+
+![Iceberg snapshot structure](https://iceberg.apache.org/assets/images/iceberg-metadata.png)
+
+This table format tracks individual data files in a table instead of directories. This allows writers to create data files in-place and only adds files to the table in an explicit commit.
+
+Table state is maintained in metadata files. All changes to table state create a new metadata file and replace the old metadata with an atomic swap. The table metadata file tracks the table schema, partitioning config, custom properties, and snapshots of the table contents. A snapshot represents the state of a table at some time and is used to access the complete set of data files in the table.
+
+Data files in snapshots are tracked by one or more manifest files that contain a row for each data file in the table, the file's partition data, and its metrics. The data in a snapshot is the union of all files in its manifests. Manifest files are reused across snapshots to avoid rewriting metadata that is slow-changing. Manifests can track data files with any subset of a table and are not associated with partitions.
+
+The manifests that make up a snapshot are stored in a manifest list file. Each manifest list stores metadata about manifests, including partition stats and data file counts. These stats are used to avoid reading manifests that are not required for an operation.
+
+### Optimistic Concurrency
+
+#### RQ.Iceberg.Concurrency
+version: 1.0
+
+An atomic swap of one table metadata file for another provides the basis for serializable isolation. Readers use the snapshot that was current when they load the table metadata and are not affected by changes until they refresh and pick up a new metadata location.
+
+Writers create table metadata files optimistically, assuming that the current version will not be changed before the writer's commit. Once a writer has created an update, it commits by swapping the table’s metadata file pointer from the base version to the new version.
+
+If the snapshot on which an update is based is no longer current, the writer must retry the update based on the new current version. Some operations support retry by re-applying metadata changes and committing, under well-defined conditions. For example, a change that rewrites files can be applied to a new table snapshot if all of the rewritten files are still in the table.
+
+The conditions required by a write to successfully commit determines the isolation level. Writers can select what to validate and can make different isolation guarantees.
+
+### Sequence Numbers
+
+#### RQ.Iceberg.SequenceNumbers
+version: 1.0
+
+The relative age of data and delete files relies on a sequence number that is assigned to every successful commit. When a snapshot is created for a commit, it is optimistically assigned the next sequence number, and it is written into the snapshot's metadata. If the commit fails and must be retried, the sequence number is reassigned and written into new snapshot metadata.
+
+All manifests, data files, and delete files created for a snapshot inherit the snapshot's sequence number. Manifest file metadata in the manifest list stores a manifest's sequence number. New data and metadata file entries are written with `null` in place of a sequence number, which is replaced with the manifest's sequence number at read time. When a data or delete file is written to a new manifest (as "existing"), the inherited sequence number is written to ensure it does not change after it is first inherited.
+
+Inheriting the sequence number from manifest metadata allows writing a new manifest once and reusing it in commit retries. To change a sequence number for a retry, only the manifest list must be rewritten -- which would be rewritten anyway with the latest set of manifests.
+
+
+### Row-level Deletes
+
+#### RQ.Iceberg.RowLevelDeletes
+version: 1.0
+
+Row-level deletes are stored in delete files.
+
+There are two ways to encode a row-level delete:
+
+* [_Position deletes_](#position-delete-files) mark a row deleted by data file path and the row position in the data file
+* [_Equality deletes_](#equality-delete-files) mark a row deleted by one or more column values, like `id = 5`
+
+Like data files, delete files are tracked by partition. In general, a delete file must be applied to older data files with the same partition; see [Scan Planning](#scan-planning) for details. Column metrics can be used to determine whether a delete file's rows overlap the contents of a data file or a scan range.
+
+
+### File System Operations
+
+#### RQ.Iceberg.FileSystemOperations
+version: 1.0
+
+Iceberg only requires that file systems support the following operations:
+
+* **In-place write** -- Files are not moved or altered once they are written.
+* **Seekable reads** -- Data file formats require seek support.
+* **Deletes** -- Tables delete files that are no longer used.
+
+These requirements are compatible with object stores, like S3.
+
+Tables do not require random-access writes. Once written, data and metadata files are immutable until they are deleted.
+
+Tables do not require rename, except for tables that use atomic rename to implement the commit operation for new metadata files.
+
+
+## Specification
+
+#### Terms
+
+* **Schema** -- Names and types of fields in a table.
+* **Partition spec** -- A definition of how partition values are derived from data fields.
+* **Snapshot** -- The state of a table at some point in time, including the set of all data files.
+* **Manifest list** -- A file that lists manifest files; one per snapshot.
+* **Manifest** -- A file that lists data or delete files; a subset of a snapshot.
+* **Data file** -- A file that contains rows of a table.
+* **Delete file** -- A file that encodes rows of a table that are deleted by position or data values.
+
+#### Writer requirements
+
+#### RQ.Iceberg.WriterRequirements
+version: 1.0
+
+Some tables in this spec have columns that specify requirements for tables by version. These requirements are intended for writers when adding metadata files (including manifests files and manifest lists) to a table with the given version.
+
+| Requirement | Write behavior |
+|-------------|----------------|
+| (blank)     | The field should be omitted |
+| _optional_  | The field can be written or omitted |
+| _required_  | The field must be written |
+
+Readers should be more permissive because v1 metadata files are allowed in v2 tables (or later) so that tables can be upgraded to without rewriting the metadata tree. For manifest list and manifest files, this table shows the expected read behavior for later versions:
+
+| v1         | v2         | v2+ read behavior |
+|------------|------------|-------------------|
+|            | _optional_ | Read the field as _optional_ |
+|            | _required_ | Read the field as _optional_; it may be missing in v1 files |
+| _optional_ |            | Ignore the field |
+| _optional_ | _optional_ | Read the field as _optional_ |
+| _optional_ | _required_ | Read the field as _optional_; it may be missing in v1 files |
+| _required_ |            | Ignore the field |
+| _required_ | _optional_ | Read the field as _optional_ |
+| _required_ | _required_ | Fill in a default or throw an exception if the field is missing |
+
+If a later version is not shown, the requirement for a version is not changed from the most recent version shown. For example, v3 uses the same requirements as v2 if a table shows only v1 and v2 requirements.
+
+Readers may be more strict for metadata JSON files because the JSON files are not reused and will always match the table version. Required fields that were not present in or were optional in prior versions may be handled as required fields. For example, a v2 table that is missing `last-sequence-number` can throw an exception.
+
+#### Writing data files
+
+##### RQ.Iceberg.WritingDataFiles
+version: 1.0
+
+All columns must be written to data files even if they introduce redundancy with metadata stored in manifest files (e.g. columns with identity partition transforms). Writing all columns provides a backup in case of corruption or bugs in the metadata layer.
+
+Writers are not allowed to commit files with a partition spec that contains a field with an unknown transform.
+
+### Schemas and Data Types
+
+#### RQ.Iceberg.SchemasAndDataTypes
+version: 1.0
+
+A table's **schema** is a list of named columns. All data types are either primitives or nested types, which are maps, lists, or structs. A table schema is also a struct type.
+
+For the representations of these types in Avro, ORC, and Parquet file formats, see Appendix A.
+
+#### Nested Types
+
+##### RQ.Iceberg.NestedTypes
+version: 1.0
+
+A **`struct`** is a tuple of typed values. Each field in the tuple is named and has an integer id that is unique in the table schema. Each field can be either optional or required, meaning that values can (or cannot) be null. Fields may be any type. Fields may have an optional comment or doc string. Fields can have [default values](#default-values).
+
+A **`list`** is a collection of values with some element type. The element field has an integer id that is unique in the table schema. Elements can be either optional or required. Element types may be any type.
+
+A **`map`** is a collection of key-value pairs with a key type and a value type. Both the key field and value field each have an integer id that is unique in the table schema. Map keys are required and map values can be either optional or required. Both map keys and map values may be any type, including nested types.
+
+#### Primitive Types
+
+##### RQ.Iceberg.PrimitiveTypes
+version: 1.0
+
+Supported primitive types are defined in the table below. Primitive types added after v1 have an "added by" version that is the first spec version in which the type is allowed. For example, nanosecond-precision timestamps are part of the v3 spec; using v3 types in v1 or v2 tables can break forward compatibility.
+
+| Added by version | Primitive type     | Description                                                              | Requirements                                     |
+|------------------|--------------------|--------------------------------------------------------------------------|--------------------------------------------------|
+| [v3](#version-3) | **`unknown`**      | Default / null column type used when a more specific type is not known   | Must be optional with `null` defaults; not stored in data files |
+|                  | **`boolean`**      | True or false                                                            |                                                  |
+|                  | **`int`**          | 32-bit signed integers                                                   | Can promote to `long`                            |
+|                  | **`long`**         | 64-bit signed integers                                                   |                                                  |
+|                  | **`float`**        | [32-bit IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floating point | Can promote to double                            |
+|                  | **`double`**       | [64-bit IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) floating point |                                                  |
+|                  | **`decimal(P,S)`** | Fixed-point decimal; precision P, scale S                                | Scale is fixed, precision must be 38 or less     |
+|                  | **`date`**         | Calendar date without timezone or time                                   |                                                  |
+|                  | **`time`**         | Time of day, microsecond precision, without date, timezone               |                                                  |
+|                  | **`timestamp`**    | Timestamp, microsecond precision, without timezone                       | [1]                                              |
+|                  | **`timestamptz`**  | Timestamp, microsecond precision, with timezone                          | [2]                                              |
+| [v3](#version-3) | **`timestamp_ns`** | Timestamp, nanosecond precision, without timezone                        | [1]                                              |
+| [v3](#version-3) | **`timestamptz_ns`** | Timestamp, nanosecond precision, with timezone                         | [2]                                              |
+|                  | **`string`**       | Arbitrary-length character sequences                                     | Encoded with UTF-8 [3]                           |
+|                  | **`uuid`**         | Universally unique identifiers                                           | Should use 16-byte fixed                         |
+|                  | **`fixed(L)`**     | Fixed-length byte array of length L                                      |                                                  |
+|                  | **`binary`**       | Arbitrary-length byte array                                              |                                                  |
+
+Notes:
+
+1. Timestamp values _without time zone_ represent a date and time of day regardless of zone: the time value is independent of zone adjustments (`2017-11-16 17:10:34` is always retrieved as `2017-11-16 17:10:34`).
+2. Timestamp values _with time zone_ represent a point in time: values are stored as UTC and do not retain a source time zone (`2017-11-16 17:10:34 PST` is stored/retrieved as `2017-11-17 01:10:34 UTC` and these values are considered identical).
+3. Character strings must be stored as UTF-8 encoded byte arrays.
+
+For details on how to serialize a schema to JSON, see Appendix C.
+
+
+#### Default values
+
+##### RQ.Iceberg.DefaultValues
+version: 1.0
+
+Default values can be tracked for struct fields (both nested structs and the top-level schema's struct). There can be two defaults with a field:
+
+* `initial-default` is used to populate the field's value for all records that were written before the field was added to the schema
+* `write-default` is used to populate the field's value for any records written after the field was added to the schema, if the writer does not supply the field's value
+
+The `initial-default` is set only when a field is added to an existing schema. The `write-default` is initially set to the same value as `initial-default` and can be changed through schema evolution. If either default is not set for an optional field, then the default value is null for compatibility with older spec versions.
+
+The `initial-default` and `write-default` produce SQL default value behavior, without rewriting data files. SQL default value behavior when a field is added handles all existing rows as though the rows were written with the new field's default value. Default value changes may only affect future records and all known fields are written into data files. Omitting a known field when writing a data file is never allowed. The write default for a field must be written if a field is not supplied to a write. If the write default for a required field is not set, the writer must fail.
+
+All columns of `unknown` type must default to null. Non-null values for `initial-default` or `write-default` are invalid.
+
+Default values are attributes of fields in schemas and serialized with fields in the JSON format. See [Appendix C](#appendix-c-json-serialization).
+
+
+#### Schema Evolution
+
+##### RQ.Iceberg.SchemaEvolution
+version: 1.0
+
+Schemas may be evolved by type promotion or adding, deleting, renaming, or reordering fields in structs (both nested structs and the top-level schema’s struct).
+
+Evolution applies changes to the table's current schema to produce a new schema that is identified by a unique schema ID, is added to the table's list of schemas, and is set as the table's current schema.
+
+Valid primitive type promotions are:
+
+| Primitive type   | v1, v2 valid type promotions | v3+ valid type promotions    | Requirements |
+|------------------|------------------------------|------------------------------|--------------|
+| `unknown`        |                              | _any type_                   | |
+| `int`            | `long`                       | `long`                       | |
+| `date`           |                              | `timestamp`, `timestamp_ns`  | Promotion to `timestamptz` or `timestamptz_ns` is **not** allowed; values outside the promoted type's range must result in a runtime failure |
+| `float`          | `double`                     | `double`                     | |
+| `decimal(P, S)`  | `decimal(P', S)` if `P' > P` | `decimal(P', S)` if `P' > P` | Widen precision only |
+
+Iceberg's Avro manifest format does not store the type of lower and upper bounds, and type promotion does not rewrite existing bounds. For example, when a `float` is promoted to `double`, existing data file bounds are encoded as 4 little-endian bytes rather than 8 little-endian bytes for `double`. To correctly decode the value, the original type at the time the file was written must be inferred according to the following table:
+
+| Current type     | Length of bounds | Inferred type at write time |
+|------------------|------------------|-----------------------------|
+| `long`           | 4 bytes          | `int`                       |
+| `long`           | 8 bytes          | `long`                      |
+| `double`         | 4 bytes          | `float`                     |
+| `double`         | 8 bytes          | `double`                    |
+| `timestamp`      | 4 bytes          | `date`                      |
+| `timestamp`      | 8 bytes          | `timestamp`                 |
+| `timestamp_ns`   | 4 bytes          | `date`                      |
+| `timestamp_ns`   | 8 bytes          | `timestamp_ns`              |
+| `decimal(P, S)`  | _any_            | `decimal(P', S)`; `P' <= P` |
+
+Type promotion is not allowed for a field that is referenced by `source-id` or `source-ids` of a partition field if the partition transform would produce a different value after promoting the type. For example, `bucket[N]` produces different hash values for `34` and `"34"` (2017239379 != -427558391) but the same value for `34` and `34L`; when an `int` field is the source for a bucket partition field, it may be promoted to `long` but not to `string`. This may happen for the following type promotion cases:
+
+* `date` to `timestamp` or `timestamp_ns`
+
+Any struct, including a top-level schema, can evolve through deleting fields, adding new fields, renaming existing fields, reordering existing fields, or promoting a primitive using the valid type promotions. Adding a new field assigns a new ID for that field and for any nested fields. Renaming an existing field must change the name, but not the field ID. Deleting a field removes it from the current schema. Field deletion cannot be rolled back unless the field was nullable or if the current snapshot has not changed.
+
+Grouping a subset of a struct’s fields into a nested struct is **not** allowed, nor is moving fields from a nested struct into its immediate parent struct (`struct<a, b, c> ↔ struct<a, struct<b, c>>`). Evolving primitive types to structs is **not** allowed, nor is evolving a single-field struct to a primitive (`map<string, int> ↔ map<string, struct<int>>`).
+
+Struct evolution requires the following rules for default values:
+
+* The `initial-default` must be set when a field is added and cannot change
+* The `write-default` must be set when a field is added and may change
+* When a required field is added, both defaults must be set to a non-null value
+* When an optional field is added, the defaults may be null and should be explicitly set
+* When a new field is added to a struct with a default value, updating the struct's default is optional
+* If a field value is missing from a struct's `initial-default`, the field's `initial-default` must be used for the field
+* If a field value is missing from a struct's `write-default`, the field's `write-default` must be used for the field
+
+
+##### Column Projection
+
+###### RQ.Iceberg.ColumnProjection
+version: 1.0
+
+Columns in Iceberg data files are selected by field id. The table schema's column names and order may change after a data file is written, and projection must be done using field ids.
+
+Values for field ids which are not present in a data file must be resolved according the following rules:
+
+* Return the value from partition metadata if an [Identity Transform](#partition-transforms) exists for the field and the partition value is present in the `partition` struct on `data_file` object in the manifest. This allows for metadata only migrations of Hive tables.
+* Use `schema.name-mapping.default` metadata to map field id to columns without field id as described below and use the column if it is present.
+* Return the default value if it has a defined `initial-default` (See [Default values](#default-values) section for more details). 
+* Return `null` in all other cases.
+
+For example, a file may be written with schema `1: a int, 2: b string, 3: c double` and read using projection schema `3: measurement, 2: name, 4: a`. This must select file columns `c` (renamed to `measurement`), `b` (now called `name`), and a column of `null` values called `a`; in that order.
+
+Tables may also define a property `schema.name-mapping.default` with a JSON name mapping containing a list of field mapping objects. These mappings provide fallback field ids to be used when a data file does not contain field id information. Each object should contain
+
+* `names`: A required list of 0 or more names for a field. 
+* `field-id`: An optional Iceberg field ID used when a field's name is present in `names`
+* `fields`: An optional list of field mappings for child field of structs, maps, and lists.
+
+Field mapping fields are constrained by the following rules:
+
+* A name may contain `.` but this refers to a literal name, not a nested field. For example, `a.b` refers to a field named `a.b`, not child field `b` of field `a`. 
+* Each child field should be defined with their own field mapping under `fields`. 
+* Multiple values for `names` may be mapped to a single field ID to support cases where a field may have different names in different data files. For example, all Avro field aliases should be listed in `names`.
+* Fields which exist only in the Iceberg schema and not in imported data files may use an empty `names` list.
+* Fields that exist in imported files but not in the Iceberg schema may omit `field-id`.
+* List types should contain a mapping in `fields` for `element`. 
+* Map types should contain mappings in `fields` for `key` and `value`. 
+* Struct types should contain mappings in `fields` for their child fields.
+
+For details on serialization, see [Appendix C](#name-mapping-serialization).
+
+#### Identifier Field IDs
+
+##### RQ.Iceberg.IndentifierFieldIDs
+version: 1.0
+
+A schema can optionally track the set of primitive fields that identify rows in a table, using the property `identifier-field-ids` (see JSON encoding in Appendix C).
+
+Two rows are the "same"---that is, the rows represent the same entity---if the identifier fields are equal. However, uniqueness of rows by this identifier is not guaranteed or required by Iceberg and it is the responsibility of processing engines or data providers to enforce.
+
+Identifier fields may be nested in structs but cannot be nested within maps or lists. Float, double, and optional fields cannot be used as identifier fields and a nested field cannot be used as an identifier field if it is nested in an optional struct, to avoid null values in identifiers.
+
+
+#### Reserved Field IDs
+
+##### RQ.Iceberg.ReservedFieldIDs
+version: 1.0
+
+Iceberg tables must not use field ids greater than 2147483447 (`Integer.MAX_VALUE - 200`). This id range is reserved for metadata columns that can be used in user data schemas, like the `_file` column that holds the file path in which a row was stored.
+
+The set of metadata columns is:
+
+| Field id, name                   | Type          | Description                                                                                            |
+|----------------------------------|---------------|--------------------------------------------------------------------------------------------------------|
+| **`2147483646  _file`**          | `string`      | Path of the file in which a row is stored                                                              |
+| **`2147483645  _pos`**           | `long`        | Ordinal position of a row in the source data file, starting at `0`                                     |
+| **`2147483644  _deleted`**       | `boolean`     | Whether the row has been deleted                                                                       |
+| **`2147483643  _spec_id`**       | `int`         | Spec ID used to track the file containing a row                                                        |
+| **`2147483642  _partition`**     | `struct`      | Partition to which a row belongs                                                                       |
+| **`2147483546  file_path`**      | `string`      | Path of a file, used in position-based delete files                                                    |
+| **`2147483545  pos`**            | `long`        | Ordinal position of a row, used in position-based delete files                                         |
+| **`2147483544  row`**            | `struct<...>` | Deleted row values, used in position-based delete files                                                |
+| **`2147483543  _row_id`**        | `long`        | A unique long assigned when row-lineage is enabled, see [Row Lineage](#row-lineage)                    |
+| **`2147483542  _last_updated_sequence_number`**   | `long`        | The sequence number which last updated this row when row-lineage is enabled [Row Lineage](#row-lineage) |
+
+#### Row Lineage
+
+##### RQ.Iceberg.RowLineage
+version: 1.0
+
+In v3 and later, an Iceberg table can track row lineage fields for all newly created rows.  Row lineage is enabled by setting the field `row-lineage` to true in the table's metadata. When enabled, engines must maintain the `next-row-id` table field and the following row-level fields when writing data files:
+
+* `_row_id` a unique long identifier for every row within the table. The value is assigned via inheritance when a row is first added to the table and the existing value is explicitly written when the row is copied into a new file.
+* `_last_updated_sequence_number` the sequence number of the commit that last updated a row. The value is inherited when a row is first added or modified and the existing value is explicitly written when the row is written to a different data file but not modified.
+
+These fields are assigned and updated by inheritance because the commit sequence number and starting row ID are not assigned until the snapshot is successfully committed. Inheritance is used to allow writing data and manifest files before values are known so that it is not necessary to rewrite data and manifest files when an optimistic commit is retried.
+
+When row lineage is enabled, new snapshots cannot include [Equality Deletes](#equality-delete-files). Row lineage is incompatible with equality deletes because lineage values must be maintained, but equality deletes are used to avoid reading existing data before writing changes.
+
+
+##### Row lineage assignment
+
+Row lineage fields are written when row lineage is enabled. When not enabled, row lineage fields (`_row_id` and `_last_updated_sequence_number`) must not be written to data files. The rest of this section applies when row lineage is enabled.
+
+When a row is added or modified, the `_last_updated_sequence_number` field is set to `null` so that it is inherited when reading. Similarly, the `_row_id` field for an added row is set to `null` and assigned when reading.
+
+A data file with only new rows for the table may omit the `_last_updated_sequence_number` and `_row_id`. If the columns are missing, readers should treat both columns as if they exist and are set to null for all rows.
+
+On read, if `_last_updated_sequence_number` is `null` it is assigned the `sequence_number` of the data file's manifest entry. The data sequence number of a data file is documented in [Sequence Number Inheritance](#sequence-number-inheritance).
+
+When `null`, a row's `_row_id` field is assigned to the `first_row_id` from its containing data file plus the row position in that data file (`_pos`). A data file's `first_row_id` field is assigned using inheritance and is documented in [First Row ID Inheritance](#first-row-id-inheritance). A manifest's `first_row_id` is assigned when writing the manifest list for a snapshot and is documented in [First Row ID Assignment](#first-row-id-assignment). A snapshot's `first-row-id` is set to the table's `next-row-id` and is documented in [Snapshot Row IDs](#snapshot-row-ids).
+
+Values for `_row_id` and `_last_updated_sequence_number` are either read from the data file or assigned at read time. As a result on read, rows in a table always have non-null values for these fields when lineage is enabled.
+
+When an existing row is moved to a different data file for any reason, writers are required to write `_row_id` and `_last_updated_sequence_number` according to the following rules:
+
+1. The row's existing non-null `_row_id` must be copied into the new data file
+2. If the write has modified the row, the `_last_updated_sequence_number` field must be set to `null` (so that the modification's sequence number replaces the current value)
+3. If the write has not modified the row, the existing non-null `_last_updated_sequence_number` value must be copied to the new data file
+
+
+##### Row lineage example
+
+This example demonstrates how `_row_id` and `_last_updated_sequence_number` are assigned for a snapshot when row lineage is enabled. This starts with a table with row lineage enabled and a `next-row-id` of 1000.
+
+Writing a new append snapshot would create snapshot metadata with `first-row-id` assigned to the table's `next-row-id`:
+
+```json
+{
+  "operation": "append",
+  "first-row-id": 1000,
+  ...
+}
+```
+
+The snapshot's manifest list would contain existing manifests, plus new manifests with an assigned `first_row_id` based on the `added_rows_count` of previously listed added manifests:
+
+| `manifest_path` | `added_rows_count` | `existing_rows_count` | `first_row_id`     |
+|-----------------|--------------------|-----------------------|--------------------|
+| ...             | ...                | ...                   | ...                |
+| existing        | 75                 | 0                     | 925                |
+| added1          | 100                | 25                    | 1000               |
+| added2          | 0                  | 100                   | 1100               |
+| added3          | 125                | 25                    | 1100               |
+
+The first added file, `added1`, is assigned the same `first_row_id` as the snapshot and the following manifests are assigned `first_row_id` based on the number of rows added by the previously listed manifests. The second file, `added2`, does not change the `first_row_id` of the next manifest because it contains no added data files.
+
+Within `added1`, the first added manifest, each data file's `first_row_id` follows a similar pattern:
+
+| `status` | `file_path` | `record_count` | `first_row_id` |
+|----------|-------------|----------------|----------------|
+| EXISTING | data1       | 25             | 800            |
+| ADDED    | data2       | 50             | null (1000)    |
+| ADDED    | data3       | 50             | null (1050)    |
+
+The `first_row_id` of the EXISTING file `data1` was already assigned, so the file metadata was copied into manifest `added1`.
+
+Files `data2` and `data3` are written with `null` for `first_row_id` and are assigned `first_row_id` at read time based on the manifest's `first_row_id` and the `record_count` of previously listed ADDED files in this manifest: (1,000 + 0) and (1,000 + 50).
+
+When the new snapshot is committed, the table's `next-row-id` must also be updated (even if the new snapshot is not in the main branch). Because 225 rows were added (`added1`: 100 + `added2`: 0 + `added3`: 125), the new value is 1,000 + 225 = 1,225:
+
+
+##### Enabling Row Lineage for Non-empty Tables
+
+Any snapshot without the field `first-row-id` does not have any lineage information and values for `_row_id` and `_last_updated_sequence_number` cannot be assigned accurately.  
+
+All files that were added before `row-lineage` was enabled should propagate null for all of the `row-lineage` related
+fields. The values for `_row_id` and `_last_updated_sequence_number` should always return null and when these rows are copied, 
+null should be explicitly written. After this point, rows are treated as if they were just created 
+and assigned `row_id` and `_last_updated_sequence_number` as if they were new rows.
+
+
+### Partitioning
+
+#### RQ.Iceberg.Partitioning
+version: 1.0
+
+Data files are stored in manifests with a tuple of partition values that are used in scans to filter out files that cannot contain records that match the scan’s filter predicate. Partition values for a data file must be the same for all records stored in the data file. (Manifests store data files from any partition, as long as the partition spec is the same for the data files.)
+
+Tables are configured with a **partition spec** that defines how to produce a tuple of partition values from a record. A partition spec has a list of fields that consist of:
+
+*   A **source column id** or a list of **source column ids** from the table’s schema
+*   A **partition field id** that is used to identify a partition field and is unique within a partition spec. In v2 table metadata, it is unique across all partition specs.
+*   A **transform** that is applied to the source column(s) to produce a partition value
+*   A **partition name**
+
+The source columns, selected by ids, must be a primitive type and cannot be contained in a map or list, but may be nested in a struct. For details on how to serialize a partition spec to JSON, see Appendix C.
+
+Partition specs capture the transform from table data to partition values. This is used to transform predicates to partition predicates, in addition to transforming data values. Deriving partition predicates from column predicates on the table data is used to separate the logical queries from physical storage: the partitioning can change and the correct partition filters are always derived from column predicates. This simplifies queries because users don’t have to supply both logical predicates and partition predicates. For more information, see Scan Planning below.
+
+Partition fields that use an unknown transform can be read by ignoring the partition field for the purpose of filtering data files during scan planning. In v1 and v2, readers should ignore fields with unknown transforms while reading; this behavior is required in v3. Writers are not allowed to commit data using a partition spec that contains a field with an unknown transform.
+
+Two partition specs are considered equivalent with each other if they have the same number of fields and for each corresponding field, the fields have the same source column IDs, transform definition and partition name. Writers must not create a new partition spec if there already exists a compatible partition spec defined in the table.
+
+Partition field IDs must be reused if an existing partition spec contains an equivalent field.
+
+#### Partition Transforms
+
+##### RQ.Iceberg.PartitionTransforms
+version: 1.0
+
+| Transform name    | Description                                                  | Source types                                                                                              | Result type |
+|-------------------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|-------------|
+| **`identity`**    | Source value, unmodified                                     | Any                                                                                                       | Source type |
+| **`bucket[N]`**   | Hash of value, mod `N` (see below)                           | `int`, `long`, `decimal`, `date`, `time`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`, `string`, `uuid`, `fixed`, `binary` | `int`       |
+| **`truncate[W]`** | Value truncated to width `W` (see below)                     | `int`, `long`, `decimal`, `string`, `binary`                                                              | Source type |
+| **`year`**        | Extract a date or timestamp year, as years from 1970         | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |
+| **`month`**       | Extract a date or timestamp month, as months from 1970-01-01 | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |
+| **`day`**         | Extract a date or timestamp day, as days from 1970-01-01     | `date`, `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                      | `int`       |
+| **`hour`**        | Extract a timestamp hour, as hours from 1970-01-01 00:00:00  | `timestamp`, `timestamptz`, `timestamp_ns`, `timestamptz_ns`                                              | `int`       |
+| **`void`**        | Always produces `null`                                       | Any                                                                                                       | Source type or `int` |
+
+All transforms must return `null` for a `null` input value.
+
+The `void` transform may be used to replace the transform in an existing partition field so that the field is effectively dropped in v1 tables. See partition evolution below.
+
+
+#### Bucket Transform Details
+
+##### RQ.Iceberg.BucketTransform
+version: 1.0
+
+Bucket partition transforms use a 32-bit hash of the source value. The 32-bit hash implementation is the 32-bit Murmur3 hash, x86 variant, seeded with 0.
+
+Transforms are parameterized by a number of buckets [1], `N`. The hash mod `N` must produce a positive value by first discarding the sign bit of the hash value. In pseudo-code, the function is:
+
+```
+  def bucket_N(x) = (murmur3_x86_32_hash(x) & Integer.MAX_VALUE) % N
+```
+
+Notes:
+
+1. Changing the number of buckets as a table grows is possible by evolving the partition spec.
+
+For hash function details by type, see Appendix B.
+
+
+#### Truncate Transform Details
+
+##### RQ.Iceberg.TruncateTransform
+version: 1.0
+
+| **Type**      | **Config**            | **Truncate specification**                                       | **Examples**                     |
+|---------------|-----------------------|------------------------------------------------------------------|----------------------------------|
+| **`int`**     | `W`, width            | `v - (v % W)`	remainders must be positive	[1]                    | `W=10`: `1` ￫ `0`, `-1` ￫ `-10`  |
+| **`long`**    | `W`, width            | `v - (v % W)`	remainders must be positive	[1]                    | `W=10`: `1` ￫ `0`, `-1` ￫ `-10`  |
+| **`decimal`** | `W`, width (no scale) | `scaled_W = decimal(W, scale(v))` `v - (v % scaled_W)`		[1, 2] | `W=50`, `s=2`: `10.65` ￫ `10.50` |
+| **`string`**  | `L`, length           | Substring of length `L`: `v.substring(0, L)` [3]                    | `L=3`: `iceberg` ￫ `ice`         |
+| **`binary`**  | `L`, length           | Sub array of length `L`: `v.subarray(0, L)`  [4]                    | `L=3`: `\x01\x02\x03\x04\x05` ￫ `\x01\x02\x03` |
+
+Notes:
+
+1. The remainder, `v % W`, must be positive. For languages where `%` can produce negative values, the correct truncate function is: `v - (((v % W) + W) % W)`
+2. The width, `W`, used to truncate decimal values is applied using the scale of the decimal column to avoid additional (and potentially conflicting) parameters.
+3. Strings are truncated to a valid UTF-8 string with no more than `L` code points.
+4. In contrast to strings, binary values do not have an assumed encoding and are truncated to `L` bytes.
+
+
+#### Partition Evolution
+
+##### RQ.Iceberg.PartitionEvolution
+version: 1.0
+
+Table partitioning can be evolved by adding, removing, renaming, or reordering partition spec fields.
+
+Changing a partition spec produces a new spec identified by a unique spec ID that is added to the table's list of partition specs and may be set as the table's default spec.
+
+When evolving a spec, changes should not cause partition field IDs to change because the partition field IDs are used as the partition tuple field IDs in manifest files.
+
+In v2, partition field IDs must be explicitly tracked for each partition field. New IDs are assigned based on the last assigned partition ID in table metadata.
+
+In v1, partition field IDs were not tracked, but were assigned sequentially starting at 1000 in the reference implementation. This assignment caused problems when reading metadata tables based on manifest files from multiple specs because partition fields with the same ID may contain different data types. For compatibility with old versions, the following rules are recommended for partition evolution in v1 tables:
+
+1. Do not reorder partition fields
+2. Do not drop partition fields; instead replace the field's transform with the `void` transform
+3. Only add partition fields at the end of the previous partition spec
+
+
+### Sorting
+
+#### RQ.Iceberg.Sorting
+version: 1.0
+
+Users can sort their data within partitions by columns to gain performance. The information on how the data is sorted can be declared per data or delete file, by a **sort order**.
+
+A sort order is defined by a sort order id and a list of sort fields. The order of the sort fields within the list defines the order in which the sort is applied to the data. Each sort field consists of:
+
+*   A **source column id** or a list of **source column ids** from the table's schema
+*   A **transform** that is used to produce values to be sorted on from the source column(s). This is the same transform as described in [partition transforms](#partition-transforms).
+*   A **sort direction**, that can only be either `asc` or `desc`
+*   A **null order** that describes the order of null values when sorted. Can only be either `nulls-first` or `nulls-last`
+
+For details on how to serialize a sort order to JSON, see Appendix C.
+
+Order id `0` is reserved for the unsorted order. 
+
+Sorting floating-point numbers should produce the following behavior: `-NaN` < `-Infinity` < `-value` < `-0` < `0` < `value` < `Infinity` < `NaN`. This aligns with the implementation of Java floating-point types comparisons. 
+
+A data or delete file is associated with a sort order by the sort order's id within [a manifest](#manifests). Therefore, the table must declare all the sort orders for lookup. A table could also be configured with a default sort order id, indicating how the new data should be sorted by default. Writers should use this default sort order to sort the data on write, but are not required to if the default order is prohibitively expensive, as it would be for streaming writes.
+
+
+### Manifests
+
+#### RQ.Iceberg.Manifest
+version: 1.0
+
+A manifest is an immutable Avro file that lists data files or delete files, along with each file’s partition data tuple, metrics, and tracking information. One or more manifest files are used to store a [snapshot](#snapshots), which tracks all of the files in a table at some point in time. Manifests are tracked by a [manifest list](#manifest-lists) for each table snapshot.
+
+A manifest is a valid Iceberg data file: files must use valid Iceberg formats, schemas, and column projection.
+
+A manifest may store either data files or delete files, but not both because manifests that contain delete files are scanned first during job planning. Whether a manifest is a data manifest or a delete manifest is stored in manifest metadata.
+
+A manifest stores files for a single partition spec. When a table’s partition spec changes, old files remain in the older manifest and newer files are written to a new manifest. This is required because a manifest file’s schema is based on its partition spec (see below). The partition spec of each manifest is also used to transform predicates on the table's data rows into predicates on partition values that are used during job planning to select files from a manifest.
+
+A manifest file must store the partition spec and other metadata as properties in the Avro file's key-value metadata:
+
+| v1         | v2         | Key                 | Value                                                                        |
+|------------|------------|---------------------|------------------------------------------------------------------------------|
+| _required_ | _required_ | `schema`            | JSON representation of the table schema at the time the manifest was written |
+| _optional_ | _required_ | `schema-id`         | ID of the schema used to write the manifest as a string                      |
+| _required_ | _required_ | `partition-spec`    | JSON fields representation of the partition spec used to write the manifest  |
+| _optional_ | _required_ | `partition-spec-id` | ID of the partition spec used to write the manifest as a string              |
+| _optional_ | _required_ | `format-version`    | Table format version number of the manifest as a string                      |
+|            | _required_ | `content`           | Type of content files tracked by the manifest: "data" or "deletes"           |
+
+The schema of a manifest file is a struct called `manifest_entry` with the following fields:
+
+| v1         | v2         | Field id, name                | Type                                                      | Description |
+| ---------- | ---------- |-------------------------------|-----------------------------------------------------------|-------------|
+| _required_ | _required_ | **`0  status`**               | `int` with meaning: `0: EXISTING` `1: ADDED` `2: DELETED` | Used to track additions and deletions. Deletes are informational only and not used in scans. |
+| _required_ | _optional_ | **`1  snapshot_id`**          | `long`                                                    | Snapshot id where the file was added, or deleted if status is 2. Inherited when null. |
+|            | _optional_ | **`3  sequence_number`**      | `long`                                                    | Data sequence number of the file. Inherited when null and status is 1 (added). |
+|            | _optional_ | **`4  file_sequence_number`** | `long`                                                    | File sequence number indicating when the file was added. Inherited when null and status is 1 (added). |
+| _required_ | _required_ | **`2  data_file`**            | `data_file` `struct` (see below)                          | File path, partition tuple, metrics, ... |
+
+`data_file` is a struct with the following fields:
+
+| v1         | v2         | v3         | Field id, name                    | Type                                                                        | Description                                                                                                                                                                                                        |
+| ---------- |------------|------------|-----------------------------------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|            | _required_ | _required_ | **`134  content`**                | `int` with meaning: `0: DATA`, `1: POSITION DELETES`, `2: EQUALITY DELETES` | Type of content stored by the data file: data, equality deletes, or position deletes (all v1 files are data files)                                                                                                 |
+| _required_ | _required_ | _required_ | **`100  file_path`**              | `string`                                                                    | Full URI for the file with FS scheme                                                                                                                                                                               |
+| _required_ | _required_ | _required_ | **`101  file_format`**            | `string`                                                                    | String file format name, `avro`, `orc`, `parquet`, or `puffin`                                                                                                                                                     |
+| _required_ | _required_ | _required_ | **`102  partition`**              | `struct<...>`                                                               | Partition data tuple, schema based on the partition spec output using partition field ids for the struct field ids                                                                                                 |
+| _required_ | _required_ | _required_ | **`103  record_count`**           | `long`                                                                      | Number of records in this file, or the cardinality of a deletion vector                                                                                                                                            |
+| _required_ | _required_ | _required_ | **`104  file_size_in_bytes`**     | `long`                                                                      | Total file size in bytes                                                                                                                                                                                           |
+| _required_ |            |            | ~~**`105 block_size_in_bytes`**~~ | `long`                                                                      | **Deprecated. Always write a default in v1. Do not write in v2 or v3.**                                                                                                                                            |
+| _optional_ |            |            | ~~**`106  file_ordinal`**~~       | `int`                                                                       | **Deprecated. Do not write.**                                                                                                                                                                                      |
+| _optional_ |            |            | ~~**`107  sort_columns`**~~       | `list<112: int>`                                                            | **Deprecated. Do not write.**                                                                                                                                                                                      |
+| _optional_ | _optional_ | _optional_ | **`108  column_sizes`**           | `map<117: int, 118: long>`                                                  | Map from column id to the total size on disk of all regions that store the column. Does not include bytes necessary to read other columns, like footers. Leave null for row-oriented formats (Avro)                |
+| _optional_ | _optional_ | _optional_ | **`109  value_counts`**           | `map<119: int, 120: long>`                                                  | Map from column id to number of values in the column (including null and NaN values)                                                                                                                               |
+| _optional_ | _optional_ | _optional_ | **`110  null_value_counts`**      | `map<121: int, 122: long>`                                                  | Map from column id to number of null values in the column                                                                                                                                                          |
+| _optional_ | _optional_ | _optional_ | **`137  nan_value_counts`**       | `map<138: int, 139: long>`                                                  | Map from column id to number of NaN values in the column                                                                                                                                                           |
+| _optional_ | _optional_ | _optional_ | **`111  distinct_counts`**        | `map<123: int, 124: long>`                                                  | Map from column id to number of distinct values in the column; distinct counts must be derived using values in the file by counting or using sketches, but not using methods like merging existing distinct counts |
+| _optional_ | _optional_ | _optional_ | **`125  lower_bounds`**           | `map<126: int, 127: binary>`                                                | Map from column id to lower bound in the column serialized as binary [1]. Each value must be less than or equal to all non-null, non-NaN values in the column for the file [2]                                     |
+| _optional_ | _optional_ | _optional_ | **`128  upper_bounds`**           | `map<129: int, 130: binary>`                                                | Map from column id to upper bound in the column serialized as binary [1]. Each value must be greater than or equal to all non-null, non-Nan values in the column for the file [2]                                  |
+| _optional_ | _optional_ | _optional_ | **`131  key_metadata`**           | `binary`                                                                    | Implementation-specific key metadata for encryption                                                                                                                                                                |
+| _optional_ | _optional_ | _optional_ | **`132  split_offsets`**          | `list<133: long>`                                                           | Split offsets for the data file. For example, all row group offsets in a Parquet file. Must be sorted ascending                                                                                                    |
+|            | _optional_ | _optional_ | **`135  equality_ids`**           | `list<136: int>`                                                            | Field ids used to determine row equality in equality delete files. Required when `content=2` and should be null otherwise. Fields with ids listed in this column must be present in the delete file                |
+| _optional_ | _optional_ | _optional_ | **`140  sort_order_id`**          | `int`                                                                       | ID representing sort order for this file [3].                                                                                                                                                                      |
+|            |            | _optional_ | **`142  first_row_id`**           | `long`                                                                      | The `_row_id` for the first row in the data file. See [First Row ID Inheritance](#first-row-id-inheritance)                                                                                                        |
+|            | _optional_ | _optional_ | **`143  referenced_data_file`**   | `string`                                                                    | Fully qualified location (URI with FS scheme) of a data file that all deletes reference [4]                                                                                                                        |
+|            |            | _optional_ | **`144  content_offset`**         | `long`                                                                      | The offset in the file where the content starts [5]                                                                                                                                                                |
+|            |            | _optional_ | **`145  content_size_in_bytes`**  | `long`                                                                      | The length of a referenced content stored in the file; required if `content_offset` is present [5]                                                                                                                 |
+
+Notes:
+
+1. Single-value serialization for lower and upper bounds is detailed in Appendix D.
+2. For `float` and `double`, the value `-0.0` must precede `+0.0`, as in the IEEE 754 `totalOrder` predicate. NaNs are not permitted as lower or upper bounds.
+3. If sort order ID is missing or unknown, then the order is assumed to be unsorted. Only data files and equality delete files should be written with a non-null order id. [Position deletes](#position-delete-files) are required to be sorted by file and position, not a table order, and should set sort order id to null. Readers must ignore sort order id for position delete files.
+4. Position delete metadata can use `referenced_data_file` when all deletes tracked by the entry are in a single data file. Setting the referenced file is required for deletion vectors.
+5. The `content_offset` and `content_size_in_bytes` fields are used to reference a specific blob for direct access to a deletion vector. For deletion vectors, these values are required and must exactly match the `offset` and `length` stored in the Puffin footer for the deletion vector blob.
+6. The following field ids are reserved on `data_file`: 141.
+
+The `partition` struct stores the tuple of partition values for each file. Its type is derived from the partition fields of the partition spec used to write the manifest file. In v2, the partition struct's field ids must match the ids from the partition spec.
+
+The column metrics maps are used when filtering to select both data and delete files. For delete files, the metrics must store bounds and counts for all deleted rows, or must be omitted. Storing metrics for deleted rows ensures that the values can be used during job planning to find delete files that must be merged during a scan.
+
+
+#### Manifest Entry Fields
+
+##### RQ.Iceberg.Manifest.EntryFields
+version: 1.0
+
+The manifest entry fields are used to keep track of the snapshot in which files were added or logically deleted. The `data_file` struct is nested inside of the manifest entry so that it can be easily passed to job planning without the manifest entry fields.
+
+When a file is added to the dataset, its manifest entry should store the snapshot ID in which the file was added and set status to 1 (added).
+
+When a file is replaced or deleted from the dataset, its manifest entry fields store the snapshot ID in which the file was deleted and status 2 (deleted). The file may be deleted from the file system when the snapshot in which it was deleted is garbage collected, assuming that older snapshots have also been garbage collected [1].
+
+Iceberg v2 adds data and file sequence numbers to the entry and makes the snapshot ID optional. Values for these fields are inherited from manifest metadata when `null`. That is, if the field is `null` for an entry, then the entry must inherit its value from the manifest file's metadata, stored in the manifest list.
+The `sequence_number` field represents the data sequence number and must never change after a file is added to the dataset. The data sequence number represents a relative age of the file content and should be used for planning which delete files apply to a data file.
+The `file_sequence_number` field represents the sequence number of the snapshot that added the file and must also remain unchanged upon assigning at commit. The file sequence number can't be used for pruning delete files as the data within the file may have an older data sequence number. 
+The data and file sequence numbers are inherited only if the entry status is 1 (added). If the entry status is 0 (existing) or 2 (deleted), the entry must include both sequence numbers explicitly.
+
+Notes:
+
+1. Technically, data files can be deleted when the last snapshot that contains the file as “live” data is garbage collected. But this is harder to detect and requires finding the diff of multiple snapshots. It is easier to track what files are deleted in a snapshot and delete them when that snapshot expires.  It is not recommended to add a deleted file back to a table. Adding a deleted file can lead to edge cases where incremental deletes can break table snapshots.
+2. Manifest list files are required in v2, so that the `sequence_number` and `snapshot_id` to inherit are always available.
+
+#### Sequence Number Inheritance
+
+##### RQ.Iceberg.Manifest.SequenceNumberInheritance
+version: 1.0
+
+Manifests track the sequence number when a data or delete file was added to the table.
+
+When adding a new file, its data and file sequence numbers are set to `null` because the snapshot's sequence number is not assigned until the snapshot is successfully committed. When reading, sequence numbers are inherited by replacing `null` with the manifest's sequence number from the manifest list.
+It is also possible to add a new file with data that logically belongs to an older sequence number. In that case, the data sequence number must be provided explicitly and not inherited. However, the file sequence number must be always assigned when the snapshot is successfully committed.
+
+When writing an existing file to a new manifest or marking an existing file as deleted, the data and file sequence numbers must be non-null and set to the original values that were either inherited or provided at the commit time.
+
+Inheriting sequence numbers through the metadata tree allows writing a new manifest without a known sequence number, so that a manifest can be written once and reused in commit retries. To change a sequence number for a retry, only the manifest list must be rewritten.
+
+When reading v1 manifests with no sequence number column, sequence numbers for all files must default to 0.
+
+#### First Row ID Inheritance
+
+##### RQ.Iceberg.Manifest.FirstRowIDInheritance
+version: 1.0
+
+Row ID inheritance is used when row lineage is enabled. When not enabled, a data file's `first_row_id` must always be set to `null`. The rest of this section applies when row lineage is enabled.
+
+When adding a new data file, its `first_row_id` field is set to `null` because it is not assigned until the snapshot is successfully committed.
+
+When reading, the `first_row_id` is assigned by replacing `null` with the manifest's `first_row_id` plus the sum of `record_count` for all added data files that preceded the file in the manifest.
+
+The `first_row_id` is only inherited for added data files. The inherited value must be written into the data file metadata for existing and deleted entries. The value of `first_row_id` for delete files is always `null`.
+
+### Snapshots
+
+#### RQ.Iceberg.Snapshot
+version: 1.0
+
+A snapshot consists of the following fields:
+
+| v1         | v2         | v3         | Field                        | Description                                                                                                                        |
+| ---------- | ---------- |------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| _required_ | _required_ | _required_ | **`snapshot-id`**            | A unique long ID                                                                                                                   |
+| _optional_ | _optional_ | _optional_ | **`parent-snapshot-id`**     | The snapshot ID of the snapshot's parent. Omitted for any snapshot with no parent                                                  |
+|            | _required_ | _required_ | **`sequence-number`**        | A monotonically increasing long that tracks the order of changes to a table                                                        |
+| _required_ | _required_ | _required_ | **`timestamp-ms`**           | A timestamp when the snapshot was created, used for garbage collection and table inspection                                        |
+| _optional_ | _required_ | _required_ | **`manifest-list`**          | The location of a manifest list for this snapshot that tracks manifest files with additional metadata                              |
+| _optional_ |            |            | **`manifests`**              | A list of manifest file locations. Must be omitted if `manifest-list` is present                                                   |
+| _optional_ | _required_ | _required_ | **`summary`**                | A string map that summarizes the snapshot changes, including `operation` as a _required_ field (see below)                         |
+| _optional_ | _optional_ | _optional_ | **`schema-id`**              | ID of the table's current schema when the snapshot was created                                                                     |
+|            |            | _optional_ | **`first-row-id`**           | The first `_row_id` assigned to the first row in the first data file in the first manifest, see [Row Lineage](#row-lineage) |
+
+The snapshot summary's `operation` field is used by some operations, like snapshot expiration, to skip processing certain snapshots. Possible `operation` values are:
+
+*   `append` -- Only data files were added and no files were removed.
+*   `replace` -- Data and delete files were added and removed without changing table data; i.e., compaction, changing the data file format, or relocating data files.
+*   `overwrite` -- Data and delete files were added and removed in a logical overwrite operation.
+*   `delete` -- Data files were removed and their contents logically deleted and/or delete files were added to delete rows.
+
+Data and delete files for a snapshot can be stored in more than one manifest. This enables:
+
+*   Appends can add a new manifest to minimize the amount of data written, instead of adding new records by rewriting and appending to an existing manifest. (This is called a “fast append”.)
+*   Tables can use multiple partition specs. A table’s partition configuration can evolve if, for example, its data volume changes. Each manifest uses a single partition spec, and queries do not need to change because partition filters are derived from data predicates.
+*   Large tables can be split across multiple manifests so that implementations can parallelize job planning or reduce the cost of rewriting a manifest.
+
+Manifests for a snapshot are tracked by a manifest list.
+
+Valid snapshots are stored as a list in table metadata. For serialization, see Appendix C.
+
+
+#### Snapshot Row IDs
+
+##### RQ.Iceberg.Snapshot.RowIDs
+version: 1.0
+
+When row lineage is not enabled, `first-row-id` must be omitted. The rest of this section applies when row lineage is enabled.
+
+A snapshot's `first-row-id` is assigned to the table's current `next-row-id` on each commit attempt. If a commit is retried, the `first-row-id` must be reassigned. If a commit contains no new rows, `first-row-id` should be omitted.
+
+The snapshot's `first-row-id` is the starting `first_row_id` assigned to manifests in the snapshot's manifest list.
+
+
+### Manifest Lists
+
+#### RQ.Iceberg.ManifestList
+version: 1.0
+
+Snapshots are embedded in table metadata, but the list of manifests for a snapshot are stored in a separate manifest list file.
+
+A new manifest list is written for each attempt to commit a snapshot because the list of manifests always changes to produce a new snapshot. When a manifest list is written, the (optimistic) sequence number of the snapshot is written for all new manifest files tracked by the list.
+
+A manifest list includes summary metadata that can be used to avoid scanning all of the manifests in a snapshot when planning a table scan. This includes the number of added, existing, and deleted files, and a summary of values for each field of the partition spec used to write the manifest.
+
+A manifest list is a valid Iceberg data file: files must use valid Iceberg formats, schemas, and column projection.
+
+Manifest list files store `manifest_file`, a struct with the following fields:
+
+| v1         | v2         | v3         | Field id, name                   | Type                                        | Description                                                                                                                                          |
+| ---------- | ---------- |------------|----------------------------------|---------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| _required_ | _required_ | _required_ | **`500 manifest_path`**          | `string`                                    | Location of the manifest file                                                                                                                        |
+| _required_ | _required_ | _required_ | **`501 manifest_length`**        | `long`                                      | Length of the manifest file in bytes                                                                                                                 |
+| _required_ | _required_ | _required_ | **`502 partition_spec_id`**      | `int`                                       | ID of a partition spec used to write the manifest; must be listed in table metadata `partition-specs`                                                |
+|            | _required_ | _required_ | **`517 content`**                | `int` with meaning: `0: data`, `1: deletes` | The type of files tracked by the manifest, either data or delete files; 0 for all v1 manifests                                                       |
+|            | _required_ | _required_ | **`515 sequence_number`**        | `long`                                      | The sequence number when the manifest was added to the table; use 0 when reading v1 manifest lists                                                   |
+|            | _required_ | _required_ | **`516 min_sequence_number`**    | `long`                                      | The minimum data sequence number of all live data or delete files in the manifest; use 0 when reading v1 manifest lists                              |
+| _required_ | _required_ | _required_ | **`503 added_snapshot_id`**      | `long`                                      | ID of the snapshot where the  manifest file was added                                                                                                |
+| _optional_ | _required_ | _required_ | **`504 added_files_count`**      | `int`                                       | Number of entries in the manifest that have status `ADDED` (1), when `null` this is assumed to be non-zero                                           |
+| _optional_ | _required_ | _required_ | **`505 existing_files_count`**   | `int`                                       | Number of entries in the manifest that have status `EXISTING` (0), when `null` this is assumed to be non-zero                                        |
+| _optional_ | _required_ | _required_ | **`506 deleted_files_count`**    | `int`                                       | Number of entries in the manifest that have status `DELETED` (2), when `null` this is assumed to be non-zero                                         |
+| _optional_ | _required_ | _required_ | **`512 added_rows_count`**       | `long`                                      | Number of rows in all of files in the manifest that have status `ADDED`, when `null` this is assumed to be non-zero                                  |
+| _optional_ | _required_ | _required_ | **`513 existing_rows_count`**    | `long`                                      | Number of rows in all of files in the manifest that have status `EXISTING`, when `null` this is assumed to be non-zero                               |
+| _optional_ | _required_ | _required_ | **`514 deleted_rows_count`**     | `long`                                      | Number of rows in all of files in the manifest that have status `DELETED`, when `null` this is assumed to be non-zero                                |
+| _optional_ | _optional_ | _optional_ | **`507 partitions`**             | `list<508: field_summary>` (see below)      | A list of field summaries for each partition field in the spec. Each field in the list corresponds to a field in the manifest file’s partition spec. |
+| _optional_ | _optional_ | _optional_ | **`519 key_metadata`**           | `binary`                                    | Implementation-specific key metadata for encryption                                                                                                  |
+|            |            | _optional_ | **`520 first_row_id`**           | `long`                                      | The starting `_row_id` to assign to rows added by `ADDED` data files [First Row ID Assignment](#first-row-id-assignment)                               |
+
+`field_summary` is a struct with the following fields:
+
+| v1         | v2         | Field id, name          | Type          | Description |
+| ---------- | ---------- |-------------------------|---------------|-------------|
+| _required_ | _required_ | **`509 contains_null`** | `boolean`     | Whether the manifest contains at least one partition with a null value for the field |
+| _optional_ | _optional_ | **`518 contains_nan`**  | `boolean`     | Whether the manifest contains at least one partition with a NaN value for the field |
+| _optional_ | _optional_ | **`510 lower_bound`**   | `bytes`   [1] | Lower bound for the non-null, non-NaN values in the partition field, or null if all values are null or NaN [2] |
+| _optional_ | _optional_ | **`511 upper_bound`**   | `bytes`   [1] | Upper bound for the non-null, non-NaN values in the partition field, or null if all values are null or NaN [2] |
+
+Notes:
+
+1. Lower and upper bounds are serialized to bytes using the single-object serialization in Appendix D. The type of used to encode the value is the type of the partition field data.
+2. If -0.0 is a value of the partition field, the `lower_bound` must not be +0.0, and if +0.0 is a value of the partition field, the `upper_bound` must not be -0.0.
+
+#### First Row ID Assignment
+
+##### RQ.Iceberg.ManifestList.FirstRowIDAssignment
+version: 1.0
+
+Row ID inheritance is used when row lineage is enabled. When not enabled, a manifest's `first_row_id` must always be set to `null`. Once enabled, row lineage cannot be disabled. The rest of this section applies when row lineage is enabled.
+
+When adding a new data manifest file, its `first_row_id` field is assigned the value of the snapshot's `first_row_id` plus the sum of `added_rows_count` for all data manifests that preceded the manifest in the manifest list.
+
+The `first_row_id` is only assigned for new data manifests. Values for existing manifests must be preserved when writing a new manifest list. The value of `first_row_id` for delete manifests is always `null`.
+
+### Scan Planning
+
+#### RQ.Iceberg.ScanPlanning
+version: 1.0
+
+Scans are planned by reading the manifest files for the current snapshot. Deleted entries in data and delete manifests (those marked with status "DELETED") are not used in a scan.
+
+Manifests that contain no matching files, determined using either file counts or partition summaries, may be skipped.
+
+For each manifest, scan predicates, which filter data rows, are converted to partition predicates, which filter partition tuples. These partition predicates are used to select relevant data files, delete files, and deletion vector metadata. Conversion uses the partition spec that was used to write the manifest file regardless of the current partition spec.
+
+Scan predicates are converted to partition predicates using an _inclusive projection_: if a scan predicate matches a row, then the partition predicate must match that row’s partition. This is called _inclusive_ [1] because rows that do not match the scan predicate may be included in the scan by the partition predicate.
+
+For example, an `events` table with a timestamp column named `ts` that is partitioned by `ts_day=day(ts)` is queried by users with ranges over the timestamp column: `ts > X`. The inclusive projection is `ts_day >= day(X)`, which is used to select files that may have matching rows. Note that, in most cases, timestamps just before `X` will be included in the scan because the file contains rows that match the predicate and rows that do not match the predicate.
+
+The inclusive projection for an unknown partition transform is _true_ because the partition field is ignored and not used in filtering.
+
+Scan predicates are also used to filter data and delete files using column bounds and counts that are stored by field id in manifests. The same filter logic can be used for both data and delete files because both store metrics of the rows either inserted or deleted. If metrics show that a delete file has no rows that match a scan predicate, it may be ignored just as a data file would be ignored [2].
+
+Data files that match the query filter must be read by the scan. 
+
+Note that for any snapshot, all file paths marked with "ADDED" or "EXISTING" may appear at most once across all manifest files in the snapshot. If a file path appears more than once, the results of the scan are undefined. Reader implementations may raise an error in this case, but are not required to do so.
+
+
+Delete files and deletion vector metadata that match the filters must be applied to data files at read time, limited by the following scope rules.
+
+* A deletion vector must be applied to a data file when all of the following are true:
+    - The data file's `file_path` is equal to the deletion vector's `referenced_data_file`
+    - The data file's data sequence number is _less than or equal to_ the deletion vector's data sequence number
+    - The data file's partition (both spec and partition values) is equal [4] to the deletion vector's partition
+* A _position_ delete file must be applied to a data file when all of the following are true:
+    - The data file's `file_path` is equal to the delete file's `referenced_data_file` if it is non-null
+    - The data file's data sequence number is _less than or equal to_ the delete file's data sequence number
+    - The data file's partition (both spec and partition values) is equal [4] to the delete file's partition
+    - There is no deletion vector that must be applied to the data file (when added, such a vector must contain all deletes from existing position delete files)
+* An _equality_ delete file must be applied to a data file when all of the following are true:
+    - The data file's data sequence number is _strictly less than_ the delete's data sequence number
+    - The data file's partition (both spec id and partition values) is equal [4] to the delete file's partition _or_ the delete file's partition spec is unpartitioned
+
+In general, deletes are applied only to data files that are older and in the same partition, except for two special cases:
+
+* Equality delete files stored with an unpartitioned spec are applied as global deletes. Otherwise, delete files do not apply to files in other partitions.
+* Position deletes (vectors and files) must be applied to data files from the same commit, when the data and delete file data sequence numbers are equal. This allows deleting rows that were added in the same commit.
+
+
+Notes:
+
+1. An alternative, *strict projection*, creates a partition predicate that will match a file if all of the rows in the file must match the scan predicate. These projections are used to calculate the residual predicates for each file in a scan.
+2. For example, if `file_a` has rows with `id` between 1 and 10 and a delete file contains rows with `id` between 1 and 4, a scan for `id = 9` may ignore the delete file because none of the deletes can match a row that will be selected.
+3. Floating point partition values are considered equal if their IEEE 754 floating-point "single format" bit layout are equal with NaNs normalized to have only the the most significant mantissa bit set (the equivalent of calling `Float.floatToIntBits` or `Double.doubleToLongBits` in Java). The Avro specification requires all floating point values to be encoded in this format.
+4. Unknown partition transforms do not affect partition equality. Although partition fields with unknown transforms are ignored for filtering, the result of an unknown transform is still used when testing whether partition values are equal.
+
+### Snapshot References
+
+#### RQ.Iceberg.SnapshotReferences
+version: 1.0
+
+Iceberg tables keep track of branches and tags using snapshot references. 
+Tags are labels for individual snapshots. Branches are mutable named references that can be updated by committing a new snapshot as the branch's referenced snapshot using the [Commit Conflict Resolution and Retry](#commit-conflict-resolution-and-retry) procedures.
+
+The snapshot reference object records all the information of a reference including snapshot ID, reference type and [Snapshot Retention Policy](#snapshot-retention-policy).
+
+| v1         | v2         | Field name                   | Type      | Description |
+| ---------- | ---------- | ---------------------------- | --------- | ----------- |
+| _required_ | _required_ | **`snapshot-id`**            | `long`    | A reference's snapshot ID. The tagged snapshot or latest snapshot of a branch. |
+| _required_ | _required_ | **`type`**                   | `string`  | Type of the reference, `tag` or `branch` |
+| _optional_ | _optional_ | **`min-snapshots-to-keep`**  | `int`     | For `branch` type only, a positive number for the minimum number of snapshots to keep in a branch while expiring snapshots. Defaults to table property `history.expire.min-snapshots-to-keep`. |
+| _optional_ | _optional_ | **`max-snapshot-age-ms`**    | `long`    | For `branch` type only, a positive number for the max age of snapshots to keep when expiring, including the latest snapshot. Defaults to table property `history.expire.max-snapshot-age-ms`. |
+| _optional_ | _optional_ | **`max-ref-age-ms`**         | `long`    | For snapshot references except the `main` branch, a positive number for the max age of the snapshot reference to keep while expiring snapshots. Defaults to table property `history.expire.max-ref-age-ms`. The `main` branch never expires. |
+
+Valid snapshot references are stored as the values of the `refs` map in table metadata. For serialization, see Appendix C.
+
+### Snapshot Retention Policy
+
+#### RQ.Iceberg.SnapshotRetentionPolicy
+version: 1.0
+
+Table snapshots expire and are removed from metadata to allow removed or replaced data files to be physically deleted.
+The snapshot expiration procedure removes snapshots from table metadata and applies the table's retention policy.
+Retention policy can be configured both globally and on snapshot reference through properties `min-snapshots-to-keep`, `max-snapshot-age-ms` and `max-ref-age-ms`.
+
+When expiring snapshots, retention policies in table and snapshot references are evaluated in the following way:
+
+1. Start with an empty set of snapshots to retain
+2. Remove any refs (other than main) where the referenced snapshot is older than `max-ref-age-ms`
+3. For each branch and tag, add the referenced snapshot to the retained set
+4. For each branch, add its ancestors to the retained set until:
+    1. The snapshot is older than `max-snapshot-age-ms`, AND
+    2. The snapshot is not one of the first `min-snapshots-to-keep` in the branch (including the branch's referenced snapshot)
+5. Expire any snapshot not in the set of snapshots to retain.
+
+### Table Metadata
+
+#### RQ.Iceberg.TableMetadata
+version: 1.0
+
+Table metadata is stored as JSON. Each table metadata change creates a new table metadata file that is committed by an atomic operation. This operation is used to ensure that a new version of table metadata replaces the version on which it was based. This produces a linear history of table versions and ensures that concurrent writes are not lost.
+
+The atomic operation used to commit metadata depends on how tables are tracked and is not standardized by this spec. See the sections below for examples.
+
+#### Table Metadata Fields
+
+##### RQ.Iceberg.TableMetadata.Fields
+version: 1.0
+
+Table metadata consists of the following fields:
+
+| v1         | v2         | v3         | Field                       | Description                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------- | ---------- |------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| _required_ | _required_ | _required_ | **`format-version`**        | An integer version number for the format. Currently, this can be 1 or 2 based on the spec. Implementations must throw an exception if a table's version is higher than the supported version.                                                                                                                                                                                                    |
+| _optional_ | _required_ | _required_ | **`table-uuid`**            | A UUID that identifies the table, generated when the table is created. Implementations must throw an exception if a table's UUID does not match the expected UUID after refreshing metadata.                                                                                                                                                                                                     |
+| _required_ | _required_ | _required_ | **`location`**              | The table's base location. This is used by writers to determine where to store data files, manifest files, and table metadata files.                                                                                                                                                                                                                                                             |
+|            | _required_ | _required_ | **`last-sequence-number`**  | The table's highest assigned sequence number, a monotonically increasing long that tracks the order of snapshots in a table.                                                                                                                                                                                                                                                                     |
+| _required_ | _required_ | _required_ | **`last-updated-ms`**       | Timestamp in milliseconds from the unix epoch when the table was last updated. Each table metadata file should update this field just before writing.                                                                                                                                                                                                                                            |
+| _required_ | _required_ | _required_ | **`last-column-id`**        | An integer; the highest assigned column ID for the table. This is used to ensure columns are always assigned an unused ID when evolving schemas.                                                                                                                                                                                                                                                 |
+| _required_ |            |            | **`schema`**                | The table’s current schema. (**Deprecated**: use `schemas` and `current-schema-id` instead)                                                                                                                                                                                                                                                                                                      |
+| _optional_ | _required_ | _required_ | **`schemas`**               | A list of schemas, stored as objects with `schema-id`.                                                                                                                                                                                                                                                                                                                                           |
+| _optional_ | _required_ | _required_ | **`current-schema-id`**     | ID of the table's current schema.                                                                                                                                                                                                                                                                                                                                                                |
+| _required_ |            |            | **`partition-spec`**        | The table’s current partition spec, stored as only fields. Note that this is used by writers to partition data, but is not used when reading because reads use the specs stored in manifest files. (**Deprecated**: use `partition-specs` and `default-spec-id` instead)                                                                                                                         |
+| _optional_ | _required_ | _required_ | **`partition-specs`**       | A list of partition specs, stored as full partition spec objects.                                                                                                                                                                                                                                                                                                                                |
+| _optional_ | _required_ | _required_ | **`default-spec-id`**       | ID of the "current" spec that writers should use by default.                                                                                                                                                                                                                                                                                                                                     |
+| _optional_ | _required_ | _required_ | **`last-partition-id`**     | An integer; the highest assigned partition field ID across all partition specs for the table. This is used to ensure partition fields are always assigned an unused ID when evolving specs.                                                                                                                                                                                                      |
+| _optional_ | _optional_ | _optional_ | **`properties`**            | A string to string map of table properties. This is used to control settings that affect reading and writing and is not intended to be used for arbitrary metadata. For example, `commit.retry.num-retries` is used to control the number of commit retries.                                                                                                                                     |
+| _optional_ | _optional_ | _optional_ | **`current-snapshot-id`**   | `long` ID of the current table snapshot; must be the same as the current ID of the `main` branch in `refs`.                                                                                                                                                                                                                                                                                      |
+| _optional_ | _optional_ | _optional_ | **`snapshots`**             | A list of valid snapshots. Valid snapshots are snapshots for which all data files exist in the file system. A data file must not be deleted from the file system until the last snapshot in which it was listed is garbage collected.                                                                                                                                                            |
+| _optional_ | _optional_ | _optional_ | **`snapshot-log`**          | A list (optional) of timestamp and snapshot ID pairs that encodes changes to the current snapshot for the table. Each time the current-snapshot-id is changed, a new entry should be added with the last-updated-ms and the new current-snapshot-id. When snapshots are expired from the list of valid snapshots, all entries before a snapshot that has expired should be removed.              |
+| _optional_ | _optional_ | _optional_ | **`metadata-log`**          | A list (optional) of timestamp and metadata file location pairs that encodes changes to the previous metadata files for the table. Each time a new metadata file is created, a new entry of the previous metadata file location should be added to the list. Tables can be configured to remove oldest metadata log entries and keep a fixed-size log of the most recent entries after a commit. |
+| _optional_ | _required_ | _required_ | **`sort-orders`**           | A list of sort orders, stored as full sort order objects.                                                                                                                                                                                                                                                                                                                                        |
+| _optional_ | _required_ | _required_ | **`default-sort-order-id`** | Default sort order id of the table. Note that this could be used by writers, but is not used when reading because reads use the specs stored in manifest files.                                                                                                                                                                                                                                  |
+|            | _optional_ | _optional_ | **`refs`**                  | A map of snapshot references. The map keys are the unique snapshot reference names in the table, and the map values are snapshot reference objects. There is always a `main` branch reference pointing to the `current-snapshot-id` even if the `refs` map is null.                                                                                                                              |
+| _optional_ | _optional_ | _optional_ | **`statistics`**            | A list (optional) of [table statistics](#table-statistics).                                                                                                                                                                                                                                                                                                                                      |
+| _optional_ | _optional_ | _optional_ | **`partition-statistics`**  | A list (optional) of [partition statistics](#partition-statistics).                                                                                                                                                                                                                                                                                                                              |
+|            |            | _optional_ | **`row-lineage`**           | A boolean, defaulting to false, setting whether or not to track the creation and updates to rows in the table. See [Row Lineage](#row-lineage).                                                                                                                                                                                                                                                  |
+|            |            | _optional_ | **`next-row-id`**           | A value higher than all assigned row IDs; the next snapshot's `first-row-id`. See [Row Lineage](#row-lineage).                                                                                                                                                                                                                                                                                   |
+
+For serialization details, see Appendix C.
+
+When a new snapshot is added, the table's `next-row-id` should be updated to the previous `next-row-id` plus the sum of `record_count` for all data files added in the snapshot (this is also equal to the sum of `added_rows_count` for all manifests added in the snapshot). This ensures that `next-row-id` is always higher than any assigned row ID in the table.
+
+#### Table Statistics
+
+##### RQ.Iceberg.TableMetadata.TableStatistics
+version: 1.0
+
+Table statistics files are valid [Puffin files](puffin-spec.md). Statistics are informational. A reader can choose to
+ignore statistics information. Statistics support is not required to read the table correctly. A table can contain
+many statistics files associated with different table snapshots.
+
+Statistics files metadata within `statistics` table metadata field is a struct with the following fields:
+
+| v1 | v2 | Field name | Type | Description |
+|----|----|------------|------|-------------|
+| _required_ | _required_ | **`snapshot-id`** | `string` | ID of the Iceberg table's snapshot the statistics file is associated with. |
+| _required_ | _required_ | **`statistics-path`** | `string` | Path of the statistics file. See [Puffin file format](puffin-spec.md). |
+| _required_ | _required_ | **`file-size-in-bytes`** | `long` | Size of the statistics file. |
+| _required_ | _required_ | **`file-footer-size-in-bytes`** | `long` | Total size of the statistics file's footer (not the footer payload size). See [Puffin file format](puffin-spec.md) for footer definition. |
+| _optional_ | _optional_ | **`key-metadata`** | Base64-encoded implementation-specific key metadata for encryption. |
+| _required_ | _required_ | **`blob-metadata`** | `list<blob metadata>` (see below) | A list of the blob metadata for statistics contained in the file with structure described below. |
+
+Blob metadata is a struct with the following fields:
+
+| v1 | v2 | Field name | Type | Description |
+|----|----|------------|------|-------------|
+| _required_ | _required_ | **`type`** | `string` | Type of the blob. Matches Blob type in the Puffin file. |
+| _required_ | _required_ | **`snapshot-id`** | `long` | ID of the Iceberg table's snapshot the blob was computed from. |
+| _required_ | _required_ | **`sequence-number`** | `long` | Sequence number of the Iceberg table's snapshot the blob was computed from. |
+| _required_ | _required_ | **`fields`** | `list<integer>` | Ordered list of fields, given by field ID, on which the statistic was calculated. |
+| _optional_ | _optional_ | **`properties`** | `map<string, string>` | Additional properties associated with the statistic. Subset of Blob properties in the Puffin file. |
+
+
+#### Partition Statistics
+
+##### RQ.Iceberg.TableMetadata.PartitionStatistics
+version: 1.0
+
+Partition statistics files are based on [partition statistics file spec](#partition-statistics-file). 
+Partition statistics are not required for reading or planning and readers may ignore them.
+Each table snapshot may be associated with at most one partition statistics file.
+A writer can optionally write the partition statistics file during each write operation, or it can also be computed on demand.
+Partition statistics file must be registered in the table metadata file to be considered as a valid statistics file for the reader.
+
+`partition-statistics` field of table metadata is an optional list of structs with the following fields:
+
+| v1 | v2 | Field name | Type | Description |
+|----|----|------------|------|-------------|
+| _required_ | _required_ | **`snapshot-id`** | `long` | ID of the Iceberg table's snapshot the partition statistics file is associated with. |
+| _required_ | _required_ | **`statistics-path`** | `string` | Path of the partition statistics file. See [Partition statistics file](#partition-statistics-file). |
+| _required_ | _required_ | **`file-size-in-bytes`** | `long` | Size of the partition statistics file. |
+
+##### Partition Statistics File
+
+Statistics information for each unique partition tuple is stored as a row in any of the data file format of the table (for example, Parquet or ORC).
+These rows must be sorted (in ascending manner with NULL FIRST) by `partition` field to optimize filtering rows while scanning.
+
+The schema of the partition statistics file is as follows:
+
+| v1 | v2 | Field id, name | Type | Description |
+|----|----|----------------|------|-------------|
+| _required_ | _required_ | **`1 partition`** | `struct<..>` | Partition data tuple, schema based on the unified partition type considering all specs in a table |
+| _required_ | _required_ | **`2 spec_id`** | `int` | Partition spec id |
+| _required_ | _required_ | **`3 data_record_count`** | `long` | Count of records in data files |
+| _required_ | _required_ | **`4 data_file_count`** | `int` | Count of data files |
+| _required_ | _required_ | **`5 total_data_file_size_in_bytes`** | `long` | Total size of data files in bytes |
+| _optional_ | _optional_ | **`6 position_delete_record_count`** | `long` | Count of records in position delete files |
+| _optional_ | _optional_ | **`7 position_delete_file_count`** | `int` | Count of position delete files |
+| _optional_ | _optional_ | **`8 equality_delete_record_count`** | `long` | Count of records in equality delete files |
+| _optional_ | _optional_ | **`9 equality_delete_file_count`** | `int` | Count of equality delete files |
+| _optional_ | _optional_ | **`10 total_record_count`** | `long` | Accurate count of records in a partition after applying the delete files if any |
+| _optional_ | _optional_ | **`11 last_updated_at`** | `long` | Timestamp in milliseconds from the unix epoch when the partition was last updated |
+| _optional_ | _optional_ | **`12 last_updated_snapshot_id`** | `long` | ID of snapshot that last updated this partition |
+
+Note that partition data tuple's schema is based on the partition spec output using partition field ids for the struct field ids.
+The unified partition type is a struct containing all fields that have ever been a part of any spec in the table 
+and sorted by the field ids in ascending order.  
+In other words, the struct fields represent a union of all known partition fields sorted in ascending order by the field ids.
+
+For example,
+
+1. `spec#0` has two fields `{field#1, field#2}`
+and then the table has evolved into `spec#1` which has three fields `{field#1, field#2, field#3}`.
+The unified partition type looks like `Struct<field#1, field#2, field#3>`.
+
+2. `spec#0` has two fields `{field#1, field#2}`
+and then the table has evolved into `spec#1` which has just one field `{field#2}`.
+The unified partition type looks like `Struct<field#1, field#2>`.
+
+### Commit Conflict Resolution and Retry
+
+#### RQ.Iceberg.CommitConflictResolutionAndRetry
+version: 1.0
+
+When two commits happen at the same time and are based on the same version, only one commit will succeed. In most cases, the failed commit can be applied to the new current version of table metadata and retried. Updates verify the conditions under which they can be applied to a new version and retry if those conditions are met.
+
+*   Append operations have no requirements and can always be applied.
+*   Replace operations must verify that the files that will be deleted are still in the table. Examples of replace operations include format changes (replace an Avro file with a Parquet file) and compactions (several files are replaced with a single file that contains the same rows).
+*   Delete operations must verify that specific files to delete are still in the table. Delete operations based on expressions can always be applied (e.g., where timestamp < X).
+*   Table schema updates and partition spec changes must validate that the schema has not changed between the base version and the current version.
+
+
+#### File System Tables
+
+##### RQ.Iceberg.CommitConflictResolutionAndRetry.FileSystemTables
+version: 1.0
+
+_Note: This file system based scheme to commit a metadata file is **deprecated** and will be removed in version 4 of this spec. The scheme is **unsafe** in object stores and local file systems._
+
+An atomic swap can be implemented using atomic rename in file systems that support it, like HDFS [1].
+
+Each version of table metadata is stored in a metadata folder under the table’s base location using a file naming scheme that includes a version number, `V`: `v<V>.metadata.json`. To commit a new metadata version, `V+1`, the writer performs the following steps:
+
+1. Read the current table metadata version `V`.
+2. Create new table metadata based on version `V`.
+3. Write the new table metadata to a unique file: `<random-uuid>.metadata.json`.
+4. Rename the unique file to the well-known file for version `V`: `v<V+1>.metadata.json`.
+    1. If the rename succeeds, the commit succeeded and `V+1` is the table’s current version
+    2. If the rename fails, go back to step 1.
+
+Notes:
+
+1. The file system table scheme is implemented in [HadoopTableOperations](../javadoc/{{ icebergVersion }}/org/apache/iceberg/hadoop/HadoopTableOperations.html).
+
+#### Metastore Tables
+
+##### RQ.Iceberg.CommitConflictResolutionAndRetry.MetastoreTables
+version: 1.0
+
+The atomic swap needed to commit new versions of table metadata can be implemented by storing a pointer in a metastore or database that is updated with a check-and-put operation [1]. The check-and-put validates that the version of the table that a write is based on is still current and then makes the new metadata from the write the current version.
+
+Each version of table metadata is stored in a metadata folder under the table’s base location using a naming scheme that includes a version and UUID: `<V>-<random-uuid>.metadata.json`. To commit a new metadata version, `V+1`, the writer performs the following steps:
+
+1. Create a new table metadata file based on the current metadata.
+2. Write the new table metadata to a unique file: `<V+1>-<random-uuid>.metadata.json`.
+3. Request that the metastore swap the table’s metadata pointer from the location of `V` to the location of `V+1`.
+    1. If the swap succeeds, the commit succeeded. `V` was still the latest metadata version and the metadata file for `V+1` is now the current metadata.
+    2. If the swap fails, another writer has already created `V+1`. The current writer goes back to step 1.
+
+Notes:
+
+1. The metastore table scheme is partly implemented in [BaseMetastoreTableOperations](../javadoc/{{ icebergVersion }}/org/apache/iceberg/BaseMetastoreTableOperations.html).
+
+
+### Delete Formats
+
+#### RQ.Iceberg.DeleteFormats
+version: 1.0
+
+This section details how to encode row-level deletes in Iceberg delete files. Row-level deletes are added by v2 and are not supported in v1. Deletion vectors are added in v3 and are not supported in v2 or earlier. Position delete files must not be added to v3 tables, but existing position delete files are valid.
+
+There are three types of row-level deletes:
+
+* Deletion vectors (DVs) identify deleted rows within a single referenced data file by position in a bitmap
+* Position delete files identify deleted rows by file location and row position (**deprecated**)
+* Equality delete files identify deleted rows by the value of one or more columns
+
+Deletion vectors are a binary representation of deletes for a single data file that is more efficient at execution time than position delete files. Unlike equality or position delete files, there can be at most one deletion vector for a given data file in a snapshot. Writers must ensure that there is at most one deletion vector per data file and must merge new deletes with existing vectors or position delete files.
+
+Row-level delete files (both equality and position delete files) are valid Iceberg data files: files must use valid Iceberg formats, schemas, and column projection. It is recommended that these delete files are written using the table's default file format.
+
+Row-level delete files and deletion vectors are tracked by manifests. A separate set of manifests is used for delete files and DVs, but the same manifest schema is used for both data and delete manifests. Deletion vectors are tracked individually by file location, offset, and length within the containing file. Deletion vector metadata must include the referenced data file.
+
+Both position and equality delete files allow encoding deleted row values with a delete. This can be used to reconstruct a stream of changes to a table.
+
+
+#### Deletion Vectors
+
+##### RQ.Iceberg.DeleteFormats.DeleteVectors
+version: 1.0
+
+Deletion vectors identify deleted rows of a file by encoding deleted positions in a bitmap. A set bit at position P indicates that the row at position P is deleted.
+
+These vectors are stored using the `deletion-vector-v1` blob definition from the [Puffin spec][puffin-spec].
+
+Deletion vectors support positive 64-bit positions, but are optimized for cases where most positions fit in 32 bits by using a collection of 32-bit Roaring bitmaps. 64-bit positions are divided into a 32-bit "key" using the most significant 4 bytes and a 32-bit sub-position using the least significant 4 bytes. For each key in the set of positions, a 32-bit Roaring bitmap is maintained to store a set of 32-bit sub-positions for that key.
+
+To test whether a certain position is set, its most significant 4 bytes (the key) are used to find a 32-bit bitmap and the least significant 4 bytes (the sub-position) are tested for inclusion in the bitmap. If a bitmap is not found for the key, then it is not set.
+
+Delete manifests track deletion vectors individually by the containing file location (`file_path`), starting offset of the DV blob (`content_offset`), and total length of the blob (`content_size_in_bytes`). Multiple deletion vectors can be stored in the same file. There are no restrictions on the data files that can be referenced by deletion vectors in the same Puffin file.
+
+At most one deletion vector is allowed per data file in a snapshot. If a DV is written for a data file, it must replace all previously written position delete files so that when a DV is present, readers can safely ignore matching position delete files.
+
+
+[puffin-spec]: https://iceberg.apache.org/puffin-spec/
+
+#### Position Delete Files
+
+##### RQ.Iceberg.DeleteFormats.PositionDeleteFiles
+version: 1.0
+
+Position-based delete files identify deleted rows by file and position in one or more data files, and may optionally contain the deleted row.
+
+_Note: Position delete files are **deprecated** in v3. Existing position deletes must be written to delete vectors when updating the position deletes for a data file._
+
+A data row is deleted if there is an entry in a position delete file for the row's file and position in the data file, starting at 0.
+
+Position-based delete files store `file_position_delete`, a struct with the following fields:
+
+| Field id, name              | Type                       | Description |
+|-----------------------------|----------------------------|-------------|
+| **`2147483546  file_path`** | `string`                   | Full URI of a data file with FS scheme. This must match the `file_path` of the target data file in a manifest entry |
+| **`2147483545  pos`**       | `long`                     | Ordinal position of a deleted row in the target data file identified by `file_path`, starting at `0` |
+| **`2147483544  row`**       | `required struct<...>` [1] | Deleted row values. Omit the column when not storing deleted rows. |
+
+1. When present in the delete file, `row` is required because all delete entries must include the row values.
+
+When the deleted row column is present, its schema may be any subset of the table schema and must use field ids matching the table.
+
+To ensure the accuracy of statistics, all delete entries must include row values, or the column must be omitted (this is why the column type is `required`).
+
+The rows in the delete file must be sorted by `file_path` then `pos` to optimize filtering rows while scanning. 
+
+*  Sorting by `file_path` allows filter pushdown by file in columnar storage formats.
+*  Sorting by `pos` allows filtering rows while scanning, to avoid keeping deletes in memory.
+
+#### Equality Delete Files
+
+##### RQ.Iceberg.DeleteFormats.EqualityDeleteFiles
+version: 1.0
+
+Equality delete files identify deleted rows in a collection of data files by one or more column values, and may optionally contain additional columns of the deleted row.
+
+Equality delete files store any subset of a table's columns and use the table's field ids. The _delete columns_ are the columns of the delete file used to match data rows. Delete columns are identified by id in the delete file [metadata column `equality_ids`](#manifests). The column restrictions for columns used in equality delete files are the same as those for [identifier fields](#identifier-field-ids) with the exception that optional columns and columns nested under optional structs are allowed (if a parent struct column is null it implies the leaf column is null).
+
+A data row is deleted if its values are equal to all delete columns for any row in an equality delete file that applies to the row's data file (see [`Scan Planning`](#scan-planning)).
+
+Each row of the delete file produces one equality predicate that matches any row where the delete columns are equal. Multiple columns can be thought of as an `AND` of equality predicates. A `null` value in a delete column matches a row if the row's value is `null`, equivalent to `col IS NULL`.
+
+For example, a table with the following data:
+
+```text
+ 1: id | 2: category | 3: name
+-------|-------------|---------
+ 1     | marsupial   | Koala
+ 2     | toy         | Teddy
+ 3     | NULL        | Grizzly
+ 4     | NULL        | Polar
+```
+
+The delete `id = 3` could be written as either of the following equality delete files:
+
+```text
+equality_ids=[1]
+
+ 1: id
+-------
+ 3
+```
+
+```text
+equality_ids=[1]
+
+ 1: id | 2: category | 3: name
+-------|-------------|---------
+ 3     | NULL        | Grizzly
+```
+
+The delete `id = 4 AND category IS NULL` could be written as the following equality delete file:
+
+```text
+equality_ids=[1, 2]
+
+ 1: id | 2: category | 3: name
+-------|-------------|---------
+ 4     | NULL        | Polar
+```
+
+If a delete column in an equality delete file is later dropped from the table, it must still be used when applying the equality deletes. If a column was added to a table and later used as a delete column in an equality delete file, the column value is read for older data files using normal projection rules (defaults to `null`).
+
+
+#### Delete File Stats
+
+##### RQ.Iceberg.DeleteFormats.DeleteFileStats
+version: 1.0
+
+Manifests hold the same statistics for delete files and data files. For delete files, the metrics describe the values that were deleted.
+
+
+## Appendix A: Format-specific Requirements
+
+
+### Avro
+
+#### RQ.Iceberg.Avro
+version: 1.0
+
+**Data Type Mappings**
+
+Values should be stored in Avro using the Avro types and logical type annotations in the table below.
+
+Optional fields, array elements, and map values must be wrapped in an Avro `union` with `null`. This is the only union type allowed in Iceberg data files.
+
+Optional fields must always set the Avro field default value to null.
+
+Maps with non-string keys must use an array representation with the `map` logical type. The array representation or Avro’s map type may be used for maps with string keys.
+
+|Type|Avro type|Notes|
+|--- |--- |--- |
+|**`unknown`**|`null` or omitted||
+|**`boolean`**|`boolean`||
+|**`int`**|`int`||
+|**`long`**|`long`||
+|**`float`**|`float`||
+|**`double`**|`double`||
+|**`decimal(P,S)`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": minBytesRequired(P),`<br />&nbsp;&nbsp;`"logicalType": "decimal",`<br />&nbsp;&nbsp;`"precision": P,`<br />&nbsp;&nbsp;`"scale": S }`|Stored as fixed using the minimum number of bytes for the given precision.|
+|**`date`**|`{ "type": "int",`<br />&nbsp;&nbsp;`"logicalType": "date" }`|Stores days from 1970-01-01.|
+|**`time`**|`{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "time-micros" }`|Stores microseconds from midnight.|
+|**`timestamp`**      | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-micros",`<br />&nbsp;&nbsp;`"adjust-to-utc": false }` | Stores microseconds from 1970-01-01 00:00:00.000000. [1]            |
+|**`timestamptz`**    | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-micros",`<br />&nbsp;&nbsp;`"adjust-to-utc": true }`  | Stores microseconds from 1970-01-01 00:00:00.000000 UTC. [1]        |
+|**`timestamp_ns`**   | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-nanos",`<br />&nbsp;&nbsp;`"adjust-to-utc": false }`  | Stores nanoseconds from 1970-01-01 00:00:00.000000000. [1], [2]     |
+|**`timestamptz_ns`** | `{ "type": "long",`<br />&nbsp;&nbsp;`"logicalType": "timestamp-nanos",`<br />&nbsp;&nbsp;`"adjust-to-utc": true }`   | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC. [1], [2] |
+|**`string`**|`string`||
+|**`uuid`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": 16,`<br />&nbsp;&nbsp;`"logicalType": "uuid" }`||
+|**`fixed(L)`**|`{ "type": "fixed",`<br />&nbsp;&nbsp;`"size": L }`||
+|**`binary`**|`bytes`||
+|**`struct`**|`record`||
+|**`list`**|`array`||
+|**`map`**|`array` of key-value records, or `map` when keys are strings (optional).|Array storage must use logical type name `map` and must store elements that are 2-field records. The first field is a non-null key and the second field is the value.|
+
+Notes:
+
+1. Avro type annotation `adjust-to-utc` is an Iceberg convention; default value is `false` if not present.
+2. Avro logical type `timestamp-nanos` is an Iceberg convention; the Avro specification does not define this type.
+
+
+**Field IDs**
+
+Iceberg struct, list, and map types identify nested types by ID. When writing data to Avro files, these IDs must be stored in the Avro schema to support ID-based column pruning.
+
+IDs are stored as JSON integers in the following locations:
+
+|ID|Avro schema location|Property|Example|
+|--- |--- |--- |--- |
+|**Struct field**|Record field object|`field-id`|`{ "type": "record", ...`<br />&nbsp;&nbsp;`"fields": [`<br />&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "l",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": ["null", "long"],`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"default": null,`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 8 }`<br />&nbsp;&nbsp;`] }`|
+|**List element**|Array schema object|`element-id`|`{ "type": "array",`<br />&nbsp;&nbsp;`"items": "int",`<br />&nbsp;&nbsp;`"element-id": 9 }`|
+|**String map key**|Map schema object|`key-id`|`{ "type": "map",`<br />&nbsp;&nbsp;`"values": "int",`<br />&nbsp;&nbsp;`"key-id": 10,`<br />&nbsp;&nbsp;`"value-id": 11 }`|
+|**String map value**|Map schema object|`value-id`||
+|**Map key, value**|Key, value fields in the element record.|`field-id`|`{ "type": "array",`<br />&nbsp;&nbsp;`"logicalType": "map",`<br />&nbsp;&nbsp;`"items": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"type": "record",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"name": "k12_v13",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"fields": [`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "key",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": "int",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 12 },`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{ "name": "value",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": "string",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"field-id": 13 }`<br />&nbsp;&nbsp;&nbsp;&nbsp;`] } }`|
+
+Note that the string map case is for maps where the key type is a string. Using Avro’s map type in this case is optional. Maps with string keys may be stored as arrays.
+
+
+### Parquet
+
+#### RQ.Iceberg.Parquet
+version: 1.0
+
+**Data Type Mappings**
+
+Values should be stored in Parquet using the types and logical type annotations in the table below. Column IDs are required to be stored as [field IDs](http://github.com/apache/parquet-format/blob/40699d05bd24181de6b1457babbee2c16dce3803/src/main/thrift/parquet.thrift#L459) on the parquet schema.
+
+Lists must use the [3-level representation](https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#lists).
+
+| Type               | Parquet physical type                                              | Logical type                                | Notes                                                          |
+|--------------------|--------------------------------------------------------------------|---------------------------------------------|----------------------------------------------------------------|
+| **`unknown`**      | None                                                               |                                             | Omit from data files                                           |
+| **`boolean`**      | `boolean`                                                          |                                             |                                                                |
+| **`int`**          | `int`                                                              |                                             |                                                                |
+| **`long`**         | `long`                                                             |                                             |                                                                |
+| **`float`**        | `float`                                                            |                                             |                                                                |
+| **`double`**       | `double`                                                           |                                             |                                                                |
+| **`decimal(P,S)`** | `P <= 9`: `int32`,<br />`P <= 18`: `int64`,<br />`fixed` otherwise | `DECIMAL(P,S)`                              | Fixed must use the minimum number of bytes that can store `P`. |
+| **`date`**         | `int32`                                                            | `DATE`                                      | Stores days from 1970-01-01.                                   |
+| **`time`**         | `int64`                                                            | `TIME_MICROS` with `adjustToUtc=false`      | Stores microseconds from midnight.                             |
+| **`timestamp`**    | `int64`                                                            | `TIMESTAMP_MICROS` with `adjustToUtc=false` | Stores microseconds from 1970-01-01 00:00:00.000000.           |
+| **`timestamptz`**  | `int64`                                                            | `TIMESTAMP_MICROS` with `adjustToUtc=true`  | Stores microseconds from 1970-01-01 00:00:00.000000 UTC.       |
+| **`timestamp_ns`**   | `int64`                                                          | `TIMESTAMP_NANOS` with `adjustToUtc=false`  | Stores nanoseconds from 1970-01-01 00:00:00.000000000.         |
+| **`timestamptz_ns`** | `int64`                                                          | `TIMESTAMP_NANOS` with `adjustToUtc=true`   | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC.     |
+| **`string`**       | `binary`                                                           | `UTF8`                                      | Encoding must be UTF-8.                                        |
+| **`uuid`**         | `fixed_len_byte_array[16]`                                         | `UUID`                                      |                                                                |
+| **`fixed(L)`**     | `fixed_len_byte_array[L]`                                          |                                             |                                                                |
+| **`binary`**       | `binary`                                                           |                                             |                                                                |
+| **`struct`**       | `group`                                                            |                                             |                                                                |
+| **`list`**         | `3-level list`                                                     | `LIST`                                      | See Parquet docs for 3-level representation.                   |
+| **`map`**          | `3-level map`                                                      | `MAP`                                       | See Parquet docs for 3-level representation.                   |
+
+
+When reading an `unknown` column, any corresponding column must be ignored and replaced with `null` values.
+
+
+### ORC
+
+#### RQ.Iceberg.ORC
+version: 1.0
+
+**Data Type Mappings**
+
+| Type               | ORC type            | ORC type attributes                                  | Notes                                                                                   |
+|--------------------|---------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| **`unknown`**      | None                |                                                      | Omit from data files                                                                    |
+| **`boolean`**      | `boolean`           |                                                      |                                                                                         |
+| **`int`**          | `int`               |                                                      | ORC `tinyint` and `smallint` would also map to **`int`**.                               |
+| **`long`**         | `long`              |                                                      |                                                                                         |
+| **`float`**        | `float`             |                                                      |                                                                                         |
+| **`double`**       | `double`            |                                                      |                                                                                         |
+| **`decimal(P,S)`** | `decimal`           |                                                      |                                                                                         |
+| **`date`**         | `date`              |                                                      |                                                                                         |
+| **`time`**         | `long`              | `iceberg.long-type`=`TIME`                           | Stores microseconds from midnight.                                                      |
+| **`timestamp`**    | `timestamp`         | `iceberg.timestamp-unit`=`MICROS`                    | Stores microseconds from 2015-01-01 00:00:00.000000. [1], [2]                           |
+| **`timestamptz`**  | `timestamp_instant` | `iceberg.timestamp-unit`=`MICROS`                    | Stores microseconds from 2015-01-01 00:00:00.000000 UTC. [1], [2]                       |
+| **`timestamp_ns`** | `timestamp`         | `iceberg.timestamp-unit`=`NANOS`                     | Stores nanoseconds from 2015-01-01 00:00:00.000000000. [1]                              |
+| **`timestamptz_ns`** | `timestamp_instant` | `iceberg.timestamp-unit`=`NANOS`                   | Stores nanoseconds from 2015-01-01 00:00:00.000000000 UTC. [1]                          |
+| **`string`**       | `string`            |                                                      | ORC `varchar` and `char` would also map to **`string`**.                                |
+| **`uuid`**         | `binary`            | `iceberg.binary-type`=`UUID`                         |                                                                                         |
+| **`fixed(L)`**     | `binary`            | `iceberg.binary-type`=`FIXED` & `iceberg.length`=`L` | The length would not be checked by the ORC reader and should be checked by the adapter. |
+| **`binary`**       | `binary`            |                                                      |                                                                                         |
+| **`struct`**       | `struct`            |                                                      |                                                                                         |
+| **`list`**         | `array`             |                                                      |                                                                                         |
+| **`map`**          | `map`               |                                                      |                                                                                         |
+
+Notes:
+
+1. ORC's [TimestampColumnVector](https://orc.apache.org/api/hive-storage-api/org/apache/hadoop/hive/ql/exec/vector/TimestampColumnVector.html) consists of a time field (milliseconds since epoch) and a nanos field (nanoseconds within the second). Hence the milliseconds within the second are reported twice; once in the time field and again in the nanos field. The read adapter should only use milliseconds within the second from one of these fields. The write adapter should also report milliseconds within the second twice; once in the time field and again in the nanos field. ORC writer is expected to correctly consider millis information from one of the fields. More details at https://issues.apache.org/jira/browse/ORC-546
+2. ORC `timestamp` and `timestamp_instant` values store nanosecond precision. Iceberg ORC writers for Iceberg types `timestamp` and `timestamptz` **must** truncate nanoseconds to microseconds. `iceberg.timestamp-unit` is assumed to be `MICROS` if not present.
+
+One of the interesting challenges with this is how to map Iceberg’s schema evolution (id based) on to ORC’s (name based). In theory, we could use Iceberg’s column ids as the column and field names, but that would be inconvenient.
+
+The column IDs must be stored in ORC type attributes using the key `iceberg.id`, and `iceberg.required` to store `"true"` if the Iceberg column is required, otherwise it will be optional.
+
+Iceberg would build the desired reader schema with their schema evolution rules and pass that down to the ORC reader, which would then use its schema evolution to map that to the writer’s schema. Basically, Iceberg would need to change the names of columns and fields to get the desired mapping.
+
+|Iceberg writer|ORC writer|Iceberg reader|ORC reader|
+|--- |--- |--- |--- |
+|`struct<a (1): int, b (2): string>`|`struct<a: int, b: string>`|`struct<a (2): string, c (3): date>`|`struct<b: string, c: date>`|
+|`struct<a (1): struct<b (2): string, c (3): date>>`|`struct<a: struct<b:string, c:date>>`|`struct<aa (1): struct<cc (3): date, bb (2): string>>`|`struct<a: struct<c:date, b:string>>`|
+
+## Appendix B: 32-bit Hash Requirements
+
+### RQ.Iceberg.32bitHash
+version: 1.0
+
+The 32-bit hash implementation is 32-bit Murmur3 hash, x86 variant, seeded with 0.
+
+| Primitive type     | Hash specification                        | Test value                                 |
+|--------------------|-------------------------------------------|--------------------------------------------|
+| **`int`**          | `hashLong(long(v))`			[1]          | `34` ￫ `2017239379`                        |
+| **`long`**         | `hashBytes(littleEndianBytes(v))`         | `34L` ￫ `2017239379`                       |
+| **`decimal(P,S)`** | `hashBytes(minBigEndian(unscaled(v)))`[2] | `14.20` ￫ `-500754589`                     |
+| **`date`**         | `hashInt(daysFromUnixEpoch(v))`           | `2017-11-16` ￫ `-653330422`                |
+| **`time`**         | `hashLong(microsecsFromMidnight(v))`      | `22:31:08` ￫ `-662762989`                  |
+| **`timestamp`**    | `hashLong(microsecsFromUnixEpoch(v))`     | `2017-11-16T22:31:08` ￫ `-2047944441`<br />`2017-11-16T22:31:08.000001` ￫ `-1207196810` |
+| **`timestamptz`**  | `hashLong(microsecsFromUnixEpoch(v))`     | `2017-11-16T14:31:08-08:00` ￫ `-2047944441`<br />`2017-11-16T14:31:08.000001-08:00` ￫ `-1207196810` |
+| **`timestamp_ns`** | `hashLong(microsecsFromUnixEpoch(v))` [3] | `2017-11-16T22:31:08` ￫ `-2047944441`<br />`2017-11-16T22:31:08.000001001` ￫ `-1207196810` |
+| **`timestamptz_ns`** | `hashLong(microsecsFromUnixEpoch(v))` [3]| `2017-11-16T14:31:08-08:00` ￫ `-2047944441`<br />`2017-11-16T14:31:08.000001001-08:00` ￫ `-1207196810` |
+| **`string`**       | `hashBytes(utf8Bytes(v))`                 | `iceberg` ￫ `1210000089`                   |
+| **`uuid`**         | `hashBytes(uuidBytes(v))`		[4]      | `f79c3e09-677c-4bbd-a479-3f349cb785e7` ￫ `1488055340`               |
+| **`fixed(L)`**     | `hashBytes(v)`                            | `00 01 02 03` ￫ `-188683207`               |
+| **`binary`**       | `hashBytes(v)`                            | `00 01 02 03` ￫ `-188683207`               |
+
+The types below are not currently valid for bucketing, and so are not hashed. However, if that changes and a hash value is needed, the following table shall apply:
+
+| Primitive type     | Hash specification                        | Test value                                 |
+|--------------------|-------------------------------------------|--------------------------------------------|
+| **`unknown`**      | always `null`                             |                                            |
+| **`boolean`**      | `false: hashInt(0)`, `true: hashInt(1)`   | `true` ￫ `1392991556`                      |
+| **`float`**        | `hashLong(doubleToLongBits(double(v))` [5]| `1.0F` ￫ `-142385009`, `0.0F` ￫ `1669671676`, `-0.0F` ￫ `1669671676` |
+| **`double`**       | `hashLong(doubleToLongBits(v))`        [5]| `1.0D` ￫ `-142385009`, `0.0D` ￫ `1669671676`, `-0.0D` ￫ `1669671676` |
+
+Notes:
+
+1. Integer and long hash results must be identical for all integer values. This ensures that schema evolution does not change bucket partition values if integer types are promoted.
+2. Decimal values are hashed using the minimum number of bytes required to hold the unscaled value as a two’s complement big-endian; this representation does not include padding bytes required for storage in a fixed-length array.
+Hash results are not dependent on decimal scale, which is part of the type, not the data value.
+3. Nanosecond timestamps must be converted to microsecond precision before hashing to ensure timestamps have the same hash value.
+4. UUIDs are encoded using big endian. The test UUID for the example above is: `f79c3e09-677c-4bbd-a479-3f349cb785e7`. This UUID encoded as a byte array is:
+`F7 9C 3E 09 67 7C 4B BD A4 79 3F 34 9C B7 85 E7`
+5. `doubleToLongBits` must give the IEEE 754 compliant bit representation of the double value. All `NaN` bit patterns must be canonicalized to `0x7ff8000000000000L`. Negative zero (`-0.0`) must be canonicalized to positive zero (`0.0`). Float hash values are the result of hashing the float cast to double to ensure that schema evolution does not change hash values if float types are promoted.
+
+## Appendix C: JSON serialization
+
+### RQ.Iceberg.JSONSerialization
+version: 1.0
+
+### Schemas
+
+Schemas are serialized as a JSON object with the same fields as a struct in the table below, and the following additional fields:
+
+| v1         | v2         |Field|JSON representation|Example|
+| ---------- | ---------- |--- |--- |--- |
+| _optional_ | _required_ |**`schema-id`**|`JSON int`|`0`|
+| _optional_ | _optional_ |**`identifier-field-ids`**|`JSON list of ints`|`[1, 2]`|
+
+Types are serialized according to this table:
+
+|Type|JSON representation|Example|
+|--- |--- |--- |
+|**`unknown`**|`JSON string: "unknown"`|`"unknown"`|
+|**`boolean`**|`JSON string: "boolean"`|`"boolean"`|
+|**`int`**|`JSON string: "int"`|`"int"`|
+|**`long`**|`JSON string: "long"`|`"long"`|
+|**`float`**|`JSON string: "float"`|`"float"`|
+|**`double`**|`JSON string: "double"`|`"double"`|
+|**`date`**|`JSON string: "date"`|`"date"`|
+|**`time`**|`JSON string: "time"`|`"time"`|
+|**`timestamp, microseconds, without zone`**|`JSON string: "timestamp"`|`"timestamp"`|
+|**`timestamp, microseconds, with zone`**|`JSON string: "timestamptz"`|`"timestamptz"`|
+|**`timestamp, nanoseconds, without zone`**|`JSON string: "timestamp_ns"`|`"timestamp_ns"`|
+|**`timestamp, nanoseconds, with zone`**|`JSON string: "timestamptz_ns"`|`"timestamptz_ns"`|
+|**`string`**|`JSON string: "string"`|`"string"`|
+|**`uuid`**|`JSON string: "uuid"`|`"uuid"`|
+|**`fixed(L)`**|`JSON string: "fixed[<L>]"`|`"fixed[16]"`|
+|**`binary`**|`JSON string: "binary"`|`"binary"`|
+|**`decimal(P, S)`**|`JSON string: "decimal(<P>,<S>)"`|`"decimal(9,2)"`,<br />`"decimal(9, 2)"`|
+|**`struct`**|`JSON object: {`<br />&nbsp;&nbsp;`"type": "struct",`<br />&nbsp;&nbsp;`"fields": [ {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"id": <field id int>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"name": <name string>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"required": <boolean>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"type": <type JSON>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"doc": <comment string>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"initial-default": <JSON encoding of default value>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"write-default": <JSON encoding of default value>`<br />&nbsp;&nbsp;&nbsp;&nbsp;`}, ...`<br />&nbsp;&nbsp;`] }`|`{`<br />&nbsp;&nbsp;`"type": "struct",`<br />&nbsp;&nbsp;`"fields": [ {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"id": 1,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"name": "id",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"required": true,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"type": "uuid",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"initial-default": "0db3e2a8-9d1d-42b9-aa7b-74ebe558dceb",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"write-default": "ec5911be-b0a7-458c-8438-c9a3e53cffae"`<br />&nbsp;&nbsp;`}, {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"id": 2,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"name": "data",`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"required": false,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"type": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"type": "list",`<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`...`<br />&nbsp;&nbsp;&nbsp;&nbsp;`}`<br />&nbsp;&nbsp;`} ]`<br />`}`|
+|**`list`**|`JSON object: {`<br />&nbsp;&nbsp;`"type": "list",`<br />&nbsp;&nbsp;`"element-id": <id int>,`<br />&nbsp;&nbsp;`"element-required": <bool>`<br />&nbsp;&nbsp;`"element": <type JSON>`<br />`}`|`{`<br />&nbsp;&nbsp;`"type": "list",`<br />&nbsp;&nbsp;`"element-id": 3,`<br />&nbsp;&nbsp;`"element-required": true,`<br />&nbsp;&nbsp;`"element": "string"`<br />`}`|
+|**`map`**|`JSON object: {`<br />&nbsp;&nbsp;`"type": "map",`<br />&nbsp;&nbsp;`"key-id": <key id int>,`<br />&nbsp;&nbsp;`"key": <type JSON>,`<br />&nbsp;&nbsp;`"value-id": <val id int>,`<br />&nbsp;&nbsp;`"value-required": <bool>`<br />&nbsp;&nbsp;`"value": <type JSON>`<br />`}`|`{`<br />&nbsp;&nbsp;`"type": "map",`<br />&nbsp;&nbsp;`"key-id": 4,`<br />&nbsp;&nbsp;`"key": "string",`<br />&nbsp;&nbsp;`"value-id": 5,`<br />&nbsp;&nbsp;`"value-required": false,`<br />&nbsp;&nbsp;`"value": "double"`<br />`}`|
+
+Note that default values are serialized using the JSON single-value serialization in [Appendix D](#appendix-d-single-value-serialization).
+
+
+### Partition Specs
+
+#### RQ.Iceberg.JSONSerialization.PartitionSpecs
+version: 1.0
+
+Partition specs are serialized as a JSON object with the following fields:
+
+|Field|JSON representation|Example|
+|--- |--- |--- |
+|**`spec-id`**|`JSON int`|`0`|
+|**`fields`**|`JSON list: [`<br />&nbsp;&nbsp;`<partition field JSON>,`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"source-id": 4,`<br />&nbsp;&nbsp;`"field-id": 1000,`<br />&nbsp;&nbsp;`"name": "ts_day",`<br />&nbsp;&nbsp;`"transform": "day"`<br />`}, {`<br />&nbsp;&nbsp;`"source-id": 1,`<br />&nbsp;&nbsp;`"field-id": 1001,`<br />&nbsp;&nbsp;`"name": "id_bucket",`<br />&nbsp;&nbsp;`"transform": "bucket[16]"`<br />`} ]`|
+
+Each partition field in `fields` is stored as a JSON object with the following properties.
+
+| V1       | V2       | V3       | Field            | JSON representation | Example      |
+|----------|----------|----------|------------------|---------------------|--------------|
+| required | required | omitted  | **`source-id`**  | `JSON int`          | 1            |
+| optional | optional | required | **`source-ids`** | `JSON list of ints` | `[1,2]`      |
+|          | required | required | **`field-id`**   | `JSON int`          | 1000         |
+| required | required | required | **`name`**       | `JSON string`       | `id_bucket`  |
+| required | required | required | **`transform`**  | `JSON string`       | `bucket[16]` |
+
+Supported partition transforms are listed below.
+
+|Transform or Field|JSON representation|Example|
+|--- |--- |--- |
+|**`identity`**|`JSON string: "identity"`|`"identity"`|
+|**`bucket[N]`**|`JSON string: "bucket[<N>]"`|`"bucket[16]"`|
+|**`truncate[W]`**|`JSON string: "truncate[<W>]"`|`"truncate[20]"`|
+|**`year`**|`JSON string: "year"`|`"year"`|
+|**`month`**|`JSON string: "month"`|`"month"`|
+|**`day`**|`JSON string: "day"`|`"day"`|
+|**`hour`**|`JSON string: "hour"`|`"hour"`|
+
+In some cases partition specs are stored using only the field list instead of the object format that includes the spec ID, like the deprecated `partition-spec` field in table metadata. The object format should be used unless otherwise noted in this spec.
+
+The `field-id` property was added for each partition field in v2. In v1, the reference implementation assigned field ids sequentially in each spec starting at 1,000. See Partition Evolution for more details.
+
+In v3 metadata, writers must use only `source-ids` because v3 requires reader support for multi-arg transforms. In v1 and v2 metadata, writers must always write `source-id`; for multi-arg transforms, writers must produce `source-ids` and set `source-id` to the first ID from the field ID list.
+
+Older versions of the reference implementation can read tables with transforms unknown to it, ignoring them. But other implementations may break if they encounter unknown transforms. All v3 readers are required to read tables with unknown transforms, ignoring them. Writers should not write using partition specs that use unknown transforms.
+
+### Sort Orders
+
+#### RQ.Iceberg.JSONSerialization.SortOrders
+version: 1.0
+
+Sort orders are serialized as a list of JSON object, each of which contains the following fields:
+
+|Field|JSON representation|Example|
+|--- |--- |--- |
+|**`order-id`**|`JSON int`|`1`|
+|**`fields`**|`JSON list: [`<br />&nbsp;&nbsp;`<sort field JSON>,`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`  "transform": "identity",`<br />&nbsp;&nbsp;`  "source-id": 2,`<br />&nbsp;&nbsp;`  "direction": "asc",`<br />&nbsp;&nbsp;`  "null-order": "nulls-first"`<br />&nbsp;&nbsp;`}, {`<br />&nbsp;&nbsp;`  "transform": "bucket[4]",`<br />&nbsp;&nbsp;`  "source-id": 3,`<br />&nbsp;&nbsp;`  "direction": "desc",`<br />&nbsp;&nbsp;`  "null-order": "nulls-last"`<br />`} ]`|
+
+Each sort field in the fields list is stored as an object with the following properties:
+
+| V1       | V2       | V3       | Field            | JSON representation | Example     |
+|----------|----------|----------|------------------|---------------------|-------------|
+| required | required | required | **`transform`**  | `JSON string`       | `bucket[4]` |
+| required | required | omitted  | **`source-id`**  | `JSON int`          | 1           |
+|          |          | required | **`source-ids`** | `JSON list of ints` | `[1,2]`     |
+| required | required | required | **`direction`**  | `JSON string`       | `asc`       |
+| required | required | required | **`null-order`** | `JSON string`       | `nulls-last`|
+
+In v3 metadata, writers must use only `source-ids` because v3 requires reader support for multi-arg transforms. In v1 and v2 metadata, writers must always write `source-id`; for multi-arg transforms, writers must produce `source-ids` and set `source-id` to the first ID from the field ID list.
+
+Older versions of the reference implementation can read tables with transforms unknown to it, ignoring them. But other implementations may break if they encounter unknown transforms. All v3 readers are required to read tables with unknown transforms, ignoring them.
+
+The following table describes the possible values for the some of the field within sort field: 
+
+|Field|JSON representation|Possible values|
+|--- |--- |--- |
+|**`direction`**|`JSON string`|`"asc", "desc"`|
+|**`null-order`**|`JSON string`|`"nulls-first", "nulls-last"`|
+
+
+### Table Metadata and Snapshots
+
+#### RQ.Iceberg.JSONSerialization.TableMetadataAndSnapshots
+version: 1.0
+
+Table metadata is serialized as a JSON object according to the following table. Snapshots are not serialized separately. Instead, they are stored in the table metadata JSON.
+
+|Metadata field|JSON representation|Example|
+|--- |--- |--- |
+|**`format-version`**|`JSON int`|`1`|
+|**`table-uuid`**|`JSON string`|`"fb072c92-a02b-11e9-ae9c-1bb7bc9eca94"`|
+|**`location`**|`JSON string`|`"s3://b/wh/data.db/table"`|
+|**`last-updated-ms`**|`JSON long`|`1515100955770`|
+|**`last-column-id`**|`JSON int`|`22`|
+|**`schema`**|`JSON schema (object)`|`See above, read schemas instead`|
+|**`schemas`**|`JSON schemas (list of objects)`|`See above`|
+|**`current-schema-id`**|`JSON int`|`0`|
+|**`partition-spec`**|`JSON partition fields (list)`|`See above, read partition-specs instead`|
+|**`partition-specs`**|`JSON partition specs (list of objects)`|`See above`|
+|**`default-spec-id`**|`JSON int`|`0`|
+|**`last-partition-id`**|`JSON int`|`1000`|
+|**`properties`**|`JSON object: {`<br />&nbsp;&nbsp;`"<key>": "<val>",`<br />&nbsp;&nbsp;`...`<br />`}`|`{`<br />&nbsp;&nbsp;`"write.format.default": "avro",`<br />&nbsp;&nbsp;`"commit.retry.num-retries": "4"`<br />`}`|
+|**`current-snapshot-id`**|`JSON long`|`3051729675574597004`|
+|**`snapshots`**|`JSON list of objects: [ {`<br />&nbsp;&nbsp;`"snapshot-id": <id>,`<br />&nbsp;&nbsp;`"timestamp-ms": <timestamp-in-ms>,`<br />&nbsp;&nbsp;`"summary": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"operation": <operation>,`<br />&nbsp;&nbsp;&nbsp;&nbsp;`... },`<br />&nbsp;&nbsp;`"manifest-list": "<location>",`<br />&nbsp;&nbsp;`"schema-id": "<id>"`<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"snapshot-id": 3051729675574597004,`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100955770,`<br />&nbsp;&nbsp;`"summary": {`<br />&nbsp;&nbsp;&nbsp;&nbsp;`"operation": "append"`<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`"manifest-list": "s3://b/wh/.../s1.avro"`<br />&nbsp;&nbsp;`"schema-id": 0`<br />`} ]`|
+|**`snapshot-log`**|`JSON list of objects: [`<br />&nbsp;&nbsp;`{`<br />&nbsp;&nbsp;`"snapshot-id": ,`<br />&nbsp;&nbsp;`"timestamp-ms": `<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"snapshot-id": 30517296...,`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100...`<br />`} ]`|
+|**`metadata-log`**|`JSON list of objects: [`<br />&nbsp;&nbsp;`{`<br />&nbsp;&nbsp;`"metadata-file": ,`<br />&nbsp;&nbsp;`"timestamp-ms": `<br />&nbsp;&nbsp;`},`<br />&nbsp;&nbsp;`...`<br />`]`|`[ {`<br />&nbsp;&nbsp;`"metadata-file": "s3://bucket/.../v1.json",`<br />&nbsp;&nbsp;`"timestamp-ms": 1515100...`<br />`} ]` |
+|**`sort-orders`**|`JSON sort orders (list of sort field object)`|`See above`|
+|**`default-sort-order-id`**|`JSON int`|`0`|
+|**`refs`**|`JSON map with string key and object value:`<br />`{`<br />&nbsp;&nbsp;`"<name>": {`<br />&nbsp;&nbsp;`"snapshot-id": <id>,`<br />&nbsp;&nbsp;`"type": <type>,`<br />&nbsp;&nbsp;`"max-ref-age-ms": <long>,`<br />&nbsp;&nbsp;`...`<br />&nbsp;&nbsp;`}`<br />&nbsp;&nbsp;`...`<br />`}`|`{`<br />&nbsp;&nbsp;`"test": {`<br />&nbsp;&nbsp;`"snapshot-id": 123456789000,`<br />&nbsp;&nbsp;`"type": "tag",`<br />&nbsp;&nbsp;`"max-ref-age-ms": 10000000`<br />&nbsp;&nbsp;`}`<br />`}`|
+
+### Name Mapping Serialization
+
+#### RQ.Iceberg.JSONSerialization.NameMappingSerialization
+version: 1.0
+
+Name mapping is serialized as a list of field mapping JSON Objects which are serialized as follows
+
+|Field mapping field|JSON representation|Example|
+|--- |--- |--- |
+|**`names`**|`JSON list of strings`|`["latitude", "lat"]`|
+|**`field-id`**|`JSON int`|`1`|
+|**`fields`**|`JSON field mappings (list of objects)`|`[{ `<br />&nbsp;&nbsp;`"field-id": 4,`<br />&nbsp;&nbsp;`"names": ["latitude", "lat"]`<br />`}, {`<br />&nbsp;&nbsp;`"field-id": 5,`<br />&nbsp;&nbsp;`"names": ["longitude", "long"]`<br />`}]`|
+
+Example
+```json
+[ { "field-id": 1, "names": ["id", "record_id"] },
+   { "field-id": 2, "names": ["data"] },
+   { "field-id": 3, "names": ["location"], "fields": [
+       { "field-id": 4, "names": ["latitude", "lat"] },
+       { "field-id": 5, "names": ["longitude", "long"] }
+     ] } ]
+```
+
+## Appendix D: Single-value serialization
+
+### RQ.Iceberg.SingleValueSerialization
+version: 1.0
+
+### Binary single-value serialization
+
+#### RQ.Iceberg.SingleValueSerialization.Binary
+version: 1.0
+
+This serialization scheme is for storing single values as individual binary values in the lower and upper bounds maps of manifest files.
+
+| Type                         | Binary serialization                                                                                         |
+|------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **`unknown`**                | Not supported                                                                                                |
+| **`boolean`**                | `0x00` for false, non-zero byte for true                                                                     |
+| **`int`**                    | Stored as 4-byte little-endian                                                                               |
+| **`long`**                   | Stored as 8-byte little-endian                                                                               |
+| **`float`**                  | Stored as 4-byte little-endian                                                                               |
+| **`double`**                 | Stored as 8-byte little-endian                                                                               |
+| **`date`**                   | Stores days from the 1970-01-01 in an 4-byte little-endian int                                               |
+| **`time`**                   | Stores microseconds from midnight in an 8-byte little-endian long                                            |
+| **`timestamp`**              | Stores microseconds from 1970-01-01 00:00:00.000000 in an 8-byte little-endian long                          |
+| **`timestamptz`**            | Stores microseconds from 1970-01-01 00:00:00.000000 UTC in an 8-byte little-endian long                      |
+| **`timestamp_ns`**           | Stores nanoseconds from 1970-01-01 00:00:00.000000000 in an 8-byte little-endian long                        |
+| **`timestamptz_ns`**         | Stores nanoseconds from 1970-01-01 00:00:00.000000000 UTC in an 8-byte little-endian long                    |
+| **`string`**                 | UTF-8 bytes (without length)                                                                                 |
+| **`uuid`**                   | 16-byte big-endian value, see example in Appendix B                                                          |
+| **`fixed(L)`**               | Binary value                                                                                                 |
+| **`binary`**                 | Binary value (without length)                                                                                |
+| **`decimal(P, S)`**          | Stores unscaled value as two’s-complement big-endian binary, using the minimum number of bytes for the value |
+| **`struct`**                 | Not supported                                                                                                |
+| **`list`**                   | Not supported                                                                                                |
+| **`map`**                    | Not supported                                                                                                |
+
+### JSON single-value serialization
+
+#### RQ.Iceberg.SingleValueSerialization.JSON
+version: 1.0
+
+ Single values are serialized as JSON by type according to the following table:
+
+| Type               | JSON representation                       | Example                                    | Description                                                                                                                 |
+| ------------------ | ----------------------------------------- | ------------------------------------------ | -- |
+| **`boolean`**      | **`JSON boolean`**                        | `true`                                     | |
+| **`int`**          | **`JSON int`**                            | `34`                                       | |
+| **`long`**         | **`JSON long`**                           | `34`                                       | |
+| **`float`**        | **`JSON number`**                         | `1.0`                                      | |
+| **`double`**       | **`JSON number`**                         | `1.0`                                      | |
+| **`decimal(P,S)`** | **`JSON string`**                         | `"14.20"`, `"2E+20"`                       | Stores the string representation of the decimal value, specifically, for values with a positive scale, the number of digits to the right of the decimal point is used to indicate scale, for values with a negative scale, the scientific notation is used and the exponent must equal the negated scale |
+| **`date`**         | **`JSON string`**                         | `"2017-11-16"`                             | Stores ISO-8601 standard date |
+| **`time`**         | **`JSON string`**                         | `"22:31:08.123456"`                        | Stores ISO-8601 standard time with microsecond precision |
+| **`timestamp`**    | **`JSON string`**                         | `"2017-11-16T22:31:08.123456"`             | Stores ISO-8601 standard timestamp with microsecond precision; must not include a zone offset |
+| **`timestamptz`**  | **`JSON string`**                         | `"2017-11-16T22:31:08.123456+00:00"`       | Stores ISO-8601 standard timestamp with microsecond precision; must include a zone offset and it must be '+00:00' |
+| **`timestamp_ns`** | **`JSON string`**                         | `"2017-11-16T22:31:08.123456789"`          | Stores ISO-8601 standard timestamp with nanosecond precision; must not include a zone offset |
+| **`timestamptz_ns`** | **`JSON string`**                       | `"2017-11-16T22:31:08.123456789+00:00"`    | Stores ISO-8601 standard timestamp with nanosecond precision; must include a zone offset and it must be '+00:00' |
+| **`string`**       | **`JSON string`**                         | `"iceberg"`                                | |
+| **`uuid`**         | **`JSON string`**                         | `"f79c3e09-677c-4bbd-a479-3f349cb785e7"`   | Stores the lowercase uuid string |
+| **`fixed(L)`**     | **`JSON string`**                         | `"000102ff"`                               | Stored as a hexadecimal string |
+| **`binary`**       | **`JSON string`**                         | `"000102ff"`                               | Stored as a hexadecimal string |
+| **`struct`**       | **`JSON object by field ID`**             | `{"1": 1, "2": "bar"}`                     | Stores struct fields using the field ID as the JSON field name; field values are stored using this JSON single-value format |
+| **`list`**         | **`JSON array of values`**                | `[1, 2, 3]`                                | Stores a JSON array of values that are serialized using this JSON single-value format |
+| **`map`**          | **`JSON object of key and value arrays`** | `{ "keys": ["a", "b"], "values": [1, 2] }` | Stores arrays of keys and values; individual keys and values are serialized using this JSON single-value format |
+
+
+## Appendix E: Format version changes
+
+### Version 3
+
+#### RQ.Iceberg.FormatVersionChanges.Version3
+version: 1.0
+
+Default values are added to struct fields in v3.
+
+* The `write-default` is a forward-compatible change because it is only used at write time. Old writers will fail because the field is missing.
+* Tables with `initial-default` will be read correctly by older readers if `initial-default` is always null for optional fields. Otherwise, old readers will default optional columns with null. Old readers will fail to read required fields which are populated by `initial-default` because that default is not supported.
+
+Types `unknown`, `timestamp_ns`, and `timestamptz_ns` are added in v3.
+
+All readers are required to read tables with unknown partition transforms, ignoring the unsupported partition fields when filtering.
+
+Writing v3 metadata:
+
+* Partition Field and Sort Field JSON:
+    * `source-ids` was added and is required
+    * `source-id` is no longer required and should be omitted; always use `source-ids` instead
+
+Reading v1 or v2 metadata for v3:
+
+* Partition Field and Sort Field JSON:
+    * `source-ids` should default to a single-value list of the value of `source-id`
+
+Writing v1 or v2 metadata:
+
+* Partition Field and Sort Field JSON:
+    * For a single-arg transform, `source-id` should be written; if `source-ids` is also written it should be a single-element list of `source-id`
+    * For multi-arg transforms, `source-ids` should be written; `source-id` should be set to the first element of `source-ids`
+
+Row-level delete changes:
+
+* Deletion vectors are added in v3, stored using the Puffin `deletion-vector-v1` blob type
+* Manifests are updated to track deletion vectors:
+    * `referenced_data_file` was added and can be used for both deletion vectors (required) and v2 position delete files that contain deletes for only one data file (optional)
+    * `content_offset` was added and must match the deletion vector blob's offset in a Puffin file
+    * `content_size_in_bytes` was added and must match the deletion vector blob's length in a Puffin file
+* Deletion vectors are maintained synchronously: Writers must merge DVs (and older position delete files) to ensure there is at most one DV per data file
+    * Readers can safely ignore position delete files if there is a DV for a data file
+* Writers are not allowed to add new position delete files to v3 tables
+* Existing position delete files are valid in tables that have been upgraded from v2
+    * These position delete files must be merged into the DV for a data file when one is created
+    * Position delete files that contain deletes for more than one data file need to be kept in table metadata until all deletes are replaced by DVs
+
+### Version 2
+
+#### RQ.Iceberg.FormatVersionChanges.Version2
+version: 1.0
+
+Writing v1 metadata:
+
+* Table metadata field `last-sequence-number` should not be written
+* Snapshot field `sequence-number` should not be written
+* Manifest list field `sequence-number` should not be written
+* Manifest list field `min-sequence-number` should not be written
+* Manifest list field `content` must be 0 (data) or omitted
+* Manifest entry field `sequence_number` should not be written
+* Manifest entry field `file_sequence_number` should not be written
+* Data file field `content` must be 0 (data) or omitted
+
+Reading v1 metadata for v2:
+
+* Table metadata field `last-sequence-number` must default to 0
+* Snapshot field `sequence-number` must default to 0
+* Manifest list field `sequence-number` must default to 0
+* Manifest list field `min-sequence-number` must default to 0
+* Manifest list field `content` must default to 0 (data)
+* Manifest entry field `sequence_number` must default to 0
+* Manifest entry field `file_sequence_number` must default to 0
+* Data file field `content` must default to 0 (data)
+
+Writing v2 metadata:
+
+* Table metadata JSON:
+    * `last-sequence-number` was added and is required; default to 0 when reading v1 metadata
+    * `table-uuid` is now required
+    * `current-schema-id` is now required
+    * `schemas` is now required
+    * `partition-specs` is now required
+    * `default-spec-id` is now required
+    * `last-partition-id` is now required
+    * `sort-orders` is now required
+    * `default-sort-order-id` is now required
+    * `schema` is no longer required and should be omitted; use `schemas` and `current-schema-id` instead
+    * `partition-spec` is no longer required and should be omitted; use `partition-specs` and `default-spec-id` instead
+* Snapshot JSON:
+    * `sequence-number` was added and is required; default to 0 when reading v1 metadata
+    * `manifest-list` is now required
+    * `manifests` is no longer required and should be omitted; always use `manifest-list` instead
+* Manifest list `manifest_file`:
+    * `content` was added and is required; 0=data, 1=deletes; default to 0 when reading v1 manifest lists
+    * `sequence_number` was added and is required
+    * `min_sequence_number` was added and is required
+    * `added_files_count` is now required
+    * `existing_files_count` is now required
+    * `deleted_files_count` is now required
+    * `added_rows_count` is now required
+    * `existing_rows_count` is now required
+    * `deleted_rows_count` is now required
+* Manifest key-value metadata:
+    * `schema-id` is now required
+    * `partition-spec-id` is now required
+    * `format-version` is now required
+    * `content` was added and is required (must be "data" or "deletes")
+* Manifest `manifest_entry`:
+    * `snapshot_id` is now optional to support inheritance
+    * `sequence_number` was added and is optional, to support inheritance
+    * `file_sequence_number` was added and is optional, to support inheritance
+* Manifest `data_file`:
+    * `content` was added and is required; 0=data, 1=position deletes, 2=equality deletes; default to 0 when reading v1 manifests
+    * `equality_ids` was added, to be used for equality deletes only
+    * `block_size_in_bytes` was removed (breaks v1 reader compatibility)
+    * `file_ordinal` was removed
+    * `sort_columns` was removed
+
+Note that these requirements apply when writing data to a v2 table. Tables that are upgraded from v1 may contain metadata that does not follow these requirements. Implementations should remain backward-compatible with v1 metadata requirements.
+
+## Appendix F: Implementation Notes
+
+This section covers topics not required by the specification but recommendations for systems implementing the Iceberg specification to help maintain a uniform experience.
+
+### Point in Time Reads (Time Travel)
+
+#### RQ.Iceberg.PointInTimeReads
+version: 1.0
+
+Iceberg supports two types of histories for tables. A history of previous "current snapshots" stored in ["snapshot-log" table metadata](#table-metadata-fields) and [parent-child lineage stored in "snapshots"](#table-metadata-fields). These two histories 
+might indicate different snapshot IDs for a specific timestamp. The discrepancies can be caused by a variety of table operations (e.g. updating the `current-snapshot-id` can be used to set the snapshot of a table to any arbitrary snapshot, which might have a lineage derived from a table branch or no lineage at all).
+
+When processing point in time queries implementations should use "snapshot-log" metadata to lookup the table state at the given point in time. This ensures time-travel queries reflect the state of the table at the provided timestamp. For example a SQL query like `SELECT * FROM prod.db.table TIMESTAMP AS OF '1986-10-26 01:21:00Z';` would find the snapshot of the Iceberg table just prior to '1986-10-26 01:21:00 UTC' in the snapshot logs and use the metadata from that snapshot to perform the scan of the table. If no  snapshot exists prior to the timestamp given or "snapshot-log" is not populated (it is an optional field), then systems should raise an informative error message about the missing metadata.
+""",
+)

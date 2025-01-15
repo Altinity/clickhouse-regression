@@ -1,0 +1,18 @@
+<clickhouse>
+    <jwt_validators>
+        <single_key_validator>
+            <algo>hs256</algo>
+            <static_key>my_secret_1234</static_key>
+            <static_key_in_base64>false</static_key_in_base64>
+        </single_key_validator>
+        <another_single_key_validator>
+            <algo>hs256</algo>
+            <static_key>another_my_secret_1234</static_key>
+            <static_key_in_base64>false</static_key_in_base64>
+        </another_single_key_validator>
+        <jwks_server>
+            <uri>http://jwks_server:8080/.well-known/jwks.json</uri>
+            <refresh_ms>0</refresh_ms>
+        </jwks_server>
+    </jwt_validators>
+</clickhouse>

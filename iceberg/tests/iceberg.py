@@ -7,8 +7,6 @@ from pyiceberg.table import Table
 from pyiceberg.schema import Schema
 from pyiceberg.types import IntegerType, StringType
 
-    
-
 
 @TestFeature
 def feature(self, servers=None, node="clickhouse1"):
