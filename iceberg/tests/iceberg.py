@@ -7,79 +7,76 @@ from pyiceberg.table import Table
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
     IntegerType,
-    StringType,
     NestedField,
-    LongType,
-    TimestampType,
 )
 from pyiceberg.partitioning import PartitionField, PartitionSpec
 from pyiceberg.transforms import DayTransform, IdentityTransform
 
 from minio import Minio
 
+import requests
+import urllib3
+
+from helpers.common import getuid
+
 
 # S3 Configuration
-S3_BUCKET = "mybucket"
+S3_BUCKET = "my-bucket"
 CATALOG_NAME = "s3_catalog"
 TABLE_NAME = "my_table"
-ENDPOINT_URL = "http://localhost:8182"
+
+BASE_URL = "http://rest:8181/v1"
+BASE_URL_LOCAL = "http://localhost:8182/v1"
+BASE_URL_LOCAL_RAW = "http://localhost:8182"
+
+
+def list_namespaces():
+    response = requests.get(f"{BASE_URL_LOCAL}/namespaces")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to list namespaces: {response.status_code}")
 
 
 @TestScenario
 def sanity(self):
-    # Define schema for the Iceberg table
-    uri = "localhost:9001"
-    access_key = "minio"
-    secret_key = "minio123"
     minio_client = Minio(
-        uri, access_key=access_key, secret_key=secret_key, secure=False
+        f"localhost:9001",
+        access_key="minio",
+        secret_key="minio123",
+        secure=False,
+        http_client=urllib3.PoolManager(cert_reqs="CERT_NONE"),
     )
 
     if not minio_client.bucket_exists(S3_BUCKET):
         minio_client.make_bucket(S3_BUCKET)
 
     schema = Schema(
-        NestedField(field_id=1, name="time", field_type=TimestampType(), required=False),
+        NestedField(
+            field_id=1, name="num", field_type=IntegerType(), required=False
+        ),
     )
 
-    # Load the S3 catalog
     catalog = load_catalog(
-        name=CATALOG_NAME,
+        "nessie",
         **{
-            "type": "rest",
-            "uri": f"{ENDPOINT_URL}",
-            "warehouse": f"s3://{S3_BUCKET}/",
-            "aws.access-key-id": "minio",
-            "aws.secret-access-key": "minio123",
-            "aws.region": "us-east-1",
+            "uri": "http://localhost:19120/iceberg/main/",
         },
     )
-
-    namespace = "namespace1"
-    if namespace not in catalog.list_namespaces():
-        catalog.create_namespace(namespace)
-
-    DEFAULT_PARTITION_SPEC = PartitionSpec(
-        PartitionField(
-            source_id=1, field_id=1000, transform=DayTransform(), name="datetime_day"
-        )
-    )
+    catalog.create_namespace("demo")
     
-    pause()
-    
-    # Create the table
-    try:
-        table = catalog.create_table(
-            identifier=f"{namespace}.{TABLE_NAME}",
-            schema=schema,
-            partition_spec=DEFAULT_PARTITION_SPEC,  # Define partitions if needed
-            properties={
-                "format-version": "2",  # Iceberg format version
-            },
-        )
-    except Exception as e:
-        note(f"Error creating table: {e}")
-        raise
+    catalog.create_table("demo.sample_table", schema)
+
+    table = catalog.load_table("demo.sample_table")
+
+    # Get the table schema
+    schema = table.schema()
+    note(f"Table Schema: {schema}")
+
+    # Get the table properties
+    properties = table.properties
+    note(f"Table Properties: {properties}")
+   
 
 
 @TestFeature

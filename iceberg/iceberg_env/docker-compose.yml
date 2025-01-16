@@ -4,8 +4,7 @@ version: '2.3'
 #   data1-1:
 
 networks:
-  app_network:
-    driver: bridge
+  nessie-net:
 
 services:
   minio:
@@ -13,7 +12,7 @@ services:
       file: minio-service.yml
       service: minio
     networks:
-      - app_network
+      - nessie-net
 
   minio-client:
     extends:
@@ -23,23 +22,26 @@ services:
       minio:
         condition: service_healthy
     networks:
-      - app_network
+      - nessie-net
   
-  rest:
-    image: tabulario/iceberg-rest
+  nessie:
+    image: ghcr.io/projectnessie/nessie:0.99.0
+    container_name: nessie
     ports:
-      - 8182:8181
+      - "19120:19120"
     environment:
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
-      AWS_REGION: us-east-1
-      CATALOG_WAREHOUSE: s3://mybucket/
-      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
-      CATALOG_S3_ENDPOINT: http://minio:9001
-    depends_on:
-      - minio
+      - nessie.version.store.type=IN_MEMORY
+      - nessie.catalog.default-warehouse=warehouse
+      - nessie.catalog.warehouses.warehouse.location=s3://my-bucket/
+      - nessie.catalog.service.s3.default-options.endpoint=http://minio:9001/
+      - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
+      - nessie.catalog.service.s3.default-options.path-style-access=true
+      - nessie.catalog.secrets.access-key.name=minio
+      - nessie.catalog.secrets.access-key.secret=minio123
+      - nessie.catalog.service.s3.default-options.region=us-east-1
+      - nessie.server.authentication.enabled=false
     networks:
-      - app_network
+      - nessie-net
 
   zookeeper1:
     extends:
