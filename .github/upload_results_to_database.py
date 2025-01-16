@@ -405,6 +405,11 @@ class ResultUploader:
             note(f"There are {len(rows)} records to insert")
 
         with And("a database client"):
+            if not verify:
+                requests.packages.urllib3.disable_warnings(
+                    requests.packages.urllib3.exceptions.InsecureRequestWarning
+                )
+
             session = requests.Session()
             session.headers.update(
                 {
@@ -426,11 +431,12 @@ class ResultUploader:
                 r = session.post(
                     url,
                     params={
-                        "query": f"INSERT INTO {table} FORMAT JSON",
+                        "query": f"INSERT INTO {table} FORMAT JSONEachRow",
                         "input_format_null_as_default": 1,
                     },
                     json=chunk,
                     verify=verify,
+                    timeout=60,
                 )
                 assert r.status_code == 200, f"Failed to insert records: {r.text}"
                 note(f"Uploaded {i + len(chunk)} of {len(rows)} records")

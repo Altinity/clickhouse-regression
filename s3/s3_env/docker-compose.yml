@@ -172,6 +172,8 @@ services:
 
   # azure-client:
   #   image: mcr.microsoft.com/azure-cli:cbl-mariner2.0
+  #   init: true
+  #   entrypoint: tail -f /dev/null
 
   zookeeper1:
     extends:
