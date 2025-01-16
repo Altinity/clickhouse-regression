@@ -131,6 +131,8 @@ The following team members SHALL be dedicated to the release:
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of January 13, 2024
 
 * https://github.com/ClickHouse/ClickHouse/issues/69518 (Inconsistent handling of maps with LowCardinality(Nullable) between 24.3 and 24.8)
+* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers tests for JSON type fails)
+* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers test for client with no cert validations fails)
 
 ### Summary
 
@@ -454,6 +456,9 @@ clickhouse-driver version: 0.2.9
 
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/24.8-lts/clickhouse-driver/
 
+* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers tests for JSON type fails)
+* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers test for client with no cert validations fails)
+  
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
 Compatibility with the [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
