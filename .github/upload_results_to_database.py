@@ -7,10 +7,8 @@ import argparse
 import os
 from datetime import datetime
 from pprint import pprint
-import asyncio
 
 import requests
-import asynch
 
 from testflows.core import *
 from testflows._core.transform.log.pipeline import ResultsLogPipeline
@@ -49,7 +47,7 @@ table_schema_attr_map = {
         "commit_hash": "commit.hash",
         "job_url": "job.url",
         "report_url": "report.url",
-        "start_time": "start_datetime",
+        "start_time": "start_time",
         "scheduled": "job.is_scheduled",
     },
     "test_results": {
@@ -258,7 +256,7 @@ class ResultUploader:
         """
         This is a fallback if test_attributes report.url does not exist.
         """
-        return os.getenv(REPORT_URL_VAR, "")
+        return os.getenv(REPORT_URL_VAR)
 
     def read_raw_log(self, log_lines=None):
         """
@@ -327,10 +325,10 @@ class ResultUploader:
         common_attributes = {}
 
         for key, value in table_schema_attr_map["pr_info"].items():
-            common_attributes[key] = self.pr_info.get(value, "")
+            common_attributes[key] = self.pr_info.get(value, None)
 
         for key, value in table_schema_attr_map["test_attributes"].items():
-            common_attributes[key] = self.test_attributes.get(value, "")
+            common_attributes[key] = self.test_attributes.get(value, None)
 
         if common_attributes["report_url"] is None:
             url = self.report_url()
@@ -339,7 +337,7 @@ class ResultUploader:
             common_attributes["report_url"] = url
 
         for key in table_schema_attr_map["test_results"].keys():
-            common_attributes[key] = ""
+            common_attributes[key] = None
 
         return common_attributes
 
@@ -351,10 +349,7 @@ class ResultUploader:
             row = common_attributes.copy()
             for schema_attr, test_attr in table_schema_attr_map["test_results"].items():
                 if test_attr in test_result:
-                    value = test_result[test_attr]
-                    if value is None:
-                        value = ""
-                    row[schema_attr] = value
+                    row[schema_attr] = test_result[test_attr]
             yield row
 
     def write_csv(self):
@@ -375,7 +370,7 @@ class ResultUploader:
             for test_result in self.iter_formatted_test_results(common_attributes):
                 writer.writerow(test_result)
 
-    async def upload_results(
+    def upload_results(
         self,
         db,
         table,
@@ -387,7 +382,7 @@ class ResultUploader:
         verify=None,
     ):
 
-        async with Given("database credentials"):
+        with Given("database credentials"):
             if db_host is None:
                 db_host = os.getenv(DATABASE_HOST_VAR)
                 assert db_host, "Failed to get database host from environment"
@@ -398,32 +393,53 @@ class ResultUploader:
             if db_password is None:
                 db_password = os.getenv(DATABASE_PASSWORD_VAR, "")
 
-        async with And("common attributes for this test run"):
+            if db_port is None:
+                db_port = 8443 if secure else 8123
+
+        with And("common attributes for this test run"):
             common_attributes = self.get_common_attributes()
 
-        async with And("a list of all test results"):
+        with And("a list of all test results"):
             rows = self.iter_formatted_test_results(common_attributes)
             rows = list(rows)
             note(f"There are {len(rows)} records to insert")
 
-        try:
-            async with Given("a database client"):
-                client = await asynch.connect(
-                    host=db_host,
-                    user=db_user,
-                    password=db_password,
-                    port=db_port,
-                    secure=secure,
-                    verify=verify,
+        with And("a database client"):
+            if not verify:
+                requests.packages.urllib3.disable_warnings(
+                    requests.packages.urllib3.exceptions.InsecureRequestWarning
                 )
 
-            async with Then("inserting test results"):
-                async with client.cursor(cursor=asynch.cursors.DictCursor) as cursor:
-                    r = await cursor.execute(f"INSERT INTO `{db}`.{table} VALUES", rows)
-                note(f"Inserted {r} records")
-        finally:
-            async with Finally("closing database client"):
-                await client.close()
+            session = requests.Session()
+            session.headers.update(
+                {
+                    "X-ClickHouse-User": db_user,
+                    "X-ClickHouse-Key": db_password,
+                    "X-ClickHouse-Database": db,
+                }
+            )
+
+        with Then("inserting test results"):
+            if secure:
+                url = f"https://{db_host}:{db_port}/"
+            else:
+                url = f"http://{db_host}:{db_port}/"
+
+            chunk_size = 100
+            for i in range(0, len(rows), chunk_size):
+                chunk = rows[i : i + chunk_size]
+                r = session.post(
+                    url,
+                    params={
+                        "query": f"INSERT INTO {table} FORMAT JSONEachRow",
+                        "input_format_null_as_default": 1,
+                    },
+                    json=chunk,
+                    verify=verify,
+                    timeout=60,
+                )
+                assert r.status_code == 200, f"Failed to insert records: {r.text}"
+                note(f"Uploaded {i + len(chunk)} of {len(rows)} records")
 
     def report_from_compressed_log(self, log_path=None):
         args = namedtuple(
@@ -509,22 +525,19 @@ class ResultUploader:
         if self.debug:
             with And("printing debug info"):
                 pprint(self.pr_info, indent=2)
-                pprint(self.get_common_attributes(), indent=2)
                 pprint(self.test_attributes, indent=2)
                 pprint(self.test_results[-1], indent=2)
 
         with And("uploading results"):
-            asyncio.run(
-                self.upload_results(
-                    db=db,
-                    table=table,
-                    db_host=db_host,
-                    db_user=db_user,
-                    db_password=db_password,
-                    db_port=db_port,
-                    secure=secure,
-                    verify=verify,
-                )
+            self.upload_results(
+                db=db,
+                table=table,
+                db_host=db_host,
+                db_user=db_user,
+                db_password=db_password,
+                db_port=db_port,
+                secure=secure,
+                verify=verify,
             )
 
 

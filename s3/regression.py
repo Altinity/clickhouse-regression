@@ -137,7 +137,7 @@ xfails = {
             Fail,
             "Times out, needs investigation",
             always,
-            ".*TIMEOUT_EXCEEDED*",
+            ".*TIMEOUT_EXCEEDED.*",
         ),
     ],
     "gcs/combinatoric table/:": [
@@ -153,7 +153,7 @@ xfails = {
             Fail,
             "Times out, needs investigation",
             always,
-            ".*TIMEOUT_EXCEEDED*",
+            ".*TIMEOUT_EXCEEDED.*",
         ),
     ],
     "azure/combinatoric table/:": [
