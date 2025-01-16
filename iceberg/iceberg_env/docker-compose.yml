@@ -1,6 +1,46 @@
 version: '2.3'
 
+# volumes:
+#   data1-1:
+
+networks:
+  app_network:
+    driver: bridge
+
 services:
+  minio:
+    extends:
+      file: minio-service.yml
+      service: minio
+    networks:
+      - app_network
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - app_network
+  
+  rest:
+    image: tabulario/iceberg-rest
+    ports:
+      - 8182:8181
+    environment:
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: minio123
+      AWS_REGION: us-east-1
+      CATALOG_WAREHOUSE: s3://mybucket/
+      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
+      CATALOG_S3_ENDPOINT: http://minio:9001
+    depends_on:
+      - minio
+    networks:
+      - app_network
+
   zookeeper1:
     extends:
       file: ../../docker-compose/zookeeper-service.yml
@@ -41,7 +81,7 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
-
+  
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
@@ -55,3 +95,6 @@ services:
         condition: service_healthy
       zookeeper1:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+      

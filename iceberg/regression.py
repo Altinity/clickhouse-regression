@@ -54,6 +54,9 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
 
+    
+    Feature(run=load("iceberg.tests.iceberg", "feature"))
+
 
 if main():
     regression()
