@@ -431,6 +431,7 @@ class ResultUploader:
                     },
                     json=chunk,
                     verify=verify,
+                    timeout=60,
                 )
                 assert r.status_code == 200, f"Failed to insert records: {r.text}"
                 note(f"Uploaded {i + len(chunk)} of {len(rows)} records")
