@@ -757,7 +757,25 @@ def run_query(instance, query, stdin=None, settings=None):
 def get_bucket_size(
     self, name=None, prefix=None, key_id=None, access_key=None, minio_enabled=None
 ):
-    """Get the size of an S3 bucket with the specified prefix."""
+    """Get the size of an blob storage bucket with the specified prefix."""
+
+    if self.context.storage == "azure":
+        account_name = self.context.azure_account_name
+        container_name = self.context.azure_container_name
+        with By(
+            "querying with az cli",
+            description=f"account: {account_name}, container: {container_name}",
+        ):
+            cmd = (
+                f"AZURE_STORAGE_KEY={self.context.azure_account_key} "
+                f'az storage blob list --container-name {container_name} --account-name {account_name} --num-results "*" --query "[].properties.contentLength" --output json '
+                "| jq -M '. | add'"
+            )
+            result = self.context.cluster.command(
+                "azure-client", cmd, steps=False, no_checks=True
+            )
+
+            return int(result.output)
 
     if name is None:
         name = self.context.bucket_name
@@ -818,10 +836,7 @@ def get_stable_bucket_size(
     self,
     name=None,
     prefix=None,
-    minio_enabled=None,
-    access_key=None,
-    key_id=None,
-    delay=10,
+    delay=15,
     timeout=300,
 ):
     """Get the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
@@ -830,9 +845,6 @@ def get_stable_bucket_size(
         size_previous = get_bucket_size(
             name=name,
             prefix=prefix,
-            minio_enabled=minio_enabled,
-            access_key=access_key,
-            key_id=key_id,
         )
 
     start_time = time.time()
@@ -843,9 +855,6 @@ def get_stable_bucket_size(
             size = get_bucket_size(
                 name=name,
                 prefix=prefix,
-                minio_enabled=minio_enabled,
-                access_key=access_key,
-                key_id=key_id,
             )
         with And(f"checking if current:{size} == previous:{size_previous}"):
             if size_previous == size:
@@ -867,17 +876,13 @@ def check_stable_bucket_size(
     name=None,
     prefix=None,
     tolerance=0,
-    minio_enabled=None,
-    delay=10,
+    delay=15,
 ):
     """Assert the size of an s3 bucket, waiting until the size hasn't changed for [delay] seconds."""
 
     current_size = get_stable_bucket_size(
         name=name,
         prefix=prefix,
-        minio_enabled=minio_enabled,
-        access_key=self.context.secret_access_key,
-        key_id=self.context.access_key_id,
         delay=delay,
     )
     assert abs(current_size - expected_size) <= tolerance, error()
@@ -1781,7 +1786,7 @@ def measure_buckets_before_and_after(
     bucket_prefix=None,
     bucket_name=None,
     tolerance=5,
-    delay=10,
+    delay=15,
     less_ok=False,
 ):
     """Return the current bucket size and assert that it is the same after cleanup."""

@@ -5,7 +5,6 @@ sudo chown -R $(whoami):$(whoami) $SUITE/
 
 echo $version > version.log.txt
 echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
-tfs --debug --no-colors transform brisk-new-fails raw.log brisk-new-fails.log.txt
 tfs --debug --no-colors transform nice-new-fails raw.log nice-new-fails.log.txt
 tfs --debug --no-colors report results -a "$SUITE_REPORT_INDEX_URL" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
 echo "Re-compress the raw.log"
@@ -19,7 +18,6 @@ then
     ./retry.sh 5 30 aws s3 cp pipeline_url.log.txt $JOB_S3_ROOT/pipeline_url.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp version.log.txt $SUITE_REPORT_BUCKET_PATH/version.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp raw.log $SUITE_REPORT_BUCKET_PATH/raw.log
-    ./retry.sh 5 30 aws s3 cp brisk-new-fails.log.txt $SUITE_REPORT_BUCKET_PATH/brisk-new-fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt $SUITE_REPORT_BUCKET_PATH/nice-new-fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp report.html $SUITE_REPORT_BUCKET_PATH/report.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
