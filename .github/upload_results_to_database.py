@@ -426,7 +426,7 @@ class ResultUploader:
                 r = session.post(
                     url,
                     params={
-                        "query": f"INSERT INTO {table} FORMAT JSON",
+                        "query": f"INSERT INTO {table} FORMAT JSONEachRow",
                         "input_format_null_as_default": 1,
                     },
                     json=chunk,
