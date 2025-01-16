@@ -405,6 +405,11 @@ class ResultUploader:
             note(f"There are {len(rows)} records to insert")
 
         with And("a database client"):
+            if not verify:
+                requests.packages.urllib3.disable_warnings(
+                    requests.packages.urllib3.exceptions.InsecureRequestWarning
+                )
+
             session = requests.Session()
             session.headers.update(
                 {
