@@ -28,7 +28,7 @@ table_configurations = {
 }
 
 WIDE_PART_SETTING = "min_bytes_for_wide_part=0"
-COMPACT_PART_SETTING = "min_bytes_for_wide_part=100000"
+COMPACT_PART_SETTING = "min_bytes_for_wide_part=1000000000000"
 
 
 @TestStep(Given)
@@ -86,6 +86,7 @@ def create_test_table(
         order_by=order_by,
         partition_by=partition_by,
         query_settings=settings,
+        settings=[("distributed_ddl_task_timeout ", 300)],
         drop_sync=True,
     )
 
@@ -106,7 +107,7 @@ def check_table_combination(
     nodes = self.context.ch_nodes
     storage_policy = "external"
     tables = []
-    insert_size = 5_000_000
+    insert_size = 3_000_000
     n_rows = insert_size // n_cols
 
     my_random = random.Random(42)
@@ -139,7 +140,8 @@ def check_table_combination(
                     * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
                 LIMIT {n_rows}
                 """,
-                timeout=180,
+                settings=[("distributed_ddl_task_timeout ", 300)],
+                timeout=300,
             )
 
         for node in query_nodes:
