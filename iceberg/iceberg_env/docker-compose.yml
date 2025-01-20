@@ -1,74 +1,83 @@
-version: '2.3'
-
-# volumes:
-#   data1-1:
-
-networks:
-  nessie-net:
 
 services:
-  # spark-iceberg:
-  #   image: tabulario/spark-iceberg
-  #   container_name: spark-iceberg
-  #   build: spark/
-  #   depends_on:
-  #     - rest
-  #     - minio
-  #   environment:
-  #     - AWS_ACCESS_KEY_ID=admin
-  #     - AWS_SECRET_ACCESS_KEY=password
-  #     - AWS_REGION=us-east-1
-  #   ports:
-  #     - 8080:8080
-  #     - 10000:10000
-  #     - 10001:10001
-  minio:
-    extends:
-      file: minio-service.yml
-      service: minio
-    networks:
-      - nessie-net
-
-  minio-client:
-    extends:
-      file: minio-client.yml
-      service: minio-client
+  spark-iceberg:
+    image: tabulario/spark-iceberg
+    container_name: spark-iceberg
+    build: spark/
     depends_on:
-      minio:
-        condition: service_healthy
-    networks:
-      - nessie-net
-  
+      - rest
+      - minio
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+    ports:
+      - 8080:8080
+      - 10000:10000
+      - 10001:10001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 20s
+
   rest:
-    image: tabulario/iceberg-rest:0.2.0
+    image: tabulario/iceberg-rest
     ports:
       - 8182:8181
     environment:
-        - AWS_ACCESS_KEY_ID=minio
-        - AWS_SECRET_ACCESS_KEY=minio123
-        - AWS_REGION=us-east-1
-        - CATALOG_WAREHOUSE=s3://iceberg_data/
-        - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
-        - CATALOG_S3_ENDPOINT=http://minio:9001
-  
-  nessie:
-    image: ghcr.io/projectnessie/nessie:0.99.0
-    container_name: nessie
-    ports:
-      - "19120:19120"
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - CATALOG_WAREHOUSE=s3://iceberg_data/
+      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+      - CATALOG_S3_ENDPOINT=http://minio:9000
+
+  minio:
+    image: minio/minio
+    container_name: minio
     environment:
-      - nessie.version.store.type=IN_MEMORY
-      - nessie.catalog.default-warehouse=warehouse
-      - nessie.catalog.warehouses.warehouse.location=s3://my-bucket/
-      - nessie.catalog.service.s3.default-options.endpoint=http://minio:9001/
-      - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
-      - nessie.catalog.service.s3.default-options.path-style-access=true
-      - nessie.catalog.secrets.access-key.name=minio
-      - nessie.catalog.secrets.access-key.secret=minio123
-      - nessie.catalog.service.s3.default-options.region=us-east-1
-      - nessie.server.authentication.enabled=false
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+      - MINIO_DOMAIN=minio
     networks:
-      - nessie-net
+      default:
+        aliases:
+          - warehouse.minio
+    ports:
+        - 9001:9001
+        - 9002:9000
+    command: ["server", "/data", "--console-address", ":9001"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mc:
+    depends_on:
+      - minio
+    image: minio/mc
+    container_name: mc
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc rm -r --force minio/warehouse;
+      /usr/bin/mc mb minio/warehouse --ignore-existing;
+      /usr/bin/mc policy set public minio/warehouse;
+      tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 20s
 
   zookeeper1:
     extends:
@@ -126,4 +135,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-      
+      spark-iceberg:
+        condition: service_healthy
+      mc:
+        condition: service_healthy
