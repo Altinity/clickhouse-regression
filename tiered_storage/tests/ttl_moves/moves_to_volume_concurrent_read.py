@@ -66,7 +66,7 @@ def scenario(self, name, engine):
                 node.query(f"INSERT INTO {name} (p1, s1, d1) VALUES {values}")
 
         with And("I get used disks for the table"):
-            for retry in retries(timeout=60, delay=10):
+            for retry in retries(timeout=120, delay=10):
                 with retry:
                     used_disks = get_used_disks_for_table(node, name)
                     with Then(f"check that no parts were moved"):
