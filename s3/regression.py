@@ -129,8 +129,13 @@ xfails = {
             ".*MEMORY_LIMIT_EXCEEDED.*",
         )
     ],
-    ":/combinatoric table/engine=CollapsingMergeTree,replicated=True,n_cols=500,n_tables=3,part_type=compact": [
-        (Fail, "Needs investigation, rows not appearing")
+    ":/combinatoric table/engine=:,replicated=True,n_cols=2000,n_tables=3,part_type=:": [
+        (
+            Fail,
+            "Needs investigation, rows not appearing",
+            always,
+            ".*assert rows == actual_count.*",
+        )
     ],
     "gcs/combinatoric table": [
         (Fail, "Time outs need investigation"),
