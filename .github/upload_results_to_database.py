@@ -438,6 +438,8 @@ class ResultUploader:
                     verify=verify,
                     timeout=60,
                 )
+                note(f"Request headers: {r.request.headers}")
+                note(f"Response headers: {r.headers}")
                 assert r.status_code == 200, f"Failed to insert records: {r.text}"
                 note(f"Uploaded {i + len(chunk)} of {len(rows)} records")
 
