@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from testflows.core import *
-from testflows.asserts import error
 
 import pyarrow as pa
 
@@ -118,12 +117,12 @@ def test_iceberg(self):
             database_name=database_name, namespace=namespace, table_name=table_name
         )
 
-    # with And("read data from clickhouse using icebergS3 table function)"):
-    #     steps.read_data_with_icebergS3_table_function(
-    #         storage_endpoint="http://localhost:9002/warehouse/data",
-    #         s3_access_key_id=s3_access_key_id,
-    #         s3_secret_access_key=s3_secret_access_key,
-    #     )
+    with And("read data from clickhouse using icebergS3 table function)"):
+        steps.read_data_with_icebergS3_table_function(
+            storage_endpoint="http://minio:9000/warehouse/data",
+            s3_access_key_id=s3_access_key_id,
+            s3_secret_access_key=s3_secret_access_key,
+        )
 
 
 @TestFeature
