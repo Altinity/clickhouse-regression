@@ -97,6 +97,9 @@ xfails = {
     # aes-128-cfb128 not supported in 22.8
     "*/:cfb128:": [(Fail, issue_40826)],
     "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.4"))],
+    "/aes encryption/performance/*": [
+        (Fail, "fails due to runners change, need to adjust thresholds")
+    ],
 }
 
 ffails = {
