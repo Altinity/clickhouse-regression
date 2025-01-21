@@ -3,7 +3,7 @@ from helpers.common import *
 from helpers.tables import *
 
 
-@TestStep
+@TestStep(Given)
 def create_database(self, database_name=None, node=None):
     if database_name is None:
         database_name = "database_" + getuid()
