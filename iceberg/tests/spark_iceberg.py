@@ -1,71 +1,61 @@
 #!/usr/bin/env python3
 
-import sys
-
 from testflows.core import *
+from testflows.asserts import error
 
 import pyarrow as pa
 
-import pyiceberg
-from pyiceberg.catalog import load_catalog
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
     DoubleType,
     StringType,
     NestedField,
+    LongType,
 )
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
-import time
+import iceberg.tests.steps as steps
 
 
 @TestScenario
 def test_iceberg(self):
     """Test Iceberg table creation and data insertion."""
     node = self.context.node
+    s3_access_key_id = "minio"
+    s3_secret_access_key = "minio123"
+    catalog_type = "rest"
+
     with Given("create catalog"):
-        catalog = load_catalog(
-            "rest",
-            **{
-                "uri": "http://localhost:8182/",  # REST server URL
-                "type": "rest",
-                "s3.endpoint": f"http://localhost:9002",  # Minio URI and credentials
-                "s3.access-key-id": "minio",
-                "s3.secret-access-key": "minio123",
-            },
+        catalog = steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=catalog_type,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=s3_access_key_id,
+            s3_secret_access_key=s3_secret_access_key,
         )
 
-    with And("create namespace and list namespaces"):
-        namespace_name = "iceberg"
-        try:
-            catalog.create_namespace(namespace_name)
-        except pyiceberg.exceptions.NamespaceAlreadyExistsError:
-            note("Already exists")
-
-        ns_list = catalog.list_namespaces()
-        for ns in ns_list:
-            note(ns)
+    with And("create namespace"):
+        namespace = "iceberg"
+        steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with And("delete table iceberg.bids if already exists"):
-        table_list = catalog.list_tables("iceberg")
-        for table in table_list:
-            note(f"{table}, {type(table)}")
-            if table[0] == "iceberg" and table[1] == "bids":
-                note("Dropping bids table")
-                catalog.drop_table("iceberg.bids")
+        table_name = "bids"
+        steps.drop_iceberg_table(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
 
     with When("define schema and create iceberg.bids table"):
         schema = Schema(
             NestedField(
-                field_id=1, name="symbol", field_type=StringType(), required=False
+                field_id=1, name="name", field_type=StringType(), required=False
             ),
             NestedField(
-                field_id=2, name="bid", field_type=DoubleType(), required=False
+                field_id=2, name="double", field_type=DoubleType(), required=False
             ),
             NestedField(
-                field_id=3, name="ask", field_type=DoubleType(), required=False
+                field_id=3, name="integer", field_type=LongType(), required=False
             ),
         )
         partition_spec = PartitionSpec(
@@ -77,23 +67,23 @@ def test_iceberg(self):
             ),
         )
         sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        time.sleep(20)
-        table = catalog.create_table(
-            identifier="iceberg.bids",
+        table = steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
             schema=schema,
             location="s3://warehouse/data",
-            sort_order=sort_order,
             partition_spec=partition_spec,
+            sort_order=sort_order,
         )
 
     with And("insert data into iceberg.bids table"):
         df = pa.Table.from_pylist(
             [
-                {"symbol": "AAPL", "bid": 195.23, "ask": 195.28},
-                {"symbol": "AAPL", "bid": 195.22, "ask": 195.28},
-                {"symbol": "AAPL", "bid": 195.25, "ask": 195.30},
-                {"symbol": "AAPL", "bid": 195.24, "ask": 195.31},
-            ],
+                {"name": "Alice", "double": 195.23, "integer": 20},
+                {"name": "Bob", "double": 123.45, "integer": 30},
+                {"name": "Charlie", "double": 67.89, "integer": 40},
+            ]
         )
         table.append(df)
 
@@ -101,25 +91,39 @@ def test_iceberg(self):
         df = table.scan().to_pandas()
         note(df)
 
-    with Then("read data from clickhouse using table function"):
-        node.query(
-            f"""
-            SELECT * FROM s3('http://minio:9000/warehouse/data/data/**/**.parquet', 'minio', 'minio123')
-        """
+    with Then("read data from clickhouse using s3 table function"):
+        steps.read_data_with_s3_table_function(
+            endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
+            s3_access_key_id=s3_access_key_id,
+            s3_secret_access_key=s3_secret_access_key,
         )
 
     with Then("read data from clickhouse using iceberg table engine"):
-        node.query(
-            f"""
-            DROP DATABASE IF EXISTS datalake;
-            SET allow_experimental_database_iceberg=true;
-            CREATE DATABASE datalake
-            ENGINE = Iceberg('http://rest:8181/v1', 'minio', 'minio123')
-            SETTINGS catalog_type = 'rest', storage_endpoint = 'http://minio:9000/warehouse', warehouse = 'iceberg';
-        """
+        database_name = "datalake"
+        steps.drop_database(database_name=database_name)
+        steps.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=s3_access_key_id,
+            s3_secret_access_key=s3_secret_access_key,
+            catalog_type=catalog_type,
+            storage_endpoint="http://minio:9000/warehouse",
         )
         node.query("SHOW TABLES from datalake")
-        node.query(f"SELECT * FROM datalake.\`iceberg.bids\`")
+        steps.read_data_from_clickhouse_iceberg_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
+        steps.show_create_clickhouse_iceberg_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
+
+    # with And("read data from clickhouse using icebergS3 table function)"):
+    #     steps.read_data_with_icebergS3_table_function(
+    #         storage_endpoint="http://localhost:9002/warehouse/data",
+    #         s3_access_key_id=s3_access_key_id,
+    #         s3_secret_access_key=s3_secret_access_key,
+    #     )
 
 
 @TestFeature
