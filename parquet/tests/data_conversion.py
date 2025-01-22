@@ -113,7 +113,7 @@ def data_conversion(
 
         with And("saving the snapshot of data from clickhouse and parquetify"):
             snapshot_value = f"ClickHouse: data [{data_from_parquet.output.strip()}] schema {schema_from_parquet.output.strip()}, parquetify data [{data}] schema {logical_type()['logicalType']}"
-            snapshot_name = f"physical_{physical_type()['physicalType']}_logical_{logical_type()['logicalType']}"
+            snapshot_name = f"physical_{physical_type.__name__}_logical_{logical_type()['logicalType']}"
             with values() as that:
                 assert that(
                     snapshot(
@@ -125,6 +125,7 @@ def data_conversion(
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion("1.0"))
 def all_datatypes(self):
     """Check the conversion of datatypes when we generate a parquet file using parquetify and then read that file from ClickHouse."""
 
