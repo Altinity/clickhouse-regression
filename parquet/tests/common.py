@@ -13,7 +13,8 @@ from helpers.tables import *
 from s3.tests.common import *
 
 
-def generate_random_value(data_type):
+def generate_random_value(data_type, only_true=False):
+    """Generate a random value for the given data type."""
     data_type = data_type.upper()
 
     if data_type == "INT32":
@@ -21,16 +22,24 @@ def generate_random_value(data_type):
     elif data_type == "INT64":
         return random.randint(-9223372036854775808, 9223372036854775807)
     elif data_type == "BOOLEAN":
-        return random.choice([True, False])
+        if not only_true:
+            return random.choice([True, False])
+        else:
+            return True
     elif data_type == "FLOAT":
         return random.uniform(-1e38, 1e38)
     elif data_type == "DOUBLE":
         return random.uniform(-1e308, 1e308)
     elif data_type == "BINARY":
-        return bytes(random.getrandbits(8) for _ in range(random.randint(1, 16)))
-    elif data_type == "FIXED_LEN_BYTE_ARRAY":
         return "".join(
-            random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 3))
+            random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
+        )
+    elif data_type.startswith("FIXED_LEN_BYTE_ARRAY"):
+        return "".join(
+            random.choices(
+                "abcdefghijklmnopqrstuvwxyz",
+                k=random.randint(3, int(data_type.split("(")[1].split(")")[0])),
+            )
         )
     elif data_type == "UTF8" or data_type == "STRING" or data_type == "ENUM":
         return "".join(
@@ -99,9 +108,12 @@ def generate_random_value(data_type):
     return None
 
 
-def generate_values(data_type, count):
+def generate_values(data_type, count, only_true=False):
     """Generate a list of random values for the given data type."""
-    return [generate_random_value(data_type) for _ in range(count)]
+    return [
+        generate_random_value(data_type=data_type, only_true=only_true)
+        for _ in range(count)
+    ]
 
 
 def generate_unique_value(data_type, existing_values, max_attempts=3000):
