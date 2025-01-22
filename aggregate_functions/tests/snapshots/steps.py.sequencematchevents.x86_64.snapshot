@@ -1,0 +1,189 @@
+_aggregate_functions_sequenceMatchEvents_NULL_value_handling = r"""
+{"sequenceMatchEvents('(?1)(?2)')(time, equals(number, NULL), equals(number, 2))":null}
+"""
+
+_aggregate_functions_sequenceMatchEvents_constant = r"""
+{"sequenceMatchEvents('(?1)(?2)')(1, 1, 1)":[1]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_Decimal128_38_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 1000))":[]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_Float32 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(float32, 100), greater(float32, 1000))":["2019-04-27 02:01:34","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_Float64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(float64, 100), greater(float64, 1000))":["2017-02-11 09:09:25","2019-04-27 02:01:34"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_Int64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(int64, 100), greater(int64, 1000))":["2006-11-27 02:50:49","2009-06-14 11:12:39"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000))":["2009-06-14 11:12:39","2011-09-30 02:34:30"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_LowCardinality_Float64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000))":["2006-11-27 02:50:49","2009-06-14 11:12:39"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000))":["2009-06-14 11:12:39","2011-09-30 02:34:30"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000))":["2006-11-27 02:50:49","2009-06-14 11:12:39"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_DateTime_UInt64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(datetime, greater(uint64, 100), greater(uint64, 1000))":["2006-11-27 02:50:49","2009-06-14 11:12:39"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_Decimal128_38_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(decimal128_38_, 100), greater(decimal128_38_, 1000))":[]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_Float32 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(float32, 100), greater(float32, 1000))":["2005-06-07","2149-06-06"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_Float64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(float64, 100), greater(float64, 1000))":["2005-06-07","2014-06-03"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_Int64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(int64, 100), greater(int64, 1000))":["2004-01-05","2004-01-27"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000))":["2004-01-05","2005-06-07"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_LowCardinality_Float64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000))":["2004-01-05","2004-01-27"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000))":["2004-01-05","2005-06-07"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000))":["2004-01-05","2004-01-27"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_Date_UInt64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(date, greater(uint64, 100), greater(uint64, 1000))":["2004-01-05","2004-01-27"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__Decimal128_38_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 1000))":[]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__Float32 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(float32, 100), greater(float32, 1000))":["2019-02-08 23:58:10","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__Float64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(float64, 100), greater(float64, 1000))":["2016-11-27 12:16:37","2019-02-08 23:58:10"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(int64, 100), greater(int64, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 1000))":["2006-05-30 22:14:05","2011-09-29 03:43:51"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__Decimal128_38_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 1000))":[]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__Float32 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(float32, 100), greater(float32, 1000))":["2009-11-18","2149-06-06"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__Float64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(float64, 100), greater(float64, 1000))":["2009-11-18","2013-09-23"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__Int64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(int64, 100), greater(int64, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(lowcardinality_date_, greater(uint64, 100), greater(uint64, 1000))":["2004-01-29","2005-02-18"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_example1 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(time, equals(number, 1), equals(number, 2))":["1970-01-02","1970-01-04"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_example2 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(time, equals(number, 1), equals(number, 2), equals(number, 3))":["1970-01-02"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_example3 = r"""
+{"sequenceMatchEvents('(?1)(?2)')(time, equals(number, 1), equals(number, 2), equals(number, 4))":["1970-01-02","1970-01-04"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_example4 = r"""
+{"sequenceMatchEvents('(?1).*(?2)')(time, equals(number, 1), equals(number, 2))":["1970-01-02","1970-01-04"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_return_type = r"""
+{"toTypeName(sequenceMatchEvents('(?1)(?2)')(number, equals(number, 1), equals(number, 2)))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_sequenceMatchEvents_single_NULL_value = r"""
+{"sequenceMatchEvents('(?1)(?2)')(time, equals(number, 1), equals(number, 2))":["1970-01-02","1970-01-04"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_single_row = r"""
+{"sequenceMatchEvents('(?1)(?2)')(number, equals(number, 1), equals(number, 1))":[]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_with_group_by = r"""
+{"even":0,"sequenceMatchEvents('(?1)(?2)')(number, equals(number, 1), equals(number, 1))":[]}
+{"even":1,"sequenceMatchEvents('(?1)(?2)')(number, equals(number, 1), equals(number, 1))":["1"]}
+"""
+
+_aggregate_functions_sequenceMatchEvents_zero_rows = r"""
+{"sequenceMatchEvents('(?1)(?2)')(number, equals(number, 1), equals(number, 1))":[]}
+"""
+

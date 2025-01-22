@@ -20,6 +20,7 @@ on:
         description: "🚩 Flags"
         type: choice
         options: 
+          - "--use-keeper --with-analyzer"
           - "--use-keeper" 
           - "none"
           - "--as-binary"
@@ -196,7 +197,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -233,7 +234,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -270,7 +271,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -309,7 +310,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -387,7 +388,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -425,7 +426,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -462,7 +463,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -505,7 +506,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -547,7 +548,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -586,7 +587,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -624,7 +625,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -663,7 +664,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -701,7 +702,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -738,7 +739,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -775,7 +776,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -812,7 +813,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -849,7 +850,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -886,7 +887,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -923,7 +924,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -960,7 +961,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -997,7 +998,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1034,7 +1035,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1071,7 +1072,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1108,7 +1109,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1145,7 +1146,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1182,7 +1183,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1219,7 +1220,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1256,7 +1257,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1293,7 +1294,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1330,7 +1331,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1367,7 +1368,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1405,7 +1406,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1445,7 +1446,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1489,7 +1490,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1526,7 +1527,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1563,7 +1564,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1606,7 +1607,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1648,7 +1649,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1690,7 +1691,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1729,7 +1730,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1766,7 +1767,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1803,7 +1804,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1840,7 +1841,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1882,7 +1883,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1924,7 +1925,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -1961,7 +1962,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -2000,7 +2001,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4
@@ -2037,7 +2038,7 @@ jobs:
 
       - name: 📤 Upload logs to results database
         if: always()
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v4

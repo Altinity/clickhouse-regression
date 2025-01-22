@@ -1,0 +1,189 @@
+_aggregate_functions_state_sequenceMatchEventsState_NULL_value_handling = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(time, equals(number, NULL), equals(number, 2)))":null}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_constant = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(1, 1, 1))":"000100000000000000010300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_Decimal128_38_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(decimal128_38_, 100), greater(decimal128_38_, 1000)))":"000600000000000000EFF1FFFF02000000000000000000000002000000000000000BF790550200000000000000960E854E0200000000000000DE9BC35C0200000000000000B5C69E580200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_Float32 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(float32, 100), greater(float32, 1000)))":"000200000000000000EFF1FFFF0300000000000000DE9BC35C0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_Float64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(float64, 100), greater(float64, 1000)))":"000300000000000000EFF1FFFF0300000000000000DE9BC35C0300000000000000B5C69E580300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_Int64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(int64, 100), greater(int64, 1000)))":"000600000000000000EFF1FFFF030000000000000079446A450300000000000000960E854E0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000)))":"000600000000000000EFF1FFFF0300000000000000960E854E0300000000000000DE9BC35C0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_LowCardinality_Float64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000)))":"000700000000000000EFF1FFFF030000000000000079446A4503000000000000000BF790550300000000000000960E854E0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000)))":"000700000000000000EFF1FFFF03000000000000000BF790550300000000000000960E854E0300000000000000DE9BC35C0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000)))":"000800000000000000EFF1FFFF030000000000000079446A4503000000000000000BF790550300000000000000960E854E0300000000000000DE9BC35C0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_DateTime_UInt64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(datetime, greater(uint64, 100), greater(uint64, 1000)))":"000800000000000000EFF1FFFF030000000000000079446A4503000000000000000BF790550300000000000000960E854E0300000000000000DE9BC35C0300000000000000B5C69E58030000000000000007BF344A0300000000000000EAFA2A5E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_Decimal128_38_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(decimal128_38_, 100), greater(decimal128_38_, 1000)))":"000600000000000000FFFF020000000000000000000200000000000000923402000000000000004D4002000000000000008D320200000000000000603F0200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_Float32 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(float32, 100), greater(float32, 1000)))":"000200000000000000FFFF03000000000000008D320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_Float64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(float64, 100), greater(float64, 1000)))":"000300000000000000FFFF03000000000000008D320300000000000000603F0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_Int64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(int64, 100), greater(int64, 1000)))":"000600000000000000FFFF03000000000000009C3003000000000000004D400300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000)))":"000600000000000000FFFF03000000000000004D4003000000000000008D320300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_LowCardinality_Float64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000)))":"000700000000000000FFFF03000000000000009C300300000000000000923403000000000000004D400300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000)))":"000700000000000000FFFF0300000000000000923403000000000000004D4003000000000000008D320300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000)))":"000800000000000000FFFF03000000000000009C300300000000000000923403000000000000004D4003000000000000008D320300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_Date_UInt64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(date, greater(uint64, 100), greater(uint64, 1000)))":"000800000000000000FFFF03000000000000009C300300000000000000923403000000000000004D4003000000000000008D320300000000000000603F0300000000000000CF49030000000000000086300300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__Decimal128_38_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(decimal128_38_, 100), greater(decimal128_38_, 1000)))":"000600000000000000EFF1FFFF0200000000000000000000000200000000000000616C014F020000000000000057CD834E020000000000000082095E5C020000000000000095C03A580200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__Float32 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(float32, 100), greater(float32, 1000)))":"000200000000000000EFF1FFFF030000000000000082095E5C0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__Float64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(float64, 100), greater(float64, 1000)))":"000300000000000000EFF1FFFF030000000000000082095E5C030000000000000095C03A580300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(int64, 100), greater(int64, 1000)))":"000600000000000000EFF1FFFF030000000000000000844561030000000000000057CD834E030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000)))":"000600000000000000EFF1FFFF030000000000000057CD834E030000000000000082095E5C030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000)))":"000700000000000000EFF1FFFF0300000000000000008445610300000000000000616C014F030000000000000057CD834E030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000)))":"000700000000000000EFF1FFFF0300000000000000616C014F030000000000000057CD834E030000000000000082095E5C030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000)))":"000800000000000000EFF1FFFF0300000000000000008445610300000000000000616C014F030000000000000057CD834E030000000000000082095E5C030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_datetime_, greater(uint64, 100), greater(uint64, 1000)))":"000800000000000000EFF1FFFF0300000000000000008445610300000000000000616C014F030000000000000057CD834E030000000000000082095E5C030000000000000095C03A5803000000000000008DA77C4403000000000000002C2327520300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__Decimal128_38_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(decimal128_38_, 100), greater(decimal128_38_, 1000)))":"000600000000000000FFFF020000000000000000000200000000000000C94A0200000000000000EB360200000000000000E6380200000000000000633E0200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__Float32 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(float32, 100), greater(float32, 1000)))":"000200000000000000FFFF0300000000000000E6380300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__Float64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(float64, 100), greater(float64, 1000)))":"000300000000000000FFFF0300000000000000E6380300000000000000633E0300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__Int64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(int64, 100), greater(int64, 1000)))":"000600000000000000FFFF030000000000000060470300000000000000EB360300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_float32_, 100), greater(lowcardinality_float32_, 1000)))":"000600000000000000FFFF0300000000000000EB360300000000000000E6380300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_float64_, 100), greater(lowcardinality_float64_, 1000)))":"000700000000000000FFFF030000000000000060470300000000000000C94A0300000000000000EB360300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_int64_, 100), greater(lowcardinality_int64_, 1000)))":"000700000000000000FFFF0300000000000000C94A0300000000000000EB360300000000000000E6380300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(lowcardinality_uint64_, 100), greater(lowcardinality_uint64_, 1000)))":"000800000000000000FFFF030000000000000060470300000000000000C94A0300000000000000EB360300000000000000E6380300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(lowcardinality_date_, greater(uint64, 100), greater(uint64, 1000)))":"000800000000000000FFFF030000000000000060470300000000000000C94A0300000000000000EB360300000000000000E6380300000000000000633E03000000000000009E30030000000000000020320300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_example1 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(time, equals(number, 1), equals(number, 2)))":"0002000000000000000100010000000000000003000200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_example2 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(time, equals(number, 1), equals(number, 2), equals(number, 3)))":"000300000000000000010001000000000000000200040000000000000003000200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_example3 = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(time, equals(number, 1), equals(number, 2), equals(number, 4)))":"0002000000000000000100010000000000000003000200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_example4 = r"""
+{"hex(sequenceMatchEventsState('(?1).*(?2)')(time, equals(number, 1), equals(number, 2)))":"00040000000000000001000100000000000000030002000000000000000400010000000000000006000200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_return_type = r"""
+{"toTypeName(hex(sequenceMatchEventsState('(?1)(?2)')(number, equals(number, 1), equals(number, 2))))":"String"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_single_NULL_value = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(time, equals(number, 1), equals(number, 2)))":"010002000000000000000100010000000000000003000200000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_single_row = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(number, equals(number, 1), equals(number, 1)))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_with_group_by = r"""
+{"even":0,"hex(sequenceMatchEventsState('(?1)(?2)')(number, equals(number, 1), equals(number, 1)))":"010000000000000000"}
+{"even":1,"hex(sequenceMatchEventsState('(?1)(?2)')(number, equals(number, 1), equals(number, 1)))":"00010000000000000001000000000000000300000000000000"}
+"""
+
+_aggregate_functions_state_sequenceMatchEventsState_zero_rows = r"""
+{"hex(sequenceMatchEventsState('(?1)(?2)')(number, equals(number, 1), equals(number, 1)))":"010000000000000000"}
+"""
+
