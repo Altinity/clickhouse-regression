@@ -340,6 +340,8 @@
         * 19.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
         * 19.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
         * 19.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+            * 19.1.4.1 [Extra entries in metadata](#extra-entries-in-metadata)
+        * 19.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
     * 19.2 [Metadata Types](#metadata-types)
         * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
         * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
@@ -2950,6 +2952,13 @@ For example,
 version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
+
+##### Extra entries in metadata
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries
+version: 1.0
+
+[ClickHouse] SHALL support reading from Parquet files that have extra entries in the metadata.
 
 ### Metadata Types
 

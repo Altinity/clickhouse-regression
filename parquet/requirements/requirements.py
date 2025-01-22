@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240813.1212956.
+# document by TestFlows v2.0.241211.1164717.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -4039,6 +4039,22 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     num="19.1.4",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading from Parquet files that have extra entries in the metadata.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="19.1.5",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File",
     version="1.0",
@@ -5781,6 +5797,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="19.1.4",
         ),
+        Heading(name="Extra entries in metadata", level=4, num="19.1.4.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries",
+            level=3,
+            num="19.1.5",
+        ),
         Heading(name="Metadata Types", level=2, num="19.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.2.1"
@@ -6180,6 +6202,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Column,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
@@ -6560,6 +6583,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
         * 19.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
         * 19.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+            * 19.1.4.1 [Extra entries in metadata](#extra-entries-in-metadata)
+        * 19.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
     * 19.2 [Metadata Types](#metadata-types)
         * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
         * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
@@ -9170,6 +9195,13 @@ For example,
 version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
+
+##### Extra entries in metadata
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries
+version: 1.0
+
+[ClickHouse] SHALL support reading from Parquet files that have extra entries in the metadata.
 
 ### Metadata Types
 
