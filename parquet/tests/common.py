@@ -13,6 +13,96 @@ from helpers.tables import *
 from s3.tests.common import *
 
 
+def generate_non_random_values(data_type, physical_data_type=None, only_true=False):
+    """Generate a fixed value for the given data type (no randomness)."""
+    data_type = data_type.upper()
+    physical_type = None
+    length = None
+    if physical_data_type is not None:
+        physical_type = physical_data_type["physicalType"]
+        if physical_type == "FIXED_LEN_BYTE_ARRAY":
+            length = physical_data_type["length"]
+
+    if data_type == "INT32":
+        return 42
+    elif data_type == "INT64":
+        return 1234567890123456789
+    elif data_type == "BOOLEAN":
+        # If we need to respect only_true, return True in any case
+        return True if only_true else True  # Always True (you can change if needed)
+    elif data_type == "FLOAT":
+        return 3.14
+    elif data_type == "DOUBLE":
+        return 2.71828
+    elif data_type == "BINARY":
+        return "fixedbinary"
+    elif data_type == "FIXED_LEN_BYTE_ARRAY":
+        return "a" * int(length)
+
+    elif data_type in ("UTF8", "STRING", "ENUM"):
+        return "fixedstring"
+    elif data_type == "DECIMAL":
+        if physical_type == "BINARY":
+            return "1234"
+        else:
+            return 1234
+    elif data_type == "DATE":
+        # ISO format date
+        return "2020-01-01"
+    elif data_type in ("TIME_MILLIS", "TIME_MICROS"):
+        return "12:34:56.789"
+    elif data_type in ("TIMESTAMP_MILLIS", "TIMESTAMP_MICROS"):
+        return "2020-01-01 12:34:56"
+    elif data_type == "NONE":
+        return None
+    elif data_type == "MAP":
+        return {
+            "key_value": [
+                {"key": "map_key", "value": "map_value"},
+                {"key": "map_key2", "value": "map_value2"},
+                {"key": "map_key3", "value": "map_value3"},
+            ]
+        }
+    elif data_type == "LIST":
+        return [1, 2, 3, 4, 5]
+    elif data_type == "MAP_KEY_VALUE":
+        return {
+            "key_value": [
+                {"key": "mapkv_key", "value": "mapkv_value"},
+                {"key": "mapkv_key2", "value": "mapkv_value2"},
+                {"key": "mapkv_key3", "value": "mapkv_value3"},
+            ]
+        }
+    elif data_type == "TIME":
+        return "12:34:56.789"
+    elif data_type == "INTEGER":
+        return 100
+    elif data_type == "JSON":
+        return json.dumps({"key": "fixed_json"})
+    elif data_type == "BSON":
+        return json.dumps({"key": "fixed_bson"})  # Basic simulation
+    elif data_type == "UUID":
+        return "550e8400e29b41d4a716446655440000"
+    elif data_type == "INTERVAL":
+        # Placeholder for an interval representation
+        return 42
+    elif data_type == "FLOAT16":
+        return 12.34
+    elif data_type == "UINT8":
+        return 255
+    elif data_type == "UINT16":
+        return 65535
+    elif data_type == "UINT32":
+        return 4294967295
+    elif data_type == "UINT64":
+        return 18446744073709551615
+    elif data_type == "INT8":
+        return 127
+    elif data_type == "INT16":
+        return 32767
+    return None
+
+
 def generate_random_value(data_type, only_true=False):
     """Generate a random value for the given data type."""
     data_type = data_type.upper()

@@ -6,6 +6,7 @@ from helpers.common import getuid
 from parquet.requirements import *
 from parquet.tests.steps.general import select_from_parquet
 
+
 def contains_value(data, target):
     """Recursively check if `target` is contained anywhere in the nested `data`."""
     if isinstance(data, dict):
@@ -15,16 +16,22 @@ def contains_value(data, target):
     else:
         return data == target
 
+
 @TestStep(Given)
 def read_metadata_from_file(self, file_name):
     """Read metadata from a parquet file."""
 
-    metadata = select_from_parquet(file_name=file_name, file_type="ParquetMetadata", statement="*", format="JSON")
+    metadata = select_from_parquet(
+        file_name=file_name, file_type="ParquetMetadata", statement="*", format="JSON"
+    )
 
     return metadata
 
+
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries("1.0")
+)
 def extra_metadata(self):
     """Check that extra metadata that is stored inside the parquet file footer can be read by ClickHouse."""
     node = self.context.node
@@ -41,10 +48,6 @@ def extra_metadata(self):
         assert is_present, "The custom metadata is not present in the output"
 
 
-
-
-
-
 @TestFeature
 @Name("metadata")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata("1.0"))
@@ -53,14 +56,3 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=extra_metadata)
-
-
-
-
-
-
-
-
-
-
-
