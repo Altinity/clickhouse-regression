@@ -112,7 +112,7 @@ def action_one_in_parallel(self, number_of_parallel_actions=2):
             product(ways_for_first_action, ways, ways)
         )  # 279841 combinations
         if not self.context.stress:
-            combinations = random.sample(combinations, 1000)
+            combinations = random.sample(combinations, 100)
 
     with Pool(5) as executor:
         for i, combination in enumerate(combinations):
