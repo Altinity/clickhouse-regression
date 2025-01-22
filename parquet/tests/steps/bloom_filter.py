@@ -691,6 +691,8 @@ simple_logical_types = [
     no_logical_type,
 ]
 
+integers = [int8, int16, int32, int64, uint8, uint16, uint32, uint64]
+
 complex_logical_types = [map, list, map_key_value]
 
 
