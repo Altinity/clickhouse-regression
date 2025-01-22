@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240801.1140507.
+# document by TestFlows v2.0.241127.1225014.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -2254,6 +2254,22 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch = Requirement(
     num="3.1.5.2.1",
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.sequenceMatchEvents",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [sequenceMatchEvents] parameteric aggregate function.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.5.3.1",
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceCount = Requirement(
     name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount",
     version="1.0",
@@ -2267,7 +2283,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceCount = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.5.3.1",
+    num="3.1.5.4.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_WindowFunnel = Requirement(
@@ -2283,7 +2299,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_WindowFunnel = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.5.4.1",
+    num="3.1.5.5.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention = Requirement(
@@ -2298,7 +2314,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.5.5.1",
+    num="3.1.5.6.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_UniqUpTo = Requirement(
@@ -2313,7 +2329,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_UniqUpTo = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.5.6.1",
+    num="3.1.5.7.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SumMapFiltered = Requirement(
@@ -2329,7 +2345,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SumMapFiltered = Requirement
     ),
     link=None,
     level=5,
-    num="3.1.5.7.1",
+    num="3.1.5.8.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceNextNode = Requirement(
@@ -2345,7 +2361,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceNextNode = Requireme
     ),
     link=None,
     level=5,
-    num="3.1.5.8.1",
+    num="3.1.5.9.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LargestTriangleThreeBuckets = Requirement(
@@ -2361,7 +2377,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LargestTriangleThreeBuckets 
     ),
     link=None,
     level=5,
-    num="3.1.5.9.1",
+    num="3.1.5.10.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_If = Requirement(
@@ -3946,47 +3962,53 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
             level=5,
             num="3.1.5.2.1",
         ),
-        Heading(name="sequenceCount", level=4, num="3.1.5.3"),
+        Heading(name="sequenceMatchEvents", level=4, num="3.1.5.3"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.sequenceMatchEvents",
             level=5,
             num="3.1.5.3.1",
         ),
-        Heading(name="windowFunnel", level=4, num="3.1.5.4"),
+        Heading(name="sequenceCount", level=4, num="3.1.5.4"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount",
             level=5,
             num="3.1.5.4.1",
         ),
-        Heading(name="retention", level=4, num="3.1.5.5"),
+        Heading(name="windowFunnel", level=4, num="3.1.5.5"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel",
             level=5,
             num="3.1.5.5.1",
         ),
-        Heading(name="uniqUpTo", level=4, num="3.1.5.6"),
+        Heading(name="retention", level=4, num="3.1.5.6"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention",
             level=5,
             num="3.1.5.6.1",
         ),
-        Heading(name="sumMapFiltered", level=4, num="3.1.5.7"),
+        Heading(name="uniqUpTo", level=4, num="3.1.5.7"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo",
             level=5,
             num="3.1.5.7.1",
         ),
-        Heading(name="sequenceNextNode", level=4, num="3.1.5.8"),
+        Heading(name="sumMapFiltered", level=4, num="3.1.5.8"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered",
             level=5,
             num="3.1.5.8.1",
         ),
-        Heading(name="largestTriangleThreeBuckets", level=4, num="3.1.5.9"),
+        Heading(name="sequenceNextNode", level=4, num="3.1.5.9"),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode",
+            level=5,
+            num="3.1.5.9.1",
+        ),
+        Heading(name="largestTriangleThreeBuckets", level=4, num="3.1.5.10"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets",
             level=5,
-            num="3.1.5.9.1",
+            num="3.1.5.10.1",
         ),
         Heading(name="Combinator Functions", level=2, num="3.2"),
         Heading(name="-If Suffix", level=3, num="3.2.1"),
@@ -4306,6 +4328,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FlameGraph,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceCount,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_WindowFunnel,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention,
@@ -4643,20 +4666,22 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
                 * 3.1.5.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
             * 3.1.5.2 [sequenceMatch](#sequencematch)
                 * 3.1.5.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceMatch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
-            * 3.1.5.3 [sequenceCount](#sequencecount)
-                * 3.1.5.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
-            * 3.1.5.4 [windowFunnel](#windowfunnel)
-                * 3.1.5.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
-            * 3.1.5.5 [retention](#retention)
-                * 3.1.5.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
-            * 3.1.5.6 [uniqUpTo](#uniqupto)
-                * 3.1.5.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
-            * 3.1.5.7 [sumMapFiltered](#summapfiltered)
-                * 3.1.5.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
-            * 3.1.5.8 [sequenceNextNode](#sequencenextnode)
-                * 3.1.5.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
-            * 3.1.5.9 [largestTriangleThreeBuckets](#largesttrianglethreebuckets)
-                * 3.1.5.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets](#rqsrs-031clickhouseaggregatefunctionsparametriclargesttrianglethreebuckets)
+            * 3.1.5.3 [sequenceMatchEvents](#sequencematchevents)
+                * 3.1.5.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.sequenceMatchEvents](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematchevents)
+            * 3.1.5.4 [sequenceCount](#sequencecount)
+                * 3.1.5.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
+            * 3.1.5.5 [windowFunnel](#windowfunnel)
+                * 3.1.5.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
+            * 3.1.5.6 [retention](#retention)
+                * 3.1.5.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
+            * 3.1.5.7 [uniqUpTo](#uniqupto)
+                * 3.1.5.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
+            * 3.1.5.8 [sumMapFiltered](#summapfiltered)
+                * 3.1.5.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
+            * 3.1.5.9 [sequenceNextNode](#sequencenextnode)
+                * 3.1.5.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
+            * 3.1.5.10 [largestTriangleThreeBuckets](#largesttrianglethreebuckets)
+                * 3.1.5.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets](#rqsrs-031clickhouseaggregatefunctionsparametriclargesttrianglethreebuckets)
     * 3.2 [Combinator Functions](#combinator-functions)
         * 3.2.1 [-If Suffix](#-if-suffix)
             * 3.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.If](#rqsrs-031clickhouseaggregatefunctionscombinatorif)
@@ -5764,6 +5789,13 @@ version: 1.0
 
 [ClickHouse] SHALL support [sequenceMatch] parameteric aggregate function.
 
+##### sequenceMatchEvents
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.sequenceMatchEvents
+version: 1.0
+
+[ClickHouse] SHALL support [sequenceMatchEvents] parameteric aggregate function.
+
 ##### sequenceCount
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount
@@ -6479,6 +6511,7 @@ GROUP BY
 [histogram]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#histogram
 [largestTriangleThreeBuckets]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/largestTriangleThreeBuckets
 [sequenceMatch]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencematch
+[sequenceMatchEvents]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions#sequencematchevents
 [sequenceCount]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencecount
 [windowFunnel]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#windowfunnel
 [retention]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#retention
