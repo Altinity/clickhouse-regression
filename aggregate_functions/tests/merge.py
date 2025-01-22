@@ -76,9 +76,7 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
     fullname = func + getuid()
-    snapshot_module = SourceFileLoader(
-        fullname, snapshot_path
-    ).load_module() 
+    snapshot_module = SourceFileLoader(fullname, snapshot_path).load_module()
     snapshot_attrs = {
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
@@ -156,6 +154,7 @@ def feature(self, extra_data=None):
         "singleValueOrNull",  # problem on 22.8
         "sequenceCount",
         "sequenceMatch",
+        "sequenceMatchEvents",
         "sequenceNextNode",
     ]
     parametric = [

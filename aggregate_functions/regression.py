@@ -712,6 +712,16 @@ ffails = {
         "quantileExactWeightedInterpolated test is not implemented",
         check_clickhouse_version(">=24.10"),
     ),
+    "/aggregate functions/:/*sequenceMatchEvents*": (
+        Skip,
+        "sequenceMatchEvents was introduced in 25.1",
+        check_clickhouse_version("<25.1"),
+    ),
+    "/aggregate functions/sequenceMatchEvents": (
+        Skip,
+        "sequenceMatchEvents was introduced in 25.1",
+        check_clickhouse_version("<25.1"),
+    ),
 }
 
 

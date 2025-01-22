@@ -144,6 +144,7 @@ aggregate_functions = [
     "row_number",
     "sequenceCount",
     "sequenceMatch",
+    "sequenceMatchEvents",
     "sequenceNextNode",
     "simpleLinearRegression",
     "singleValueOrNull",
