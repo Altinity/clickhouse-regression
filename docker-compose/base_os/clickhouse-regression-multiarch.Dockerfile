@@ -3,6 +3,9 @@ FROM $BASE_OS
 
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
+# Fix for 22.x keeper
+RUN mkdir -p /var/lib/clickhouse/coordination
+
 ARG CLICKHOUSE_PACKAGE
 COPY $CLICKHOUSE_PACKAGE /tmp/
 
