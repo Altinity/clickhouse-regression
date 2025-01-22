@@ -20,7 +20,8 @@ from parquet.tests.steps.bloom_filter import (
     physical_types,
     logical_types,
     compression,
-    simple_logical_types, physical_to_logical_annotation,
+    simple_logical_types,
+    physical_to_logical_annotation,
 )
 from parquet.tests.steps.general import (
     parquetify,
@@ -44,14 +45,16 @@ def prepare_parquet_file(
 
     if logical_type()["logicalType"] == "NONE":
         data = generate_values(
-            physical_type()["physicalType"], self.context.number_of_inserts
+            physical_type()["physicalType"], self.context.number_of_inserts, True
         )
         column_name = physical_type()["physicalType"].lower()
 
     else:
-        data = generate_values(
-            logical_type()["logicalType"], self.context.number_of_inserts
-        )
+        if logical_type()["logicalType"] == "FIXED_LEN_BYTE_ARRAY":
+            datatype = logical_type()["logicalType"] + f"({logical_type()['length']})"
+        else:
+            datatype = logical_type()["logicalType"]
+        data = generate_values(datatype, self.context.number_of_inserts, True)
         column_name = logical_type()["logicalType"].lower()
 
     parquet_file = (
@@ -149,6 +152,7 @@ def check_bloom_and_min_max_evaluation(
     compression_value,
     condition_1,
     condition_2,
+    logical_operator,
 ):
     """Check that bloom filter and min/max indexes are evaluated when used together."""
     node = self.context.node
@@ -219,7 +223,7 @@ def check_bloom_and_min_max_evaluation(
         else:
             data_2 = f"'{generate_unique_value(datatype, data)}'"
 
-        condition = f"WHERE {column_name} {condition_1} {data_1} or {column_name} {condition_2} {data_2}"
+        condition = f"WHERE {column_name} {condition_1} {data_1} {logical_operator} {column_name} {condition_2} {data_2}"
         results = select_from_parquet(
             file_name=parquet_file,
             format="Json",
@@ -259,6 +263,7 @@ def bloom_filter_and_min_max_evaluation(self):
     writer_versions = either(*writer_version)
     physical_type = either(*physical_types)
     logical_type = either(*simple_logical_types)
+    logical_operator = either(*["AND", "OR"])
 
     check_bloom_and_min_max_evaluation(
         schema_type=schema_types,
@@ -268,6 +273,7 @@ def bloom_filter_and_min_max_evaluation(self):
         compression_value=compressions,
         condition_1=conditions_1,
         condition_2=conditions_2,
+        logical_operator=logical_operator,
     )
 
 

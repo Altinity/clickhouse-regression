@@ -3832,6 +3832,28 @@ RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary = Requirement(
     num="18.4.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Parquet files have three types of metadata\n"
+        "\n"
+        "- file metadata\n"
+        "- column (chunk) metadata\n"
+        "- page header metadata\n"
+        "\n"
+        "as described in https://parquet.apache.org/docs/file-format/metadata/.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="19.4.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
     version="1.0",
@@ -3851,7 +3873,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     ),
     link=None,
     level=3,
-    num="19.1.1",
+    num="19.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requirement(
@@ -3879,7 +3901,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requiremen
     ),
     link=None,
     level=3,
-    num="19.1.2",
+    num="19.5.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
@@ -4020,7 +4042,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
     ),
     link=None,
     level=3,
-    num="19.1.3",
+    num="19.5.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
@@ -4036,7 +4058,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     ),
     link=None,
     level=3,
-    num="19.1.4",
+    num="19.5.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries = Requirement(
@@ -4052,7 +4074,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries = Requiremen
     ),
     link=None,
     level=3,
-    num="19.1.5",
+    num="19.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
@@ -4067,7 +4089,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     ),
     link=None,
     level=3,
-    num="19.2.1",
+    num="19.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
@@ -4083,7 +4105,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="19.2.2",
+    num="19.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
@@ -4099,7 +4121,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="19.2.3",
+    num="19.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -5776,42 +5798,43 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="18.4.1",
         ),
         Heading(name="Metadata", level=1, num="19"),
-        Heading(name="ParquetFormat", level=2, num="19.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Metadata", level=3, num="19.4.1"),
+        Heading(name="ParquetFormat", level=2, num="19.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
             level=3,
-            num="19.1.1",
+            num="19.5.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output",
             level=3,
-            num="19.1.2",
+            num="19.5.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content",
             level=3,
-            num="19.1.3",
+            num="19.5.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax",
             level=3,
-            num="19.1.4",
+            num="19.5.4",
         ),
-        Heading(name="Extra entries in metadata", level=4, num="19.1.4.1"),
+        Heading(name="Extra entries in metadata", level=2, num="19.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries",
             level=3,
-            num="19.1.5",
+            num="19.6.1",
         ),
-        Heading(name="Metadata Types", level=2, num="19.2"),
+        Heading(name="Metadata Types", level=2, num="19.7"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.2.1"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="19.2.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.7.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.2.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="19.7.2"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.7.3"
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6198,6 +6221,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_KeyColumnTypes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_BloomFilter_ConsistentOutput_FieldTypes,
         RQ_SRS_032_ClickHouse_Parquet_Indexes_Dictionary,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content,
@@ -6578,17 +6602,18 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 18.4 [Dictionary](#dictionary)
         * 18.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 19 [Metadata](#metadata)
-    * 19.1 [ParquetFormat](#parquetformat)
-        * 19.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
-        * 19.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-        * 19.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
-        * 19.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-            * 19.1.4.1 [Extra entries in metadata](#extra-entries-in-metadata)
-        * 19.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
-    * 19.2 [Metadata Types](#metadata-types)
-        * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
-        * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
-        * 19.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+        * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata](#rqsrs-032clickhouseparquetmetadata)
+    * 19.5 [ParquetFormat](#parquetformat)
+        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
+        * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
+        * 19.5.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+        * 19.5.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 19.6 [Extra entries in metadata](#extra-entries-in-metadata)
+        * 19.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
+    * 19.7 [Metadata Types](#metadata-types)
+        * 19.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+        * 19.7.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+        * 19.7.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -9023,6 +9048,9 @@ version: 1.0
 
 ## Metadata
 
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata
+version: 1.0
+
 Parquet files have three types of metadata
 
 - file metadata
@@ -9196,7 +9224,7 @@ version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
 
-##### Extra entries in metadata
+### Extra entries in metadata
 
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries
 version: 1.0

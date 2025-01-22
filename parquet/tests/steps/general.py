@@ -141,10 +141,10 @@ def select_from_parquet(
         node = self.context.node
 
     if file_type is None:
-        file_type = ", Parquet"
+        file_type = "Parquet"
 
     with By(f"selecting the data from the parquet file {file_name}"):
-        r = rf"SELECT {statement} FROM file('{file_name}'{file_type}"
+        r = rf"SELECT {statement} FROM file('{file_name}', {file_type}"
 
         if key_column is not None:
             r += rf", '{key_column}')"
