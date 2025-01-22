@@ -126,9 +126,9 @@ on:
         type: string
         default: ""
       extra_args:
-        description: "🎛️ Extra test program arguments. Default: --with-analyzer."
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
         type: string
-        default: "--with-analyzer"
+        default: ""
       custom_run_name:
         description: '📝 Custom run name (optional)'
         required: false
