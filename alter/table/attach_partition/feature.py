@@ -90,7 +90,7 @@ def feature(self):
         )
         Feature(
             run=load(
-                "alter.table.attach_partition.replica.add_delete_replica", "feature"
+                "alter.table.attach_partition.replica.add_remove_replica", "feature"
             ),
             parallel=True,
             executor=pool,
