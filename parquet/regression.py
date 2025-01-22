@@ -185,6 +185,12 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/63701",
         )
     ],
+    "/parquet/metadata/extra metadata": [
+        (
+            Fail,
+            "Currently not supported",
+        )
+    ],
 }
 
 
@@ -551,12 +557,12 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        # Feature(
-        #     run=load("parquet.tests.indexing", "feature"),
-        #     parallel=True,
-        #     executor=executor,
-        #     flags=parallel,
-        # )
+        Feature(
+            run=load("parquet.tests.indexing", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
         Feature(
             run=load("parquet.tests.cache", "feature"),
             parallel=True,
@@ -595,6 +601,18 @@ def regression(
         )
         Feature(
             run=load("parquet.tests.columns", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.native_reader", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.metadata", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,
