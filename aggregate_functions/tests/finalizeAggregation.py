@@ -146,6 +146,7 @@ def feature(self, extra_data=None):
         "windowFunnel",
         "quantileGK",
         "sequenceNextNode",
+        "sequenceMatchEvents",
     ]
 
     test_funcs = [i for i in aggregate_functions]
