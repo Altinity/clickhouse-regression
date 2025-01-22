@@ -221,8 +221,8 @@ def check_datatypes(
             if not check_conversion:
                 skip(f"Incorrect conversion {column_name} to {key_column}")
             if (
-                data_with_native_reader.output.strip()
-                in "DB::Exception: Unsupported encoding"
+                "DB::Exception: Unsupported encoding"
+                in data_with_native_reader.output.strip()
             ):
                 skip("Unsupported encoding")
 
