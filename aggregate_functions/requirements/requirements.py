@@ -2231,7 +2231,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [histogram] parameteric aggregate function.\n" "\n"
+        "[ClickHouse] SHALL support [histogram] parametric aggregate function.\n" "\n"
     ),
     link=None,
     level=5,
@@ -2246,7 +2246,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceMatch = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [sequenceMatch] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [sequenceMatch] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2262,7 +2262,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents = Requir
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [sequenceMatchEvents] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [sequenceMatchEvents] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2278,7 +2278,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceCount = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [sequenceCount] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [sequenceCount] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2294,7 +2294,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_WindowFunnel = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [windowFunnel] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [windowFunnel] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2310,7 +2310,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [retention] parameteric aggregate function.\n" "\n"
+        "[ClickHouse] SHALL support [retention] parametric aggregate function.\n" "\n"
     ),
     link=None,
     level=5,
@@ -2325,7 +2325,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_UniqUpTo = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [uniqUpTo] parameteric aggregate function.\n" "\n"
+        "[ClickHouse] SHALL support [uniqUpTo] parametric aggregate function.\n" "\n"
     ),
     link=None,
     level=5,
@@ -2340,7 +2340,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SumMapFiltered = Requirement
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [sumMapFiltered] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [sumMapFiltered] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2356,7 +2356,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceNextNode = Requireme
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [sequenceNextNode] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [sequenceNextNode] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -2372,7 +2372,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LargestTriangleThreeBuckets 
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support [largestTriangleThreeBuckets] parameteric aggregate function.\n"
+        "[ClickHouse] SHALL support [largestTriangleThreeBuckets] parametric aggregate function.\n"
         "\n"
     ),
     link=None,
@@ -5780,70 +5780,70 @@ version: 1.0
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram
 version: 1.0
 
-[ClickHouse] SHALL support [histogram] parameteric aggregate function.
+[ClickHouse] SHALL support [histogram] parametric aggregate function.
 
 ##### sequenceMatch
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceMatch
 version: 1.0
 
-[ClickHouse] SHALL support [sequenceMatch] parameteric aggregate function.
+[ClickHouse] SHALL support [sequenceMatch] parametric aggregate function.
 
 ##### sequenceMatchEvents
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.sequenceMatchEvents
 version: 1.0
 
-[ClickHouse] SHALL support [sequenceMatchEvents] parameteric aggregate function.
+[ClickHouse] SHALL support [sequenceMatchEvents] parametric aggregate function.
 
 ##### sequenceCount
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount
 version: 1.0
 
-[ClickHouse] SHALL support [sequenceCount] parameteric aggregate function.
+[ClickHouse] SHALL support [sequenceCount] parametric aggregate function.
 
 ##### windowFunnel
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel
 version: 1.0
 
-[ClickHouse] SHALL support [windowFunnel] parameteric aggregate function.
+[ClickHouse] SHALL support [windowFunnel] parametric aggregate function.
 
 ##### retention
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention
 version: 1.0
 
-[ClickHouse] SHALL support [retention] parameteric aggregate function.
+[ClickHouse] SHALL support [retention] parametric aggregate function.
 
 ##### uniqUpTo
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo
 version: 1.0
 
-[ClickHouse] SHALL support [uniqUpTo] parameteric aggregate function.
+[ClickHouse] SHALL support [uniqUpTo] parametric aggregate function.
 
 ##### sumMapFiltered
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered
 version: 1.0
 
-[ClickHouse] SHALL support [sumMapFiltered] parameteric aggregate function.
+[ClickHouse] SHALL support [sumMapFiltered] parametric aggregate function.
 
 ##### sequenceNextNode
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode
 version: 1.0
 
-[ClickHouse] SHALL support [sequenceNextNode] parameteric aggregate function.
+[ClickHouse] SHALL support [sequenceNextNode] parametric aggregate function.
 
 ##### largestTriangleThreeBuckets
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LargestTriangleThreeBuckets
 version: 1.0
 
-[ClickHouse] SHALL support [largestTriangleThreeBuckets] parameteric aggregate function.
+[ClickHouse] SHALL support [largestTriangleThreeBuckets] parametric aggregate function.
 
 ### Combinator Functions
 
