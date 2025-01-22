@@ -1403,7 +1403,7 @@ class PackageDownloader:
 
                 if not self.package_version:
                     self.package_version = bash(
-                        f"{self.binary_path} --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                        f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
                     ).output.strip(".")
 
         if binary_only:
