@@ -20,6 +20,7 @@ on:
         description: "🚩 Flags"
         type: choice
         options: 
+          - "--use-keeper --with-analyzer"
           - "--use-keeper" 
           - "none"
           - "--as-binary"
