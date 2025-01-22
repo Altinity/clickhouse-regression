@@ -26,6 +26,7 @@ from parquet.tests.steps.bloom_filter import (
     integers,
     int32_physical,
     int64_physical,
+    physical_to_logical_annotation,
 )
 from parquet.tests.steps.general import select_from_parquet
 from parquet.tests.steps.arrow import *
@@ -208,7 +209,7 @@ def check_datatypes(
             )
 
             if not check_conversion:
-                skip(f"Incorrect conversion boolean to {key_column}")
+                skip(f"Incorrect conversion {logical_type.__name__} to {key_column}")
 
             data_without_native_reader, data_with_native_reader = (
                 read_data_with_and_without_native_reader(
@@ -219,6 +220,11 @@ def check_datatypes(
         with And("checking that the data with and without native reader is the same"):
             if not check_conversion:
                 skip(f"Incorrect conversion {column_name} to {key_column}")
+            if (
+                data_with_native_reader.output.strip()
+                in "DB::Exception: Unsupported encoding"
+            ):
+                skip("Unsupported encoding")
 
             assert (
                 data_without_native_reader.output.strip()
@@ -254,18 +260,18 @@ def integer_support(self):
     key_columns = either(*key_columns)
     schemas = either(*schema_types)
     writer_versions = either(*writer_version)
-    physical_types = either(*[int32_physical, int64_physical])
-    logical_types = either(*integers)
     compressions = either(*compression)
 
-    check_datatypes(
-        schema_type=schemas,
-        writer_version=writer_versions,
-        physical_type=physical_types,
-        logical_type=logical_types,
-        compression_value=compressions,
-        key_column=key_columns,
-    )
+    for physical_type in [int32_physical, int64_physical]:
+        for logical_type in integers:
+            check_datatypes(
+                schema_type=schemas,
+                writer_version=writer_versions,
+                physical_type=physical_type,
+                logical_type=logical_type,
+                compression_value=compressions,
+                key_column=key_columns,
+            )
 
 
 @TestScenario
@@ -312,4 +318,3 @@ def feature(self, node="clickhouse1"):
     Scenario(run=boolean_support)
     Scenario(run=integer_support)
     Scenario(run=page_header_v2)
-

@@ -42,6 +42,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/datatypes:/var/lib/clickhouse/user_files/datatypes"
       - "${CLICKHOUSE_TESTS_DIR}/data/fastparquet:/var/lib/clickhouse/user_files/fastparquet"
       - "${CLICKHOUSE_TESTS_DIR}/data/encodings:/var/lib/clickhouse/user_files/encodings"
+      - "${CLICKHOUSE_TESTS_DIR}/data/metadata:/var/lib/clickhouse/user_files/metadata"
       - "${CLICKHOUSE_TESTS_DIR}/data/hive-partitioning:/var/lib/clickhouse/user_files/hive-partitioning"
       - "${CLICKHOUSE_TESTS_DIR}/data/h2oai:/var/lib/clickhouse/user_files/h2oai"
       - "${CLICKHOUSE_TESTS_DIR}/data/malloy-smaller:/var/lib/clickhouse/user_files/malloy-smaller"
