@@ -6,6 +6,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
+# Fix for 22.x keeper
+RUN mkdir -p /var/lib/clickhouse/coordination
+
 RUN dnf update -y
 RUN dnf install -y ca-certificates procps
 
