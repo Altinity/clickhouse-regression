@@ -192,7 +192,11 @@ def create_ontime_table(self, table_name, table_settings, node=None):
 
     try:
         with When(f"I create {table_name} table with ontime data structure"):
-            if self.context.stress or self.context.storage == "minio":
+            if (
+                self.context.stress
+                or self.context.storage == "minio"
+                or check_clickhouse_version("<23")(self)
+            ):
                 node.query(textwrap.dedent(full_table_create), use_file=True)
             else:
                 node.query(textwrap.dedent(minimal_table_create), use_file=True)
