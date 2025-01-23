@@ -84,7 +84,12 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
-
+            
+            Feature(
+                run=load("rbac.tests.privileges.check.check_table", "feature"),
+                parallel=True,
+                executor=pool,
+            )
             Feature(
                 run=load("rbac.tests.privileges.show.show_tables", "feature"),
                 parallel=True,
