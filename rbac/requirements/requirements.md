@@ -5120,6 +5120,7 @@ version: 1.0
 
 [ClickHouse] SHALL successfully execute `CHECK table` statement if and only if the user has **show tables** privilege,
 or any privilege on the table either directly or through a role.
+From version 25.1 CHECK TABLE queries require a separate, CHECK grant (PR #74471).
 
 #### RQ.SRS-006.RBAC.ShowDatabases.Privilege
 version: 1.0
