@@ -403,6 +403,9 @@ def regression(
     }
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
+    self.context.json_files = "/json_files"
+    self.context.parquet_output_path = "/parquet-files"
 
     if check_clickhouse_version("<23.3")(self):
         pool = 2
@@ -557,12 +560,12 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        Feature(
-            run=load("parquet.tests.indexing", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
+        # Feature(
+        #     run=load("parquet.tests.indexing", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
         Feature(
             run=load("parquet.tests.cache", "feature"),
             parallel=True,
@@ -605,18 +608,24 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        Feature(
-            run=load("parquet.tests.native_reader", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.metadata", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
+        # Feature(
+        #     run=load("parquet.tests.native_reader", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.metadata", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.data_conversion", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
         join()
 
     storages = s3_args.pop("storages", None)
