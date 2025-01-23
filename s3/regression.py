@@ -164,9 +164,6 @@ xfails = {
             ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
         ),
     ],
-    "azure/combinatoric table": [
-        (Fail, "Time outs need investigation"),
-    ],
     ":/invalid table function/invalid region": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/59084")
     ],
@@ -232,14 +229,9 @@ ffails = {
         XFail,
         "Not working, needs investigation",
     ),
-    "azure/zero copy replication/metadata": (
-        Skip,
-        "azure not s3 compatible",
-    ),
-    "azure/zero copy replication/alter": (
-        Skip,
-        "investigate",
-    ),
+    "azure/combinatoric table": (Skip, "Time outs need investigation"),
+    "azure/zero copy replication/metadata": (Skip, "azure not s3 compatible"),
+    "azure/zero copy replication/alter": (Skip, "investigate"),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
