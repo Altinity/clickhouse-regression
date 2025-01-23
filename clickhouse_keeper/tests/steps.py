@@ -1628,3 +1628,19 @@ def start_standalone_keeper(
                     self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
                     time.sleep(5)
             clean_coordination_on_all_nodes()
+
+
+@TestStep(When)
+def get_part_name_for_table(self, table_name, node=None):
+    """Get first part name from ClickHouse system.parts table."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with By("selecting part name from system.parts"):
+        return node.query(
+            "SELECT name FROM system.parts "
+            f"WHERE table='{table_name}' "
+            "ORDER BY name "
+            "LIMIT 1"
+        ).output

@@ -61,8 +61,11 @@ def alter_detach_partition(self):
         with And("I create table and make 2 part insert"):
             alter_partition(table_name=table_name, cluster_name=cluster_name)
 
+        with And("I get part name"):
+            part_name = get_part_name_for_table(table_name=table_name)
+            
         with And("I detach part"):
-            node.query(f"ALTER TABLE {table_name} DETACH PART 'all_0_0_0'")
+            node.query(f"ALTER TABLE {table_name} DETACH PART '{part_name}'")
 
             node.query(f"SYSTEM START MERGES {table_name}")
             node.query(f"OPTIMIZE TABLE {table_name} FINAL")
@@ -102,8 +105,11 @@ def alter_drop_partition(self):
         with And("I create table and make 2 part insert"):
             alter_partition(table_name=table_name, cluster_name=cluster_name)
 
+        with And("I get part name"):
+            part_name = get_part_name_for_table(table_name=table_name)
+
         with And("I detach part"):
-            node.query(f"ALTER TABLE {table_name} DROP PART 'all_0_0_0'")
+            node.query(f"ALTER TABLE {table_name} DROP PART '{part_name}'")
 
             node.query(f"SYSTEM START MERGES {table_name}")
             node.query(f"OPTIMIZE TABLE {table_name} FINAL")
@@ -144,14 +150,17 @@ def alter_attach_partition(self):
         with And("I create table and make 2 part insert"):
             alter_partition(table_name=table_name, cluster_name=cluster_name)
 
+        with And("I get part name"):
+            part_name = get_part_name_for_table(table_name=table_name)
+
         with And("I detach part"):
-            node.query(f"ALTER TABLE {table_name} DETACH PART 'all_0_0_0'")
+            node.query(f"ALTER TABLE {table_name} DETACH PART '{part_name}'")
 
             node.query(f"SYSTEM START MERGES {table_name}")
             node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
         with And("I attach part"):
-            node.query(f"ALTER TABLE {table_name} ATTACH PART 'all_0_0_0'")
+            node.query(f"ALTER TABLE {table_name} ATTACH PART '{part_name}'")
 
         with Then("I check part detached"):
             for name in cluster.nodes["clickhouse"][0:3]:
@@ -496,14 +505,17 @@ def alter_fetch_partition(self):
         with And("I create table and make 2 part insert"):
             alter_partition(table_name=table_name, cluster_name=cluster_name)
 
+        with And("I get part name"):
+            part_name = get_part_name_for_table(table_name=table_name)
+
         with And("I fetch part from shard one"):
             cluster.node("clickhouse4").query(
-                f"ALTER TABLE {table_name} FETCH PART 'all_0_0_0' FROM '/clickhouse/tables/replicated/01/{table_name}'"
+                f"ALTER TABLE {table_name} FETCH PART '{part_name}' FROM '/clickhouse/tables/replicated/01/{table_name}'"
             )
 
         with And("I attach this part to table on shard two"):
             cluster.node("clickhouse4").query(
-                f"alter table {table_name} attach part 'all_0_0_0'"
+                f"alter table {table_name} attach part '{part_name}'"
             )
 
         with Then("I check the data added"):
