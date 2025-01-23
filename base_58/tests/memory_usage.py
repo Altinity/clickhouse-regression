@@ -99,76 +99,77 @@ def memory_usage_for_constant_input(self, node=None):
     if node is None:
         node = self.context.node
 
-    for attempt in retries(timeout=100, delay=10):
-        with attempt:
-            id_for_retry = (1000 + attempt.retry_number) * 10
+    with Check("constant input"):
+        for attempt in retries(timeout=100, delay=10):
+            with attempt:
+                id_for_retry = (1000 + attempt.retry_number) * 10
 
-            with When("I run base58 encode function"):
-                r = node.query(
-                    f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
-                    query_id=id_for_retry + 0,
-                )
-                b58_encoded_string = r.output
+                with When("I run base58 encode function"):
+                    r = node.query(
+                        f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
+                        query_id=id_for_retry + 0,
+                    )
+                    b58_encoded_string = r.output
 
-            with When("I run base64 encode function"):
-                r = node.query(
-                    f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
-                    query_id=id_for_retry + 1,
-                )
-                b64_encoded_string = r.output
+                with When("I run base64 encode function"):
+                    r = node.query(
+                        f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}') FORMAT TabSeparated",
+                        query_id=id_for_retry + 1,
+                    )
+                    b64_encoded_string = r.output
 
-            with When("I run base58 decode function"):
-                r = node.query(
-                    f"SELECT base58Decode('{b58_encoded_string}') FORMAT TabSeparated",
-                    query_id=id_for_retry + 2,
-                )
-                b58_decoded_string = r.output
+                with When("I run base58 decode function"):
+                    r = node.query(
+                        f"SELECT base58Decode('{b58_encoded_string}') FORMAT TabSeparated",
+                        query_id=id_for_retry + 2,
+                    )
+                    b58_decoded_string = r.output
 
-            with When("I run base64 decode function"):
-                r = node.query(
-                    f"SELECT base64Decode('{b64_encoded_string}') FORMAT TabSeparated",
-                    query_id=id_for_retry + 3,
-                )
-                b64_decoded_string = r.output
+                with When("I run base64 decode function"):
+                    r = node.query(
+                        f"SELECT base64Decode('{b64_encoded_string}') FORMAT TabSeparated",
+                        query_id=id_for_retry + 3,
+                    )
+                    b64_decoded_string = r.output
 
-            with Then("I check strings are not changed after encode, decode"):
-                assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
-                assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
+                with Then("I check strings are not changed after encode, decode"):
+                    assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
+                    assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
 
-            for attempt_1 in retries(timeout=100, delay=10):
-                with attempt_1:
-                    with When("I remember memory usages"):
-                        r = node.query(
-                            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 0}' FORMAT TabSeparated"
-                        )
-                        b58_encode_memory_usage = int(r.output)
-                        assert b58_encode_memory_usage > 0, error()
+                for attempt_1 in retries(timeout=100, delay=10):
+                    with attempt_1:
+                        with When("I remember memory usages"):
+                            r = node.query(
+                                f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 0}' FORMAT TabSeparated"
+                            )
+                            b58_encode_memory_usage = int(r.output)
+                            assert b58_encode_memory_usage > 0, error()
 
-                        r = node.query(
-                            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 1}' FORMAT TabSeparated"
-                        )
-                        b64_encode_memory_usage = int(r.output)
-                        assert b64_encode_memory_usage > 0, error()
+                            r = node.query(
+                                f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 1}' FORMAT TabSeparated"
+                            )
+                            b64_encode_memory_usage = int(r.output)
+                            assert b64_encode_memory_usage > 0, error()
 
-                        r = node.query(
-                            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 2}' FORMAT TabSeparated"
-                        )
-                        b58_decode_memory_usage = int(r.output)
-                        assert b58_decode_memory_usage > 0, error()
+                            r = node.query(
+                                f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 2}' FORMAT TabSeparated"
+                            )
+                            b58_decode_memory_usage = int(r.output)
+                            assert b58_decode_memory_usage > 0, error()
 
-                        r = node.query(
-                            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 3}' FORMAT TabSeparated"
-                        )
-                        b64_decode_memory_usage = int(r.output)
-                        assert b64_decode_memory_usage > 0, error()
+                            r = node.query(
+                                f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '{id_for_retry + 3}' FORMAT TabSeparated"
+                            )
+                            b64_decode_memory_usage = int(r.output)
+                            assert b64_decode_memory_usage > 0, error()
 
-            with Then("I check memory usages are similar"):
-                debug(f"""b58_encode_memory_usage: {b58_encode_memory_usage},
-                 b64_encode_memory_usage: {b64_encode_memory_usage},
-                 b58_decode_memory_usage: {b58_decode_memory_usage},
-                 b64_decode_memory_usage: {b64_decode_memory_usage}""")
-                assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
-                assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
+                with Then("I check memory usages are similar"):
+                    debug(f"b58_encode_memory_usage: {b58_encode_memory_usage},\n"
+                          f"b64_encode_memory_usage: {b64_encode_memory_usage},\n"
+                          f"b58_decode_memory_usage: {b58_decode_memory_usage},\n"
+                          f"b64_decode_memory_usage: {b64_decode_memory_usage}")
+                    assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
+                    assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
 
 
 @TestFeature
