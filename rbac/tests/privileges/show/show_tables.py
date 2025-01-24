@@ -258,7 +258,7 @@ def check(self, privilege, on, grant_target_name, user_name, table_name, node=No
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
             with Then(f"I CHECK {table_name}"):
-                if check_clickhouse_version(">=25.1")(self):
+                if check_clickhouse_version(">=25.1")(self) and privilege != "ALL":
                     node.query(
                         f"CHECK TABLE {table_name}",
                         settings=[("user", user_name)],
