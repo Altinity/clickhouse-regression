@@ -177,12 +177,12 @@
     * 10.5 [Exporting Chunked Columns](#exporting-chunked-columns)
         * 10.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
     * 10.6 [Multi-chunk Upload (Split to Rowgroups)](#multi-chunk-upload-split-to-rowgroups)
-            * 10.6.1.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
-        * 10.6.2 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
-        * 10.6.3 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
-            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
-        * 10.6.4 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
-            * 10.6.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
+        * 10.6.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
+            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
+        * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
+            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
+        * 10.6.3 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
+            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
     * 10.7 [Query Types](#query-types)
         * 10.7.1 [JOIN](#join)
             * 10.7.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
@@ -2055,9 +2055,9 @@ version: 1.0
 
 ### Multi-chunk Upload (Split to Rowgroups)
 
-##### Inserting Data Into Parquet Files
+#### Inserting Data Into Parquet Files
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
 version: 1.0
 
 [ClickHouse] SHALL support exporting Parquet files with multiple row groups.
