@@ -3,21 +3,21 @@ version: '2.3'
 services:
   minio:
     image: minio/minio
-    # volumes:
-    #   - data1-1:/data1
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-}
+      - MINIO_DOMAIN=minio
     networks:
       default:
         aliases:
           - warehouse.minio
     ports:
-      - "9001:9001"
-      - "9002:9000"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
+        - 9001:9001
+        - 9002:9000
     command: ["server", "/data", "--console-address", ":9001"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9001/minio/health/live"]
-      interval: 2s
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 60
+      retries: 5
