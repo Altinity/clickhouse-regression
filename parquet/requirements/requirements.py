@@ -2349,8 +2349,8 @@ RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="10.6.2",
+    level=4,
+    num="10.6.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_MergeTreePart = Requirement(
@@ -2369,7 +2369,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_MergeTreePart = Requiremen
     ),
     link=None,
     level=4,
-    num="10.6.3.1",
+    num="10.6.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize = Requirement(
@@ -2395,7 +2395,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize = Re
     ),
     link=None,
     level=4,
-    num="10.6.4.1",
+    num="10.6.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Export_Parquet_Join = Requirement(
@@ -5389,27 +5389,27 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="10.5.1",
         ),
         Heading(name="Multi-chunk Upload (Split to Rowgroups)", level=2, num="10.6"),
-        Heading(name="Inserting Data Into Parquet Files", level=4, num="10.6.1.1"),
+        Heading(name="Inserting Data Into Parquet Files", level=3, num="10.6.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert",
-            level=3,
-            num="10.6.2",
+            level=4,
+            num="10.6.1.1",
         ),
-        Heading(name="Move from MergeTree Part to Parquet", level=3, num="10.6.3"),
+        Heading(name="Move from MergeTree Part to Parquet", level=3, num="10.6.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart",
             level=4,
-            num="10.6.3.1",
+            num="10.6.2.1",
         ),
         Heading(
             name="Settings used to manipulate the number of row groups",
             level=3,
-            num="10.6.4",
+            num="10.6.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize",
             level=4,
-            num="10.6.4.1",
+            num="10.6.3.1",
         ),
         Heading(name="Query Types", level=2, num="10.7"),
         Heading(name="JOIN", level=3, num="10.7.1"),
@@ -6531,12 +6531,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 10.5 [Exporting Chunked Columns](#exporting-chunked-columns)
         * 10.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
     * 10.6 [Multi-chunk Upload (Split to Rowgroups)](#multi-chunk-upload-split-to-rowgroups)
-            * 10.6.1.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
-        * 10.6.2 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
-        * 10.6.3 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
-            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
-        * 10.6.4 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
-            * 10.6.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
+        * 10.6.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
+            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
+        * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
+            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
+        * 10.6.3 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
+            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
     * 10.7 [Query Types](#query-types)
         * 10.7.1 [JOIN](#join)
             * 10.7.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
@@ -8409,9 +8409,9 @@ version: 1.0
 
 ### Multi-chunk Upload (Split to Rowgroups)
 
-##### Inserting Data Into Parquet Files
+#### Inserting Data Into Parquet Files
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
 version: 1.0
 
 [ClickHouse] SHALL support exporting Parquet files with multiple row groups.
