@@ -20,7 +20,7 @@ import iceberg.tests.steps as steps
 
 @TestScenario
 def iceberg_engine(self):
-    """Test Iceberg table creation and data insertion."""
+    """Test the Iceberg engine in ClickHouse."""
     node = self.context.node
     s3_access_key_id = "minio"
     s3_secret_access_key = "minio123"
@@ -90,7 +90,7 @@ def iceberg_engine(self):
         df = table.scan().to_pandas()
         note(df)
 
-    with Then("read data from clickhouse using iceberg table engine"):
+    with Then("create database with Iceberg engine"):
         database_name = "datalake"
         steps.drop_database(database_name=database_name)
         steps.create_experimental_iceberg_database(
@@ -102,10 +102,14 @@ def iceberg_engine(self):
             catalog_type=catalog_type,
             storage_endpoint="http://minio:9000/warehouse",
         )
+
+    with And("check the tables in the database"):
         node.query("SHOW TABLES from datalake")
         steps.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
+
+    with And("read data in clickhouse from the previously created table"):
         steps.show_create_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )

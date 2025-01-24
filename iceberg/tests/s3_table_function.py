@@ -20,19 +20,16 @@ import iceberg.tests.steps as steps
 
 @TestScenario
 def s3_table_function(self):
-    """Test Iceberg table creation and data insertion."""
-    node = self.context.node
-    s3_access_key_id = steps.S3_ACCESS_KEY_ID
-    s3_secret_access_key = steps.S3_SECRET_ACCESS_KEY
-    catalog_type = steps.CATALOG_TYPE
+    """Test Iceberg table creation and reading data from ClickHouse using
+    icebergS3 table function."""
 
     with Given("create catalog"):
         catalog = steps.create_catalog(
             uri="http://localhost:8182/",
-            catalog_type=catalog_type,
+            catalog_type=steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=steps.S3_ACCESS_KEY_ID,
+            s3_secret_access_key=steps.S3_SECRET_ACCESS_KEY,
         )
 
     with And("create namespace"):
@@ -90,11 +87,11 @@ def s3_table_function(self):
         df = table.scan().to_pandas()
         note(df)
 
-    with Then("read data from clickhouse using s3 table function"):
+    with Then("read data in clickhouse using s3 table function"):
         steps.read_data_with_s3_table_function(
             endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=steps.S3_ACCESS_KEY_ID,
+            s3_secret_access_key=steps.S3_SECRET_ACCESS_KEY,
         )
 
 
