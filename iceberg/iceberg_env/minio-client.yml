@@ -2,15 +2,17 @@ version: '2.3'
 
 services:
   minio-client:
-    image: minio/mc:RELEASE.2022-06-11T21-10-36Z
+    image: minio/mc
     entrypoint: >
-     /bin/sh -c "
-     /usr/bin/mc config host add minio http://minio:9001 minio minio123;
-     /usr/bin/mc mb minio/root;
-     touch /tmp/ready;
-     "
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc rm -r --force minio/warehouse;
+      /usr/bin/mc mb minio/warehouse --ignore-existing;
+      /usr/bin/mc policy set public minio/warehouse;
+      tail -f /dev/null
+      "
     healthcheck:
-      test: ["CMD", "ls", "/tmp/ready"]
-      interval: 5s
-      timeout: 2s
-      retries: 60
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
