@@ -5,6 +5,10 @@ from pyiceberg.catalog import load_catalog
 
 from helpers.common import getuid
 
+S3_ACCESS_KEY_ID = "minio"
+S3_SECRET_ACCESS_KEY = "minio123"
+CATALOG_TYPE = "rest"
+
 
 @TestStep(Given)
 def create_catalog(
@@ -12,9 +16,9 @@ def create_catalog(
     uri,
     name="rest_catalog",
     s3_endpoint="http://localhost:9002",
-    s3_access_key_id="minio",
-    s3_secret_access_key="minio123",
-    catalog_type="rest",
+    s3_access_key_id=S3_ACCESS_KEY_ID,
+    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
+    catalog_type=CATALOG_TYPE,
 ):
     catalog = load_catalog(
         name,
@@ -102,9 +106,9 @@ def create_experimental_iceberg_database(
     database_name=None,
     node=None,
     rest_catalog_url="http://rest:8181/v1",
-    s3_access_key_id="minio",
-    s3_secret_access_key="minio123",
-    catalog_type="rest",
+    s3_access_key_id=S3_ACCESS_KEY_ID,
+    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
+    catalog_type=CATALOG_TYPE,
     storage_endpoint="http://minio:9000/warehouse",
 ):
     if node is None:
@@ -157,8 +161,8 @@ def read_data_with_icebergS3_table_function(
     storage_endpoint,
     node=None,
     columns="*",
-    s3_access_key_id="minio",
-    s3_secret_access_key="minio123",
+    s3_access_key_id=S3_ACCESS_KEY_ID,
+    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
 ):
     if node is None:
         node = self.context.node
