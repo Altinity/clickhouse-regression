@@ -614,6 +614,23 @@ def create_partitioned_replicated_table_with_datetime_data(
         node.query(
             f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*24, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
         )
+        
+    with And("wait until the data is replicated"):
+        for attempt in retries(timeout=300, delay=10):
+            with attempt:
+                data1 = (
+                    self.context.node_1
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                data2 = (
+                    self.context.node_2
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                data3 = (
+                    self.context.node_3
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                assert data1 == data2 == data3, "Data is not yet replicated"
 
 
 @TestStep(Given)
@@ -763,6 +780,23 @@ def create_partitioned_replicated_table_with_data(
                 node.query(
                     f"INSERT INTO {table_name} (a, b, c, extra, sign) SELECT number+10, number+{i+bias}+14, number+{i+bias}+18, number+1001, 1 FROM numbers({10})"
                 )
+
+    with And("wait until the data is replicated"):
+        for attempt in retries(timeout=300, delay=10):
+            with attempt:
+                data1 = (
+                    self.context.node_1
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                data2 = (
+                    self.context.node_2
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                data3 = (
+                    self.context.node_3
+                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                ).output.strip()
+                assert data1 == data2 == data3, "Data is not yet replicated"
 
 
 @TestStep(Given)
