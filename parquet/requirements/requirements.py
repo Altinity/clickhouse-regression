@@ -2337,6 +2337,67 @@ RQ_SRS_032_ClickHouse_Parquet_Export_ChunkedColumns = Requirement(
     num="10.5.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting Parquet files with multiple row groups.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="10.6.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_MergeTreePart = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support moving data from a MergeTree part to a Parquet file. The process must handle large parts by \n"
+        "processing them in MergeTree blocks, ensuring that each block is written as a RowGroup in the Parquet file.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="10.6.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| Settings                                     | Values                                         | Description                                                                                                                                                                                                                                                                       |\n"
+        "|----------------------------------------------|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| `min_insert_block_size_rows`                 | `Positive integer (default: 1048449)` or `0`   | Sets the minimum number of rows in the block that can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                            |\n"
+        "| `min_insert_block_size_bytes`                | `Positive integer (default: 268402944)` or `0` | Sets the minimum number of bytes in the block which can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                          |\n"
+        "| `output_format_parquet_row_group_size`       | `Positive integer (default: 1000000)` or `0`   | Target row group size in rows.                                                                                                                                                                                                                                                    |\n"
+        "| `output_format_parquet_row_group_size_bytes` | `Positive integer (default: 536870912)` or `0` | Target row group size in bytes, before compression.                                                                                                                                                                                                                               |\n"
+        "| `output_format_parquet_parallel_encoding`    | `1` or `0`                                     | Do Parquet encoding in multiple threads. Requires `output_format_parquet_use_custom_encoder`.                                                                                                                                                                                     |\n"
+        "| `max_threads`                                | `Positive integer (default: 4)` or `0`         | The maximum number of query processing threads, excluding threads for retrieving data from remote servers.                                                                                                                                                                        |\n"
+        "| `max_insert_block_size`                      | `Positive integer (default: 1048449)` or `0`   | The size of blocks (in a count of rows) to form for insertion into a table.                                                                                                                                                                                                       |\n"
+        "| `max_block_size`                             | `Positive integer (default: 65409)` or `0`     | indicates the recommended maximum number of rows to include in a single block when loading data from tables. Blocks the size of max_block_size are not always loaded from the table: if ClickHouse determines that less data needs to be retrieved, a smaller block is processed. |\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="10.6.3.1",
+)
+
 RQ_SRS_032_ClickHouse_Export_Parquet_Join = Requirement(
     name="RQ.SRS-032.ClickHouse.Export.Parquet.Join",
     version="1.0",
@@ -2350,7 +2411,7 @@ RQ_SRS_032_ClickHouse_Export_Parquet_Join = Requirement(
     ),
     link=None,
     level=4,
-    num="10.6.1.1",
+    num="10.7.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
@@ -2366,7 +2427,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
     ),
     link=None,
     level=4,
-    num="10.6.2.1",
+    num="10.7.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Union_Multiple = Requirement(
@@ -2394,7 +2455,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Union_Multiple = Requirement(
     ),
     link=None,
     level=4,
-    num="10.6.2.2",
+    num="10.7.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_View = Requirement(
@@ -2410,7 +2471,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_View = Requirement(
     ),
     link=None,
     level=3,
-    num="10.6.3",
+    num="10.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
@@ -2426,7 +2487,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
     ),
     link=None,
     level=3,
-    num="10.6.4",
+    num="10.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain = Requirement(
@@ -2441,7 +2502,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.1.1",
+    num="10.8.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Dictionary = Requirement(
@@ -2457,7 +2518,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Dictionary = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.2.1",
+    num="10.8.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_RunLength = Requirement(
@@ -2473,7 +2534,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_RunLength = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.3.1",
+    num="10.8.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Delta = Requirement(
@@ -2489,7 +2550,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Delta = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.4.1",
+    num="10.8.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaLengthByteArray = Requirement(
@@ -2505,7 +2566,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaLengthByteArray = Requirement
     ),
     link=None,
     level=4,
-    num="10.7.5.1",
+    num="10.8.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaStrings = Requirement(
@@ -2521,7 +2582,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaStrings = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.6.1",
+    num="10.8.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_ByteStreamSplit = Requirement(
@@ -2537,7 +2598,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_ByteStreamSplit = Requirement(
     ),
     link=None,
     level=4,
-    num="10.7.7.1",
+    num="10.8.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_RowGroupSize = Requirement(
@@ -2554,7 +2615,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_RowGroupSize = Requirement(
     ),
     link=None,
     level=3,
-    num="10.8.1",
+    num="10.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsString = Requirement(
@@ -2571,7 +2632,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsString = Requirement(
     ),
     link=None,
     level=3,
-    num="10.8.2",
+    num="10.9.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsFixedByteArray = Requirement(
@@ -2587,7 +2648,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsFixedByteArray = Requireme
     ),
     link=None,
     level=3,
-    num="10.8.3",
+    num="10.9.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion = Requirement(
@@ -2604,7 +2665,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion = Requirement(
     ),
     link=None,
     level=3,
-    num="10.8.4",
+    num="10.9.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod = Requirement(
@@ -2621,7 +2682,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod = Requirement(
     ),
     link=None,
     level=3,
-    num="10.8.5",
+    num="10.9.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
@@ -2646,7 +2707,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
     ),
     link=None,
     level=3,
-    num="10.9.1",
+    num="10.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_NativeReader = Requirement(
@@ -3850,8 +3911,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="19.4.1",
+    level=2,
+    num="19.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
@@ -3873,7 +3934,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
     ),
     link=None,
     level=3,
-    num="19.5.1",
+    num="19.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requirement(
@@ -3901,7 +3962,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output = Requiremen
     ),
     link=None,
     level=3,
-    num="19.5.2",
+    num="19.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
@@ -4042,7 +4103,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content = Requirement(
     ),
     link=None,
     level=3,
-    num="19.5.3",
+    num="19.2.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
@@ -4058,7 +4119,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     ),
     link=None,
     level=3,
-    num="19.5.4",
+    num="19.2.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries = Requirement(
@@ -4074,7 +4135,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_ExtraEntries = Requiremen
     ),
     link=None,
     level=3,
-    num="19.6.1",
+    num="19.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
@@ -4089,7 +4150,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.1",
+    num="19.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
@@ -4105,7 +4166,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.2",
+    num="19.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
@@ -4121,7 +4182,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="19.7.3",
+    num="19.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -5327,102 +5388,125 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="10.5.1",
         ),
-        Heading(name="Query Types", level=2, num="10.6"),
-        Heading(name="JOIN", level=3, num="10.6.1"),
+        Heading(name="Multi-chunk Upload (Split to Rowgroups)", level=2, num="10.6"),
+        Heading(name="Inserting Data Into Parquet Files", level=3, num="10.6.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=4, num="10.6.1.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert",
+            level=4,
+            num="10.6.1.1",
         ),
-        Heading(name="UNION", level=3, num="10.6.2"),
+        Heading(name="Move from MergeTree Part to Parquet", level=3, num="10.6.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=4, num="10.6.2.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart",
+            level=4,
+            num="10.6.2.1",
+        ),
+        Heading(
+            name="Settings used to manipulate the number of row groups",
+            level=3,
+            num="10.6.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize",
+            level=4,
+            num="10.6.3.1",
+        ),
+        Heading(name="Query Types", level=2, num="10.7"),
+        Heading(name="JOIN", level=3, num="10.7.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=4, num="10.7.1.1"
+        ),
+        Heading(name="UNION", level=3, num="10.7.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=4, num="10.7.2.1"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple",
             level=4,
-            num="10.6.2.2",
+            num="10.7.2.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.View", level=3, num="10.6.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.View", level=3, num="10.7.3"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView",
             level=3,
-            num="10.6.4",
+            num="10.7.4",
         ),
-        Heading(name="Export Encoded", level=2, num="10.7"),
-        Heading(name="Plain (Export)", level=3, num="10.7.1"),
+        Heading(name="Export Encoded", level=2, num="10.8"),
+        Heading(name="Plain (Export)", level=3, num="10.8.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain",
             level=4,
-            num="10.7.1.1",
+            num="10.8.1.1",
         ),
-        Heading(name="Dictionary (Export)", level=3, num="10.7.2"),
+        Heading(name="Dictionary (Export)", level=3, num="10.8.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary",
             level=4,
-            num="10.7.2.1",
+            num="10.8.2.1",
         ),
-        Heading(name="Run Length Encoding (Export)", level=3, num="10.7.3"),
+        Heading(name="Run Length Encoding (Export)", level=3, num="10.8.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength",
             level=4,
-            num="10.7.3.1",
+            num="10.8.3.1",
         ),
-        Heading(name="Delta (Export)", level=3, num="10.7.4"),
+        Heading(name="Delta (Export)", level=3, num="10.8.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta",
             level=4,
-            num="10.7.4.1",
+            num="10.8.4.1",
         ),
-        Heading(name="Delta-length byte array (Export)", level=3, num="10.7.5"),
+        Heading(name="Delta-length byte array (Export)", level=3, num="10.8.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray",
             level=4,
-            num="10.7.5.1",
+            num="10.8.5.1",
         ),
-        Heading(name="Delta Strings (Export)", level=3, num="10.7.6"),
+        Heading(name="Delta Strings (Export)", level=3, num="10.8.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings",
             level=4,
-            num="10.7.6.1",
+            num="10.8.6.1",
         ),
-        Heading(name="Byte Stream Split (Export)", level=3, num="10.7.7"),
+        Heading(name="Byte Stream Split (Export)", level=3, num="10.8.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit",
             level=4,
-            num="10.7.7.1",
+            num="10.8.7.1",
         ),
-        Heading(name="Export Settings", level=2, num="10.8"),
+        Heading(name="Export Settings", level=2, num="10.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize",
             level=3,
-            num="10.8.1",
+            num="10.9.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString",
             level=3,
-            num="10.8.2",
+            num="10.9.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray",
             level=3,
-            num="10.8.3",
+            num="10.9.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion",
             level=3,
-            num="10.8.4",
+            num="10.9.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod",
             level=3,
-            num="10.8.5",
+            num="10.9.5",
         ),
-        Heading(name="Type Conversion", level=2, num="10.9"),
+        Heading(name="Type Conversion", level=2, num="10.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
             level=3,
-            num="10.9.1",
+            num="10.10.1",
         ),
         Heading(name="Native Reader", level=1, num="11"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.NativeReader", level=2, num="11.1"),
@@ -5798,43 +5882,43 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="18.4.1",
         ),
         Heading(name="Metadata", level=1, num="19"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Metadata", level=3, num="19.4.1"),
-        Heading(name="ParquetFormat", level=2, num="19.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Metadata", level=2, num="19.1"),
+        Heading(name="ParquetFormat", level=2, num="19.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat",
             level=3,
-            num="19.5.1",
+            num="19.2.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output",
             level=3,
-            num="19.5.2",
+            num="19.2.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content",
             level=3,
-            num="19.5.3",
+            num="19.2.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax",
             level=3,
-            num="19.5.4",
+            num="19.2.4",
         ),
-        Heading(name="Extra entries in metadata", level=2, num="19.6"),
+        Heading(name="Extra entries in metadata", level=2, num="19.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries",
             level=3,
-            num="19.6.1",
+            num="19.3.1",
         ),
-        Heading(name="Metadata Types", level=2, num="19.7"),
+        Heading(name="Metadata Types", level=2, num="19.4"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.7.1"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="19.7.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="19.4.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.7.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=3, num="19.4.2"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.4.3"
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6138,6 +6222,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Export_Nested,
         RQ_SRS_032_ClickHouse_Parquet_Export_Nested_Complex,
         RQ_SRS_032_ClickHouse_Parquet_Export_ChunkedColumns,
+        RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert,
+        RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_MergeTreePart,
+        RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize,
         RQ_SRS_032_ClickHouse_Export_Parquet_Join,
         RQ_SRS_032_ClickHouse_Parquet_Export_Union,
         RQ_SRS_032_ClickHouse_Parquet_Export_Union_Multiple,
@@ -6443,37 +6530,44 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 10.4.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested.Complex](#rqsrs-032clickhouseparquetexportnestedcomplex)
     * 10.5 [Exporting Chunked Columns](#exporting-chunked-columns)
         * 10.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
-    * 10.6 [Query Types](#query-types)
-        * 10.6.1 [JOIN](#join)
-            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
-        * 10.6.2 [UNION](#union)
-            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
-            * 10.6.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
-        * 10.6.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
-        * 10.6.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
-    * 10.7 [Export Encoded](#export-encoded)
-        * 10.7.1 [Plain (Export)](#plain-export)
-            * 10.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
-        * 10.7.2 [Dictionary (Export)](#dictionary-export)
-            * 10.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
-        * 10.7.3 [Run Length Encoding (Export)](#run-length-encoding-export)
-            * 10.7.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
-        * 10.7.4 [Delta (Export)](#delta-export)
-            * 10.7.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
-        * 10.7.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
-            * 10.7.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
-        * 10.7.6 [Delta Strings (Export)](#delta-strings-export)
-            * 10.7.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
-        * 10.7.7 [Byte Stream Split (Export)](#byte-stream-split-export)
-            * 10.7.7.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
-    * 10.8 [Export Settings](#export-settings)
-        * 10.8.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
-        * 10.8.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
-        * 10.8.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
-        * 10.8.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
-        * 10.8.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
-    * 10.9 [Type Conversion](#type-conversion)
-        * 10.9.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+    * 10.6 [Multi-chunk Upload (Split to Rowgroups)](#multi-chunk-upload-split-to-rowgroups)
+        * 10.6.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
+            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
+        * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
+            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
+        * 10.6.3 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
+            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
+    * 10.7 [Query Types](#query-types)
+        * 10.7.1 [JOIN](#join)
+            * 10.7.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
+        * 10.7.2 [UNION](#union)
+            * 10.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+            * 10.7.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
+        * 10.7.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
+        * 10.7.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
+    * 10.8 [Export Encoded](#export-encoded)
+        * 10.8.1 [Plain (Export)](#plain-export)
+            * 10.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
+        * 10.8.2 [Dictionary (Export)](#dictionary-export)
+            * 10.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
+        * 10.8.3 [Run Length Encoding (Export)](#run-length-encoding-export)
+            * 10.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
+        * 10.8.4 [Delta (Export)](#delta-export)
+            * 10.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
+        * 10.8.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
+            * 10.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
+        * 10.8.6 [Delta Strings (Export)](#delta-strings-export)
+            * 10.8.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
+        * 10.8.7 [Byte Stream Split (Export)](#byte-stream-split-export)
+            * 10.8.7.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
+    * 10.9 [Export Settings](#export-settings)
+        * 10.9.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
+        * 10.9.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
+        * 10.9.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
+        * 10.9.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
+        * 10.9.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
+    * 10.10 [Type Conversion](#type-conversion)
+        * 10.10.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
 * 11 [Native Reader](#native-reader)
     * 11.1 [RQ.SRS-032.ClickHouse.Parquet.NativeReader](#rqsrs-032clickhouseparquetnativereader)
     * 11.2 [Data Types Support](#data-types-support)
@@ -6602,18 +6696,18 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 18.4 [Dictionary](#dictionary)
         * 18.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 19 [Metadata](#metadata)
-        * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata](#rqsrs-032clickhouseparquetmetadata)
-    * 19.5 [ParquetFormat](#parquetformat)
-        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
-        * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-        * 19.5.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
-        * 19.5.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-    * 19.6 [Extra entries in metadata](#extra-entries-in-metadata)
-        * 19.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
-    * 19.7 [Metadata Types](#metadata-types)
-        * 19.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
-        * 19.7.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
-        * 19.7.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 19.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata](#rqsrs-032clickhouseparquetmetadata)
+    * 19.2 [ParquetFormat](#parquetformat)
+        * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
+        * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
+        * 19.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+        * 19.2.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 19.3 [Extra entries in metadata](#extra-entries-in-metadata)
+        * 19.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
+    * 19.4 [Metadata Types](#metadata-types)
+        * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+        * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+        * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -8313,6 +8407,40 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting chunked columns to Parquet files.
 
+### Multi-chunk Upload (Split to Rowgroups)
+
+#### Inserting Data Into Parquet Files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
+version: 1.0
+
+[ClickHouse] SHALL support exporting Parquet files with multiple row groups.
+
+#### Move from MergeTree Part to Parquet
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart
+version: 1.0  
+
+[ClickHouse] SHALL support moving data from a MergeTree part to a Parquet file. The process must handle large parts by 
+processing them in MergeTree blocks, ensuring that each block is written as a RowGroup in the Parquet file.
+
+#### Settings used to manipulate the number of row groups
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize
+version: 1.0
+
+| Settings                                     | Values                                         | Description                                                                                                                                                                                                                                                                       |
+|----------------------------------------------|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `min_insert_block_size_rows`                 | `Positive integer (default: 1048449)` or `0`   | Sets the minimum number of rows in the block that can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                            |
+| `min_insert_block_size_bytes`                | `Positive integer (default: 268402944)` or `0` | Sets the minimum number of bytes in the block which can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                          |
+| `output_format_parquet_row_group_size`       | `Positive integer (default: 1000000)` or `0`   | Target row group size in rows.                                                                                                                                                                                                                                                    |
+| `output_format_parquet_row_group_size_bytes` | `Positive integer (default: 536870912)` or `0` | Target row group size in bytes, before compression.                                                                                                                                                                                                                               |
+| `output_format_parquet_parallel_encoding`    | `1` or `0`                                     | Do Parquet encoding in multiple threads. Requires `output_format_parquet_use_custom_encoder`.                                                                                                                                                                                     |
+| `max_threads`                                | `Positive integer (default: 4)` or `0`         | The maximum number of query processing threads, excluding threads for retrieving data from remote servers.                                                                                                                                                                        |
+| `max_insert_block_size`                      | `Positive integer (default: 1048449)` or `0`   | The size of blocks (in a count of rows) to form for insertion into a table.                                                                                                                                                                                                       |
+| `max_block_size`                             | `Positive integer (default: 65409)` or `0`     | indicates the recommended maximum number of rows to include in a single block when loading data from tables. Blocks the size of max_block_size are not always loaded from the table: if ClickHouse determines that less data needs to be retrieved, a smaller block is processed. |
+
+
 ### Query Types
 
 #### JOIN
@@ -9048,7 +9176,7 @@ version: 1.0
 
 ## Metadata
 
-#### RQ.SRS-032.ClickHouse.Parquet.Metadata
+### RQ.SRS-032.ClickHouse.Parquet.Metadata
 version: 1.0
 
 Parquet files have three types of metadata
