@@ -50,7 +50,7 @@ def create_parquet_from_ontime_dataset(
     node.command(f"mv {parquet_file} /var/lib/clickhouse/user_files", exitcode=0)
 
     yield parquet_file
-
+    node.command(f"rm /var/lib/clickhouse/user_files/{parquet_file}", exitcode=0)
 
 @TestCheck
 def multi_chunk_inserts(
@@ -85,7 +85,6 @@ def multi_chunk_inserts(
     with Then("I select from the parquet file"):
         select_from_parquet(file_name=parquet_file, limit=1)
 
-    node.command(f"rm /var/lib/clickhouse/user_files/{parquet_file}", exitcode=0)
 
 
 @TestSketch(Scenario)
