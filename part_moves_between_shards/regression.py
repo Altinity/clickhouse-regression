@@ -42,6 +42,21 @@ ffails = {
         "SELECT uuid FROM system.parts WHERE uuid = {uuid} doesn't output anything: https://github.com/ClickHouse/ClickHouse/issues/61220",
         check_clickhouse_version(">=24.1"),
     ),
+    "/part moves between shards/part_moves": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/74857",
+        check_clickhouse_version(">24.8"),
+    ),
+    "/part moves between shards/system_table": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/74857",
+        check_clickhouse_version(">24.8"),
+    ),
+    "/part moves between shards/deduplication": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/74857",
+        check_clickhouse_version(">24.8"),
+    ),
 }
 
 
