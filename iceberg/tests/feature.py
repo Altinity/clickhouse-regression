@@ -10,5 +10,5 @@ def feature(self):
     tables in Clickhouse."""
 
     Feature(run=load("iceberg.tests.s3_table_function", "feature"))
-    Feature(run=load("iceberg.tests.icebergS3_table_function", "feature"))
+    Feature(run=load("iceberg.tests.icebergS3_table_function", "icebergS3_table_function"))
     Feature(run=load("iceberg.tests.iceberg_engine", "feature"))
