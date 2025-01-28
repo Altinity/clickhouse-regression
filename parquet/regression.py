@@ -626,6 +626,12 @@ def regression(
         #     executor=executor,
         #     flags=parallel,
         # )
+        Feature(
+            run=load("parquet.tests.multi_chunk_upload", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
         join()
 
     storages = s3_args.pop("storages", None)

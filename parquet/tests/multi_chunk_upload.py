@@ -122,3 +122,5 @@ def feature(self, node="clickhouse1"):
 
     with Given("I create a MergeTree table with the ontime dataset"):
         self.context.table_name = create_table_with_ontime_dataset()
+
+    Scenario(run=multi_chunk_upload)
