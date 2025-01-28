@@ -72,14 +72,14 @@ def multi_chunk_inserts(
         description=f"min_insert_block_size_rows={min_insert_block_size_rows}, min_insert_block_size_bytes={min_insert_block_size_bytes}, output_format_parquet_row_group_size={output_format_parquet_row_group_size}, output_format_parquet_row_group_size_bytes={output_format_parquet_row_group_size_bytes}, output_format_parquet_parallel_encoding={output_format_parquet_parallel_encoding}, max_threads={max_threads}, max_insert_block_size={max_insert_block_size}, max_block_size={max_block_size}",
     ):
         parquet_file = create_parquet_from_ontime_dataset(
-            min_insert_block_size_rows,
-            min_insert_block_size_bytes,
-            output_format_parquet_row_group_size,
-            output_format_parquet_row_group_size_bytes,
-            output_format_parquet_parallel_encoding,
-            max_threads,
-            max_insert_block_size,
-            max_block_size,
+            min_insert_block_size_rows=min_insert_block_size_rows,
+            min_insert_block_size_bytes=min_insert_block_size_bytes,
+            output_format_parquet_row_group_size=output_format_parquet_row_group_size,
+            output_format_parquet_row_group_size_bytes=output_format_parquet_row_group_size_bytes,
+            output_format_parquet_parallel_encoding=output_format_parquet_parallel_encoding,
+            max_threads=max_threads,
+            max_insert_block_size=max_insert_block_size,
+            max_block_size=max_block_size,
         )
 
     with Then("I select from the parquet file"):
