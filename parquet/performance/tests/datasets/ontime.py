@@ -10,12 +10,15 @@ def create_table_with_ontime_dataset(
     max_memory_usage: int = 0,
     from_year: int = 1987,
     to_year: int = 2022,
+    node=None
 ):
     """Create a MergeTree table using the ontime airlines dataset
     https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
     that contains 200M rows."""
 
-    clickhouse_node = self.context.clickhouse_node
+    if node is None:
+        clickhouse_node = self.context.node
+
     table_name = "ontime_" + getuid()
     with Given(
         "I create an ontime table in clickhouse and populate it with the ontime airlines dataset"
