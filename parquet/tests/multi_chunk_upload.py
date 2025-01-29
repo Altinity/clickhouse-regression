@@ -111,17 +111,23 @@ def multi_chunk_inserts(
     RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize("1.0"),
 )
 def multi_chunk_upload(self):
-    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file."""
-    min_insert_block_size_rows = either(*[10000, 100000, 1000000])
-    min_insert_block_size_bytes = either(*[10000000, 100000000, 1000000000])
-    output_format_parquet_row_group_size = either(*[10000, 100000, 1000000])
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file
+
+    To get a single large block ideally:
+
+    the block should be less than `output_format_parquet_row_group_size * 2` but more than `output_format_parquet_row_group_size`.
+    """
+
+    min_insert_block_size_rows = either(*[10000, 100000, 13000000, 130000000000])
+    min_insert_block_size_bytes = either(*[10000000, 100000000, 100000000000])
+    output_format_parquet_row_group_size = either(*[100000, 1000000, 100000000000])
     output_format_parquet_row_group_size_bytes = either(
         *[10000000, 100000000, 1000000000]
     )
     output_format_parquet_parallel_encoding = 1
     max_threads = either(*[2, 4, 8, 16, 32])
-    max_insert_block_size = either(*[10000000, 100000000, 1000000000])
-    max_block_size = either(*[15000000, 20000000, 150000000, 1500000000])
+    max_insert_block_size = either(*[10000000, 100000000, 1000000000, 100000000000])
+    max_block_size = either(*[15000000, 20000000, 150000000, 150000000000])
 
     multi_chunk_inserts(
         min_insert_block_size_rows=min_insert_block_size_rows,
