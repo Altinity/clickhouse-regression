@@ -106,6 +106,10 @@ def multi_chunk_inserts(
 
 
 @TestSketch(Scenario)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Settings_RowGroupSize("1.0"),
+)
 def multi_chunk_upload(self):
     """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file."""
     min_insert_block_size_rows = either(*[10000, 100000, 1000000])
