@@ -2439,7 +2439,7 @@ For example,
 
 ```sql
 SELECT *
-FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
+FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
 ```
 
 #### Detecting Hive Partitioning
