@@ -119,7 +119,7 @@ def multi_chunk_upload(self):
     """
 
     min_insert_block_size_rows = either(*[10000, 100000, 13000000, 130000000000])
-    min_insert_block_size_bytes = either(*[10000000, 100000000, 100000000000])
+    min_insert_block_size_bytes = either(*[10000000, 100000000, 130000000000])
     output_format_parquet_row_group_size = either(*[100000, 1000000, 100000000000])
     output_format_parquet_row_group_size_bytes = either(
         *[10000000, 100000000, 1000000000]
