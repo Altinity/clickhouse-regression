@@ -4226,7 +4226,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
         "\n"
         "```sql\n"
         "SELECT COUNT(*)\n"
-        "FROM s3(s3_conn, filename = 'test.parquet', format = Parquet)\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
         "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
         "```\n"
         "\n"
@@ -9536,7 +9536,7 @@ For example,
 
 ```sql
 SELECT COUNT(*)
-FROM s3(s3_conn, filename = 'test.parquet', format = Parquet)
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
