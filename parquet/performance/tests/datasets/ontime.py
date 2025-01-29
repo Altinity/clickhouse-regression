@@ -16,13 +16,13 @@ def create_table_with_ontime_dataset(
     that contains 200M rows."""
 
     if node is None:
-        clickhouse_node = self.context.node
+        node = self.context.node
 
     table_name = "ontime_" + getuid()
     with Given(
         "I create an ontime table in clickhouse and populate it with the ontime airlines dataset"
     ):
-        clickhouse_node.query(
+        node.query(
             f"""
             CREATE TABLE `{table_name}`
         (
@@ -140,7 +140,7 @@ def create_table_with_ontime_dataset(
                 """
         )
 
-        clickhouse_node.query(
+        node.query(
             f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime"
             f"/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = {threads}, max_memory_usage={max_memory_usage};",
             progress=True,
@@ -148,7 +148,7 @@ def create_table_with_ontime_dataset(
         )
 
     yield table_name
-    clickhouse_node.query(f"DROP TABLE {table_name}")
+    node.query(f"DROP TABLE {table_name}")
 
 
 @TestStep(Given)
