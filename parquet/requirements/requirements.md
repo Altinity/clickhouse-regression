@@ -354,6 +354,8 @@
         * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
         * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
         * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 19.5 [Caching in Object Storage](#caching-in-object-storage)
+        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -3021,6 +3023,21 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
+
+### Caching in Object Storage
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
+version: 1.0
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
+`input_format_parquet_use_metadata_cache` setting. This metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
+
+For example,
+
+```sql
+SELECT COUNT(*)
+FROM s3(s3_conn, filename = 'test.parquet', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+```
 
 ## Error Recovery
 
