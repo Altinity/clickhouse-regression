@@ -2447,7 +2447,7 @@ FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parque
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning
 version: 1.0
 
-[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting.
+[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.
 
 For example,
 
