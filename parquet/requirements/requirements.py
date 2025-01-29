@@ -3136,13 +3136,38 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3 = Requirement(
         "\n"
         "```sql\n"
         "SELECT *\n"
-        "FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)\n"
+        "FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)\n"
         "```\n"
         "\n"
     ),
     link=None,
     level=3,
     num="16.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date > '2020-01-01' and _country = 'Netherlands' and _code = 42;\n"
+        "```\n"
+        "\n"
+        "> When setting use_hive_partitioning is set to 1, ClickHouse will detect \n"
+        "> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="16.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC = Requirement(
@@ -5680,6 +5705,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="16.3.1",
         ),
+        Heading(name="Detecting Hive Partitioning", level=3, num="16.3.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning",
+            level=4,
+            num="16.3.2.1",
+        ),
         Heading(name="JDBC", level=2, num="16.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC",
@@ -6325,6 +6356,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3,
+        RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_ODBC,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS,
@@ -6676,6 +6708,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 16.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
     * 16.3 [S3](#s3)
         * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
+        * 16.3.2 [Detecting Hive Partitioning](#detecting-hive-partitioning)
+            * 16.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning](#rqsrs-032clickhouseparquettablefunctionss3hivepartitioning)
     * 16.4 [JDBC](#jdbc)
         * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
     * 16.5 [ODBC](#odbc)
@@ -8850,8 +8884,24 @@ For example,
 
 ```sql
 SELECT *
-FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
+FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
 ```
+
+#### Detecting Hive Partitioning
+
+##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning
+version: 1.0
+
+[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting.
+
+For example,
+
+```sql
+SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date > '2020-01-01' and _country = 'Netherlands' and _code = 42;
+```
+
+> When setting use_hive_partitioning is set to 1, ClickHouse will detect 
+> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.
 
 ### JDBC
 
