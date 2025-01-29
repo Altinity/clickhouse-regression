@@ -3050,7 +3050,7 @@ version: 1.0
 | Setting                                            | Values                 | Description                                                                                                                 |
 |----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
-| `parquet_metadata_cache_max_entries`               | INT                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
+| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
 | `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
 | `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
 ## Error Recovery
