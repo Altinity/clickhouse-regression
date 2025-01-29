@@ -9414,6 +9414,7 @@ version: 1.0
 
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
 version: 1.0
+
 [ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
 `input_format_parquet_use_metadata_cache` setting. This metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
 
