@@ -3153,7 +3153,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting.\n"
+        "[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -8893,7 +8893,7 @@ FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parque
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning
 version: 1.0
 
-[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting.
+[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.
 
 For example,
 
