@@ -100,7 +100,7 @@ def multi_chunk_upload(self):
     output_format_parquet_parallel_encoding = 1
     max_threads = either(*[2, 4, 8, 16, 32])
     max_insert_block_size = either(*[10000000, 100000000, 1000000000])
-    max_block_size = either(*[15000000, 150000000, 1500000000])
+    max_block_size = either(*[15000000, 20000000, 150000000, 1500000000])
 
     multi_chunk_inserts(
         min_insert_block_size_rows=min_insert_block_size_rows,
@@ -117,11 +117,14 @@ def multi_chunk_upload(self):
 @TestFeature
 @Name("multi chunk upload")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert("1.0"))
-def feature(self, node="clickhouse1"):
-    """Validating multi chunked uploads into a parquet file."""
+def feature(self, node="clickhouse1", from_year=1987, to_year=2022):
+    """Validating multi chunked uploads into a parquet file.
+
+    The parameters: from_year and to_year determine the size of the dataset, the larger the range, the larger the dataset.
+    """
     self.context.node = self.context.cluster.node(node)
 
     with Given("I create a MergeTree table with the ontime dataset"):
-        self.context.table_name = create_table_with_ontime_dataset()
+        self.context.table_name = create_table_with_ontime_dataset(from_year=from_year, to_year=to_year)
 
     Scenario(run=multi_chunk_upload)
