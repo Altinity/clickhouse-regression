@@ -41,7 +41,7 @@ def create_parquet_from_ontime_dataset(
 ):
     """Create a parquet file from the MergeTree table with the ontime dataset."""
     table_name = self.context.table_name
-    parquet_file = "ontime_parquet_" + getuid() + ".parquet"
+    parquet_file = "ontime_" + getuid() + ".parquet"
 
     node = self.context.node
 
