@@ -3163,7 +3163,8 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning = Requirement(
         "\n"
         "> When setting use_hive_partitioning is set to 1, ClickHouse will detect \n"
         "> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.\n"
-        "\n"
+        "> \n"
+        "> Source: https://clickhouse.com/docs/en/sql-reference/table-functions/s3#hive-style-partitioning\n"
     ),
     link=None,
     level=4,
@@ -8902,7 +8903,8 @@ SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date
 
 > When setting use_hive_partitioning is set to 1, ClickHouse will detect 
 > Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.
-
+> 
+> Source: https://clickhouse.com/docs/en/sql-reference/table-functions/s3#hive-style-partitioning
 ### JDBC
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
