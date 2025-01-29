@@ -1,11 +1,28 @@
-import os
-import json
-
 from testflows.core import *
 from helpers.common import getuid, check_clickhouse_version
 from parquet.requirements import *
 from parquet.tests.steps.general import select_from_parquet
 from parquet.performance.tests.datasets.ontime import create_table_with_ontime_dataset
+
+
+@TestStep(Given)
+def move_parquet_to_user_files(self, file_name, node=None):
+    """Move the parquet file to the user_files directory so that ClickHouse can read it."""
+
+    if node is None:
+        node = self.context.node
+
+    node.command(f"mv {file_name} /var/lib/clickhouse/user_files", exitcode=0)
+
+
+@TestStep(Then)
+def remove_parquet_from_user_files(self, file_name, node=None):
+    """Remove the parquet file from the user_files directory."""
+
+    if node is None:
+        node = self.context.node
+
+    node.command(f"rm /var/lib/clickhouse/user_files/{file_name}", exitcode=0)
 
 
 @TestStep(Given)
@@ -48,10 +65,10 @@ def create_parquet_from_ontime_dataset(
         timeout=3600,
     )
 
-    node.command(f"mv {parquet_file} /var/lib/clickhouse/user_files", exitcode=0)
+    move_parquet_to_user_files(file_name=parquet_file)
 
     yield parquet_file
-    node.command(f"rm /var/lib/clickhouse/user_files/{parquet_file}", exitcode=0)
+    remove_parquet_from_user_files(file_name=parquet_file)
 
 
 @TestCheck
@@ -120,11 +137,13 @@ def multi_chunk_upload(self):
 def feature(self, node="clickhouse1", from_year=1987, to_year=2022):
     """Validating multi chunked uploads into a parquet file.
 
-    The parameters: from_year and to_year determine the size of the dataset, the larger the range, the larger the dataset.
+    The parameters: `from_year` and `to_year` determine the size of the dataset, the larger the range between two numbers, the larger the dataset.
     """
     self.context.node = self.context.cluster.node(node)
 
     with Given("I create a MergeTree table with the ontime dataset"):
-        self.context.table_name = create_table_with_ontime_dataset(from_year=from_year, to_year=to_year)
+        self.context.table_name = create_table_with_ontime_dataset(
+            from_year=from_year, to_year=to_year
+        )
 
     Scenario(run=multi_chunk_upload)
