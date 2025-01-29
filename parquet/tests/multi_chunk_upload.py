@@ -22,6 +22,7 @@ def create_parquet_from_ontime_dataset(
     threads=20,
     max_memory_usage=0,
 ):
+    """Create a parquet file from the MergeTree table with the ontime dataset."""
     table_name = self.context.table_name
     parquet_file = "ontime_parquet_" + getuid() + ".parquet"
 
@@ -51,6 +52,7 @@ def create_parquet_from_ontime_dataset(
 
     yield parquet_file
     node.command(f"rm /var/lib/clickhouse/user_files/{parquet_file}", exitcode=0)
+
 
 @TestCheck
 def multi_chunk_inserts(
@@ -84,7 +86,6 @@ def multi_chunk_inserts(
 
     with Then("I select from the parquet file"):
         select_from_parquet(file_name=parquet_file, limit=1)
-
 
 
 @TestSketch(Scenario)

@@ -2,7 +2,6 @@ from testflows.core import *
 from helpers.common import getuid, check_clickhouse_version
 
 
-
 @TestStep(Given)
 def create_table_with_ontime_dataset(
     self,
@@ -10,7 +9,7 @@ def create_table_with_ontime_dataset(
     max_memory_usage: int = 0,
     from_year: int = 1987,
     to_year: int = 2022,
-    node=None
+    node=None,
 ):
     """Create a MergeTree table using the ontime airlines dataset
     https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
@@ -150,6 +149,7 @@ def create_table_with_ontime_dataset(
 
     yield table_name
     clickhouse_node.query(f"DROP TABLE {table_name}")
+
 
 @TestStep(Given)
 def create_parquet_file(
