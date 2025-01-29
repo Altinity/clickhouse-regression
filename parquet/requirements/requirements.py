@@ -5402,7 +5402,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="10.6.2.1",
         ),
         Heading(
-            name="Settings used to manipulate the number of row groups",
+            name="Settings for Manipulating the Size of Row Groups",
             level=3,
             num="10.6.3",
         ),
@@ -6535,7 +6535,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
         * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
             * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
-        * 10.6.3 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
+        * 10.6.3 [Settings for Manipulating the Size of Row Groups](#settings-for-manipulating-the-size-of-row-groups)
             * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
     * 10.7 [Query Types](#query-types)
         * 10.7.1 [JOIN](#join)
@@ -8424,7 +8424,7 @@ version: 1.0
 [ClickHouse] SHALL support moving data from a MergeTree part to a Parquet file. The process must handle large parts by 
 processing them in MergeTree blocks, ensuring that each block is written as a RowGroup in the Parquet file.
 
-#### Settings used to manipulate the number of row groups
+#### Settings for Manipulating the Size of Row Groups
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize
 version: 1.0
