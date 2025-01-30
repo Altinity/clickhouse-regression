@@ -179,6 +179,9 @@ def max_block_size_and_group_size_bytes(self):
     max_block_size = random.sample(range(100000000001, 150000000001), 4)
     min_insert_block_size_bytes = random.sample(range(100000000001, 130000000001), 4)
 
+    max_block_size = either(*max_block_size)
+    min_insert_block_size_bytes = either(*min_insert_block_size_bytes)
+
     multi_chunk_inserts(
         max_block_size=max_block_size,
         min_insert_block_size_bytes=min_insert_block_size_bytes,
@@ -198,7 +201,7 @@ def feature(self, node="clickhouse1", from_year=1987, to_year=2022):
 
     with Given("I create a MergeTree table with the ontime dataset"):
         self.context.table_name = create_table_with_ontime_dataset(
-            from_year=from_year, to_year=to_year
+            from_year=from_year, to_year=to_year, threads=40
         )
 
     Scenario(run=multi_chunk_upload)
