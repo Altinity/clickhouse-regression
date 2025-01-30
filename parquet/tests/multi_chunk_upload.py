@@ -1,3 +1,5 @@
+import random
+
 from testflows.core import *
 from helpers.common import getuid, check_clickhouse_version
 from parquet.requirements import *
@@ -45,17 +47,44 @@ def create_parquet_from_ontime_dataset(
 
     node = self.context.node
 
-    insert_into_parquet = (
-        f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
-        # f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}, "
-        f"min_insert_block_size_rows={min_insert_block_size_rows}, min_insert_block_size_bytes={min_insert_block_size_bytes}, "
-        f"output_format_parquet_row_group_size={output_format_parquet_row_group_size}, "
-        f"output_format_parquet_row_group_size_bytes={output_format_parquet_row_group_size_bytes}, "
-        f"output_format_parquet_parallel_encoding={output_format_parquet_parallel_encoding}, "
-        f"max_threads={max_threads}, "
-        f"max_insert_block_size={max_insert_block_size}, "
-        f"max_block_size={max_block_size}"
-    )
+    settings = [
+        (
+            f"min_insert_block_size_rows={min_insert_block_size_rows}"
+            if min_insert_block_size_rows is not None
+            else ""
+        ),
+        (
+            f"min_insert_block_size_bytes={min_insert_block_size_bytes}"
+            if min_insert_block_size_bytes is not None
+            else ""
+        ),
+        (
+            f"output_format_parquet_row_group_size={output_format_parquet_row_group_size}"
+            if output_format_parquet_row_group_size is not None
+            else ""
+        ),
+        (
+            f"output_format_parquet_row_group_size_bytes={output_format_parquet_row_group_size_bytes}"
+            if output_format_parquet_row_group_size_bytes is not None
+            else ""
+        ),
+        (
+            f"output_format_parquet_parallel_encoding={output_format_parquet_parallel_encoding}"
+            if output_format_parquet_parallel_encoding is not None
+            else ""
+        ),
+        f"max_threads={max_threads}" if max_threads is not None else "",
+        (
+            f"max_insert_block_size={max_insert_block_size}"
+            if max_insert_block_size is not None
+            else ""
+        ),
+        f"max_block_size={max_block_size}" if max_block_size is not None else "",
+    ]
+
+    settings = ", ".join(filter(None, settings))
+
+    insert_into_parquet = f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS {settings}"
 
     if check_clickhouse_version(">=23.3")(self):
         insert_into_parquet += f", output_format_parquet_compression_method='snappy'"
@@ -74,14 +103,14 @@ def create_parquet_from_ontime_dataset(
 @TestCheck
 def multi_chunk_inserts(
     self,
-    min_insert_block_size_rows,
-    min_insert_block_size_bytes,
-    output_format_parquet_row_group_size,
-    output_format_parquet_row_group_size_bytes,
-    output_format_parquet_parallel_encoding,
-    max_threads,
-    max_insert_block_size,
-    max_block_size,
+    min_insert_block_size_rows=None,
+    min_insert_block_size_bytes=None,
+    output_format_parquet_row_group_size=None,
+    output_format_parquet_row_group_size_bytes=None,
+    output_format_parquet_parallel_encoding=None,
+    max_threads=None,
+    max_insert_block_size=None,
+    max_block_size=None,
 ):
     """Check that the parquet file was created with the specified settings."""
     node = self.context.node
@@ -141,6 +170,22 @@ def multi_chunk_upload(self):
     )
 
 
+@TestSketch(Scenario)
+def max_block_size_and_group_size_bytes(self):
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file.
+
+    Variations of two settings: `max_block_size` and `min_insert_block_size_bytes`
+    """
+    max_block_size = random.sample(range(100000000001, 150000000001), 4)
+    min_insert_block_size_bytes = random.sample(range(100000000001, 130000000001), 4)
+
+    multi_chunk_inserts(
+        max_block_size=max_block_size,
+        min_insert_block_size_bytes=min_insert_block_size_bytes,
+        output_format_parquet_parallel_encoding=1,
+    )
+
+
 @TestFeature
 @Name("multi chunk upload")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert("1.0"))
@@ -157,3 +202,4 @@ def feature(self, node="clickhouse1", from_year=1987, to_year=2022):
         )
 
     Scenario(run=multi_chunk_upload)
+    Scenario(run=max_block_size_and_group_size_bytes)
