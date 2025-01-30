@@ -47,7 +47,7 @@ def create_parquet_from_ontime_dataset(
 
     insert_into_parquet = (
         f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
-        f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}, "
+        # f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}, "
         f"min_insert_block_size_rows={min_insert_block_size_rows}, min_insert_block_size_bytes={min_insert_block_size_bytes}, "
         f"output_format_parquet_row_group_size={output_format_parquet_row_group_size}, "
         f"output_format_parquet_row_group_size_bytes={output_format_parquet_row_group_size_bytes}, "
