@@ -348,3 +348,68 @@ def CaptureS3Args(func):
         return func(self, s3_args=s3_args, **kwargs)
 
     return capture_s3_args
+
+
+def argparser_minio(parser):
+    """Extended argument parser for suites with only minio."""
+    argparser(parser)
+
+    parser.add_argument(
+        "--minio-uri",
+        action="store",
+        help="set url for the minio connection",
+        type=Secret(name="minio_uri"),
+        default="http://minio:9001",
+    )
+
+    parser.add_argument(
+        "--minio-root-user",
+        action="store",
+        help="minio root user name (access key id)",
+        type=Secret(name="minio_root_user"),
+        default="minio",
+    )
+
+    parser.add_argument(
+        "--minio-root-password",
+        action="store",
+        help="minio root user password (secret access key)",
+        type=Secret(name="minio_root_password"),
+        default="minio123",
+    )
+
+
+def CaptureMinioArgs(func):
+    """
+    Collect Minio arguments from argparser into minio_args.
+
+    Usage:
+
+        @TestModule
+        @ArgumentParser(argparser_minio)
+        @...  # other decorators
+        @CaptureClusterArgs
+        @CaptureMinioArgs
+        def regression(
+            self,
+            cluster_args,
+            minio_args,
+            clickhouse_version,
+            stress=None,
+            with_analyzer=False,
+        ):
+            ...
+
+    """
+
+    def capture_minio_args(
+        self, minio_uri, minio_root_user, minio_root_password, **kwargs
+    ):
+        minio_args = {
+            "minio_uri": minio_uri,
+            "minio_root_user": minio_root_user,
+            "minio_root_password": minio_root_password,
+        }
+        return func(self, minio_args=minio_args, **kwargs)
+
+    return capture_minio_args

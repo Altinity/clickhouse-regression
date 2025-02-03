@@ -143,7 +143,7 @@ def keep_adding_new_auth_methods_with_expiration_date(self):
     The server should not crash during the process."""
     node = self.context.node
     user_name = f"user_{getuid()}"
-    passwords = [f"foo{i}" for i in range(0, 2001)]
+    passwords = [f"foo{i}" for i in range(0, 2000)]
     num_auth_methods = 2000
 
     try:

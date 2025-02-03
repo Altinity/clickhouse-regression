@@ -368,6 +368,11 @@ ffails = {
         "multiple authentication methods were introduced in 24.12",
         check_clickhouse_version("<24.12"),
     ),
+    "/rbac/privileges/check table": (
+        Skip,
+        "check privilege was introduced in 25.1",
+        check_clickhouse_version("<25.1"),
+    ),
 }
 
 

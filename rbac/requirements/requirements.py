@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240708.1162538.
+# document by TestFlows v2.0.241127.1225014.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -9917,6 +9917,7 @@ RQ_SRS_006_RBAC_CheckTable_RequiredPrivilege = Requirement(
     description=(
         "[ClickHouse] SHALL successfully execute `CHECK table` statement if and only if the user has **show tables** privilege,\n"
         "or any privilege on the table either directly or through a role.\n"
+        "From version 25.1 CHECK TABLE queries require a separate, CHECK grant (PR #74471).\n"
         "\n"
     ),
     link=None,
@@ -19334,6 +19335,7 @@ version: 1.0
 
 [ClickHouse] SHALL successfully execute `CHECK table` statement if and only if the user has **show tables** privilege,
 or any privilege on the table either directly or through a role.
+From version 25.1 CHECK TABLE queries require a separate, CHECK grant (PR #74471).
 
 #### RQ.SRS-006.RBAC.ShowDatabases.Privilege
 version: 1.0

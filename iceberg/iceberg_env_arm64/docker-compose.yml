@@ -1,6 +1,87 @@
-version: '2.3'
 
 services:
+  spark-iceberg:
+    image: tabulario/spark-iceberg
+    container_name: spark-iceberg
+    build: spark/
+    depends_on:
+      - rest
+      - minio
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+    ports:
+      - 8080:8080
+      - 10000:10000
+      - 10001:10001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rest:
+    image: tabulario/iceberg-rest
+    ports:
+      - 8182:8181
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - CATALOG_WAREHOUSE=s3://iceberg_data/
+      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+      - CATALOG_S3_ENDPOINT=http://minio:9000
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+      - MINIO_DOMAIN=minio
+    networks:
+      default:
+        aliases:
+          - warehouse.minio
+    ports:
+        - 9001:9001
+        - 9002:9000
+    command: ["server", "/data", "--console-address", ":9001"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mc:
+    depends_on:
+      - minio
+    image: minio/mc
+    container_name: mc
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc rm -r --force minio/warehouse;
+      /usr/bin/mc mb minio/warehouse --ignore-existing;
+      /usr/bin/mc policy set public minio/warehouse;
+      tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper1:
+    extends:
+      file: ../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
+
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -9,6 +90,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -18,6 +102,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
 
   clickhouse3:
     extends:
@@ -26,8 +113,11 @@ services:
     hostname: clickhouse3
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/" 
-
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+  
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
@@ -38,4 +128,12 @@ services:
       clickhouse2:
         condition: service_healthy
       clickhouse3:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      spark-iceberg:
+        condition: service_healthy
+      mc:
         condition: service_healthy

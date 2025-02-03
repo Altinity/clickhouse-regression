@@ -173,7 +173,7 @@ def cannot_parse_string_as_float(string):
 
 
 def missing_columns(name):
-    return (47, f"Exception: Missing columns: '{name}' while processing query")
+    return (47, f"Exception: Missing columns: '{name}' while processing")
 
 
 def missing_columns_analyzer(name):

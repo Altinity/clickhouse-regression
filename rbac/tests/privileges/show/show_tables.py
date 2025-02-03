@@ -227,7 +227,7 @@ def exists(self, privilege, on, grant_target_name, user_name, table_name, node=N
 )
 def check(self, privilege, on, grant_target_name, user_name, table_name, node=None):
     """Check that user is able to execute CHECK on a table if and only if the user has SHOW TABLE privilege
-    on that table.
+    on that table. From 25.1 version, CHECK TABLE requires CHECK TABLE privilege.
     """
     exitcode, message = errors.not_enough_privileges(name=user_name)
 
@@ -258,7 +258,17 @@ def check(self, privilege, on, grant_target_name, user_name, table_name, node=No
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
             with Then(f"I CHECK {table_name}"):
-                node.query(f"CHECK TABLE {table_name}", settings=[("user", user_name)])
+                if check_clickhouse_version(">=25.1")(self) and privilege != "ALL":
+                    node.query(
+                        f"CHECK TABLE {table_name}",
+                        settings=[("user", user_name)],
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                else:
+                    node.query(
+                        f"CHECK TABLE {table_name}", settings=[("user", user_name)]
+                    )
 
         with Scenario("CHECK with revoked privilege"):
             with When(f"I grant {privilege} on the table"):
