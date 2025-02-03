@@ -93,6 +93,7 @@ def regression(
     Feature(run=load("functions.tests.insert", "feature"))
     Feature(run=load("functions.tests.projection_optimization", "feature"))
     Feature(run=load("functions.tests.math_functions", "feature"))
+    Feature(run=load("functions.tests.throwIf_function", "feature"))
 
 
 if main():

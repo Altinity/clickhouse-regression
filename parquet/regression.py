@@ -367,10 +367,14 @@ ffails = {
         "Unsupported compression type",
     ),
     "/parquet/fastparquet/*": (Skip, "Unsupported"),
-    "parquet/bloom/": (
+    "/parquet/bloom/": (
         Skip,
         "Not implemented before 24.10.1",
         check_clickhouse_version("<24.10.1"),
+    ),
+    "/parquet/multi chunk upload/": (
+        Skip,
+        "Trigger manually when needed, need to move to separate suite.",
     ),
 }
 
@@ -626,6 +630,12 @@ def regression(
         #     executor=executor,
         #     flags=parallel,
         # )
+        Feature(
+            run=load("parquet.tests.multi_chunk_upload", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
         join()
 
     storages = s3_args.pop("storages", None)
