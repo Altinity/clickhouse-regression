@@ -68,6 +68,7 @@ on:
           - example
           - extended_precision_data_types
           - functions
+          - iceberg
           - jwt_authentication
           - kafka
           - kerberos
