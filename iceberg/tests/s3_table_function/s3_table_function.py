@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+from testflows.core import *
+
+import pyarrow as pa
+
+import iceberg.tests.common_steps as common_steps
+import iceberg.tests.s3_table_function.steps as steps
+
+
+@TestScenario
+def s3_table_function(self):
+    """Test Iceberg table creation and reading data from ClickHouse using
+    icebergS3 table function."""
+
+    with Given("create catalog"):
+        catalog = common_steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=common_steps.CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=common_steps.S3_ACCESS_KEY_ID,
+            s3_secret_access_key=common_steps.S3_SECRET_ACCESS_KEY,
+        )
+
+    with And("create namespace"):
+        namespace = "iceberg"
+        table_name = "names"
+        common_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"delete table {namespace}.{table_name} if already exists"):
+        common_steps.drop_iceberg_table(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = common_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+        )
+
+    with And(f"insert data into {namespace}.{table_name} table"):
+        df = pa.Table.from_pylist(
+            [
+                {"name": "Alice", "double": 195.23, "integer": 20},
+                {"name": "Bob", "double": 123.45, "integer": 30},
+                {"name": "Charlie", "double": 67.89, "integer": 40},
+            ]
+        )
+        table.append(df)
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(df)
+
+    with Then("read data in clickhouse using s3 table function"):
+        steps.read_data_with_s3_table_function(
+            endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
+            s3_access_key_id=common_steps.S3_ACCESS_KEY_ID,
+            s3_secret_access_key=common_steps.S3_SECRET_ACCESS_KEY,
+        )
+
+
+@TestFeature
+def feature(self):
+    Scenario(run=s3_table_function)

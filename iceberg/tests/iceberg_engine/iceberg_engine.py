@@ -15,7 +15,8 @@ from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
-import iceberg.tests.steps as steps
+import iceberg.tests.common_steps as common_steps
+import iceberg.tests.iceberg_engine.steps as steps
 
 
 @TestScenario
@@ -27,7 +28,7 @@ def iceberg_engine(self):
     catalog_type = "rest"
 
     with Given("create catalog"):
-        catalog = steps.create_catalog(
+        catalog = common_steps.create_catalog(
             uri="http://localhost:8182/",
             catalog_type=catalog_type,
             s3_endpoint="http://localhost:9002",
@@ -37,11 +38,11 @@ def iceberg_engine(self):
 
     with And("create namespace"):
         namespace = "iceberg"
-        steps.create_namespace(catalog=catalog, namespace=namespace)
+        common_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with And("delete table iceberg.bids if already exists"):
         table_name = "bids"
-        steps.drop_iceberg_table(
+        common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
@@ -66,7 +67,7 @@ def iceberg_engine(self):
             ),
         )
         sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        table = steps.create_iceberg_table(
+        table = common_steps.create_iceberg_table(
             catalog=catalog,
             namespace=namespace,
             table_name=table_name,
@@ -104,7 +105,7 @@ def iceberg_engine(self):
         )
 
     with And("check the tables in the database"):
-        steps.show_create_clickhouse_iceberg_table(
+        steps.show_create_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
 
@@ -123,7 +124,7 @@ def recreate_table(self):
     catalog_type = "rest"
 
     with Given("create catalog"):
-        catalog = steps.create_catalog(
+        catalog = common_steps.create_catalog(
             uri="http://localhost:8182/",
             catalog_type=catalog_type,
             s3_endpoint="http://localhost:9002",
@@ -133,11 +134,11 @@ def recreate_table(self):
 
     with And("create namespace"):
         namespace = "iceberg"
-        steps.create_namespace(catalog=catalog, namespace=namespace)
+        common_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with And("delete table iceberg.bids if already exists"):
         table_name = "bids"
-        steps.drop_iceberg_table(
+        common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
@@ -162,7 +163,7 @@ def recreate_table(self):
             ),
         )
         sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        table = steps.create_iceberg_table(
+        table = common_steps.create_iceberg_table(
             catalog=catalog,
             namespace=namespace,
             table_name=table_name,
@@ -209,7 +210,7 @@ def recreate_table(self):
 
     with And("delete table iceberg.bids if already exists"):
         table_name = "bids"
-        steps.drop_iceberg_table(
+        common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
@@ -217,7 +218,7 @@ def recreate_table(self):
         node.query("SHOW TABLES from datalake")
 
     with And("recreate table with same name"):
-        table = steps.create_iceberg_table(
+        table = common_steps.create_iceberg_table(
             catalog=catalog,
             namespace=namespace,
             table_name=table_name,
