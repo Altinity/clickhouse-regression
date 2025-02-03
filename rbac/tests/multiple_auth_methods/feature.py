@@ -146,3 +146,9 @@ def feature(self, node="clickhouse1"):
             "feature",
         ),
     )
+    # Feature(
+    #     run=load(
+    #         "rbac.tests.multiple_auth_methods.simple_combinatorics.simple_combinatorics",
+    #         "feature",
+    #     ),
+    # )
