@@ -3136,13 +3136,39 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3 = Requirement(
         "\n"
         "```sql\n"
         "SELECT *\n"
-        "FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)\n"
+        "FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)\n"
         "```\n"
         "\n"
     ),
     link=None,
     level=3,
     num="16.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date > '2020-01-01' and _country = 'Netherlands' and _code = 42;\n"
+        "```\n"
+        "\n"
+        "> When setting use_hive_partitioning is set to 1, ClickHouse will detect \n"
+        "> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.\n"
+        "> \n"
+        "> Source: https://clickhouse.com/docs/en/sql-reference/table-functions/s3#hive-style-partitioning\n"
+    ),
+    link=None,
+    level=4,
+    num="16.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC = Requirement(
@@ -4183,6 +4209,75 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
     link=None,
     level=3,
     num="19.4.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the \n"
+        "`input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT COUNT(*)\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
+        "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="19.5.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT COUNT(*)\n"
+        "FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parquet)\n"
+        "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "| Setting                                            | Values                 | Description                                                                                                                 |\n"
+        "|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|\n"
+        "| `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |\n"
+        "| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |\n"
+        "| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |\n"
+        "| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -5402,7 +5497,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="10.6.2.1",
         ),
         Heading(
-            name="Settings used to manipulate the number of row groups",
+            name="Settings for Manipulating the Size of Row Groups",
             level=3,
             num="10.6.3",
         ),
@@ -5634,6 +5729,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3",
             level=3,
             num="16.3.1",
+        ),
+        Heading(name="Detecting Hive Partitioning", level=3, num="16.3.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning",
+            level=4,
+            num="16.3.2.1",
         ),
         Heading(name="JDBC", level=2, num="16.4"),
         Heading(
@@ -5919,6 +6020,24 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.4.3"
+        ),
+        Heading(name="Caching in Object Storage", level=2, num="19.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage",
+            level=3,
+            num="19.5.1",
+        ),
+        Heading(name="S3Cluster", level=3, num="19.5.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster",
+            level=4,
+            num="19.5.2.1",
+        ),
+        Heading(name="Caching Settings", level=3, num="19.5.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
+            level=4,
+            num="19.5.3.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6268,6 +6387,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3,
+        RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3_HivePartitioning,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_ODBC,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS,
@@ -6317,6 +6437,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Column,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column,
@@ -6535,7 +6658,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
         * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
             * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
-        * 10.6.3 [Settings used to manipulate the number of row groups](#settings-used-to-manipulate-the-number-of-row-groups)
+        * 10.6.3 [Settings for Manipulating the Size of Row Groups](#settings-for-manipulating-the-size-of-row-groups)
             * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
     * 10.7 [Query Types](#query-types)
         * 10.7.1 [JOIN](#join)
@@ -6617,6 +6740,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 16.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
     * 16.3 [S3](#s3)
         * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
+        * 16.3.2 [Detecting Hive Partitioning](#detecting-hive-partitioning)
+            * 16.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning](#rqsrs-032clickhouseparquettablefunctionss3hivepartitioning)
     * 16.4 [JDBC](#jdbc)
         * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
     * 16.5 [ODBC](#odbc)
@@ -6708,6 +6833,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
         * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
         * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 19.5 [Caching in Object Storage](#caching-in-object-storage)
+        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
+        * 19.5.2 [S3Cluster](#s3cluster)
+            * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
+        * 19.5.3 [Caching Settings](#caching-settings)
+            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -8424,7 +8555,7 @@ version: 1.0
 [ClickHouse] SHALL support moving data from a MergeTree part to a Parquet file. The process must handle large parts by 
 processing them in MergeTree blocks, ensuring that each block is written as a RowGroup in the Parquet file.
 
-#### Settings used to manipulate the number of row groups
+#### Settings for Manipulating the Size of Row Groups
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize
 version: 1.0
@@ -8787,9 +8918,26 @@ For example,
 
 ```sql
 SELECT *
-FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
+FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
 ```
 
+#### Detecting Hive Partitioning
+
+##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning
+version: 1.0
+
+[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.
+
+For example,
+
+```sql
+SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date > '2020-01-01' and _country = 'Netherlands' and _code = 42;
+```
+
+> When setting use_hive_partitioning is set to 1, ClickHouse will detect 
+> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.
+> 
+> Source: https://clickhouse.com/docs/en/sql-reference/table-functions/s3#hive-style-partitioning
 ### JDBC
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
@@ -9376,6 +9524,48 @@ version: 1.0
 
 [ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
 
+### Caching in Object Storage
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
+`input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
+
+For example,
+
+```sql
+SELECT COUNT(*)
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+#### S3Cluster
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.
+
+For example,
+
+```sql
+SELECT COUNT(*)
+FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+#### Caching Settings
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
+version: 1.0
+
+| Setting                                            | Values                 | Description                                                                                                                 |
+|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
+| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
+| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
+| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
 ## Error Recovery
 
 ### RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber
