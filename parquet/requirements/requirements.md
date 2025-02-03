@@ -176,37 +176,44 @@
         * 10.4.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested.Complex](#rqsrs-032clickhouseparquetexportnestedcomplex)
     * 10.5 [Exporting Chunked Columns](#exporting-chunked-columns)
         * 10.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
-    * 10.6 [Query Types](#query-types)
-        * 10.6.1 [JOIN](#join)
-            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
-        * 10.6.2 [UNION](#union)
-            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
-            * 10.6.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
-        * 10.6.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
-        * 10.6.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
-    * 10.7 [Export Encoded](#export-encoded)
-        * 10.7.1 [Plain (Export)](#plain-export)
-            * 10.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
-        * 10.7.2 [Dictionary (Export)](#dictionary-export)
-            * 10.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
-        * 10.7.3 [Run Length Encoding (Export)](#run-length-encoding-export)
-            * 10.7.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
-        * 10.7.4 [Delta (Export)](#delta-export)
-            * 10.7.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
-        * 10.7.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
-            * 10.7.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
-        * 10.7.6 [Delta Strings (Export)](#delta-strings-export)
-            * 10.7.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
-        * 10.7.7 [Byte Stream Split (Export)](#byte-stream-split-export)
-            * 10.7.7.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
-    * 10.8 [Export Settings](#export-settings)
-        * 10.8.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
-        * 10.8.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
-        * 10.8.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
-        * 10.8.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
-        * 10.8.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
-    * 10.9 [Type Conversion](#type-conversion)
-        * 10.9.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+    * 10.6 [Multi-chunk Upload (Split to Rowgroups)](#multi-chunk-upload-split-to-rowgroups)
+        * 10.6.1 [Inserting Data Into Parquet Files](#inserting-data-into-parquet-files)
+            * 10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert](#rqsrs-032clickhouseparquetexportmultichunkuploadinsert)
+        * 10.6.2 [Move from MergeTree Part to Parquet](#move-from-mergetree-part-to-parquet)
+            * 10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart](#rqsrs-032clickhouseparquetexportmultichunkuploadmergetreepart)
+        * 10.6.3 [Settings for Manipulating the Size of Row Groups](#settings-for-manipulating-the-size-of-row-groups)
+            * 10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportmultichunkuploadsettingsrowgroupsize)
+    * 10.7 [Query Types](#query-types)
+        * 10.7.1 [JOIN](#join)
+            * 10.7.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
+        * 10.7.2 [UNION](#union)
+            * 10.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+            * 10.7.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
+        * 10.7.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
+        * 10.7.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
+    * 10.8 [Export Encoded](#export-encoded)
+        * 10.8.1 [Plain (Export)](#plain-export)
+            * 10.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
+        * 10.8.2 [Dictionary (Export)](#dictionary-export)
+            * 10.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
+        * 10.8.3 [Run Length Encoding (Export)](#run-length-encoding-export)
+            * 10.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
+        * 10.8.4 [Delta (Export)](#delta-export)
+            * 10.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
+        * 10.8.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
+            * 10.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
+        * 10.8.6 [Delta Strings (Export)](#delta-strings-export)
+            * 10.8.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
+        * 10.8.7 [Byte Stream Split (Export)](#byte-stream-split-export)
+            * 10.8.7.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
+    * 10.9 [Export Settings](#export-settings)
+        * 10.9.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
+        * 10.9.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
+        * 10.9.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
+        * 10.9.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
+        * 10.9.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
+    * 10.10 [Type Conversion](#type-conversion)
+        * 10.10.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
 * 11 [Native Reader](#native-reader)
     * 11.1 [RQ.SRS-032.ClickHouse.Parquet.NativeReader](#rqsrs-032clickhouseparquetnativereader)
     * 11.2 [Data Types Support](#data-types-support)
@@ -256,6 +263,8 @@
         * 16.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
     * 16.3 [S3](#s3)
         * 16.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
+        * 16.3.2 [Detecting Hive Partitioning](#detecting-hive-partitioning)
+            * 16.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning](#rqsrs-032clickhouseparquettablefunctionss3hivepartitioning)
     * 16.4 [JDBC](#jdbc)
         * 16.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
     * 16.5 [ODBC](#odbc)
@@ -335,18 +344,24 @@
     * 18.4 [Dictionary](#dictionary)
         * 18.4.1 [RQ.SRS-032.ClickHouse.Parquet.Indexes.Dictionary](#rqsrs-032clickhouseparquetindexesdictionary)
 * 19 [Metadata](#metadata)
-        * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata](#rqsrs-032clickhouseparquetmetadata)
-    * 19.5 [ParquetFormat](#parquetformat)
-        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
-        * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-        * 19.5.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
-        * 19.5.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-    * 19.6 [Extra entries in metadata](#extra-entries-in-metadata)
-        * 19.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
-    * 19.7 [Metadata Types](#metadata-types)
-        * 19.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
-        * 19.7.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
-        * 19.7.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 19.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata](#rqsrs-032clickhouseparquetmetadata)
+    * 19.2 [ParquetFormat](#parquetformat)
+        * 19.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
+        * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
+        * 19.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+        * 19.2.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 19.3 [Extra entries in metadata](#extra-entries-in-metadata)
+        * 19.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
+    * 19.4 [Metadata Types](#metadata-types)
+        * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+        * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+        * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 19.5 [Caching in Object Storage](#caching-in-object-storage)
+        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
+        * 19.5.2 [S3Cluster](#s3cluster)
+            * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
+        * 19.5.3 [Caching Settings](#caching-settings)
+            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -2046,6 +2061,40 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting chunked columns to Parquet files.
 
+### Multi-chunk Upload (Split to Rowgroups)
+
+#### Inserting Data Into Parquet Files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Insert
+version: 1.0
+
+[ClickHouse] SHALL support exporting Parquet files with multiple row groups.
+
+#### Move from MergeTree Part to Parquet
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.MergeTreePart
+version: 1.0  
+
+[ClickHouse] SHALL support moving data from a MergeTree part to a Parquet file. The process must handle large parts by 
+processing them in MergeTree blocks, ensuring that each block is written as a RowGroup in the Parquet file.
+
+#### Settings for Manipulating the Size of Row Groups
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.MultiChunkUpload.Settings.RowGroupSize
+version: 1.0
+
+| Settings                                     | Values                                         | Description                                                                                                                                                                                                                                                                       |
+|----------------------------------------------|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `min_insert_block_size_rows`                 | `Positive integer (default: 1048449)` or `0`   | Sets the minimum number of rows in the block that can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                            |
+| `min_insert_block_size_bytes`                | `Positive integer (default: 268402944)` or `0` | Sets the minimum number of bytes in the block which can be inserted into a table by an INSERT query. Smaller-sized blocks are squashed into bigger ones.                                                                                                                          |
+| `output_format_parquet_row_group_size`       | `Positive integer (default: 1000000)` or `0`   | Target row group size in rows.                                                                                                                                                                                                                                                    |
+| `output_format_parquet_row_group_size_bytes` | `Positive integer (default: 536870912)` or `0` | Target row group size in bytes, before compression.                                                                                                                                                                                                                               |
+| `output_format_parquet_parallel_encoding`    | `1` or `0`                                     | Do Parquet encoding in multiple threads. Requires `output_format_parquet_use_custom_encoder`.                                                                                                                                                                                     |
+| `max_threads`                                | `Positive integer (default: 4)` or `0`         | The maximum number of query processing threads, excluding threads for retrieving data from remote servers.                                                                                                                                                                        |
+| `max_insert_block_size`                      | `Positive integer (default: 1048449)` or `0`   | The size of blocks (in a count of rows) to form for insertion into a table.                                                                                                                                                                                                       |
+| `max_block_size`                             | `Positive integer (default: 65409)` or `0`     | indicates the recommended maximum number of rows to include in a single block when loading data from tables. Blocks the size of max_block_size are not always loaded from the table: if ClickHouse determines that less data needs to be retrieved, a smaller block is processed. |
+
+
 ### Query Types
 
 #### JOIN
@@ -2392,9 +2441,26 @@ For example,
 
 ```sql
 SELECT *
-FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
+FROM s3('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
 ```
 
+#### Detecting Hive Partitioning
+
+##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3.HivePartitioning
+version: 1.0
+
+[ClickHouse] SHALL support detecting Hive partitioning when using the `s3` table function with `use_hive_partitioning` setting. That allows to use partition columns as virtual columns in the query.
+
+For example,
+
+```sql
+SELECT * from s3('s3://data/path/date=*/country=*/code=*/*.parquet') where _date > '2020-01-01' and _country = 'Netherlands' and _code = 42;
+```
+
+> When setting use_hive_partitioning is set to 1, ClickHouse will detect 
+> Hive-style partitioning in the path (/name=value/) and will allow to use partition columns as virtual columns in the query. These virtual columns will have the same names as in the partitioned path, but starting with _.
+> 
+> Source: https://clickhouse.com/docs/en/sql-reference/table-functions/s3#hive-style-partitioning
 ### JDBC
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
@@ -2781,7 +2847,7 @@ version: 1.0
 
 ## Metadata
 
-#### RQ.SRS-032.ClickHouse.Parquet.Metadata
+### RQ.SRS-032.ClickHouse.Parquet.Metadata
 version: 1.0
 
 Parquet files have three types of metadata
@@ -2981,6 +3047,48 @@ version: 1.0
 
 [ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
 
+### Caching in Object Storage
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
+`input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
+
+For example,
+
+```sql
+SELECT COUNT(*)
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+#### S3Cluster
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.
+
+For example,
+
+```sql
+SELECT COUNT(*)
+FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+#### Caching Settings
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
+version: 1.0
+
+| Setting                                            | Values                 | Description                                                                                                                 |
+|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
+| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
+| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
+| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
 ## Error Recovery
 
 ### RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber

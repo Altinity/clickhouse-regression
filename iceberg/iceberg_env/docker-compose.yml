@@ -34,48 +34,17 @@ services:
       - CATALOG_S3_ENDPOINT=http://minio:9000
 
   minio:
-    image: minio/minio
-    container_name: minio
-    environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=minio123
-      - MINIO_DOMAIN=minio
-    networks:
-      default:
-        aliases:
-          - warehouse.minio
-    ports:
-        - 9001:9001
-        - 9002:9000
-    command: ["server", "/data", "--console-address", ":9001"]
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    extends:
+      file: minio-service.yml
+      service: minio
 
   mc:
+    extends:
+      file: minio-client.yml
+      service: mc
     depends_on:
-      - minio
-    image: minio/mc
-    container_name: mc
-    environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-    entrypoint: >
-      /bin/sh -c "
-      until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
-      /usr/bin/mc rm -r --force minio/warehouse;
-      /usr/bin/mc mb minio/warehouse --ignore-existing;
-      /usr/bin/mc policy set public minio/warehouse;
-      tail -f /dev/null
-      "
-    healthcheck:
-      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      minio:
+        condition: service_healthy
 
   zookeeper1:
     extends:

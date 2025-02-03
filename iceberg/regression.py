@@ -5,7 +5,11 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
-from helpers.argparser import argparser, CaptureClusterArgs
+from helpers.argparser import (
+    argparser_minio,
+    CaptureClusterArgs,
+    CaptureMinioArgs,
+)
 
 from iceberg.requirements.requirements import *
 
@@ -18,15 +22,17 @@ ffails = {}
 @Name("iceberg")
 @FFails(ffails)
 @XFails(xfails)
-@ArgumentParser(argparser)
+@ArgumentParser(argparser_minio)
 @Specifications(Apache_Iceberg_Table)
 @CaptureClusterArgs
+@CaptureMinioArgs
 def regression(
     self,
     cluster_args,
     clickhouse_version,
     stress=None,
     with_analyzer=False,
+    minio_args=None,
 ):
     """Run tests for Iceberg tables."""
     nodes = {
@@ -42,19 +48,30 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
+    root_user = minio_args["minio_root_user"].value
+    root_password = minio_args["minio_root_password"].value
+    
+
+    note(root_user)
+    note(root_password)
+
     with Given("docker-compose cluster"):
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
+            environ={
+                "MINIO_ROOT_USER": root_user,
+                "MINIO_ROOT_PASSWORD": root_password,
+            },
         )
         self.context.cluster = cluster
 
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
-    
-    Feature(run=load("iceberg.tests.spark_iceberg", "feature"))
+
+    Feature(run=load("iceberg.tests.feature", "feature"))
 
 
 if main():

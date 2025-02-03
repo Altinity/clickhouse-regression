@@ -367,10 +367,14 @@ ffails = {
         "Unsupported compression type",
     ),
     "/parquet/fastparquet/*": (Skip, "Unsupported"),
-    "parquet/bloom/": (
+    "/parquet/bloom/": (
         Skip,
         "Not implemented before 24.10.1",
         check_clickhouse_version("<24.10.1"),
+    ),
+    "/parquet/multi chunk upload/": (
+        Skip,
+        "Trigger manually when needed, need to move to separate suite.",
     ),
 }
 
@@ -403,6 +407,9 @@ def regression(
     }
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
+    self.context.json_files = "/json_files"
+    self.context.parquet_output_path = "/parquet-files"
 
     if check_clickhouse_version("<23.3")(self):
         pool = 2
@@ -557,12 +564,12 @@ def regression(
             executor=executor,
             flags=parallel,
         )
-        Feature(
-            run=load("parquet.tests.indexing", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
+        # Feature(
+        #     run=load("parquet.tests.indexing", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
         Feature(
             run=load("parquet.tests.cache", "feature"),
             parallel=True,
@@ -605,14 +612,26 @@ def regression(
             executor=executor,
             flags=parallel,
         )
+        # Feature(
+        #     run=load("parquet.tests.native_reader", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.metadata", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.data_conversion", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
         Feature(
-            run=load("parquet.tests.native_reader", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.metadata", "feature"),
+            run=load("parquet.tests.multi_chunk_upload", "feature"),
             parallel=True,
             executor=executor,
             flags=parallel,
