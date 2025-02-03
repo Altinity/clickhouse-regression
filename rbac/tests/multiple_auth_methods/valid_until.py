@@ -177,8 +177,9 @@ def keep_adding_new_auth_methods_with_expiration_date(self):
                 node.query(query)
 
         with Then("check that user can login with any of the passwords"):
-            password = random.choice(passwords)
-            common.login(user_name=user_name, password=password)
+            for i in range(100):
+                password = random.choice(passwords)
+                common.login(user_name=user_name, password=password)
 
     finally:
         with Finally("drop user"):
