@@ -32,7 +32,7 @@ def s3_table_function(self):
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with When(f"define schema and create {namespace}.{table_name} table"):
+    with When(f"create {namespace}.{table_name} table with three columns"):
         table = common_steps.create_iceberg_table_with_three_columns(
             catalog=catalog,
             namespace=namespace,
