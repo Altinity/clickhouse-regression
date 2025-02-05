@@ -8,6 +8,26 @@ from parquet.performance.tests.datasets.ontime import create_table_with_ontime_d
 
 
 @TestStep(Given)
+def create_wide_dataset(self, table_name, node=None):
+
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"""
+        CREATE TABLE {table_name}
+        ENGINE = MergeTree
+        ORDER BY tuple()
+        AS
+        SELECT
+            number AS id,
+            repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 10000) AS big_col
+        FROM numbers(1000000);
+    """
+    )
+
+
+@TestStep(Given)
 def move_parquet_to_user_files(self, file_name, node=None):
     """Move the parquet file to the user_files directory so that ClickHouse can read it."""
 
@@ -189,20 +209,109 @@ def max_block_size_and_group_size_bytes(self):
     )
 
 
+@TestSketch(Scenario)
+def output_format_parquet_row_group_size(self):
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file.
+
+    Variations of the `output_format_parquet_row_group_size` setting.
+    """
+    output_format_parquet_row_group_size = random.sample(
+        range(100000001, 1000000001), 4
+    )
+
+    output_format_parquet_row_group_size = either(*output_format_parquet_row_group_size)
+
+    multi_chunk_inserts(
+        output_format_parquet_row_group_size=output_format_parquet_row_group_size,
+        output_format_parquet_parallel_encoding=1,
+    )
+
+
+@TestSketch(Scenario)
+def output_format_parquet_row_group_size_bytes(self):
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file.
+
+    Variations of the `output_format_parquet_row_group_size_bytes` setting.
+    """
+    output_format_parquet_row_group_size_bytes = random.sample(
+        range(10000000001, 100000000001), 4
+    )
+
+    output_format_parquet_row_group_size_bytes = either(
+        *output_format_parquet_row_group_size_bytes
+    )
+
+    multi_chunk_inserts(
+        output_format_parquet_row_group_size_bytes=output_format_parquet_row_group_size_bytes,
+        output_format_parquet_parallel_encoding=1,
+    )
+
+
+@TestSketch(Scenario)
+def max_threads(self):
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file.
+
+    Variations of the `max_threads` setting.
+    """
+    max_threads = random.sample(range(2, 33), 4)
+
+    max_threads = either(*max_threads)
+
+    multi_chunk_inserts(
+        max_threads=max_threads,
+        output_format_parquet_parallel_encoding=1,
+    )
+
+
+@TestSketch
+def max_insert_block_size(self):
+    """Combinatorial checks with multiple settings that might affect the chunk size when exporting into a parquet file.
+
+    Variations of the `max_insert_block_size` setting.
+    """
+    max_insert_block_size = random.sample(range(10000000001, 100000000001), 4)
+
+    max_insert_block_size = either(*max_insert_block_size)
+
+    multi_chunk_inserts(
+        max_insert_block_size=max_insert_block_size,
+        output_format_parquet_parallel_encoding=1,
+    )
+
+
 @TestFeature
 @Name("multi chunk upload")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_MultiChunkUpload_Insert("1.0"))
-def feature(self, node="clickhouse1", from_year=1987, to_year=2022):
-    """Validating multi chunked uploads into a parquet file.
+def feature(
+    self,
+    node="clickhouse1",
+    from_year=1987,
+    to_year=2022,
+    ontime=True,
+    all_combinations=False,
+):
+    """
+    Validating multi chunked uploads into a parquet file.
 
     The parameters: `from_year` and `to_year` determine the size of the dataset, the larger the range between two numbers, the larger the dataset.
+    create_wide_dataset creates a table with a single column that contains a large string.
     """
     self.context.node = self.context.cluster.node(node)
-
+    wide_table = "wide_" + getuid()
     with Given("I create a MergeTree table with the ontime dataset"):
-        self.context.table_name = create_table_with_ontime_dataset(
-            from_year=from_year, to_year=to_year, threads=40
-        )
+        if ontime:
+            self.context.table_name = create_table_with_ontime_dataset(
+                from_year=from_year, to_year=to_year, threads=40
+            )
+        else:
+            create_wide_dataset(table_name=wide_table)
+            self.context.table_name = wide_table
 
-    Scenario(run=multi_chunk_upload)
-    Scenario(run=max_block_size_and_group_size_bytes)
+    if not all_combinations:
+        Scenario(run=max_block_size_and_group_size_bytes)
+        Scenario(run=output_format_parquet_row_group_size)
+        Scenario(run=output_format_parquet_row_group_size_bytes)
+        Scenario(run=max_threads)
+        Scenario(run=max_insert_block_size)
+    else:
+        Scenario(run=multi_chunk_upload)
