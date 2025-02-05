@@ -18,7 +18,7 @@ xfails = {
     "/iceberg/iceberg integration/icebergS3 table function/recreate table/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #100": [
+    "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
     "/iceberg/iceberg integration/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
