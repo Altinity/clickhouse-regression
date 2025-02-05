@@ -168,19 +168,9 @@ def recreate_table(self, minio_root_user, minio_root_password):
         node.restart()
         node.query(f"SYSTEM DROP FILESYSTEM CACHE")
 
-    with And("read data in clickhouse from recreated table"):
-        steps.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
-
     with And("scan and display data"):
         df = table.scan().to_pandas()
         note(df)
-
-    with And("read data in clickhouse from recreated table"):
-        result = steps.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
 
     with Then("verify that ClickHouse reads the new data （one row）"):
         for retry in retries(count=11, delay=1):
