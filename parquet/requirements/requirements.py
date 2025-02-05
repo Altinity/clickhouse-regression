@@ -4260,6 +4260,22 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Require
     num="19.5.2.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.3.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
     version="1.0",
@@ -4274,10 +4290,11 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
         "| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |\n"
         "| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |\n"
         "| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num="19.5.3.1",
+    num="19.5.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6033,11 +6050,17 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.2.1",
         ),
-        Heading(name="Caching Settings", level=3, num="19.5.3"),
+        Heading(name="Cache Invalidation", level=3, num="19.5.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
+            level=4,
+            num="19.5.3.1",
+        ),
+        Heading(name="Caching Settings", level=3, num="19.5.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
             level=4,
-            num="19.5.3.1",
+            num="19.5.4.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6439,6 +6462,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
@@ -6837,8 +6861,10 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
         * 19.5.2 [S3Cluster](#s3cluster)
             * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
-        * 19.5.3 [Caching Settings](#caching-settings)
-            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.3 [Cache Invalidation](#cache-invalidation)
+            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
+        * 19.5.4 [Caching Settings](#caching-settings)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -9555,6 +9581,13 @@ FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parq
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
+#### Cache Invalidation
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation
+version: 1.0
+
+[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+
 #### Caching Settings
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
@@ -9566,6 +9599,7 @@ version: 1.0
 | `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
 | `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
 | `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
+
 ## Error Recovery
 
 ### RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber
