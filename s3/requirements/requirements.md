@@ -221,14 +221,6 @@ version: 1.0
 `<policies>` section of the `<storage_configuration>` section of the config.xml
 file or the storage.xml file in the config.d directory.
 
-#### RQ.SRS-015.S3.TableFunction
-version: 1.0
-
-[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table
-function. Using the table function, [ClickHouse] SHALL provide read and write
-functionality. Upon a write to a location with data already stored, [ClickHouse]
-SHALL overwrite existing data.
-
 #### RQ.SRS-015.S3.DataParts
 version: 1.0
 
@@ -943,19 +935,62 @@ default to perform TTL moves immediately upon an insert operation.
 
 ### Table Function
 
-#### RQ.SRS-015.S3.TableFunction.Syntax
+#### RQ.SRS-015.S3.TableFunction.S3
+version: 1.0
+
+[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table
+function. Using the table function, [ClickHouse] SHALL provide read and write
+functionality. Upon a write to a location with data already stored, [ClickHouse]
+SHALL overwrite existing data.
+
+#### RQ.SRS-015.S3.TableFunction.S3Cluster
+version: 1.0
+
+[ClickHouse] SHALL support reading from AWS [S3] clusters using the
+`s3Cluster` table function. Attempt to insert into [S3Cluster] table function SHALL return an error.
+
+#### RQ.SRS-015.S3.TableFunction.S3.Syntax
 version: 1.0
 
 [ClickHouse] SHALL support the following syntax for the [S3] table function.
 
 ``` sql
-s3(path, [access_key_id, secret_access_key,] format, structure, [compression])
+s3(url [, NOSIGN | access_key_id, secret_access_key, [session_token]] [,format] [,structure] [,compression_method],[,headers])
 ```
+
+[Clickhouse] SHALL also support named collections as parameter of [S3] table function.
+
+```sql
+s3(named_collection[, option=value [,..]])
+```
+
+#### RQ.SRS-015.S3.TableFunction.S3Cluster.Syntax
+version: 1.0
+
+[ClickHouse] SHALL support the following syntax for the [S3Cluster] table function.
+
+``` sql
+s3Cluster(cluster_name, url [, NOSIGN | access_key_id, secret_access_key, [session_token]] [,format] [,structure] [,compression_method],[,headers])
+```
+
+[Clickhouse] SHALL also support named collections as parameter of [S3Cluster] table function.
+
+```sql
+s3Cluster(cluster_name, named_collection[, option=value [,..]])
+```
+
+#### RQ.SRS-015.S3.TableFunction.S3Cluster.ClusterName
+version: 1.0
+
+[ClickHouse] SHALL support the `<cluster_name>` parameter to the [S3Cluster] table function to
+specify the cluster name. This parameter SHALL
+be mandatory.
+
 
 #### RQ.SRS-015.S3.TableFunction.Path
 version: 1.0
 
-[ClickHouse] SHALL support the `<path>` parameter to the [S3] table function to
+[ClickHouse] SHALL support the `<url>` parameter to the [S3] and [S3Cluster] table functions to
 specify the url of the [S3] bucket and the path to the file. This parameter SHALL
 be mandatory.
 
@@ -963,8 +998,8 @@ be mandatory.
 version: 1.0
 
 [ClickHouse] SHALL support the `<access_key_id>` and `<secret_access_key>`
-parameters to the [S3] table function to authorize access to the [S3] bucket url
-specified in the `<path>` parameter.
+parameters to the [S3] and [S3Cluster] table functions to authorize access to the [S3] bucket url
+specified in the `<url>` parameter.
 
 #### RQ.SRS-015.S3.TableFunction.Credentials.Invalid
 version: 1.0
@@ -976,7 +1011,7 @@ the [S3] bucket.
 #### RQ.SRS-015.S3.TableFunction.Path.Glob
 version: 1.0
 
-[ClickHouse] SHALL support using glob patterns in file paths to import multiple files from [S3].
+[ClickHouse] SHALL support using glob patterns in file paths to import multiple files from [S3] bucket.
 
 > Multiple path components can have globs. For being processed file must exist and match to the whole path pattern (not only suffix or prefix).
 >
@@ -1065,16 +1100,6 @@ are supported:
 * `xz`
 * `zstd`
 * `zst`
-
-#### RQ.SRS-015.S3.TableFunction.S3Cluster
-version: 1.0
-
-[ClickHouse] SHALL support reading from AWS [S3] clusters using the
-`s3Cluster` table function. The table function can be used with the following syntax:
-
-``` sql
-s3Cluster(cluster_name, source, [access_key_id, secret_access_key,] format, structure)
-```
 
 ### MinIO
 
@@ -1399,4 +1424,5 @@ it is not set.
 [GitLab Repository]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/blob/master/QA_SRS_015_ClickHouse_S3_Support.md
 [Revision History]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/commits/master/QA_SRS_015_ClickHouse_S3_Support.md
 [S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[S3Cluster]: https://clickhouse.com/docs/en/sql-reference/table-functions/s3Cluster
 [Azure Blob Storage]: https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction

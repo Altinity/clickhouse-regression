@@ -1759,7 +1759,7 @@ def insert_to_s3_function(
 
 @TestStep(When)
 def insert_from_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None
+    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None, cluster_name=None
 ):
     """Import data from a file in s3 to a table."""
     access_key_id = self.context.access_key_id
@@ -1767,7 +1767,10 @@ def insert_from_s3_function(
     uri = uri or self.context.uri
     node = current().context.node
 
-    query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+    if cluster_name is None:
+        query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+    else:
+        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster({cluster_name}, '{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
 
     if compression:
         query += f", '{compression}'"

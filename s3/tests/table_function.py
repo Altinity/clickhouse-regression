@@ -39,6 +39,41 @@ def syntax(self):
         assert r == expected, error()
 
 
+@TestScenario
+@Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0")) #todo
+def syntax_s3Cluster(self):
+    """Check that S3 storage works correctly for both imports and exports
+    when accessed using a s3Cluster table function.
+    """
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
+    node = current().context.node
+    expected = "427"
+    cluster_name = 'replicated'
+
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
+
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
+
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
+
+    with When(f"I export the data to S3 using the table function"):
+        insert_to_s3_function(filename=f"syntax_{cluster_name}.csv", table_name=table1_name)
+
+    with And(f"I import the data from S3 into the second table {table2_name}"):
+        insert_from_s3_function(filename="syntax.csv", s3Cluster=True, table_name=table2_name)
+
+    with Then(
+        f"""I check that a simple SELECT * query on the second table
+                {table2_name} returns matching data on every node""" #todo
+    ):
+        r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+        assert r == expected, error()
+
+
 @TestOutline(Scenario)
 @Examples(
     "wildcard expected",
