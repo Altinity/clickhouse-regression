@@ -362,8 +362,10 @@
             * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
         * 19.5.3 [Cache Invalidation](#cache-invalidation)
             * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
-        * 19.5.4 [Caching Settings](#caching-settings)
-            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.4 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
+        * 19.5.5 [Caching Settings](#caching-settings)
+            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -3086,6 +3088,24 @@ SETTINGS input_format_parquet_use_metadata_cache=1;
 version: 1.0
 
 [ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+
+#### Reading Metadata After Caching Is Completed
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching
+version: 1.0
+
+[ClickHouse] SHALL support reading a given Parquet file's metadata once it has been cached.
+
+For example,
+
+If we run a query against a Parquet file one, assuming that after that query the metadata is cached. After that if we execute the following query:
+
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)
+```
+
+The metadata of the Parquet file SHALL be returned.
 
 #### Caching Settings
 
