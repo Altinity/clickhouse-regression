@@ -14,8 +14,6 @@ from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
-S3_ACCESS_KEY_ID = "minio"
-S3_SECRET_ACCESS_KEY = "minio123"
 CATALOG_TYPE = "rest"
 
 
@@ -23,10 +21,10 @@ CATALOG_TYPE = "rest"
 def create_catalog(
     self,
     uri,
+    s3_access_key_id,
+    s3_secret_access_key,
     name="rest_catalog",
     s3_endpoint="http://localhost:9002",
-    s3_access_key_id=S3_ACCESS_KEY_ID,
-    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
     catalog_type=CATALOG_TYPE,
 ):
     catalog = load_catalog(

@@ -21,6 +21,9 @@ xfails = {
     "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #100": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
+    "/iceberg/iceberg integration/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
 }
 ffails = {}
 
@@ -55,11 +58,8 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    root_user = minio_args["minio_root_user"].value
-    root_password = minio_args["minio_root_password"].value
-
-    note(root_user)
-    note(root_password)
+    minio_root_user = minio_args["minio_root_user"].value
+    minio_root_password = minio_args["minio_root_password"].value
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -67,8 +67,8 @@ def regression(
             nodes=nodes,
             configs_dir=current_dir(),
             environ={
-                "MINIO_ROOT_USER": root_user,
-                "MINIO_ROOT_PASSWORD": root_password,
+                "MINIO_ROOT_USER": minio_root_user,
+                "MINIO_ROOT_PASSWORD": minio_root_password,
             },
         )
         self.context.cluster = cluster
@@ -77,7 +77,9 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
 
-    Feature(run=load("iceberg.tests.feature", "feature"))
+    Feature(test=load("iceberg.tests.feature", "feature"))(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
 
 
 if main():

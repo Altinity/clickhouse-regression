@@ -10,10 +10,8 @@ import iceberg.tests.iceberg_engine.steps as steps
 
 
 @TestScenario
-def sanity(self):
+def sanity(self, minio_root_user, minio_root_password):
     """Test the Iceberg engine in ClickHouse."""
-    s3_access_key_id = "minio"
-    s3_secret_access_key = "minio123"
     catalog_type = "rest"
     namespace = "iceberg"
     table_name = "name"
@@ -23,8 +21,8 @@ def sanity(self):
             uri="http://localhost:8182/",
             catalog_type=catalog_type,
             s3_endpoint="http://localhost:9002",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
         )
 
     with And("create namespace"):
@@ -47,8 +45,8 @@ def sanity(self):
             namespace=namespace,
             database_name=database_name,
             rest_catalog_url="http://rest:8181/v1",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
             catalog_type=catalog_type,
             storage_endpoint="http://minio:9000/warehouse",
         )
@@ -88,11 +86,9 @@ def sanity(self):
 
 
 @TestScenario
-def recreate_table(self):
+def recreate_table(self, minio_root_user, minio_root_password):
     """Test the Iceberg engine in ClickHouse."""
     node = self.context.node
-    s3_access_key_id = "minio"
-    s3_secret_access_key = "minio123"
     catalog_type = "rest"
     namespace = "iceberg"
     table_name = "name"
@@ -102,8 +98,8 @@ def recreate_table(self):
             uri="http://localhost:8182/",
             catalog_type=catalog_type,
             s3_endpoint="http://localhost:9002",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
         )
 
     with And("create namespace"):
@@ -140,8 +136,8 @@ def recreate_table(self):
             namespace=namespace,
             database_name=database_name,
             rest_catalog_url="http://rest:8181/v1",
-            s3_access_key_id=s3_access_key_id,
-            s3_secret_access_key=s3_secret_access_key,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
             catalog_type=catalog_type,
             storage_endpoint="http://minio:9000/warehouse",
         )
@@ -198,6 +194,10 @@ def recreate_table(self):
 
 
 @TestFeature
-def feature(self):
-    Scenario(run=sanity)
-    Scenario(run=recreate_table)
+def feature(self, minio_root_user, minio_root_password):
+    Scenario(test=sanity)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=recreate_table)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
