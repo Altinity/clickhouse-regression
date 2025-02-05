@@ -57,7 +57,7 @@ def read_data_from_clickhouse_iceberg_table(
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\`{namespace}.{table_name}\`"
+        f"SELECT {columns} FROM {database_name}.\`{namespace}.{table_name}\` FORMAT TabSeparated"
     )
     return result
 
