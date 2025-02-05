@@ -24,3 +24,7 @@ def feature(self, minio_root_user=None, minio_root_password=None):
         name="iceberg engine",
         test=load("iceberg.tests.iceberg_engine.iceberg_engine", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        name="iceberg engine",
+        test=load("iceberg.tests.iceberg_engine.rbac", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
