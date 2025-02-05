@@ -34,6 +34,37 @@ def insert_to_s3_function_invalid(
     node.query(query, message=message, exitcode=exitcode, timeout=timeout)
 
 
+@TestStep(When)
+def insert_from_s3_function_invalid(
+    self,
+    filename,
+    table_name,
+    columns="d UInt64",
+    compression=None,
+    fmt=None,
+    uri=None,
+    message=None,
+    exitcode=None,
+    timeout=60,
+):
+    """Import data from a file in s3 to a table and catch fail."""
+    access_key_id = self.context.access_key_id
+    secret_access_key = self.context.secret_access_key
+    uri = uri or self.context.uri
+    node = current().context.node
+
+    query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+
+    if compression:
+        query += f", '{compression}'"
+
+    query += ")"
+
+    if fmt:
+        query += f" FORMAT {fmt}"
+
+    node.query(query, message=message, exitcode=exitcode, timeout=timeout)
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
 def empty_path(self):
@@ -86,6 +117,49 @@ def invalid_path(self):
             message=message,
             exitcode=exitcode,
             timeout=30,
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
+def invalid_wildcard(self):
+    """Check that ClickHouse returns an error when the wildcard in path is invalid.
+    """
+
+    table1_name = "table_" + getuid()
+    table2_name = "table_" + getuid()
+    node = current().context.node
+
+    wildcard_invalid = define('wildcard_invalid', '{1,2}')
+
+    if self.context.storage == "minio":
+        with Given("If using MinIO, clear objects on directory path to avoid error"):
+            self.context.cluster.minio_client.remove_object(
+                self.context.cluster.minio_bucket, "data"
+            )
+
+    with Given("I create a table"):
+        simple_table(node=node, name=table1_name, policy="default")
+
+    with And("I create a second table for comparison"):
+        simple_table(node=node, name=table2_name, policy="default")
+
+    with And(f"I store simple data in the first table {table1_name}"):
+        node.query(f"INSERT INTO {table1_name} VALUES (427)")
+
+    with And("I export the data to my bucket"):
+        insert_to_s3_function(filename="subdata1", table_name=table1_name)
+
+    with Then(
+        f"""I import the data from external storage into the second
+            table {table2_name} using the invalid wildcard '{wildcard_invalid}' 
+            and check output"""
+    ):
+        insert_from_s3_function_invalid(
+            filename=f"subdata{wildcard_invalid}",
+            table_name=table2_name,
+            message="DB::Exception: Failed to get object info",
+            exitcode=243
         )
 
 

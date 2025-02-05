@@ -47,7 +47,6 @@ def syntax(self):
         ("%3F", "427\n427\n427", Name("question")),
         ("{2..3}", "427\n427", Name("nums")),
         ("{1,3}", "427\n427", Name("strings")),
-        ("{1,3,4}", "427\n427", Name("strings_one_missing")),
     ],
 )
 @Requirements(RQ_SRS_015_S3_TableFunction_Path_Glob("1.0"))
