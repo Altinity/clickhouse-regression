@@ -4276,6 +4276,33 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requ
     num="19.5.3.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading a given Parquet file's metadata once it has been cached.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "If we run a query against a Parquet file one, assuming that after that query the metadata is cached. After that if we execute the following query:\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)\n"
+        "```\n"
+        "\n"
+        "The metadata of the Parquet file SHALL be returned.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.4.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
     version="1.0",
@@ -4294,7 +4321,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
     ),
     link=None,
     level=4,
-    num="19.5.4.1",
+    num="19.5.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6056,11 +6083,19 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.3.1",
         ),
-        Heading(name="Caching Settings", level=3, num="19.5.4"),
+        Heading(
+            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+            level=4,
+            num="19.5.4.1",
+        ),
+        Heading(name="Caching Settings", level=3, num="19.5.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
             level=4,
-            num="19.5.4.1",
+            num="19.5.5.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6463,6 +6498,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
@@ -6863,8 +6899,10 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
         * 19.5.3 [Cache Invalidation](#cache-invalidation)
             * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
-        * 19.5.4 [Caching Settings](#caching-settings)
-            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.4 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
+        * 19.5.5 [Caching Settings](#caching-settings)
+            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -9587,6 +9625,24 @@ SETTINGS input_format_parquet_use_metadata_cache=1;
 version: 1.0
 
 [ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+
+#### Reading Metadata After Caching Is Completed
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching
+version: 1.0
+
+[ClickHouse] SHALL support reading a given Parquet file's metadata once it has been cached.
+
+For example,
+
+If we run a query against a Parquet file one, assuming that after that query the metadata is cached. After that if we execute the following query:
+
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)
+```
+
+The metadata of the Parquet file SHALL be returned.
 
 #### Caching Settings
 
