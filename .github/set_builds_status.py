@@ -25,7 +25,8 @@ state = {
 # Get log summary
 # 140 characters max
 status_message = (
-    subprocess.getoutput("tfs show totals raw.log").strip()[:140] or "Job completed"
+    subprocess.getoutput("tfs --no-color show totals raw.log").strip()[:140]
+    or "Job completed"
 )
 
 # GitHub API request to set commit status
