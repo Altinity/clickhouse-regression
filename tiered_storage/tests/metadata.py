@@ -109,7 +109,7 @@ def scenario(self, cluster, node="clickhouse1", count=10000):
                         node.command(f"find /jbod2 | grep {name}.sql", exitcode=1)
                         node.command(f"find /external | grep {name}.sql", exitcode=1)
 
-                    expected = f"/var/lib/clickhouse/store/.*?/{name}.sql"
+                    expected = f"^(/var/lib/clickhouse/)?store/.*?/{name}.sql"
                     with And(
                         "metadata_path column in system.tables points to the default disk",
                         description=expected,
