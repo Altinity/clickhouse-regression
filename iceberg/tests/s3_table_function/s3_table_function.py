@@ -9,7 +9,7 @@ import iceberg.tests.s3_table_function.steps as steps
 
 
 @TestScenario
-def s3_table_function(self):
+def s3_table_function(self, minio_root_user, minio_root_password):
     """Test Iceberg table creation and reading data from ClickHouse using
     icebergS3 table function."""
 
@@ -18,8 +18,8 @@ def s3_table_function(self):
             uri="http://localhost:8182/",
             catalog_type=common_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
-            s3_access_key_id=common_steps.S3_ACCESS_KEY_ID,
-            s3_secret_access_key=common_steps.S3_SECRET_ACCESS_KEY,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
         )
 
     with And("create namespace"):
@@ -56,11 +56,13 @@ def s3_table_function(self):
     with Then("read data in clickhouse using s3 table function"):
         steps.read_data_with_s3_table_function(
             endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
-            s3_access_key_id=common_steps.S3_ACCESS_KEY_ID,
-            s3_secret_access_key=common_steps.S3_SECRET_ACCESS_KEY,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
         )
 
 
 @TestFeature
-def feature(self):
-    Scenario(run=s3_table_function)
+def feature(self, minio_root_user, minio_root_password):
+    Scenario(test=s3_table_function)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
