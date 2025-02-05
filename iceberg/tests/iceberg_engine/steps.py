@@ -2,8 +2,6 @@ from testflows.core import *
 
 from helpers.common import getuid
 
-S3_ACCESS_KEY_ID = "minio"
-S3_SECRET_ACCESS_KEY = "minio123"
 CATALOG_TYPE = "rest"
 
 
@@ -23,11 +21,11 @@ def drop_database(self, database_name=None, node=None):
 def create_experimental_iceberg_database(
     self,
     namespace,
+    s3_access_key_id,
+    s3_secret_access_key,
     database_name=None,
     node=None,
     rest_catalog_url="http://rest:8181/v1",
-    s3_access_key_id=S3_ACCESS_KEY_ID,
-    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
     catalog_type=CATALOG_TYPE,
     storage_endpoint="http://minio:9000/warehouse",
 ):
