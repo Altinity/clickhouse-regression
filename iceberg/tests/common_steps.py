@@ -74,14 +74,18 @@ def create_iceberg_table(
     partition_spec,
     sort_order=None,
 ):
-    table = catalog.create_table(
-        identifier=f"{namespace}.{table_name}",
-        schema=schema,
-        location=location,
-        sort_order=sort_order,
-        partition_spec=partition_spec,
-    )
-    return table
+    try:
+        table = catalog.create_table(
+            identifier=f"{namespace}.{table_name}",
+            schema=schema,
+            location=location,
+            sort_order=sort_order,
+            partition_spec=partition_spec,
+        )
+        yield table
+    finally:
+        with Finally("drop table"):
+            drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
 
 
 @TestStep(Given)

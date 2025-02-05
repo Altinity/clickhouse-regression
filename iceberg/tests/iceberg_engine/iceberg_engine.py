@@ -1,31 +1,22 @@
 #!/usr/bin/env python3
 
 from testflows.core import *
+from testflows.asserts import error
 
 import pyarrow as pa
-
-from pyiceberg.schema import Schema
-from pyiceberg.types import (
-    DoubleType,
-    StringType,
-    NestedField,
-    LongType,
-)
-from pyiceberg.partitioning import PartitionSpec, PartitionField
-from pyiceberg.table.sorting import SortOrder, SortField
-from pyiceberg.transforms import IdentityTransform
 
 import iceberg.tests.common_steps as common_steps
 import iceberg.tests.iceberg_engine.steps as steps
 
 
 @TestScenario
-def iceberg_engine(self):
+def sanity(self):
     """Test the Iceberg engine in ClickHouse."""
-    node = self.context.node
     s3_access_key_id = "minio"
     s3_secret_access_key = "minio123"
     catalog_type = "rest"
+    namespace = "iceberg"
+    table_name = "name"
 
     with Given("create catalog"):
         catalog = common_steps.create_catalog(
@@ -37,59 +28,17 @@ def iceberg_engine(self):
         )
 
     with And("create namespace"):
-        namespace = "iceberg"
         common_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And("delete table iceberg.bids if already exists"):
-        table_name = "bids"
+    with And(f"delete table {namespace}.{table_name} if already exists"):
         common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with When("define schema and create iceberg.bids table"):
-        schema = Schema(
-            NestedField(
-                field_id=1, name="name", field_type=StringType(), required=False
-            ),
-            NestedField(
-                field_id=2, name="double", field_type=DoubleType(), required=False
-            ),
-            NestedField(
-                field_id=3, name="integer", field_type=LongType(), required=False
-            ),
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = common_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
         )
-        partition_spec = PartitionSpec(
-            PartitionField(
-                source_id=1,
-                field_id=1001,
-                transform=IdentityTransform(),
-                name="symbol_partition",
-            ),
-        )
-        sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        table = common_steps.create_iceberg_table(
-            catalog=catalog,
-            namespace=namespace,
-            table_name=table_name,
-            schema=schema,
-            location="s3://warehouse/data",
-            partition_spec=partition_spec,
-            sort_order=sort_order,
-        )
-
-    with And("insert data into iceberg.bids table"):
-        df = pa.Table.from_pylist(
-            [
-                {"name": "Alice", "double": 195.23, "integer": 20},
-                {"name": "Bob", "double": 123.45, "integer": 30},
-                {"name": "Charlie", "double": 67.89, "integer": 40},
-            ]
-        )
-        table.append(df)
-
-    with And("scan and display data"):
-        df = table.scan().to_pandas()
-        note(df)
 
     with Then("create database with Iceberg engine"):
         database_name = "datalake"
@@ -110,9 +59,32 @@ def iceberg_engine(self):
         )
 
     with And("read data in clickhouse from the previously created table"):
-        steps.read_data_from_clickhouse_iceberg_table(
+        result = steps.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
+        assert "" in result.output, error()
+
+    with And(f"insert data into {namespace}.{table_name} table"):
+        df = pa.Table.from_pylist(
+            [
+                {"name": "Alice", "double": 195.23, "integer": 20},
+                {"name": "Bob", "double": 123.45, "integer": 30},
+                {"name": "Charlie", "double": 67.89, "integer": 40},
+            ]
+        )
+        table.append(df)
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(df)
+
+    with And("read data in clickhouse from the previously created table"):
+        result = steps.read_data_from_clickhouse_iceberg_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
+        assert "Alice	195.23	20" in result.output, error()
+        assert "Bob	123.45	30" in result.output, error()
+        assert "Charlie	67.89	40" in result.output, error()
 
 
 @TestScenario
@@ -122,6 +94,8 @@ def recreate_table(self):
     s3_access_key_id = "minio"
     s3_secret_access_key = "minio123"
     catalog_type = "rest"
+    namespace = "iceberg"
+    table_name = "name"
 
     with Given("create catalog"):
         catalog = common_steps.create_catalog(
@@ -133,47 +107,19 @@ def recreate_table(self):
         )
 
     with And("create namespace"):
-        namespace = "iceberg"
         common_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And("delete table iceberg.bids if already exists"):
-        table_name = "bids"
+    with And(f"delete table {namespace}.{table_name} if already exists"):
         common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with When("define schema and create iceberg.bids table"):
-        schema = Schema(
-            NestedField(
-                field_id=1, name="name", field_type=StringType(), required=False
-            ),
-            NestedField(
-                field_id=2, name="double", field_type=DoubleType(), required=False
-            ),
-            NestedField(
-                field_id=3, name="integer", field_type=LongType(), required=False
-            ),
-        )
-        partition_spec = PartitionSpec(
-            PartitionField(
-                source_id=1,
-                field_id=1001,
-                transform=IdentityTransform(),
-                name="symbol_partition",
-            ),
-        )
-        sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        table = common_steps.create_iceberg_table(
-            catalog=catalog,
-            namespace=namespace,
-            table_name=table_name,
-            schema=schema,
-            location="s3://warehouse/data",
-            partition_spec=partition_spec,
-            sort_order=sort_order,
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = common_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with And("insert data into iceberg.bids table"):
+    with And(f"insert data into {namespace}.{table_name} table"):
         df = pa.Table.from_pylist(
             [
                 {"name": "Alice", "double": 195.23, "integer": 20},
@@ -200,32 +146,18 @@ def recreate_table(self):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("read data in clickhouse from the previously created table"):
-        steps.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
-
-    with And("check the tables in the database"):
-        node.query("SHOW TABLES from datalake")
-
-    with And("delete table iceberg.bids if already exists"):
-        table_name = "bids"
+    with And(f"delete table {namespace}.{table_name} if already exists"):
         common_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with And("check the tables in the database after deleting the table"):
-        node.query("SHOW TABLES from datalake")
+        result = node.query("SHOW TABLES from datalake")
+        assert table_name not in result.output, error()
 
     with And("recreate table with same name"):
-        table = common_steps.create_iceberg_table(
-            catalog=catalog,
-            namespace=namespace,
-            table_name=table_name,
-            schema=schema,
-            location="s3://warehouse/data",
-            partition_spec=partition_spec,
-            sort_order=sort_order,
+        table = common_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with And("insert one row to recreated table"):
@@ -236,10 +168,8 @@ def recreate_table(self):
         )
         table.append(df)
 
-    with When("restart the node"):
+    with When("restart the node and drop filesystem cache"):
         node.restart()
-
-    with And("drop cache"):
         node.query(f"SYSTEM DROP FILESYSTEM CACHE")
 
     with And("read data in clickhouse from recreated table"):
@@ -252,25 +182,22 @@ def recreate_table(self):
         note(df)
 
     with And("read data in clickhouse from recreated table"):
-        steps.read_data_from_clickhouse_iceberg_table(
+        result = steps.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
 
-    with And("scan and display data"):
-        df = table.scan().to_pandas()
-        note(df)
-
-    with And("read data in clickhouse from recreated table"):
-        steps.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
-
-    with And("scan and display data"):
-        df = table.scan().to_pandas()
-        note(df)
+    with Then("verify that ClickHouse reads the new data （one row）"):
+        for retry in retries(count=11, delay=1):
+            with retry:
+                result = steps.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name,
+                )
+                assert "David\t20\t27" in result.output, error()
 
 
 @TestFeature
 def feature(self):
-    Scenario(run=iceberg_engine)
+    Scenario(run=sanity)
     Scenario(run=recreate_table)

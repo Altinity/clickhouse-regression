@@ -14,7 +14,14 @@ from helpers.argparser import (
 from iceberg.requirements.requirements import *
 
 
-xfails = {}
+xfails = {
+    "/iceberg/iceberg integration/icebergS3 table function/recreate table/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
+    "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #100": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
+}
 ffails = {}
 
 
@@ -50,7 +57,6 @@ def regression(
 
     root_user = minio_args["minio_root_user"].value
     root_password = minio_args["minio_root_password"].value
-    
 
     note(root_user)
     note(root_password)
