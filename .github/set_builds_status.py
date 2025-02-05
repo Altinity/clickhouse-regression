@@ -5,7 +5,7 @@ Used by the builds pipeline.
 """
 import os
 import subprocess
-from github import Github
+import requests
 
 # Get environment variables
 token = os.getenv("GITHUB_TOKEN")
@@ -22,17 +22,29 @@ state = {
     "cancelled": "error",
 }.get(job_outcome, "pending")
 
-# Run generate_message.sh and get output
+# Get log summary
 status_message = (
     subprocess.getoutput("tfs transform new-fails raw.log").strip() or "Job completed"
 )
 
-# Set commit status using PyGithub
-Github(token).get_repo(repo_name).get_commit(sha).create_status(
-    state=state,
-    description=status_message,
-    context=suite,
-    target_url=target_url,
+# GitHub API request to set commit status
+response = requests.post(
+    f"https://api.github.com/repos/{repo_name}/statuses/{sha}",
+    headers={
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    },
+    json={
+        "state": state,
+        "context": suite,
+        "description": status_message,
+        "target_url": target_url,
+    },
 )
 
-print(f"✅ Commit status set: {suite} - {state}")
+# Print result
+if response.status_code == 201:
+    print(f"✅ Commit status set: {suite} - {state}")
+else:
+    print(f"❌ Failed to set commit status: {response.text}")
+    exit(1)
