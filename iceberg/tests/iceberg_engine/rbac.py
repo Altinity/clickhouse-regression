@@ -5,8 +5,8 @@ from testflows.asserts import error
 
 import pyarrow as pa
 
-import iceberg.tests.common_steps as common_steps
-import iceberg.tests.iceberg_engine.steps as steps
+import iceberg.tests.steps.catalog as catalog_steps
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from helpers.common import create_user, getuid
 
@@ -14,42 +14,41 @@ from helpers.common import create_user, getuid
 @TestScenario
 def sanity(self, minio_root_user, minio_root_password):
     """Test basic RBAC with tables from Iceberg engine."""
-    catalog_type = "rest"
     namespace = "iceberg"
     table_name = "name"
 
     with Given("create catalog"):
-        catalog = common_steps.create_catalog(
+        catalog = catalog_steps.create_catalog(
             uri="http://localhost:8182/",
-            catalog_type=catalog_type,
+            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
 
     with And("create namespace"):
-        common_steps.create_namespace(catalog=catalog, namespace=namespace)
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with And(f"delete table {namespace}.{table_name} if already exists"):
-        common_steps.drop_iceberg_table(
+        catalog_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with When(f"define schema and create {namespace}.{table_name} table"):
-        table = common_steps.create_iceberg_table_with_three_columns(
+        table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with Then("create database with Iceberg engine"):
         database_name = "datalake"
-        steps.drop_database(database_name=database_name)
-        steps.create_experimental_iceberg_database(
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
             namespace=namespace,
             database_name=database_name,
             rest_catalog_url="http://rest:8181/v1",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_type,
+            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -64,7 +63,7 @@ def sanity(self, minio_root_user, minio_root_password):
         table.append(df)
 
     with And("read data in clickhouse from the previously created table"):
-        result = steps.read_data_from_clickhouse_iceberg_table(
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
         assert "Alice	195.23	20" in result.output, error()
@@ -77,7 +76,7 @@ def sanity(self, minio_root_user, minio_root_password):
 
     with And("try to read from iceberg table with new user"):
         exitcode, message = 241, f"DB::Exception: {user_name}: Not enough privileges."
-        result = steps.read_data_from_clickhouse_iceberg_table(
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name,
             namespace=namespace,
             table_name=table_name,
@@ -92,7 +91,7 @@ def sanity(self, minio_root_user, minio_root_password):
         )
 
     with And("try to read from iceberg table with new user"):
-        result = steps.read_data_from_clickhouse_iceberg_table(
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name,
             namespace=namespace,
             table_name=table_name,
