@@ -15,13 +15,13 @@ from iceberg.requirements.requirements import *
 
 
 xfails = {
-    "/iceberg/iceberg integration/icebergS3 table function/recreate table/*": [
+    "/iceberg/icebergS3 table function/recreate table/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg integration/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/iceberg engine/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
 }
@@ -77,9 +77,25 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
 
-    Feature(test=load("iceberg.tests.feature", "feature"))(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
+    Feature(
+        name="s3 table function",
+        test=load("iceberg.tests.s3_table_function.s3_table_function", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        name="icebergS3 table function",
+        test=load(
+            "iceberg.tests.icebergS3_table_function.icebergS3_table_function",
+            "icebergS3_table_function",
+        ),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        name="iceberg engine",
+        test=load("iceberg.tests.iceberg_engine.iceberg_engine", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        name="iceberg engine",
+        test=load("iceberg.tests.iceberg_engine.rbac", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
 
 if main():
