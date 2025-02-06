@@ -10,6 +10,7 @@ def read_data_with_icebergS3_table_function(
     node=None,
     columns="*",
 ):
+    """Read Iceberg tables from S3 using the icebergS3 table function."""
     if node is None:
         node = self.context.node
 
