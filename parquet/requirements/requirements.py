@@ -4244,7 +4244,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Require
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -4288,14 +4288,12 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCa
         "\n"
         "For example,\n"
         "\n"
-        "If we run a query against a Parquet file one, assuming that after that query the metadata is cached. After that if we execute the following query:\n"
+        "If we run a query against a Parquet file once, when the metadata is cached, the following query SHALL return the metadata of the given Parquet file:\n"
         "\n"
         "```sql\n"
         "SELECT *\n"
         "FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)\n"
         "```\n"
-        "\n"
-        "The metadata of the Parquet file SHALL be returned.\n"
         "\n"
     ),
     link=None,
@@ -9609,7 +9607,7 @@ SETTINGS input_format_parquet_use_metadata_cache=1;
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
 version: 1.0
 
-[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.
 
 For example,
 
@@ -9635,14 +9633,12 @@ version: 1.0
 
 For example,
 
-If we run a query against a Parquet file one, assuming that after that query the metadata is cached. After that if we execute the following query:
+If we run a query against a Parquet file once, when the metadata is cached, the following query SHALL return the metadata of the given Parquet file:
 
 ```sql
 SELECT *
 FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)
 ```
-
-The metadata of the Parquet file SHALL be returned.
 
 #### Caching Settings
 
