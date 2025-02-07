@@ -3112,7 +3112,7 @@ FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning
 version: 1.0
 
-[ClickHouse] SHALL support caching metadata when querying multiple Parquet files stored in object storage by using the `input_format_parquet_use_metadata_cache` setting.
+[ClickHouse] SHALL support caching metadata when querying multiple Parquet files stored in object storage by using the `input_format_parquet_use_metadata_cache` and `use_hive_partitioning` setting.
 
 For example, when using globs:
 
