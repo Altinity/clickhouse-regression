@@ -6,12 +6,9 @@ CATALOG_TYPE = "rest"
 
 
 @TestStep
-def drop_database(self, database_name=None, node=None):
+def drop_database(self, database_name, node=None):
     if node is None:
         node = self.context.node
-
-    if database_name is None:
-        database_name = "database_" + getuid()
 
     node.query(f"DROP DATABASE IF EXISTS {database_name}")
     return database_name
