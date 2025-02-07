@@ -24,6 +24,9 @@ xfails = {
     "/iceberg/iceberg engine/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
+    "/iceberg/iceberg engine/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
 }
 ffails = {}
 
