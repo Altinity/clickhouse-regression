@@ -3114,7 +3114,7 @@ version: 1.0
 
 [ClickHouse] SHALL support caching metadata when querying multiple Parquet files stored in object storage by using the `input_format_parquet_use_metadata_cache` and `use_hive_partitioning` setting.
 
-For example, when using globs:
+For example,
 
 ```sql
 SELECT date, sum(output_count)
