@@ -91,7 +91,6 @@ def sanity(self, minio_root_user, minio_root_password):
 
     with And("select data from table"):
         result = node.query(f"SELECT * FROM {table_name} FORMAT TabSeparated")
-        pause()
 
     with And("change schema again"):
         new_schema = Schema(
