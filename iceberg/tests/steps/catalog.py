@@ -2,7 +2,6 @@ from testflows.core import *
 
 import pyiceberg
 from pyiceberg.catalog import load_catalog
-
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
     DoubleType,
@@ -14,8 +13,8 @@ from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
-S3_ACCESS_KEY_ID = "minio"
-S3_SECRET_ACCESS_KEY = "minio123"
+import boto3
+
 CATALOG_TYPE = "rest"
 
 
@@ -23,24 +22,33 @@ CATALOG_TYPE = "rest"
 def create_catalog(
     self,
     uri,
+    s3_access_key_id,
+    s3_secret_access_key,
     name="rest_catalog",
     s3_endpoint="http://localhost:9002",
-    s3_access_key_id=S3_ACCESS_KEY_ID,
-    s3_secret_access_key=S3_SECRET_ACCESS_KEY,
     catalog_type=CATALOG_TYPE,
 ):
-    catalog = load_catalog(
-        name,
-        **{
-            "uri": uri,
-            "type": catalog_type,
-            "s3.endpoint": s3_endpoint,
-            "s3.access-key-id": s3_access_key_id,
-            "s3.secret-access-key": s3_secret_access_key,
-        },
-    )
+    try:
+        catalog = load_catalog(
+            name,
+            **{
+                "uri": uri,
+                "type": catalog_type,
+                "s3.endpoint": s3_endpoint,
+                "s3.access-key-id": s3_access_key_id,
+                "s3.secret-access-key": s3_secret_access_key,
+            },
+        )
+        yield catalog
 
-    return catalog
+    finally:
+        with Finally("drop catalog"):
+            clean_minio_bucket(
+                bucket_name="warehouse",
+                s3_endpoint=s3_endpoint,
+                s3_access_key_id=s3_access_key_id,
+                s3_secret_access_key=s3_secret_access_key,
+            )
 
 
 @TestStep(Given)
@@ -56,7 +64,12 @@ def create_namespace(self, catalog, namespace):
 
 @TestStep(Given)
 def drop_iceberg_table(self, catalog, namespace, table_name):
-    table_list = catalog.list_tables(namespace)
+    try:
+        table_list = catalog.list_tables(namespace)
+    except pyiceberg.exceptions.NoSuchNamespaceException:
+        note("No such namespace")
+        table_list = []
+
     for table in table_list:
         if table[0] == namespace and table[1] == table_name:
             note("Dropping table")
@@ -85,7 +98,9 @@ def create_iceberg_table(
         yield table
     finally:
         with Finally("drop table"):
-            drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
+            drop_iceberg_table(
+                catalog=catalog, namespace=namespace, table_name=table_name
+            )
 
 
 @TestStep(Given)
@@ -115,3 +130,42 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
         sort_order=sort_order,
     )
     return table
+
+
+@TestStep(When)
+def clean_minio_bucket(
+    self, bucket_name, s3_endpoint, s3_access_key_id, s3_secret_access_key
+):
+    """Delete all objects from the MinIO bucket."""
+    s3_client = boto3.client(
+        "s3",
+        endpoint_url=s3_endpoint,
+        aws_access_key_id=s3_access_key_id,
+        aws_secret_access_key=s3_secret_access_key,
+    )
+
+    # List all objects in the bucket
+    objects = s3_client.list_objects_v2(Bucket=bucket_name)
+
+    if "Contents" in objects:
+        delete_objects = {
+            "Objects": [{"Key": obj["Key"]} for obj in objects["Contents"]]
+        }
+        s3_client.delete_objects(Bucket=bucket_name, Delete=delete_objects)
+        note(f"Deleted {len(delete_objects['Objects'])} objects from {bucket_name}")
+
+    else:
+        note(f"No objects found in {bucket_name}")
+
+
+@TestStep(Given)
+def drop_namespace(self, catalog, namespace):
+    """Drop namespace in Iceberg catalog."""
+    try:
+        catalog.drop_namespace(namespace)
+        note(f"Namespace {namespace} dropped")
+    except pyiceberg.exceptions.NoSuchNamespaceError:
+        note(f"Namespace {namespace} does not exist")
+    except Exception as e:
+        note(f"An error occurred while dropping namespace: {e}")
+        raise
