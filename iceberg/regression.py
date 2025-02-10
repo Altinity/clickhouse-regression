@@ -10,6 +10,7 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
+from helpers.common import check_clickhouse_version
 
 from iceberg.requirements.requirements import *
 
@@ -21,14 +22,25 @@ xfails = {
     "/iceberg/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg engine/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/iceberg engine/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg engine/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/iceberg engine/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
 }
-ffails = {}
+ffails = {
+    "/iceberg/iceberg engine": (
+        Skip,
+        "Iceberg engine was introduced in 24.12",
+        check_clickhouse_version("<=24.12"),
+    ),
+    "/iceberg/icebergS3 table function": (
+        Skip,
+        "Iceberg engine was introduced in 23.2",
+        check_clickhouse_version("<=23.2"),
+    ),
+}
 
 
 @TestModule

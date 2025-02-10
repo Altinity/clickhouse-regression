@@ -15,6 +15,6 @@ def read_data_with_icebergS3_table_function(
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM icebergS3('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')"
+        f"SELECT {columns} FROM iceberg('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')"
     )
     return result
