@@ -1,9 +1,12 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from helpers.common import check_clickhouse_version
+
+
 @TestScenario
 @Name("throwIf function")
-def scenario(self, node="clickhouse1"):
+def throw_if(self, node="clickhouse1"):
     """Check that ClickHouse provides stacktraces properly for throwIf function."""
     node = self.context.cluster.node(node)
 
@@ -22,8 +25,10 @@ def scenario(self, node="clickhouse1"):
                 assert stack_trace != '', error()
 
     with Then("I check stacktrace"):
-        assert 'DB::Exception' in stack_trace, error()
-
+        if check_clickhouse_version(">=22.8")(self):
+            assert 'DB::Exception' in stack_trace, error()
+        else:
+            assert 'DB::Function' in stack_trace, error()
 
 @TestFeature
 @Name("exceptions")
