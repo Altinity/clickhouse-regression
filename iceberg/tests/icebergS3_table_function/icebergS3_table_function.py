@@ -242,6 +242,7 @@ def recreate_table_and_insert_new_data(self, minio_root_user, minio_root_passwor
 
 
 @TestFeature
+@Name("icebergS3 table function")
 def icebergS3_table_function(self, minio_root_user, minio_root_password):
     Scenario(test=sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password

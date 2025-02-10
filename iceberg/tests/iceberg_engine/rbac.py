@@ -12,6 +12,7 @@ from helpers.common import create_user, getuid
 
 
 @TestScenario
+@Name("rbac")
 def sanity(self, minio_root_user, minio_root_password):
     """Test basic RBAC with tables from Iceberg engine."""
     namespace = "iceberg"
@@ -100,7 +101,6 @@ def sanity(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
-@Name("rbac")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
