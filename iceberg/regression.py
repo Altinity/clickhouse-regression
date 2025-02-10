@@ -43,6 +43,11 @@ ffails = {
         "Iceberg engine was introduced in 23.2",
         check_clickhouse_version("<=23.2"),
     ),
+    "/iceberg/s3 table function": (
+        Skip,
+        "Support for codec 'zstd' not built",
+        check_clickhouse_version("<23.8"),
+    ),
 }
 
 
