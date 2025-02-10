@@ -10,19 +10,40 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
+from helpers.common import check_clickhouse_version
 
 from iceberg.requirements.requirements import *
 
 
 xfails = {
-    "/iceberg/iceberg integration/icebergS3 table function/recreate table/*": [
+    "/iceberg/icebergS3 table function/recreate table/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg integration/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #100": [
+    "/iceberg/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
+    "/iceberg/iceberg engine/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
+    "/iceberg/iceberg engine/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    ],
+    "/iceberg/icebergS3 table function/*": [
+        (Fail, "Need to investigate", check_clickhouse_version("<=24")),
     ],
 }
-ffails = {}
+ffails = {
+    "/iceberg/iceberg engine": (
+        Skip,
+        "Iceberg engine was introduced in 24.12",
+        check_clickhouse_version("<=24.12"),
+    ),
+    "/iceberg/icebergS3 table function": (
+        Skip,
+        "Iceberg engine was introduced in 23.2",
+        check_clickhouse_version("<=23.2"),
+    ),
+}
 
 
 @TestModule
@@ -55,11 +76,8 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    root_user = minio_args["minio_root_user"].value
-    root_password = minio_args["minio_root_password"].value
-
-    note(root_user)
-    note(root_password)
+    minio_root_user = minio_args["minio_root_user"].value
+    minio_root_password = minio_args["minio_root_password"].value
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(
@@ -67,8 +85,8 @@ def regression(
             nodes=nodes,
             configs_dir=current_dir(),
             environ={
-                "MINIO_ROOT_USER": root_user,
-                "MINIO_ROOT_PASSWORD": root_password,
+                "MINIO_ROOT_USER": minio_root_user,
+                "MINIO_ROOT_PASSWORD": minio_root_password,
             },
         )
         self.context.cluster = cluster
@@ -77,7 +95,18 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
 
-    Feature(run=load("iceberg.tests.feature", "feature"))
+    Feature(
+        test=load("iceberg.tests.s3_table_function.s3_table_function", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load(
+            "iceberg.tests.icebergS3_table_function.icebergS3_table_function",
+            "icebergS3_table_function",
+        ),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_engine.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
 
 if main():

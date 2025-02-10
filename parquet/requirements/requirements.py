@@ -4244,7 +4244,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Require
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -4260,6 +4260,72 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Require
     num="19.5.2.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading a given Parquet file's metadata once it has been cached.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "If we run a query against a Parquet file once, when the metadata is cached, the following query SHALL return the metadata of the given Parquet file:\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying multiple Parquet files stored in object storage by using the `input_format_parquet_use_metadata_cache` and `use_hive_partitioning` setting.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT date, sum(output_count)\n"
+        "FROM s3('s3://aws-public-blockchain/v1.0/btc/transactions/date=*/*.parquet', NOSIGN)\n"
+        "WHERE date>='2024-01-01'\n"
+        "GROUP BY date ORDER BY date\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.5.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
     version="1.0",
@@ -4270,14 +4336,15 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
     description=(
         "| Setting                                            | Values                 | Description                                                                                                                 |\n"
         "|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|\n"
-        "| `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |\n"
-        "| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |\n"
+        "| `input_format_parquet_use_metadata_cache`          | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |\n"
+        "| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |\n"
         "| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |\n"
         "| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num="19.5.3.1",
+    num="19.5.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6005,7 +6072,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="19.2.4",
         ),
-        Heading(name="Extra entries in metadata", level=2, num="19.3"),
+        Heading(name="Extra Entries in Metadata", level=2, num="19.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries",
             level=3,
@@ -6033,11 +6100,35 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.2.1",
         ),
-        Heading(name="Caching Settings", level=3, num="19.5.3"),
+        Heading(name="Cache Invalidation", level=3, num="19.5.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
+            level=4,
+            num="19.5.3.1",
+        ),
+        Heading(
+            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+            level=4,
+            num="19.5.4.1",
+        ),
+        Heading(
+            name="Caching When Reading From Hive Partitioned Parquet Files in Object Storage",
+            level=3,
+            num="19.5.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning",
+            level=4,
+            num="19.5.5.1",
+        ),
+        Heading(name="Caching Settings", level=3, num="19.5.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
             level=4,
-            num="19.5.3.1",
+            num="19.5.6.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6439,6 +6530,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
@@ -6827,7 +6921,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
         * 19.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
         * 19.2.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
-    * 19.3 [Extra entries in metadata](#extra-entries-in-metadata)
+    * 19.3 [Extra Entries in Metadata](#extra-entries-in-metadata)
         * 19.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries](#rqsrs-032clickhouseparquetmetadataparquetmetadataextraentries)
     * 19.4 [Metadata Types](#metadata-types)
         * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
@@ -6837,8 +6931,14 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
         * 19.5.2 [S3Cluster](#s3cluster)
             * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
-        * 19.5.3 [Caching Settings](#caching-settings)
-            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.3 [Cache Invalidation](#cache-invalidation)
+            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
+        * 19.5.4 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
+        * 19.5.5 [Caching When Reading From Hive Partitioned Parquet Files in Object Storage](#caching-when-reading-from-hive-partitioned-parquet-files-in-object-storage)
+            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
+        * 19.5.6 [Caching Settings](#caching-settings)
+            * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -9500,7 +9600,7 @@ version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
 
-### Extra entries in metadata
+### Extra Entries in Metadata
 
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.ExtraEntries
 version: 1.0
@@ -9545,7 +9645,7 @@ SETTINGS input_format_parquet_use_metadata_cache=1;
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
 version: 1.0
 
-[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3 cluster` by using the `input_format_parquet_use_metadata_cache` setting.
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.
 
 For example,
 
@@ -9555,6 +9655,45 @@ FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parq
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
+#### Cache Invalidation
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation
+version: 1.0
+
+[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+
+#### Reading Metadata After Caching Is Completed
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching
+version: 1.0
+
+[ClickHouse] SHALL support reading a given Parquet file's metadata once it has been cached.
+
+For example,
+
+If we run a query against a Parquet file once, when the metadata is cached, the following query SHALL return the metadata of the given Parquet file:
+
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = ParquetMetadata)
+```
+
+#### Caching When Reading From Hive Partitioned Parquet Files in Object Storage
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying multiple Parquet files stored in object storage by using the `input_format_parquet_use_metadata_cache` and `use_hive_partitioning` setting.
+
+For example,
+
+```sql
+SELECT date, sum(output_count)
+FROM s3('s3://aws-public-blockchain/v1.0/btc/transactions/date=*/*.parquet', NOSIGN)
+WHERE date>='2024-01-01'
+GROUP BY date ORDER BY date
+```
+
 #### Caching Settings
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
@@ -9562,10 +9701,11 @@ version: 1.0
 
 | Setting                                            | Values                 | Description                                                                                                                 |
 |----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `parquet_use_metadata_cache`                       | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
-| `parquet_metadata_cache_max_entries`               | `INT`                    | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
+| `input_format_parquet_use_metadata_cache`          | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
+| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
 | `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
 | `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
+
 ## Error Recovery
 
 ### RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber
