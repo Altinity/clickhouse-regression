@@ -242,7 +242,9 @@ def recreate_table_and_insert_new_data(self, minio_root_user, minio_root_passwor
 
 
 @TestScenario
-def recreate_table_and_insert_new_data_multiple_times(self, minio_root_user, minio_root_password):
+def recreate_table_and_insert_new_data_multiple_times(
+    self, minio_root_user, minio_root_password
+):
     """Verify that when a table is recreated, ClickHouse reads data from the new table."""
     namespace = "icebergS3"
     table_name = "new_data"
@@ -310,7 +312,7 @@ def recreate_table_and_insert_new_data_multiple_times(self, minio_root_user, min
         table.append(df)
 
     with Then("verify that ClickHouse reads the new data (one row)"):
-        for retry in retries(count=100, delay=2):
+        for retry in retries(count=11, delay=2):
             with retry:
                 result = icebergS3.read_data_with_icebergS3_table_function(
                     storage_endpoint="http://minio:9000/warehouse/data",
