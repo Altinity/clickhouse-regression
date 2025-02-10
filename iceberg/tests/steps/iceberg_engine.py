@@ -61,7 +61,7 @@ def read_data_from_clickhouse_iceberg_table(
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\`{namespace}.{table_name}\` FORMAT TabSeparated",
+        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` FORMAT TabSeparated",
         settings=[("user", user), ("password", f"{password}")],
         exitcode=exitcode,
         message=message,
@@ -75,7 +75,7 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
         node = self.context.node
 
     result = node.query(
-        f"SHOW CREATE TABLE {database_name}.\`{namespace}.{table_name}\`"
+        f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
     )
     return result
 
