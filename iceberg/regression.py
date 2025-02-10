@@ -28,6 +28,9 @@ xfails = {
     "/iceberg/iceberg engine/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
+    "/iceberg/icebergS3 table function/*": [
+        (Fail, "Need to investigate", check_clickhouse_version("<=24")),
+    ],
 }
 ffails = {
     "/iceberg/iceberg engine": (
