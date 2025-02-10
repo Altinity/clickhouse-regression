@@ -62,6 +62,7 @@ def s3_table_function(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("s3 table function")
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=s3_table_function)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
