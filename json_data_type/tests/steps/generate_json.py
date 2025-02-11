@@ -1,5 +1,4 @@
 import random
-import json
 import string
 
 
@@ -54,19 +53,27 @@ def random_value():
     return random.choice(types)()
 
 
-def generate_homogeneous_array():
-    """Generate an array where all elements are of the same type."""
-    element_type = random.choice(
-        [
+def generate_homogeneous_array(max_length=10):
+    """Generate an array where all elements are of a compatible supertype."""
+
+    type_group = random.choice(["numeric", "string"])
+
+    if type_group == "numeric":
+        element_types = [
             lambda: random.randint(-1000, 1000),  # Int64
             lambda: round(random.uniform(-1000, 1000), 2),  # Float64
-            lambda: "".join(
-                random.choices(string.ascii_letters, k=random.randint(5, 10))
-            ),  # String
             lambda: random.choice([True, False]),  # Bool
         ]
-    )
-    return [element_type() for _ in range(random.randint(1, 4))]
+    else:
+        element_types = [
+            lambda: "".join(
+                random.choices(string.ascii_letters, k=random.randint(5, 10))
+            )  # String
+        ]
+
+    element_type = random.choice(element_types)
+
+    return [element_type() for _ in range(random.randint(0, max_length))]
 
 
 def get_clickhouse_type(value):
