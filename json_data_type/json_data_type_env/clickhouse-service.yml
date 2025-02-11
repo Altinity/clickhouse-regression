@@ -1,0 +1,13 @@
+version: '2.3'
+
+services:
+  clickhouse:
+    extends:
+      file: ../../docker-compose/clickhouse-service.yml
+      service: clickhouse
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
