@@ -4253,7 +4253,6 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
         "SELECT *\n"
         "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
         "```\n"
-        "```\n"
         "\n"
     ),
     link=None,
@@ -10754,7 +10753,6 @@ For example,
 ```sql
 SELECT *
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
-```
 ```
 
 ##### S3Cluster
