@@ -10599,16 +10599,18 @@ Metadata Caching in Object Storage:
     - JDBC
     - ODBC
   Actions:
+    - Enable metadata caching
+    - Disable metadata caching
+    - Set the maximum number of entries in the metadata cache
     - Query Parquet files stored in object storage:
       - Files stored in the same location
       - Files stored in different locations
       - Multiple files in different locations with the same name
+      - Single Parquet File
+      - Multiple Parquet Files
       - Files with different partitioning
-      - Files with different partitioning and different file structure
+      - Files with different partitioning and different file structure 
       - Have multiple files > cache metadata of all files > delete one file > query with globs all files (*)
-    - Enable metadata caching
-    - Disable metadata caching
-    - Set the maximum number of entries in the metadata cache
     - Determine the cache hits and misses
     - List all cached metadata files
   Query Types:
@@ -11299,7 +11301,6 @@ SELECT
     extra_info.extra_field  AS extra_info_field
 FROM
 (
-    -- Level 4: final join of two sub-branches
     SELECT
         branch_1.user_id,
         branch_1.order_total,
