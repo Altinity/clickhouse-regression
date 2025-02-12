@@ -358,8 +358,39 @@
         * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
     * 19.5 [Caching in Object Storage](#caching-in-object-storage)
         * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
-        * 19.5.2 [S3Cluster](#s3cluster)
-            * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
+        * 19.5.2 [All Functions and Engines That Can Work With Parquet ](#all-functions-and-engines-that-can-work-with-parquet-)
+            * 19.5.2.1 [S3 Engine or Function](#s3-engine-or-function)
+                * 19.5.2.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3)
+            * 19.5.2.2 [S3Cluster](#s3cluster)
+                * 19.5.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
+            * 19.5.2.3 [IcebergS3 Engine or Function](#icebergs3-engine-or-function)
+                * 19.5.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageicebergs3)
+            * 19.5.2.4 [URL Engine or Function](#url-engine-or-function)
+                * 19.5.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageurl)
+            * 19.5.2.5 [File Engine or Function](#file-engine-or-function)
+                * 19.5.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragefile)
+            * 19.5.2.6 [Dictionary Engine or Function](#dictionary-engine-or-function)
+                * 19.5.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedictionary)
+            * 19.5.2.7 [Distributed Engine or Function](#distributed-engine-or-function)
+                * 19.5.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedistributed)
+            * 19.5.2.8 [Memory Engine or Function](#memory-engine-or-function)
+                * 19.5.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragememory)
+            * 19.5.2.9 [PostgreSQL Engine or Function](#postgresql-engine-or-function)
+                * 19.5.2.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragepostgresql)
+            * 19.5.2.10 [EmbeddedRocksDB Engine or Function](#embeddedrocksdb-engine-or-function)
+                * 19.5.2.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageembeddedrocksdb)
+            * 19.5.2.11 [Kafka Engine or Function](#kafka-engine-or-function)
+                * 19.5.2.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragekafka)
+            * 19.5.2.12 [MongoDB Engine or Function](#mongodb-engine-or-function)
+                * 19.5.2.12.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemongodb)
+            * 19.5.2.13 [MySQL Engine or Function](#mysql-engine-or-function)
+                * 19.5.2.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemysql)
+            * 19.5.2.14 [JDBC Engine or Function](#jdbc-engine-or-function)
+                * 19.5.2.14.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragejdbc)
+            * 19.5.2.15 [ODBC Engine or Function](#odbc-engine-or-function)
+                * 19.5.2.15.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageodbc)
+            * 19.5.2.16 [HDFS Engine or Function](#hdfs-engine-or-function)
+                * 19.5.2.16.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehdfs)
         * 19.5.3 [Cache Invalidation](#cache-invalidation)
             * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
         * 19.5.4 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
@@ -368,6 +399,12 @@
             * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
         * 19.5.6 [Caching Settings](#caching-settings)
             * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.7 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
+            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
+        * 19.5.8 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
+            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
+        * 19.5.9 [Hits and Misses Counter](#hits-and-misses-counter)
+            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -3058,7 +3095,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
 version: 1.0
 
-[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
+[ClickHouse] SHALL support caching [the whole metadata object](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent) when querying Parquet files stored in object storage by using the 
 `input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
 
 For example,
@@ -3069,9 +3106,18 @@ FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
-#### S3Cluster
+#### All Functions and Engines That Can Work With Parquet 
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
+##### S3 Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### S3Cluster
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
 version: 1.0
 
 [ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.
@@ -3084,12 +3130,110 @@ FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parq
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
+##### IcebergS3 Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `IcebergS3` engine or function including,`IcebergAzure`, `IcebergHDFS` and `IcebergLocal`, by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### URL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `URL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### File Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `File` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Dictionary Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Dictionary` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Distributed Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Distributed` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Memory Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Memory` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### PostgreSQL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `PostgreSQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### EmbeddedRocksDB Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `EmbeddedRocksDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Kafka Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Kafka` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### MongoDB Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MongoDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### MySQL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MySQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### JDBC Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `JDBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### ODBC Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `ODBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### HDFS Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `HDFS` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
 #### Cache Invalidation
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation
 version: 1.0
 
-[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+[ClickHouse] SHALL throw and error when the Parquet file is deleted from the object storage and we .
 
 #### Reading Metadata After Caching Is Completed
 
@@ -3128,12 +3272,63 @@ GROUP BY date ORDER BY date
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
 version: 1.0
 
-| Setting                                            | Values                 | Description                                                                                                                 |
-|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `input_format_parquet_use_metadata_cache`          | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
-| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
-| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
-| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
+| Setting                                           | Values         | Description                                                                         |
+|---------------------------------------------------|----------------|-------------------------------------------------------------------------------------|
+| `input_format_parquet_use_metadata_cache`         | `true`/`false` | Enable/disable caching of Parquet file metadata                                     |
+| `input_format_parquet_metadata_cache_max_entries` | `INT`          | Maximum number of file metadata objects to cache set from the server configuration. |
+
+#### Maximum Size of Metadata Cache
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize
+version: 1.0
+
+[ClickHouse] SHALL support setting the maximum size of the metadata cache for Parquet files stored in object storage using the `input_format_parquet_metadata_cache_max_entries` setting. The setting must be set as a [ClickHouse] server configuration.
+If the number of cached metadata objects exceeds the maximum size, the exception SHALL be thrown.
+
+#### File With The Same Name But Different Location
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation
+version: 1.0
+
+[ClickHouse] SHALL be able to successfully read from the Parquet files with the same name but different locations when the metadata is cached.
+
+For example, if we have two files, `test.parquet` in `s3://bucket1/` and `test.parquet` in `s3://bucket2/`, the following query SHALL successfully read the data of the file after the metadata is cached:
+
+```sql
+SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet)
+SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet)
+```
+
+#### Hits and Misses Counter
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter
+version: 1.0
+
+[ClickHouse] SHALL support counting the number of cache hits and misses when querying Parquet files stored in object storage.
+In order to get the number of cache hits and misses the following steps SHALL be taken:
+
+1. Use the `log_comment` setting.
+2. Query through the `system.log` using that `log_comment`.
+
+```sql
+SELECT COUNT(*)
+FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+
+SELECT COUNT(*)
+FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1, log_comment='test_03262_parquet_metadata_cache';
+
+SYSTEM FLUSH LOGS;
+
+SELECT ProfileEvents['ParquetMetaDataCacheHits']
+FROM system.query_log
+where log_comment = 'test_03262_parquet_metadata_cache'
+AND type = 'QueryFinish'
+ORDER BY event_time desc
+LIMIT 1;
+```
+
 
 ## Error Recovery
 
