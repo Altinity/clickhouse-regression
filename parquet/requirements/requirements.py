@@ -4777,11 +4777,260 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter =
         "LIMIT 1;\n"
         "```\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
     num="19.5.10.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    COUNT(*) AS total_rows\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column > 0;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.11.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionAll = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "    \n"
+        "```sql\n"
+        "SELECT 'first_file' AS source, COUNT(*) AS row_count\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column = 10\n"
+        "\n"
+        "UNION ALL\n"
+        "\n"
+        "SELECT 'second_file' AS source, COUNT(*) AS row_count\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'another_file.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column = 10;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.11.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    a.user_id,\n"
+        "    a.metric_1,\n"
+        "    b.metric_2\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT user_id, metric_1\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    WHERE event_date = '2025-01-01'\n"
+        ") AS a\n"
+        "JOIN\n"
+        "(\n"
+        "    SELECT user_id, metric_2\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    WHERE event_date = '2025-01-02'\n"
+        ") AS b\n"
+        "ON a.user_id = b.user_id\n"
+        "WHERE a.metric_1 > 100;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.11.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_FilterAggregation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    region,\n"
+        "    COUNT(*) AS count_per_region\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT\n"
+        "        region,\n"
+        "        user_id,\n"
+        "        total_spent\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT *\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'test.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    )\n"
+        "    WHERE total_spent > 0\n"
+        ") AS data_with_spent\n"
+        "WHERE region != 'UNKNOWN'\n"
+        "GROUP BY region\n"
+        "ORDER BY count_per_region DESC;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.11.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionJoin = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "WITH\n"
+        "transactions_all AS\n"
+        "(\n"
+        "    SELECT user_id, amount, event_date\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT user_id, amount, event_date\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'transactions_2024.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "        WHERE event_date < '2025-01-01'\n"
+        "    )\n"
+        "    UNION ALL\n"
+        "    SELECT user_id, amount, event_date\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT user_id, amount, event_date\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'transactions_2025.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "        WHERE event_date >= '2025-01-01'\n"
+        "    )\n"
+        "),\n"
+        "\n"
+        "user_profiles AS\n"
+        "(\n"
+        "    SELECT user_id, region, signup_date\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'user_profiles.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "\n"
+        "SELECT\n"
+        "    p.user_id,\n"
+        "    p.region,\n"
+        "    SUM(t.amount) AS total_spent,\n"
+        "    COUNT()       AS txn_count\n"
+        "FROM transactions_all AS t\n"
+        "JOIN user_profiles AS p ON t.user_id = p.user_id\n"
+        "GROUP BY\n"
+        "    p.user_id,\n"
+        "    p.region\n"
+        "ORDER BY total_spent DESC\n"
+        "LIMIT 100;\n"
+        "\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.11.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6692,6 +6941,47 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.10.1",
         ),
+        Heading(name="Nested Queries With Metadata Caching", level=3, num="19.5.11"),
+        Heading(name="Basic Nested Subquery", level=4, num="19.5.11.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic",
+            level=5,
+            num="19.5.11.1.1",
+        ),
+        Heading(name="Union All with Nested Parquet Queries", level=4, num="19.5.11.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll",
+            level=5,
+            num="19.5.11.2.1",
+        ),
+        Heading(name="Join Two Parquet Subqueries from S3", level=4, num="19.5.11.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join",
+            level=5,
+            num="19.5.11.3.1",
+        ),
+        Heading(
+            name="Nested Subquery with an Additional Filter and Aggregation",
+            level=4,
+            num="19.5.11.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation",
+            level=5,
+            num="19.5.11.4.1",
+        ),
+        Heading(name="Combining a UNION with a JOIN", level=4, num="19.5.11.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin",
+            level=5,
+            num="19.5.11.5.1",
+        ),
+        Heading(name="Deeply Nested JOIN", level=4, num="19.5.11.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin",
+            level=5,
+            num="19.5.11.6.1",
+        ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber",
@@ -7115,6 +7405,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionAll,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_FilterAggregation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionJoin,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column,
@@ -7559,6 +7854,19 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
         * 19.5.10 [Hits and Misses Counter](#hits-and-misses-counter)
             * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
+        * 19.5.11 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
+            * 19.5.11.1 [Basic Nested Subquery](#basic-nested-subquery)
+                * 19.5.11.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
+            * 19.5.11.2 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
+                * 19.5.11.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
+            * 19.5.11.3 [Join Two Parquet Subqueries from S3](#join-two-parquet-subqueries-from-s3)
+                * 19.5.11.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
+            * 19.5.11.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
+                * 19.5.11.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
+            * 19.5.11.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
+                * 19.5.11.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
+            * 19.5.11.6 [Deeply Nested JOIN](#deeply-nested-join)
+                * 19.5.11.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -10591,6 +10899,309 @@ where log_comment = 'test_03262_parquet_metadata_cache'
 AND type = 'QueryFinish'
 ORDER BY event_time desc
 LIMIT 1;
+```
+
+#### Nested Queries With Metadata Caching
+
+##### Basic Nested Subquery
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    COUNT(*) AS total_rows
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column > 0;
+```
+
+##### Union All with Nested Parquet Queries
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+    
+```sql
+SELECT 'first_file' AS source, COUNT(*) AS row_count
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column = 10
+
+UNION ALL
+
+SELECT 'second_file' AS source, COUNT(*) AS row_count
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'another_file.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column = 10;
+```
+
+##### Join Two Parquet Subqueries from S3
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    a.user_id,
+    a.metric_1,
+    b.metric_2
+FROM
+(
+    SELECT user_id, metric_1
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+    WHERE event_date = '2025-01-01'
+) AS a
+JOIN
+(
+    SELECT user_id, metric_2
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+    WHERE event_date = '2025-01-02'
+) AS b
+ON a.user_id = b.user_id
+WHERE a.metric_1 > 100;
+```
+
+##### Nested Subquery with an Additional Filter and Aggregation
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    region,
+    COUNT(*) AS count_per_region
+FROM
+(
+    SELECT
+        region,
+        user_id,
+        total_spent
+    FROM
+    (
+        SELECT *
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'test.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+    )
+    WHERE total_spent > 0
+) AS data_with_spent
+WHERE region != 'UNKNOWN'
+GROUP BY region
+ORDER BY count_per_region DESC;
+```
+
+##### Combining a UNION with a JOIN
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+WITH
+transactions_all AS
+(
+    SELECT user_id, amount, event_date
+    FROM
+    (
+        SELECT user_id, amount, event_date
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'transactions_2024.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+        WHERE event_date < '2025-01-01'
+    )
+    UNION ALL
+    SELECT user_id, amount, event_date
+    FROM
+    (
+        SELECT user_id, amount, event_date
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'transactions_2025.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+        WHERE event_date >= '2025-01-01'
+    )
+),
+
+user_profiles AS
+(
+    SELECT user_id, region, signup_date
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'user_profiles.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+
+SELECT
+    p.user_id,
+    p.region,
+    SUM(t.amount) AS total_spent,
+    COUNT()       AS txn_count
+FROM transactions_all AS t
+JOIN user_profiles AS p ON t.user_id = p.user_id
+GROUP BY
+    p.user_id,
+    p.region
+ORDER BY total_spent DESC
+LIMIT 100;
+
+```
+
+##### Deeply Nested JOIN
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    final_join.user_id,
+    final_join.order_total AS total_orders,
+    extra_info.extra_field  AS extra_info_field
+FROM
+(
+    -- Level 4: final join of two sub-branches
+    SELECT
+        branch_1.user_id,
+        branch_1.order_total,
+        branch_2.preference
+    FROM
+    (
+        SELECT
+            subA.user_id,
+            subA.order_total + IFNULL(subA2.additional_value, 0) AS order_total
+        FROM
+        (
+            SELECT
+                user_id,
+                sum(amount) AS order_total
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'orders_2025.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            WHERE event_date >= '2025-01-01'
+            GROUP BY user_id
+        ) AS subA
+        LEFT JOIN
+        (
+            SELECT
+                user_id,
+                sum(value) AS additional_value
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'orders_extras_2025.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            WHERE extra_flag = 1
+            GROUP BY user_id
+        ) AS subA2
+        ON subA.user_id = subA2.user_id
+    ) AS branch_1
+    JOIN
+    (
+        SELECT
+            subB.user_id,
+            subB.preference
+        FROM
+        (
+            SELECT
+                user_id,
+                any(preference) AS preference
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'user_preferences.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            GROUP BY user_id
+        ) AS subB
+    ) AS branch_2
+    ON branch_1.user_id = branch_2.user_id
+) AS final_join
+LEFT JOIN
+(
+    SELECT
+        user_id,
+        extra_field
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'user_extra_info.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+) AS extra_info
+ON final_join.user_id = extra_info.user_id
+WHERE final_join.order_total > 100
+ORDER BY final_join.order_total DESC
+LIMIT 50;
 ```
 
 
