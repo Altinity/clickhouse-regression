@@ -3296,7 +3296,6 @@ For example,
 SELECT *
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 ```
-```
 
 ##### S3Cluster
 
