@@ -3291,7 +3291,7 @@ version: 1.0
 
 For example,
 
-```sql
+
 ```sql
 SELECT *
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
