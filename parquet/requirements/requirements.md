@@ -3162,6 +3162,13 @@ Metadata Caching in Object Storage:
     - Nested Subquery with an Additional Filter and Aggregation
     - Combining a UNION with a JOIN
     - Deeply Nested JOIN
+  Metadata Types:
+    - ClickHouse generated metadata
+    - Metadata from the file generated outside ClickHouse:
+        - Parquetify
+        - DuckD
+        - Apache Arrow
+        - External files for ClickHouse inc tests
   Use metadata cache along other settings:
     settings:
         - aggregation_in_order                                  
