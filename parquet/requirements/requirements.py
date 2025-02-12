@@ -4248,7 +4248,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
         "\n"
         "For example,\n"
         "\n"
-        "```sql\n"
+        "\n"
         "```sql\n"
         "SELECT *\n"
         "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
@@ -10749,7 +10749,7 @@ version: 1.0
 
 For example,
 
-```sql
+
 ```sql
 SELECT *
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
