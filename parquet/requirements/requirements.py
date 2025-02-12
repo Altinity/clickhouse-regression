@@ -4246,6 +4246,15 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
     description=(
         "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
         "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
+        "```\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=5,
@@ -10576,6 +10585,15 @@ SETTINGS input_format_parquet_use_metadata_cache=1;
 version: 1.0
 
 [ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+For example,
+
+```sql
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
+```
+```
 
 ##### S3Cluster
 

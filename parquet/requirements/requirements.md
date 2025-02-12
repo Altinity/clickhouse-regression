@@ -3130,6 +3130,15 @@ version: 1.0
 
 [ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
 
+For example,
+
+```sql
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
+```
+```
+
 ##### S3Cluster
 
 ###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
