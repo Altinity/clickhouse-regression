@@ -4585,6 +4585,125 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
     num="19.5.6.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The following settings can be used along with the metadata caching settings and SHALL not cause any crashes in the system:\n"
+        "\n"
+        "| Setting                                                | Description                                                                                                                        |\n"
+        "|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| aggregation_in_order                                   | Enables partial aggregation in sort order if data is already sorted by GROUP BY keys.                                              |\n"
+        "| aggregation_memory_efficient_merge_threads             | Number of threads used for external merges during aggregation when data is spilled to disk.                                        |\n"
+        "| allow_ddl                                              | If disabled, DDL statements (CREATE, DROP, ALTER, etc.) are disallowed; typically set for read-only usage.                         |\n"
+        "| allow_experimental_bigint_types                        | Enables the experimental Int128, Int256, UInt128, UInt256 types (in some newer versions).                                          |\n"
+        "| allow_experimental_decimal_type                        | Enables the experimental extended Decimal types beyond standard Decimal(76, x).                                                    |\n"
+        "| allow_experimental_map_type                            | Enables experimental Map data type usage in queries.                                                                               |\n"
+        "| allow_experimental_object_type                         | Enables experimental Object data type usage in queries.                                                                            |\n"
+        "| allow_experimental_window_functions                    | Allows usage of window functions in older releases when they were still marked experimental.                                       |\n"
+        "| allow_introspection_functions                          | Allows special introspection/debugging functions (e.g. queryMemoryUsage()).                                                        |\n"
+        "| allow_nullable_key                                     | Permits using nullable columns as keys in GROUP BY or JOIN operations.                                                             |\n"
+        "| allow_suspicious_low_cardinality_types                 | Allows creating or querying LowCardinality columns in contexts that may be risky or unoptimized.                                   |\n"
+        "| async_socket_for_remote                                | Enables asynchronous network I/O for distributed queries to improve performance under certain conditions.                          |\n"
+        "| compile_aggregate_expressions                          | Tries to compile certain aggregate expressions to native code (requires ClickHouse built with LLVM).                               |\n"
+        "| compile_expressions                                    | Attempts to compile complex expressions to native code via LLVM JIT for faster execution.                                          |\n"
+        "| connect_timeout                                        | Timeout (seconds) for establishing connections (e.g., to remote shards in a distributed query).                                    |\n"
+        "| custom_settings_prefix                                 | A prefix for custom (user-defined) settings to avoid naming conflicts with built-in settings.                                      |\n"
+        "| database_atomic_wait_for_drop_and_detach_synchronously | Waits for asynchronous tasks (DROP/DETACH) in Atomic databases to finish.                                                          |\n"
+        "| debug_allow_same_replica_for_distributed_queries       | Allows reading from the same replica multiple times in distributed queries (for debugging/diagnostics).                            |\n"
+        "| dialect_type                                           | Chooses which SQL dialect to emulate (clickhouse, mysql, postgresql, etc.).                                                        |\n"
+        "| distributed_aggregation_memory_efficient               | Improves memory usage for distributed aggregation by streaming partial results.                                                    |\n"
+        "| force_index_by_date                                    | Requires a partition key or index by date to be used; otherwise the query fails.                                                   |\n"
+        "| force_primary_key                                      | Requires usage of the primary key for query filtering; otherwise the query fails.                                                  |\n"
+        "| format_csv_allow_double_quotes                         | When reading/writing CSV, whether double quotes are allowed to quote strings.                                                      |\n"
+        "| format_csv_allow_single_quotes                         | When reading/writing CSV, whether single quotes are allowed to quote strings.                                                      |\n"
+        "| format_csv_delimiter                                   | Delimiter character for CSV format (, by default).                                                                                 |\n"
+        "| format_tsv_allow_single_quotes                         | Allows single quotes in TSV parsing (less common).                                                                                 |\n"
+        "| group_by_overflow_mode                                 | Action if GROUP BY exceeds certain limits (e.g., throw, break).                                                                    |\n"
+        "| group_by_two_level_threshold                           | Threshold of distinct keys at which ClickHouse switches to two-level aggregation.                                                  |\n"
+        "| http_max_multipart_form_data_size                      | Maximum size for multipart/form-data HTTP requests (relevant if query input arrives this way).                                     |\n"
+        "| http_receive_timeout                                   | HTTP server receive timeout (in seconds) for query data.                                                                           |\n"
+        "| http_send_timeout                                      | HTTP server send timeout (in seconds) for sending results back to the client.                                                      |\n"
+        "| input_format_allow_errors_num                          | Maximum number of parsing errors allowed in input before aborting.                                                                 |\n"
+        "| input_format_allow_errors_ratio                        | Maximum ratio of parsing errors allowed (fraction of total rows) before aborting.                                                  |\n"
+        "| input_format_csv_delimiter                             | Delimiter for CSV input (can be overridden per query).                                                                             |\n"
+        "| input_format_csv_enum_detect_factor                    | Heuristic factor for detecting Enum from CSV input.                                                                                |\n"
+        "| input_format_csv_enum_parsing_mode                     | Parsing mode for CSV Enum fields (string, auto, numeric, etc.).                                                                    |\n"
+        "| input_format_defaults_for_omitted_fields               | Use default values if certain columns are missing from input.                                                                      |\n"
+        "| input_format_import_nested_json                        | Allows parsing nested JSON structures in input.                                                                                    |\n"
+        "| input_format_null_as_default                           | Treats NULL in incoming data as the default value for non-nullable columns.                                                        |\n"
+        "| input_format_skip_unknown_fields                       | Skip fields in input that do not match any column definition.                                                                      |\n"
+        "| join_algorithm                                         | Chooses join algorithm (auto, hash, partial_merge, etc.).                                                                          |\n"
+        "| join_default_strictness                                | Default JOIN strictness if not specified (_`ANY                                                                                    |\n"
+        "| join_use_nulls                                         | Use NULL in joined columns if no match (for left/full joins).                                                                      |\n"
+        "| load_balancing                                         | Strategy for choosing replicas in a distributed query (random, nearest_hostname, etc.).                                            |\n"
+        "| log_queries                                            | Enables or disables writing query info into system.query_log.                                                                      |\n"
+        "| log_comment                                            | Additional string comment appended to query logs for identification.                                                               |\n"
+        "| lookup_replica_priority                                | Whether to consider replica priority for distributed reads.                                                                        |\n"
+        "| low_cardinality_allow_in_native_format                 | Allow storing LowCardinality columns in the native (optimized) format.                                                             |\n"
+        "| max_ast_depth                                          | Maximum depth of the query’s AST (Abstract Syntax Tree).                                                                           |\n"
+        "| max_ast_elements                                       | Maximum number of nodes/elements in the query’s AST.                                                                               |\n"
+        "| max_bytes_before_external_group_by                     | Threshold (bytes) before partial GROUP BY is spilled to disk.                                                                      |\n"
+        "| max_bytes_before_external_sort                         | Threshold (bytes) before partial sort is spilled to disk.                                                                          |\n"
+        "| max_bytes_before_remerge_sort                          | Threshold for re-merging data on disk in external sorts.                                                                           |\n"
+        "| max_bytes_in_dist_read                                 | Maximum bytes to read from each remote shard in a distributed query.                                                               |\n"
+        "| max_bytes_in_join                                      | Maximum bytes in an in-memory JOIN state.                                                                                          |\n"
+        "| max_bytes_to_read                                      | Maximum total bytes that can be read from storage during the query.                                                                |\n"
+        "| max_csv_rows_to_read_for_schema_inference              | If using automatic schema inference from CSV, stops reading after this many rows for detection.                                    |\n"
+        "| max_distributed_connections                            | Maximum number of connections to remote servers in distributed queries.                                                            |\n"
+        "| max_execution_speed                                    | Maximum execution speed (rows/second). If exceeded, the query is paused or stopped depending on max_execution_speed_overflow_mode. |\n"
+        "| max_execution_speed_overflow_mode                      | Action if the query exceeds max_execution_speed (throw, break, etc.).                                                              |\n"
+        "| max_execution_time                                     | Maximum execution time in seconds. Query is aborted if exceeded (unless changed by the overflow mode).                             |\n"
+        "| max_expanded_ast_elements                              | Limits expansions in the AST (e.g., from IN sets).                                                                                 |\n"
+        "| max_insert_threads                                     | Maximum threads for INSERT SELECT queries.                                                                                         |\n"
+        "| max_memory_usage                                       | Maximum memory usage per query.                                                                                                    |\n"
+        "| max_memory_usage_for_all_queries                       | Maximum total memory usage for all queries on the server.                                                                          |\n"
+        "| max_memory_usage_for_user                              | Maximum total memory usage for all queries by the current user.                                                                    |\n"
+        "| max_parallel_replicas                                  | Maximum number of replicas to use in parallel for a query in a Distributed table.                                                  |\n"
+        "| max_pipeline_depth                                     | Maximum execution pipeline depth.                                                                                                  |\n"
+        "| max_query_size                                         | Maximum size of the query text in bytes.                                                                                           |\n"
+        "| max_read_buffer_size                                   | Size (bytes) of the buffer used when reading from filesystem or network.                                                           |\n"
+        "| max_result_bytes                                       | Maximum total size of the result (in bytes) returned by a query.                                                                   |\n"
+        "| max_result_rows                                        | Maximum number of rows in the result set returned by a query.                                                                      |\n"
+        "| max_rows_in_distinct                                   | Limit on the number of rows held in memory for SELECT DISTINCT.                                                                    |\n"
+        "| max_rows_in_join                                       | Limit on the number of rows in a join hash table.                                                                                  |\n"
+        "| max_rows_in_set                                        | Limit on the number of rows in a SET (for IN subqueries).                                                                          |\n"
+        "| max_rows_in_table_function                             | Limit on rows read by table functions like s3, hdfs, or file.                                                                      |\n"
+        "| max_rows_in_view                                       | Limit on rows that a VIEW can return.                                                                                              |\n"
+        "| max_rows_to_group_by                                   | Limit on rows to process in GROUP BY before taking an overflow action.                                                             |\n"
+        "| max_rows_to_read                                       | Limit on number of rows read from storage during the query.                                                                        |\n"
+        "| memory_overflow_mode                                   | Action if max_memory_usage is exceeded (throw, break, etc.).                                                                       |\n"
+        "| merge_tree_uniform_read_distribution                   | Distribute reads more evenly among parts for MergeTree tables if possible.                                                         |\n"
+        "| min_execution_speed                                    | Minimum execution speed in rows/second; if slower after timeout_before_checking_execution_speed, it’s aborted/paused.              |\n"
+        "| min_execution_speed_overflow_mode                      | Action if query falls below min_execution_speed.                                                                                   |\n"
+        "| optimize_fuse_sum_count_avg                            | Tries to rewrite sequences of sum, count, avg into more optimal queries (e.g., combining aggregates).                              |\n"
+        "| optimize_move_functions_out_of_any                     | Moves functions out of any(...) if possible to reduce overhead.                                                                    |\n"
+        "| optimize_skip_unused_shards                            | Skip contacting shards if partition pruning or other conditions show no data is needed from them.                                  |\n"
+        "| optimize_throw_if_suboptimal_plan                      | Throw an exception if the optimizer cannot generate a plan that is considered optimal (based on internal heuristics).              |\n"
+        "| optimize_read_in_order                                 | Attempt to read in sorted order to avoid extra sorting if the query ORDER BY matches table sorting.                                |\n"
+        '| output_format_json_escape_forward_slashes              | Whether to escape _"/_" in JSON output formats.                                                                                    |\n'
+        "| output_format_json_quote_64bit_integers                | Whether to quote 64-bit integers in JSON output (to avoid losing precision in certain JS clients).                                 |\n"
+        "| output_format_pretty_max_rows                          | Maximum number of rows printed in FORMAT Pretty.                                                                                   |\n"
+        "| output_format_write_statistics                         | Controls whether to output query execution statistics in some formats.                                                             |\n"
+        "| partial_merge_join_optimizations                       | Enables partial merge join (useful if both tables are large and sorted on join keys).                                              |\n"
+        "| prefer_localhost_replica                               | Prefer reading from the local replica first in a replicated/distributed setup if available.                                        |\n"
+        "| readonly                                               | If >0, disallows write operations (DDL/DML) – only SELECT. If >1, also disallows creating temporary tables, etc.                   |\n"
+        "| send_logs_level                                        | Controls the verbosity of logs sent back to the client.                                                                            |\n"
+        "| timeout_before_checking_execution_speed                | Time (seconds) after which ClickHouse checks if min_execution_speed is met.                                                        |\n"
+        "| use_uncompressed_cache                                 | Enables the uncompressed cache for data, which can speed reads but uses more memory.                                               |\n"
+        "| user_files_path                                        | Path where user can read files from or write files to (when using file table function, etc.).                                      |\n"
+        "| wait_end_of_query                                      | When set, waits for the query to finish for all replicas in a Distributed table before returning (used in replication scenarios).  |\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.7.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
     version="1.0",
@@ -4599,7 +4718,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize = Requireme
     ),
     link=None,
     level=4,
-    num="19.5.7.1",
+    num="19.5.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation = Requirement(
@@ -4615,14 +4734,14 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLo
         "For example, if we have two files, `test.parquet` in `s3://bucket1/` and `test.parquet` in `s3://bucket2/`, the following query SHALL successfully read the data of the file after the metadata is cached:\n"
         "\n"
         "```sql\n"
-        "SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet)\n"
-        "SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet)\n"
+        "SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1\n"
+        "SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1\n"
         "```\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="19.5.8.1",
+    num="19.5.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter = Requirement(
@@ -4662,7 +4781,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter =
     ),
     link=None,
     level=4,
-    num="19.5.9.1",
+    num="19.5.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6543,25 +6662,35 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.6.1",
         ),
-        Heading(name="Maximum Size of Metadata Cache", level=3, num="19.5.7"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
+            name="All Possible Settings That Can Be Used Along With Metadata Caching Settings",
+            level=3,
+            num="19.5.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
             level=4,
             num="19.5.7.1",
         ),
+        Heading(name="Maximum Size of Metadata Cache", level=3, num="19.5.8"),
         Heading(
-            name="File With The Same Name But Different Location", level=3, num="19.5.8"
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
+            level=4,
+            num="19.5.8.1",
+        ),
+        Heading(
+            name="File With The Same Name But Different Location", level=3, num="19.5.9"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation",
             level=4,
-            num="19.5.8.1",
+            num="19.5.9.1",
         ),
-        Heading(name="Hits and Misses Counter", level=3, num="19.5.9"),
+        Heading(name="Hits and Misses Counter", level=3, num="19.5.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter",
             level=4,
-            num="19.5.9.1",
+            num="19.5.10.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6982,6 +7111,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter,
@@ -7421,12 +7551,14 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
         * 19.5.6 [Caching Settings](#caching-settings)
             * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
-        * 19.5.7 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
-            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
-        * 19.5.8 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
-            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
-        * 19.5.9 [Hits and Misses Counter](#hits-and-misses-counter)
-            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
+        * 19.5.7 [All Possible Settings That Can Be Used Along With Metadata Caching Settings](#all-possible-settings-that-can-be-used-along-with-metadata-caching-settings)
+            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageallsettings)
+        * 19.5.8 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
+            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
+        * 19.5.9 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
+            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
+        * 19.5.10 [Hits and Misses Counter](#hits-and-misses-counter)
+            * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -10299,6 +10431,116 @@ version: 1.0
 | `input_format_parquet_use_metadata_cache`         | `true`/`false` | Enable/disable caching of Parquet file metadata                                     |
 | `input_format_parquet_metadata_cache_max_entries` | `INT`          | Maximum number of file metadata objects to cache set from the server configuration. |
 
+#### All Possible Settings That Can Be Used Along With Metadata Caching Settings
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings
+version: 1.0
+
+The following settings can be used along with the metadata caching settings and SHALL not cause any crashes in the system:
+
+| Setting                                                | Description                                                                                                                        |
+|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| aggregation_in_order                                   | Enables partial aggregation in sort order if data is already sorted by GROUP BY keys.                                              |
+| aggregation_memory_efficient_merge_threads             | Number of threads used for external merges during aggregation when data is spilled to disk.                                        |
+| allow_ddl                                              | If disabled, DDL statements (CREATE, DROP, ALTER, etc.) are disallowed; typically set for read-only usage.                         |
+| allow_experimental_bigint_types                        | Enables the experimental Int128, Int256, UInt128, UInt256 types (in some newer versions).                                          |
+| allow_experimental_decimal_type                        | Enables the experimental extended Decimal types beyond standard Decimal(76, x).                                                    |
+| allow_experimental_map_type                            | Enables experimental Map data type usage in queries.                                                                               |
+| allow_experimental_object_type                         | Enables experimental Object data type usage in queries.                                                                            |
+| allow_experimental_window_functions                    | Allows usage of window functions in older releases when they were still marked experimental.                                       |
+| allow_introspection_functions                          | Allows special introspection/debugging functions (e.g. queryMemoryUsage()).                                                        |
+| allow_nullable_key                                     | Permits using nullable columns as keys in GROUP BY or JOIN operations.                                                             |
+| allow_suspicious_low_cardinality_types                 | Allows creating or querying LowCardinality columns in contexts that may be risky or unoptimized.                                   |
+| async_socket_for_remote                                | Enables asynchronous network I/O for distributed queries to improve performance under certain conditions.                          |
+| compile_aggregate_expressions                          | Tries to compile certain aggregate expressions to native code (requires ClickHouse built with LLVM).                               |
+| compile_expressions                                    | Attempts to compile complex expressions to native code via LLVM JIT for faster execution.                                          |
+| connect_timeout                                        | Timeout (seconds) for establishing connections (e.g., to remote shards in a distributed query).                                    |
+| custom_settings_prefix                                 | A prefix for custom (user-defined) settings to avoid naming conflicts with built-in settings.                                      |
+| database_atomic_wait_for_drop_and_detach_synchronously | Waits for asynchronous tasks (DROP/DETACH) in Atomic databases to finish.                                                          |
+| debug_allow_same_replica_for_distributed_queries       | Allows reading from the same replica multiple times in distributed queries (for debugging/diagnostics).                            |
+| dialect_type                                           | Chooses which SQL dialect to emulate (clickhouse, mysql, postgresql, etc.).                                                        |
+| distributed_aggregation_memory_efficient               | Improves memory usage for distributed aggregation by streaming partial results.                                                    |
+| force_index_by_date                                    | Requires a partition key or index by date to be used; otherwise the query fails.                                                   |
+| force_primary_key                                      | Requires usage of the primary key for query filtering; otherwise the query fails.                                                  |
+| format_csv_allow_double_quotes                         | When reading/writing CSV, whether double quotes are allowed to quote strings.                                                      |
+| format_csv_allow_single_quotes                         | When reading/writing CSV, whether single quotes are allowed to quote strings.                                                      |
+| format_csv_delimiter                                   | Delimiter character for CSV format (, by default).                                                                                 |
+| format_tsv_allow_single_quotes                         | Allows single quotes in TSV parsing (less common).                                                                                 |
+| group_by_overflow_mode                                 | Action if GROUP BY exceeds certain limits (e.g., throw, break).                                                                    |
+| group_by_two_level_threshold                           | Threshold of distinct keys at which ClickHouse switches to two-level aggregation.                                                  |
+| http_max_multipart_form_data_size                      | Maximum size for multipart/form-data HTTP requests (relevant if query input arrives this way).                                     |
+| http_receive_timeout                                   | HTTP server receive timeout (in seconds) for query data.                                                                           |
+| http_send_timeout                                      | HTTP server send timeout (in seconds) for sending results back to the client.                                                      |
+| input_format_allow_errors_num                          | Maximum number of parsing errors allowed in input before aborting.                                                                 |
+| input_format_allow_errors_ratio                        | Maximum ratio of parsing errors allowed (fraction of total rows) before aborting.                                                  |
+| input_format_csv_delimiter                             | Delimiter for CSV input (can be overridden per query).                                                                             |
+| input_format_csv_enum_detect_factor                    | Heuristic factor for detecting Enum from CSV input.                                                                                |
+| input_format_csv_enum_parsing_mode                     | Parsing mode for CSV Enum fields (string, auto, numeric, etc.).                                                                    |
+| input_format_defaults_for_omitted_fields               | Use default values if certain columns are missing from input.                                                                      |
+| input_format_import_nested_json                        | Allows parsing nested JSON structures in input.                                                                                    |
+| input_format_null_as_default                           | Treats NULL in incoming data as the default value for non-nullable columns.                                                        |
+| input_format_skip_unknown_fields                       | Skip fields in input that do not match any column definition.                                                                      |
+| join_algorithm                                         | Chooses join algorithm (auto, hash, partial_merge, etc.).                                                                          |
+| join_default_strictness                                | Default JOIN strictness if not specified (_`ANY                                                                                    |
+| join_use_nulls                                         | Use NULL in joined columns if no match (for left/full joins).                                                                      |
+| load_balancing                                         | Strategy for choosing replicas in a distributed query (random, nearest_hostname, etc.).                                            |
+| log_queries                                            | Enables or disables writing query info into system.query_log.                                                                      |
+| log_comment                                            | Additional string comment appended to query logs for identification.                                                               |
+| lookup_replica_priority                                | Whether to consider replica priority for distributed reads.                                                                        |
+| low_cardinality_allow_in_native_format                 | Allow storing LowCardinality columns in the native (optimized) format.                                                             |
+| max_ast_depth                                          | Maximum depth of the query’s AST (Abstract Syntax Tree).                                                                           |
+| max_ast_elements                                       | Maximum number of nodes/elements in the query’s AST.                                                                               |
+| max_bytes_before_external_group_by                     | Threshold (bytes) before partial GROUP BY is spilled to disk.                                                                      |
+| max_bytes_before_external_sort                         | Threshold (bytes) before partial sort is spilled to disk.                                                                          |
+| max_bytes_before_remerge_sort                          | Threshold for re-merging data on disk in external sorts.                                                                           |
+| max_bytes_in_dist_read                                 | Maximum bytes to read from each remote shard in a distributed query.                                                               |
+| max_bytes_in_join                                      | Maximum bytes in an in-memory JOIN state.                                                                                          |
+| max_bytes_to_read                                      | Maximum total bytes that can be read from storage during the query.                                                                |
+| max_csv_rows_to_read_for_schema_inference              | If using automatic schema inference from CSV, stops reading after this many rows for detection.                                    |
+| max_distributed_connections                            | Maximum number of connections to remote servers in distributed queries.                                                            |
+| max_execution_speed                                    | Maximum execution speed (rows/second). If exceeded, the query is paused or stopped depending on max_execution_speed_overflow_mode. |
+| max_execution_speed_overflow_mode                      | Action if the query exceeds max_execution_speed (throw, break, etc.).                                                              |
+| max_execution_time                                     | Maximum execution time in seconds. Query is aborted if exceeded (unless changed by the overflow mode).                             |
+| max_expanded_ast_elements                              | Limits expansions in the AST (e.g., from IN sets).                                                                                 |
+| max_insert_threads                                     | Maximum threads for INSERT SELECT queries.                                                                                         |
+| max_memory_usage                                       | Maximum memory usage per query.                                                                                                    |
+| max_memory_usage_for_all_queries                       | Maximum total memory usage for all queries on the server.                                                                          |
+| max_memory_usage_for_user                              | Maximum total memory usage for all queries by the current user.                                                                    |
+| max_parallel_replicas                                  | Maximum number of replicas to use in parallel for a query in a Distributed table.                                                  |
+| max_pipeline_depth                                     | Maximum execution pipeline depth.                                                                                                  |
+| max_query_size                                         | Maximum size of the query text in bytes.                                                                                           |
+| max_read_buffer_size                                   | Size (bytes) of the buffer used when reading from filesystem or network.                                                           |
+| max_result_bytes                                       | Maximum total size of the result (in bytes) returned by a query.                                                                   |
+| max_result_rows                                        | Maximum number of rows in the result set returned by a query.                                                                      |
+| max_rows_in_distinct                                   | Limit on the number of rows held in memory for SELECT DISTINCT.                                                                    |
+| max_rows_in_join                                       | Limit on the number of rows in a join hash table.                                                                                  |
+| max_rows_in_set                                        | Limit on the number of rows in a SET (for IN subqueries).                                                                          |
+| max_rows_in_table_function                             | Limit on rows read by table functions like s3, hdfs, or file.                                                                      |
+| max_rows_in_view                                       | Limit on rows that a VIEW can return.                                                                                              |
+| max_rows_to_group_by                                   | Limit on rows to process in GROUP BY before taking an overflow action.                                                             |
+| max_rows_to_read                                       | Limit on number of rows read from storage during the query.                                                                        |
+| memory_overflow_mode                                   | Action if max_memory_usage is exceeded (throw, break, etc.).                                                                       |
+| merge_tree_uniform_read_distribution                   | Distribute reads more evenly among parts for MergeTree tables if possible.                                                         |
+| min_execution_speed                                    | Minimum execution speed in rows/second; if slower after timeout_before_checking_execution_speed, it’s aborted/paused.              |
+| min_execution_speed_overflow_mode                      | Action if query falls below min_execution_speed.                                                                                   |
+| optimize_fuse_sum_count_avg                            | Tries to rewrite sequences of sum, count, avg into more optimal queries (e.g., combining aggregates).                              |
+| optimize_move_functions_out_of_any                     | Moves functions out of any(...) if possible to reduce overhead.                                                                    |
+| optimize_skip_unused_shards                            | Skip contacting shards if partition pruning or other conditions show no data is needed from them.                                  |
+| optimize_throw_if_suboptimal_plan                      | Throw an exception if the optimizer cannot generate a plan that is considered optimal (based on internal heuristics).              |
+| optimize_read_in_order                                 | Attempt to read in sorted order to avoid extra sorting if the query ORDER BY matches table sorting.                                |
+| output_format_json_escape_forward_slashes              | Whether to escape _"/_" in JSON output formats.                                                                                    |
+| output_format_json_quote_64bit_integers                | Whether to quote 64-bit integers in JSON output (to avoid losing precision in certain JS clients).                                 |
+| output_format_pretty_max_rows                          | Maximum number of rows printed in FORMAT Pretty.                                                                                   |
+| output_format_write_statistics                         | Controls whether to output query execution statistics in some formats.                                                             |
+| partial_merge_join_optimizations                       | Enables partial merge join (useful if both tables are large and sorted on join keys).                                              |
+| prefer_localhost_replica                               | Prefer reading from the local replica first in a replicated/distributed setup if available.                                        |
+| readonly                                               | If >0, disallows write operations (DDL/DML) – only SELECT. If >1, also disallows creating temporary tables, etc.                   |
+| send_logs_level                                        | Controls the verbosity of logs sent back to the client.                                                                            |
+| timeout_before_checking_execution_speed                | Time (seconds) after which ClickHouse checks if min_execution_speed is met.                                                        |
+| use_uncompressed_cache                                 | Enables the uncompressed cache for data, which can speed reads but uses more memory.                                               |
+| user_files_path                                        | Path where user can read files from or write files to (when using file table function, etc.).                                      |
+| wait_end_of_query                                      | When set, waits for the query to finish for all replicas in a Distributed table before returning (used in replication scenarios).  |
+
 #### Maximum Size of Metadata Cache
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize
@@ -10317,8 +10559,8 @@ version: 1.0
 For example, if we have two files, `test.parquet` in `s3://bucket1/` and `test.parquet` in `s3://bucket2/`, the following query SHALL successfully read the data of the file after the metadata is cached:
 
 ```sql
-SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet)
-SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet)
+SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1
+SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1
 ```
 
 #### Hits and Misses Counter
