@@ -6,11 +6,14 @@
 
 ## Introduction
 
-This Software Requirements Specification (SRS) defines the requirements for ClickHouse integration with Iceberg. ClickHouse now has 
-- Iceberg() table function that provides a read-only table-like interface to Apache Iceberg tables in Amazon S3, Azure, HDFS or locally stored. 
-- Iceberg engine that provides a read-only integration with existing Apache Iceberg tables in Amazon S3, Azure, HDFS and locally stored tables.
+This Software Requirements Specification (SRS) defines the requirements for ClickHouse integration with Iceberg.
 
-## Iceberg Table 
+Specifically:
+
+- `Iceberg()` table function that provides a read-only table-like interface to Apache Iceberg tables in Amazon S3, Azure, HDFS or locally stored. 
+- `Iceberg` engine that provides a read-only integration with existing Apache Iceberg tables in Amazon S3, Azure, HDFS and locally stored tables.
+
+## Test Schema
 
 ### Properties
 
