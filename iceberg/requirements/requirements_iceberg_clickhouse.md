@@ -40,7 +40,7 @@ This Software Requirements Specification (SRS) defines the requirements for Clic
             - Field ID
             - Transform
     - Sort Order
-        -Sort Field
+        - Sort Field
             - Source ID
             - Field ID
 
