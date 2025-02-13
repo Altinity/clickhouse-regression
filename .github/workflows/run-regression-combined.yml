@@ -61,7 +61,6 @@ on:
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
-          - data_lakes
           - data_types
           - datetime64_extended_range
           - disk_level_encryption

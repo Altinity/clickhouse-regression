@@ -181,11 +181,148 @@ def recreate_table(self, minio_root_user, minio_root_password):
                 assert "David\t20\t27" in result.output, error()
 
 
+@TestScenario
+def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
+    """Test the Iceberg engine in ClickHouse."""
+    node = self.context.node
+    namespace = "iceberg"
+    table_name = "name"
+
+    with Given("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create namespace"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"delete table {namespace}.{table_name} if already exists"):
+        catalog_steps.drop_iceberg_table(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with And(f"insert data into {namespace}.{table_name} table"):
+        df = pa.Table.from_pylist(
+            [
+                {"name": "Alice", "double": 195.23, "integer": 20},
+                {"name": "Bob", "double": 123.45, "integer": 30},
+                {"name": "Charlie", "double": 67.89, "integer": 40},
+            ]
+        )
+        table.append(df)
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(df)
+
+    with Then("create database with Iceberg engine"):
+        database_name = "datalake"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And(f"delete table {namespace}.{table_name} if already exists"):
+        catalog_steps.drop_iceberg_table(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with And("check the tables in the database after deleting the table"):
+        result = node.query("SHOW TABLES from datalake")
+        assert table_name not in result.output, error()
+
+    with And("recreate table with same name"):
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with And("insert one row to recreated table"):
+        df = pa.Table.from_pylist(
+            [
+                {"name": "David", "double": 20.0, "integer": 27},
+            ]
+        )
+        table.append(df)
+
+    with When("restart the node and drop filesystem cache"):
+        node.restart()
+        node.query(f"SYSTEM DROP FILESYSTEM CACHE")
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(df)
+
+    with Then("verify that ClickHouse reads the new data （one row）"):
+        for retry in retries(count=11, delay=1):
+            with retry:
+                result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name,
+                )
+                assert "David\t20\t27" in result.output, error()
+
+    with Then("recreate database with Iceberg engine"):
+        database_name = "datalake"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with Then("verify that ClickHouse reads the new data （one row）"):
+        for retry in retries(count=11, delay=1):
+            with retry:
+                result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name,
+                )
+                assert "David\t20\t27" in result.output, error()
+
+    with Then("recreate database with Iceberg engine"):
+        database_name = "datalake"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with Then("verify that ClickHouse reads the new data （one row）"):
+        for retry in retries(count=11, delay=1):
+            with retry:
+                result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name,
+                )
+                assert "David\t20\t27" in result.output, error()
+
+
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=recreate_table)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=recreate_table_multiple_times)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
