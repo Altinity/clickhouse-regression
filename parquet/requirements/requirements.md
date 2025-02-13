@@ -3306,7 +3306,7 @@ Metadata Caching in Object Storage:
 version: 1.0
 
 [ClickHouse] SHALL support caching [the whole metadata object](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent) when querying Parquet files stored in any type of remote object storage by using the 
-`input_format_parquet_use_metadata_cache` setting (default value: 5000). The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
+`input_format_parquet_use_metadata_cache` setting (disabled by default). The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
 
 For example,
 
