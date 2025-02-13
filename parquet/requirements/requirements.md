@@ -414,7 +414,7 @@
         * 19.5.13 [Hits and Misses Counter](#hits-and-misses-counter)
             * 19.5.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
         * 19.5.14 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
-            * 19.5.14.1 [Join Two Parquet Files From and Object Storage](#join-two-parquet-files-from-and-object-storage)
+            * 19.5.14.1 [Join Two Parquet Files From an Object Storage](#join-two-parquet-files-from-an-object-storage)
                 * 19.5.14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
             * 19.5.14.2 [Basic Nested Subquery](#basic-nested-subquery)
                 * 19.5.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
@@ -3675,7 +3675,7 @@ LIMIT 1;
 
 #### Nested Queries With Metadata Caching
 
-##### Join Two Parquet Files From and Object Storage
+##### Join Two Parquet Files From an Object Storage
 
 ###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join
 version: 1.0
