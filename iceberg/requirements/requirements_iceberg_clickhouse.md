@@ -1,4 +1,4 @@
-# SRS-044 Iceberg 
+# SRS-044 ClickHouse Iceberg Support
 # Software Requirements Specification
 
 ## Table of Contents
