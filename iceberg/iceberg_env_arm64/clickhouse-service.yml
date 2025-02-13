@@ -11,6 +11,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/iceberg.xml:/etc/clickhouse-server/config.d/iceberg.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/common.xml:/etc/clickhouse-server/common.xml"
