@@ -61,7 +61,7 @@ def read_data_from_clickhouse_iceberg_table(
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\`{namespace}.{table_name}\` FORMAT TabSeparated",
+        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` FORMAT TabSeparated",
         settings=[("user", user), ("password", f"{password}")],
         exitcode=exitcode,
         message=message,
@@ -75,6 +75,57 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
         node = self.context.node
 
     result = node.query(
-        f"SHOW CREATE TABLE {database_name}.\`{namespace}.{table_name}\`"
+        f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
     )
     return result
+
+
+@TestStep(Given)
+def create_table_with_iceberg_engine(
+    self,
+    table_name=None,
+    node=None,
+    config_name="iceberg_conf",
+    filename="data",
+    allow_dynamic_metadata_for_data_lakes=False,
+):
+    """Create table with Iceberg table engine with named collection
+    config_name(iceberg_conf) in config.xml."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        table_name = "iceberg_table_" + getuid()
+
+    settings = ""
+    if allow_dynamic_metadata_for_data_lakes:
+        settings = "SETTINGS allow_dynamic_metadata_for_data_lakes = true"
+
+    node.query(
+        f"""
+        CREATE TABLE {table_name} 
+        ENGINE=IcebergS3({config_name}, filename = '{filename}')
+        {settings}
+        """
+    )
+
+    return table_name
+
+
+@TestStep(Given)
+def create_named_collection(self, name=None, dict={}, node=None):
+    """Create named collection from dictionary."""
+    if node is None:
+        node = self.context.node
+
+    if name is None:
+        name = "named_collection_" + getuid()
+
+    params = ""
+
+    for key, value in dict.items():
+        params += f"{key} = '{value}', "
+
+    node.query(f"CREATE NAMED COLLECTION {name} AS {params[:-2]}")
+
+    return name

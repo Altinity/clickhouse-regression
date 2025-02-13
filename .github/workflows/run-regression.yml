@@ -59,7 +59,6 @@ on:
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
-          - data_lakes
           - data_types
           - datetime64_extended_range
           - disk_level_encryption
@@ -155,7 +154,7 @@ env:
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.id="${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log
     ${{ inputs.flags != 'none' && inputs.flags || ''}}
     ${{ inputs.extra_args }}
@@ -687,54 +686,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-  
-  data_lakes:
-    runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
-    timeout-minutes: 180
-    env:
-      SUITE: data_lakes
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_lakes' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-      
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'  # You can also use 'zulu', 'adopt', etc.
-          check-latest: false
-          server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: ${{ secrets.GITHUB_TOKEN }}
-          overwrite-settings: true
 
       - name: 🛠️ Setup
         run: .github/setup.sh

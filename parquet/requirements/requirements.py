@@ -4219,7 +4219,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the \n"
+        "[ClickHouse] SHALL support caching [the whole metadata object](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent) when querying Parquet files stored in object storage by using the \n"
         "`input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.\n"
         "\n"
         "For example,\n"
@@ -4233,7 +4233,31 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
     ),
     link=None,
     level=3,
-    num="19.5.1",
+    num="19.5.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3(s3_url, filename = 'test.parquet', format = Parquet)\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Requirement(
@@ -4256,8 +4280,232 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster = Require
         "\n"
     ),
     link=None,
-    level=4,
-    num="19.5.2.1",
+    level=5,
+    num="19.5.3.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_IcebergS3 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `IcebergS3` engine or function including,`IcebergAzure`, `IcebergHDFS` and `IcebergLocal`, by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_URL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `URL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_File = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `File` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.5.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Dictionary = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Dictionary` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.6.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Distributed = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Distributed` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.7.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Memory = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Memory` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.8.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_PostgreSQL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `PostgreSQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.9.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EmbeddedRocksDB = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `EmbeddedRocksDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.10.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Kafka = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Kafka` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.11.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MongoDB = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MongoDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.12.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MySQL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MySQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.13.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_JDBC = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `JDBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.14.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ODBC = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `ODBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.15.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HDFS = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `HDFS` engine or function by using the `input_format_parquet_use_metadata_cache` setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.16.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requirement(
@@ -4268,12 +4516,12 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requ
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.\n"
+        "[ClickHouse] SHALL throw and error when the Parquet file is deleted from the object storage and we .\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="19.5.3.1",
+    num="19.5.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching = Requirement(
@@ -4298,7 +4546,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCa
     ),
     link=None,
     level=4,
-    num="19.5.4.1",
+    num="19.5.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning = Requirement(
@@ -4323,7 +4571,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning = 
     ),
     link=None,
     level=4,
-    num="19.5.5.1",
+    num="19.5.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
@@ -4334,17 +4582,463 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
     type=None,
     uid=None,
     description=(
-        "| Setting                                            | Values                 | Description                                                                                                                 |\n"
-        "|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|\n"
-        "| `input_format_parquet_use_metadata_cache`          | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |\n"
-        "| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |\n"
-        "| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |\n"
-        "| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |\n"
+        "| Setting                                           | Values         | Description                                                                         |\n"
+        "|---------------------------------------------------|----------------|-------------------------------------------------------------------------------------|\n"
+        "| `input_format_parquet_use_metadata_cache`         | `true`/`false` | Enable/disable caching of Parquet file metadata                                     |\n"
+        "| `input_format_parquet_metadata_cache_max_entries` | `INT`          | Maximum number of file metadata objects to cache set from the server configuration. |\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="19.5.6.1",
+    num="19.5.7.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The following settings can be used along with the metadata caching settings and SHALL not cause any crashes in the system:\n"
+        "\n"
+        "| Setting                                                | Description                                                                                                                        |\n"
+        "|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|\n"
+        "| aggregation_in_order                                   | Enables partial aggregation in sort order if data is already sorted by GROUP BY keys.                                              |\n"
+        "| aggregation_memory_efficient_merge_threads             | Number of threads used for external merges during aggregation when data is spilled to disk.                                        |\n"
+        "| allow_ddl                                              | If disabled, DDL statements (CREATE, DROP, ALTER, etc.) are disallowed; typically set for read-only usage.                         |\n"
+        "| allow_experimental_bigint_types                        | Enables the experimental Int128, Int256, UInt128, UInt256 types (in some newer versions).                                          |\n"
+        "| allow_experimental_decimal_type                        | Enables the experimental extended Decimal types beyond standard Decimal(76, x).                                                    |\n"
+        "| allow_experimental_map_type                            | Enables experimental Map data type usage in queries.                                                                               |\n"
+        "| allow_experimental_object_type                         | Enables experimental Object data type usage in queries.                                                                            |\n"
+        "| allow_experimental_window_functions                    | Allows usage of window functions in older releases when they were still marked experimental.                                       |\n"
+        "| allow_introspection_functions                          | Allows special introspection/debugging functions (e.g. queryMemoryUsage()).                                                        |\n"
+        "| allow_nullable_key                                     | Permits using nullable columns as keys in GROUP BY or JOIN operations.                                                             |\n"
+        "| allow_suspicious_low_cardinality_types                 | Allows creating or querying LowCardinality columns in contexts that may be risky or unoptimized.                                   |\n"
+        "| async_socket_for_remote                                | Enables asynchronous network I/O for distributed queries to improve performance under certain conditions.                          |\n"
+        "| compile_aggregate_expressions                          | Tries to compile certain aggregate expressions to native code (requires ClickHouse built with LLVM).                               |\n"
+        "| compile_expressions                                    | Attempts to compile complex expressions to native code via LLVM JIT for faster execution.                                          |\n"
+        "| connect_timeout                                        | Timeout (seconds) for establishing connections (e.g., to remote shards in a distributed query).                                    |\n"
+        "| custom_settings_prefix                                 | A prefix for custom (user-defined) settings to avoid naming conflicts with built-in settings.                                      |\n"
+        "| database_atomic_wait_for_drop_and_detach_synchronously | Waits for asynchronous tasks (DROP/DETACH) in Atomic databases to finish.                                                          |\n"
+        "| debug_allow_same_replica_for_distributed_queries       | Allows reading from the same replica multiple times in distributed queries (for debugging/diagnostics).                            |\n"
+        "| dialect_type                                           | Chooses which SQL dialect to emulate (clickhouse, mysql, postgresql, etc.).                                                        |\n"
+        "| distributed_aggregation_memory_efficient               | Improves memory usage for distributed aggregation by streaming partial results.                                                    |\n"
+        "| force_index_by_date                                    | Requires a partition key or index by date to be used; otherwise the query fails.                                                   |\n"
+        "| force_primary_key                                      | Requires usage of the primary key for query filtering; otherwise the query fails.                                                  |\n"
+        "| format_csv_allow_double_quotes                         | When reading/writing CSV, whether double quotes are allowed to quote strings.                                                      |\n"
+        "| format_csv_allow_single_quotes                         | When reading/writing CSV, whether single quotes are allowed to quote strings.                                                      |\n"
+        "| format_csv_delimiter                                   | Delimiter character for CSV format (, by default).                                                                                 |\n"
+        "| format_tsv_allow_single_quotes                         | Allows single quotes in TSV parsing (less common).                                                                                 |\n"
+        "| group_by_overflow_mode                                 | Action if GROUP BY exceeds certain limits (e.g., throw, break).                                                                    |\n"
+        "| group_by_two_level_threshold                           | Threshold of distinct keys at which ClickHouse switches to two-level aggregation.                                                  |\n"
+        "| http_max_multipart_form_data_size                      | Maximum size for multipart/form-data HTTP requests (relevant if query input arrives this way).                                     |\n"
+        "| http_receive_timeout                                   | HTTP server receive timeout (in seconds) for query data.                                                                           |\n"
+        "| http_send_timeout                                      | HTTP server send timeout (in seconds) for sending results back to the client.                                                      |\n"
+        "| input_format_allow_errors_num                          | Maximum number of parsing errors allowed in input before aborting.                                                                 |\n"
+        "| input_format_allow_errors_ratio                        | Maximum ratio of parsing errors allowed (fraction of total rows) before aborting.                                                  |\n"
+        "| input_format_csv_delimiter                             | Delimiter for CSV input (can be overridden per query).                                                                             |\n"
+        "| input_format_csv_enum_detect_factor                    | Heuristic factor for detecting Enum from CSV input.                                                                                |\n"
+        "| input_format_csv_enum_parsing_mode                     | Parsing mode for CSV Enum fields (string, auto, numeric, etc.).                                                                    |\n"
+        "| input_format_defaults_for_omitted_fields               | Use default values if certain columns are missing from input.                                                                      |\n"
+        "| input_format_import_nested_json                        | Allows parsing nested JSON structures in input.                                                                                    |\n"
+        "| input_format_null_as_default                           | Treats NULL in incoming data as the default value for non-nullable columns.                                                        |\n"
+        "| input_format_skip_unknown_fields                       | Skip fields in input that do not match any column definition.                                                                      |\n"
+        "| join_algorithm                                         | Chooses join algorithm (auto, hash, partial_merge, etc.).                                                                          |\n"
+        "| join_default_strictness                                | Default JOIN strictness if not specified (_`ANY                                                                                    |\n"
+        "| join_use_nulls                                         | Use NULL in joined columns if no match (for left/full joins).                                                                      |\n"
+        "| load_balancing                                         | Strategy for choosing replicas in a distributed query (random, nearest_hostname, etc.).                                            |\n"
+        "| log_queries                                            | Enables or disables writing query info into system.query_log.                                                                      |\n"
+        "| log_comment                                            | Additional string comment appended to query logs for identification.                                                               |\n"
+        "| lookup_replica_priority                                | Whether to consider replica priority for distributed reads.                                                                        |\n"
+        "| low_cardinality_allow_in_native_format                 | Allow storing LowCardinality columns in the native (optimized) format.                                                             |\n"
+        "| max_ast_depth                                          | Maximum depth of the query’s AST (Abstract Syntax Tree).                                                                           |\n"
+        "| max_ast_elements                                       | Maximum number of nodes/elements in the query’s AST.                                                                               |\n"
+        "| max_bytes_before_external_group_by                     | Threshold (bytes) before partial GROUP BY is spilled to disk.                                                                      |\n"
+        "| max_bytes_before_external_sort                         | Threshold (bytes) before partial sort is spilled to disk.                                                                          |\n"
+        "| max_bytes_before_remerge_sort                          | Threshold for re-merging data on disk in external sorts.                                                                           |\n"
+        "| max_bytes_in_dist_read                                 | Maximum bytes to read from each remote shard in a distributed query.                                                               |\n"
+        "| max_bytes_in_join                                      | Maximum bytes in an in-memory JOIN state.                                                                                          |\n"
+        "| max_bytes_to_read                                      | Maximum total bytes that can be read from storage during the query.                                                                |\n"
+        "| max_csv_rows_to_read_for_schema_inference              | If using automatic schema inference from CSV, stops reading after this many rows for detection.                                    |\n"
+        "| max_distributed_connections                            | Maximum number of connections to remote servers in distributed queries.                                                            |\n"
+        "| max_execution_speed                                    | Maximum execution speed (rows/second). If exceeded, the query is paused or stopped depending on max_execution_speed_overflow_mode. |\n"
+        "| max_execution_speed_overflow_mode                      | Action if the query exceeds max_execution_speed (throw, break, etc.).                                                              |\n"
+        "| max_execution_time                                     | Maximum execution time in seconds. Query is aborted if exceeded (unless changed by the overflow mode).                             |\n"
+        "| max_expanded_ast_elements                              | Limits expansions in the AST (e.g., from IN sets).                                                                                 |\n"
+        "| max_insert_threads                                     | Maximum threads for INSERT SELECT queries.                                                                                         |\n"
+        "| max_memory_usage                                       | Maximum memory usage per query.                                                                                                    |\n"
+        "| max_memory_usage_for_all_queries                       | Maximum total memory usage for all queries on the server.                                                                          |\n"
+        "| max_memory_usage_for_user                              | Maximum total memory usage for all queries by the current user.                                                                    |\n"
+        "| max_parallel_replicas                                  | Maximum number of replicas to use in parallel for a query in a Distributed table.                                                  |\n"
+        "| max_pipeline_depth                                     | Maximum execution pipeline depth.                                                                                                  |\n"
+        "| max_query_size                                         | Maximum size of the query text in bytes.                                                                                           |\n"
+        "| max_read_buffer_size                                   | Size (bytes) of the buffer used when reading from filesystem or network.                                                           |\n"
+        "| max_result_bytes                                       | Maximum total size of the result (in bytes) returned by a query.                                                                   |\n"
+        "| max_result_rows                                        | Maximum number of rows in the result set returned by a query.                                                                      |\n"
+        "| max_rows_in_distinct                                   | Limit on the number of rows held in memory for SELECT DISTINCT.                                                                    |\n"
+        "| max_rows_in_join                                       | Limit on the number of rows in a join hash table.                                                                                  |\n"
+        "| max_rows_in_set                                        | Limit on the number of rows in a SET (for IN subqueries).                                                                          |\n"
+        "| max_rows_in_table_function                             | Limit on rows read by table functions like s3, hdfs, or file.                                                                      |\n"
+        "| max_rows_in_view                                       | Limit on rows that a VIEW can return.                                                                                              |\n"
+        "| max_rows_to_group_by                                   | Limit on rows to process in GROUP BY before taking an overflow action.                                                             |\n"
+        "| max_rows_to_read                                       | Limit on number of rows read from storage during the query.                                                                        |\n"
+        "| memory_overflow_mode                                   | Action if max_memory_usage is exceeded (throw, break, etc.).                                                                       |\n"
+        "| merge_tree_uniform_read_distribution                   | Distribute reads more evenly among parts for MergeTree tables if possible.                                                         |\n"
+        "| min_execution_speed                                    | Minimum execution speed in rows/second; if slower after timeout_before_checking_execution_speed, it’s aborted/paused.              |\n"
+        "| min_execution_speed_overflow_mode                      | Action if query falls below min_execution_speed.                                                                                   |\n"
+        "| optimize_fuse_sum_count_avg                            | Tries to rewrite sequences of sum, count, avg into more optimal queries (e.g., combining aggregates).                              |\n"
+        "| optimize_move_functions_out_of_any                     | Moves functions out of any(...) if possible to reduce overhead.                                                                    |\n"
+        "| optimize_skip_unused_shards                            | Skip contacting shards if partition pruning or other conditions show no data is needed from them.                                  |\n"
+        "| optimize_throw_if_suboptimal_plan                      | Throw an exception if the optimizer cannot generate a plan that is considered optimal (based on internal heuristics).              |\n"
+        "| optimize_read_in_order                                 | Attempt to read in sorted order to avoid extra sorting if the query ORDER BY matches table sorting.                                |\n"
+        '| output_format_json_escape_forward_slashes              | Whether to escape _"/_" in JSON output formats.                                                                                    |\n'
+        "| output_format_json_quote_64bit_integers                | Whether to quote 64-bit integers in JSON output (to avoid losing precision in certain JS clients).                                 |\n"
+        "| output_format_pretty_max_rows                          | Maximum number of rows printed in FORMAT Pretty.                                                                                   |\n"
+        "| output_format_write_statistics                         | Controls whether to output query execution statistics in some formats.                                                             |\n"
+        "| partial_merge_join_optimizations                       | Enables partial merge join (useful if both tables are large and sorted on join keys).                                              |\n"
+        "| prefer_localhost_replica                               | Prefer reading from the local replica first in a replicated/distributed setup if available.                                        |\n"
+        "| readonly                                               | If >0, disallows write operations (DDL/DML) – only SELECT. If >1, also disallows creating temporary tables, etc.                   |\n"
+        "| send_logs_level                                        | Controls the verbosity of logs sent back to the client.                                                                            |\n"
+        "| timeout_before_checking_execution_speed                | Time (seconds) after which ClickHouse checks if min_execution_speed is met.                                                        |\n"
+        "| use_uncompressed_cache                                 | Enables the uncompressed cache for data, which can speed reads but uses more memory.                                               |\n"
+        "| user_files_path                                        | Path where user can read files from or write files to (when using file table function, etc.).                                      |\n"
+        "| wait_end_of_query                                      | When set, waits for the query to finish for all replicas in a Distributed table before returning (used in replication scenarios).  |\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.8.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support setting the maximum size of the metadata cache for Parquet files stored in object storage using the `input_format_parquet_metadata_cache_max_entries` setting. The setting must be set as a [ClickHouse] server configuration.\n"
+        "If the number of cached metadata objects exceeds the maximum size, the exception SHALL be thrown.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.9.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be able to successfully read from the Parquet files with the same name but different locations when the metadata is cached.\n"
+        "\n"
+        "For example, if we have two files, `test.parquet` in `s3://bucket1/` and `test.parquet` in `s3://bucket2/`, the following query SHALL successfully read the data of the file after the metadata is cached:\n"
+        "\n"
+        "```sql\n"
+        "SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1\n"
+        "SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.10.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support counting the number of cache hits and misses when querying Parquet files stored in object storage.\n"
+        "In order to get the number of cache hits and misses the following steps SHALL be taken:\n"
+        "\n"
+        "1. Use the `log_comment` setting.\n"
+        "2. Query through the `system.log` using that `log_comment`.\n"
+        "\n"
+        "```sql\n"
+        "SELECT COUNT(*)\n"
+        "FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)\n"
+        "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
+        "\n"
+        "SELECT COUNT(*)\n"
+        "FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)\n"
+        "SETTINGS input_format_parquet_use_metadata_cache=1, log_comment='test_03262_parquet_metadata_cache';\n"
+        "\n"
+        "SYSTEM FLUSH LOGS;\n"
+        "\n"
+        "SELECT ProfileEvents['ParquetMetaDataCacheHits']\n"
+        "FROM system.query_log\n"
+        "where log_comment = 'test_03262_parquet_metadata_cache'\n"
+        "AND type = 'QueryFinish'\n"
+        "ORDER BY event_time desc\n"
+        "LIMIT 1;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.11.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    COUNT(*) AS total_rows\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column > 0;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.12.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionAll = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "    \n"
+        "```sql\n"
+        "SELECT 'first_file' AS source, COUNT(*) AS row_count\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column = 10\n"
+        "\n"
+        "UNION ALL\n"
+        "\n"
+        "SELECT 'second_file' AS source, COUNT(*) AS row_count\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT *\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'another_file.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "WHERE some_column = 10;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.12.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    a.user_id,\n"
+        "    a.metric_1,\n"
+        "    b.metric_2\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT user_id, metric_1\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    WHERE event_date = '2025-01-01'\n"
+        ") AS a\n"
+        "JOIN\n"
+        "(\n"
+        "    SELECT user_id, metric_2\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'test.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    WHERE event_date = '2025-01-02'\n"
+        ") AS b\n"
+        "ON a.user_id = b.user_id\n"
+        "WHERE a.metric_1 > 100;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.12.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_FilterAggregation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    region,\n"
+        "    COUNT(*) AS count_per_region\n"
+        "FROM\n"
+        "(\n"
+        "    SELECT\n"
+        "        region,\n"
+        "        user_id,\n"
+        "        total_spent\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT *\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'test.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "    )\n"
+        "    WHERE total_spent > 0\n"
+        ") AS data_with_spent\n"
+        "WHERE region != 'UNKNOWN'\n"
+        "GROUP BY region\n"
+        "ORDER BY count_per_region DESC;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.12.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionJoin = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.\n"
+        "\n"
+        "```sql\n"
+        "WITH\n"
+        "transactions_all AS\n"
+        "(\n"
+        "    SELECT user_id, amount, event_date\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT user_id, amount, event_date\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'transactions_2024.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "        WHERE event_date < '2025-01-01'\n"
+        "    )\n"
+        "    UNION ALL\n"
+        "    SELECT user_id, amount, event_date\n"
+        "    FROM\n"
+        "    (\n"
+        "        SELECT user_id, amount, event_date\n"
+        "        FROM s3Cluster(\n"
+        "            s3_cluster_name,\n"
+        "            s3_url,\n"
+        "            'transactions_2025.parquet',\n"
+        "            'Parquet'\n"
+        "        )\n"
+        "        SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        "        WHERE event_date >= '2025-01-01'\n"
+        "    )\n"
+        "),\n"
+        "\n"
+        "user_profiles AS\n"
+        "(\n"
+        "    SELECT user_id, region, signup_date\n"
+        "    FROM s3Cluster(\n"
+        "        s3_cluster_name,\n"
+        "        s3_url,\n"
+        "        'user_profiles.parquet',\n"
+        "        'Parquet'\n"
+        "    )\n"
+        "    SETTINGS input_format_parquet_use_metadata_cache = 1\n"
+        ")\n"
+        "\n"
+        "SELECT\n"
+        "    p.user_id,\n"
+        "    p.region,\n"
+        "    SUM(t.amount) AS total_spent,\n"
+        "    COUNT()       AS txn_count\n"
+        "FROM transactions_all AS t\n"
+        "JOIN user_profiles AS p ON t.user_id = p.user_id\n"
+        "GROUP BY\n"
+        "    p.user_id,\n"
+        "    p.region\n"
+        "ORDER BY total_spent DESC\n"
+        "LIMIT 100;\n"
+        "\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.12.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber = Requirement(
@@ -6089,46 +6783,215 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.4.3"
         ),
         Heading(name="Caching in Object Storage", level=2, num="19.5"),
+        Heading(name="Test Schema For Metadata Caching", level=3, num="19.5.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage",
             level=3,
-            num="19.5.1",
+            num="19.5.2",
         ),
-        Heading(name="S3Cluster", level=3, num="19.5.2"),
+        Heading(
+            name="All Functions and Engines That Can Work With Parquet ",
+            level=3,
+            num="19.5.3",
+        ),
+        Heading(name="S3 Engine or Function", level=4, num="19.5.3.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3",
+            level=5,
+            num="19.5.3.1.1",
+        ),
+        Heading(name="S3Cluster", level=4, num="19.5.3.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster",
-            level=4,
-            num="19.5.2.1",
+            level=5,
+            num="19.5.3.2.1",
         ),
-        Heading(name="Cache Invalidation", level=3, num="19.5.3"),
+        Heading(name="IcebergS3 Engine or Function", level=4, num="19.5.3.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3",
+            level=5,
+            num="19.5.3.3.1",
+        ),
+        Heading(name="URL Engine or Function", level=4, num="19.5.3.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL",
+            level=5,
+            num="19.5.3.4.1",
+        ),
+        Heading(name="File Engine or Function", level=4, num="19.5.3.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File",
+            level=5,
+            num="19.5.3.5.1",
+        ),
+        Heading(name="Dictionary Engine or Function", level=4, num="19.5.3.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary",
+            level=5,
+            num="19.5.3.6.1",
+        ),
+        Heading(name="Distributed Engine or Function", level=4, num="19.5.3.7"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed",
+            level=5,
+            num="19.5.3.7.1",
+        ),
+        Heading(name="Memory Engine or Function", level=4, num="19.5.3.8"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory",
+            level=5,
+            num="19.5.3.8.1",
+        ),
+        Heading(name="PostgreSQL Engine or Function", level=4, num="19.5.3.9"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL",
+            level=5,
+            num="19.5.3.9.1",
+        ),
+        Heading(name="EmbeddedRocksDB Engine or Function", level=4, num="19.5.3.10"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB",
+            level=5,
+            num="19.5.3.10.1",
+        ),
+        Heading(name="Kafka Engine or Function", level=4, num="19.5.3.11"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka",
+            level=5,
+            num="19.5.3.11.1",
+        ),
+        Heading(name="MongoDB Engine or Function", level=4, num="19.5.3.12"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB",
+            level=5,
+            num="19.5.3.12.1",
+        ),
+        Heading(name="MySQL Engine or Function", level=4, num="19.5.3.13"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL",
+            level=5,
+            num="19.5.3.13.1",
+        ),
+        Heading(name="JDBC Engine or Function", level=4, num="19.5.3.14"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC",
+            level=5,
+            num="19.5.3.14.1",
+        ),
+        Heading(name="ODBC Engine or Function", level=4, num="19.5.3.15"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC",
+            level=5,
+            num="19.5.3.15.1",
+        ),
+        Heading(name="HDFS Engine or Function", level=4, num="19.5.3.16"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS",
+            level=5,
+            num="19.5.3.16.1",
+        ),
+        Heading(name="Cache Invalidation", level=3, num="19.5.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
-            level=4,
-            num="19.5.3.1",
-        ),
-        Heading(
-            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.4"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
             level=4,
             num="19.5.4.1",
         ),
         Heading(
+            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.5"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+            level=4,
+            num="19.5.5.1",
+        ),
+        Heading(
             name="Caching When Reading From Hive Partitioned Parquet Files in Object Storage",
             level=3,
-            num="19.5.5",
+            num="19.5.6",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning",
             level=4,
-            num="19.5.5.1",
+            num="19.5.6.1",
         ),
-        Heading(name="Caching Settings", level=3, num="19.5.6"),
+        Heading(name="Caching Settings", level=3, num="19.5.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
             level=4,
-            num="19.5.6.1",
+            num="19.5.7.1",
+        ),
+        Heading(
+            name="All Possible Settings That Can Be Used Along With Metadata Caching Settings",
+            level=3,
+            num="19.5.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
+            level=4,
+            num="19.5.8.1",
+        ),
+        Heading(name="Maximum Size of Metadata Cache", level=3, num="19.5.9"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
+            level=4,
+            num="19.5.9.1",
+        ),
+        Heading(
+            name="File With The Same Name But Different Location",
+            level=3,
+            num="19.5.10",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation",
+            level=4,
+            num="19.5.10.1",
+        ),
+        Heading(name="Hits and Misses Counter", level=3, num="19.5.11"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter",
+            level=4,
+            num="19.5.11.1",
+        ),
+        Heading(name="Nested Queries With Metadata Caching", level=3, num="19.5.12"),
+        Heading(name="Basic Nested Subquery", level=4, num="19.5.12.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic",
+            level=5,
+            num="19.5.12.1.1",
+        ),
+        Heading(name="Union All with Nested Parquet Queries", level=4, num="19.5.12.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll",
+            level=5,
+            num="19.5.12.2.1",
+        ),
+        Heading(name="Join Two Parquet Subqueries from S3", level=4, num="19.5.12.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join",
+            level=5,
+            num="19.5.12.3.1",
+        ),
+        Heading(
+            name="Nested Subquery with an Additional Filter and Aggregation",
+            level=4,
+            num="19.5.12.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation",
+            level=5,
+            num="19.5.12.4.1",
+        ),
+        Heading(name="Combining a UNION with a JOIN", level=4, num="19.5.12.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin",
+            level=5,
+            num="19.5.12.5.1",
+        ),
+        Heading(name="Deeply Nested JOIN", level=4, num="19.5.12.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin",
+            level=5,
+            num="19.5.12.6.1",
         ),
         Heading(name="Error Recovery", level=1, num="20"),
         Heading(
@@ -6529,11 +7392,35 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Column,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3Cluster,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_IcebergS3,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_URL,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_File,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Dictionary,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Distributed,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Memory,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_PostgreSQL,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EmbeddedRocksDB,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Kafka,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MongoDB,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MySQL,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_JDBC,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ODBC,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HDFS,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionAll,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_FilterAggregation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionJoin,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_MagicNumber,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_Column,
@@ -6928,17 +7815,70 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
         * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
     * 19.5 [Caching in Object Storage](#caching-in-object-storage)
-        * 19.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
-        * 19.5.2 [S3Cluster](#s3cluster)
-            * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
-        * 19.5.3 [Cache Invalidation](#cache-invalidation)
-            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
-        * 19.5.4 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
-            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
-        * 19.5.5 [Caching When Reading From Hive Partitioned Parquet Files in Object Storage](#caching-when-reading-from-hive-partitioned-parquet-files-in-object-storage)
-            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
-        * 19.5.6 [Caching Settings](#caching-settings)
-            * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.1 [Test Schema For Metadata Caching](#test-schema-for-metadata-caching)
+        * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
+        * 19.5.3 [All Functions and Engines That Can Work With Parquet ](#all-functions-and-engines-that-can-work-with-parquet-)
+            * 19.5.3.1 [S3 Engine or Function](#s3-engine-or-function)
+                * 19.5.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3)
+            * 19.5.3.2 [S3Cluster](#s3cluster)
+                * 19.5.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3cluster)
+            * 19.5.3.3 [IcebergS3 Engine or Function](#icebergs3-engine-or-function)
+                * 19.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageicebergs3)
+            * 19.5.3.4 [URL Engine or Function](#url-engine-or-function)
+                * 19.5.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageurl)
+            * 19.5.3.5 [File Engine or Function](#file-engine-or-function)
+                * 19.5.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragefile)
+            * 19.5.3.6 [Dictionary Engine or Function](#dictionary-engine-or-function)
+                * 19.5.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedictionary)
+            * 19.5.3.7 [Distributed Engine or Function](#distributed-engine-or-function)
+                * 19.5.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedistributed)
+            * 19.5.3.8 [Memory Engine or Function](#memory-engine-or-function)
+                * 19.5.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragememory)
+            * 19.5.3.9 [PostgreSQL Engine or Function](#postgresql-engine-or-function)
+                * 19.5.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragepostgresql)
+            * 19.5.3.10 [EmbeddedRocksDB Engine or Function](#embeddedrocksdb-engine-or-function)
+                * 19.5.3.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageembeddedrocksdb)
+            * 19.5.3.11 [Kafka Engine or Function](#kafka-engine-or-function)
+                * 19.5.3.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragekafka)
+            * 19.5.3.12 [MongoDB Engine or Function](#mongodb-engine-or-function)
+                * 19.5.3.12.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemongodb)
+            * 19.5.3.13 [MySQL Engine or Function](#mysql-engine-or-function)
+                * 19.5.3.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemysql)
+            * 19.5.3.14 [JDBC Engine or Function](#jdbc-engine-or-function)
+                * 19.5.3.14.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragejdbc)
+            * 19.5.3.15 [ODBC Engine or Function](#odbc-engine-or-function)
+                * 19.5.3.15.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageodbc)
+            * 19.5.3.16 [HDFS Engine or Function](#hdfs-engine-or-function)
+                * 19.5.3.16.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehdfs)
+        * 19.5.4 [Cache Invalidation](#cache-invalidation)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
+        * 19.5.5 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
+            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
+        * 19.5.6 [Caching When Reading From Hive Partitioned Parquet Files in Object Storage](#caching-when-reading-from-hive-partitioned-parquet-files-in-object-storage)
+            * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
+        * 19.5.7 [Caching Settings](#caching-settings)
+            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.8 [All Possible Settings That Can Be Used Along With Metadata Caching Settings](#all-possible-settings-that-can-be-used-along-with-metadata-caching-settings)
+            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageallsettings)
+        * 19.5.9 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
+            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
+        * 19.5.10 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
+            * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
+        * 19.5.11 [Hits and Misses Counter](#hits-and-misses-counter)
+            * 19.5.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
+        * 19.5.12 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
+            * 19.5.12.1 [Basic Nested Subquery](#basic-nested-subquery)
+                * 19.5.12.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
+            * 19.5.12.2 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
+                * 19.5.12.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
+            * 19.5.12.3 [Join Two Parquet Subqueries from S3](#join-two-parquet-subqueries-from-s3)
+                * 19.5.12.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
+            * 19.5.12.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
+                * 19.5.12.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
+            * 19.5.12.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
+                * 19.5.12.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
+            * 19.5.12.6 [Deeply Nested JOIN](#deeply-nested-join)
+                * 19.5.12.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
 * 20 [Error Recovery](#error-recovery)
     * 20.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 20.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
@@ -9626,10 +10566,175 @@ version: 1.0
 
 ### Caching in Object Storage
 
+#### Test Schema For Metadata Caching
+
+```yaml
+Metadata Caching in Object Storage:
+  Settings:
+    - input_format_parquet_use_metadata_cache:
+        type: query_settings
+        values: true/false
+    - input_format_parquet_metadata_cache_max_entries:
+        type: server_settings
+        values: UInt64
+  Engines And Functions That Can Store Parquet:
+    - S3
+    - S3Cluster
+    - HDFS
+    - IcebergS3
+    - IcebergAzure
+    - IcebergHDFS
+    - IcebergLocal
+    - URL
+  Engines not suited for direct Parquet storage:
+    - Dictionary
+    - Distributed
+    - Memory
+    - PostgreSQL
+    - MySQL
+    - MongoDB
+    - Kafka
+    - EmbeddedRocksDB
+    - JDBC
+    - ODBC
+  Actions:
+    - Enable metadata caching
+    - Disable metadata caching
+    - Set the maximum number of entries in the metadata cache
+    - Query Parquet files stored in object storage:
+      - Files stored in the same location
+      - Files stored in different locations
+      - Multiple files in different locations with the same name
+      - Single Parquet File
+      - Multiple Parquet Files
+      - Files with different partitioning
+      - Files with different partitioning and different file structure 
+      - Have multiple files > cache metadata of all files > delete one file > query with globs all files (*)
+    - Determine the cache hits and misses
+    - List all cached metadata files
+  Query Types:
+    - Regular Query
+    - Basic Nested Subquery
+    - Union All with Nested Parquet Queries
+    - Join Two Parquet Subqueries from S3
+    - Nested Subquery with an Additional Filter and Aggregation
+    - Combining a UNION with a JOIN
+    - Deeply Nested JOIN
+  Metadata Types:
+    - ClickHouse generated metadata
+    - Metadata from the file generated outside ClickHouse:
+        - Parquetify
+        - DuckD
+        - Apache Arrow
+        - External files for ClickHouse inc tests
+  Use metadata cache along other settings:
+    settings:
+        - aggregation_in_order                                  
+        - aggregation_memory_efficient_merge_threads            
+        - allow_ddl                                             
+        - allow_experimental_bigint_types                       
+        - allow_experimental_decimal_type                       
+        - allow_experimental_map_type                           
+        - allow_experimental_object_type                        
+        - allow_experimental_window_functions                   
+        - allow_introspection_functions                         
+        - allow_nullable_key                                    
+        - allow_suspicious_low_cardinality_types                
+        - async_socket_for_remote                               
+        - compile_aggregate_expressions                         
+        - compile_expressions                                   
+        - connect_timeout                                       
+        - custom_settings_prefix                                
+        - database_atomic_wait_for_drop_and_detach_synchronously
+        - debug_allow_same_replica_for_distributed_queries      
+        - dialect_type                                          
+        - distributed_aggregation_memory_efficient              
+        - force_index_by_date                                   
+        - force_primary_key                                     
+        - format_csv_allow_double_quotes                        
+        - format_csv_allow_single_quotes                        
+        - format_csv_delimiter                                  
+        - format_tsv_allow_single_quotes                        
+        - group_by_overflow_mode                                
+        - group_by_two_level_threshold                          
+        - http_max_multipart_form_data_size                     
+        - http_receive_timeout                                  
+        - http_send_timeout                                     
+        - input_format_allow_errors_num                         
+        - input_format_allow_errors_ratio                       
+        - input_format_csv_delimiter                            
+        - input_format_csv_enum_detect_factor                   
+        - input_format_csv_enum_parsing_mode                    
+        - input_format_defaults_for_omitted_fields              
+        - input_format_import_nested_json                       
+        - input_format_null_as_default                          
+        - input_format_skip_unknown_fields                      
+        - join_algorithm                                        
+        - join_default_strictness                               
+        - join_use_nulls                                        
+        - load_balancing                                        
+        - log_queries                                           
+        - log_comment                                           
+        - lookup_replica_priority                               
+        - low_cardinality_allow_in_native_format                
+        - max_ast_depth                                         
+        - max_ast_elements                                      
+        - max_bytes_before_external_group_by                    
+        - max_bytes_before_external_sort                        
+        - max_bytes_before_remerge_sort                         
+        - max_bytes_in_dist_read                                
+        - max_bytes_in_join                                     
+        - max_bytes_to_read                                     
+        - max_csv_rows_to_read_for_schema_inference             
+        - max_distributed_connections                           
+        - max_execution_speed                                   
+        - max_execution_speed_overflow_mode                     
+        - max_execution_time                                    
+        - max_expanded_ast_elements                             
+        - max_insert_threads                                    
+        - max_memory_usage                                      
+        - max_memory_usage_for_all_queries                      
+        - max_memory_usage_for_user                             
+        - max_parallel_replicas                                 
+        - max_pipeline_depth                                    
+        - max_query_size                                        
+        - max_read_buffer_size                                  
+        - max_result_bytes                                      
+        - max_result_rows                                       
+        - max_rows_in_distinct                                  
+        - max_rows_in_join                                      
+        - max_rows_in_set                                       
+        - max_rows_in_table_function                            
+        - max_rows_in_view                                      
+        - max_rows_to_group_by                                  
+        - max_rows_to_read                                      
+        - memory_overflow_mode                                  
+        - merge_tree_uniform_read_distribution                  
+        - min_execution_speed                                   
+        - min_execution_speed_overflow_mode                     
+        - optimize_fuse_sum_count_avg                           
+        - optimize_move_functions_out_of_any                    
+        - optimize_skip_unused_shards                           
+        - optimize_throw_if_suboptimal_plan                     
+        - optimize_read_in_order                                
+        - output_format_json_escape_forward_slashes             
+        - output_format_json_quote_64bit_integers               
+        - output_format_pretty_max_rows                         
+        - output_format_write_statistics                        
+        - partial_merge_join_optimizations                      
+        - prefer_localhost_replica                              
+        - readonly                                              
+        - send_logs_level                                       
+        - timeout_before_checking_execution_speed               
+        - use_uncompressed_cache                                
+        - user_files_path                                       
+        - wait_end_of_query
+```
+
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage
 version: 1.0
 
-[ClickHouse] SHALL support caching metadata when querying Parquet files stored in object storage by using the 
+[ClickHouse] SHALL support caching [the whole metadata object](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent) when querying Parquet files stored in object storage by using the 
 `input_format_parquet_use_metadata_cache` setting. The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
 
 For example,
@@ -9640,9 +10745,26 @@ FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
-#### S3Cluster
+#### All Functions and Engines That Can Work With Parquet 
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
+##### S3 Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+For example,
+
+
+```sql
+SELECT *
+FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
+```
+
+##### S3Cluster
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3Cluster
 version: 1.0
 
 [ClickHouse] SHALL support caching metadata when querying Parquet files stored in `S3Cluster` by using the `input_format_parquet_use_metadata_cache` setting.
@@ -9655,12 +10777,110 @@ FROM s3Cluster(s3_cluster_name, s3_url, filename = 'test.parquet', format = Parq
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
+##### IcebergS3 Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.IcebergS3
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `IcebergS3` engine or function including,`IcebergAzure`, `IcebergHDFS` and `IcebergLocal`, by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### URL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.URL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `URL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### File Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.File
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `File` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Dictionary Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Dictionary` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Distributed Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Distributed
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Distributed` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Memory Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Memory
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Memory` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### PostgreSQL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.PostgreSQL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `PostgreSQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### EmbeddedRocksDB Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EmbeddedRocksDB
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `EmbeddedRocksDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### Kafka Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Kafka
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `Kafka` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### MongoDB Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MongoDB
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MongoDB` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### MySQL Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MySQL
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `MySQL` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### JDBC Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.JDBC
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `JDBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### ODBC Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ODBC
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `ODBC` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
+##### HDFS Engine or Function
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS
+version: 1.0
+
+[ClickHouse] SHALL support caching metadata when querying Parquet files stored in `HDFS` engine or function by using the `input_format_parquet_use_metadata_cache` setting.
+
 #### Cache Invalidation
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation
 version: 1.0
 
-[ClickHouse] SHALL invalidate the cache when the Parquet file is updated or deleted from the object storage.
+[ClickHouse] SHALL throw and error when the Parquet file is deleted from the object storage and we .
 
 #### Reading Metadata After Caching Is Completed
 
@@ -9699,12 +10919,475 @@ GROUP BY date ORDER BY date
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings
 version: 1.0
 
-| Setting                                            | Values                 | Description                                                                                                                 |
-|----------------------------------------------------|------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `input_format_parquet_use_metadata_cache`          | `true`/`false`         | Enable/disable caching of Parquet file metadata                                                                             |
-| `parquet_metadata_cache_max_entries`               | `INT`                  | Maximum number of file metadata objects to cache. Only settable before first time use.                                      |
-| `cache_object_storage_list_results`                | `true`/`false`         | Enable/disable caching of object storage listing results (via Glob pattern) for object storage tables.                      |
-| `cache_object_storage_list_results_expire_seconds` | `seconds` (default 30) | Time validity of cached list. After expiry, the ListObjects API will be re-issued and fresh list of objects will be cached. |
+| Setting                                           | Values         | Description                                                                         |
+|---------------------------------------------------|----------------|-------------------------------------------------------------------------------------|
+| `input_format_parquet_use_metadata_cache`         | `true`/`false` | Enable/disable caching of Parquet file metadata                                     |
+| `input_format_parquet_metadata_cache_max_entries` | `INT`          | Maximum number of file metadata objects to cache set from the server configuration. |
+
+#### All Possible Settings That Can Be Used Along With Metadata Caching Settings
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings
+version: 1.0
+
+The following settings can be used along with the metadata caching settings and SHALL not cause any crashes in the system:
+
+| Setting                                                | Description                                                                                                                        |
+|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| aggregation_in_order                                   | Enables partial aggregation in sort order if data is already sorted by GROUP BY keys.                                              |
+| aggregation_memory_efficient_merge_threads             | Number of threads used for external merges during aggregation when data is spilled to disk.                                        |
+| allow_ddl                                              | If disabled, DDL statements (CREATE, DROP, ALTER, etc.) are disallowed; typically set for read-only usage.                         |
+| allow_experimental_bigint_types                        | Enables the experimental Int128, Int256, UInt128, UInt256 types (in some newer versions).                                          |
+| allow_experimental_decimal_type                        | Enables the experimental extended Decimal types beyond standard Decimal(76, x).                                                    |
+| allow_experimental_map_type                            | Enables experimental Map data type usage in queries.                                                                               |
+| allow_experimental_object_type                         | Enables experimental Object data type usage in queries.                                                                            |
+| allow_experimental_window_functions                    | Allows usage of window functions in older releases when they were still marked experimental.                                       |
+| allow_introspection_functions                          | Allows special introspection/debugging functions (e.g. queryMemoryUsage()).                                                        |
+| allow_nullable_key                                     | Permits using nullable columns as keys in GROUP BY or JOIN operations.                                                             |
+| allow_suspicious_low_cardinality_types                 | Allows creating or querying LowCardinality columns in contexts that may be risky or unoptimized.                                   |
+| async_socket_for_remote                                | Enables asynchronous network I/O for distributed queries to improve performance under certain conditions.                          |
+| compile_aggregate_expressions                          | Tries to compile certain aggregate expressions to native code (requires ClickHouse built with LLVM).                               |
+| compile_expressions                                    | Attempts to compile complex expressions to native code via LLVM JIT for faster execution.                                          |
+| connect_timeout                                        | Timeout (seconds) for establishing connections (e.g., to remote shards in a distributed query).                                    |
+| custom_settings_prefix                                 | A prefix for custom (user-defined) settings to avoid naming conflicts with built-in settings.                                      |
+| database_atomic_wait_for_drop_and_detach_synchronously | Waits for asynchronous tasks (DROP/DETACH) in Atomic databases to finish.                                                          |
+| debug_allow_same_replica_for_distributed_queries       | Allows reading from the same replica multiple times in distributed queries (for debugging/diagnostics).                            |
+| dialect_type                                           | Chooses which SQL dialect to emulate (clickhouse, mysql, postgresql, etc.).                                                        |
+| distributed_aggregation_memory_efficient               | Improves memory usage for distributed aggregation by streaming partial results.                                                    |
+| force_index_by_date                                    | Requires a partition key or index by date to be used; otherwise the query fails.                                                   |
+| force_primary_key                                      | Requires usage of the primary key for query filtering; otherwise the query fails.                                                  |
+| format_csv_allow_double_quotes                         | When reading/writing CSV, whether double quotes are allowed to quote strings.                                                      |
+| format_csv_allow_single_quotes                         | When reading/writing CSV, whether single quotes are allowed to quote strings.                                                      |
+| format_csv_delimiter                                   | Delimiter character for CSV format (, by default).                                                                                 |
+| format_tsv_allow_single_quotes                         | Allows single quotes in TSV parsing (less common).                                                                                 |
+| group_by_overflow_mode                                 | Action if GROUP BY exceeds certain limits (e.g., throw, break).                                                                    |
+| group_by_two_level_threshold                           | Threshold of distinct keys at which ClickHouse switches to two-level aggregation.                                                  |
+| http_max_multipart_form_data_size                      | Maximum size for multipart/form-data HTTP requests (relevant if query input arrives this way).                                     |
+| http_receive_timeout                                   | HTTP server receive timeout (in seconds) for query data.                                                                           |
+| http_send_timeout                                      | HTTP server send timeout (in seconds) for sending results back to the client.                                                      |
+| input_format_allow_errors_num                          | Maximum number of parsing errors allowed in input before aborting.                                                                 |
+| input_format_allow_errors_ratio                        | Maximum ratio of parsing errors allowed (fraction of total rows) before aborting.                                                  |
+| input_format_csv_delimiter                             | Delimiter for CSV input (can be overridden per query).                                                                             |
+| input_format_csv_enum_detect_factor                    | Heuristic factor for detecting Enum from CSV input.                                                                                |
+| input_format_csv_enum_parsing_mode                     | Parsing mode for CSV Enum fields (string, auto, numeric, etc.).                                                                    |
+| input_format_defaults_for_omitted_fields               | Use default values if certain columns are missing from input.                                                                      |
+| input_format_import_nested_json                        | Allows parsing nested JSON structures in input.                                                                                    |
+| input_format_null_as_default                           | Treats NULL in incoming data as the default value for non-nullable columns.                                                        |
+| input_format_skip_unknown_fields                       | Skip fields in input that do not match any column definition.                                                                      |
+| join_algorithm                                         | Chooses join algorithm (auto, hash, partial_merge, etc.).                                                                          |
+| join_default_strictness                                | Default JOIN strictness if not specified (_`ANY                                                                                    |
+| join_use_nulls                                         | Use NULL in joined columns if no match (for left/full joins).                                                                      |
+| load_balancing                                         | Strategy for choosing replicas in a distributed query (random, nearest_hostname, etc.).                                            |
+| log_queries                                            | Enables or disables writing query info into system.query_log.                                                                      |
+| log_comment                                            | Additional string comment appended to query logs for identification.                                                               |
+| lookup_replica_priority                                | Whether to consider replica priority for distributed reads.                                                                        |
+| low_cardinality_allow_in_native_format                 | Allow storing LowCardinality columns in the native (optimized) format.                                                             |
+| max_ast_depth                                          | Maximum depth of the query’s AST (Abstract Syntax Tree).                                                                           |
+| max_ast_elements                                       | Maximum number of nodes/elements in the query’s AST.                                                                               |
+| max_bytes_before_external_group_by                     | Threshold (bytes) before partial GROUP BY is spilled to disk.                                                                      |
+| max_bytes_before_external_sort                         | Threshold (bytes) before partial sort is spilled to disk.                                                                          |
+| max_bytes_before_remerge_sort                          | Threshold for re-merging data on disk in external sorts.                                                                           |
+| max_bytes_in_dist_read                                 | Maximum bytes to read from each remote shard in a distributed query.                                                               |
+| max_bytes_in_join                                      | Maximum bytes in an in-memory JOIN state.                                                                                          |
+| max_bytes_to_read                                      | Maximum total bytes that can be read from storage during the query.                                                                |
+| max_csv_rows_to_read_for_schema_inference              | If using automatic schema inference from CSV, stops reading after this many rows for detection.                                    |
+| max_distributed_connections                            | Maximum number of connections to remote servers in distributed queries.                                                            |
+| max_execution_speed                                    | Maximum execution speed (rows/second). If exceeded, the query is paused or stopped depending on max_execution_speed_overflow_mode. |
+| max_execution_speed_overflow_mode                      | Action if the query exceeds max_execution_speed (throw, break, etc.).                                                              |
+| max_execution_time                                     | Maximum execution time in seconds. Query is aborted if exceeded (unless changed by the overflow mode).                             |
+| max_expanded_ast_elements                              | Limits expansions in the AST (e.g., from IN sets).                                                                                 |
+| max_insert_threads                                     | Maximum threads for INSERT SELECT queries.                                                                                         |
+| max_memory_usage                                       | Maximum memory usage per query.                                                                                                    |
+| max_memory_usage_for_all_queries                       | Maximum total memory usage for all queries on the server.                                                                          |
+| max_memory_usage_for_user                              | Maximum total memory usage for all queries by the current user.                                                                    |
+| max_parallel_replicas                                  | Maximum number of replicas to use in parallel for a query in a Distributed table.                                                  |
+| max_pipeline_depth                                     | Maximum execution pipeline depth.                                                                                                  |
+| max_query_size                                         | Maximum size of the query text in bytes.                                                                                           |
+| max_read_buffer_size                                   | Size (bytes) of the buffer used when reading from filesystem or network.                                                           |
+| max_result_bytes                                       | Maximum total size of the result (in bytes) returned by a query.                                                                   |
+| max_result_rows                                        | Maximum number of rows in the result set returned by a query.                                                                      |
+| max_rows_in_distinct                                   | Limit on the number of rows held in memory for SELECT DISTINCT.                                                                    |
+| max_rows_in_join                                       | Limit on the number of rows in a join hash table.                                                                                  |
+| max_rows_in_set                                        | Limit on the number of rows in a SET (for IN subqueries).                                                                          |
+| max_rows_in_table_function                             | Limit on rows read by table functions like s3, hdfs, or file.                                                                      |
+| max_rows_in_view                                       | Limit on rows that a VIEW can return.                                                                                              |
+| max_rows_to_group_by                                   | Limit on rows to process in GROUP BY before taking an overflow action.                                                             |
+| max_rows_to_read                                       | Limit on number of rows read from storage during the query.                                                                        |
+| memory_overflow_mode                                   | Action if max_memory_usage is exceeded (throw, break, etc.).                                                                       |
+| merge_tree_uniform_read_distribution                   | Distribute reads more evenly among parts for MergeTree tables if possible.                                                         |
+| min_execution_speed                                    | Minimum execution speed in rows/second; if slower after timeout_before_checking_execution_speed, it’s aborted/paused.              |
+| min_execution_speed_overflow_mode                      | Action if query falls below min_execution_speed.                                                                                   |
+| optimize_fuse_sum_count_avg                            | Tries to rewrite sequences of sum, count, avg into more optimal queries (e.g., combining aggregates).                              |
+| optimize_move_functions_out_of_any                     | Moves functions out of any(...) if possible to reduce overhead.                                                                    |
+| optimize_skip_unused_shards                            | Skip contacting shards if partition pruning or other conditions show no data is needed from them.                                  |
+| optimize_throw_if_suboptimal_plan                      | Throw an exception if the optimizer cannot generate a plan that is considered optimal (based on internal heuristics).              |
+| optimize_read_in_order                                 | Attempt to read in sorted order to avoid extra sorting if the query ORDER BY matches table sorting.                                |
+| output_format_json_escape_forward_slashes              | Whether to escape _"/_" in JSON output formats.                                                                                    |
+| output_format_json_quote_64bit_integers                | Whether to quote 64-bit integers in JSON output (to avoid losing precision in certain JS clients).                                 |
+| output_format_pretty_max_rows                          | Maximum number of rows printed in FORMAT Pretty.                                                                                   |
+| output_format_write_statistics                         | Controls whether to output query execution statistics in some formats.                                                             |
+| partial_merge_join_optimizations                       | Enables partial merge join (useful if both tables are large and sorted on join keys).                                              |
+| prefer_localhost_replica                               | Prefer reading from the local replica first in a replicated/distributed setup if available.                                        |
+| readonly                                               | If >0, disallows write operations (DDL/DML) – only SELECT. If >1, also disallows creating temporary tables, etc.                   |
+| send_logs_level                                        | Controls the verbosity of logs sent back to the client.                                                                            |
+| timeout_before_checking_execution_speed                | Time (seconds) after which ClickHouse checks if min_execution_speed is met.                                                        |
+| use_uncompressed_cache                                 | Enables the uncompressed cache for data, which can speed reads but uses more memory.                                               |
+| user_files_path                                        | Path where user can read files from or write files to (when using file table function, etc.).                                      |
+| wait_end_of_query                                      | When set, waits for the query to finish for all replicas in a Distributed table before returning (used in replication scenarios).  |
+
+#### Maximum Size of Metadata Cache
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize
+version: 1.0
+
+[ClickHouse] SHALL support setting the maximum size of the metadata cache for Parquet files stored in object storage using the `input_format_parquet_metadata_cache_max_entries` setting. The setting must be set as a [ClickHouse] server configuration.
+If the number of cached metadata objects exceeds the maximum size, the exception SHALL be thrown.
+
+#### File With The Same Name But Different Location
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation
+version: 1.0
+
+[ClickHouse] SHALL be able to successfully read from the Parquet files with the same name but different locations when the metadata is cached.
+
+For example, if we have two files, `test.parquet` in `s3://bucket1/` and `test.parquet` in `s3://bucket2/`, the following query SHALL successfully read the data of the file after the metadata is cached:
+
+```sql
+SELECT COUNT(*) FROM s3({s3_url}/bucket1, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1
+SELECT COUNT(*) FROM s3({s3_url}/bucket2, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1
+```
+
+#### Hits and Misses Counter
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter
+version: 1.0
+
+[ClickHouse] SHALL support counting the number of cache hits and misses when querying Parquet files stored in object storage.
+In order to get the number of cache hits and misses the following steps SHALL be taken:
+
+1. Use the `log_comment` setting.
+2. Query through the `system.log` using that `log_comment`.
+
+```sql
+SELECT COUNT(*)
+FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1;
+
+SELECT COUNT(*)
+FROM s3(s3_conn, filename = 'test_03262_*', format = Parquet)
+SETTINGS input_format_parquet_use_metadata_cache=1, log_comment='test_03262_parquet_metadata_cache';
+
+SYSTEM FLUSH LOGS;
+
+SELECT ProfileEvents['ParquetMetaDataCacheHits']
+FROM system.query_log
+where log_comment = 'test_03262_parquet_metadata_cache'
+AND type = 'QueryFinish'
+ORDER BY event_time desc
+LIMIT 1;
+```
+
+#### Nested Queries With Metadata Caching
+
+##### Basic Nested Subquery
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    COUNT(*) AS total_rows
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column > 0;
+```
+
+##### Union All with Nested Parquet Queries
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+    
+```sql
+SELECT 'first_file' AS source, COUNT(*) AS row_count
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column = 10
+
+UNION ALL
+
+SELECT 'second_file' AS source, COUNT(*) AS row_count
+FROM
+(
+    SELECT *
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'another_file.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+WHERE some_column = 10;
+```
+
+##### Join Two Parquet Subqueries from S3
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    a.user_id,
+    a.metric_1,
+    b.metric_2
+FROM
+(
+    SELECT user_id, metric_1
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+    WHERE event_date = '2025-01-01'
+) AS a
+JOIN
+(
+    SELECT user_id, metric_2
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'test.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+    WHERE event_date = '2025-01-02'
+) AS b
+ON a.user_id = b.user_id
+WHERE a.metric_1 > 100;
+```
+
+##### Nested Subquery with an Additional Filter and Aggregation
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    region,
+    COUNT(*) AS count_per_region
+FROM
+(
+    SELECT
+        region,
+        user_id,
+        total_spent
+    FROM
+    (
+        SELECT *
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'test.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+    )
+    WHERE total_spent > 0
+) AS data_with_spent
+WHERE region != 'UNKNOWN'
+GROUP BY region
+ORDER BY count_per_region DESC;
+```
+
+##### Combining a UNION with a JOIN
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin
+version: 1.0
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+WITH
+transactions_all AS
+(
+    SELECT user_id, amount, event_date
+    FROM
+    (
+        SELECT user_id, amount, event_date
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'transactions_2024.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+        WHERE event_date < '2025-01-01'
+    )
+    UNION ALL
+    SELECT user_id, amount, event_date
+    FROM
+    (
+        SELECT user_id, amount, event_date
+        FROM s3Cluster(
+            s3_cluster_name,
+            s3_url,
+            'transactions_2025.parquet',
+            'Parquet'
+        )
+        SETTINGS input_format_parquet_use_metadata_cache = 1
+        WHERE event_date >= '2025-01-01'
+    )
+),
+
+user_profiles AS
+(
+    SELECT user_id, region, signup_date
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'user_profiles.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+)
+
+SELECT
+    p.user_id,
+    p.region,
+    SUM(t.amount) AS total_spent,
+    COUNT()       AS txn_count
+FROM transactions_all AS t
+JOIN user_profiles AS p ON t.user_id = p.user_id
+GROUP BY
+    p.user_id,
+    p.region
+ORDER BY total_spent DESC
+LIMIT 100;
+
+```
+
+##### Deeply Nested JOIN
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin
+
+The metadata caching SHALL not cause any crashes or exception in [ClickHouse] when using the `input_format_parquet_use_metadata_cache` setting with a deeply nested query.
+
+```sql
+SELECT
+    final_join.user_id,
+    final_join.order_total AS total_orders,
+    extra_info.extra_field  AS extra_info_field
+FROM
+(
+    SELECT
+        branch_1.user_id,
+        branch_1.order_total,
+        branch_2.preference
+    FROM
+    (
+        SELECT
+            subA.user_id,
+            subA.order_total + IFNULL(subA2.additional_value, 0) AS order_total
+        FROM
+        (
+            SELECT
+                user_id,
+                sum(amount) AS order_total
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'orders_2025.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            WHERE event_date >= '2025-01-01'
+            GROUP BY user_id
+        ) AS subA
+        LEFT JOIN
+        (
+            SELECT
+                user_id,
+                sum(value) AS additional_value
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'orders_extras_2025.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            WHERE extra_flag = 1
+            GROUP BY user_id
+        ) AS subA2
+        ON subA.user_id = subA2.user_id
+    ) AS branch_1
+    JOIN
+    (
+        SELECT
+            subB.user_id,
+            subB.preference
+        FROM
+        (
+            SELECT
+                user_id,
+                any(preference) AS preference
+            FROM s3Cluster(
+                s3_cluster_name,
+                s3_url,
+                'user_preferences.parquet',
+                'Parquet'
+            )
+            SETTINGS input_format_parquet_use_metadata_cache = 1
+            GROUP BY user_id
+        ) AS subB
+    ) AS branch_2
+    ON branch_1.user_id = branch_2.user_id
+) AS final_join
+LEFT JOIN
+(
+    SELECT
+        user_id,
+        extra_field
+    FROM s3Cluster(
+        s3_cluster_name,
+        s3_url,
+        'user_extra_info.parquet',
+        'Parquet'
+    )
+    SETTINGS input_format_parquet_use_metadata_cache = 1
+) AS extra_info
+ON final_join.user_id = extra_info.user_id
+WHERE final_join.order_total > 100
+ORDER BY final_join.order_total DESC
+LIMIT 50;
+```
+
 
 ## Error Recovery
 
