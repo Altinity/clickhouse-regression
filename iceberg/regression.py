@@ -36,7 +36,7 @@ ffails = {
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
-        check_clickhouse_version("<=24.12"),
+        check_clickhouse_version("<24.12"),
     ),
     "/iceberg/icebergS3 table function": (
         Skip,
