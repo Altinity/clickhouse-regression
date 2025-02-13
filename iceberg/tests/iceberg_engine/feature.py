@@ -6,7 +6,7 @@ from testflows.core import *
 def feature(self, minio_root_user, minio_root_password):
     """Run iceberg engine test."""
     Feature(
-        test=load("iceberg.tests.iceberg_engine.iceberg_engine", "feature"),
+        test=load("iceberg.tests.iceberg_engine.sanity", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load("iceberg.tests.iceberg_engine.rbac", "feature"),
