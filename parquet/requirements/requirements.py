@@ -6864,7 +6864,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=3, num="19.4.3"
         ),
-        Heading(name="Caching in Object Storage", level=2, num="19.5"),
+        Heading(name="Caching for Object Storage", level=2, num="19.5"),
         Heading(name="Test Schema For Metadata Caching", level=3, num="19.5.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage",
@@ -7948,7 +7948,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 19.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
         * 19.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
         * 19.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
-    * 19.5 [Caching in Object Storage](#caching-in-object-storage)
+    * 19.5 [Caching for Object Storage](#caching-for-object-storage)
         * 19.5.1 [Test Schema For Metadata Caching](#test-schema-for-metadata-caching)
         * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
         * 19.5.3 [Object Storages](#object-storages)
@@ -10712,7 +10712,7 @@ version: 1.0
 
 [ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
 
-### Caching in Object Storage
+### Caching for Object Storage
 
 #### Test Schema For Metadata Caching
 
