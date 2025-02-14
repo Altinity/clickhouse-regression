@@ -8,7 +8,11 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import (
+    check_clickhouse_version,
+    experimental_analyzer,
+    check_with_any_sanitizer,
+)
 from lightweight_delete.requirements import *
 from lightweight_delete.tests.steps import allow_experimental_lightweight_delete
 
@@ -63,6 +67,11 @@ ffails = {
     "/lightweight delete/lack of disk space/lack of disk space tiered storage": (
         Skip,
         "freezes server",
+    ),
+    "/lightweight delete/ontime tests": (
+        Skip,
+        "time consumption on builds with sanitizers is bigger",
+        check_with_any_sanitizer,
     ),
 }
 
