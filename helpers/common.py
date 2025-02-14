@@ -115,7 +115,7 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
-def check_any_sanitizer_in_binary_link(test):
+def check_with_any_sanitizer(test):
     """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
     sanitizers = ["tsan", "asan", "ubsan", "msan"]
     if hasattr(test.context, "build_options"):
