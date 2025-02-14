@@ -89,25 +89,29 @@ def check_with_msan(test):
 
 def check_tsan_in_binary_link(test):
     """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "tsan" in binary_path
 
 
 def check_asan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with AddressSanitizer (asan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "asan" in binary_path
 
 
 def check_ubsan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with UndefinedBehaviorSanitizer (ubsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "ubsan" in binary_path
 
 
 def check_msan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with MemorySanitizer (msan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "msan" in binary_path
 
 
