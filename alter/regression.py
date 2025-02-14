@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 from alter.requirements.requirements import *
 
 from helpers.cluster import create_cluster
-from helpers.common import experimental_analyzer
+from helpers.common import experimental_analyzer, check_any_sanitizer_in_binary_link
 from helpers.argparser import argparser as base_argparser, CaptureClusterArgs
 from helpers.datatypes import *
 
@@ -208,6 +208,11 @@ ffails = {
         XFail,
         "https://github.com/ClickHouse/ClickHouse/issues/62459",
         check_clickhouse_version("<24.4"),
+    ),
+    "/alter/attach partition/part level/part levels user example": (
+        Skip,
+        "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
+        check_any_sanitizer_in_binary_link,
     ),
 }
 
