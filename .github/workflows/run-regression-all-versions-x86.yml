@@ -1,5 +1,5 @@
-name: regression
-run-name: regression
+name: 🔬 regression
+run-name: 🔬 regression
 
 on:
   workflow_dispatch:
