@@ -855,17 +855,44 @@ def create_file_on_node(self, path, content, node=None):
 
 
 @TestStep(Given)
-def create_user(self, name, node=None):
+def create_user(self, name=None, node=None):
     """Create a user."""
     if node is None:
         node = self.context.node
 
+    if name is None:
+        name = f"user_{getuid()}"
+
     try:
         node.query(f"CREATE USER OR REPLACE {name}")
-        yield
+        yield name
     finally:
-        with Finally(f"I delete the user {name}"):
+        with Finally(f"drop the user {name}"):
             node.query(f"DROP USER IF EXISTS {name}")
+
+
+@TestStep(Given)
+def create_role(self, privilege=None, object=None, role_name=None, node=None):
+    """Create role and grant privilege on object."""
+
+    if node is None:
+        node = self.context.node
+
+    if role_name is None:
+        role_name = f"role_{getuid()}"
+
+    query = f"CREATE ROLE {role_name}; "
+
+    if privilege is not None and object is not None:
+        query += f"GRANT {privilege} ON {object} TO {role_name};"
+
+    try:
+        node.query(query)
+        yield role_name
+
+    finally:
+        with Finally("drop the role"):
+            node.query(f"DROP ROLE IF EXISTS {role_name}")
 
 
 @TestStep(When)
