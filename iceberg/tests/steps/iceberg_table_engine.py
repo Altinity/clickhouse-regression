@@ -84,10 +84,9 @@ def create_table_with_iceberg_engine(
 
 
 def parse_clickhouse_error(error_message):
-    # Define regex pattern to extract error code, exception type, and message
-    pattern = r"Code: (\d+)\. DB::Exception:.*?DB::Exception: (.*?):"
+    """Parse ClickHouse error message and return error code and message."""
+    pattern = r"Code: (\d+)\. DB::Exception:.*?DB::Exception: (.*?)"
 
-    # Extract error code and message using regex
     match = re.search(pattern, error_message)
 
     if match:
@@ -96,7 +95,6 @@ def parse_clickhouse_error(error_message):
 
         return {
             "Code": int(error_code),
-            "Exception Type": "DB::Exception",
             "Message": error_message_main.strip(),
         }
 
