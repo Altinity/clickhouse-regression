@@ -81,7 +81,7 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
 
 
 @TestStep(Given)
-def create_table_with_iceberg_engine(
+def create_table_with_iceberg_engine_from_config(
     self,
     table_name=None,
     node=None,
