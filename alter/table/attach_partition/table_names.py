@@ -75,9 +75,12 @@ def check_table_name(
                 else:
                     query = f"ALTER TABLE {destination_name} ATTACH PARTITION {partition_id} FROM {source_name}"
 
+            if (exitcode is not None) and (message is not None):
                 result = node.query(query, no_checks=True)
                 assert message in result.output, error()
                 assert exitcode == result.exitcode, error()
+            else:
+                node.query(query)
 
 
 @TestSketch(Scenario)
