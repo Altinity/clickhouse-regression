@@ -1,4 +1,4 @@
-name: Re-trigger Failed Jobs
+name: Re-trigger Failed Scheduled Jobs
 
 on:
   workflow_dispatch:
