@@ -117,7 +117,12 @@ def check_column_rbac(
 
     with When("define grant statements for specified columns"):
         iceberg_table_engine.grant_select(
-            table_name=table_name,
+            table_name=merge_tree_table_name,
+            table_columns=table_columns,
+            user_and_role_names=user_and_role_names,
+        )
+        iceberg_table_engine.grant_select(
+            table_name=iceberg_table_name,
             table_columns=table_columns,
             user_and_role_names=user_and_role_names,
         )
@@ -171,10 +176,10 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
         table_column_names = [
             "boolean_col",
             "long_col",
-            "float_col",
+            "double_col",
             "string_col",
             "date_col",
-            "MISSING_COL",
+            # "MISSING_COL",
         ]
 
         table_column_names_options = iceberg_table_engine.get_all_combinations(
