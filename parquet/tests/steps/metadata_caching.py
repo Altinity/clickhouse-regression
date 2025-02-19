@@ -147,6 +147,8 @@ def select_parquet_from_s3(
 ):
     """Select data from a Parquet file on S3."""
 
+    # FROM s3(s3_conn, filename='test_03262_*', format=Parquet)
+
     if node is None:
         node = self.context.node
 
@@ -162,6 +164,28 @@ def select_parquet_from_s3(
 
     if settings is not None:
         r += f" SETTINGS {settings}"
+
+    return node.query(r)
+
+
+@TestStep(When)
+def select_parquet_with_metadata_caching(self, file_name, log_comment=None):
+
+    settings = "input_format_parquet_use_metadata_cache=1"
+
+    if log_comment is not None:
+        settings += f", log_comment='{log_comment}'"
+
+    select_parquet_from_s3(file_name=file_name, settings=settings)
+
+
+@TestStep(Then)
+def check_hits(self, log_comment, node=None):
+    """Check the number of cache hits and misses for a Parquet file."""
+    if node is None:
+        node = self.context.node
+
+    r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc LIMIT 1;"
 
     return node.query(r)
 
