@@ -119,13 +119,13 @@ def row_policy(
     with And(
         "check that table with Iceberg engine has the same data as MergeTree table"
     ):
-        merge_tree_output = node.query(
-            f"SELECT * FROM {merge_tree_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-        iceberg_output = node.query(
-            f"SELECT * FROM {iceberg_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
-        assert merge_tree_output.output == iceberg_output.output, error()
+        merge_tree_output = iceberg_table_engine.get_select_query_result(
+            table_name=merge_tree_table_name
+        ).output
+        iceberg_output = iceberg_table_engine.get_select_query_result(
+            table_name=iceberg_table_name
+        ).output
+        assert merge_tree_output == iceberg_output, error()
 
     with And("create same row policy for MergeTree and Iceberg tables"):
         policy_name = f"policy_{getuid()}"
@@ -150,10 +150,10 @@ def row_policy(
 
     with Then("check that selects for each user show the same rows for both tables"):
         for user_name in [user_name1, user_name2]:
-            merge_tree_result = iceberg_table_engine.get_query_result(
+            merge_tree_result = iceberg_table_engine.get_select_query_result(
                 table_name=merge_tree_table_name, user_name=user_name
             )
-            iceberg_result = iceberg_table_engine.get_query_result(
+            iceberg_result = iceberg_table_engine.get_select_query_result(
                 table_name=iceberg_table_name, user_name=user_name
             )
             iceberg_table_engine.compare_results(
