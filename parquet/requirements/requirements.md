@@ -407,25 +407,36 @@
             * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
         * 19.5.10 [All Possible Settings That Can Be Used Along With Metadata Caching Settings](#all-possible-settings-that-can-be-used-along-with-metadata-caching-settings)
             * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageallsettings)
-        * 19.5.11 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
-            * 19.5.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
-        * 19.5.12 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
-            * 19.5.12.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
-        * 19.5.13 [Hits and Misses Counter](#hits-and-misses-counter)
-            * 19.5.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
-        * 19.5.14 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
-            * 19.5.14.1 [Join Two Parquet Files From an Object Storage](#join-two-parquet-files-from-an-object-storage)
-                * 19.5.14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
-            * 19.5.14.2 [Basic Nested Subquery](#basic-nested-subquery)
-                * 19.5.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
-            * 19.5.14.3 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
-                * 19.5.14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
-            * 19.5.14.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
-                * 19.5.14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
-            * 19.5.14.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
-                * 19.5.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
-            * 19.5.14.6 [Deeply Nested JOIN](#deeply-nested-join)
-                * 19.5.14.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
+        * 19.5.11 [Cases When Metadata Cache Speeds Up Query Execution](#cases-when-metadata-cache-speeds-up-query-execution)
+            * 19.5.11.1 [Count](#count)
+                * 19.5.11.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.Count](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutioncount)
+            * 19.5.11.2 [Min and Max](#min-and-max)
+                * 19.5.11.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.MinMax](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionminmax)
+            * 19.5.11.3 [Bloom Filter Caching](#bloom-filter-caching)
+                * 19.5.11.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.BloomFilter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionbloomfilter)
+            * 19.5.11.4 [Distinct Count](#distinct-count)
+                * 19.5.11.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.DistinctCount](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutiondistinctcount)
+            * 19.5.11.5 [File Schema](#file-schema)
+                * 19.5.11.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.FileSchema](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionfileschema)
+        * 19.5.12 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
+            * 19.5.12.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
+        * 19.5.13 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
+            * 19.5.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
+        * 19.5.14 [Hits and Misses Counter](#hits-and-misses-counter)
+            * 19.5.14.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
+        * 19.5.15 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
+            * 19.5.15.1 [Join Two Parquet Files From an Object Storage](#join-two-parquet-files-from-an-object-storage)
+                * 19.5.15.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
+            * 19.5.15.2 [Basic Nested Subquery](#basic-nested-subquery)
+                * 19.5.15.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
+            * 19.5.15.3 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
+                * 19.5.15.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
+            * 19.5.15.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
+                * 19.5.15.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
+            * 19.5.15.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
+                * 19.5.15.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
+            * 19.5.15.6 [Deeply Nested JOIN](#deeply-nested-join)
+                * 19.5.15.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
     * 19.6 [Cachable Metadata Types](#cachable-metadata-types)
         * 19.6.1 [Metadata Generated by ClickHouse](#metadata-generated-by-clickhouse)
             * 19.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MetadataTypes.ClickHouse](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemetadatatypesclickhouse)
@@ -3125,7 +3136,7 @@ version: 1.0
 #### Test Schema For Metadata Caching
 
 ```yaml
-Metadata Caching in Object Storage:
+Metadata Caching for Object Storage:
   Settings:
     - input_format_parquet_use_metadata_cache:
         type: query_settings
@@ -3168,21 +3179,40 @@ Metadata Caching in Object Storage:
     - Yandex.Cloud Object Storage
     - Cloudflare R2
     - Alibaba Cloud OSS
+  Files:
+    - count: [one, many]
+    - location: [same, different]
+    - partitioning: [hive, custom]
+    - name: [same, different]
   Actions:
-    - Enable metadata caching
-    - Disable metadata caching
-    - Set the maximum number of entries in the metadata cache
-    - Query Parquet files stored in object storage:
-      - Files stored in the same location
-      - Files stored in different locations
-      - Multiple files in different locations with the same name
-      - Single Parquet File
-      - Multiple Parquet Files
-      - Files with different partitioning
-      - Files with different partitioning and different file structure 
-      - Have multiple files > cache metadata of all files > delete one file > query with globs all files (*)
-    - Determine the cache hits and misses
+    - delete file
+    - read file:
+        cache state:
+          - cache miss so populate metadata cache
+          - cache hit use metadata cache
+        with glob:
+          - file matches glob
+          - file does not match glob
     - List all cached metadata files
+  cases when metadata cache speeds up query execution:
+    - Skip the read of the whole file:
+        - SELECT COUNT()
+        - Queries that utilize:
+            - min/max
+            - bloom filter
+            - row count
+        - DISTINCT COUNT
+        - SELECT ... FROM file('file.parquet', ParquetMetadata)
+        - DESCRIBE Parquet schema
+    - Skip the read of some row groups:
+        - SELECT COUNT()
+        - Queries that utilize:
+            - min/max
+            - bloom filter
+            - row count
+        - DISTINCT COUNT
+        - SELECT ... FROM file('file.parquet', ParquetMetadata)
+        - DESCRIBE Parquet schema
   Query Types:
     - Regular Query
     - JOIN two parquet files
@@ -3306,7 +3336,7 @@ Metadata Caching in Object Storage:
 version: 1.0
 
 [ClickHouse] SHALL support caching [the whole metadata object](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent) when querying Parquet files stored in any type of remote object storage by using the 
-`input_format_parquet_use_metadata_cache` setting (disabled by default). The metadata caching allows faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
+`input_format_parquet_use_metadata_cache` query setting (disabled by default). The metadata caching SHALL allow faster query execution by avoiding the need to read the Parquet file’s metadata each time a query is executed.
 
 For example,
 
@@ -3620,6 +3650,72 @@ The following settings SHALL not cause any crashes in the system when used along
 | use_uncompressed_cache                                 | Enables the uncompressed cache for data, which can speed reads but uses more memory.                                               |
 | user_files_path                                        | Path where user can read files from or write files to (when using file table function, etc.).                                      |
 | wait_end_of_query                                      | When set, waits for the query to finish for all replicas in a Distributed table before returning (used in replication scenarios).  |
+| object_storage_cluster                                 |                                                                                                                                    |
+
+#### Cases When Metadata Cache Speeds Up Query Execution
+
+##### Count
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.Count
+version: 1.0
+
+[ClickHouse] SHALL speed up the query execution when the metadata is cached for the object storage for the following query:
+
+```sql
+SELECT COUNT(*) FROM s3(s3_url, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+##### Min and Max
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.MinMax
+version: 1.0
+
+[ClickHouse] SHALL speed up the query execution when the metadata is cached for the object storage for the queries that utilize min/max values from metadata.
+
+For example,
+
+```sql
+SELECT * FROM s3(s3_url, filename = 'test.parquet', format = Parquet) WHERE column1 > 1000 SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+##### Bloom Filter Caching
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.BloomFilter
+version: 1.0
+
+[ClickHouse] SHALL speed up the query execution when the metadata is cached for the object storage for the queries that utilize bloom filter.
+
+For example,
+
+```sql
+SELECT * FROM s3(s3_url, filename = 'test.parquet', format = Parquet) WHERE column1 = 'value' SETTINGS input_format_parquet_use_metadata_cache=1, input_format_parquet_bloom_filter=1;
+```
+
+##### Distinct Count
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.DistinctCount
+version: 1.0
+
+[ClickHouse] SHALL speed up the query execution when the metadata is cached for the object storage for the queries that utilize distinct count.
+
+For example,
+
+```sql
+SELECT COUNT(DISTINCT column1) FROM s3(s3_url, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+##### File Schema
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.FileSchema
+version: 1.0
+
+[ClickHouse] SHALL speed up the query execution when the metadata is cached for the object storage for the queries that read the file schema.
+
+For example,
+
+```sql
+DESCRIBE s3(s3_url, filename = 'test.parquet', format = Parquet) SETTINGS input_format_parquet_use_metadata_cache=1;
+```
 
 #### Maximum Size of Metadata Cache
 
