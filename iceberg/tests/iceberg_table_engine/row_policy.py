@@ -12,35 +12,7 @@ from helpers.common import create_user, getuid, create_role
 import random
 from datetime import date
 
-
-@TestStep(Given)
-def create_merge_tree_table(self, table_name=None, node=None):
-    """Create MergeTree table."""
-    if node is None:
-        node = self.context.node
-
-    if table_name is None:
-        table_name = f"merge_tree_table_{getuid()}"
-
-    try:
-        node.query(
-            f"""
-            CREATE TABLE {table_name} (
-                boolean_col Nullable(Bool), 
-                long_col Nullable(Int64), 
-                double_col Nullable(Float), 
-                string_col Nullable(String),
-                date_col Nullable(Date)
-            ) 
-            ENGINE = MergeTree 
-            ORDER BY tuple()
-            """
-        )
-        yield table_name
-
-    finally:
-        with Finally("drop table"):
-            node.query(f"DROP TABLE IF EXISTS {table_name}")
+random.seed(42)
 
 
 @TestScenario
@@ -96,7 +68,7 @@ def row_policy(
         )
 
     with And("create MergeTree table with same structure"):
-        create_merge_tree_table(table_name=merge_tree_table_name)
+        iceberg_table_engine.create_merge_tree_table(table_name=merge_tree_table_name)
 
     with And("insert data into Iceberg table"):
         df = pa.Table.from_pylist(
@@ -176,41 +148,17 @@ def row_policy(
             to_clause=to_clause,
         )
 
-    with Then("check that selects for both users show the same rows"):
-        result1 = node.query(
-            f"SELECT * FROM {merge_tree_table_name} ORDER BY tuple(*) FORMAT TabSeparated",
-            settings=[("user", user_name1)],
-            no_checks=True,
-        )
-        result2 = node.query(
-            f"SELECT * FROM {iceberg_table_name} ORDER BY tuple(*) FORMAT TabSeparated",
-            settings=[("user", user_name1)],
-            no_checks=True,
-        )
-        result3 = node.query(
-            f"SELECT * FROM {merge_tree_table_name} ORDER BY tuple(*) FORMAT TabSeparated",
-            settings=[("user", user_name2)],
-            no_checks=True,
-        )
-        result4 = node.query(
-            f"SELECT * FROM {iceberg_table_name} ORDER BY tuple(*) FORMAT TabSeparated",
-            settings=[("user", user_name2)],
-            no_checks=True,
-        )
-
-        if result1.exitcode == 0:
-            assert result1.output == result2.output, error()
-        else:
-            assert iceberg_table_engine.parse_clickhouse_error(
-                result1.output
-            ) == iceberg_table_engine.parse_clickhouse_error(result2.output), error()
-
-        if result3.exitcode == 0:
-            assert result3.output == result4.output, error()
-        else:
-            assert iceberg_table_engine.parse_clickhouse_error(
-                result3.output
-            ) == iceberg_table_engine.parse_clickhouse_error(result4.output), error()
+    with Then("check that selects for each user show the same rows for both tables"):
+        for user_name in [user_name1, user_name2]:
+            merge_tree_result = iceberg_table_engine.get_query_result(
+                table_name=merge_tree_table_name, user_name=user_name
+            )
+            iceberg_result = iceberg_table_engine.get_query_result(
+                table_name=iceberg_table_name, user_name=user_name
+            )
+            iceberg_table_engine.compare_results(
+                result1=merge_tree_result, result2=iceberg_result
+            )
 
 
 @TestFeature
@@ -222,18 +170,19 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
     with Given("create users and roles that will be used in row policies"):
         user_name1 = f"user1_{getuid()}"
         user_name2 = f"user2_{getuid()}"
-        create_user(name=user_name1)
-        create_user(name=user_name2)
-
         role_name1 = f"role1_{getuid()}"
         role_name2 = f"role2_{getuid()}"
+        create_user(name=user_name1)
+        create_user(name=user_name2)
         create_role(role_name=role_name1)
         create_role(role_name=role_name2)
+        all_roles_and_users = [user_name1, user_name2, role_name1, role_name2]
+
+    with And("grant roles to users"):
         node.query(f"GRANT {role_name1} TO {user_name1}")
         node.query(f"GRANT {role_name2} TO {user_name2}")
-        all_roles = [user_name1, user_name2, role_name1, role_name2]
 
-    with And("define merge_tree_table_name and iceberg_table_name"):
+    with And("define MergeTree and Iceberg table names"):
         merge_tree_table_name = define(
             "merge_tree_table_name", "merge_tree_table_" + getuid()
         )
@@ -268,20 +217,22 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
         as_clause_options = ["PERMISSIVE", "RESTRICTIVE", None]
 
-        to_clause_options = all_roles + [None] + ["ALL"]
-        combinations_by_two = [", ".join(roles) for roles in combinations(all_roles, 2)]
+        to_clause_options = all_roles_and_users + [None] + ["ALL"]
+        combinations_by_two = [
+            ", ".join(roles) for roles in combinations(all_roles_and_users, 2)
+        ]
         combinations_by_three = [
-            ", ".join(roles) for roles in combinations(all_roles, 3)
+            ", ".join(roles) for roles in combinations(all_roles_and_users, 3)
         ]
         combinations_by_four = [
-            ", ".join(roles) for roles in combinations(all_roles, 4)
+            ", ".join(roles) for roles in combinations(all_roles_and_users, 4)
         ]
         to_clause_options.extend(combinations_by_two)
         to_clause_options.extend(combinations_by_three)
         to_clause_options.extend(combinations_by_four)
         all_except = [
             f"ALL EXCEPT {role}"
-            for role in all_roles
+            for role in all_roles_and_users
             + combinations_by_two
             + combinations_by_three
             + combinations_by_four
@@ -291,21 +242,15 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
     if not self.context.stress:
         to_clause_options = random.sample(to_clause_options, 5)
 
-    for (
-        table_column,
-        condition,
-        as_clause,
-        to_clause,
-    ) in product(
-        table_column_names,
-        condition_options,
-        as_clause_options,
-        to_clause_options,
-    ):
-        Scenario(test=row_policy)(
+    all_combinations = product(
+        table_column_names, condition_options, as_clause_options, to_clause_options
+    )
+
+    for num, combination in enumerate(all_combinations):
+        table_column, condition, as_clause, to_clause = combination
+        Scenario(name=f"combination #{num}", test=row_policy)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
-            node=node,
             table_column=table_column,
             condition=condition,
             as_clause=as_clause,
@@ -319,6 +264,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
+    """Test row policies on Iceberg tables."""
     Feature(test=row_policies)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
