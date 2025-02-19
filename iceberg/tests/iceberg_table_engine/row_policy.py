@@ -200,7 +200,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
         table_column_names = [
             "boolean_col",
             "long_col",
-            "float_col",
+            "double_col",
             "string_col",
             "date_col",
             "MISSING_COL",
