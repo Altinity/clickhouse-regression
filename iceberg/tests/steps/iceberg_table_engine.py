@@ -1,5 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
+from testflows.combinatorics import combinations
 
 from helpers.common import getuid
 
@@ -110,20 +111,20 @@ def parse_clickhouse_error(error_message, only_error_name=True):
 
 @TestStep(Given)
 def get_select_query_result(
-    self, table_name, user_name=None, no_checks=True, node=None
+    self, table_name, select_columns="*", user_name=None, no_checks=True, node=None
 ):
     """Helper function to execute query and return result."""
-    
+
     settings = []
 
     if node is None:
         node = self.context.node
 
-    if user_name is None:
+    if user_name is not None:
         settings.append(("user", user_name))
 
     return node.query(
-        f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated",
+        f"SELECT {select_columns} FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated",
         settings=settings,
         no_checks=no_checks,
     )
@@ -168,3 +169,29 @@ def create_merge_tree_table(self, table_name=None, node=None):
     finally:
         with Finally("drop table"):
             node.query(f"DROP TABLE IF EXISTS {table_name}")
+
+
+def get_all_combinations(items):
+    """Generate all possible non-empty combinations of the input list."""
+    all_combinations = []
+    for r in range(1, len(items) + 1):
+        all_combinations.extend([", ".join(combo) for combo in combinations(items, r)])
+    return all_combinations
+
+
+@TestStep(When)
+def grant_select(self, table_name, user_and_role_names, table_columns, node=None):
+    """Define grants for users and roles."""
+    if node is None:
+        node = self.context.node
+
+    try:
+        node.query(
+            f"GRANT SELECT({table_columns}) ON {table_name} TO {user_and_role_names}"
+        )
+        yield
+    finally:
+        with Finally("revoke select privilege"):
+            node.query(
+                f"REVOKE SELECT({table_columns}) ON {table_name} FROM {user_and_role_names}"
+            )
