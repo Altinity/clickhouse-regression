@@ -135,12 +135,44 @@ def multiple_parquet_files_with_all_map_datatypes(self, number_of_files):
 
 
 @TestStep(When)
-def select_parquet_from_s3(self, file_name, node=None):
+def select_parquet_from_s3(
+    self,
+    file_name,
+    statement="*",
+    node=None,
+    type="Parquet",
+    condition=None,
+    settings=None,
+    output_format=None,
+):
     """Select data from a Parquet file on S3."""
 
     if node is None:
         node = self.context.node
 
-    return node.query(
-        f"SELECT * FROM s3('{self.context.uri}{file_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')"
+    r = f"SELECT {statement} FROM s3('{self.context.uri}{file_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', '{type}')"
+
+    if condition is not None:
+        r += rf" {condition}"
+
+    if output_format is None:
+        output_format = "TabSeparated"
+
+    r += rf" FORMAT {output_format}"
+
+    if settings is not None:
+        r += f" SETTINGS {settings}"
+
+    return node.query(r)
+
+
+@TestStep(When)
+def select_parquet_metadata_from_s3(self, file_name, node=None):
+    """Select metadata from a Parquet file on S3."""
+
+    if node is None:
+        node = self.context.node
+
+    return select_parquet_from_s3(
+        file_name=file_name, node=node, type="ParquetMetadata"
     )
