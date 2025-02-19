@@ -109,14 +109,23 @@ def parse_clickhouse_error(error_message, only_error_name=True):
 
 
 @TestStep(Given)
-def get_query_result(self, table_name, user_name, node=None):
+def get_select_query_result(
+    self, table_name, user_name=None, no_checks=True, node=None
+):
     """Helper function to execute query and return result."""
+    
+    settings = []
+
     if node is None:
         node = self.context.node
+
+    if user_name is None:
+        settings.append(("user", user_name))
+
     return node.query(
         f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated",
-        settings=[("user", user_name)],
-        no_checks=True,
+        settings=settings,
+        no_checks=no_checks,
     )
 
 
