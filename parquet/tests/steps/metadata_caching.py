@@ -5,6 +5,22 @@ from alter.stress.tests.tc_netem import network_packet_delay
 
 
 @TestStep(Given)
+def set_delay_on_a_node(self, node=None):
+    """Set a delay on a network node."""
+
+    if node is None:
+        node = self.context.node
+
+    network_packet_delay(node=node)
+
+
+@TestStep(Given)
+def set_delay_on_minio_node(self):
+    """Set a delay on the MinIO node."""
+    set_delay_on_a_node(node=self.context.cluster.node("minio"))
+
+
+@TestStep(Given)
 def create_parquet_on_s3(self, file_name, columns, compression_type=None):
     """Create a Parquet file on S3."""
 
