@@ -5,6 +5,13 @@ from testflows.combinatorics import combinations
 from helpers.common import getuid
 
 import re
+import pyarrow as pa
+import random
+import string
+
+from datetime import date, timedelta
+
+random.seed(42)
 
 
 @TestStep(Given)
@@ -111,7 +118,13 @@ def parse_clickhouse_error(error_message, only_error_name=True):
 
 @TestStep(Given)
 def get_select_query_result(
-    self, table_name, select_columns="*", user_name=None, no_checks=True, node=None
+    self,
+    table_name,
+    select_columns="*",
+    order_by="tuple(*)",
+    user_name=None,
+    no_checks=True,
+    node=None,
 ):
     """Helper function to execute query and return result."""
 
@@ -124,7 +137,7 @@ def get_select_query_result(
         settings.append(("user", user_name))
 
     return node.query(
-        f"SELECT {select_columns} FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated",
+        f"SELECT {select_columns} FROM {table_name} ORDER BY {order_by} FORMAT TabSeparated",
         settings=settings,
         no_checks=no_checks,
     )
@@ -133,12 +146,16 @@ def get_select_query_result(
 @TestStep(Then)
 def compare_results(self, result1, result2):
     """Helper function to compare query results or exception messages."""
-    if result1.exitcode == 0:
+    if result1.exitcode == 0 and result2.exitcode == 0:
         assert result1.output == result2.output, error()
+    elif result1.exitcode == 0:
+        assert result1.output.strip() == "", error()
+    elif result2.exitcode == 0:
+        assert result2.output.strip() == "", error()
     else:
-        exception1 = parse_clickhouse_error(result1.output)["Message"]
-        exception2 = parse_clickhouse_error(result2.output)["Message"]
-        assert exception1 == exception2, error()
+        exception1 = parse_clickhouse_error(result1.output)
+        exception2 = parse_clickhouse_error(result2.output)
+        assert exception1["Message"] == exception2["Message"], error()
 
 
 @TestStep(Given)
@@ -156,7 +173,7 @@ def create_merge_tree_table(self, table_name=None, node=None):
             CREATE TABLE {table_name} (
                 boolean_col Nullable(Bool), 
                 long_col Nullable(Int64), 
-                double_col Nullable(Float), 
+                double_col Nullable(Float64), 
                 string_col Nullable(String),
                 date_col Nullable(Date)
             ) 
@@ -171,10 +188,14 @@ def create_merge_tree_table(self, table_name=None, node=None):
             node.query(f"DROP TABLE IF EXISTS {table_name}")
 
 
-def get_all_combinations(items):
+def get_all_combinations(items, max_length=None):
     """Generate all possible non-empty combinations of the input list."""
+    if max_length is None:
+        max_length = len(items) + 1
+
     all_combinations = []
-    for r in range(1, len(items) + 1):
+    for r in range(1, max_length + 1):
+        note([", ".join(combo) for combo in combinations(items, r)])
         all_combinations.extend([", ".join(combo) for combo in combinations(items, r)])
     return all_combinations
 
@@ -195,3 +216,58 @@ def grant_select(self, table_name, user_and_role_names, table_columns, node=None
             node.query(
                 f"REVOKE SELECT({table_columns}) ON {table_name} FROM {user_and_role_names}"
             )
+
+
+def random_string(length=None):
+    """Generate a random string of given length."""
+    if length is None:
+        length = random.randint(1, 10)
+    character_set = random.choice(
+        [string.digits, string.ascii_letters, string.ascii_letters + string.digits]
+    )
+    return "".join(random.choices(character_set, k=length))
+
+
+def generate_data(num_rows=100):
+    data = []
+
+    for _ in range(num_rows):
+        entry = {
+            "boolean_col": random.choice([True, False]),
+            "long_col": random.randint(1, 5000),
+            "double_col": round(random.uniform(1.0, 500.0), 2),
+            "string_col": random_string(),
+            "date_col": date(2020, 1, 1) + timedelta(days=random.randint(0, 1500)),
+        }
+        data.append(entry)
+
+    return data
+
+
+def transform_to_clickhouse_format(data):
+    """Transform a list of dictionaries into a ClickHouse-compatible tuple format."""
+    transformed = [
+        f"({row['boolean_col']}, {row['long_col']}, {row['double_col']}, '{row['string_col']}', '{row['date_col']}')"
+        for row in data
+    ]
+    return ",\n".join(transformed)
+
+
+@TestStep(Given)
+def insert_same_data_to_iceberg_and_merge_tree_tables(
+    self, merge_tree_table_name, iceberg_table, data=None, node=None
+):
+    """Insert the same data into MergeTree and Iceberg tables."""
+    if node is None:
+        node = self.context.node
+
+    if data is None:
+        data = generate_data(num_rows=100)
+
+    with By("insert data into Iceberg table"):
+        df = pa.Table.from_pylist(data)
+        iceberg_table.append(df)
+
+    with And("insert data into MergeTree table"):
+        data_str = transform_to_clickhouse_format(data)
+        node.query(f"INSERT INTO {merge_tree_table_name} VALUES {data_str}")
