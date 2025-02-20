@@ -26,6 +26,12 @@ from pyiceberg.transforms import IdentityTransform
 
 import boto3
 
+import pyarrow as pa
+
+from helpers.common import getuid
+
+from datetime import date
+
 CATALOG_TYPE = "rest"
 
 
@@ -219,3 +225,74 @@ def drop_namespace(self, catalog, namespace):
     except Exception as e:
         note(f"An error occurred while dropping namespace: {e}")
         raise
+
+
+@TestStep(Given)
+def create_catalog_and_iceberg_table_with_data(
+    self, minio_root_user, minio_root_password, namespace=None, table_name=None
+):
+    """Combine all steps to create catalog, namespace, table with five
+    columns and insert data to the created table."""
+
+    if namespace is None:
+        namespace = "namespace_" + getuid()
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    with By("create catalog"):
+        catalog = create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create namespace"):
+        create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"delete table {namespace}.{table_name} if already exists"):
+        drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
+
+    with And(f"define schema and create {namespace}.{table_name} table"):
+        table = create_iceberg_table_with_five_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with And("insert data into Iceberg table"):
+        df = pa.Table.from_pylist(
+            [
+                {
+                    "boolean_col": True,
+                    "long_col": 1000,
+                    "double_col": 456.78,
+                    "string_col": "Alice",
+                    "date_col": date(2024, 1, 1),
+                },
+                {
+                    "boolean_col": False,
+                    "long_col": 2000,
+                    "double_col": 456.78,
+                    "string_col": "Bob",
+                    "date_col": date(2023, 5, 15),
+                },
+                {
+                    "boolean_col": True,
+                    "long_col": 3000,
+                    "double_col": 6.7,
+                    "string_col": "Charlie",
+                    "date_col": date(2022, 1, 1),
+                },
+                {
+                    "boolean_col": False,
+                    "long_col": 4000,
+                    "double_col": 8.9,
+                    "string_col": "1",
+                    "date_col": date(2021, 1, 1),
+                },
+            ]
+        )
+        table.append(df)
+
+    return table_name
