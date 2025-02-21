@@ -1,8 +1,5 @@
 from testflows.core import *
-from testflows.asserts import error
 from testflows.combinatorics import combinations, product
-
-import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
@@ -10,7 +7,6 @@ import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
 from helpers.common import create_user, getuid, create_role
 
 import random
-from datetime import date
 
 random.seed(42)
 
