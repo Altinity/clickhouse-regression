@@ -3,6 +3,7 @@ from testflows.combinatorics import combinations, product
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
+import iceberg.tests.steps.common as common
 
 from helpers.common import create_user, getuid, create_role
 
@@ -29,7 +30,7 @@ def row_policy(
         using_clause = f" {conditions_join_option} ".join(
             j for j in column_condition_combination
         )
-        iceberg_table_engine.create_row_policy(
+        common.create_row_policy(
             on_clause=f"{merge_tree_table_name}, {iceberg_table_name}",
             using_clause=using_clause,
             as_clause=as_clause,
