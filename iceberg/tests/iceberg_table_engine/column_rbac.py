@@ -5,6 +5,7 @@ import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
+import iceberg.tests.steps.common as common
 
 from helpers.common import create_user, getuid, create_role
 
@@ -30,12 +31,12 @@ def check_column_rbac(
     with Given(
         "grant same select privileges for specified columns and users on both tables"
     ):
-        iceberg_table_engine.grant_select(
+        common.grant_select(
             table_name=merge_tree_table_name,
             table_columns=table_columns,
             user_and_role_names=user_and_role_names,
         )
-        iceberg_table_engine.grant_select(
+        common.grant_select(
             table_name=iceberg_table_name,
             table_columns=table_columns,
             user_and_role_names=user_and_role_names,
@@ -50,19 +51,19 @@ def check_column_rbac(
         for num, columns_combination_option in enumerate(table_column_names_options):
             with By(f"select #{num}"):
                 for user_name in [user_name1, user_name2]:
-                    merge_tree_result = iceberg_table_engine.get_select_query_result(
+                    merge_tree_result = common.get_select_query_result(
                         table_name=merge_tree_table_name,
                         user_name=user_name,
                         select_columns=columns_combination_option,
                         order_by=columns_combination_option,
                     )
-                    iceberg_result = iceberg_table_engine.get_select_query_result(
+                    iceberg_result = common.get_select_query_result(
                         table_name=iceberg_table_name,
                         user_name=user_name,
                         select_columns=columns_combination_option,
                         order_by=columns_combination_option,
                     )
-                    iceberg_table_engine.compare_results(
+                    common.compare_results(
                         result1=merge_tree_result, result2=iceberg_result
                     )
 
@@ -109,10 +110,10 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        iceberg_table_engine.create_merge_tree_table(table_name=merge_tree_table_name)
+        common.create_merge_tree_table(table_name=merge_tree_table_name)
 
     with And("insert same data into both tables"):
-        iceberg_table_engine.insert_same_data_to_iceberg_and_merge_tree_tables(
+        common.insert_same_data_to_iceberg_and_merge_tree_tables(
             iceberg_table=iceberg_table, merge_tree_table_name=merge_tree_table_name
         )
 
@@ -140,12 +141,8 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
             "date_col",
         ]
 
-        table_column_names_options = iceberg_table_engine.get_all_combinations(
-            table_column_names
-        )
-        user_and_role_names_options = iceberg_table_engine.get_all_combinations(
-            all_roles_and_users
-        )
+        table_column_names_options = common.get_all_combinations(table_column_names)
+        user_and_role_names_options = common.get_all_combinations(all_roles_and_users)
 
     all_combinations = product(table_column_names_options, user_and_role_names_options)
 

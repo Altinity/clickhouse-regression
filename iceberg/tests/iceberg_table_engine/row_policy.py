@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 from testflows.combinatorics import combinations, product
 
 import iceberg.tests.steps.catalog as catalog_steps
@@ -13,7 +14,7 @@ random.seed(42)
 
 
 @TestScenario
-def row_policy(
+def check_row_policy(
     self,
     column_condition_combination,
     conditions_join_option,
@@ -26,7 +27,11 @@ def row_policy(
 ):
     """Check that specified row policy on iceberg table works the same as on MergeTree table."""
 
-    with Given("create same row policy for MergeTree and Iceberg tables"):
+    with Given("check that there is no row policy on tables"):
+        n = self.context.node.query(f"SELECT count() FROM system.row_policies").output
+        assert n.strip() == "0", error()
+
+    with And("create same row policy for MergeTree and Iceberg tables"):
         using_clause = f" {conditions_join_option} ".join(
             j for j in column_condition_combination
         )
@@ -39,15 +44,13 @@ def row_policy(
 
     with Then("check that selects for each user show the same rows for both tables"):
         for user_name in [user_name1, user_name2]:
-            merge_tree_result = iceberg_table_engine.get_select_query_result(
+            merge_tree_result = common.get_select_query_result(
                 table_name=merge_tree_table_name, user_name=user_name
             )
-            iceberg_result = iceberg_table_engine.get_select_query_result(
+            iceberg_result = common.get_select_query_result(
                 table_name=iceberg_table_name, user_name=user_name
             )
-            iceberg_table_engine.compare_results(
-                result1=merge_tree_result, result2=iceberg_result
-            )
+            common.compare_results(result1=merge_tree_result, result2=iceberg_result)
 
 
 @TestFeature
@@ -92,10 +95,10 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        iceberg_table_engine.create_merge_tree_table(table_name=merge_tree_table_name)
+        common.create_merge_tree_table(table_name=merge_tree_table_name)
 
     with And("insert same data into both tables"):
-        iceberg_table_engine.insert_same_data_to_iceberg_and_merge_tree_tables(
+        common.insert_same_data_to_iceberg_and_merge_tree_tables(
             iceberg_table=iceberg_table, merge_tree_table_name=merge_tree_table_name
         )
 
@@ -151,9 +154,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
         as_clause_options = ["PERMISSIVE", "RESTRICTIVE", None]
 
-        user_and_role_names_options = iceberg_table_engine.get_all_combinations(
-            all_roles_and_users
-        )
+        user_and_role_names_options = common.get_all_combinations(all_roles_and_users)
         all_except = [f"ALL EXCEPT {role}" for role in user_and_role_names_options]
         to_clause_options = user_and_role_names_options + all_except + [None] + ["ALL"]
 
@@ -171,7 +172,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
         column_condition_combination, conditions_join_option, as_clause, to_clause = (
             combination
         )
-        Scenario(name=f"combination #{num}", test=row_policy)(
+        Scenario(name=f"combination #{num}", test=check_row_policy)(
             column_condition_combination=column_condition_combination,
             conditions_join_option=conditions_join_option,
             as_clause=as_clause,
