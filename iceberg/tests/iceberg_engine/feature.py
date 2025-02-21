@@ -17,3 +17,9 @@ def feature(self, minio_root_user, minio_root_password):
     Feature(
         test=load("iceberg.tests.iceberg_engine.changing_schema", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_engine.row_policy", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_engine.column_rbac", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
