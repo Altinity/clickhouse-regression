@@ -295,4 +295,4 @@ def create_catalog_and_iceberg_table_with_data(
         )
         table.append(df)
 
-    return table_name
+    return table_name, namespace
