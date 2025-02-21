@@ -10,32 +10,15 @@ from helpers.common import create_user, getuid
 
 
 @TestScenario
-@Name("rbac")
-def sanity(self, minio_root_user, minio_root_password):
+def rbac_sanity(self, minio_root_user, minio_root_password):
     """Test basic RBAC with tables from Iceberg engine."""
-    namespace = "iceberg"
-    table_name = "name"
 
-    with Given("create catalog"):
-        catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            s3_endpoint="http://localhost:9002",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    with And("create namespace"):
-        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
-
-    with When(f"define schema and create {namespace}.{table_name} table"):
-        table = catalog_steps.create_iceberg_table_with_three_columns(
-            catalog=catalog, namespace=namespace, table_name=table_name
+    with Given("create catalog and Iceberg table with data"):
+        table_name, namespace = (
+            catalog_steps.create_catalog_and_iceberg_table_with_data(
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
         )
 
     with Then("create database with Iceberg engine"):
@@ -51,23 +34,14 @@ def sanity(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And(f"insert data into {namespace}.{table_name} table"):
-        df = pa.Table.from_pylist(
-            [
-                {"name": "Alice", "double": 195.23, "integer": 20},
-                {"name": "Bob", "double": 123.45, "integer": 30},
-                {"name": "Charlie", "double": 67.89, "integer": 40},
-            ]
-        )
-        table.append(df)
-
     with And("read data in clickhouse from the previously created table"):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
-        assert "Alice	195.23	20" in result.output, error()
-        assert "Bob	123.45	30" in result.output, error()
-        assert "Charlie	67.89	40" in result.output, error()
+        assert "true	1000	456.78	Alice	2024-01-01" in result.output, error()
+        assert "true	3000	6.7	Charlie	2022-01-01" in result.output, error()
+        assert "false	2000	456.78	Bob	2023-05-15" in result.output, error()
+        assert "false	4000	8.9	1	2021-01-01" in result.output, error()
 
     with Then("create new clickhouse user"):
         user_name = f"test_user_{getuid()}"
@@ -96,10 +70,14 @@ def sanity(self, minio_root_user, minio_root_password):
             table_name=table_name,
             user=user_name,
         )
+        assert "true	1000	456.78	Alice	2024-01-01" in result.output, error()
+        assert "true	3000	6.7	Charlie	2022-01-01" in result.output, error()
+        assert "false	2000	456.78	Bob	2023-05-15" in result.output, error()
+        assert "false	4000	8.9	1	2021-01-01" in result.output, error()
 
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
-    Scenario(test=sanity)(
+    Scenario(test=rbac_sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
