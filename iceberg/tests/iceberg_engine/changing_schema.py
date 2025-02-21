@@ -62,7 +62,7 @@ def sanity(self, minio_root_user, minio_root_password):
     with Then(
         "create table with Iceberg engine with named collection iceberg_conf defined in config.xml"
     ):
-        table_name = iceberg_engine.create_table_with_iceberg_engine(
+        table_name = iceberg_engine.create_table_with_iceberg_engine_from_config(
             config_name="iceberg_conf",
             allow_dynamic_metadata_for_data_lakes=True,
         )
