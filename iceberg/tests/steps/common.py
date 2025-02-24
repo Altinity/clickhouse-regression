@@ -116,7 +116,7 @@ def transform_to_clickhouse_format(data):
         f"({row['boolean_col']}, {row['long_col']}, {row['double_col']}, '{row['string_col']}', '{row['date_col']}')"
         for row in data
     ]
-    return ",\n".join(transformed)
+    return ", ".join(transformed)
 
 
 @TestStep(Given)
@@ -136,6 +136,8 @@ def insert_same_data_to_iceberg_and_merge_tree_tables(
 
     with And("insert data into MergeTree table"):
         data_str = transform_to_clickhouse_format(data)
+        note("Insert query:")
+        note(f"INSERT INTO {merge_tree_table_name} VALUES {data_str}")
         node.query(f"INSERT INTO {merge_tree_table_name} VALUES {data_str}")
 
 
