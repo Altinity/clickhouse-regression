@@ -51,6 +51,11 @@ ffails = {
         "Support for codec 'zstd' not built",
         check_clickhouse_version("<23.8"),
     ),
+    "/iceberg/iceberg table engine": (
+        Skip,
+        "Iceberg table engine was introduced in 23.2",
+        check_clickhouse_version("<24.2"),
+    ),
 }
 
 
