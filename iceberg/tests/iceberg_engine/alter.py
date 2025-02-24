@@ -7,51 +7,6 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 from helpers.common import getuid
 
 
-@TestStep(Given)
-def get_iceberg_table_name(self, minio_root_user, minio_root_password):
-    """Create catalog, namespace, table and database with Iceberg engine.
-    Return ClickHouse table name from database with Iceberg engine."""
-    namespace = f"namespace_{getuid()}"
-    table_name = f"table_{getuid()}"
-
-    with Given("create catalog"):
-        catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            s3_endpoint="http://localhost:9002",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    with And("create namespace"):
-        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
-
-    with And(f"define schema and create {namespace}.{table_name} table"):
-        catalog_steps.create_iceberg_table_with_five_columns(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
-
-    with And("create database with Iceberg engine"):
-        database_name = "row_policy"
-        iceberg_engine.drop_database(database_name=database_name)
-        iceberg_engine.create_experimental_iceberg_database(
-            namespace=namespace,
-            database_name=database_name,
-            rest_catalog_url="http://rest:8181/v1",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            storage_endpoint="http://minio:9000/warehouse",
-        )
-
-    return f"{database_name}.\\`{namespace}.{table_name}\\`"
-
-
 @TestScenario
 def alter_column(self, minio_root_user, minio_root_password, node=None):
     """Check that ALTER TABLE ADD COLUMN, DROP COLUMN, RENAME COLUMN are
@@ -61,7 +16,7 @@ def alter_column(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
