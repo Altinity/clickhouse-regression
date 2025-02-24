@@ -1,5 +1,3 @@
-import random
-
 from testflows.core import *
 
 from helpers.common import *
@@ -9,7 +7,6 @@ from helpers.datatypes import UInt64, UInt16
 from alter.table.attach_partition.common import (
     create_partitioned_table_with_data,
     create_empty_partitioned_table,
-    version_when_attach_partition_with_different_keys_merged,
 )
 from alter.table.attach_partition.requirements.requirements import *
 
