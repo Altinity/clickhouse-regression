@@ -98,7 +98,7 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
@@ -286,7 +286,7 @@ def alter_comment_columns(self, minio_root_user, minio_root_password, node=None)
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
@@ -319,7 +319,7 @@ def alter_delete(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
@@ -344,7 +344,7 @@ def alter_settings(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
@@ -373,7 +373,7 @@ def alter_order_by(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     with Given("get table with Iceberg engine"):
-        iceberg_table_name = get_iceberg_table_name(
+        iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
