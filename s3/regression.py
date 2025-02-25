@@ -356,40 +356,39 @@ def minio_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
-        # Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
-        # Feature(test=load("s3.tests.table_function", "minio"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.backup", "minio"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-        #     uri=uri_bucket_file
-        # )
-        # Feature(test=load("s3.tests.disk", "minio"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-        # Feature(test=load("s3.tests.alter", "feature"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.combinatoric_table", "feature"))(
-        #     uri=uri_bucket_file
-        # )
-        # Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
-        # Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.orphans", "feature"))(
-        #     uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        # )
-        # Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
-        # Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
-        # Feature(test=load("s3.tests.table_function_performance", "minio"))(
-        #     uri=uri_bucket_file
-        # )
-        note(uri_bucket_file)
-        Feature(test=load("s3.tests.s3Cluster_function", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.backup", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.table_function_invalid", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.disk", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function_performance", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.s3Cluster", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
 
 
 @TestFeature
