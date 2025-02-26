@@ -21,7 +21,7 @@ def with_caconfig(
             create_node_server_certificate_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=ca_chain_crt,
@@ -115,6 +115,7 @@ def with_caconfig_missing_first_ca_in_chain_on_one_node(
     with And("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -128,11 +129,11 @@ def with_caconfig_missing_first_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -158,6 +159,7 @@ def with_caconfig_missing_last_ca_in_chain_on_one_node(
     with And("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -171,11 +173,11 @@ def with_caconfig_missing_last_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -201,6 +203,7 @@ def with_caconfig_missing_middle_ca_in_chain_on_one_node(
     with And("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     with_caconfig_missing_ca_in_chain(
         ca_store=ca_store,
@@ -214,11 +217,11 @@ def with_caconfig_missing_middle_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -394,6 +397,7 @@ def without_caconfig_missing_first_trusted_ca_on_one_node(
     with Given("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
@@ -408,11 +412,11 @@ def without_caconfig_missing_first_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -430,6 +434,8 @@ def without_caconfig_missing_last_trusted_ca_on_one_node(
     with Given("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
+
 
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
@@ -444,11 +450,11 @@ def without_caconfig_missing_last_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -466,6 +472,7 @@ def without_caconfig_missing_middle_trusted_ca_on_one_node(
     with Given("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
@@ -480,11 +487,11 @@ def without_caconfig_missing_middle_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
     )
 
@@ -644,6 +651,7 @@ def server_certificate_with_chain_missing_ca_on_one_node(
     with Given("the expected error messages"):
         error_certificate_verify_failed = get_error_certificate_verify_failed()
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
+        error_authentication_failed = get_error_authentication_failed()
 
     server_certificate_with_chain_missing_ca(
         ca_store=ca_store,
@@ -658,11 +666,11 @@ def server_certificate_with_chain_missing_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_tlsv1_alert_unknown_ca,
             ("clickhouse1", "clickhouse3"): error_tlsv1_alert_unknown_ca,
             ("clickhouse2", "clickhouse1"): error_certificate_verify_failed,
-            ("clickhouse2", "clickhouse2"): None,
-            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse2", "clickhouse2"): error_authentication_failed,
+            ("clickhouse2", "clickhouse3"): error_authentication_failed,
             ("clickhouse3", "clickhouse1"): error_certificate_verify_failed,
-            ("clickhouse3", "clickhouse2"): None,
-            ("clickhouse3", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse2"): error_authentication_failed,
+            ("clickhouse3", "clickhouse3"): error_authentication_failed,
         },
         trusted_cas=trusted_cas,
         use_ca_config=use_ca_config,

@@ -318,6 +318,7 @@ def create_rsa_private_key(
         outfile, id=stashed.hash(algorithm, length, passphrase), use_stash=use_stash
     ) as stash:
         try:
+            print(f"openssl genrsa {algorithm}-out {outfile} {length}")
             with bash(
                 f"openssl genrsa {algorithm}-out {outfile} {length}",
                 name="openssl",
@@ -544,6 +545,9 @@ def create_ca_certificate(
         use_stash=use_stash,
     ) as stash:
         try:
+            print(f"openssl req -new -{type} -days {days} -key {key} "
+                f"-{hash} -extensions {extensions} -out {outfile} "
+                '-addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=keyCertSign, cRLSign"')
             with bash(
                 f"openssl req -new -{type} -days {days} -key {key} "
                 f"-{hash} -extensions {extensions} -out {outfile} "
@@ -615,6 +619,7 @@ def create_certificate_signing_request(
         use_stash=use_stash,
     ) as stash:
         try:
+            print(f"openssl req -{hash} -new -key {key} -out {outfile}")
             with bash(
                 f"openssl req -{hash} -new -key {key} -out {outfile}",
                 name="openssl",
@@ -731,7 +736,7 @@ def sign_certificate(
                     f"openssl {type} -{hash} -req -in {csr} "
                     f"-signkey {ca_key} -out {outfile} -days {days}"
                 )
-
+            print(command)
             with bash(
                 command,
                 name="openssl",
@@ -757,6 +762,7 @@ def create_dh_params(self, outfile, length=512, use_stash=True):
         outfile, id=stashed.hash(length), use_stash=use_stash
     ) as stash:
         try:
+            print(f"openssl dhparam -out {outfile} {length}")
             cmd = bash(f"openssl dhparam -out {outfile} {length}")
 
             with Then("checking exitcode 0"):
@@ -777,6 +783,8 @@ def validate_certificate(
     """Validate certificate using CA certificate."""
     if node is None:
         node = self.context.node
+
+    print(f"openssl verify {option} -CAfile {ca_certificate} {certificate}")
 
     cmd = node.command(
         f"openssl verify {option} -CAfile {ca_certificate} {certificate}"
@@ -946,6 +954,7 @@ def clickhouse_client_connection(
     exitcode=None,
     insecure=True,
     prefer_server_ciphers=False,
+    user="default",
 ):
     """Check SSL TCP connection using clickhouse-client utility.
 
@@ -988,7 +997,7 @@ def clickhouse_client_connection(
         add_ssl_clickhouse_client_configuration_file(entries=options)
 
     output = node.command(
-        f'clickhouse client {secure_flag} --verbose --host {hostname} --port {port} -q "SELECT 1 FORMAT TabSeparated"',
+        f'clickhouse client {secure_flag} --verbose --host {hostname} --port {port} --user {user} -q "SELECT 1 FORMAT TabSeparated"',
         message=message,
         messages=messages,
         exitcode=exitcode,
