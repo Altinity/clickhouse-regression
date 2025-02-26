@@ -65,7 +65,7 @@ def with_caconfig_missing_ca_in_chain(
             create_node_server_certificate_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=ca_chain_crt,
@@ -82,7 +82,6 @@ def with_caconfig_missing_ca_in_chain(
                 dh_params=f"/{node_name}.dh",
                 ca_config="/ca_chain.crt",
             )
-
     with Then("check secure connection from each clickhouse server to the other"):
         for from_name in nodes:
             for to_name in nodes:
@@ -129,11 +128,11 @@ def with_caconfig_missing_first_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -173,11 +172,11 @@ def with_caconfig_missing_last_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -217,11 +216,11 @@ def with_caconfig_missing_middle_ca_in_chain_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -294,7 +293,7 @@ def without_caconfig(self, ca_store, ca_chain_crt, trusted_cas, nodes=None):
             create_node_server_certificate_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=ca_chain_crt,
@@ -338,7 +337,7 @@ def without_caconfig_missing_trusted_ca(
             create_node_server_certificate_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=ca_chain_crt,
@@ -412,11 +411,11 @@ def without_caconfig_missing_first_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -450,11 +449,11 @@ def without_caconfig_missing_last_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -487,11 +486,11 @@ def without_caconfig_missing_middle_trusted_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_certificate_verify_failed,
             ("clickhouse1", "clickhouse3"): error_certificate_verify_failed,
             ("clickhouse2", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_tlsv1_alert_unknown_ca,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
     )
 
@@ -549,7 +548,7 @@ def server_certificate_with_chain(
             create_node_server_certificate_with_chain_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=ca_intermediate_chain_crt,
@@ -602,7 +601,7 @@ def server_certificate_with_chain_missing_ca(
             create_node_server_certificate_with_chain_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
-                common_name=node_name,
+                common_name=f"{node_name}:cert_user",
                 ca_key=f"{os.path.join(ca_store, 'ca.key')}",
                 ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
                 ca_chain_crt=nodes_ca_intermediate_chain_crt[node_name],
@@ -666,11 +665,11 @@ def server_certificate_with_chain_missing_ca_on_one_node(
             ("clickhouse1", "clickhouse2"): error_tlsv1_alert_unknown_ca,
             ("clickhouse1", "clickhouse3"): error_tlsv1_alert_unknown_ca,
             ("clickhouse2", "clickhouse1"): error_certificate_verify_failed,
-            ("clickhouse2", "clickhouse2"): error_authentication_failed,
-            ("clickhouse2", "clickhouse3"): error_authentication_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
             ("clickhouse3", "clickhouse1"): error_certificate_verify_failed,
-            ("clickhouse3", "clickhouse2"): error_authentication_failed,
-            ("clickhouse3", "clickhouse3"): error_authentication_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
         },
         trusted_cas=trusted_cas,
         use_ca_config=use_ca_config,
