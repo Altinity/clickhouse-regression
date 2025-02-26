@@ -152,6 +152,16 @@ xfails = {
 xflags = {}
 
 ffails = {
+    "/ssl server/verification modes":(
+        Skip,
+        "native protocol supported on >=23.3",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/ssl server/ca chain": (
+        Skip,
+        "native protocol supported on >=23.3",
+        check_clickhouse_version("<23.3"),
+    ),
     "check certificate/system certificates": (
         Skip,
         "supported on >=22.8",
