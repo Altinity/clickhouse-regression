@@ -121,14 +121,14 @@ def transform_to_clickhouse_format(data):
 
 @TestStep(Given)
 def insert_same_data_to_iceberg_and_merge_tree_tables(
-    self, merge_tree_table_name, iceberg_table, data=None, node=None
+    self, merge_tree_table_name, iceberg_table, num_rows=100, data=None, node=None
 ):
     """Insert the same data into MergeTree and Iceberg tables."""
     if node is None:
         node = self.context.node
 
     if data is None:
-        data = generate_data(num_rows=100)
+        data = generate_data(num_rows=num_rows)
 
     with By("insert data into Iceberg table"):
         df = pa.Table.from_pylist(data)
@@ -235,3 +235,26 @@ def grant_select(self, table_name, user_and_role_names, table_columns, node=None
             node.query(
                 f"REVOKE SELECT({table_columns}) ON {table_name} FROM {user_and_role_names}"
             )
+
+
+@TestStep(Given)
+def delete_rows_from_merge_tree_table(self, table_name, condition, node=None):
+    """Delete rows from MergeTree table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"DELETE FROM {table_name} WHERE {condition}")
+
+
+@TestStep(Given)
+def get_random_value_from_table(self, table_name, column, node=None):
+    """Get a random value from a column in a table."""
+    if node is None:
+        node = self.context.node
+
+    count = int(node.query(f"SELECT count(*) FROM {table_name}").output.strip())
+    offset = random.randint(1, count - 1)
+    result = self.context.node.query(
+        f"SELECT {column} FROM {table_name} LIMIT 1 OFFSET {offset}"
+    )
+    return result.output.strip()
