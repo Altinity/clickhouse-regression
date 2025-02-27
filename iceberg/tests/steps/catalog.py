@@ -229,7 +229,12 @@ def drop_namespace(self, catalog, namespace):
 
 @TestStep(Given)
 def create_catalog_and_iceberg_table_with_data(
-    self, minio_root_user, minio_root_password, namespace=None, table_name=None
+    self,
+    minio_root_user,
+    minio_root_password,
+    namespace=None,
+    table_name=None,
+    with_data=True,
 ):
     """Combine all steps to create catalog, namespace, table with five
     columns and insert data to the created table."""
@@ -260,7 +265,7 @@ def create_catalog_and_iceberg_table_with_data(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with And("insert data into Iceberg table"):
+    with And("insert data into Iceberg table if required"):
         df = pa.Table.from_pylist(
             [
                 {
@@ -293,6 +298,20 @@ def create_catalog_and_iceberg_table_with_data(
                 },
             ]
         )
-        table.append(df)
+        if with_data:
+            table.append(df)
 
     return table_name, namespace
+
+
+@TestStep(Given)
+def equality_delete_from_iceberg_table(self, iceberg_table, condition):
+    """Delete rows from Iceberg table using equality condition."""
+    iceberg_table.delete(delete_filter=f"{condition}")
+
+
+@TestStep(Given)
+def delete_transaction(self, iceberg_table, condition):
+    """Delete rows from Iceberg table using transaction."""
+    with iceberg_table.transaction() as txn:
+        txn.delete(condition)

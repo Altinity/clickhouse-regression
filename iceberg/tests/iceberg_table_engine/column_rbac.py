@@ -164,7 +164,7 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
-    """Test RBAC for Iceberg tables."""
+    """Test column RBAC for Iceberg tables."""
     Feature(test=column_rbac)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

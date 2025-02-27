@@ -56,6 +56,7 @@ def read_data_from_clickhouse_iceberg_table(
     columns="*",
     user="default",
     password="",
+    order_by="tuple()",
     exitcode=None,
     message=None,
 ):
@@ -63,7 +64,7 @@ def read_data_from_clickhouse_iceberg_table(
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` FORMAT TabSeparated",
+        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` ORDER BY {order_by} FORMAT TabSeparated",
         settings=[("user", user), ("password", f"{password}")],
         exitcode=exitcode,
         message=message,
@@ -134,11 +135,25 @@ def create_named_collection(self, name=None, dict={}, node=None):
 
 
 @TestStep(Given)
-def get_iceberg_table_name(self, minio_root_user, minio_root_password):
+def get_iceberg_table_name(
+    self,
+    minio_root_user,
+    minio_root_password,
+    database_name=None,
+    namespace=None,
+    table_name=None,
+):
     """Create catalog, namespace, table and database with Iceberg engine.
     Return ClickHouse table name from database with Iceberg engine."""
-    namespace = f"namespace_{getuid()}"
-    table_name = f"table_{getuid()}"
+
+    if database_name is None:
+        database_name = f"database_{getuid()}"
+
+    if namespace is None:
+        namespace = "namespace_" + getuid()
+
+    if table_name is None:
+        table_name = f"table_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -163,7 +178,6 @@ def get_iceberg_table_name(self, minio_root_user, minio_root_password):
         )
 
     with And("create database with Iceberg engine"):
-        database_name = "row_policy"
         drop_database(database_name=database_name)
         create_experimental_iceberg_database(
             namespace=namespace,
