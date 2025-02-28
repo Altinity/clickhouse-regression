@@ -21,10 +21,11 @@ echo "::endgroup::"
 
 echo "::group::Python Setup"
 echo "Install Python modules..."
-sudo apt-get install -y python3.12-venv
+PYTHON_VERSION=$(cat .python-version)
+sudo apt-get install -y python${PYTHON_VERSION}-venv
 
 echo "Create and activate Python virtual environment..."
-python3 -m venv venv
+python${PYTHON_VERSION} -m venv venv
 source venv/bin/activate
 echo PATH=$PATH >>$GITHUB_ENV
 

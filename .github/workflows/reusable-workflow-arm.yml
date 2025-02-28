@@ -742,6 +742,14 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: venv
+          key: ${{ runner.os }}-python-${{ hashFiles('.python-version') }}-venv-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-python-${{ hashFiles('.python-version') }}-venv-
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
