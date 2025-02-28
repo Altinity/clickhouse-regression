@@ -315,6 +315,162 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
                 assert "David\t20\t27" in result.output, error()
 
 
+@TestScenario
+def rename_database(self, minio_root_user, minio_root_password):
+    """Test renaming the database with Iceberg engine in ClickHouse."""
+    namespace = f"iceberg_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with Given("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create namespace"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with Then("create database with Iceberg engine"):
+        database_name = f"iceberg_database_{getuid()}"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("check that rename table from Iceberg database is not supported"):
+        new_table_name = f"new_table_{getuid()}"
+        exitcode = 48
+        message = "DB::Exception: Iceberg: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
+        self.context.node.query(
+            f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}",
+            exitcode=exitcode,
+            message=message,
+        )
+
+    with And("check that rename Iceberg database is not supported"):
+        new_database_name = f"new_iceberg_database_{getuid()}"
+        exitcode = 48
+        message = "DB::Exception: Iceberg: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
+        self.context.node.query(
+            f"RENAME DATABASE {database_name} TO {new_database_name}",
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+def rename_table_from_iceberg_database(self, minio_root_user, minio_root_password):
+    """Test renaming the database with Iceberg engine in ClickHouse."""
+    namespace = f"iceberg_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with Given("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create namespace"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with Then("create database with Iceberg engine"):
+        database_name = f"iceberg_database_{getuid()}"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("check that rename table from Iceberg database is not supported"):
+        new_table_name = f"new_table_{getuid()}"
+        exitcode = 48
+        message = (
+            "DB::Exception: Iceberg: renameTable() is not supported. (NOT_IMPLEMENTED)"
+        )
+        self.context.node.query(
+            f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}",
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+def use_database(self, minio_root_user, minio_root_password, node=None):
+    """Test using the database with Iceberg engine in ClickHouse."""
+    if node is None:
+        node = self.context.node
+
+    namespace = f"iceberg_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with Given("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:8182/",
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create namespace"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name
+        )
+
+    with Then("create database with Iceberg engine"):
+        database_name = f"iceberg_database_{getuid()}"
+        iceberg_engine.drop_database(database_name=database_name)
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("use the database"):
+        result = node.query(
+            f"USE {database_name}; SELECT currentDatabase(); SHOW TABLES;"
+        )
+        assert f"{namespace}.{table_name}" in result.output, error()
+
+    with And("check the current database"):
+        result = node.query(f"USE {database_name}; SELECT currentDatabase()")
+        assert result.output.strip() == f"{database_name}", error()
+
+
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sanity)(
@@ -324,5 +480,14 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=recreate_table_multiple_times)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=use_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_table_from_iceberg_database)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
