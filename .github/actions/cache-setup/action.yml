@@ -8,6 +8,6 @@ runs:
       uses: actions/cache@v4
       with:
         path: venv
-        key: ${{ runner.os }}-${{ runner.arch }}-python-${{ hashFiles('.python-version') }}-venv-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-python-3.12-venv-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-python-${{ hashFiles('.python-version') }}-venv-
+          ${{ runner.os }}-${{ runner.arch }}-python-3.12-venv-
