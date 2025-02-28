@@ -7,7 +7,7 @@
 | Equality deletes (mark a row deleted by one or more column values)                                       | Yes                        |
 | Primitive data types                                                                                     | Yes (except from UUID)     |
 | Nested data types                                                                                     | ???                        |
-| Schema evolution: type promotion (int -> long, float -> double, decimal -> decimal with wider precision) |                            |
+| Schema evolution: type promotion (int -> long, float -> double, decimal -> decimal with wider precision) |       Yes                     |
 | Schema evolution: adding fields                                                                          | Yes                        |
 | Schema evolution: renaming fields                                                                        | Yes                        |
 | Schema evolution: deleting fields                                                                        | Yes                        |
