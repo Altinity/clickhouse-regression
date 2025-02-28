@@ -742,7 +742,7 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Cache Python dependencies and Docker images
+      - name: Cache Python dependencies
         uses: ./.github/actions/cache-setup
         with:
           package: ${{ inputs.package }}

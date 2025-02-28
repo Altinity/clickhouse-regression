@@ -1,27 +1,9 @@
 name: 'Cache Setup'
-description: 'Setup caching for Docker images and Python dependencies'
-inputs:
-  package:
-    description: 'String describing the package'
-    required: true
+description: 'Setup caching for Python dependencies'
 
 runs:
   using: 'composite'
   steps:
-    - name: Hash package input
-      id: hash_package
-      run: |
-        echo "package_hash=$(echo -n '${{ inputs.package }}' | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Cache Docker images
-      uses: actions/cache@v3
-      with:
-        path: /var/lib/docker
-        key: ${{ runner.os }}-${{ runner.arch }}-docker-${{ hashFiles('docker-compose/base-os/*','helpers/cluster.py') }}-${{ env.package_hash }}
-        restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-docker-${{ hashFiles('docker-compose/base-os/*','helpers/cluster.py') }}-
-
     - name: Cache Python venv
       uses: actions/cache@v4
       with:
