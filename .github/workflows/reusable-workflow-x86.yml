@@ -99,6 +99,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -135,6 +138,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -173,6 +179,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -210,6 +219,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -250,6 +262,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -289,6 +304,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -327,6 +345,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -364,6 +385,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -404,6 +428,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -443,6 +470,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -480,6 +510,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -520,6 +553,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -556,6 +592,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -594,6 +633,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -630,6 +672,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -668,6 +713,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -704,6 +752,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -782,6 +833,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -818,6 +872,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -856,6 +913,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -892,6 +952,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -930,6 +993,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -966,6 +1032,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1004,6 +1073,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1040,6 +1112,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1078,6 +1153,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1114,6 +1192,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1152,6 +1233,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1188,6 +1272,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1227,6 +1314,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1264,6 +1354,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1304,6 +1397,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1340,6 +1436,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1379,6 +1478,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1417,6 +1519,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1453,6 +1558,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1491,6 +1599,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1527,6 +1638,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -1566,6 +1680,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -1603,6 +1720,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
