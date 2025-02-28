@@ -4617,7 +4617,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
         "| Setting                                           | Values                          | Description                                                                         |\n"
         "|---------------------------------------------------|---------------------------------|-------------------------------------------------------------------------------------|\n"
         "| `input_format_parquet_use_metadata_cache`         | `true`/`false` (default: false) | Enable/disable caching of Parquet file metadata                                     |\n"
-        "| `input_format_parquet_metadata_cache_max_entries` | `INT` (default: 5000)           | Maximum number of file metadata objects to cache set from the server configuration. |\n"
+        "| `input_format_parquet_metadata_cache_max_entries` | `INT` (default: 500000000 bytes)           | Maximum number of file metadata objects to cache set from the server configuration. |\n"
         "\n"
     ),
     link=None,
@@ -10886,7 +10886,7 @@ Metadata Caching for Object Storage:
     - input_format_parquet_metadata_cache_max_entries:
         type: server_settings
         values: UInt64
-        default: 5000
+        default: 500000000 (bytes)
   Engines And Functions That Can Store Parquet:
     - S3
     - S3Cluster
@@ -11280,7 +11280,7 @@ version: 1.0
 | Setting                                           | Values                          | Description                                                                         |
 |---------------------------------------------------|---------------------------------|-------------------------------------------------------------------------------------|
 | `input_format_parquet_use_metadata_cache`         | `true`/`false` (default: false) | Enable/disable caching of Parquet file metadata                                     |
-| `input_format_parquet_metadata_cache_max_entries` | `INT` (default: 5000)           | Maximum number of file metadata objects to cache set from the server configuration. |
+| `input_format_parquet_metadata_cache_max_entries` | `INT` (default: 500000000 bytes)           | Maximum number of file metadata objects to cache set from the server configuration. |
 
 #### All Possible Settings That Can Be Used Along With Metadata Caching Settings
 
