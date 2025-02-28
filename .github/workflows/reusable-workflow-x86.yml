@@ -742,6 +742,11 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: '.python-version'
+          cache: 'pip'
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
