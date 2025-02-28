@@ -15,7 +15,7 @@ runs:
       shell: bash
 
     - name: Cache Docker images
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: /var/lib/docker
         key: ${{ runner.os }}-${{ runner.arch }}-docker-${{ hashFiles('docker-compose/base-os/*','helpers/cluster.py') }}-${{ env.package_hash }}
