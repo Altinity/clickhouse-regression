@@ -1,7 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
 
-import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from helpers.common import getuid
