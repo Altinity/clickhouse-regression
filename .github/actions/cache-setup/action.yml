@@ -1,0 +1,13 @@
+name: 'Cache Setup'
+description: 'Setup caching for Python dependencies'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache Python venv
+      uses: actions/cache@v4
+      with:
+        path: venv
+        key: ${{ runner.os }}-${{ runner.arch }}-python-3.12-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-python-3.12-venv-
