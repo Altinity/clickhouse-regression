@@ -744,8 +744,6 @@ jobs:
 
       - name: Cache Python dependencies
         uses: ./.github/actions/cache-setup
-        with:
-          package: ${{ inputs.package }}
 
       - name: 🛠️ Setup
         run: .github/setup.sh
