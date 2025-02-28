@@ -20,12 +20,14 @@ sudo apt-get update
 echo "::endgroup::"
 
 echo "::group::Python Setup"
+echo "Install Python modules..."
+sudo apt-get install -y python3.12-venv
+
 echo "Create and activate Python virtual environment..."
 python3 -m venv venv
 source venv/bin/activate
 echo PATH=$PATH >>$GITHUB_ENV
 
-echo "Install Python requirements..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
 echo "::endgroup::"
 
