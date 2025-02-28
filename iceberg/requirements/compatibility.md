@@ -17,7 +17,7 @@
 | Partition Evolution: renaming partition spec fields                                                      |                            |
 | Partition Evolution: reordering partition spec fields                                                    |                            |
 | Partition Evolution: removing partition spec fields                                                      |                            |
-| Sorting                                                                                                  |                            |
+| Sorting                                                                                                  |            Not preserved                |
 | Point in Time Reads (Time Travel)                                                                        | No                         |
 | Writes: Overwrite data                                                                                   | Yes                        |
 | Writes: Append data                                                                                      | Yes                        |
