@@ -83,11 +83,13 @@ def execute_query(
         if "snapshot_id" in current().context:
             snapshot_id = current().context.snapshot_id
         else:
-            snapshot_id = (
-                "tests.pre22.3"
-                if check_clickhouse_version("<22.3")(current())
-                else "tests.post22.3"
-            )
+            if check_clickhouse_version(">=25.3")(current()):
+                # https://github.com/ClickHouse/ClickHouse/pull/76840
+                snapshot_id = "tests.post25.3"
+            elif check_clickhouse_version(">=22.3")(current()):
+                snapshot_id = "tests.post22.3"
+            else:
+                snapshot_id = "tests.pre22.3"
 
         if is_with_analyzer(current().context.node):
             snapshot_id += "_with_analyzer"
