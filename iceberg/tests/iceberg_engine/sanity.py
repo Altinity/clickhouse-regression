@@ -3,6 +3,23 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from helpers.common import getuid
+
+from decimal import Decimal
+from pyiceberg.schema import Schema
+from pyiceberg.types import (
+    BooleanType,
+    StringType,
+    LongType,
+    DoubleType,
+    DecimalType,
+    StructType,
+    NestedField,
+)
+from pyiceberg.partitioning import PartitionSpec, PartitionField
+from pyiceberg.table.sorting import SortOrder, SortField
+from pyiceberg.transforms import IdentityTransform
+
 import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
@@ -320,6 +337,7 @@ def rename_database(self, minio_root_user, minio_root_password):
     """Test renaming the database with Iceberg engine in ClickHouse."""
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
+    database_name = f"iceberg_database_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -334,12 +352,11 @@ def rename_database(self, minio_root_user, minio_root_password):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with When(f"define schema and create {namespace}.{table_name} table"):
-        table = catalog_steps.create_iceberg_table_with_three_columns(
+        catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             namespace=namespace,
@@ -351,22 +368,13 @@ def rename_database(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("check that rename table from Iceberg database is not supported"):
-        new_table_name = f"new_table_{getuid()}"
-        exitcode = 48
-        message = "DB::Exception: Iceberg: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
-        self.context.node.query(
-            f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}",
-            exitcode=exitcode,
-            message=message,
-        )
-
     with And("check that rename Iceberg database is not supported"):
         new_database_name = f"new_iceberg_database_{getuid()}"
         exitcode = 48
         message = "DB::Exception: Iceberg: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
+        rename_query = f"RENAME DATABASE {database_name} TO {new_database_name}"
         self.context.node.query(
-            f"RENAME DATABASE {database_name} TO {new_database_name}",
+            rename_query,
             exitcode=exitcode,
             message=message,
         )
@@ -377,6 +385,7 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
     """Test renaming the database with Iceberg engine in ClickHouse."""
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
+    database_name = f"iceberg_database_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -391,12 +400,11 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with When(f"define schema and create {namespace}.{table_name} table"):
-        table = catalog_steps.create_iceberg_table_with_three_columns(
+        catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             namespace=namespace,
@@ -414,8 +422,9 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
         message = (
             "DB::Exception: Iceberg: renameTable() is not supported. (NOT_IMPLEMENTED)"
         )
+        rename_query = f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}"
         self.context.node.query(
-            f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}",
+            rename_query,
             exitcode=exitcode,
             message=message,
         )
