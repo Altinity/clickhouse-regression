@@ -7,7 +7,7 @@ from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
-from helpers.common import experimental_analyzer, check_any_sanitizer_in_binary_link
+from helpers.common import experimental_analyzer, check_with_any_sanitizer
 from helpers.cluster import create_cluster, check_clickhouse_version
 from helpers.argparser import argparser, CaptureClusterArgs
 from aes_encryption.requirements import *
@@ -106,7 +106,7 @@ ffails = {
     "/aes encryption/performance": (
         Skip,
         "Builds with sanitizers are slow.",
-        check_any_sanitizer_in_binary_link,
+        check_with_any_sanitizer,
     ),
 }
 

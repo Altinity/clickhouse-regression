@@ -1,0 +1,91 @@
+name: 🔬 regression
+run-name: 🔬 regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "🧪 Test suite to run (default: all)"
+        type: choice
+        options:
+          - all
+          - all_aws
+          - all_gcs
+          - aes_encryption
+          - aggregate_functions
+          - atomic_insert
+          - alter_all
+          - alter_replace_partition
+          - alter_attach_partition
+          - alter_move_partition
+          - attach
+          - base_58
+          - benchmark_all
+          - benchmark_aws
+          - benchmark_gcs
+          - benchmark_minio
+          - clickhouse_keeper
+          - clickhouse_keeper_failover
+          - data_types
+          - datetime64_extended_range
+          - disk_level_encryption
+          - dns
+          - engines
+          - example
+          - extended_precision_data_types
+          - functions
+          - iceberg
+          - jwt_authentication
+          - kafka
+          - kerberos
+          - key_value
+          - ldap
+          - lightweight_delete
+          - memory
+          - parquet_all
+          - parquet
+          - parquet_minio
+          - parquet_s3
+          - part_moves_between_shards
+          - rbac
+          - s3_all
+          - s3_aws
+          - s3_azure
+          - s3_gcs
+          - s3_minio
+          - selects
+          - session_timezone
+          - ssl_server
+          - tiered_storage_all
+          - tiered_storage_aws
+          - tiered_storage_gcs
+          - tiered_storage_local
+          - tiered_storage_minio
+          - window_functions
+
+jobs:
+  example_matrix:
+    strategy:
+      matrix:
+        include:
+          - clickhouse_package: docker://altinity/clickhouse-server:22.3.15.34.altinitystable
+            artifact_name: altinitystable-22-3-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
+            artifact_name: altinitystable-22-8-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
+            artifact_name: altinitystable-23-3-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:23.8.11.29.altinitystable
+            artifact_name: altinitystable-23-8-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
+            artifact_name: altinitystable-24-3-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:24.8.7.43.altinityedge
+            artifact_name: altinityedge-24-8-x86-zookeeper
+          - clickhouse_package: docker://clickhouse/clickhouse-server:head-alpine
+            artifact_name: clickhouse-head-x86-zookeeper
+
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    with:
+      package: ${{ matrix.clickhouse_package }}
+      artifact_name: ${{ matrix.artifact_name }}
+      suite: ${{ inputs.suite }}
+    secrets: inherit

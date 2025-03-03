@@ -119,7 +119,19 @@
             <ssl_certificates>
                 <common_name>clickhouse1:client3</common_name>
             </ssl_certificates>
-        </CN_hostname_user>        
+        </CN_hostname_user>
+        <cert_user>
+            <ssl_certificates>
+                <common_name>clickhouse1:cert_user</common_name>
+                <common_name>clickhouse2:cert_user</common_name>
+                <common_name>clickhouse3:cert_user</common_name>
+            </ssl_certificates>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <access_management>1</access_management>
+        </cert_user>
     </users>
 
     <!-- Quotas. -->

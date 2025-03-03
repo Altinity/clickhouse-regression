@@ -89,29 +89,33 @@ def check_with_msan(test):
 
 def check_tsan_in_binary_link(test):
     """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "tsan" in binary_path
 
 
 def check_asan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with AddressSanitizer (asan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "asan" in binary_path
 
 
 def check_ubsan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with UndefinedBehaviorSanitizer (ubsan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "ubsan" in binary_path
 
 
 def check_msan_in_binary_link(test):
-    """Check if the build is with ThreadSanitizer (tsan)."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_binary_path", "")
+    """Check if the build is with MemorySanitizer (msan)."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
     return "msan" in binary_path
 
 
-def check_any_sanitizer_in_binary_link(test):
+def check_with_any_sanitizer(test):
     """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
     sanitizers = ["tsan", "asan", "ubsan", "msan"]
     if hasattr(test.context, "build_options"):
@@ -851,17 +855,44 @@ def create_file_on_node(self, path, content, node=None):
 
 
 @TestStep(Given)
-def create_user(self, name, node=None):
+def create_user(self, name=None, node=None):
     """Create a user."""
     if node is None:
         node = self.context.node
 
+    if name is None:
+        name = f"user_{getuid()}"
+
     try:
         node.query(f"CREATE USER OR REPLACE {name}")
-        yield
+        yield name
     finally:
-        with Finally(f"I delete the user {name}"):
+        with Finally(f"drop the user {name}"):
             node.query(f"DROP USER IF EXISTS {name}")
+
+
+@TestStep(Given)
+def create_role(self, privilege=None, object=None, role_name=None, node=None):
+    """Create role and grant privilege on object."""
+
+    if node is None:
+        node = self.context.node
+
+    if role_name is None:
+        role_name = f"role_{getuid()}"
+
+    query = f"CREATE ROLE {role_name}; "
+
+    if privilege is not None and object is not None:
+        query += f"GRANT {privilege} ON {object} TO {role_name};"
+
+    try:
+        node.query(query)
+        yield role_name
+
+    finally:
+        with Finally("drop the role"):
+            node.query(f"DROP ROLE IF EXISTS {role_name}")
 
 
 @TestStep(When)

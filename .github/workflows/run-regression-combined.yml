@@ -61,7 +61,6 @@ on:
           - benchmark_minio
           - clickhouse_keeper
           - clickhouse_keeper_failover
-          - data_lakes
           - data_types
           - datetime64_extended_range
           - disk_level_encryption
@@ -70,6 +69,7 @@ on:
           - example
           - extended_precision_data_types
           - functions
+          - iceberg
           - jwt_authentication
           - kafka
           - kerberos
