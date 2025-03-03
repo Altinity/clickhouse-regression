@@ -1,15 +1,8 @@
 from testflows.core import *
-from testflows.asserts import error
-from testflows.combinatorics import combinations
 
 from helpers.common import getuid
 
-import re
-import pyarrow as pa
 import random
-import string
-
-from datetime import date, timedelta
 
 random.seed(42)
 
@@ -22,7 +15,6 @@ def create_table_with_iceberg_engine(
     secret_access_key,
     table_name=None,
     node=None,
-    filename="data",
     allow_dynamic_metadata_for_data_lakes=False,
 ):
     """Create table with Iceberg table engine."""
@@ -50,4 +42,3 @@ def create_table_with_iceberg_engine(
     finally:
         with Finally("drop table"):
             node.query(f"DROP TABLE IF EXISTS {table_name}")
-
