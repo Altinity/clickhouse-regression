@@ -16,6 +16,11 @@ def get_error_tlsv1_alert_unknown_ca(self):
     else:
         return "Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"
 
+@TestStep(Given)
+def get_error_authentication_failed(self):
+
+    return "Authentication failed: password is incorrect, or there is no user with such name"
+
 
 @TestStep(Given)
 def create_node_server_certificate_with_chain_and_dh_params(
@@ -210,7 +215,7 @@ def check_secure_connection(self, from_node, to_node, message=None):
             "SELECT 1 FORMAT TabSeparated",
             message=message,
             secure=True,
-            settings=[("host", to_node.name)],
+            settings=[("host", to_node.name), ("user", "cert_user")],
         )
 
     if message is None:

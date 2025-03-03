@@ -174,6 +174,13 @@ xfails = {
             check_clickhouse_version(">=24.9"),
         )
     ],
+    "minio/invalid table function/invalid wildcard": [
+        (
+            Fail,
+            "doesn't work <25.1 https://github.com/ClickHouse/ClickHouse/issues/75492",
+            check_clickhouse_version("<25.1"),
+        )
+    ],
 }
 
 ffails = {

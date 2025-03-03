@@ -246,5 +246,9 @@ def feature(self):
     self.context.krb_server = self.context.cluster.node("kerberos")
     self.context.bash_tools = self.context.cluster.node("bash-tools")
 
-    for scenario in loads(current_module(), Scenario):
-        Scenario(test=scenario, flags=TE)()
+    Scenario(run=multiple_auth_methods)
+    Scenario(run=kerberos_with_valid_until_and_other_methods)
+    Scenario(run=add_kerberos_auth)
+    Scenario(run=kerberos_with_valid_until)
+    Scenario(run=revoke_kerberos_auth)
+    

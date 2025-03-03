@@ -286,25 +286,27 @@ def attach_partition_from_with_temporary_tables(self):
         "GraphiteMergeTree",
     }
 
-    with Pool(1) as executor:
-        for (
+    combinations = product(source_tables, destination_tables, engines, engines)
+
+    if not self.context.stress:
+        combinations = random.sample(list(combinations), 100)
+
+    for num, combination in enumerate(combinations):
+        (
             source_table,
             destination_table,
             source_table_engine,
             destination_table_engine,
-        ) in product(source_tables, destination_tables, engines, engines):
-            Scenario(
-                f"{source_table.__name__}_{destination_table.__name__}_{source_table_engine}_{destination_table_engine}",
-                test=check_attach_partition_from_with_temporary_tables,
-                parallel=True,
-                executor=executor,
-            )(
-                source_table=source_table,
-                destination_table=destination_table,
-                source_table_engine=source_table_engine,
-                destination_table_engine=destination_table_engine,
-            )
-        join()
+        ) = combination
+        Scenario(
+            f"combination #{num}",
+            test=check_attach_partition_from_with_temporary_tables,
+        )(
+            source_table=source_table,
+            destination_table=destination_table,
+            source_table_engine=source_table_engine,
+            destination_table_engine=destination_table_engine,
+        )
 
 
 @TestFeature

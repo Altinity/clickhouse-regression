@@ -120,7 +120,7 @@ env:
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
     --log raw.log ${{ inputs.extra_args }}
     --stress
     --only ":/combinations/:/${{ inputs.scenario }}*"
@@ -147,6 +147,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -186,6 +189,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -223,6 +229,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -257,6 +266,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -290,6 +302,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh
@@ -329,6 +344,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -366,6 +384,9 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -399,6 +420,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
 
       - name: 🛠️ Setup
         run: .github/setup.sh

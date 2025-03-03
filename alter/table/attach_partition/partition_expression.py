@@ -10,7 +10,7 @@ from alter.table.attach_partition.common import (
 )
 from alter.table.attach_partition.requirements.requirements import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 source_table = "source_" + getuid()
@@ -28,29 +28,61 @@ def if_valid(partition, with_id):
     if with_id:
         not_exists = {"0", "4", "5", "6", "7", "8", "9", "0", "-", "!"} | ascii_letters
         invalid_format = not_letters.difference({"-", "!"})
-        invalid_syntax = "'"
 
         if partition in not_exists:
             return None, None, False
-        elif partition in invalid_syntax:
-            return 62, "Exception: Syntax error: failed at position", False
+        elif partition == "!" and check_clickhouse_version(">=25.2")(current()):
+            return (
+                62,
+                "DB::Exception: Exclamation mark can only occur in != operator: Syntax error: failed at position",
+                False,
+            )
+        elif partition == "'":
+            if check_clickhouse_version(">=25.2")(current()):
+                return (
+                    62,
+                    "DB::Exception: Single quoted string is not closed: Syntax error: failed at position",
+                    False,
+                )
+            return 62, "DB::Exception: Syntax error: failed at position", False
         elif partition in invalid_format:
-            return 248, "Exception: Invalid partition format", False
+            return 248, "DB::Exception: Invalid partition format", False
         else:
             return None, None, True
     else:
         not_exists = {"0", "4", "5", "6", "7", "8", "9"}
         invalid = not_letters | ascii_letters
+        unrecognized_token = ["~", "&"]
 
         if partition in not_exists:
             return None, None, False
+        elif partition == "!" and check_clickhouse_version(">=25.2")(current()):
+            return (
+                62,
+                "DB::Exception: Exclamation mark can only occur in != operator: Syntax error: failed at position",
+                False,
+            )
+        elif partition == "'" and check_clickhouse_version(">=25.2")(current()):
+            return (
+                62,
+                "DB::Exception: Single quoted string is not closed: Syntax error: failed at position",
+                False,
+            )
+        elif partition in unrecognized_token and check_clickhouse_version(">=25.2")(
+            current()
+        ):
+            return (
+                62,
+                "DB::Exception: Unrecognized token: Syntax error: failed at position",
+                False,
+            )
         elif partition in invalid:
-            return 62, "Exception: Syntax error: failed at position", False
+            return 62, "DB::Exception: Syntax error: failed at position", False
         else:
             return None, None, True
 
 
-@TestScenario
+@TestCheck
 @Flags(TE)
 @Requirements(RQ_SRS_034_ClickHouse_Alter_Table_AttachPartitionFrom("1.0"))
 def check_partition_expression(
@@ -78,7 +110,9 @@ def check_partition_expression(
             for attempt in retries(timeout=10, delay=1):
                 with attempt:
                     assert len(result.output) > 0, error()
+
             node.query(f"ALTER TABLE {destination_table} DETACH PARTITION {partition}")
+
         else:
             result = node.query(
                 f"SELECT * FROM {destination_table} FORMAT TabSeparated"
@@ -88,16 +122,17 @@ def check_partition_expression(
                     assert len(result.output) == 0, error()
 
 
-@TestSketch(Scenario)
+@TestScenario
 @Flags(TE)
 def partition_expression(self, with_id=False):
     """Check if partition expression is valid."""
     partitions = ascii_letters | not_letters
 
-    check_partition_expression(
-        with_id=with_id,
-        partition=either(*partitions),
-    )
+    for num, partition in enumerate(partitions):
+        Check(name=f"#{num}", test=check_partition_expression)(
+            with_id=with_id,
+            partition=partition,
+        )
 
 
 @TestFeature

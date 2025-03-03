@@ -505,11 +505,12 @@ def attach_partition_from_on_node(
         return True
 
     except Exception as e:
-        exitcode = "Code: 60"
+        # 60 - Table doesn't exist
+        # 218 - Table is dropped or detached
         message = "DB::Exception: Table default.source"
-        assert message in e.message and exitcode in e.message
-
-        return False
+        assert message in e.message and (
+            "Code: 60" in e.message or "Code: 218" in e.message
+        ), error()
 
 
 @TestStep

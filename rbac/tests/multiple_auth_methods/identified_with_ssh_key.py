@@ -3,7 +3,7 @@ from testflows.asserts import error
 
 from rbac.requirements import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 import rbac.tests.multiple_auth_methods.common as common
 import rbac.tests.multiple_auth_methods.errors as errors
@@ -230,6 +230,12 @@ def key_without_BY_clause_after_other_auth_method(self):
                 62,
                 "DB::Exception: Syntax error: failed at position 660 ('KEY')",
             )
+            if check_clickhouse_version(">=25.2")(self):
+                exitcode, message = (
+                    62,
+                    "DB::Exception: Syntax error: failed at position 660 (KEY)",
+                )
+
             node.query(query, exitcode=exitcode, message=message)
 
     finally:

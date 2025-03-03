@@ -24,14 +24,9 @@ def valid_name(source_table_name, destination_table_name):
         invalid.remove("_")
     valid = ["a" * 10000] + [i for i in ascii_letters] + ["_"]
 
-    if destination_table_name in invalid:
-        return 62, "DB::Exception: Syntax error: failed at position"
-    elif source_table_name in invalid:
-        return 62, "DB::Exception: Syntax error: failed at position"
-    elif destination_table_name in valid:
-        note("Could not find a table or table does not exist")
-        return 60, "DB::Exception: "
-    elif source_table_name in valid:
+    if destination_table_name in invalid or source_table_name in invalid:
+        return 62, "Syntax error: failed at position"
+    elif destination_table_name in valid or source_table_name in valid:
         note("Could not find a table or table does not exist")
         return 60, "DB::Exception: "
     else:
@@ -80,7 +75,12 @@ def check_table_name(
                 else:
                     query = f"ALTER TABLE {destination_name} ATTACH PARTITION {partition_id} FROM {source_name}"
 
-                node.query(query, exitcode=exitcode, message=message)
+            if (exitcode is not None) and (message is not None):
+                result = node.query(query, no_checks=True)
+                assert message in result.output, error()
+                assert exitcode == result.exitcode, error()
+            else:
+                node.query(query)
 
 
 @TestSketch(Scenario)
