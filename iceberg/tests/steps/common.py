@@ -4,12 +4,13 @@ from testflows.combinatorics import combinations
 
 from helpers.common import getuid
 
+from datetime import date, timedelta
+
 import re
-import pyarrow as pa
+import math
 import random
 import string
-
-from datetime import date, timedelta
+import pyarrow as pa
 
 random.seed(42)
 
@@ -142,7 +143,8 @@ def insert_same_data_to_iceberg_and_merge_tree_tables(
 
 
 def get_all_combinations(items, max_length=None):
-    """Generate all possible non-empty combinations of the input list."""
+    """Generate all possible combinations of items up to a given length,
+    output is comma-separated strings of items."""
     if max_length is None:
         max_length = len(items) + 1
 
@@ -258,3 +260,45 @@ def get_random_value_from_table(self, table_name, column, node=None):
         f"SELECT {column} FROM {table_name} LIMIT 1 OFFSET {offset}"
     )
     return result.output.strip()
+
+
+def parse_table_output(output):
+    """Parses a tab-separated string output into a list of lists with appropriate types."""
+    rows = output.strip().split("\n")
+    parsed_data = []
+
+    for row in rows:
+        values = row.split("\t")
+        parsed_row = []
+        for value in values:
+            # Try to convert to int, then float, otherwise keep as string
+            if value.isdigit():
+                parsed_row.append(int(value))
+            else:
+                try:
+                    parsed_row.append(float(value))
+                except ValueError:
+                    parsed_row.append(value)
+        parsed_data.append(parsed_row)
+
+    return parsed_data
+
+
+def compare_results(iceberg_output, merge_tree_output, rel_tol=1e-3, abs_tol=1e-3):
+    iceberg_data = parse_table_output(iceberg_output)
+    merge_tree_data = parse_table_output(merge_tree_output)
+
+    if len(iceberg_data) != len(merge_tree_data):
+        return False
+
+    for row1, row2 in zip(iceberg_data, merge_tree_data):
+        if len(row1) != len(row2):
+            return False
+
+        for val1, val2 in zip(row1, row2):
+            if isinstance(val1, float) and isinstance(val2, float):
+                if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
+                    return False
+            elif val1 != val2:
+                return False
+    return True
