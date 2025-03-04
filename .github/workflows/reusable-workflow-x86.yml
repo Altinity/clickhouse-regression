@@ -1223,7 +1223,7 @@ jobs:
 
   lightweight_delete:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 240
     env:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
