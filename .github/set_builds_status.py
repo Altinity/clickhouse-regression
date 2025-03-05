@@ -22,19 +22,27 @@ state = {
     "cancelled": "error",
 }.get(job_outcome, "pending")
 
-# Get log summary
-# 140 characters max
-status_message = (
-    subprocess.getoutput("tfs --no-color show totals raw.log").strip()
-    or "Job completed"
-)
 
-# Keep the first 3 lines and the last line of tfs show totals
-status_lines = status_message.splitlines()
-if len(status_lines) > 4:
-    status_message = "\n".join(status_lines[:3] + status_lines[-1:])
+def make_status_message():
+    # Get log summary
+    # 140 characters max
+    status_message = (
+        subprocess.getoutput("tfs --no-color show totals raw.log").strip()
+        or "Job completed"
+    )
 
-status_message = status_message[:140]
+    # Keep the first 3 lines and the last line of tfs show totals
+    status_lines = status_message.splitlines()
+    if len(status_lines) > 4:
+        status_message = "\n".join(status_lines[:3] + status_lines[-1:])
+
+    return status_message[:140]
+
+
+if state == "error":
+    status_message = "Job did not complete"
+else:
+    status_message = make_status_message()
 
 # GitHub API request to set commit status
 response = requests.post(
