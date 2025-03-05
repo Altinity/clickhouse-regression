@@ -207,6 +207,16 @@ def parse_clickhouse_error(error_message, only_error_name=True):
 
 
 @TestStep(Then)
+def compare_data_in_two_tables(self, table_name1, table_name2):
+    """Compare data in two tables."""
+    table_name1_result = get_select_query_result(
+        table_name=table_name1,
+    ).output
+    table_name2_result = get_select_query_result(table_name=table_name2).output
+    compare_results(table_name1_result, table_name2_result)
+
+
+@TestStep(Then)
 def compare_results(self, result1, result2):
     """Helper function to compare query results or exception messages."""
     if result1.exitcode == 0 and result2.exitcode == 0:
@@ -249,17 +259,23 @@ def delete_rows_from_merge_tree_table(self, table_name, condition, node=None):
 
 
 @TestStep(Given)
-def get_random_value_from_table(self, table_name, column, node=None):
-    """Get a random value from a column in a table."""
+def get_random_value_from_table(self, table_name, column, number=1, node=None):
+    """Get specified number of random values from a given column in a table."""
     if node is None:
         node = self.context.node
 
-    count = int(node.query(f"SELECT count(*) FROM {table_name}").output.strip())
-    offset = random.randint(1, count - 1)
-    result = self.context.node.query(
-        f"SELECT {column} FROM {table_name} LIMIT 1 OFFSET {offset}"
-    )
-    return result.output.strip()
+    output = []
+    for _ in range(number):
+        count = int(node.query(f"SELECT count(*) FROM {table_name}").output.strip())
+        if count == 0:
+            return None
+        offset = random.randint(0, count - 1)
+        result = self.context.node.query(
+            f"SELECT {column} FROM {table_name} LIMIT 1 OFFSET {offset} FORMAT TabSeparated"
+        )
+        output.append(result.output.strip())
+
+    return output[0] if number == 1 else output
 
 
 def parse_table_output(output):
