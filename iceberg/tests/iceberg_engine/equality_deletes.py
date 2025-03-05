@@ -256,7 +256,7 @@ def add_data(self, merge_tree_table_name, iceberg_table, num_rows=10):
     )
 
 
-@TestScenario
+@TestCheck
 def equality_delete(self, minio_root_user, minio_root_password, actions, node=None):
     """Test that ClickHouse can read data from Iceberg table after
     deleting some rows from Iceberg table."""
