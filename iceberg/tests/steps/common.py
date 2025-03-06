@@ -182,6 +182,16 @@ def get_select_query_result(
     )
 
 
+@TestStep(Then)
+def compare_data_in_two_tables(self, table_name1, table_name2):
+    """Compare data in two tables."""
+    table_name1_result = get_select_query_result(
+        table_name=table_name1,
+    ).output
+    table_name2_result = get_select_query_result(table_name=table_name2).output
+    compare_select_outputs(table_name1_result, table_name2_result)
+
+
 def parse_clickhouse_error(error_message, only_error_name=True):
     """Parse ClickHouse error message and return error code and message."""
     pattern = r"Code: (\d+)\. DB::Exception:.*?DB::Exception: (.*?[\.:])"
@@ -207,18 +217,8 @@ def parse_clickhouse_error(error_message, only_error_name=True):
 
 
 @TestStep(Then)
-def compare_data_in_two_tables(self, table_name1, table_name2):
-    """Compare data in two tables."""
-    table_name1_result = get_select_query_result(
-        table_name=table_name1,
-    ).output
-    table_name2_result = get_select_query_result(table_name=table_name2).output
-    compare_results(table_name1_result, table_name2_result)
-
-
-@TestStep(Then)
 def compare_results(self, result1, result2):
-    """Helper function to compare query results or exception messages."""
+    """Helper function to compare query results and exception messages."""
     if result1.exitcode == 0 and result2.exitcode == 0:
         assert result1.output == result2.output, error()
     elif result1.exitcode == 0:
@@ -300,9 +300,9 @@ def parse_table_output(output):
     return parsed_data
 
 
-def compare_results(iceberg_output, merge_tree_output, rel_tol=1e-3, abs_tol=1e-3):
-    iceberg_data = parse_table_output(iceberg_output)
-    merge_tree_data = parse_table_output(merge_tree_output)
+def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
+    iceberg_data = parse_table_output(output1)
+    merge_tree_data = parse_table_output(output2)
 
     if len(iceberg_data) != len(merge_tree_data):
         return False
