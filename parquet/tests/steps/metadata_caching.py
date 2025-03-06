@@ -41,34 +41,47 @@ def create_parquet_on_s3(self, file_name, columns, compression_type=None, cluste
 
 @TestStep(Given)
 def create_s3_parquet_all_datatypes(
-    self, file_name, compression_type=None, row_count=1000
+    self, file_name, compression_type=None, row_count=10, cluster=None
 ):
     """Create a Parquet file with all supported data types."""
     columns = generate_all_column_types(include=parquet_test_columns())
     file = create_parquet_on_s3(
-        file_name=file_name, columns=columns, compression_type=compression_type
+        file_name=file_name,
+        columns=columns,
+        compression_type=compression_type,
+        cluster=cluster,
     )
 
     file.insert_test_data(row_count=row_count)
 
 
 @TestStep(Given)
-def create_s3_parquet_basic_numeric_datatypes(self, file_name, compression_type=None):
+def create_s3_parquet_basic_numeric_datatypes(
+    self, file_name, compression_type=None, cluster=None
+):
     """Create a Parquet file with basic numeric data types."""
     columns = generate_all_basic_numeric_column_types()
     file = create_parquet_on_s3(
-        file_name=file_name, columns=columns, compression_type=compression_type
+        file_name=file_name,
+        columns=columns,
+        compression_type=compression_type,
+        cluster=cluster,
     )
 
     file.insert_test_data()
 
 
 @TestStep(Given)
-def create_s3_parquet_common_datatypes(self, file_name, compression_type=None):
+def create_s3_parquet_common_datatypes(
+    self, file_name, compression_type=None, cluster=None
+):
     """Create a Parquet file with common data types."""
     columns = common_columns()
     file = create_parquet_on_s3(
-        file_name=file_name, columns=columns, compression_type=compression_type
+        file_name=file_name,
+        columns=columns,
+        compression_type=compression_type,
+        cluster=cluster,
     )
 
     file.insert_test_data()
@@ -86,7 +99,9 @@ def create_s3_parquet_all_map_datatypes(self, file_name, compression_type=None):
 
 
 @TestStep(Given)
-def create_multiple_parquet_files_with_all_datatypes(self, number_of_files):
+def create_multiple_parquet_files_with_all_datatypes(
+    self, number_of_files, cluster=None
+):
     """Create multiple Parquet files with all supported data types."""
     file_names = [f"file_{getuid()}" for _ in range(number_of_files)]
 
@@ -96,14 +111,14 @@ def create_multiple_parquet_files_with_all_datatypes(self, number_of_files):
                 test=create_s3_parquet_all_datatypes,
                 parallel=True,
                 executor=pool,
-            )(file_name=name)
+            )(file_name=name, cluster=cluster)
         join()
 
     return file_names
 
 
 @TestStep(Given)
-def create_multiple_parquet_files_with_common_datatypes(self, number_of_files):
+def create_multiple_parquet_files_with_common_datatypes(self, number_of_files, cluster):
     """Create multiple Parquet files with common data types."""
     file_names = [f"file_{getuid()}" for _ in range(number_of_files)]
 
@@ -113,14 +128,16 @@ def create_multiple_parquet_files_with_common_datatypes(self, number_of_files):
                 test=create_s3_parquet_common_datatypes,
                 parallel=True,
                 executor=pool,
-            )(file_name=name)
+            )(file_name=name, cluster=cluster)
         join()
 
     return file_names
 
 
 @TestStep(Given)
-def create_multiple_parquet_files_with_basic_numeric_datatypes(self, number_of_files):
+def create_multiple_parquet_files_with_basic_numeric_datatypes(
+    self, number_of_files, cluster=None
+):
     """Create multiple Parquet files with basic numeric data types."""
     file_names = [f"file_{getuid()}" for _ in range(number_of_files)]
 
@@ -130,7 +147,7 @@ def create_multiple_parquet_files_with_basic_numeric_datatypes(self, number_of_f
                 test=create_s3_parquet_basic_numeric_datatypes,
                 parallel=True,
                 executor=pool,
-            )(file_name=name)
+            )(file_name=name, cluster=cluster)
         join()
 
     return file_names
@@ -256,7 +273,12 @@ def select_parquet_with_metadata_caching(self, file_name, log_comment=None):
     if log_comment is not None:
         settings += f", log_comment='{log_comment}'"
 
+    start_time = time.time()
+
     select_parquet_from_s3(file_name=file_name, settings=settings)
+    execution_time = time.time() - start_time
+
+    return execution_time
 
 
 @TestStep(When)
@@ -269,9 +291,13 @@ def select_parquet_with_metadata_caching_from_cluster(
     if log_comment is not None:
         settings += f", log_comment='{log_comment}'"
 
+    start_time = time.time()
     select_parquet_from_s3_cluster(
         file_name=file_name, settings=settings, cluster=cluster
     )
+    execution_time = time.time() - start_time
+
+    return execution_time
 
 
 @TestStep(Then)
@@ -282,7 +308,7 @@ def check_hits(self, log_comment, node=None):
 
     node.query("SYSTEM FLUSH LOGS")
 
-    r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc LIMIT 1 FORMAT TSV;"
+    r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc FORMAT TSV;"
 
     return node.query(r)
 
@@ -295,7 +321,7 @@ def check_misses(self, log_comment, node=None):
 
     node.query("SYSTEM FLUSH LOGS")
 
-    r = f"SELECT ProfileEvents['ParquetMetaDataCacheMisses'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc LIMIT 1 FORMAT TSV;"
+    r = f"SELECT ProfileEvents['ParquetMetaDataCacheMisses'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc FORMAT TSV;"
 
     return node.query(r)
 
@@ -315,10 +341,15 @@ def assert_hits(self, file_name, log_comment):
 
 
 @TestStep(When)
-def select_parquet_metadata_from_s3(self, file_name, node=None, log_comment=None):
+def select_parquet_metadata_from_s3(
+    self, file_name, node=None, log_comment=None, caching=False, statement="*"
+):
     """Select metadata from a Parquet file on S3."""
 
-    settings = "input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0"
+    if caching:
+        settings = "input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0"
+    else:
+        settings = None
 
     if node is None:
         node = self.context.node
@@ -326,6 +357,14 @@ def select_parquet_metadata_from_s3(self, file_name, node=None, log_comment=None
     if log_comment is not None:
         settings += f", log_comment='{log_comment}'"
 
-    return select_parquet_from_s3(
-        file_name=file_name, node=node, type="ParquetMetadata", settings=settings
+    start_time = time.time()
+    parquet = select_parquet_from_s3(
+        file_name=file_name,
+        node=node,
+        type="ParquetMetadata",
+        settings=settings,
+        statement=statement,
     )
+    execution_time = time.time() - start_time
+
+    return parquet, execution_time
