@@ -40,7 +40,7 @@ def perform_delete(
     common.delete_rows_from_merge_tree_table(
         table_name=merge_tree_table_name, condition=merge_tree_condition
     )
-    catalog_steps.delete_transaction(
+    catalog_steps.delete_rows_from_iceberg_table(
         iceberg_table=iceberg_table, condition=iceberg_condition
     )
 
