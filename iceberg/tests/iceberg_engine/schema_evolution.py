@@ -1,14 +1,4 @@
-#!/usr/bin/env python3
-
 from testflows.core import *
-
-import random
-
-random.seed(42)
-
-import iceberg.tests.steps.catalog as catalog_steps
-import iceberg.tests.steps.iceberg_engine as iceberg_engine
-import iceberg.tests.steps.common as common
 
 from pyiceberg.types import (
     DoubleType,
@@ -23,6 +13,13 @@ from pyiceberg.schema import Schema
 
 from helpers.common import getuid
 
+import iceberg.tests.steps.catalog as catalog_steps
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
+import iceberg.tests.steps.common as common
+
+import random
+
+random.seed(42)
 
 iceberg_clickhouse_type_mapping = {
     "Nullable(Int32)": IntegerType(),
@@ -152,12 +149,14 @@ def rename_column(self, iceberg_table, merge_tree_table_name):
     """Rename one column in both MergeTree and Iceberg tables."""
     if not self.context.columns:
         return
-    random.shuffle(self.context.columns)
-    old_column_name = self.context.columns[0]["name"]
-    new_column_name = f"new_{old_column_name}"
-    self.context.columns[0]["name"] = new_column_name
 
-    with By("rename column in MergeTree table"):
+    with By("choose column to rename"):
+        random.shuffle(self.context.columns)
+        old_column_name = self.context.columns[0]["name"]
+        new_column_name = f"new_{old_column_name}"
+        self.context.columns[0]["name"] = new_column_name
+
+    with And("rename column in MergeTree table"):
         self.context.node.query(
             f"ALTER TABLE {merge_tree_table_name} RENAME COLUMN {old_column_name} TO {new_column_name}"
         )
@@ -170,30 +169,40 @@ def rename_column(self, iceberg_table, merge_tree_table_name):
 @TestStep(Given)
 def union_by_name(self, merge_tree_table_name, iceberg_table):
     """Merge another schema into an existing Iceberg table. For
-    MergeTree table analog is ALTER TABLE ... ADD COLUMN ..."""
-    column_name = f"new_column_{getuid()}"
+    MergeTree table analog is `ALTER TABLE ADD COLUMN`."""
+    column_name = f"new_column_union_{getuid()}"
     column_type = "Nullable(Int64)"
+    field_id = iceberg_table.schema().fields[-1].field_id + 1
 
     with By("add column to MergeTree table"):
         self.context.node.query(
             f"ALTER TABLE {merge_tree_table_name} ADD COLUMN {column_name} {column_type}"
         )
 
-    new_schema = Schema(
-        NestedField(1, "city", StringType(), required=False),
-        NestedField(2, "lat", DoubleType(), required=False),
-        NestedField(3, "long", DoubleType(), required=False),
-        NestedField(10, "population", LongType(), required=False),
-    )
+    with And("define new schema on base of existing schema and new column"):
+        existing_schema = iceberg_table.schema()
+        new_column = NestedField(
+            field_id,
+            column_name,
+            iceberg_clickhouse_type_mapping[column_type],
+            required=False,
+        )
+        new_schema = Schema(*existing_schema.fields, new_column)
 
-    with iceberg_table.update_schema() as update:
-        update.union_by_name(new_schema)
+    with And("update Iceberg table schema by union"):
+        with iceberg_table.update_schema() as update:
+            update.union_by_name(new_schema)
+
+    with And("update column list"):
+        self.context.columns.append({"name": column_name, "type": column_type})
 
 
 @TestScenario
 def execute_schema_evolution_actions(
     self, minio_root_user, minio_root_password, actions_list
 ):
+    """Execute schema evolution actions on Iceberg table.
+    Do the same actions on MergeTree table and compare results."""
 
     database_name = f"iceberg_database_{getuid()}"
     namespace = f"iceberg_{getuid()}"
@@ -230,9 +239,8 @@ def execute_schema_evolution_actions(
         merge_tree_table_name = "merge_tree_table_" + getuid()
         common.create_merge_tree_table(table_name=merge_tree_table_name)
 
-    with And("update column list"):
+    with And("define columns list, do not include partition column"):
         self.context.columns = [
-            # "boolean_col",
             {"name": "long_col", "type": "Nullable(Int64)"},
             {"name": "double_col", "type": "Nullable(Float64)"},
             {"name": "string_col", "type": "Nullable(String)"},
@@ -264,7 +272,9 @@ def execute_schema_evolution_actions(
 
 
 @TestFeature
+@Name("schema evolution")
 def feature(self, minio_root_user, minio_root_password):
+    """Schema evolution feature tests."""
     actions = [
         add_column,
         delete_column,
@@ -272,10 +282,14 @@ def feature(self, minio_root_user, minio_root_password):
         move_column_after,
         update_column_type,
         rename_column,
+        union_by_name,
     ]
 
-    for num in range(100):
-        actions_list = [random.choice(actions) for _ in range(10)]
+    length_of_actions_list = 10
+    number_of_tests = 10
+
+    for num in range(number_of_tests):
+        actions_list = [random.choice(actions) for _ in range(length_of_actions_list)]
         Scenario(name=f"#{num}", test=execute_schema_evolution_actions)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
