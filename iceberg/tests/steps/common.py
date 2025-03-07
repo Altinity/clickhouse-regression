@@ -189,7 +189,7 @@ def compare_data_in_two_tables(self, table_name1, table_name2):
         table_name=table_name1,
     ).output
     table_name2_result = get_select_query_result(table_name=table_name2).output
-    compare_select_outputs(table_name1_result, table_name2_result)
+    assert compare_select_outputs(table_name1_result, table_name2_result), error()
 
 
 def parse_clickhouse_error(error_message, only_error_name=True):
