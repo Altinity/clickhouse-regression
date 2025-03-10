@@ -12,6 +12,15 @@ import random
 import string
 import pyarrow as pa
 
+from pyiceberg.types import (
+    DoubleType,
+    StringType,
+    LongType,
+    DateType,
+    IntegerType,
+    FloatType,
+)
+
 random.seed(42)
 
 
@@ -183,13 +192,17 @@ def get_select_query_result(
 
 
 @TestStep(Then)
-def compare_data_in_two_tables(self, table_name1, table_name2):
+def compare_data_in_two_tables(
+    self, table_name1, table_name2, select_columns="*", order_by="tuple(*)"
+):
     """Compare data in two tables."""
     table_name1_result = get_select_query_result(
-        table_name=table_name1,
+        table_name=table_name1, select_columns=select_columns, order_by=order_by
     ).output
-    table_name2_result = get_select_query_result(table_name=table_name2).output
-    compare_select_outputs(table_name1_result, table_name2_result)
+    table_name2_result = get_select_query_result(
+        table_name=table_name2, select_columns=select_columns, order_by=order_by
+    ).output
+    assert compare_select_outputs(table_name1_result, table_name2_result), error()
 
 
 def parse_clickhouse_error(error_message, only_error_name=True):
@@ -301,13 +314,13 @@ def parse_table_output(output):
 
 
 def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
-    iceberg_data = parse_table_output(output1)
-    merge_tree_data = parse_table_output(output2)
+    parsed_output1 = parse_table_output(output1)
+    parsed_output2 = parse_table_output(output2)
 
-    if len(iceberg_data) != len(merge_tree_data):
+    if len(parsed_output1) != len(parsed_output2):
         return False
 
-    for row1, row2 in zip(iceberg_data, merge_tree_data):
+    for row1, row2 in zip(parsed_output1, parsed_output2):
         if len(row1) != len(row2):
             return False
 
@@ -318,3 +331,47 @@ def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
             elif val1 != val2:
                 return False
     return True
+
+
+@TestStep(Given)
+def compare_iceberg_and_merge_tree_schemas(self, merge_tree_table_name, iceberg_table):
+    """Compare schemas of MergeTree and Iceberg tables."""
+
+    iceberg_clickhouse_type_mapping = {
+        "Nullable(Int32)": "int",
+        "Nullable(Int64)": "long",
+        "Nullable(Float32)": "float",
+        "Nullable(Float64)": "double",
+        "Nullable(String)": "string",
+        "Nullable(Date)": "date",
+        "Nullable(Bool)": "boolean",
+    }
+
+    merge_tree_schema_query = self.context.node.query(
+        f"DESCRIBE TABLE {merge_tree_table_name} FORMAT TabSeparated"
+    ).output
+
+    merge_tree_schema = {}
+    for line in merge_tree_schema_query.strip().split("\n"):
+        parts = line.split("\t")
+        column_name = parts[0].strip()
+        column_type = parts[1].strip()
+
+        mapped_type = iceberg_clickhouse_type_mapping.get(column_type, column_type)
+        merge_tree_schema[column_name] = mapped_type
+
+    iceberg_schema = iceberg_table.schema()
+
+    iceberg_columns = {
+        field.name: str(field.field_type) for field in iceberg_schema.fields
+    }
+
+    note("ClickHouse MergeTree Schema (converted to Iceberg types):")
+    note(merge_tree_schema)
+
+    note("Iceberg Table Schema:")
+    note(iceberg_columns)
+
+    assert merge_tree_schema == iceberg_columns, error(
+        "Schema mismatch between MergeTree and Iceberg tables!"
+    )
