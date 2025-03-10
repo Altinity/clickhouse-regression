@@ -112,9 +112,15 @@ def parquet_metadata_format_on_cluster(self):
 
 @TestCheck
 def check_caching_metadata_on_multiple_nodes(
-    self, create_parquet_files, additional_setting, statement, glob=None
+    self,
+    create_parquet_files,
+    additional_setting,
+    statement,
+    select,
+    glob=None,
+    condition=None,
 ):
-
+    """Check to determine scenarios when metadata caching works on multiple node setup."""
     settings = random.choice(additional_setting)
 
     """Check to determine scenarios when metadata caching works on multiple node setup."""
@@ -127,18 +133,29 @@ def check_caching_metadata_on_multiple_nodes(
             file_name = glob
 
     with When("I select data from s3 before the metadata was cached"):
-        time_before_cache, _ = select_parquet_with_metadata_caching_from_cluster(
-            file_name=file_name
-        )
+        if "join" in select.__name__:
+            time_before_cache, _ = select(
+                file_name1=files[0], file_name2=files[1], condition=condition
+            )
+        else:
+            time_before_cache, _ = select(file_name=file_name, condition=condition)
 
     with And("I select data from s3 after the metadata was cached"):
-        time_after_cache, log_comment = (
-            select_parquet_with_metadata_caching_from_cluster(
+        if "join" in select.__name__:
+            time_after_cache, log_comment = select(
+                file_name1=files[0],
+                file_name2=files[1],
+                additional_setting=settings,
+                statement=statement,
+                condition=condition,
+            )
+        else:
+            time_after_cache, log_comment = select(
                 file_name=file_name,
                 additional_setting=settings,
                 statement=statement,
+                condition=condition,
             )
-        )
 
     with Then("I check the number of hits in the metadata"):
         check_hits_on_cluster(log_comment=log_comment)
@@ -149,6 +166,12 @@ def check_caching_metadata_on_multiple_nodes(
         )
 
 
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning(
+        "1.0"
+    ),
+)
 @TestSketch(Scenario)
 def parquet_s3_caching(self):
     """Check to determine scenarios when metadata caching works and is useful."""
@@ -203,6 +226,13 @@ def parquet_s3_caching(self):
     ]
 
     statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)"])
+    conditions = either(*[None])
+    selects = either(
+        *[
+            select_parquet_with_metadata_caching_from_cluster,
+            select_parquet_with_metadata_caching_with_join,
+        ]
+    )
 
     create_parquet = either(
         *[
@@ -220,11 +250,14 @@ def parquet_s3_caching(self):
         additional_setting=settings,
         statement=statements,
         glob=glob,
+        select=selects,
+        condition=conditions,
     )
 
 
 @TestFeature
 @Name("s3 metadata caching")
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def feature(self, node="clickhouse1", number_of_files=15):
     """Tests for parquet metadata caching for object storage."""
     self.context.node = self.context.cluster.node("clickhouse1")
