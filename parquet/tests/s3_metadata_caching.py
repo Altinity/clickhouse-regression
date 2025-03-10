@@ -261,7 +261,7 @@ def parquet_s3_caching(self):
         ]
     )
 
-    glob = either(*[None, "**.Parquet"])
+    glob = either(*[None, "**.Parquet", "**.incorrect"])
 
     check_caching_metadata_on_multiple_nodes(
         create_parquet_files=create_parquet,
