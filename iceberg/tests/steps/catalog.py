@@ -315,3 +315,9 @@ def delete_transaction(self, iceberg_table, condition):
     """Delete rows from Iceberg table using transaction."""
     with iceberg_table.transaction() as txn:
         txn.delete(condition)
+
+
+@TestStep(Given)
+def delete_rows_from_iceberg_table(self, iceberg_table, condition):
+    """Delete rows from Iceberg table using transaction."""
+    iceberg_table.delete(condition)
