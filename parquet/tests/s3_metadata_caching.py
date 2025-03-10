@@ -56,6 +56,11 @@ def select_with_cache(self, file_name, statement="*", log_comment=None):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching(
+        "1.0"
+    )
+)
 def parquet_metadata_format(self):
     """Check that a Parquet file can be created on S3."""
     log_comment = "test_" + getuid()
@@ -85,6 +90,14 @@ def parquet_metadata_format(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_S3Cluster(
+        "1.0"
+    ),
+)
 def parquet_metadata_format_on_cluster(self):
     """Check that a Parquet file can be created on S3."""
     log_comment = "test_" + getuid()
@@ -111,6 +124,11 @@ def parquet_metadata_format_on_cluster(self):
 
 
 @TestCheck
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_S3Cluster(
+        "1.0"
+    )
+)
 def check_caching_metadata_on_multiple_nodes(
     self,
     create_parquet_files,
