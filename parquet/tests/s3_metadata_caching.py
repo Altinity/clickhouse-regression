@@ -36,9 +36,43 @@ def create_multiple_parquet_files_with_common_datatypes_on_cluster(self):
 
 
 @TestStep(Given)
-def create_a_file_with_bloom_filter(self):
+def create_parquet_file_with_bloom_filter(self):
     """Create a Parquet file with bloom filter."""
-    pass
+    upload_file_to_s3(
+        file_src=f"../data/bloom/multi_column_bloom.gz.parquet",
+        file_dest=f"data/parquet/multi_column_bloom.gz.parquet",
+    )
+
+    return "multi_column_bloom.gz.parquet"
+
+
+@TestStep(Given)
+def create_parquet_file_with_hive_partition(self, node=None, compression_type="NONE"):
+    """Create a Parquet file with Hive partition."""
+    file_name = "parquet_" + getuid()
+    full_path = (
+        self.context.uri
+        + "event_date={event_date|yyyy-MM-dd}/region={region}/data_{uuid}"
+        + ".Parquet"
+    )
+    if node is None:
+        node = self.context.node
+
+    create_table_query = (
+        f"CREATE TABLE {file_name} (`event_date` Date, `region` String, `value` Float64) "
+        f"ENGINE = S3('{full_path}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}') "
+        f"PARTITION BY (event_date, region) "
+        f"ORDER BY (event_date, region)"
+    )
+    node.query(create_table_query)
+
+    insert_data_query = (
+        f"INSERT INTO {file_name} (event_date, region, value) VALUES "
+        f"('2024-10-31', 'us-east-1', 123.45), "
+        f"('2024-10-31', 'eu-central-1', 678.90), "
+        f"('2024-11-01', 'us-east-1', 42.00)"
+    )
+    node.query(insert_data_query)
 
 
 @TestStep(When)
@@ -156,16 +190,72 @@ def parquet_s3_caching(self):
         "force_aggregation_in_order=1",
         "aggregation_memory_efficient_merge_threads=1",
         "allow_ddl=1",
+        "allow_materialized_view_with_bad_select=1",
+        "aggregate_functions_null_for_empty=1",
+        "analyzer_compatibility_join_using_top_level_identifier=1",
+        "apply_mutations_on_fly=1",
+        "convert_query_to_cnf=1",
+        "database_replicated_allow_heavy_create=1",
+        "do_not_merge_across_partitions_select_final=1",
+        "enable_optimize_predicate_expression=1",
+        "enable_writes_to_query_cache=1",
+        "enable_reads_from_query_cache=1",
+        "engine_file_empty_if_not_exists=1",
+        "engine_file_skip_empty_files=1",
+        "engine_url_skip_empty_files=1",
+        "fallback_to_stale_replicas_for_distributed_queries=1",
+        "implicit_select=1",
+        "optimize_move_to_prewhere=1",
+        "optimize_move_to_prewhere_if_final=1"
+        "asterisk_include_alias_columns=1",
+        "azure_ignore_file_doesnt_exist=1",
+        "azure_skip_empty_files=1",
+        "azure_throw_on_zero_files_match=1"
         "allow_experimental_codecs=1",
-    ]
+        "allow_experimental_database_materialized_postgresql=1",
+        "allow_experimental_dynamic_type=1",
+        "allow_experimental_full_text_index=1",
+        "allow_experimental_funnel_functions=1",
+        "allow_experimental_hash_functions=1",
+        "allow_experimental_inverted_index=1",
+        "allow_experimental_join_condition=1",
+        "allow_experimental_json_type=1",
+        "allow_experimental_kafka_offsets_storage_in_keeper=1",
+        "allow_experimental_kusto_dialect=1",
+        "allow_experimental_live_view=1",
+        "allow_experimental_materialized_postgresql_table=1",
+        "allow_experimental_nlp_functions=1",
+        "allow_experimental_object_type=1",
+        "allow_experimental_parallel_reading_from_replicas=1",
+        "allow_experimental_prql_dialect=1",
+        "allow_experimental_query_deduplication=1",
+        "allow_experimental_shared_set_join=1",
+        "allow_experimental_statistics=1",
+        "allow_experimental_time_series_table=1",
+        "allow_experimental_ts_to_grid_aggregate_function=1",
+        "allow_experimental_variant_type=1",
+        "allow_experimental_vector_similarity_index=1",
+        ]
 
-    statements = ["*", "COUNT(*)"]
+    statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)"])
 
-    create_parquet = [
-        create_parquet_in_different_locations_on_cluster,
-        create_multiple_parquet_files_with_common_datatypes_on_cluster,
-        create_a_file_with_bloom_filter,
-    ]
+    create_parquet = either(
+        *[
+            create_parquet_in_different_locations_on_cluster,
+            create_multiple_parquet_files_with_common_datatypes_on_cluster,
+            create_parquet_file_with_bloom_filter,
+            create_parquet_file_with_hive_partition,
+        ]
+    )
+
+    glob = either(*[None, "**.Parquet"])
+
+    check_caching_metadata_on_multiple_nodes(
+        create_parquet_files=create_parquet,
+        additional_setting=settings,
+        statement=statements,
+        glob=glob,
+    )
 
 
 @TestFeature
