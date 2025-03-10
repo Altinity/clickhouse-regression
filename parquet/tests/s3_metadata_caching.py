@@ -35,46 +35,6 @@ def create_multiple_parquet_files_with_common_datatypes_on_cluster(self):
     )
 
 
-@TestStep(Given)
-def create_parquet_file_with_bloom_filter(self):
-    """Create a Parquet file with bloom filter."""
-    upload_file_to_s3(
-        file_src=f"../data/bloom/multi_column_bloom.gz.parquet",
-        file_dest=f"data/parquet/multi_column_bloom.gz.parquet",
-    )
-
-    return "multi_column_bloom.gz.parquet"
-
-
-@TestStep(Given)
-def create_parquet_file_with_hive_partition(self, node=None, compression_type="NONE"):
-    """Create a Parquet file with Hive partition."""
-    file_name = "parquet_" + getuid()
-    full_path = (
-        self.context.uri
-        + "event_date={event_date|yyyy-MM-dd}/region={region}/data_{uuid}"
-        + ".Parquet"
-    )
-    if node is None:
-        node = self.context.node
-
-    create_table_query = (
-        f"CREATE TABLE {file_name} (`event_date` Date, `region` String, `value` Float64) "
-        f"ENGINE = S3('{full_path}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}') "
-        f"PARTITION BY (event_date, region) "
-        f"ORDER BY (event_date, region)"
-    )
-    node.query(create_table_query)
-
-    insert_data_query = (
-        f"INSERT INTO {file_name} (event_date, region, value) VALUES "
-        f"('2024-10-31', 'us-east-1', 123.45), "
-        f"('2024-10-31', 'eu-central-1', 678.90), "
-        f"('2024-11-01', 'us-east-1', 42.00)"
-    )
-    node.query(insert_data_query)
-
-
 @TestStep(When)
 def select_without_cache(self, file_name, statement="*"):
     """Select metadata of the Parquet file without caching the metadata."""
@@ -99,9 +59,11 @@ def select_with_cache(self, file_name, statement="*", log_comment=None):
 def parquet_metadata_format(self):
     """Check that a Parquet file can be created on S3."""
     log_comment = "test_" + getuid()
-    node = self.context.node
+
     with Given("I create a parquet file on s3"):
-        files = create_multiple_parquet_files_with_all_datatypes(number_of_files=15)
+        files = create_multiple_parquet_files_with_all_datatypes(
+            number_of_files=self.context.number_of_files
+        )
     with When("I select metadata of the Parquet file without caching the metadata"):
         parquet, without_cache = select_without_cache(
             file_name=files[0], statement="COUNT(*)"
@@ -128,7 +90,9 @@ def parquet_metadata_format_on_cluster(self):
     log_comment = "test_" + getuid()
     node = self.context.node
     with Given("I create a parquet file on s3"):
-        files = create_multiple_parquet_files_with_all_datatypes(number_of_files=15)
+        files = create_multiple_parquet_files_with_all_datatypes(
+            number_of_files=self.context.number_of_files
+        )
     with When("I select metadata of the Parquet file without caching the metadata"):
         parquet, without_cache = select_parquet_metadata_from_s3(file_name=files[0])
     with And("I select metadata of the Parquet file with caching the metadata"):
@@ -139,7 +103,7 @@ def parquet_metadata_format_on_cluster(self):
     with Then("I check the number of hits in the metadata"):
         for retry in retries(count=10, delay=1):
             with retry:
-                check_hits(log_comment=log_comment)
+                check_hits_on_cluster(log_comment=log_comment)
 
         assert (
             without_cache > with_cache
@@ -150,6 +114,9 @@ def parquet_metadata_format_on_cluster(self):
 def check_caching_metadata_on_multiple_nodes(
     self, create_parquet_files, additional_setting, statement, glob=None
 ):
+
+    settings = random.choice(additional_setting)
+
     """Check to determine scenarios when metadata caching works on multiple node setup."""
     with Given("I create a parquet files on s3"):
         files = create_parquet_files()
@@ -168,7 +135,7 @@ def check_caching_metadata_on_multiple_nodes(
         time_after_cache, log_comment = (
             select_parquet_with_metadata_caching_from_cluster(
                 file_name=file_name,
-                additional_setting=additional_setting,
+                additional_setting=settings,
                 statement=statement,
             )
         )
@@ -206,12 +173,10 @@ def parquet_s3_caching(self):
         "fallback_to_stale_replicas_for_distributed_queries=1",
         "implicit_select=1",
         "optimize_move_to_prewhere=1",
-        "optimize_move_to_prewhere_if_final=1"
-        "asterisk_include_alias_columns=1",
+        "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
         "azure_ignore_file_doesnt_exist=1",
         "azure_skip_empty_files=1",
-        "azure_throw_on_zero_files_match=1"
-        "allow_experimental_codecs=1",
+        "azure_throw_on_zero_files_match=1" "allow_experimental_codecs=1",
         "allow_experimental_database_materialized_postgresql=1",
         "allow_experimental_dynamic_type=1",
         "allow_experimental_full_text_index=1",
@@ -235,7 +200,7 @@ def parquet_s3_caching(self):
         "allow_experimental_ts_to_grid_aggregate_function=1",
         "allow_experimental_variant_type=1",
         "allow_experimental_vector_similarity_index=1",
-        ]
+    ]
 
     statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)"])
 
@@ -260,7 +225,7 @@ def parquet_s3_caching(self):
 
 @TestFeature
 @Name("s3 metadata caching")
-def feature(self, node="clickhouse1"):
+def feature(self, node="clickhouse1", number_of_files=15):
     """Tests for parquet metadata caching for object storage."""
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
@@ -268,7 +233,7 @@ def feature(self, node="clickhouse1"):
         self.context.cluster.node("clickhouse3"),
     ]
     self.cotext.cluster_name = "replicated_cluster"
-
+    self.context.number_of_files = number_of_files
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
