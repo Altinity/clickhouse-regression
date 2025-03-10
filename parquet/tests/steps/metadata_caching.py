@@ -40,6 +40,23 @@ def create_parquet_on_s3(self, file_name, columns, compression_type=None, cluste
 
 
 @TestStep(Given)
+def create_parquet_on_s3_with_hive_partition(
+    self, file_name, columns, compression_type=None, cluster=None
+):
+    if compression_type is None:
+        compression_type = "NONE"
+
+    full_path = self.context.uri + file_name + ".Parquet"
+
+    table = create_table(
+        name=file_name,
+        engine=f"S3('{full_path}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
+        columns=columns,
+        cluster=cluster,
+    )
+
+
+@TestStep(Given)
 def create_s3_parquet_all_datatypes(
     self, file_name, compression_type=None, row_count=10, cluster=None
 ):
@@ -198,6 +215,46 @@ def create_multiple_parquet_files_with_all_map_datatypes(self, number_of_files):
         join()
 
     return file_names
+
+
+@TestStep(Given)
+def create_parquet_file_with_hive_partition(self, node=None, compression_type="NONE"):
+    """Create a Parquet file with Hive partition."""
+    file_name = "parquet_" + getuid()
+    full_path = (
+        self.context.uri
+        + "event_date={event_date|yyyy-MM-dd}/region={region}/data_{uuid}"
+        + ".Parquet"
+    )
+    if node is None:
+        node = self.context.node
+
+    create_table_query = (
+        f"CREATE TABLE {file_name} (`event_date` Date, `region` String, `value` Float64) "
+        f"ENGINE = S3('{full_path}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}') "
+        f"PARTITION BY (event_date, region) "
+        f"ORDER BY (event_date, region)"
+    )
+    node.query(create_table_query)
+
+    insert_data_query = (
+        f"INSERT INTO {file_name} (event_date, region, value) VALUES "
+        f"('2024-10-31', 'us-east-1', 123.45), "
+        f"('2024-10-31', 'eu-central-1', 678.90), "
+        f"('2024-11-01', 'us-east-1', 42.00)"
+    )
+    node.query(insert_data_query)
+
+
+@TestStep(Given)
+def create_parquet_file_with_bloom_filter(self):
+    """Create a Parquet file with bloom filter."""
+    upload_file_to_s3(
+        file_src=f"../data/bloom/multi_column_bloom.gz.parquet",
+        file_dest=f"data/parquet/multi_column_bloom.gz.parquet",
+    )
+
+    return "multi_column_bloom.gz.parquet"
 
 
 @TestStep(When)
