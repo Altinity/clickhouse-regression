@@ -35,6 +35,12 @@ def create_multiple_parquet_files_with_common_datatypes_on_cluster(self):
     )
 
 
+@TestStep(Given)
+def create_a_file_with_bloom_filter(self):
+    """Create a Parquet file with bloom filter."""
+    pass
+
+
 @TestStep(When)
 def select_without_cache(self, file_name, statement="*"):
     """Select metadata of the Parquet file without caching the metadata."""
@@ -114,14 +120,39 @@ def check_caching_metadata_on_multiple_nodes(
     with Given("I create a parquet files on s3"):
         files = create_parquet_files()
 
-    with When("I select data from s3 with caching"):
-        time_before_cache = select_parquet_with_metadata_caching_from_cluster()
+        if glob is None:
+            file_name = random.choice(files)
+        else:
+            file_name = glob
+
+    with When("I select data from s3 before the metadata was cached"):
+        time_before_cache, _ = select_parquet_with_metadata_caching_from_cluster(
+            file_name=file_name
+        )
+
+    with And("I select data from s3 after the metadata was cached"):
+        time_after_cache, log_comment = (
+            select_parquet_with_metadata_caching_from_cluster(
+                file_name=file_name,
+                additional_setting=additional_setting,
+                statement=statement,
+            )
+        )
+
+    with Then("I check the number of hits in the metadata"):
+        check_hits_on_cluster(log_comment=log_comment)
+
+        assert time_after_cache < time_before_cache, (
+            f"query ran slower with caching time_before_cache={time_before_cache}s"
+            f"time_after_cache={time_after_cache}s"
+        )
 
 
-@TestSketch
+@TestSketch(Scenario)
 def parquet_s3_caching(self):
     """Check to determine scenarios when metadata caching works and is useful."""
     settings = [
+        None,
         "force_aggregation_in_order=1",
         "aggregation_memory_efficient_merge_threads=1",
         "allow_ddl=1",
@@ -133,6 +164,7 @@ def parquet_s3_caching(self):
     create_parquet = [
         create_parquet_in_different_locations_on_cluster,
         create_multiple_parquet_files_with_common_datatypes_on_cluster,
+        create_a_file_with_bloom_filter,
     ]
 
 
@@ -151,3 +183,4 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=parquet_metadata_format)
+    Scenario(run=parquet_s3_caching)
