@@ -286,7 +286,7 @@ def feature(self, minio_root_user, minio_root_password):
     ]
 
     length_of_actions_list = 10
-    number_of_tests = 10
+    number_of_tests = 100
 
     for num in range(number_of_tests):
         actions_list = [random.choice(actions) for _ in range(length_of_actions_list)]
