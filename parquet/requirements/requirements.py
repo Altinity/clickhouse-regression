@@ -4230,6 +4230,9 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
         "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
         "```\n"
         "\n"
+        "> [!NOTE]\n"
+        "> For the input_format_parquet_use_metadata_cache setting to consistently work the following setting must be disabled: optimize_count_from_files=0, remote_filesystem_read_prefetch=0\n"
+        "\n"
     ),
     link=None,
     level=3,
@@ -11086,6 +11089,9 @@ SELECT COUNT(*)
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
+
+> [!NOTE]
+> For the input_format_parquet_use_metadata_cache setting to consistently work the following setting must be disabled: optimize_count_from_files=0, remote_filesystem_read_prefetch=0
 
 #### Object Storages
 

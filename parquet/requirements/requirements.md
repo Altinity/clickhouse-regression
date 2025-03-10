@@ -3346,6 +3346,9 @@ FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
 ```
 
+> [!NOTE]
+> For the input_format_parquet_use_metadata_cache setting to consistently work the following setting must be disabled: optimize_count_from_files=0, remote_filesystem_read_prefetch=0
+
 #### Object Storages
 
 ##### S3 Storage
