@@ -118,7 +118,9 @@ def create_multiple_parquet_files_with_all_datatypes(
 
 
 @TestStep(Given)
-def create_multiple_parquet_files_with_common_datatypes(self, number_of_files, cluster):
+def create_multiple_parquet_files_with_common_datatypes(
+    self, number_of_files=10, cluster=None
+):
     """Create multiple Parquet files with common data types."""
     file_names = [f"file_{getuid()}" for _ in range(number_of_files)]
 
@@ -136,7 +138,7 @@ def create_multiple_parquet_files_with_common_datatypes(self, number_of_files, c
 
 @TestStep(Given)
 def create_multiple_parquet_files_with_basic_numeric_datatypes(
-    self, number_of_files, cluster=None
+    self, number_of_files=10, cluster=None
 ):
     """Create multiple Parquet files with basic numeric data types."""
     file_names = [f"file_{getuid()}" for _ in range(number_of_files)]
@@ -154,11 +156,14 @@ def create_multiple_parquet_files_with_basic_numeric_datatypes(
 
 
 @TestStep(Given)
-def create_parquet_files_in_different_paths(self, number_of_files, path_1, path_2):
+def create_parquet_files_in_different_paths(
+    self, path_1, path_2, number_of_files=10, cluster=None
+):
     """Create multiple Parquet files in different paths."""
 
     file_names_1 = [f"{path_1}/file_{getuid()}" for _ in range(number_of_files)]
     file_names_2 = [f"{path_2}/file_{getuid()}" for _ in range(number_of_files)]
+    all_file_names = file_names_1 + file_names_2
 
     with Pool(4) as pool:
         for name_1 in file_names_1:
@@ -166,16 +171,16 @@ def create_parquet_files_in_different_paths(self, number_of_files, path_1, path_
                 test=create_s3_parquet_common_datatypes,
                 parallel=True,
                 executor=pool,
-            )(file_name=name_1)
+            )(file_name=name_1, cluste=cluster)
         for name_2 in file_names_2:
             By(
                 test=create_s3_parquet_common_datatypes,
                 parallel=True,
                 executor=pool,
-            )(file_name=name_2)
+            )(file_name=name_2, cluster=cluster)
         join()
 
-    return file_names_1, file_names_2
+    return all_file_names
 
 
 @TestStep(Given)
@@ -267,11 +272,10 @@ def select_parquet_from_s3_cluster(
 
 @TestStep(When)
 def select_parquet_with_metadata_caching(self, file_name, log_comment=None):
+    """Select data from a Parquet file with metadata caching enabled."""
 
-    settings = "input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0"
-
-    if log_comment is not None:
-        settings += f", log_comment='{log_comment}'"
+    log_comment = "log_" + getuid()
+    settings = f"input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}'"
 
     start_time = time.time()
 
@@ -283,13 +287,14 @@ def select_parquet_with_metadata_caching(self, file_name, log_comment=None):
 
 @TestStep(When)
 def select_parquet_with_metadata_caching_from_cluster(
-    self, file_name, log_comment=None, cluster=None
+    self, file_name, cluster=None, additional_setting=None, log=False
 ):
+    """Select data from a Parquet file with metadata caching enabled on a cluster."""
+    log_comment = "log_" + getuid()
+    settings = f"input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}'"
 
-    settings = "input_format_parquet_use_metadata_cache=1, optimize_count_from_files=0, remote_filesystem_read_prefetch=0"
-
-    if log_comment is not None:
-        settings += f", log_comment='{log_comment}'"
+    if additional_setting is not None:
+        settings += f", {additional_setting}"
 
     start_time = time.time()
     select_parquet_from_s3_cluster(
@@ -297,7 +302,7 @@ def select_parquet_with_metadata_caching_from_cluster(
     )
     execution_time = time.time() - start_time
 
-    return execution_time
+    return execution_time, log_comment
 
 
 @TestStep(Then)
@@ -309,8 +314,36 @@ def check_hits(self, log_comment, node=None):
     node.query("SYSTEM FLUSH LOGS")
 
     r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc FORMAT TSV;"
+    hits = node.query(r)
 
-    return node.query(r)
+    assert (
+        "1" in hits.output.strip()
+    ), f"number of hits is less than 1 and = {hits.output.strip()}"
+
+
+@TestStep(Then)
+def check_hits_on_cluster(self, log_comment, other_nodes=None):
+    """Check the number of cache hits and misses for a Parquet file on a cluster."""
+
+    if other_nodes is None:
+        other_nodes = self.context.node_list
+
+    initiator_node = self.context.cluster.node("node1")
+
+    initiator_node.query("SYSTEM FLUSH LOGS")
+    r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc FORMAT TSV;"
+    hits = initiator_node.query(r)
+
+    assert (
+        "0" in hits.output.strip()
+    ), f"number of hits is less than 1 and = {hits.output.strip()}"
+
+    for node in other_nodes:
+        node.query("SYSTEM FLUSH LOGS")
+        hits = node.query(r)
+        assert (
+            "1" in hits.output.strip()
+        ), f"number of hits is less than 1 and = {hits.output.strip()}"
 
 
 @TestStep(Then)
