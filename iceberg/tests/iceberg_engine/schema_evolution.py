@@ -113,35 +113,33 @@ def move_column_after(self, merge_tree_table_name, iceberg_table):
 
 @TestStep(Given)
 def move_column_before(self, merge_tree_table_name, iceberg_table):
-    """Move one column after another column in both MergeTree and Iceberg tables."""
-    if len(self.context.columns) < 2:
-        return
-
-    with By("get ordered list of columns"):
-        ordered_columns = self.context.node.query(
-            f"SELECT name FROM system.columns WHERE table = '{merge_tree_table_name}'"
+    """Move one column before another column in both MergeTree and Iceberg tables."""
+    with By("get ordered list of columns and types"):
+        result = self.context.node.query(
+            f"SELECT name, type FROM system.columns WHERE table = '{merge_tree_table_name}'"
         ).output.split("\n")
-        column_types = self.context.node.query(
-            f"SELECT type FROM system.columns WHERE table = '{merge_tree_table_name}'"
-        ).output.split("\n")
-        names_and_types = list(zip(ordered_columns, column_types))
+        names_and_types = [
+            tuple(line.strip().split()) for line in result if line.strip()
+        ]
+        if len(names_and_types) < 2:
+            return
         move_column, before_column = random.sample(names_and_types, 2)
         move_column_name, move_column_type = move_column
-        before_column_name, before_column_type = before_column
+        before_column_name, _ = before_column
 
     with And("search for previous column before before_column"):
-        if before_column_name == ordered_columns[0]:
+        if before_column_name == names_and_types[0][0]:
             move_query = f"ALTER TABLE {merge_tree_table_name} MODIFY COLUMN {move_column_name} {move_column_type} FIRST"
         else:
-            previous_column_name = ordered_columns[
-                ordered_columns.index(before_column_name) - 1
-            ]
+            previous_column_name = names_and_types[
+                names_and_types.index(before_column) - 1
+            ][0]
             move_query = f"ALTER TABLE {merge_tree_table_name} MODIFY COLUMN {move_column_name} {move_column_type} AFTER {previous_column_name}"
 
-    with And("move column after another column in MergeTree table"):
+    with And("move column before another column in MergeTree table"):
         self.context.node.query(move_query)
 
-    with And("move column after another column in Iceberg table"):
+    with And("move column before another column in Iceberg table"):
         with iceberg_table.update_schema() as update:
             update.move_before(move_column_name, before_column_name)
 
