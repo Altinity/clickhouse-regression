@@ -123,7 +123,7 @@ def generate_data(num_rows=100):
 def transform_to_clickhouse_format(data):
     """Transform a list of dictionaries into a ClickHouse-compatible tuple format."""
     transformed = [
-        f"({row['boolean_col']}, {row['long_col']}, {row['double_col']}, '{row['string_col']}', '{row['date_col']}')"
+        f"({row['boolean_col']}, {row['long_col']}, round({row['double_col']}, 2), '{row['string_col']}', '{row['date_col']}')"
         for row in data
     ]
     return ", ".join(transformed)
