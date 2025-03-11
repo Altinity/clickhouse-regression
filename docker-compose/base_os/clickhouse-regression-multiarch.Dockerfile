@@ -1,6 +1,9 @@
 ARG BASE_OS=altinityinfra/clickhouse-regression-multiarch:3.0
 FROM $BASE_OS
 
+# Whenever possible, install dependencies in the base image instead of in this one.
+# See `docker/image/clickhouse-regression-multiarch/Dockerfile`
+
 RUN ln -s /usr/bin/clickhouse /usr/bin/clickhouse-keeper
 
 
