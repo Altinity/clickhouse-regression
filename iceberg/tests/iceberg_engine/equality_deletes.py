@@ -304,13 +304,21 @@ def equality_delete(self, minio_root_user, minio_root_password, actions, node=No
 
     with And("perform delete actions and compare results"):
         for action in actions:
-            action(
-                merge_tree_table_name=merge_tree_table_name, iceberg_table=iceberg_table
-            )
-            common.compare_data_in_two_tables(
-                table_name1=merge_tree_table_name,
-                table_name2=clickhouse_iceberg_table_name,
-            )
+            with By(f"perform {action.__name__} action"):
+                action(
+                    merge_tree_table_name=merge_tree_table_name,
+                    iceberg_table=iceberg_table,
+                )
+
+            with And("compare data in MergeTree and Iceberg tables"):
+                common.compare_data_in_two_tables(
+                    table_name1=merge_tree_table_name,
+                    table_name2=clickhouse_iceberg_table_name,
+                )
+
+            with And("scan with PyIceberg and display data from Iceberg table"):
+                df = iceberg_table.scan().to_pandas()
+                note(df)
 
 
 @TestScenario
