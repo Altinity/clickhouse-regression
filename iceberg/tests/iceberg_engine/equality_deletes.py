@@ -310,15 +310,15 @@ def equality_delete(self, minio_root_user, minio_root_password, actions, node=No
                     iceberg_table=iceberg_table,
                 )
 
+            with And("scan with PyIceberg and display data from Iceberg table"):
+                df = iceberg_table.scan().to_pandas()
+                note(df)
+
             with And("compare data in MergeTree and Iceberg tables"):
                 common.compare_data_in_two_tables(
                     table_name1=merge_tree_table_name,
                     table_name2=clickhouse_iceberg_table_name,
                 )
-
-            with And("scan with PyIceberg and display data from Iceberg table"):
-                df = iceberg_table.scan().to_pandas()
-                note(df)
 
 
 @TestScenario
