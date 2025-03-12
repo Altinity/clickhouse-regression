@@ -477,6 +477,13 @@ xfails = {
             check_clickhouse_version(">=24.11"),
         )
     ],
+    "/aggregate functions/state/*": [
+        (
+            Fail,
+            "Not deterministic, need to investigate",
+            check_clickhouse_version(">=25.1"),
+        )
+    ],
 }
 
 

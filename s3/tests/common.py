@@ -1262,7 +1262,7 @@ def default_s3_and_local_disk(
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
-                "do_not_evict_index_and_mark_files": "1",
+                # "do_not_evict_index_and_mark_files": "1",
             }
         else:
             disks["s3_cache"] = disks["external"]
@@ -1328,7 +1328,7 @@ def default_s3_and_local_volume(
                 "path": "external_disk_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
-                "do_not_evict_index_and_mark_files": "1",
+                # "do_not_evict_index_and_mark_files": "1",
             }
         else:
             disks["s3_cache"] = disks["external"]
@@ -1395,7 +1395,7 @@ def default_s3_disk_and_volume(
                     "path": f"{disk_name}_cache/",
                     "max_size": "22548578304",
                     "cache_on_write_operations": "1",
-                    "do_not_evict_index_and_mark_files": "1",
+                    # "do_not_evict_index_and_mark_files": "1",
                 },
             }
         else:

@@ -4230,10 +4230,77 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
         "SETTINGS input_format_parquet_use_metadata_cache=1;\n"
         "```\n"
         "\n"
+        "> [!NOTE]\n"
+        "> For the input_format_parquet_use_metadata_cache setting to consistently work the following setting must be disabled: optimize_count_from_files=0, remote_filesystem_read_prefetch=0\n"
+        "\n"
     ),
     link=None,
     level=3,
     num="19.5.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query when set from the profile settings for all nodes.\n"
+        "\n"
+        "For example, \n"
+        "\n"
+        "when the setting is set in the `users.xml` file for all nodes as:\n"
+        "\n"
+        "```xml\n"
+        "<input_format_parquet_use_metadata_cache>1</input_format_parquet_use_metadata_cache>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings_InitiatorNode = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings.InitiatorNode",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query when set from the profile settings for the initiator node only.\n"
+        "\n"
+        "For example, \n"
+        "\n"
+        "when the setting is set in the `users.xml` file for the initiator node as:\n"
+        "\n"
+        "```xml\n"
+        "<input_format_parquet_use_metadata_cache>1</input_format_parquet_use_metadata_cache>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="19.5.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
@@ -4249,7 +4316,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3 = Requirement(
     ),
     link=None,
     level=5,
-    num="19.5.3.1.1",
+    num="19.5.4.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Azure = Requirement(
@@ -4265,7 +4332,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Azure = Requirement
     ),
     link=None,
     level=5,
-    num="19.5.3.2.1",
+    num="19.5.4.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_GoogleCloudStorage = Requirement(
@@ -4281,7 +4348,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_GoogleCloudStorage 
     ),
     link=None,
     level=5,
-    num="19.5.3.3.1",
+    num="19.5.4.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MinIO = Requirement(
@@ -4297,7 +4364,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MinIO = Requirement
     ),
     link=None,
     level=5,
-    num="19.5.3.4.1",
+    num="19.5.4.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HDFS = Requirement(
@@ -4313,7 +4380,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HDFS = Requirement(
     ),
     link=None,
     level=5,
-    num="19.5.3.5.1",
+    num="19.5.4.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Wasabi = Requirement(
@@ -4329,7 +4396,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Wasabi = Requiremen
     ),
     link=None,
     level=5,
-    num="19.5.3.6.1",
+    num="19.5.4.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_DigitalOceanSpaces = Requirement(
@@ -4345,7 +4412,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_DigitalOceanSpaces 
     ),
     link=None,
     level=5,
-    num="19.5.3.7.1",
+    num="19.5.4.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_CephRADOSGateway = Requirement(
@@ -4361,7 +4428,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_CephRADOSGateway = 
     ),
     link=None,
     level=5,
-    num="19.5.3.8.1",
+    num="19.5.4.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_YandexCloudObjectStorage = Requirement(
@@ -4377,7 +4444,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_YandexCloudObjectSt
     ),
     link=None,
     level=5,
-    num="19.5.3.9.1",
+    num="19.5.4.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_CloudflareR2 = Requirement(
@@ -4393,7 +4460,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_CloudflareR2 = Requ
     ),
     link=None,
     level=5,
-    num="19.5.3.10.1",
+    num="19.5.4.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AlibabaCloudOSS = Requirement(
@@ -4409,7 +4476,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AlibabaCloudOSS = R
     ),
     link=None,
     level=5,
-    num="19.5.3.11.1",
+    num="19.5.4.11.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_S3 = Requirement(
@@ -4433,7 +4500,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.1.1",
+    num="19.5.5.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_S3Cluster = Requirement(
@@ -4457,7 +4524,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.2.1",
+    num="19.5.5.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_IcebergS3 = Requirement(
@@ -4473,7 +4540,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.3.1",
+    num="19.5.5.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_URL = Requirement(
@@ -4489,7 +4556,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.4.1",
+    num="19.5.5.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_File = Requirement(
@@ -4505,7 +4572,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.5.1",
+    num="19.5.5.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions_HDFS = Requirement(
@@ -4521,7 +4588,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_EnginesAndFunctions
     ),
     link=None,
     level=5,
-    num="19.5.4.6.1",
+    num="19.5.5.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NotSuitedEngines = Requirement(
@@ -4537,7 +4604,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NotSuitedEngines = 
     ),
     link=None,
     level=4,
-    num="19.5.5.1",
+    num="19.5.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requirement(
@@ -4553,7 +4620,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Invalidation = Requ
     ),
     link=None,
     level=4,
-    num="19.5.6.1",
+    num="19.5.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCaching = Requirement(
@@ -4578,7 +4645,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_ReadMetadataAfterCa
     ),
     link=None,
     level=4,
-    num="19.5.7.1",
+    num="19.5.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning = Requirement(
@@ -4603,7 +4670,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning = 
     ),
     link=None,
     level=4,
-    num="19.5.8.1",
+    num="19.5.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirement(
@@ -4622,7 +4689,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Settings = Requirem
     ),
     link=None,
     level=4,
-    num="19.5.9.1",
+    num="19.5.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings = Requirement(
@@ -4742,7 +4809,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_AllSettings = Requi
     ),
     link=None,
     level=4,
-    num="19.5.10.1",
+    num="19.5.11.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_Count = Requirement(
@@ -4762,7 +4829,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecuti
     ),
     link=None,
     level=5,
-    num="19.5.11.1.1",
+    num="19.5.12.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_MinMax = Requirement(
@@ -4784,7 +4851,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecuti
     ),
     link=None,
     level=5,
-    num="19.5.11.2.1",
+    num="19.5.12.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_BloomFilter = Requirement(
@@ -4806,7 +4873,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecuti
     ),
     link=None,
     level=5,
-    num="19.5.11.3.1",
+    num="19.5.12.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_DistinctCount = Requirement(
@@ -4828,7 +4895,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecuti
     ),
     link=None,
     level=5,
-    num="19.5.11.4.1",
+    num="19.5.12.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_FileSchema = Requirement(
@@ -4850,7 +4917,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecuti
     ),
     link=None,
     level=5,
-    num="19.5.11.5.1",
+    num="19.5.12.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize = Requirement(
@@ -4867,7 +4934,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize = Requireme
     ),
     link=None,
     level=4,
-    num="19.5.12.1",
+    num="19.5.13.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLocation = Requirement(
@@ -4890,7 +4957,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SameNameDifferentLo
     ),
     link=None,
     level=4,
-    num="19.5.13.1",
+    num="19.5.14.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter = Requirement(
@@ -4929,7 +4996,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HitsMissesCounter =
     ),
     link=None,
     level=4,
-    num="19.5.14.1",
+    num="19.5.15.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join = Requirement(
@@ -4964,7 +5031,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Join 
     ),
     link=None,
     level=5,
-    num="19.5.15.1.1",
+    num="19.5.16.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic = Requirement(
@@ -4997,7 +5064,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Basic
     ),
     link=None,
     level=5,
-    num="19.5.15.2.1",
+    num="19.5.16.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionAll = Requirement(
@@ -5045,7 +5112,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Union
     ),
     link=None,
     level=5,
-    num="19.5.15.3.1",
+    num="19.5.16.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_FilterAggregation = Requirement(
@@ -5089,7 +5156,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Filte
     ),
     link=None,
     level=5,
-    num="19.5.15.4.1",
+    num="19.5.16.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_UnionJoin = Requirement(
@@ -5165,7 +5232,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_NestedQueries_Union
     ),
     link=None,
     level=5,
-    num="19.5.15.5.1",
+    num="19.5.16.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MetadataTypes_ClickHouse = Requirement(
@@ -6980,265 +7047,291 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="19.5.2",
         ),
-        Heading(name="Object Storages", level=3, num="19.5.3"),
-        Heading(name="S3 Storage", level=4, num="19.5.3.1"),
+        Heading(name="Setting Propagation to All Nodes", level=3, num="19.5.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3",
-            level=5,
-            num="19.5.3.1.1",
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation",
+            level=4,
+            num="19.5.3.1",
         ),
-        Heading(name="Azure", level=4, num="19.5.3.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Azure",
+            name="Propagate Settings to All Nodes When Set in the Profile (All Nodes)",
+            level=4,
+            num="19.5.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings",
             level=5,
             num="19.5.3.2.1",
         ),
-        Heading(name="Google Cloud Storage", level=4, num="19.5.3.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.GoogleCloudStorage",
+            name="Propagate Settings to All Nodes When Set in the Profile (Initiator Node Only)",
+            level=4,
+            num="19.5.3.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings.InitiatorNode",
             level=5,
             num="19.5.3.3.1",
         ),
-        Heading(name="MinIO", level=4, num="19.5.3.4"),
+        Heading(name="Object Storages", level=3, num="19.5.4"),
+        Heading(name="S3 Storage", level=4, num="19.5.4.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3",
+            level=5,
+            num="19.5.4.1.1",
+        ),
+        Heading(name="Azure", level=4, num="19.5.4.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Azure",
+            level=5,
+            num="19.5.4.2.1",
+        ),
+        Heading(name="Google Cloud Storage", level=4, num="19.5.4.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.GoogleCloudStorage",
+            level=5,
+            num="19.5.4.3.1",
+        ),
+        Heading(name="MinIO", level=4, num="19.5.4.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MinIO",
             level=5,
-            num="19.5.3.4.1",
+            num="19.5.4.4.1",
         ),
-        Heading(name="HDFS Storage", level=4, num="19.5.3.5"),
+        Heading(name="HDFS Storage", level=4, num="19.5.4.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS",
             level=5,
-            num="19.5.3.5.1",
+            num="19.5.4.5.1",
         ),
-        Heading(name="Wasabi", level=4, num="19.5.3.6"),
+        Heading(name="Wasabi", level=4, num="19.5.4.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Wasabi",
             level=5,
-            num="19.5.3.6.1",
+            num="19.5.4.6.1",
         ),
-        Heading(name="DigitalOcean Spaces", level=4, num="19.5.3.7"),
+        Heading(name="DigitalOcean Spaces", level=4, num="19.5.4.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.DigitalOceanSpaces",
             level=5,
-            num="19.5.3.7.1",
+            num="19.5.4.7.1",
         ),
-        Heading(name="Ceph RADOS Gateway", level=4, num="19.5.3.8"),
+        Heading(name="Ceph RADOS Gateway", level=4, num="19.5.4.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CephRADOSGateway",
             level=5,
-            num="19.5.3.8.1",
+            num="19.5.4.8.1",
         ),
-        Heading(name="Yandex Cloud Object Storage", level=4, num="19.5.3.9"),
+        Heading(name="Yandex Cloud Object Storage", level=4, num="19.5.4.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.YandexCloudObjectStorage",
             level=5,
-            num="19.5.3.9.1",
+            num="19.5.4.9.1",
         ),
-        Heading(name="Cloudflare R2", level=4, num="19.5.3.10"),
+        Heading(name="Cloudflare R2", level=4, num="19.5.4.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CloudflareR2",
             level=5,
-            num="19.5.3.10.1",
+            num="19.5.4.10.1",
         ),
-        Heading(name="Alibaba Cloud OSS", level=4, num="19.5.3.11"),
+        Heading(name="Alibaba Cloud OSS", level=4, num="19.5.4.11"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AlibabaCloudOSS",
             level=5,
-            num="19.5.3.11.1",
+            num="19.5.4.11.1",
         ),
         Heading(
             name="All Functions and Engines That Can Store Parquet ",
             level=3,
-            num="19.5.4",
+            num="19.5.5",
         ),
-        Heading(name="S3 Engine or Function", level=4, num="19.5.4.1"),
+        Heading(name="S3 Engine or Function", level=4, num="19.5.5.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3",
             level=5,
-            num="19.5.4.1.1",
+            num="19.5.5.1.1",
         ),
-        Heading(name="S3Cluster", level=4, num="19.5.4.2"),
+        Heading(name="S3Cluster", level=4, num="19.5.5.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3Cluster",
             level=5,
-            num="19.5.4.2.1",
+            num="19.5.5.2.1",
         ),
-        Heading(name="IcebergS3 Engine or Function", level=4, num="19.5.4.3"),
+        Heading(name="IcebergS3 Engine or Function", level=4, num="19.5.5.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.IcebergS3",
             level=5,
-            num="19.5.4.3.1",
+            num="19.5.5.3.1",
         ),
-        Heading(name="URL Engine or Function", level=4, num="19.5.4.4"),
+        Heading(name="URL Engine or Function", level=4, num="19.5.5.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.URL",
             level=5,
-            num="19.5.4.4.1",
+            num="19.5.5.4.1",
         ),
-        Heading(name="File Engine or Function", level=4, num="19.5.4.5"),
+        Heading(name="File Engine or Function", level=4, num="19.5.5.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.File",
             level=5,
-            num="19.5.4.5.1",
+            num="19.5.5.5.1",
         ),
-        Heading(name="HDFS Engine or Function", level=4, num="19.5.4.6"),
+        Heading(name="HDFS Engine or Function", level=4, num="19.5.5.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.HDFS",
             level=5,
-            num="19.5.4.6.1",
+            num="19.5.5.6.1",
         ),
         Heading(
             name="Trying To Cache Metadata When Using Engines Not Suited for Direct Parquet Storage",
             level=3,
-            num="19.5.5",
+            num="19.5.6",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NotSuitedEngines",
             level=4,
-            num="19.5.5.1",
-        ),
-        Heading(name="Cache Invalidation", level=3, num="19.5.6"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
-            level=4,
             num="19.5.6.1",
         ),
+        Heading(name="Cache Invalidation", level=3, num="19.5.7"),
         Heading(
-            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.7"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation",
             level=4,
             num="19.5.7.1",
         ),
         Heading(
+            name="Reading Metadata After Caching Is Completed", level=3, num="19.5.8"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching",
+            level=4,
+            num="19.5.8.1",
+        ),
+        Heading(
             name="Caching When Reading From Hive Partitioned Parquet Files in Object Storage",
             level=3,
-            num="19.5.8",
+            num="19.5.9",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning",
             level=4,
-            num="19.5.8.1",
-        ),
-        Heading(name="Caching Settings", level=3, num="19.5.9"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
-            level=4,
             num="19.5.9.1",
         ),
+        Heading(name="Caching Settings", level=3, num="19.5.10"),
         Heading(
-            name="All Possible Settings That Can Be Used Along With Metadata Caching Settings",
-            level=3,
-            num="19.5.10",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings",
             level=4,
             num="19.5.10.1",
         ),
         Heading(
-            name="Cases When Metadata Cache Speeds Up Query Execution",
+            name="All Possible Settings That Can Be Used Along With Metadata Caching Settings",
             level=3,
             num="19.5.11",
         ),
-        Heading(name="Count", level=4, num="19.5.11.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings",
+            level=4,
+            num="19.5.11.1",
+        ),
+        Heading(
+            name="Cases When Metadata Cache Speeds Up Query Execution",
+            level=3,
+            num="19.5.12",
+        ),
+        Heading(name="Count", level=4, num="19.5.12.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.Count",
             level=5,
-            num="19.5.11.1.1",
+            num="19.5.12.1.1",
         ),
-        Heading(name="Min and Max", level=4, num="19.5.11.2"),
+        Heading(name="Min and Max", level=4, num="19.5.12.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.MinMax",
             level=5,
-            num="19.5.11.2.1",
+            num="19.5.12.2.1",
         ),
-        Heading(name="Bloom Filter Caching", level=4, num="19.5.11.3"),
+        Heading(name="Bloom Filter Caching", level=4, num="19.5.12.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.BloomFilter",
             level=5,
-            num="19.5.11.3.1",
+            num="19.5.12.3.1",
         ),
-        Heading(name="Distinct Count", level=4, num="19.5.11.4"),
+        Heading(name="Distinct Count", level=4, num="19.5.12.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.DistinctCount",
             level=5,
-            num="19.5.11.4.1",
+            num="19.5.12.4.1",
         ),
-        Heading(name="File Schema", level=4, num="19.5.11.5"),
+        Heading(name="File Schema", level=4, num="19.5.12.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.FileSchema",
             level=5,
-            num="19.5.11.5.1",
+            num="19.5.12.5.1",
         ),
-        Heading(name="Maximum Size of Metadata Cache", level=3, num="19.5.12"),
+        Heading(name="Maximum Size of Metadata Cache", level=3, num="19.5.13"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize",
             level=4,
-            num="19.5.12.1",
+            num="19.5.13.1",
         ),
         Heading(
             name="File With The Same Name But Different Location",
             level=3,
-            num="19.5.13",
+            num="19.5.14",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation",
             level=4,
-            num="19.5.13.1",
+            num="19.5.14.1",
         ),
-        Heading(name="Hits and Misses Counter", level=3, num="19.5.14"),
+        Heading(name="Hits and Misses Counter", level=3, num="19.5.15"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter",
             level=4,
-            num="19.5.14.1",
+            num="19.5.15.1",
         ),
-        Heading(name="Nested Queries With Metadata Caching", level=3, num="19.5.15"),
+        Heading(name="Nested Queries With Metadata Caching", level=3, num="19.5.16"),
         Heading(
             name="Join Two Parquet Files From an Object Storage",
             level=4,
-            num="19.5.15.1",
+            num="19.5.16.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join",
             level=5,
-            num="19.5.15.1.1",
+            num="19.5.16.1.1",
         ),
-        Heading(name="Basic Nested Subquery", level=4, num="19.5.15.2"),
+        Heading(name="Basic Nested Subquery", level=4, num="19.5.16.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic",
             level=5,
-            num="19.5.15.2.1",
+            num="19.5.16.2.1",
         ),
-        Heading(name="Union All with Nested Parquet Queries", level=4, num="19.5.15.3"),
+        Heading(name="Union All with Nested Parquet Queries", level=4, num="19.5.16.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll",
             level=5,
-            num="19.5.15.3.1",
+            num="19.5.16.3.1",
         ),
         Heading(
             name="Nested Subquery with an Additional Filter and Aggregation",
             level=4,
-            num="19.5.15.4",
+            num="19.5.16.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation",
             level=5,
-            num="19.5.15.4.1",
+            num="19.5.16.4.1",
         ),
-        Heading(name="Combining a UNION with a JOIN", level=4, num="19.5.15.5"),
+        Heading(name="Combining a UNION with a JOIN", level=4, num="19.5.16.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin",
             level=5,
-            num="19.5.15.5.1",
+            num="19.5.16.5.1",
         ),
-        Heading(name="Deeply Nested JOIN", level=4, num="19.5.15.6"),
+        Heading(name="Deeply Nested JOIN", level=4, num="19.5.16.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin",
             level=5,
-            num="19.5.15.6.1",
+            num="19.5.16.6.1",
         ),
         Heading(name="Cachable Metadata Types", level=2, num="19.6"),
         Heading(name="Metadata Generated by ClickHouse", level=3, num="19.6.1"),
@@ -7664,6 +7757,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Column,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings_InitiatorNode,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_S3,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Azure,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_GoogleCloudStorage,
@@ -8100,84 +8196,90 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 19.5 [Caching for Object Storage](#caching-for-object-storage)
         * 19.5.1 [Test Schema For Metadata Caching](#test-schema-for-metadata-caching)
         * 19.5.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
-        * 19.5.3 [Object Storages](#object-storages)
-            * 19.5.3.1 [S3 Storage](#s3-storage)
-                * 19.5.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3)
-            * 19.5.3.2 [Azure](#azure)
-                * 19.5.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Azure](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageazure)
-            * 19.5.3.3 [Google Cloud Storage](#google-cloud-storage)
-                * 19.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.GoogleCloudStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragegooglecloudstorage)
-            * 19.5.3.4 [MinIO](#minio)
-                * 19.5.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MinIO](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageminio)
-            * 19.5.3.5 [HDFS Storage](#hdfs-storage)
-                * 19.5.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehdfs)
-            * 19.5.3.6 [Wasabi](#wasabi)
-                * 19.5.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Wasabi](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragewasabi)
-            * 19.5.3.7 [DigitalOcean Spaces](#digitalocean-spaces)
-                * 19.5.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.DigitalOceanSpaces](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedigitaloceanspaces)
-            * 19.5.3.8 [Ceph RADOS Gateway](#ceph-rados-gateway)
-                * 19.5.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CephRADOSGateway](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragecephradosgateway)
-            * 19.5.3.9 [Yandex Cloud Object Storage](#yandex-cloud-object-storage)
-                * 19.5.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.YandexCloudObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageyandexcloudobjectstorage)
-            * 19.5.3.10 [Cloudflare R2](#cloudflare-r2)
-                * 19.5.3.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CloudflareR2](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragecloudflarer2)
-            * 19.5.3.11 [Alibaba Cloud OSS](#alibaba-cloud-oss)
-                * 19.5.3.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AlibabaCloudOSS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragealibabacloudoss)
-        * 19.5.4 [All Functions and Engines That Can Store Parquet ](#all-functions-and-engines-that-can-store-parquet-)
-            * 19.5.4.1 [S3 Engine or Function](#s3-engine-or-function)
-                * 19.5.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionss3)
-            * 19.5.4.2 [S3Cluster](#s3cluster)
-                * 19.5.4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionss3cluster)
-            * 19.5.4.3 [IcebergS3 Engine or Function](#icebergs3-engine-or-function)
-                * 19.5.4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.IcebergS3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsicebergs3)
-            * 19.5.4.4 [URL Engine or Function](#url-engine-or-function)
-                * 19.5.4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.URL](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsurl)
-            * 19.5.4.5 [File Engine or Function](#file-engine-or-function)
-                * 19.5.4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.File](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsfile)
-            * 19.5.4.6 [HDFS Engine or Function](#hdfs-engine-or-function)
-                * 19.5.4.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionshdfs)
-        * 19.5.5 [Trying To Cache Metadata When Using Engines Not Suited for Direct Parquet Storage](#trying-to-cache-metadata-when-using-engines-not-suited-for-direct-parquet-storage)
-            * 19.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NotSuitedEngines](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenotsuitedengines)
-        * 19.5.6 [Cache Invalidation](#cache-invalidation)
-            * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
-        * 19.5.7 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
-            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
-        * 19.5.8 [Caching When Reading From Hive Partitioned Parquet Files in Object Storage](#caching-when-reading-from-hive-partitioned-parquet-files-in-object-storage)
-            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
-        * 19.5.9 [Caching Settings](#caching-settings)
-            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
-        * 19.5.10 [All Possible Settings That Can Be Used Along With Metadata Caching Settings](#all-possible-settings-that-can-be-used-along-with-metadata-caching-settings)
-            * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageallsettings)
-        * 19.5.11 [Cases When Metadata Cache Speeds Up Query Execution](#cases-when-metadata-cache-speeds-up-query-execution)
-            * 19.5.11.1 [Count](#count)
-                * 19.5.11.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.Count](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutioncount)
-            * 19.5.11.2 [Min and Max](#min-and-max)
-                * 19.5.11.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.MinMax](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionminmax)
-            * 19.5.11.3 [Bloom Filter Caching](#bloom-filter-caching)
-                * 19.5.11.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.BloomFilter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionbloomfilter)
-            * 19.5.11.4 [Distinct Count](#distinct-count)
-                * 19.5.11.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.DistinctCount](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutiondistinctcount)
-            * 19.5.11.5 [File Schema](#file-schema)
-                * 19.5.11.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.FileSchema](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionfileschema)
-        * 19.5.12 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
-            * 19.5.12.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
-        * 19.5.13 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
-            * 19.5.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
-        * 19.5.14 [Hits and Misses Counter](#hits-and-misses-counter)
-            * 19.5.14.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
-        * 19.5.15 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
-            * 19.5.15.1 [Join Two Parquet Files From an Object Storage](#join-two-parquet-files-from-an-object-storage)
-                * 19.5.15.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
-            * 19.5.15.2 [Basic Nested Subquery](#basic-nested-subquery)
-                * 19.5.15.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
-            * 19.5.15.3 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
-                * 19.5.15.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
-            * 19.5.15.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
-                * 19.5.15.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
-            * 19.5.15.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
-                * 19.5.15.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
-            * 19.5.15.6 [Deeply Nested JOIN](#deeply-nested-join)
-                * 19.5.15.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
+        * 19.5.3 [Setting Propagation to All Nodes](#setting-propagation-to-all-nodes)
+            * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettingpropagation)
+            * 19.5.3.2 [Propagate Settings to All Nodes When Set in the Profile (All Nodes)](#propagate-settings-to-all-nodes-when-set-in-the-profile-all-nodes)
+                * 19.5.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettingpropagationprofilesettings)
+            * 19.5.3.3 [Propagate Settings to All Nodes When Set in the Profile (Initiator Node Only)](#propagate-settings-to-all-nodes-when-set-in-the-profile-initiator-node-only)
+                * 19.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings.InitiatorNode](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettingpropagationprofilesettingsinitiatornode)
+        * 19.5.4 [Object Storages](#object-storages)
+            * 19.5.4.1 [S3 Storage](#s3-storage)
+                * 19.5.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorages3)
+            * 19.5.4.2 [Azure](#azure)
+                * 19.5.4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Azure](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageazure)
+            * 19.5.4.3 [Google Cloud Storage](#google-cloud-storage)
+                * 19.5.4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.GoogleCloudStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragegooglecloudstorage)
+            * 19.5.4.4 [MinIO](#minio)
+                * 19.5.4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MinIO](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageminio)
+            * 19.5.4.5 [HDFS Storage](#hdfs-storage)
+                * 19.5.4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehdfs)
+            * 19.5.4.6 [Wasabi](#wasabi)
+                * 19.5.4.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Wasabi](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragewasabi)
+            * 19.5.4.7 [DigitalOcean Spaces](#digitalocean-spaces)
+                * 19.5.4.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.DigitalOceanSpaces](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragedigitaloceanspaces)
+            * 19.5.4.8 [Ceph RADOS Gateway](#ceph-rados-gateway)
+                * 19.5.4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CephRADOSGateway](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragecephradosgateway)
+            * 19.5.4.9 [Yandex Cloud Object Storage](#yandex-cloud-object-storage)
+                * 19.5.4.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.YandexCloudObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageyandexcloudobjectstorage)
+            * 19.5.4.10 [Cloudflare R2](#cloudflare-r2)
+                * 19.5.4.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.CloudflareR2](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragecloudflarer2)
+            * 19.5.4.11 [Alibaba Cloud OSS](#alibaba-cloud-oss)
+                * 19.5.4.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AlibabaCloudOSS](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragealibabacloudoss)
+        * 19.5.5 [All Functions and Engines That Can Store Parquet ](#all-functions-and-engines-that-can-store-parquet-)
+            * 19.5.5.1 [S3 Engine or Function](#s3-engine-or-function)
+                * 19.5.5.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionss3)
+            * 19.5.5.2 [S3Cluster](#s3cluster)
+                * 19.5.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.S3Cluster](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionss3cluster)
+            * 19.5.5.3 [IcebergS3 Engine or Function](#icebergs3-engine-or-function)
+                * 19.5.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.IcebergS3](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsicebergs3)
+            * 19.5.5.4 [URL Engine or Function](#url-engine-or-function)
+                * 19.5.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.URL](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsurl)
+            * 19.5.5.5 [File Engine or Function](#file-engine-or-function)
+                * 19.5.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.File](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionsfile)
+            * 19.5.5.6 [HDFS Engine or Function](#hdfs-engine-or-function)
+                * 19.5.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.EnginesAndFunctions.HDFS](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageenginesandfunctionshdfs)
+        * 19.5.6 [Trying To Cache Metadata When Using Engines Not Suited for Direct Parquet Storage](#trying-to-cache-metadata-when-using-engines-not-suited-for-direct-parquet-storage)
+            * 19.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NotSuitedEngines](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenotsuitedengines)
+        * 19.5.7 [Cache Invalidation](#cache-invalidation)
+            * 19.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Invalidation](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageinvalidation)
+        * 19.5.8 [Reading Metadata After Caching Is Completed](#reading-metadata-after-caching-is-completed)
+            * 19.5.8.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.ReadMetadataAfterCaching](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragereadmetadataaftercaching)
+        * 19.5.9 [Caching When Reading From Hive Partitioned Parquet Files in Object Storage](#caching-when-reading-from-hive-partitioned-parquet-files-in-object-storage)
+            * 19.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HivePartitioning](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehivepartitioning)
+        * 19.5.10 [Caching Settings](#caching-settings)
+            * 19.5.10.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.Settings](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesettings)
+        * 19.5.11 [All Possible Settings That Can Be Used Along With Metadata Caching Settings](#all-possible-settings-that-can-be-used-along-with-metadata-caching-settings)
+            * 19.5.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.AllSettings](#rqsrs-032clickhouseparquetmetadatacachingobjectstorageallsettings)
+        * 19.5.12 [Cases When Metadata Cache Speeds Up Query Execution](#cases-when-metadata-cache-speeds-up-query-execution)
+            * 19.5.12.1 [Count](#count)
+                * 19.5.12.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.Count](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutioncount)
+            * 19.5.12.2 [Min and Max](#min-and-max)
+                * 19.5.12.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.MinMax](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionminmax)
+            * 19.5.12.3 [Bloom Filter Caching](#bloom-filter-caching)
+                * 19.5.12.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.BloomFilter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionbloomfilter)
+            * 19.5.12.4 [Distinct Count](#distinct-count)
+                * 19.5.12.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.DistinctCount](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutiondistinctcount)
+            * 19.5.12.5 [File Schema](#file-schema)
+                * 19.5.12.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SpeedUpQueryExecution.FileSchema](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragespeedupqueryexecutionfileschema)
+        * 19.5.13 [Maximum Size of Metadata Cache](#maximum-size-of-metadata-cache)
+            * 19.5.13.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MaxSize](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemaxsize)
+        * 19.5.14 [File With The Same Name But Different Location](#file-with-the-same-name-but-different-location)
+            * 19.5.14.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SameNameDifferentLocation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragesamenamedifferentlocation)
+        * 19.5.15 [Hits and Misses Counter](#hits-and-misses-counter)
+            * 19.5.15.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.HitsMissesCounter](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragehitsmissescounter)
+        * 19.5.16 [Nested Queries With Metadata Caching](#nested-queries-with-metadata-caching)
+            * 19.5.16.1 [Join Two Parquet Files From an Object Storage](#join-two-parquet-files-from-an-object-storage)
+                * 19.5.16.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Join](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesjoin)
+            * 19.5.16.2 [Basic Nested Subquery](#basic-nested-subquery)
+                * 19.5.16.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.Basic](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesbasic)
+            * 19.5.16.3 [Union All with Nested Parquet Queries](#union-all-with-nested-parquet-queries)
+                * 19.5.16.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionAll](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionall)
+            * 19.5.16.4 [Nested Subquery with an Additional Filter and Aggregation](#nested-subquery-with-an-additional-filter-and-aggregation)
+                * 19.5.16.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.FilterAggregation](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesfilteraggregation)
+            * 19.5.16.5 [Combining a UNION with a JOIN](#combining-a-union-with-a-join)
+                * 19.5.16.5.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.UnionJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesunionjoin)
+            * 19.5.16.6 [Deeply Nested JOIN](#deeply-nested-join)
+                * 19.5.16.6.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.NestedQueries.DeeplyNestedJoin](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragenestedqueriesdeeplynestedjoin)
     * 19.6 [Cachable Metadata Types](#cachable-metadata-types)
         * 19.6.1 [Metadata Generated by ClickHouse](#metadata-generated-by-clickhouse)
             * 19.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.MetadataTypes.ClickHouse](#rqsrs-032clickhouseparquetmetadatacachingobjectstoragemetadatatypesclickhouse)
@@ -11085,6 +11187,46 @@ For example,
 SELECT COUNT(*)
 FROM s3(s3_url, filename = 'test.parquet', format = Parquet)
 SETTINGS input_format_parquet_use_metadata_cache=1;
+```
+
+> [!NOTE]
+> For the input_format_parquet_use_metadata_cache setting to consistently work the following setting must be disabled: optimize_count_from_files=0, remote_filesystem_read_prefetch=0
+
+#### Setting Propagation to All Nodes
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation
+version: 1.0
+
+[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query.
+
+##### Propagate Settings to All Nodes When Set in the Profile (All Nodes)
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings
+version: 1.0
+
+[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query when set from the profile settings for all nodes.
+
+For example, 
+
+when the setting is set in the `users.xml` file for all nodes as:
+
+```xml
+<input_format_parquet_use_metadata_cache>1</input_format_parquet_use_metadata_cache>
+```
+
+##### Propagate Settings to All Nodes When Set in the Profile (Initiator Node Only)
+
+###### RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage.SettingPropagation.ProfileSettings.InitiatorNode
+version: 1.0
+
+[ClickHouse] SHALL propagate the `input_format_parquet_use_metadata_cache` setting to all nodes in a distributed query when set from the profile settings for the initiator node only.
+
+For example, 
+
+when the setting is set in the `users.xml` file for the initiator node as:
+
+```xml
+<input_format_parquet_use_metadata_cache>1</input_format_parquet_use_metadata_cache>
 ```
 
 #### Object Storages

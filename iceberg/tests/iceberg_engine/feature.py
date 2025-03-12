@@ -30,11 +30,14 @@ def feature(self, minio_root_user, minio_root_password):
         test=load("iceberg.tests.iceberg_engine.alter", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
-        test=load("iceberg.tests.iceberg_engine.deletes", "feature"),
+        test=load("iceberg.tests.iceberg_engine.equality_deletes", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     # Feature(
     #     test=load("iceberg.tests.iceberg_engine.datatypes", "feature"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load("iceberg.tests.iceberg_engine.writes", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load("iceberg.tests.iceberg_engine.schema_evolution", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Fix for 22.x keeper
 RUN mkdir -p /var/lib/clickhouse/coordination
 
-# install curl, base image could be alpine
+# install curl, base image could be Alpine or Ubuntu
 RUN if [ -f /etc/alpine-release ]; then \
     apk update && \
     apk add --no-cache curl openssl shadow openssh-client ca-certificates; \

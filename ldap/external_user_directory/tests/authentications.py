@@ -1589,10 +1589,12 @@ def user_lookup_priority(self, server):
     ):
         with rbac_users({"cn": "local", "userpassword": "local"}):
             exitcode = 4
-            if check_clickhouse_version(">=25.1")(
-                self
-            ):  # https://github.com/ClickHouse/ClickHouse/pull/72198
+            if check_clickhouse_version(">=25.1")(self) and check_clickhouse_version(
+                "<=25.3"
+            )(self):
                 exitcode = 194
+                # https://github.com/ClickHouse/ClickHouse/pull/72198
+                # https://github.com/ClickHouse/ClickHouse/pull/76637
             with When(
                 "I try to login as 'default' user which is also defined in users.xml it should fail"
             ):
