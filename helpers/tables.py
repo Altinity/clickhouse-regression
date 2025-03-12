@@ -251,6 +251,7 @@ def common_datatypes():
 def common_columns():
     return [Column(datatype) for datatype in common_datatypes()]
 
+
 def generate_all_basic_numeric_column_types():
     """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
     types = [
@@ -268,13 +269,13 @@ def generate_all_basic_numeric_column_types():
         Float64(),
         Decimal128(scale=38),
     ]
-    
+
     return [Column(datatype) for datatype in types]
 
 
 def generate_all_column_types(include=None, exclude=None):
     """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
-    
+
     if exclude is None:
         exclude = []
 
@@ -317,7 +318,9 @@ def generate_all_column_types(include=None, exclude=None):
         + tuple_datatype
     )
 
-    return [Column(datatype) for datatype in all_test_datatypes if datatype not in exclude]
+    return [
+        Column(datatype) for datatype in all_test_datatypes if datatype not in exclude
+    ]
 
 
 def generate_all_map_column_types():
