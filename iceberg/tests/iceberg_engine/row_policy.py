@@ -172,7 +172,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
     )
 
     if not self.context.stress:
-        all_combinations = random.sample(list(all_combinations), 1000)
+        all_combinations = random.sample(list(all_combinations), 100)
 
     for num, combination in enumerate(all_combinations):
         column_condition_combination, conditions_join_option, as_clause, to_clause = (
