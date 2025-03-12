@@ -6734,6 +6734,10 @@ _aggregate_functions_extra_data_argMax_datatypes_String_Bool_PPPPPPPPPPPPPPPPPPP
 {"argMax(string, bool)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP","any(toTypeName(string))":"String","any(toTypeName(bool))":"Bool"}
 """
 
+_aggregate_functions_extra_data_argMax_datatypes_String_DateTime64_3___22_8_ = r"""
+{"argMax(string, datetime64_3_)":"","any(toTypeName(string))":"String","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
+"""
+
 _aggregate_functions_extra_data_argMax_datatypes_String_DateTime64_3___22_8_rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr = r"""
 {"argMax(string, datetime64_3_)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr","any(toTypeName(string))":"String","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
