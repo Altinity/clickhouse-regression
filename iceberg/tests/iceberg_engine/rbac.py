@@ -60,7 +60,7 @@ def rbac_sanity(self, minio_root_user, minio_root_password):
 
     with And("grant read access to the table"):
         self.context.node.query(
-            f"GRANT SELECT ON {database_name}.\`{namespace}.{table_name}\` TO {user_name}"
+            f"GRANT SELECT ON {database_name}.\\`{namespace}.{table_name}\\` TO {user_name}"
         )
 
     with And("try to read from iceberg table with new user"):

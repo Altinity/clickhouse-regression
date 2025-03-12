@@ -137,7 +137,7 @@ def add_storage_config(
             "path": "external_cache/",
             "max_size": "22548578304",
             "cache_on_write_operations": "1",
-            "do_not_evict_index_and_mark_files": "1",
+            # "do_not_evict_index_and_mark_files": "1",
         },
     }
     external_disk_name = "external_cache"
