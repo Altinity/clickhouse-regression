@@ -318,17 +318,25 @@ def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
     parsed_output2 = parse_table_output(output2)
 
     if len(parsed_output1) != len(parsed_output2):
+        note(
+            f"Row counts are not equal: {len(parsed_output1)} != {len(parsed_output2)}"
+        )
         return False
 
     for row1, row2 in zip(parsed_output1, parsed_output2):
         if len(row1) != len(row2):
+            note(row1)
+            note(row2)
+            note(f"Row lengths are not equal: {len(row1)} != {len(row2)}")
             return False
 
         for val1, val2 in zip(row1, row2):
             if isinstance(val1, float) and isinstance(val2, float):
                 if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
+                    note(f"Values are not close enough: {val1} != {val2}")
                     return False
             elif val1 != val2:
+                note(f"Values are not equal: {val1} != {val2}")
                 return False
     return True
 
