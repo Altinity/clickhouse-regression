@@ -6734,6 +6734,10 @@ _aggregate_functions_extra_data_state_argMaxState_datatypes_String_Bool_5F000000
 {"hex(argMaxState(string, bool))":"5F00000050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050000101","any(toTypeName(string))":"String","any(toTypeName(bool))":"Bool"}
 """
 
+_aggregate_functions_extra_data_state_argMaxState_datatypes_String_DateTime64_3___22_8_0100000000017F8928A678090000 = r"""
+{"hex(argMaxState(string, datetime64_3_))":"0100000000017F8928A678090000","any(toTypeName(string))":"String","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
+"""
+
 _aggregate_functions_extra_data_state_argMaxState_datatypes_String_DateTime64_3___22_8_230000007272727272727272727272727272727272727272727272727272727272727272727200017F8928A678090000 = r"""
 {"hex(argMaxState(string, datetime64_3_))":"230000007272727272727272727272727272727272727272727272727272727272727272727200017F8928A678090000","any(toTypeName(string))":"String","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
