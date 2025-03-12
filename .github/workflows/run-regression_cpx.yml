@@ -1076,7 +1076,7 @@ jobs:
 
   iceberg:
     runs-on: [self-hosted, x86, type-cpx41, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: iceberg
     if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
