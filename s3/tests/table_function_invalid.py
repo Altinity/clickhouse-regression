@@ -175,7 +175,11 @@ def invalid_bucket(self):
         """When I export the data to S3 using the table function with
                 invalid path parameter it should fail"""
     ):
-        if check_clickhouse_version(">=23")(self) and self.context.storage == "aws_s3":
+        if (
+            self.context.storage == "aws_s3"
+            and check_clickhouse_version(">=23")(self)
+            and check_clickhouse_version("<24.12")(self)
+        ):
             exitcode = 36
         else:
             exitcode = 243
