@@ -367,7 +367,7 @@ def regression(
             ), "S3_AMAZON_URI env variable must be defined"
             environ["S3_AMAZON_KEY_ID"] = aws_s3_key_id.value
             environ["S3_AMAZON_ACCESS_KEY"] = aws_s3_access_key.value
-            environ["S3_AMAZON_URI"] = aws_s3_uri.value
+            environ["S3_AMAZON_URI"] = aws_s3_uri.value + "tiered_storage/"
 
         if with_s3gcs:
             assert (
@@ -379,7 +379,7 @@ def regression(
             assert gcs_uri.value is not None, "GCS_URI env variable must be defined"
             environ["GCS_KEY_ID"] = gcs_key_id.value
             environ["GCS_KEY_SECRET"] = gcs_key_secret.value
-            environ["GCS_URI"] = gcs_uri.value
+            environ["GCS_URI"] = gcs_uri.value + "/tiered_storage"
 
     name = "normal"
     if with_minio:
