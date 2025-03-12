@@ -186,9 +186,12 @@ def delete_in(self, merge_tree_table_name, iceberg_table, column, range_length=1
     ) is None:
         return
 
+    # Determine if values should be treated as numeric or string
+    quote = "" if all(isinstance(x, (int, float)) for x in values) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"""{column} IN ({', '.join(f"'{value}'" for value in values)})""",
+        merge_tree_condition=f"{column} IN ({', '.join(f'{quote}{v}{quote}' for v in values)})",
         iceberg_table=iceberg_table,
         iceberg_condition=In(column, values),
     )
@@ -204,9 +207,12 @@ def delete_not_in(self, merge_tree_table_name, iceberg_table, column, range_leng
     ) is None:
         return
 
+    # Determine if values should be treated as numeric or string
+    quote = "" if all(isinstance(x, (int, float)) for x in values) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"""{column} NOT IN ({', '.join(f"'{value}'" for value in values)})""",
+        merge_tree_condition=f"{column} NOT IN ({', '.join(f'{quote}{v}{quote}' for v in values)})",
         iceberg_table=iceberg_table,
         iceberg_condition=NotIn(column, values),
     )
