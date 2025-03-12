@@ -86,7 +86,7 @@ def create_test_table(
         order_by=order_by,
         partition_by=partition_by,
         query_settings=settings,
-        settings=[("distributed_ddl_task_timeout ", 300)],
+        settings=[("distributed_ddl_task_timeout ", 600)],
         drop_sync=True,
     )
 
