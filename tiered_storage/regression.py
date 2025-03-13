@@ -10,6 +10,7 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base, CaptureClusterArgs
 from helpers.common import check_clickhouse_version, experimental_analyzer
+from s3.tests.common import temporary_bucket_path
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
 
@@ -367,7 +368,17 @@ def regression(
             ), "S3_AMAZON_URI env variable must be defined"
             environ["S3_AMAZON_KEY_ID"] = aws_s3_key_id.value
             environ["S3_AMAZON_ACCESS_KEY"] = aws_s3_access_key.value
-            environ["S3_AMAZON_URI"] = aws_s3_uri.value + "tiered_storage/"
+
+            with Given("a temporary S3 path"):
+                uri = aws_s3_uri.value
+                bucket_name, bucket_prefix = (
+                    uri.split(".amazonaws.com/")[-1].strip("/").split("/", maxsplit=1)
+                )
+                temp_s3_path = temporary_bucket_path(
+                    bucket_name=bucket_name,
+                    bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                )
+                environ["S3_AMAZON_URI"] = f"{uri}/tiered_storage/{temp_s3_path}/"
 
         if with_s3gcs:
             assert (
@@ -379,7 +390,18 @@ def regression(
             assert gcs_uri.value is not None, "GCS_URI env variable must be defined"
             environ["GCS_KEY_ID"] = gcs_key_id.value
             environ["GCS_KEY_SECRET"] = gcs_key_secret.value
-            environ["GCS_URI"] = gcs_uri.value + "/tiered_storage"
+            with Given("a temporary GCS path"):
+                uri = gcs_uri.value
+                bucket_name, bucket_prefix = uri.split(
+                    "https://storage.googleapis.com/"
+                )[-1].split("/", maxsplit=1)
+                temp_s3_path = temporary_bucket_path(
+                    bucket_name=bucket_name,
+                    bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                    access_key_id=gcs_key_id.value,
+                    secret_access_key=gcs_key_secret.value,
+                )
+                environ["GCS_URI"] = f"{uri}/tiered_storage/{temp_s3_path}"
 
     name = "normal"
     if with_minio:
