@@ -1101,7 +1101,13 @@ def aws_s3_setup_second_bucket(self, region, bucket):
 
 
 @TestStep(Given)
-def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
+def temporary_bucket_path(
+    self,
+    bucket_name=None,
+    bucket_prefix=None,
+    access_key_id=None,
+    secret_access_key=None,
+):
     """
     Return a temporary bucket sub-path which will be cleaned up.
     This is returned without the given prefix for compatibility with the
@@ -1133,6 +1139,11 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
     if bucket_prefix is None:
         bucket_prefix = self.context.bucket_prefix
 
+    if access_key_id is None:
+        access_key_id = self.context.access_key_id
+    if secret_access_key is None:
+        secret_access_key = self.context.secret_access_key
+
     try:
         with When("I create a temporary bucket path"):
             temp_path = f"tmp_{getuid()}"
@@ -1160,7 +1171,7 @@ def temporary_bucket_path(self, bucket_name=None, bucket_prefix=None):
                 cluster.command(
                     "aws",
                     (
-                        f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key}"
+                        f"AWS_ACCESS_KEY_ID={access_key_id} AWS_SECRET_ACCESS_KEY={secret_access_key}"
                         f" aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
                         " --endpoint=https://storage.googleapis.com/"
                     ),
