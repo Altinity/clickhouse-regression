@@ -334,9 +334,10 @@ def start_minio(
                 for name in object_names:
                     minio_client.remove_object(bucket.name, name)
 
-            buckets = ["root", "root2"]
+            buckets = ["root", "root2", "warehouse"]
             self.context.cluster.minio_bucket = "root"
             self.context.cluster.minio_bucket_2 = "root2"
+            self.context.cluster.minio_bucket_3 = "warehouse"
 
             for bucket in buckets:
                 if minio_client.bucket_exists(bucket):

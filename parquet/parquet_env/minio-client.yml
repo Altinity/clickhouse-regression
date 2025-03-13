@@ -7,10 +7,15 @@ services:
      /bin/sh -c "
      /usr/bin/mc config host add minio http://minio:9001 minio minio123;
      /usr/bin/mc mb minio/root;
+
+     /usr/bin/mc rm -r --force minio/warehouse;
+     /usr/bin/mc mb minio/warehouse --ignore-existing;
+     /usr/bin/mc policy set public minio/warehouse;
+
      touch /tmp/ready;
      "
     healthcheck:
-      test: ["CMD", "ls", "/tmp/ready"]
+      test: ["CMD-SHELL", "[ -f /tmp/ready ] && /usr/bin/mc ls minio/warehouse || exit 1"]
       interval: 5s
       timeout: 2s
       retries: 60
