@@ -291,31 +291,57 @@ def get_random_value_from_table(self, table_name, column, number=1, node=None):
     return output[0] if number == 1 else output
 
 
-def parse_table_output(output):
-    """Parses a tab-separated string output into a list of lists with appropriate types."""
+def get_column_types(table_name):
+    """Retrieve column types from using DESCRIBE TABLE query."""
+    describe_query = f"DESCRIBE TABLE {table_name} FORMAT TabSeparated"
+    describe_result = current().context.node.query(describe_query).output
+
+    column_names_and_types = []
+    for row in describe_result.strip().split("\n"):
+        column_name, column_type = row.split("\t")[:2]
+        column_names_and_types.append((column_name, column_type))
+
+    return column_names_and_types
+
+
+def parse_table_output(output, column_names_and_types):
+    """Parses a tab-separated string output into a list of lists with appropriate types, ensuring correct column mapping."""
     rows = output.strip().split("\n")
     parsed_data = []
 
     for row in rows:
         values = row.split("\t")
         parsed_row = []
-        for value in values:
-            # Try to convert to int, then float, otherwise keep as string
-            if value.isdigit():
-                parsed_row.append(int(value))
-            else:
+        for value, (_, col_type) in zip(values, column_names_and_types):
+            if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
                 try:
                     parsed_row.append(float(value))
                 except ValueError:
                     parsed_row.append(value)
+            elif (
+                col_type.startswith("Int")
+                or col_type.startswith("Nullable(Int")
+                or col_type.startswith("UInt")
+                or col_type.startswith("Nullable(UInt")
+            ):
+                try:
+                    parsed_row.append(int(value))
+                except ValueError:
+                    parsed_row.append(value)
+            else:
+                parsed_row.append(value)
         parsed_data.append(parsed_row)
 
     return parsed_data
 
 
-def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
-    parsed_output1 = parse_table_output(output1)
-    parsed_output2 = parse_table_output(output2)
+def compare_select_outputs(output1, output2, table_name1, rel_tol=1e-3, abs_tol=1e-3):
+    """Compares two table outputs with math.isclose() only for float columns, ensuring correct column order."""
+
+    column_names_and_types = get_column_types(table_name1)
+
+    parsed_output1 = parse_table_output(output1, column_names_and_types)
+    parsed_output2 = parse_table_output(output2, column_names_and_types)
 
     if len(parsed_output1) != len(parsed_output2):
         note(
@@ -330,14 +356,19 @@ def compare_select_outputs(output1, output2, rel_tol=1e-3, abs_tol=1e-3):
             note(f"Row lengths are not equal: {len(row1)} != {len(row2)}")
             return False
 
-        for val1, val2 in zip(row1, row2):
-            if isinstance(val1, float) and isinstance(val2, float):
+        for (val1, val2), (col_name, col_type) in zip(
+            zip(row1, row2), column_names_and_types
+        ): 
+            if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
                 if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
-                    note(f"Values are not close enough: {val1} != {val2}")
+                    note(
+                        f"Float values are not close enough in column {col_name}: {val1} != {val2}"
+                    )
                     return False
             elif val1 != val2:
-                note(f"Values are not equal: {val1} != {val2}")
+                note(f"Values are not equal in column {col_name}: {val1} != {val2}")
                 return False
+
     return True
 
 
