@@ -5,6 +5,39 @@ volumes:
   parquet-files:
 
 services:
+  spark-iceberg:
+    image: tabulario/spark-iceberg
+    container_name: spark-iceberg
+    build: spark/
+    depends_on:
+      - rest
+      - minio
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+    ports:
+      - 8080:8080
+      - 10000:10000
+      - 10001:10001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rest:
+    image: tabulario/iceberg-rest
+    ports:
+      - 8182:8181
+    environment:
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_REGION=us-east-1
+      - CATALOG_WAREHOUSE=s3://warehouse/data/
+      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+      - CATALOG_S3_ENDPOINT=http://minio:9000
+
   zookeeper1:
     extends:
       file: ../../docker-compose/zookeeper-service.yml
@@ -14,6 +47,36 @@ services:
     extends:
       file: ../../docker-compose/keeper-service.yml
       service: keeper1
+
+  clickhouse-antalya:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse-antalya
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/antalya/remote_servers.xml:/etc/clickhouse-server/config.d/remote.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/antalya/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/antalya:/var/log/clickhouse-server"
+
+  clickhouse-swarm-1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse-swarm-1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/swarm/remote_servers.xml:/etc/clickhouse-server/config.d/remote.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/swarm-1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/swarm-1:/var/log/clickhouse-server"
+
+  clickhouse-swarm-2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse-swarm-2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/swarm/remote_servers.xml:/etc/clickhouse-server/config.d/remote.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/swarm-2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/swarm-2:/var/log/clickhouse-server"
 
   clickhouse1:
     extends:
@@ -141,6 +204,12 @@ services:
       clickhouse2:
         condition: service_healthy
       clickhouse3:
+        condition: service_healthy
+      clickhouse-antalya:
+        condition: service_healthy
+      clickhouse-swarm-1:
+        condition: service_healthy
+      clickhouse-swarm-2:
         condition: service_healthy
       zookeeper1:
         condition: service_healthy
