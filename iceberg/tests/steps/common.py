@@ -195,14 +195,16 @@ def get_select_query_result(
 def compare_data_in_two_tables(
     self, table_name1, table_name2, select_columns="*", order_by="tuple(*)"
 ):
-    """Compare data in two tables."""
+    """Compare data in two tables, ensuring floats are compared with math.isclose()."""
     table_name1_result = get_select_query_result(
         table_name=table_name1, select_columns=select_columns, order_by=order_by
     ).output
     table_name2_result = get_select_query_result(
         table_name=table_name2, select_columns=select_columns, order_by=order_by
     ).output
-    assert compare_select_outputs(table_name1_result, table_name2_result), error()
+    assert compare_select_outputs(
+        table_name1_result, table_name2_result, table_name1
+    ), error()
 
 
 def parse_clickhouse_error(error_message, only_error_name=True):
