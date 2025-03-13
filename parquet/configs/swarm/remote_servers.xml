@@ -1,0 +1,55 @@
+<clickhouse>
+    <!-- Enable automatic cluster discovery. -->
+    <allow_experimental_cluster_discovery>1</allow_experimental_cluster_discovery>
+
+    <!-- Zookeeper for registering swarm members. --> 
+    <!--
+    <auxiliary_zookeepers>
+        <registry>
+            <node>
+                <host>keeper</host>
+                <port>9181</port>
+            </node>
+        </registry>
+    </auxiliary_zookeepers>
+    -->
+        <zookeeper>
+            <node>
+                <host>keeper</host>
+                <port>9181</port>
+            </node>
+        </zookeeper>
+    <remote_servers>
+        <!-- Swarm cluster built using remote discovery --> 
+        <swarm>
+            <discovery>
+                <path>/clickhouse/discovery/swarm</path>
+                <secret>secret_key</secret>
+            </discovery>
+        </swarm>
+        <!-- Cluster containing all servers to enable query across every replica -->
+        <all>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>antalya</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>swarm-1</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>swarm-2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </all>
+    </remote_servers>
+</clickhouse>

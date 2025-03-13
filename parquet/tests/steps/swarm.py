@@ -52,17 +52,19 @@ def generate_data(num_partitions):
 
 
 @TestStep(Given)
-def connect_to_catalog_minio(self, catalog_type="rest"):
+def connect_to_catalog_minio(self, catalog_type="rest"): #1
     """Connect to the catalog."""
-    create_catalog(
+    catalog = create_catalog(
         catalog_type=catalog_type,
         s3_access_key_id=self.context.access_key_id,
         s3_secret_access_key=self.context.secret_access_key,
     )
 
+    return catalog
+
 
 @TestStep(Given)
-def create_iceberg_namespace(self, namespace="iceberg"):
+def create_iceberg_namespace(self, namespace="iceberg"): #2
     """Create namespace iceberg."""
     create_namespace(namespace=namespace)
 
@@ -75,7 +77,7 @@ def to_dt(string):
 
 
 @TestStep(Given)
-def create_parquet_partitioned_by_datetime(
+def create_parquet_partitioned_by_datetime( #3
     self, catalog, location=None, number_of_partitions=100
 ):
     """Create a partitioned table."""
