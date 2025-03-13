@@ -377,6 +377,7 @@ def regression(
                 temp_s3_path = temporary_bucket_path(
                     bucket_name=bucket_name,
                     bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                    storage="aws_s3",
                 )
                 environ["S3_AMAZON_URI"] = f"{uri}/tiered_storage/{temp_s3_path}/"
 
@@ -400,6 +401,7 @@ def regression(
                     bucket_prefix=f"{bucket_prefix}/tiered_storage",
                     access_key_id=gcs_key_id.value,
                     secret_access_key=gcs_key_secret.value,
+                    storage="gcs",
                 )
                 environ["GCS_URI"] = f"{uri}/tiered_storage/{temp_s3_path}"
 

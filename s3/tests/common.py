@@ -1107,6 +1107,7 @@ def temporary_bucket_path(
     bucket_prefix=None,
     access_key_id=None,
     secret_access_key=None,
+    storage=None,
 ):
     """
     Return a temporary bucket sub-path which will be cleaned up.
@@ -1126,12 +1127,14 @@ def temporary_bucket_path(
             temp_bucket_path = f"{bucket_prefix}/my_test_prefix/{temp_s3_path}"
 
     """
+    if storage is None:
+        storage = self.context.storage
 
-    assert self.context.storage in [
+    assert storage in [
         "minio",
         "aws_s3",
         "gcs",
-    ], f"Unsupported storage: {self.context.storage}"
+    ], f"Unsupported storage: {storage}"
 
     if bucket_name is None:
         bucket_name = self.context.bucket_name
@@ -1151,7 +1154,7 @@ def temporary_bucket_path(
 
     finally:
         with Finally("remove the temporary bucket path"):
-            if self.context.storage == "minio":
+            if storage == "minio":
                 minio_client = self.context.cluster.minio_client
                 for obj in list(minio_client.list_objects(bucket_name, recursive=True)):
                     if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
@@ -1159,14 +1162,14 @@ def temporary_bucket_path(
                     if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
                         minio_client.remove_object(bucket_name, obj.object_name)
 
-            elif self.context.storage == "aws_s3":
+            elif storage == "aws_s3":
                 cluster = current().context.cluster
                 cluster.command(
                     "aws",
                     f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive",
                 )
 
-            elif self.context.storage == "gcs":
+            elif storage == "gcs":
                 cluster = current().context.cluster
                 cluster.command(
                     "aws",
