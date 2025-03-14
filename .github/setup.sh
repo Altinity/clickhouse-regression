@@ -107,7 +107,9 @@ else
   keeper_or_zookeeper="zookeeper"
 fi
 
-JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
+S3_ENDPOINT=${S3_ENDPOINT:-s3.amazonaws.com}
+
+JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
 
 echo "confidential=$confidential" >>$GITHUB_ENV
 
@@ -127,3 +129,5 @@ SUITE_REPORT_BUCKET_PATH=$JOB_S3_ROOT/$(uname -i)/$analyzer/$keeper_or_zookeeper
 echo "SUITE_REPORT_BUCKET_PATH=$SUITE_REPORT_BUCKET_PATH" >>$GITHUB_ENV
 
 echo "::endgroup::"
+
+echo "Browse results at $SUITE_REPORT_INDEX_URL"
