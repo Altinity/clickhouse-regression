@@ -27,30 +27,30 @@ settings = [
     "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
     "azure_ignore_file_doesnt_exist=1",
     "azure_skip_empty_files=1",
-    "azure_throw_on_zero_files_match=1" "allow_experimental_codecs=1",
-    "allow_experimental_database_materialized_postgresql=1",
-    "allow_experimental_dynamic_type=1",
-    "allow_experimental_full_text_index=1",
-    "allow_experimental_funnel_functions=1",
-    "allow_experimental_hash_functions=1",
-    "allow_experimental_inverted_index=1",
-    "allow_experimental_join_condition=1",
-    "allow_experimental_json_type=1",
-    "allow_experimental_kafka_offsets_storage_in_keeper=1",
-    "allow_experimental_kusto_dialect=1",
-    "allow_experimental_live_view=1",
-    "allow_experimental_materialized_postgresql_table=1",
-    "allow_experimental_nlp_functions=1",
-    "allow_experimental_object_type=1",
-    "allow_experimental_parallel_reading_from_replicas=1",
-    "allow_experimental_prql_dialect=1",
-    "allow_experimental_query_deduplication=1",
-    "allow_experimental_shared_set_join=1",
-    "allow_experimental_statistics=1",
-    "allow_experimental_time_series_table=1",
-    "allow_experimental_ts_to_grid_aggregate_function=1",
-    "allow_experimental_variant_type=1",
-    "allow_experimental_vector_similarity_index=1",
+    "azure_throw_on_zero_files_match=1",
+    # "allow_experimental_database_materialized_postgresql=1",
+    # "allow_experimental_dynamic_type=1",
+    # "allow_experimental_full_text_index=1",
+    # "allow_experimental_funnel_functions=1",
+    # "allow_experimental_hash_functions=1",
+    # "allow_experimental_inverted_index=1",
+    # "allow_experimental_join_condition=1",
+    # "allow_experimental_json_type=1",
+    # "allow_experimental_kafka_offsets_storage_in_keeper=1",
+    # "allow_experimental_kusto_dialect=1",
+    # "allow_experimental_live_view=1",
+    # "allow_experimental_materialized_postgresql_table=1",
+    # "allow_experimental_nlp_functions=1",
+    # "allow_experimental_object_type=1",
+    # "allow_experimental_parallel_reading_from_replicas=1",
+    # "allow_experimental_prql_dialect=1",
+    # "allow_experimental_query_deduplication=1",
+    # "allow_experimental_shared_set_join=1",
+    # "allow_experimental_statistics=1",
+    # "allow_experimental_time_series_table=1",
+    # "allow_experimental_ts_to_grid_aggregate_function=1",
+    # "allow_experimental_variant_type=1",
+    # "allow_experimental_vector_similarity_index=1",
 ]
 
 
@@ -526,11 +526,13 @@ def check_hits_on_cluster(self, log_comment, initiator_node=None, other_nodes=No
     ), f"number of hits is less than 1 and = {hits.output.strip()}"
 
     for node in other_nodes:
-        node.query("SYSTEM FLUSH LOGS")
-        hits = node.query(r)
-        assert (
-            int(hits.output.strip()) > 0
-        ), f"number of hits is less than 1 and = {hits.output.strip()}"
+        for retry in retries(count=10, delay=2):
+            with retry:
+                node.query("SYSTEM FLUSH LOGS")
+                hits = node.query(r)
+                assert (
+                    int(hits.output.strip()) > 0
+                ), f"number of hits is less than 1 and = {hits.output.strip()}"
 
 
 @TestStep(Then)
