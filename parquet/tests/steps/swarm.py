@@ -100,7 +100,7 @@ def setup_iceberg(self, catalog_type=None, namespace=None):
 
 @TestStep(Given)
 def create_parquet_partitioned_by_datetime(  # 3
-    self, catalog, location=None, number_of_partitions=100
+    self, catalog, location=None, number_of_partitions=1000
 ):
     """Create a partitioned table."""
     table_name = "table_" + getuid()

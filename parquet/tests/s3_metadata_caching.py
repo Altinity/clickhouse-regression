@@ -354,16 +354,24 @@ def check_swarm_parquet(
     setting = random.choice(additional_settings)
 
     with Given(
-        "I connect to the catalog",
+        "I select data from the parquet file without using metadata caching",
         description=f"""additional setting for a query: {setting}, select function: {select.__name__}, condition: {condition}""",
     ):
-        catalog = setup_iceberg()
-
-    with And("I create a partitioned parquet file in iceberg"):
-        create_parquet_partitioned_by_datetime(catalog=catalog)
-        pause()
-    with When("I select the data from parquet in iceberg"):
+        if file_type == "ParquetMetadata" and statement != "*":
+            skip()
         initial_execution_time, log = select(
+            node=self.context.swarm_initiator,
+            cache_metadata=False,
+            additional_settings=setting,
+            statement=statement,
+            condition=condition,
+            file_type=file_type,
+            path_glob=path_glob,
+        )
+    with When("I select the data from parquet in iceberg"):
+        if file_type == "ParquetMetadata" and statement != "*":
+            skip()
+        select(
             node=self.context.swarm_initiator,
             cache_metadata=True,
             additional_settings=setting,
@@ -382,12 +390,16 @@ def check_swarm_parquet(
             path_glob=path_glob,
         )
     with Then("I check that the metadata was cached"):
+        if file_type == "ParquetMetadata" and statement != "*":
+            skip()
         check_hits_on_cluster(
             log_comment=log,
             initiator_node=self.context.swarm_initiator,
             other_nodes=self.context.swarm_nodes,
         )
     with And("I check that the query ran faster with caching"):
+        if file_type == "ParquetMetadata" and statement != "*":
+            skip()
         assert (
             initial_execution_time > execution_time
         ), f"query ran slower with caching initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
@@ -395,14 +407,16 @@ def check_swarm_parquet(
 
 @TestSketch(Scenario)
 @Flags(TE)
-def swarm(self):
-
-    set_delay_on_minio_node()
-
+def swarm_combinations(self):
+    """Combinations of tests for metadata caching on a swarm setup."""
     conditions = either(
         *[
             "WHERE datetime < '2017-09-12 10:35:00.000000'",  # Should skip all files as the datetime is out of min/max range
             "WHERE datetime = '2019-09-12 10:35:00.000000'",
+            "WHERE datetime = toDateTime('2019-09-12 10:35:00.000000')",
+            "WHERE toYYYYMMDD(datetime) = 20190912",
+            "WHERE datetime IN ('2019-09-12 10:35:00.000000', '2019-09-14 10:35:00.000000', '2019-09-16 10:35:00.000000')",
+            "WHERE toString(datetime) LIKE '2019-09-12%'",
         ]
     )
 
@@ -428,11 +442,51 @@ def swarm(self):
         path_glob=path_glob,
     )
 
+@TestStep
+
+@TestScenario
+def one_node_disconnects(self):
+    """Scenario when in a swarm cluster one node disconnects, and we check that we need to cache the parquet metadata again on that node when it recovers."""
+    initiator_node = self.context.swarm_initiator
+    disconnect_node = self.context.swarm_nodes[0]
+
+    with Given("I cache metadata from a parquet file"):
+        select_parquet_from_iceberg_s3(
+            node=initiator_node, statement="COUNT(*)", cache_metadata=True
+        )
+        _, log = select_parquet_from_iceberg_s3(
+            node=initiator_node, statement="COUNT(*)", cache_metadata=True
+        )
+
+    with When("I check that the metadata was cached"):
+        check_hits_on_cluster(log_comment=log, initiator_node=initiator_node)
+
+    with And("I stop the connection to one of the swarm nodes"):
+        disconnect_node.stop_clickhouse(safe=False)
+        disconnect_node.start_clickhouse()
+
+    with Then("I check that the metadata was cached again"):
+        _, log2 = select_parquet_from_iceberg_s3(
+            node=initiator_node, statement="COUNT(*)", cache_metadata=True
+        )
+
+    with And("I validate that the metadata is not cached"):
+        hits = check_hits(log_comment=log2, node=disconnect_node)
+
+        assert hits == 0, f"metadata was cached on the disconnected node hits={hits}"
+
+
+@TestSuite
+def swarm(self):
+    """Tests for parquet metadata caching on a swarm setup."""
+    Scenario(run=swarm_combinations)
+    Scenario(run=one_node_disconnects)
+
 
 @TestFeature
 @Name("s3 metadata caching")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
-def feature(self, node="clickhouse1", number_of_files=15):
+def feature(self, node="clickhouse1", number_of_files=15, partitions_for_swarm=1000):
     """Tests for parquet metadata caching for object storage."""
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
@@ -453,4 +507,13 @@ def feature(self, node="clickhouse1", number_of_files=15):
 
     # Scenario(run=parquet_metadata_format)
     # Scenario(run=parquet_s3_caching)
+
+    with Given("I setup iceberg catalog"):
+        catalog = setup_iceberg()
+
+    with And("I create a partitioned parquet file in iceberg"):
+        create_parquet_partitioned_by_datetime(
+            catalog=catalog, number_of_partitions=partitions_for_swarm
+        )
+
     Scenario(run=swarm)
