@@ -76,9 +76,11 @@ def delete_equal_to(self, merge_tree_table_name, iceberg_table, column):
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
 
+    quote = "" if isinstance(value, (int, float)) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} = '{value}'",
+        merge_tree_condition=f"{column} = {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=EqualTo(column, value),
     )
@@ -90,9 +92,11 @@ def delete_not_equal_to(self, merge_tree_table_name, iceberg_table, column):
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
 
+    quote = "" if isinstance(value, (int, float)) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} != '{value}'",
+        merge_tree_condition=f"{column} != {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=NotEqualTo(column, value),
     )
@@ -103,10 +107,12 @@ def delete_greater_than(self, merge_tree_table_name, iceberg_table, column):
     """Delete rows where given column value is greater than some value."""
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
+    
+    quote = "" if isinstance(value, (int, float)) else "'"
 
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} > '{value}'",
+        merge_tree_condition=f"{column} > {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=GreaterThan(column, value),
     )
@@ -118,9 +124,11 @@ def delete_less_than(self, merge_tree_table_name, iceberg_table, column):
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
 
+    quote = "" if isinstance(value, (int, float)) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} < '{value}'",
+        merge_tree_condition=f"{column} < {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=LessThan(column, value),
     )
@@ -131,10 +139,12 @@ def delete_greater_than_or_equal(self, merge_tree_table_name, iceberg_table, col
     """Delete rows where given column value is greater than or equal to some value."""
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
+    
+    quote = "" if isinstance(value, (int, float)) else "'"
 
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} >= '{value}'",
+        merge_tree_condition=f"{column} >= {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=GreaterThanOrEqual(column, value),
     )
@@ -146,9 +156,11 @@ def delete_less_than_or_equal(self, merge_tree_table_name, iceberg_table, column
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
 
+    quote = "" if isinstance(value, (int, float)) else "'"
+
     perform_delete(
         merge_tree_table_name=merge_tree_table_name,
-        merge_tree_condition=f"{column} <= '{value}'",
+        merge_tree_condition=f"{column} <= {quote}{value}{quote}",
         iceberg_table=iceberg_table,
         iceberg_condition=LessThanOrEqual(column, value),
     )
@@ -186,7 +198,6 @@ def delete_in(self, merge_tree_table_name, iceberg_table, column, range_length=1
     ) is None:
         return
 
-    # Determine if values should be treated as numeric or string
     quote = "" if all(isinstance(x, (int, float)) for x in values) else "'"
 
     perform_delete(
@@ -207,7 +218,6 @@ def delete_not_in(self, merge_tree_table_name, iceberg_table, column, range_leng
     ) is None:
         return
 
-    # Determine if values should be treated as numeric or string
     quote = "" if all(isinstance(x, (int, float)) for x in values) else "'"
 
     perform_delete(
