@@ -153,8 +153,7 @@ ffails = {
 )
 def feature(
     self,
-    cluster_args,
-    with_analyzer,
+    cluster,
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
@@ -162,194 +161,173 @@ def feature(
     base_uri=None,
 ):
     """Execute tests for tiered storage feature."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    with Cluster(**cluster_args, nodes=nodes) as cluster:
-        cluster.with_minio = with_minio
-        cluster.with_s3amazon = with_s3amazon
-        cluster.with_s3gcs = with_s3gcs
-        self.context.cluster = cluster
+    args = {"cluster": cluster}
+    common_args = dict(args=args, flags=TE)
 
-        args = {"cluster": cluster}
-        common_args = dict(args=args, flags=TE)
+    if with_s3amazon:
+        with Given("a temporary S3 path"):
+            bucket_name, bucket_prefix = (
+                base_uri.split(".amazonaws.com/")[-1].strip("/").split("/", maxsplit=1)
+            )
+            temp_s3_path = temporary_bucket_path(
+                bucket_name=bucket_name,
+                bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                secret_access_key=environ["S3_AMAZON_ACCESS_KEY"],
+                access_key_id=environ["S3_AMAZON_KEY_ID"],
+                storage="aws_s3",
+            )
+            environ["S3_AMAZON_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}/"
 
-        with Given("I enable or disable experimental analyzer if needed"):
-            for node in nodes["clickhouse"]:
-                experimental_analyzer(
-                    node=cluster.node(node), with_analyzer=with_analyzer
-                )
+    if with_s3gcs:
+        with Given("a temporary GCS path"):
+            bucket_name, bucket_prefix = base_uri.split(
+                "https://storage.googleapis.com/"
+            )[-1].split("/", maxsplit=1)
+            temp_s3_path = temporary_bucket_path(
+                bucket_name=bucket_name,
+                bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                access_key_id=environ["GCS_KEY_ID"],
+                secret_access_key=environ["GCS_KEY_SECRET"],
+                storage="gcs",
+            )
+            environ["GCS_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}"
 
-        if with_s3amazon:
-            with Given("a temporary S3 path"):
-                bucket_name, bucket_prefix = (
-                    base_uri.split(".amazonaws.com/")[-1]
-                    .strip("/")
-                    .split("/", maxsplit=1)
-                )
-                temp_s3_path = temporary_bucket_path(
-                    bucket_name=bucket_name,
-                    bucket_prefix=f"{bucket_prefix}/tiered_storage",
-                    secret_access_key=environ["S3_AMAZON_ACCESS_KEY"],
-                    access_key_id=environ["S3_AMAZON_KEY_ID"],
-                    storage="aws_s3",
-                )
-                environ["S3_AMAZON_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}/"
-
-        if with_s3gcs:
-            with Given("a temporary GCS path"):
-                bucket_name, bucket_prefix = base_uri.split(
-                    "https://storage.googleapis.com/"
-                )[-1].split("/", maxsplit=1)
-                temp_s3_path = temporary_bucket_path(
-                    bucket_name=bucket_name,
-                    bucket_prefix=f"{bucket_prefix}/tiered_storage",
-                    access_key_id=environ["GCS_KEY_ID"],
-                    secret_access_key=environ["GCS_KEY_SECRET"],
-                    storage="gcs",
-                )
-                environ["GCS_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}"
-
-        with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
-            Scenario(
-                run=load("tiered_storage.tests.startup_and_queries", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.metadata", "scenario"), **common_args
-            )
-            Scenario(
-                run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_tables", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.system_detached_parts", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.attach_or_replace_partition_different_policies",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.query_parser", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.keep_free_space", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.round_robin", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.max_data_part_size", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.jbod_overflow", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.start_stop_moves", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_table_policy", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.simple_replication_and_moves", "scenario"
-                ),
-                **common_args,
-            )
-            # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.download_appropriate_disk", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_advanced",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(run=load("tiered_storage.tests.rename", "scenario"), **common_args)
-            Scenario(run=load("tiered_storage.tests.freeze", "scenario"), **common_args)
-            Scenario(
-                run=load("tiered_storage.tests.double_move_while_select", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.background_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.alter_move.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.manual_move_with_downtime", "scenario"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes", "scenario"
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.merge_parts_different_volumes_no_space",
-                    "scenario",
-                ),
-                **common_args,
-            )
-            Scenario(
-                run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
-                **common_args,
-            )
-            Scenario(
-                run=load(
-                    "tiered_storage.tests.change_config_norestart.feature",
-                    "feature",
-                ),
-                **common_args,
-            )
+    with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+        Scenario(
+            run=load("tiered_storage.tests.startup_and_queries", "scenario"),
+            **common_args,
+        )
+        Scenario(run=load("tiered_storage.tests.metadata", "scenario"), **common_args)
+        Scenario(
+            run=load("tiered_storage.tests.no_changes_to_queries", "scenario"),
+            **common_args,
+        )
+        # Scenario(run=load("tiered_storage.tests.disk_config_either_keep_free_space_bytes_or_ratio", "scenario"), **common_args)
+        Scenario(
+            run=load(
+                "tiered_storage.tests.volume_config_either_max_data_part_size_bytes_or_ratio",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.system_tables", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.system_detached_parts", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.attach_or_replace_partition_different_policies",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.query_parser", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.keep_free_space", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.no_warning_about_zero_max_data_part_size",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.round_robin", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.max_data_part_size", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.jbod_overflow", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.start_stop_moves", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.mutate_to_another_disk", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.alter_table_policy", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.simple_replication_and_moves", "scenario"),
+            **common_args,
+        )
+        # Scenario(run=load("tiered_storage.tests.simple_replication_and_moves_no_space", "scenario"), **common_args)
+        Scenario(
+            run=load("tiered_storage.tests.download_appropriate_disk", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.download_appropriate_disk_advanced",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.download_appropriate_disk_max_data_part_size",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(run=load("tiered_storage.tests.rename", "scenario"), **common_args)
+        Scenario(run=load("tiered_storage.tests.freeze", "scenario"), **common_args)
+        Scenario(
+            run=load("tiered_storage.tests.double_move_while_select", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.background_move.feature", "feature"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.alter_move.feature", "feature"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.manual_move_with_downtime", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.merge_parts_different_volumes", "scenario"),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.merge_parts_different_volumes_no_space",
+                "scenario",
+            ),
+            **common_args,
+        )
+        Scenario(
+            run=load("tiered_storage.tests.ttl_moves.feature", "feature"),
+            **common_args,
+        )
+        Scenario(
+            run=load(
+                "tiered_storage.tests.change_config_norestart.feature",
+                "feature",
+            ),
+            **common_args,
+        )
 
 
 @TestModule
@@ -414,23 +392,34 @@ def regression(
             environ["GCS_KEY_SECRET"] = gcs_key_secret.value
             base_uri = gcs_uri.value
 
-    name = "normal"
-    if with_minio:
-        name = "with minio"
-    elif with_s3amazon:
-        name = "with s3amazon"
-    elif with_s3gcs:
-        name = "with s3gcs"
+        nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    Feature(name, test=feature)(
-        cluster_args=cluster_args,
-        with_minio=with_minio,
-        with_s3amazon=with_s3amazon,
-        with_s3gcs=with_s3gcs,
-        environ=environ,
-        base_uri=base_uri,
-        with_analyzer=with_analyzer,
-    )
+    with Cluster(**cluster_args, nodes=nodes) as cluster:
+        cluster.with_minio = with_minio
+        cluster.with_s3amazon = with_s3amazon
+        cluster.with_s3gcs = with_s3gcs
+        self.context.cluster = cluster
+
+        with Given("I enable or disable experimental analyzer if needed"):
+            for node in nodes["clickhouse"]:
+                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+        name = "normal"
+        if with_minio:
+            name = "with minio"
+        elif with_s3amazon:
+            name = "with s3amazon"
+        elif with_s3gcs:
+            name = "with s3gcs"
+
+        Feature(name, test=feature)(
+            cluster=cluster,
+            with_minio=with_minio,
+            with_s3amazon=with_s3amazon,
+            with_s3gcs=with_s3gcs,
+            environ=environ,
+            base_uri=base_uri,
+        )
 
 
 if main():
