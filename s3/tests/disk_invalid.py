@@ -124,7 +124,8 @@ def invalid_endpoint(self):
         if check_clickhouse_version("<24.12")(self):
             message = "Couldn't resolve host name"
         else:
-            message = "Address family for hostname not supported"
+            message = "Could not resolve hostname"
+
     else:
         if check_clickhouse_version("<23.8")(self):
             message = "DB::Exception: No key in S3 uri"
