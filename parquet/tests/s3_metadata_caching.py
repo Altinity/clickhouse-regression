@@ -14,6 +14,22 @@ PATH1 = "location_1"
 PATH2 = "location_2"
 
 
+@TestStep(When)
+def stop_swarm_1_node(self):
+    """Stop clickhouse on node clickhouse-swarm-1"""
+
+    node = self.context.swarm_nodes[0]
+    node.stop_clickhouse(safe=False)
+
+
+@TestStep(When)
+def start_swarm_1_node(self):
+    """Start clickhouse on node clickhouse-swarm-1"""
+
+    node = self.context.swarm_nodes[0]
+    node.start_clickhouse()
+
+
 @TestStep(Given)
 def select_parquet_from_iceberg_s3(
     self,
@@ -442,7 +458,6 @@ def swarm_combinations(self):
         path_glob=path_glob,
     )
 
-@TestStep
 
 @TestScenario
 def one_node_disconnects(self):
@@ -462,8 +477,8 @@ def one_node_disconnects(self):
         check_hits_on_cluster(log_comment=log, initiator_node=initiator_node)
 
     with And("I stop the connection to one of the swarm nodes"):
-        disconnect_node.stop_clickhouse(safe=False)
-        disconnect_node.start_clickhouse()
+        stop_swarm_1_node()
+        start_swarm_1_node()
 
     with Then("I check that the metadata was cached again"):
         _, log2 = select_parquet_from_iceberg_s3(
@@ -471,14 +486,26 @@ def one_node_disconnects(self):
         )
 
     with And("I validate that the metadata is not cached"):
-        hits = check_hits(log_comment=log2, node=disconnect_node)
+        hits = check_hits(log_comment=log2, node=disconnect_node, assertion=False)
 
         assert hits == 0, f"metadata was cached on the disconnected node hits={hits}"
+
+        _, log3 = select_parquet_from_iceberg_s3(
+            node=initiator_node, statement="COUNT(*)", cache_metadata=True
+        )
+
+        check_hits(log_comment=log2, node=disconnect_node)
+
+
+@TestSuite
+def distributed(self):
+    """Tests for parquet metadata caching on a distributed setup with replicated cluster of 3 nodes."""
+    Scenario(run=parquet_s3_caching)
 
 
 @TestSuite
 def swarm(self):
-    """Tests for parquet metadata caching on a swarm setup."""
+    """Tests for parquet metadata caching on a swarm setup, where clickhouse-antalya is an initiator node and clickhouse-swarm-1 and clickhouse-swarm-2 are swarm nodes on a cluster."""
     Scenario(run=swarm_combinations)
     Scenario(run=one_node_disconnects)
 
