@@ -21,13 +21,14 @@ def select_parquet_from_iceberg_s3(
     statement="*",
     additional_settings=None,
     condition=None,
-    cache_metadata=True,
+    cache_metadata=False,
     file_type="Parquet",
+    path_glob="**",
 ):
     """Select metadata of the Parquet file from Iceberg on S3."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm', filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
 
     if node is None:
         node = self.context.node
@@ -45,7 +46,7 @@ def select_parquet_from_iceberg_s3(
 
     start_time = time.time()
     node.query(
-        f"""SELECT {statement} FROM s3('{self.context.warehouse_uri}/**/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
+        f"""SELECT {statement} FROM s3('{self.context.warehouse_uri}/{path_glob}/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
     )
     execution_time = time.time() - start_time
 
@@ -59,13 +60,14 @@ def select_parquet_from_iceberg_s3_cluster_join(
     statement="*",
     additional_settings=None,
     condition=None,
-    cache_metadata=True,
+    cache_metadata=False,
     file_type="Parquet",
+    path_glob="**",
 ):
     """Select metadata of the Parquet file from Iceberg on S3."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm', filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
 
     if node is None:
         node = self.context.node
@@ -99,13 +101,14 @@ def select_parquet_from_iceberg_s3_cluster(
     statement="*",
     additional_settings=None,
     condition=None,
-    cache_metadata=True,
+    cache_metadata=False,
     file_type="Parquet",
+    path_glob="**",
 ):
     """Select metadata of the Parquet file from Iceberg on s3Cluster."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
 
     if node is None:
         node = self.context.node
@@ -123,7 +126,7 @@ def select_parquet_from_iceberg_s3_cluster(
 
     start_time = time.time()
     node.query(
-        f"""SELECT {statement} FROM s3Cluster('swarm' ,'{self.context.warehouse_uri}/**/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
+        f"""SELECT {statement} FROM s3Cluster('swarm' ,'{self.context.warehouse_uri}/{path_glob}/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
     )
     execution_time = time.time() - start_time
 
@@ -345,7 +348,7 @@ def parquet_s3_caching(self):
 
 @TestCheck
 def check_swarm_parquet(
-    self, select, additional_settings, condition, statement, file_type
+    self, select, additional_settings, condition, statement, file_type, path_glob
 ):
     """Check to determine scenarios when metadata caching works on a swarm setup."""
     setting = random.choice(additional_settings)
@@ -360,8 +363,14 @@ def check_swarm_parquet(
         create_parquet_partitioned_by_datetime(catalog=catalog)
         pause()
     with When("I select the data from parquet in iceberg"):
-        initial_execution_time, _ = select(
-            node=self.context.swarm_initiator, cache_metadata=True, file_type=file_type
+        initial_execution_time, log = select(
+            node=self.context.swarm_initiator,
+            cache_metadata=True,
+            additional_settings=setting,
+            statement=statement,
+            condition=condition,
+            file_type=file_type,
+            path_glob=path_glob,
         )
         execution_time, log = select(
             node=self.context.swarm_initiator,
@@ -370,6 +379,7 @@ def check_swarm_parquet(
             statement=statement,
             condition=condition,
             file_type=file_type,
+            path_glob=path_glob,
         )
     with Then("I check that the metadata was cached"):
         check_hits_on_cluster(
@@ -377,14 +387,18 @@ def check_swarm_parquet(
             initiator_node=self.context.swarm_initiator,
             other_nodes=self.context.swarm_nodes,
         )
-
-    assert (
-        initial_execution_time > execution_time
-    ), f"query ran slower with caching initial_execution_time={initial_execution_time} execution_time={execution_time}"
+    with And("I check that the query ran faster with caching"):
+        assert (
+            initial_execution_time > execution_time
+        ), f"query ran slower with caching initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
 
 
 @TestSketch(Scenario)
+@Flags(TE)
 def swarm(self):
+
+    set_delay_on_minio_node()
+
     conditions = either(
         *[
             "WHERE datetime < '2017-09-12 10:35:00.000000'",  # Should skip all files as the datetime is out of min/max range
@@ -392,14 +406,18 @@ def swarm(self):
         ]
     )
 
-    statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)", "datetime"])
+    statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)", "toDate(datetime)"])
 
     selects = either(
-        *[select_parquet_from_iceberg_s3_cluster, select_parquet_from_iceberg_s3]
+        *[
+            select_parquet_from_iceberg_s3_cluster,
+            select_parquet_from_iceberg_s3,
+            select_parquet_from_iceberg_s3_cluster_join,
+        ]
     )
 
     file_type = either(*["Parquet", "ParquetMetadata"])
-    path_glob = ["**", "datetime_day=2019-08-17"]
+    path_glob = either(*["**", "datetime_day=2019-08-17"])
 
     check_swarm_parquet(
         select=selects,
@@ -407,6 +425,7 @@ def swarm(self):
         condition=conditions,
         statement=statements,
         file_type=file_type,
+        path_glob=path_glob,
     )
 
 
