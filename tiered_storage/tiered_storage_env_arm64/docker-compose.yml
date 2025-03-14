@@ -143,6 +143,11 @@ services:
       minio:
         condition: service_healthy
 
+  aws:
+    extends:
+      file: ../../docker-compose/aws-client.yml
+      service: aws
+
   zookeeper1:
     extends:
       file: ../../docker-compose/zookeeper-service.yml
@@ -249,4 +254,6 @@ services:
       keeper1:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      aws:
         condition: service_healthy
