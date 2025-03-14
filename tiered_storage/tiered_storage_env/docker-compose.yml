@@ -255,5 +255,3 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-      aws:
-        condition: service_healthy
