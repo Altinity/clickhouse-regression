@@ -3,10 +3,10 @@
 | Format Version 1                                                                                         | Yes                        |
 | Format Version 2                                                                                         | Yes                        |
 | Format Version 3                                                                                         | No                         |
-| Position deletes (mark a row deleted by data file path and the row position in the data file)            | Yes                        |
-| Equality deletes (mark a row deleted by one or more column values)                                       | Yes                        |
+| Position deletes (mark a row deleted by data file path and the row position in the data file)            | No                        |
+| Equality deletes (mark a row deleted by one or more column values)                                       | No                        |
 | Primitive data types                                                                                     | Yes (except from UUID)     |
-| Nested data types                                                                                     | ???                        |
+| Nested data types                                                                                     | Yes, but struct represented as nested tuples                        |
 | Schema evolution: type promotion (int -> long, float -> double, decimal -> decimal with wider precision) |       Yes                     |
 | Schema evolution: adding fields                                                                          | Yes                        |
 | Schema evolution: renaming fields                                                                        | Yes                        |
