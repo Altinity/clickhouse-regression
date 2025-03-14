@@ -407,7 +407,13 @@ def swarm(self):
 @TestFeature
 @Name("s3 metadata caching")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
-def feature(self, node="clickhouse1", number_of_files=15, partitions_for_swarm=1000):
+def feature(
+    self,
+    node="clickhouse1",
+    number_of_files=15,
+    partitions_for_swarm=1000,
+    altinity=False,
+):
     """Tests for parquet metadata caching for object storage."""
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
@@ -432,12 +438,13 @@ def feature(self, node="clickhouse1", number_of_files=15, partitions_for_swarm=1
     Scenario(run=parquet_s3_caching)
     Feature(run=distributed)
 
-    with Given("I setup iceberg catalog"):
-        catalog = setup_iceberg()
+    if altinity:
+        with Given("I setup iceberg catalog"):
+            catalog = setup_iceberg()
 
-    with And("I create a partitioned parquet file in iceberg"):
-        create_parquet_partitioned_by_datetime(
-            catalog=catalog, number_of_partitions=partitions_for_swarm
-        )
+        with And("I create a partitioned parquet file in iceberg"):
+            create_parquet_partitioned_by_datetime(
+                catalog=catalog, number_of_partitions=partitions_for_swarm
+            )
 
-    Feature(run=swarm)
+        Feature(run=swarm)
