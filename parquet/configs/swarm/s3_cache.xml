@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <filesystem_caches>
+        <cache_for_s3>
+            <path>/var/lib/clickhouse/cache</path>
+            <max_size>10Gi</max_size>
+        </cache_for_s3>
+    </filesystem_caches>
+</clickhouse>
