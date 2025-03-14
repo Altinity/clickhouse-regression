@@ -107,9 +107,12 @@ else
   keeper_or_zookeeper="zookeeper"
 fi
 
-S3_ENDPOINT=${S3_ENDPOINT:-s3.amazonaws.com}
 
-JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
+if [[ -z "$S3_ENDPOINT" ]]; then 
+  JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
+else
+  JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
+fi
 
 echo "confidential=$confidential" >>$GITHUB_ENV
 
