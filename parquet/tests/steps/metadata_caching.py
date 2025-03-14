@@ -492,7 +492,7 @@ def select_parquet_with_metadata_caching_with_join(
 
 
 @TestStep(Then)
-def check_hits(self, log_comment, node=None):
+def check_hits(self, log_comment, node=None, assertion=True):
     """Check the number of cache hits and misses for a Parquet file."""
     if node is None:
         node = self.context.node
@@ -500,11 +500,16 @@ def check_hits(self, log_comment, node=None):
     node.query("SYSTEM FLUSH LOGS")
 
     r = f"SELECT ProfileEvents['ParquetMetaDataCacheHits'] FROM system.query_log where log_comment = '{log_comment}' AND type = 'QueryFinish' ORDER BY event_time desc FORMAT TSV;"
-    hits = node.query(r)
 
-    assert (
-        "1" in hits.output.strip()
-    ), f"number of hits is less than 1 and = {hits.output.strip()}"
+    if assertion:
+        for retry in retries(count=10, delay=2):
+            with retry:
+                hits = node.query(r)
+                assert (
+                    int(hits.output.strip()) > 0
+                ), f"number of hits is less than 1 and = {hits.output.strip()}"
+
+    return int(hits.output.strip())
 
 
 @TestStep(Then)
