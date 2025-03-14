@@ -1,3 +1,4 @@
+from pandas import describe_option
 from testflows.core import *
 from parquet.requirements import *
 from helpers.common import *
@@ -5,10 +6,128 @@ from parquet.tests.common import *
 from s3.tests.common import *
 
 from parquet.tests.steps.metadata_caching import *
+from parquet.tests.steps.metadata_caching import settings as settings_for_select
+from parquet.tests.steps.swarm import *
 from alter.stress.tests.tc_netem import network_packet_delay
 
 PATH1 = "location_1"
 PATH2 = "location_2"
+
+
+@TestStep(Given)
+def select_parquet_from_iceberg_s3(
+    self,
+    node=None,
+    statement="*",
+    additional_settings=None,
+    condition=None,
+    cache_metadata=True,
+    file_type="Parquet",
+):
+    """Select metadata of the Parquet file from Iceberg on S3."""
+
+    log_comment = "log_" + getuid()
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+
+    if node is None:
+        node = self.context.node
+
+    if cache_metadata:
+        settings += ", input_format_parquet_use_metadata_cache=1"
+    else:
+        settings += ", input_format_parquet_use_metadata_cache=0"
+
+    if additional_settings is not None:
+        settings += f", {additional_settings}"
+
+    if condition is None:
+        condition = ""
+
+    start_time = time.time()
+    node.query(
+        f"""SELECT {statement} FROM s3('{self.context.warehouse_uri}/**/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
+    )
+    execution_time = time.time() - start_time
+
+    return execution_time, log_comment
+
+
+@TestStep(Given)
+def select_parquet_from_iceberg_s3_cluster_join(
+    self,
+    node=None,
+    statement="*",
+    additional_settings=None,
+    condition=None,
+    cache_metadata=True,
+    file_type="Parquet",
+):
+    """Select metadata of the Parquet file from Iceberg on S3."""
+
+    log_comment = "log_" + getuid()
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+
+    if node is None:
+        node = self.context.node
+
+    if cache_metadata:
+        settings += ", input_format_parquet_use_metadata_cache=1"
+    else:
+        settings += ", input_format_parquet_use_metadata_cache=0"
+
+    if additional_settings is not None:
+        settings += f", {additional_settings}"
+
+    if condition is None:
+        condition = ""
+
+    start_time = time.time()
+    node.query(
+        f"""SELECT *, a.*, b.* FROM s3Cluster('swarm', 'http://minio:9000/warehouse/data/data/datetime_day=2019-08-09/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) AS a FULL OUTER JOIN s3Cluster('swarm', 'http://minio:9000/warehouse/data/data/datetime_day=2019-08-07/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) AS b ON a.bid = b.bid SETTINGS {settings} FORMAT TabSeparated
+"""
+    )
+
+    execution_time = time.time() - start_time
+
+    return execution_time, log_comment
+
+
+@TestStep(Given)
+def select_parquet_from_iceberg_s3_cluster(
+    self,
+    node=None,
+    statement="*",
+    additional_settings=None,
+    condition=None,
+    cache_metadata=True,
+    file_type="Parquet",
+):
+    """Select metadata of the Parquet file from Iceberg on s3Cluster."""
+
+    log_comment = "log_" + getuid()
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1"
+
+    if node is None:
+        node = self.context.node
+
+    if cache_metadata:
+        settings += ", input_format_parquet_use_metadata_cache=1"
+    else:
+        settings += ", input_format_parquet_use_metadata_cache=0"
+
+    if additional_settings is not None:
+        settings += f", {additional_settings}"
+
+    if condition is None:
+        condition = ""
+
+    start_time = time.time()
+    node.query(
+        f"""SELECT {statement} FROM s3Cluster('swarm' ,'{self.context.warehouse_uri}/**/**.parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', {file_type}) {condition} SETTINGS {settings} FORMAT TabSeparated"""
+    )
+    execution_time = time.time() - start_time
+
+    return execution_time, log_comment
 
 
 @TestStep(Given)
@@ -193,55 +312,6 @@ def check_caching_metadata_on_multiple_nodes(
 @TestSketch(Scenario)
 def parquet_s3_caching(self):
     """Check to determine scenarios when metadata caching works and is useful."""
-    settings = [
-        None,
-        "force_aggregation_in_order=1",
-        "aggregation_memory_efficient_merge_threads=1",
-        "allow_ddl=1",
-        "allow_materialized_view_with_bad_select=1",
-        "aggregate_functions_null_for_empty=1",
-        "analyzer_compatibility_join_using_top_level_identifier=1",
-        "apply_mutations_on_fly=1",
-        "convert_query_to_cnf=1",
-        "database_replicated_allow_heavy_create=1",
-        "do_not_merge_across_partitions_select_final=1",
-        "enable_optimize_predicate_expression=1",
-        "enable_writes_to_query_cache=1",
-        "enable_reads_from_query_cache=1",
-        "engine_file_empty_if_not_exists=1",
-        "engine_file_skip_empty_files=1",
-        "engine_url_skip_empty_files=1",
-        "fallback_to_stale_replicas_for_distributed_queries=1",
-        "implicit_select=1",
-        "optimize_move_to_prewhere=1",
-        "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
-        "azure_ignore_file_doesnt_exist=1",
-        "azure_skip_empty_files=1",
-        "azure_throw_on_zero_files_match=1" "allow_experimental_codecs=1",
-        "allow_experimental_database_materialized_postgresql=1",
-        "allow_experimental_dynamic_type=1",
-        "allow_experimental_full_text_index=1",
-        "allow_experimental_funnel_functions=1",
-        "allow_experimental_hash_functions=1",
-        "allow_experimental_inverted_index=1",
-        "allow_experimental_join_condition=1",
-        "allow_experimental_json_type=1",
-        "allow_experimental_kafka_offsets_storage_in_keeper=1",
-        "allow_experimental_kusto_dialect=1",
-        "allow_experimental_live_view=1",
-        "allow_experimental_materialized_postgresql_table=1",
-        "allow_experimental_nlp_functions=1",
-        "allow_experimental_object_type=1",
-        "allow_experimental_parallel_reading_from_replicas=1",
-        "allow_experimental_prql_dialect=1",
-        "allow_experimental_query_deduplication=1",
-        "allow_experimental_shared_set_join=1",
-        "allow_experimental_statistics=1",
-        "allow_experimental_time_series_table=1",
-        "allow_experimental_ts_to_grid_aggregate_function=1",
-        "allow_experimental_variant_type=1",
-        "allow_experimental_vector_similarity_index=1",
-    ]
 
     statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)"])
     conditions = either(*[None])
@@ -265,11 +335,78 @@ def parquet_s3_caching(self):
 
     check_caching_metadata_on_multiple_nodes(
         create_parquet_files=create_parquet,
-        additional_setting=settings,
+        additional_setting=settings_for_select,
         statement=statements,
         glob=glob,
         select=selects,
         condition=conditions,
+    )
+
+
+@TestCheck
+def check_swarm_parquet(
+    self, select, additional_settings, condition, statement, file_type
+):
+    """Check to determine scenarios when metadata caching works on a swarm setup."""
+    setting = random.choice(additional_settings)
+
+    with Given(
+        "I connect to the catalog",
+        description=f"""additional setting for a query: {setting}, select function: {select.__name__}, condition: {condition}""",
+    ):
+        catalog = setup_iceberg()
+
+    with And("I create a partitioned parquet file in iceberg"):
+        create_parquet_partitioned_by_datetime(catalog=catalog)
+        pause()
+    with When("I select the data from parquet in iceberg"):
+        initial_execution_time, _ = select(
+            node=self.context.swarm_initiator, cache_metadata=True, file_type=file_type
+        )
+        execution_time, log = select(
+            node=self.context.swarm_initiator,
+            cache_metadata=True,
+            additional_settings=setting,
+            statement=statement,
+            condition=condition,
+            file_type=file_type,
+        )
+    with Then("I check that the metadata was cached"):
+        check_hits_on_cluster(
+            log_comment=log,
+            initiator_node=self.context.swarm_initiator,
+            other_nodes=self.context.swarm_nodes,
+        )
+
+    assert (
+        initial_execution_time > execution_time
+    ), f"query ran slower with caching initial_execution_time={initial_execution_time} execution_time={execution_time}"
+
+
+@TestSketch(Scenario)
+def swarm(self):
+    conditions = either(
+        *[
+            "WHERE datetime < '2017-09-12 10:35:00.000000'",  # Should skip all files as the datetime is out of min/max range
+            "WHERE datetime = '2019-09-12 10:35:00.000000'",
+        ]
+    )
+
+    statements = either(*["*", "COUNT(*)", "COUNT(DISTINCT *)", "datetime"])
+
+    selects = either(
+        *[select_parquet_from_iceberg_s3_cluster, select_parquet_from_iceberg_s3]
+    )
+
+    file_type = either(*["Parquet", "ParquetMetadata"])
+    path_glob = ["**", "datetime_day=2019-08-17"]
+
+    check_swarm_parquet(
+        select=selects,
+        additional_settings=settings_for_select,
+        condition=conditions,
+        statement=statements,
+        file_type=file_type,
     )
 
 
@@ -283,10 +420,18 @@ def feature(self, node="clickhouse1", number_of_files=15):
         self.context.cluster.node("clickhouse2"),
         self.context.cluster.node("clickhouse3"),
     ]
-    self.cotext.cluster_name = "replicated_cluster"
+
+    self.context.swarm_initiator = self.context.cluster.node("clickhouse-antalya")
+    self.context.swarm_nodes = [
+        self.context.cluster.node("clickhouse-swarm-1"),
+        self.context.cluster.node("clickhouse-swarm-2"),
+    ]
+
+    self.context.cluster_name = "replicated_cluster"
     self.context.number_of_files = number_of_files
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=parquet_metadata_format)
-    Scenario(run=parquet_s3_caching)
+    # Scenario(run=parquet_metadata_format)
+    # Scenario(run=parquet_s3_caching)
+    Scenario(run=swarm)
