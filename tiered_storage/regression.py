@@ -181,9 +181,11 @@ def feature(
 
     if with_s3gcs:
         with Given("a temporary GCS path"):
-            bucket_name, bucket_prefix = base_uri.split(
-                "https://storage.googleapis.com/"
-            )[-1].split("/", maxsplit=1)
+            bucket_name, bucket_prefix = (
+                base_uri.split("https://storage.googleapis.com/")[-1]
+                .strip("/")
+                .split("/", maxsplit=1)
+            )
             temp_s3_path = temporary_bucket_path(
                 bucket_name=bucket_name,
                 bucket_prefix=f"{bucket_prefix}/tiered_storage",
@@ -366,6 +368,7 @@ def regression(
 
     with Shell() as bash:
         base_uri = None
+        aws_region = None
         if with_s3amazon:
             assert (
                 aws_s3_key_id.value is not None
@@ -379,6 +382,7 @@ def regression(
             environ["S3_AMAZON_KEY_ID"] = aws_s3_key_id.value
             environ["S3_AMAZON_ACCESS_KEY"] = aws_s3_access_key.value
             base_uri = aws_s3_uri.value
+            aws_region = base_uri.split(".")[1]
 
         if with_s3gcs:
             assert (
@@ -394,7 +398,11 @@ def regression(
 
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    with Cluster(**cluster_args, nodes=nodes) as cluster:
+    with Cluster(
+        **cluster_args,
+        nodes=nodes,
+        environ={"AWS_DEFAULT_REGION": aws_region},
+    ) as cluster:
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
         cluster.with_s3gcs = with_s3gcs
@@ -402,7 +410,9 @@ def regression(
 
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
-                experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+                experimental_analyzer(
+                    node=cluster.node(node), with_analyzer=with_analyzer
+                )
 
         name = "normal"
         if with_minio:
