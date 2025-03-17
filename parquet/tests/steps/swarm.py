@@ -30,6 +30,7 @@ from parquet.tests.steps.metadata_caching import (
 
 
 def generate_data(num_partitions):
+    """Generate data for the parquet file with partitions."""
 
     data = []
     base_date = datetime(2019, 8, 7, 8, 35, 0)
