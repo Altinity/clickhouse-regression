@@ -445,6 +445,6 @@ def read_from_s3_and_expect_query_fail(self, node=None):
         node = self.context.swarm_initiator
 
     time, log, q = select_parquet_from_iceberg_s3(
-        node=node, statement="COUNT(*)", cache_metadata=True
+        node=node, statement="COUNT(*), sleep(3)", cache_metadata=True
     )
     assert q.exitcode != 0

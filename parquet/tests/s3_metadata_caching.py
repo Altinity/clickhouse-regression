@@ -172,6 +172,7 @@ def parquet_s3_caching(self):
     )
 
     glob = either(*[None, "**.Parquet", "**.incorrect"])
+    settings_for_select = additional_settings()
 
     check_caching_metadata_on_multiple_nodes(
         create_parquet_files=create_parquet,
@@ -192,7 +193,7 @@ def check_swarm_parquet(
 
     with Given(
         "I select data from the parquet file without using metadata caching",
-        description=f"""additional setting for a query: {setting}, select function: {select.__name__}, condition: {condition}""",
+        description=f"""additional setting for a query: {setting}, select function: {select.__name__}, condition: {condition}, statement: {statement}, file_type: {file_type}, path_glob: {path_glob}""",
     ):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
@@ -281,6 +282,9 @@ def swarm_combinations(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Swarm_NodeStops("1.0")
+)
 def one_node_disconnects(self):
     """Scenario when in a swarm cluster one node disconnects, and we check that we need to cache the parquet metadata again on that node when it recovers."""
     initiator_node = self.context.swarm_initiator
@@ -319,6 +323,11 @@ def one_node_disconnects(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings(
+        "1.0"
+    )
+)
 def user_config_disabled(self):
     """Scenario when in a swarm cluster input_format_parquet_use_metadata_cache is disabled in user profile settings for the initiator node."""
     initiator_node = self.context.swarm_initiator
@@ -341,6 +350,11 @@ def user_config_disabled(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings(
+        "1.0"
+    )
+)
 def user_config_caching_disabled_on_swarm_nodes(self):
     """Scenario when in a swarm cluster swarm-1 and swarm-2 clusters do not have input_metadata_caching enabled in user profile settings but are enabled in the initiator antalya node."""
     initiator_node = self.context.swarm_initiator
@@ -364,6 +378,9 @@ def user_config_caching_disabled_on_swarm_nodes(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Swarm_NodeStops("1.0")
+)
 def node_dies_during_query_execution(self):
     """Scenario when in a swarm cluster one node dies during query execution, and we check that the query fails."""
     initiator_node = self.context.swarm_initiator
@@ -389,12 +406,14 @@ def node_dies_during_query_execution(self):
 
 
 @TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def distributed(self):
     """Tests for parquet metadata caching on a distributed setup with replicated cluster of 3 nodes."""
     Scenario(run=parquet_s3_caching)
 
 
 @TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Swarm("1.0"))
 def swarm(self):
     """Tests for parquet metadata caching on a swarm setup, where clickhouse-antalya is an initiator node and clickhouse-swarm-1 and clickhouse-swarm-2 are swarm nodes on a cluster."""
     Scenario(run=swarm_combinations)
@@ -431,8 +450,6 @@ def feature(
     self.context.number_of_files = number_of_files
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
-
-    note(self.context.clickhouse_version)
 
     Scenario(run=parquet_metadata_format)
     Scenario(run=parquet_s3_caching)
