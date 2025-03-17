@@ -271,7 +271,7 @@ def start_swarm_1_node(self):
 
 
 @TestStep(Given)
-def select_parquet_from_iceberg_s3(
+def select_parquet_from_swarm_s3(
     self,
     node=None,
     statement="*",
@@ -282,7 +282,7 @@ def select_parquet_from_iceberg_s3(
     path_glob="**",
     retrieve_query=False,
 ):
-    """Select metadata of the Parquet file from Iceberg on S3."""
+    """Select metadata of the Parquet file from Swarm on S3."""
 
     log_comment = "log_" + getuid()
     settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm', filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
@@ -314,7 +314,7 @@ def select_parquet_from_iceberg_s3(
 
 
 @TestStep(Given)
-def select_parquet_from_iceberg_s3_cluster_join(
+def select_parquet_from_swarm_s3_cluster_join(
     self,
     node=None,
     statement="*",
@@ -355,7 +355,7 @@ def select_parquet_from_iceberg_s3_cluster_join(
 
 
 @TestStep(Given)
-def select_parquet_from_iceberg_s3_cluster(
+def select_parquet_from_swarm_s3_cluster(
     self,
     node=None,
     statement="*",
@@ -444,7 +444,7 @@ def read_from_s3_and_expect_query_fail(self, node=None):
     if node is None:
         node = self.context.swarm_initiator
 
-    time, log, q = select_parquet_from_iceberg_s3(
+    time, log, q = select_parquet_from_swarm_s3(
         node=node, statement="COUNT(*), sleep(3)", cache_metadata=True
     )
     assert q.exitcode != 0
