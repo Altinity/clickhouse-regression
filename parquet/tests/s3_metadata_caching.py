@@ -262,9 +262,9 @@ def swarm_combinations(self):
 
     selects = either(
         *[
-            select_parquet_from_iceberg_s3_cluster,
-            select_parquet_from_iceberg_s3,
-            select_parquet_from_iceberg_s3_cluster_join,
+            select_parquet_from_swarm_s3_cluster,
+            select_parquet_from_swarm_s3,
+            select_parquet_from_swarm_s3_cluster_join,
         ]
     )
 
@@ -291,10 +291,10 @@ def one_node_disconnects(self):
     disconnect_node = self.context.swarm_nodes[0]
 
     with Given("I cache metadata from a parquet file"):
-        select_parquet_from_iceberg_s3(
+        select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
-        _, log = select_parquet_from_iceberg_s3(
+        _, log = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
@@ -306,7 +306,7 @@ def one_node_disconnects(self):
         start_swarm_1_node()
 
     with Then("I check that the metadata was cached again"):
-        _, log2 = select_parquet_from_iceberg_s3(
+        _, log2 = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
@@ -315,7 +315,7 @@ def one_node_disconnects(self):
 
         assert hits == 0, f"metadata was cached on the disconnected node hits={hits}"
 
-        _, log3 = select_parquet_from_iceberg_s3(
+        _, log3 = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
@@ -338,10 +338,10 @@ def user_config_disabled(self):
         apply_user_config_with_disabled_caching_on_antalya()
 
     with When("I cache metadata from a parquet file"):
-        select_parquet_from_iceberg_s3(
+        select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
-        _, log = select_parquet_from_iceberg_s3(
+        _, log = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
@@ -366,10 +366,10 @@ def user_config_caching_disabled_on_swarm_nodes(self):
         apply_user_config_with_disabled_caching_on_swarm_2()
 
     with When("I cache metadata from a parquet file"):
-        select_parquet_from_iceberg_s3(
+        select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
-        _, log = select_parquet_from_iceberg_s3(
+        _, log = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
@@ -387,10 +387,10 @@ def node_dies_during_query_execution(self):
     disconnect_node = self.context.swarm_nodes[0]
 
     with Given("I cache metadata from a parquet file"):
-        select_parquet_from_iceberg_s3(
+        select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
-        _, log = select_parquet_from_iceberg_s3(
+        _, log = select_parquet_from_swarm_s3(
             node=initiator_node, statement="COUNT(*)", cache_metadata=True
         )
 
