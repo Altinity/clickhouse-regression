@@ -2,56 +2,66 @@ from testflows.core import *
 from parquet.tests.common import *
 from s3.tests.common import *
 from alter.stress.tests.tc_netem import network_packet_delay
+from parquet.requirements.requirements import *
 
-settings = [
-    None,
-    "force_aggregation_in_order=1",
-    "aggregation_memory_efficient_merge_threads=1",
-    "allow_ddl=1",
-    "allow_materialized_view_with_bad_select=1",
-    "aggregate_functions_null_for_empty=1",
-    "analyzer_compatibility_join_using_top_level_identifier=1",
-    "apply_mutations_on_fly=1",
-    "convert_query_to_cnf=1",
-    "database_replicated_allow_heavy_create=1",
-    "do_not_merge_across_partitions_select_final=1",
-    "enable_optimize_predicate_expression=1",
-    "enable_writes_to_query_cache=1",
-    "enable_reads_from_query_cache=1",
-    "engine_file_empty_if_not_exists=1",
-    "engine_file_skip_empty_files=1",
-    "engine_url_skip_empty_files=1",
-    "fallback_to_stale_replicas_for_distributed_queries=1",
-    "implicit_select=1",
-    "optimize_move_to_prewhere=1",
-    "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
-    "azure_ignore_file_doesnt_exist=1",
-    "azure_skip_empty_files=1",
-    "azure_throw_on_zero_files_match=1",
-    # "allow_experimental_database_materialized_postgresql=1",
-    # "allow_experimental_dynamic_type=1",
-    # "allow_experimental_full_text_index=1",
-    # "allow_experimental_funnel_functions=1",
-    # "allow_experimental_hash_functions=1",
-    # "allow_experimental_inverted_index=1",
-    # "allow_experimental_join_condition=1",
-    # "allow_experimental_json_type=1",
-    # "allow_experimental_kafka_offsets_storage_in_keeper=1",
-    # "allow_experimental_kusto_dialect=1",
-    # "allow_experimental_live_view=1",
-    # "allow_experimental_materialized_postgresql_table=1",
-    # "allow_experimental_nlp_functions=1",
-    # "allow_experimental_object_type=1",
-    # "allow_experimental_parallel_reading_from_replicas=1",
-    # "allow_experimental_prql_dialect=1",
-    # "allow_experimental_query_deduplication=1",
-    # "allow_experimental_shared_set_join=1",
-    # "allow_experimental_statistics=1",
-    # "allow_experimental_time_series_table=1",
-    # "allow_experimental_ts_to_grid_aggregate_function=1",
-    # "allow_experimental_variant_type=1",
-    # "allow_experimental_vector_similarity_index=1",
-]
+
+@TestStep(Given)
+def additional_settings(self):
+    settings = [
+        None,
+        "force_aggregation_in_order=1",
+        "aggregation_memory_efficient_merge_threads=1",
+        "allow_ddl=1",
+        "allow_materialized_view_with_bad_select=1",
+        "aggregate_functions_null_for_empty=1",
+        "analyzer_compatibility_join_using_top_level_identifier=1",
+        "apply_mutations_on_fly=1",
+        "convert_query_to_cnf=1",
+        "database_replicated_allow_heavy_create=1",
+        "do_not_merge_across_partitions_select_final=1",
+        "enable_optimize_predicate_expression=1",
+        "enable_writes_to_query_cache=1",
+        "enable_reads_from_query_cache=1",
+        "engine_file_empty_if_not_exists=1",
+        "engine_file_skip_empty_files=1",
+        "engine_url_skip_empty_files=1",
+        "fallback_to_stale_replicas_for_distributed_queries=1",
+        "implicit_select=1",
+        "optimize_move_to_prewhere=1",
+        "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
+        "azure_ignore_file_doesnt_exist=1",
+        "azure_skip_empty_files=1",
+        "azure_throw_on_zero_files_match=1",
+    ]
+
+    if check_clickhouse_version(">24.12")(self):
+        settings += [
+            "allow_experimental_database_materialized_postgresql=1",
+            "allow_experimental_dynamic_type=1",
+            "allow_experimental_full_text_index=1",
+            "allow_experimental_funnel_functions=1",
+            "allow_experimental_hash_functions=1",
+            "allow_experimental_inverted_index=1",
+            "allow_experimental_join_condition=1",
+            "allow_experimental_json_type=1",
+            "allow_experimental_kafka_offsets_storage_in_keeper=1",
+            "allow_experimental_kusto_dialect=1",
+            "allow_experimental_live_view=1",
+            "allow_experimental_materialized_postgresql_table=1",
+            "allow_experimental_nlp_functions=1",
+            "allow_experimental_object_type=1",
+            "allow_experimental_parallel_reading_from_replicas=1",
+            "allow_experimental_prql_dialect=1",
+            "allow_experimental_query_deduplication=1",
+            "allow_experimental_shared_set_join=1",
+            "allow_experimental_statistics=1",
+            "allow_experimental_time_series_table=1",
+            "allow_experimental_ts_to_grid_aggregate_function=1",
+            "allow_experimental_variant_type=1",
+            "allow_experimental_vector_similarity_index=1",
+        ]
+
+    return settings
 
 
 @TestStep(Given)
@@ -268,6 +278,9 @@ def create_multiple_parquet_files_with_all_map_datatypes(self, number_of_files):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_HivePartitioning("1.0")
+)
 def create_parquet_file_with_hive_partition(self, node=None, compression_type="NONE"):
     """Create a Parquet file with Hive partition."""
     file_name = "parquet_" + getuid()
@@ -297,11 +310,16 @@ def create_parquet_file_with_hive_partition(self, node=None, compression_type="N
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SpeedUpQueryExecution_BloomFilter(
+        "1.0"
+    )
+)
 def create_parquet_file_with_bloom_filter(self):
     """Create a Parquet file with bloom filter."""
     upload_file_to_s3(
-        file_src=f"../data/bloom/multi_column_bloom.gz.parquet",
-        file_dest=f"data/parquet/multi_column_bloom.gz.parquet",
+        file_src=os.path.join("..", "data", "bloom", "multi_column_bloom.gz.parquet"),
+        file_dest=os.path.join("data", "parquet", "multi_column_bloom.gz.parquet"),
     )
 
     return "multi_column_bloom.gz.parquet"
@@ -513,6 +531,11 @@ def check_hits(self, log_comment, node=None, assertion=True):
 
 
 @TestStep(Then)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings_InitiatorNode(
+        "1.0"
+    )
+)
 def check_hits_on_cluster(self, log_comment, initiator_node=None, other_nodes=None):
     """Check the number of cache hits and misses for a Parquet file on a cluster."""
 
