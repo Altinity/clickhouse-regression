@@ -433,7 +433,7 @@ def feature(
     partitions_for_swarm=1000,
     altinity=False,
 ):
-    """Tests for parquet metadata caching for object storage."""
+    """Tests that verify Parquet metadata caching for object storage."""
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
         self.context.cluster.node("clickhouse2"),
