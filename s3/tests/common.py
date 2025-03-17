@@ -1108,6 +1108,7 @@ def temporary_bucket_path(
     access_key_id=None,
     secret_access_key=None,
     storage=None,
+    aws_region=None,
 ):
     """
     Return a temporary bucket sub-path which will be cleaned up.
@@ -1164,10 +1165,16 @@ def temporary_bucket_path(
 
             elif storage == "aws_s3":
                 cluster = current().context.cluster
-                cluster.command(
-                    "aws",
-                    f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive",
-                )
+
+                cmd = f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                if aws_region:
+                    cmd += f" --region {aws_region}"
+                if secret_access_key:
+                    cmd = f"AWS_SECRET_ACCESS_KEY={secret_access_key} {cmd}"
+                if access_key_id:
+                    cmd = f"AWS_ACCESS_KEY_ID={access_key_id} {cmd}"
+
+                cluster.command("aws", cmd)
 
             elif storage == "gcs":
                 cluster = current().context.cluster

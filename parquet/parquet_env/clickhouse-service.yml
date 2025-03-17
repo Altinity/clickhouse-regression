@@ -50,3 +50,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/users.d/users_disabled_caching.xml:/other_user_configs/users_disabled_caching.xml"
