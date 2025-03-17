@@ -433,7 +433,13 @@ def feature(
     partitions_for_swarm=1000,
     altinity=False,
 ):
-    """Tests that verify Parquet metadata caching for object storage."""
+    """Tests that verify Parquet metadata caching for object storage.
+
+    nodes: clickhouse1, clickhouse2, clickhouse3 - used for testing distributed setup.
+    nodes: clickhouse-antalya, clickhouse-swarm-1, clickhouse-swarm-2 - used for testing swarm setup.
+    partitions_for_swarm: number of partitions for the parquet file in a swarm environment.
+    number_of_files: is the number of parquet files that we create in distributed setup, for tests with different locations the number of files is per location.
+    """
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
         self.context.cluster.node("clickhouse2"),
