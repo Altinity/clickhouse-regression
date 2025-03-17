@@ -410,7 +410,8 @@ def node_dies_during_query_execution(self):
 def distributed(self):
     """Tests for parquet metadata caching on a distributed setup with replicated cluster of 3 nodes."""
     Scenario(run=parquet_s3_caching)
-
+    Scenario(run=parquet_metadata_format)
+    Scenario(run=parquet_metadata_format_on_cluster)
 
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Swarm("1.0"))
