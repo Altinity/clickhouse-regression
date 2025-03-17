@@ -124,21 +124,21 @@ services:
   proxy1:
     image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
-      - "8080"
+      - "8082"
       - "80"
       - "443"
 
   proxy2:
     image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
-      - "8080"
+      - "8082"
       - "80"
       - "443"
 
   resolver:
     image: altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
-      - "8080"
+      - "8082"
     tty: true
     init: true
     depends_on:
