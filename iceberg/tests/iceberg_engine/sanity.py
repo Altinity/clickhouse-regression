@@ -3,7 +3,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 from decimal import Decimal
 from pyiceberg.schema import Schema
@@ -371,7 +371,10 @@ def rename_database(self, minio_root_user, minio_root_password):
     with And("check that rename Iceberg database is not supported"):
         new_database_name = f"new_iceberg_database_{getuid()}"
         exitcode = 48
-        message = "DB::Exception: Iceberg: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
+        database_engine_name = (
+            "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+        )
+        message = f"DB::Exception: {database_engine_name}: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
         rename_query = f"RENAME DATABASE {database_name} TO {new_database_name}"
         self.context.node.query(
             rename_query,
@@ -419,9 +422,10 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
     with And("check that rename table from Iceberg database is not supported"):
         new_table_name = f"new_table_{getuid()}"
         exitcode = 48
-        message = (
-            "DB::Exception: Iceberg: renameTable() is not supported. (NOT_IMPLEMENTED)"
+        database_engine_name = (
+            "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
         )
+        message = f"DB::Exception: {database_engine_name}: renameTable() is not supported. (NOT_IMPLEMENTED)"
         rename_query = f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}"
         self.context.node.query(
             rename_query,

@@ -1,6 +1,6 @@
 from testflows.core import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 import iceberg.tests.steps.catalog as catalog_steps
 
@@ -34,11 +34,15 @@ def create_experimental_iceberg_database(
     if database_name is None:
         database_name = "iceberg_database_" + getuid()
 
+    database_engine_name = (
+        "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    )
+
     node.query(
         f"""
             SET allow_experimental_database_iceberg=true;
             CREATE DATABASE {database_name}
-            ENGINE = Iceberg('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}')
+            ENGINE = {database_engine_name}('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}')
             SETTINGS catalog_type = '{catalog_type}', storage_endpoint = '{storage_endpoint}', warehouse = '{namespace}';
         """
     )
@@ -59,12 +63,13 @@ def read_data_from_clickhouse_iceberg_table(
     order_by="tuple()",
     exitcode=None,
     message=None,
+    format="TabSeparated",
 ):
     if node is None:
         node = self.context.node
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` ORDER BY {order_by} FORMAT TabSeparated",
+        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` ORDER BY {order_by} FORMAT {format}",
         settings=[("user", user), ("password", f"{password}")],
         exitcode=exitcode,
         message=message,
