@@ -476,7 +476,7 @@ def feature(
     node="clickhouse1",
     number_of_files=15,
     partitions_for_swarm=1000,
-    altinity=True,
+    altinity=False,
 ):
     """Tests that verify Parquet metadata caching for object storage.
 
@@ -502,9 +502,9 @@ def feature(
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
-    # Scenario(run=parquet_metadata_format)
-    # Scenario(run=parquet_s3_caching)
-    # Feature(run=distributed)
+    Scenario(run=parquet_metadata_format)
+    Scenario(run=parquet_s3_caching)
+    Feature(run=distributed)
 
     if altinity:
         with Given("I setup iceberg catalog"):
