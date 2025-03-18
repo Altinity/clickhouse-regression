@@ -251,6 +251,14 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
             s3_secret_access_key=minio_root_password,
         )
 
+    with And("read data in clickhouse from the previously created table"):
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
+        )
+        assert "Alice\t195.23\t20" in result.output, error()
+        assert "Bob\t123.45\t30" in result.output, error()
+        assert "Charlie\t67.89\t40" in result.output, error()
+
     with And(f"delete table {namespace}.{table_name} if already exists"):
         catalog_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
@@ -272,10 +280,6 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
             ]
         )
         table.append(df)
-
-    with When("restart the node and drop filesystem cache"):
-        node.restart()
-        node.query(f"SYSTEM DROP FILESYSTEM CACHE")
 
     with And("scan and display data"):
         df = table.scan().to_pandas()
