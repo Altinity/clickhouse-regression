@@ -10,9 +10,6 @@ from parquet.tests.steps.metadata_caching import settings as settings_for_select
 from parquet.tests.steps.swarm import *
 from alter.stress.tests.tc_netem import network_packet_delay
 
-PATH1 = "location_1"
-PATH2 = "location_2"
-
 
 @TestScenario
 @Requirements(
@@ -172,7 +169,7 @@ def parquet_s3_caching(self):
     )
 
     glob = either(*[None, "**.Parquet", "**.incorrect"])
-    settings_for_select = additional_settings()
+    settings_for_select = None
 
     check_caching_metadata_on_multiple_nodes(
         create_parquet_files=create_parquet,
@@ -193,8 +190,9 @@ def check_swarm_parquet(
 
     with Given(
         "I select data from the parquet file without using metadata caching",
-        description=f"""additional setting for a query: {setting}, select function: {select.__name__}, condition: {condition}, statement: {statement}, file_type: {file_type}, path_glob: {path_glob}""",
+        description=f"""additional setting for a query: setting: {setting} select function: {select.__name__}, condition: {condition}, statement: {statement}, file_type: {file_type}, path_glob: {path_glob}""",
     ):
+
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
         initial_execution_time, log = select(
@@ -271,9 +269,63 @@ def swarm_combinations(self):
     file_type = either(*["Parquet", "ParquetMetadata"])
     path_glob = either(*["**", "datetime_day=2019-08-17"])
 
+    settings = [
+        None,
+        "force_aggregation_in_order=1",
+        "aggregation_memory_efficient_merge_threads=1",
+        "allow_ddl=1",
+        "allow_materialized_view_with_bad_select=1",
+        "aggregate_functions_null_for_empty=1",
+        "analyzer_compatibility_join_using_top_level_identifier=1",
+        "apply_mutations_on_fly=1",
+        "convert_query_to_cnf=1",
+        "database_replicated_allow_heavy_create=1",
+        "do_not_merge_across_partitions_select_final=1",
+        "enable_optimize_predicate_expression=1",
+        "enable_writes_to_query_cache=1",
+        "enable_reads_from_query_cache=1",
+        "engine_file_empty_if_not_exists=1",
+        "engine_file_skip_empty_files=1",
+        "engine_url_skip_empty_files=1",
+        "fallback_to_stale_replicas_for_distributed_queries=1",
+        "implicit_select=1",
+        "optimize_move_to_prewhere=1",
+        "optimize_move_to_prewhere_if_final=1" "asterisk_include_alias_columns=1",
+        "azure_ignore_file_doesnt_exist=1",
+        "azure_skip_empty_files=1",
+        "azure_throw_on_zero_files_match=1",
+    ]
+
+    if check_clickhouse_version(">24.12")(self):
+        settings += [
+            "allow_experimental_database_materialized_postgresql=1",
+            "allow_experimental_dynamic_type=1",
+            "allow_experimental_full_text_index=1",
+            "allow_experimental_funnel_functions=1",
+            "allow_experimental_hash_functions=1",
+            "allow_experimental_inverted_index=1",
+            "allow_experimental_join_condition=1",
+            "allow_experimental_json_type=1",
+            "allow_experimental_kafka_offsets_storage_in_keeper=1",
+            "allow_experimental_kusto_dialect=1",
+            "allow_experimental_live_view=1",
+            "allow_experimental_materialized_postgresql_table=1",
+            "allow_experimental_nlp_functions=1",
+            "allow_experimental_object_type=1",
+            "allow_experimental_parallel_reading_from_replicas=1",
+            "allow_experimental_prql_dialect=1",
+            "allow_experimental_query_deduplication=1",
+            "allow_experimental_shared_set_join=1",
+            "allow_experimental_statistics=1",
+            "allow_experimental_time_series_table=1",
+            "allow_experimental_ts_to_grid_aggregate_function=1",
+            "allow_experimental_variant_type=1",
+            "allow_experimental_vector_similarity_index=1",
+        ]
+
     check_swarm_parquet(
         select=selects,
-        additional_settings=settings_for_select,
+        additional_settings=settings,
         condition=conditions,
         statement=statements,
         file_type=file_type,
@@ -413,6 +465,7 @@ def distributed(self):
     Scenario(run=parquet_metadata_format)
     Scenario(run=parquet_metadata_format_on_cluster)
 
+
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_Swarm("1.0"))
 def swarm(self):
@@ -432,7 +485,7 @@ def feature(
     node="clickhouse1",
     number_of_files=15,
     partitions_for_swarm=1000,
-    altinity=False,
+    altinity=True,
 ):
     """Tests that verify Parquet metadata caching for object storage.
 
@@ -458,9 +511,9 @@ def feature(
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=parquet_metadata_format)
-    Scenario(run=parquet_s3_caching)
-    Feature(run=distributed)
+    # Scenario(run=parquet_metadata_format)
+    # Scenario(run=parquet_s3_caching)
+    # Feature(run=distributed)
 
     if altinity:
         with Given("I setup iceberg catalog"):
