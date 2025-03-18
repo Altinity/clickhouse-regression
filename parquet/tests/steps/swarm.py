@@ -21,12 +21,14 @@ from iceberg.tests.steps.catalog import (
     create_iceberg_table,
 )
 from parquet.tests.common import getuid
-from parquet.tests.s3_metadata_caching import PATH1, PATH2
 from parquet.tests.steps.metadata_caching import (
     select_parquet_metadata_from_s3,
     create_multiple_parquet_files_with_common_datatypes,
     create_parquet_files_in_different_paths,
 )
+
+PATH1 = "location_1"
+PATH2 = "location_2"
 
 
 def generate_data(num_partitions):
