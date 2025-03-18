@@ -1,8 +1,7 @@
-from testflows.core import *
-from parquet.tests.common import *
-from s3.tests.common import *
 from alter.stress.tests.tc_netem import network_packet_delay
 from parquet.requirements.requirements import *
+from parquet.tests.common import *
+from s3.tests.common import *
 
 
 @TestStep(Given)
