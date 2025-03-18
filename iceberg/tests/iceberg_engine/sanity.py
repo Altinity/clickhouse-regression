@@ -316,6 +316,90 @@ def recreate_table(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+def multiple_tables(self, minio_root_user, minio_root_password):
+    """Test creating multiple tables in same Iceberg database."""
+
+    namespace = f"iceberg_{getuid()}"
+    table_name_1 = "iceberg_table_1"
+    table_name_2 = "iceberg_table_2"
+
+    with Given("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:8182/",
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with When(f"create namespace {namespace} and two tables under {namespace}"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+        table_1 = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name_1
+        )
+        table_2 = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name_2
+        )
+
+    with And(f"insert data into both tables"):
+        df1 = pa.Table.from_pylist(
+            [
+                {"name": "Alice", "double": 195.23, "integer": 20},
+                {"name": "Bob", "double": 123.45, "integer": 30},
+            ]
+        )
+        table_1.append(df1)
+        df2 = pa.Table.from_pylist(
+            [
+                {"name": "David", "double": 20.0, "integer": 27},
+                {"name": "Eve", "double": 30.0, "integer": 35},
+            ]
+        )
+        table_2.append(df2)
+
+    with And("scan and display data with PyIceberg"):
+        data1 = table_1.scan().to_pandas()
+        data2 = table_2.scan().to_pandas()
+        note(data1)
+        note(data2)
+
+    with Then("create database with Iceberg engine"):
+        database_name = f"iceberg_database_{getuid()}"
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("check the tables in the database after deleting the table"):
+        result = self.context.node.query(f"SHOW TABLES from {database_name}")
+        assert table_name_1 in result.output, error()
+        assert table_name_2 in result.output, error()
+
+    with Then("verify that ClickHouse reads correct data from both tables"):
+        for retry in retries(count=10, delay=1):
+            with retry:
+                result_1 = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name_1,
+                )
+                assert "Alice\t195.23\t20" in result_1.output, error()
+                assert "Bob\t123.45\t30" in result_1.output, error()
+
+                result_2 = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                    database_name=database_name,
+                    namespace=namespace,
+                    table_name=table_name_2,
+                )
+                assert "David\t20\t27" in result_2.output, error()
+                assert "Eve\t30\t35" in result_2.output, error()
+
+
+@TestScenario
 def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
     """Test the Iceberg engine in ClickHouse."""
     node = self.context.node
