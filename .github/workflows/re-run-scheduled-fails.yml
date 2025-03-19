@@ -1,0 +1,61 @@
+name: 🔄 Re-run Failed Scheduled Jobs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  re-run-failed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install gh CLI
+        run: |
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+
+      - name: Authenticate with GitHub
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Find and re-run failed scheduled jobs
+        run: |
+          echo "Looking for failed jobs from latest scheduled workflow runs"
+          
+          # Get all workflow runs (not filtered by status to see latest of each)
+          gh api -X GET "/repos/${{ github.repository }}/actions/runs?per_page=100" > runs.json
+          
+          # Calculate the cutoff date (30 days ago)
+          CUTOFF_DATE=$(date -u -d "30 days ago" +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Process the results - get only the latest scheduled run for each workflow
+          jq -r --arg cutoff "$CUTOFF_DATE" '
+            .workflow_runs
+            | group_by(.workflow_id)
+            | map(
+                sort_by(.created_at) 
+                | reverse 
+                | map(select(.event == "schedule"))
+                | first 
+                | select(
+                    . != null and
+                    .status == "completed" and
+                    .conclusion == "failure" and
+                    .created_at >= $cutoff
+                  )
+              )
+            | .[]
+            | [.id, .name, .workflow_id]
+            | @tsv
+          ' runs.json | while IFS=$'\t' read -r run_id run_name workflow_id; do
+            echo "Re-running failed jobs from workflow run: $run_name (ID: $run_id)"
+            gh api -X POST "/repos/${{ github.repository }}/actions/runs/$run_id/rerun-failed-jobs" || {
+              echo "Failed to re-run failed jobs for workflow $run_name (ID: $run_id)"
+            }
+            echo "Successfully triggered re-run of failed jobs for workflow $run_name"
+          done
