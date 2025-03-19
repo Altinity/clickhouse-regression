@@ -28,48 +28,27 @@ jobs:
           echo "Looking for failed jobs from latest scheduled workflow runs"
           
           # Get all workflow runs and filter for scheduled ones that failed
-          gh api graphql -f query='
-            query GetFailedJobs($owner: String!, $name: String!) {
-              repository(owner: $owner, name: $name) {
-                actions {
-                  runs(first: 100, orderBy: {field: CREATED_AT, direction: DESC}) {
-                    nodes {
-                      id
-                      name
-                      event
-                      conclusion
-                      createdAt
-                      workflow {
-                        name
-                        id
-                      }
-                      jobs(first: 100) {
-                        nodes {
-                          id
-                          name
-                          conclusion
-                          databaseId
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }' -f owner=${{ github.repository_owner }} -f name=${{ github.event.repository.name }} > runs.json
+          gh api -X GET "/repos/${{ github.repository }}/actions/runs?event=schedule&status=failure&per_page=100" > runs.json
           
           # Process the results - get only the latest run for each workflow
           jq -r '
-            .data.repository.actions.runs.nodes
-            | map(select(.event == "schedule" and .conclusion == "failure"))
-            | group_by(.workflow.id)
-            | map(sort_by(.createdAt) | last)
+            .workflow_runs
+            | group_by(.workflow_id)
+            | map(sort_by(.created_at) | last)
             | .[]
-            | .jobs.nodes[]
-            | select(.conclusion == "failure")
-            | [.databaseId, .name]
-            | @tsv
-          ' runs.json | while IFS=$'\t' read -r job_id job_name; do
-            echo "Re-running failed job: $job_name (ID: $job_id)"
-            gh api -X POST /repos/${{ github.repository }}/actions/jobs/$job_id/rerun
-            echo "Successfully triggered re-run for $job_name"
+            | .jobs_url
+            | @text
+          ' runs.json | while read -r jobs_url; do
+            # Get the jobs for this run
+            gh api "$jobs_url" > jobs.json
+            jq -r '
+              .jobs[]
+              | select(.conclusion == "failure")
+              | [.id, .name]
+              | @tsv
+            ' jobs.json | while IFS=$'\t' read -r job_id job_name; do
+              echo "Re-running failed job: $job_name (ID: $job_id)"
+              gh api -X POST "/repos/${{ github.repository }}/actions/jobs/$job_id/rerun"
+              echo "Successfully triggered re-run for $job_name"
+            done
           done
