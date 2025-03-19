@@ -50,21 +50,12 @@ jobs:
                   )
               )
             | .[]
-            | .jobs_url
-            | @text
-          ' runs.json | while read -r jobs_url; do
-            # Get the jobs for this run
-            gh api "$jobs_url" > jobs.json
-            jq -r '
-              .jobs[]
-              | select(.conclusion == "failure")
-              | [.id, .name]
-              | @tsv
-            ' jobs.json | while IFS=$'\t' read -r job_id job_name; do
-              echo "Re-running failed job: $job_name (ID: $job_id)"
-              gh api -X POST "/repos/${{ github.repository }}/actions/jobs/$job_id/rerun" || {
-                echo "Failed to re-run job $job_name (ID: $job_id)"
-              }
-              echo "Successfully triggered re-run for $job_name"
-            done
+            | [.id, .name, .workflow_id]
+            | @tsv
+          ' runs.json | while IFS=$'\t' read -r run_id run_name workflow_id; do
+            echo "Re-running failed jobs from workflow run: $run_name (ID: $run_id)"
+            gh api -X POST "/repos/${{ github.repository }}/actions/runs/$run_id/rerun-failed-jobs" || {
+              echo "Failed to re-run failed jobs for workflow $run_name (ID: $run_id)"
+            }
+            echo "Successfully triggered re-run of failed jobs for workflow $run_name"
           done
