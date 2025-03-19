@@ -3,7 +3,7 @@ from testflows.asserts import error
 
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestScenario
@@ -293,7 +293,12 @@ def alter_comment_columns(self, minio_root_user, minio_root_password, node=None)
     with Then("comment columns in ClickHouse table with Iceberg engine"):
         comment = f"comment_{getuid()}"
         exitcode = 48
-        message = "DB::Exception: Iceberg: alterTable() is not supported."
+        database_engine_name = (
+            "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+        )
+        message = (
+            f"DB::Exception: {database_engine_name}: alterTable() is not supported."
+        )
         node.query(
             f"ALTER TABLE {iceberg_table_name} COMMENT COLUMN long_col '{comment}'",
             exitcode=exitcode,
