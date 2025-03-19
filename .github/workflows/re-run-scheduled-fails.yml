@@ -2,12 +2,6 @@ name: Re-run Failed Scheduled Jobs
 
 on:
   workflow_dispatch:
-    inputs:
-      days_back:
-        description: 'Number of days to look back for failed jobs'
-        required: true
-        default: '7'
-        type: string
 
 jobs:
   re-run-failed:
@@ -31,44 +25,41 @@ jobs:
 
       - name: Find and re-run failed scheduled jobs
         run: |
-          # Get the date range
-          END_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          START_DATE=$(date -u -d "${{ inputs.days_back }} days ago" +"%Y-%m-%dT%H:%M:%SZ")
-          
-          # Get all workflow runs
-          echo "Looking for failed scheduled jobs between $START_DATE and $END_DATE"
+          echo "Looking for failed jobs from latest scheduled workflow runs"
           
           # Get all workflow runs and filter for scheduled ones that failed
           gh api graphql -f query='
-            query($owner: String!, $name: String!, $startDate: DateTime!, $endDate: DateTime!) {
+            query GetFailedJobs($owner: String!, $name: String!) {
               repository(owner: $owner, name: $name) {
-                workflowRuns(first: 100, filterBy: {created: {start: $startDate, end: $endDate}}) {
-                  nodes {
-                    id
-                    name
-                    event
-                    conclusion
-                    createdAt
-                    workflow {
-                      name
+                actions {
+                  runs(first: 100, orderBy: {field: CREATED_AT, direction: DESC}) {
+                    nodes {
                       id
-                    }
-                    jobs(first: 100) {
-                      nodes {
-                        id
+                      name
+                      event
+                      conclusion
+                      createdAt
+                      workflow {
                         name
-                        conclusion
-                        databaseId
+                        id
+                      }
+                      jobs(first: 100) {
+                        nodes {
+                          id
+                          name
+                          conclusion
+                          databaseId
+                        }
                       }
                     }
                   }
                 }
               }
-            }' -f owner=${{ github.repository_owner }} -f name=${{ github.event.repository.name }} -f startDate=$START_DATE -f endDate=$END_DATE > runs.json
+            }' -f owner=${{ github.repository_owner }} -f name=${{ github.event.repository.name }} > runs.json
           
           # Process the results - get only the latest run for each workflow
           jq -r '
-            .data.repository.workflowRuns.nodes
+            .data.repository.actions.runs.nodes
             | map(select(.event == "schedule" and .conclusion == "failure"))
             | group_by(.workflow.id)
             | map(sort_by(.createdAt) | last)
