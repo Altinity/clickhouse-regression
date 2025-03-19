@@ -48,8 +48,10 @@ jobs:
                     name
                     event
                     conclusion
+                    createdAt
                     workflow {
                       name
+                      id
                     }
                     jobs(first: 100) {
                       nodes {
@@ -64,8 +66,18 @@ jobs:
               }
             }' -f owner=${{ github.repository_owner }} -f name=${{ github.event.repository.name }} -f startDate=$START_DATE -f endDate=$END_DATE > runs.json
           
-          # Process the results
-          jq -r '.data.repository.workflowRuns.nodes[] | select(.event == "schedule") | select(.conclusion == "failure") | .jobs.nodes[] | select(.conclusion == "failure") | [.databaseId, .name] | @tsv' runs.json | while IFS=$'\t' read -r job_id job_name; do
+          # Process the results - get only the latest run for each workflow
+          jq -r '
+            .data.repository.workflowRuns.nodes
+            | map(select(.event == "schedule" and .conclusion == "failure"))
+            | group_by(.workflow.id)
+            | map(sort_by(.createdAt) | last)
+            | .[]
+            | .jobs.nodes[]
+            | select(.conclusion == "failure")
+            | [.databaseId, .name]
+            | @tsv
+          ' runs.json | while IFS=$'\t' read -r job_id job_name; do
             echo "Re-running failed job: $job_name (ID: $job_id)"
             gh api -X POST /repos/${{ github.repository }}/actions/jobs/$job_id/rerun
             echo "Successfully triggered re-run for $job_name"
