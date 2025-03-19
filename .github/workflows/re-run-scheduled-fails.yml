@@ -27,14 +27,28 @@ jobs:
         run: |
           echo "Looking for failed jobs from latest scheduled workflow runs"
           
-          # Get all workflow runs and filter for scheduled ones that failed
-          gh api -X GET "/repos/${{ github.repository }}/actions/runs?event=schedule&status=failure&per_page=100" > runs.json
+          # Get all workflow runs (not filtered by status to see latest of each)
+          gh api -X GET "/repos/${{ github.repository }}/actions/runs?per_page=100" > runs.json
           
-          # Process the results - get only the latest run for each workflow
-          jq -r '
+          # Calculate the cutoff date (30 days ago)
+          CUTOFF_DATE=$(date -u -d "30 days ago" +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Process the results - get only the latest scheduled run for each workflow
+          jq -r --arg cutoff "$CUTOFF_DATE" '
             .workflow_runs
             | group_by(.workflow_id)
-            | map(sort_by(.created_at) | last)
+            | map(
+                sort_by(.created_at) 
+                | reverse 
+                | map(select(.event == "schedule"))
+                | first 
+                | select(
+                    . != null and
+                    .status == "completed" and
+                    .conclusion == "failure" and
+                    .created_at >= $cutoff
+                  )
+              )
             | .[]
             | .jobs_url
             | @text
@@ -48,7 +62,9 @@ jobs:
               | @tsv
             ' jobs.json | while IFS=$'\t' read -r job_id job_name; do
               echo "Re-running failed job: $job_name (ID: $job_id)"
-              gh api -X POST "/repos/${{ github.repository }}/actions/jobs/$job_id/rerun"
+              gh api -X POST "/repos/${{ github.repository }}/actions/jobs/$job_id/rerun" || {
+                echo "Failed to re-run job $job_name (ID: $job_id)"
+              }
               echo "Successfully triggered re-run for $job_name"
             done
           done
