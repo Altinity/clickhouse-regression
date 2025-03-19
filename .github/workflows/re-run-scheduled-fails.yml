@@ -1,0 +1,72 @@
+name: Re-run Failed Scheduled Jobs
+
+on:
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Number of days to look back for failed jobs'
+        required: true
+        default: '7'
+        type: string
+
+jobs:
+  re-run-failed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install gh CLI
+        run: |
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+
+      - name: Authenticate with GitHub
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Find and re-run failed scheduled jobs
+        run: |
+          # Get the date range
+          END_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          START_DATE=$(date -u -d "${{ inputs.days_back }} days ago" +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Get all workflow runs
+          echo "Looking for failed scheduled jobs between $START_DATE and $END_DATE"
+          
+          # Get all workflow runs and filter for scheduled ones that failed
+          gh api graphql -f query='
+            query($owner: String!, $name: String!, $startDate: DateTime!, $endDate: DateTime!) {
+              repository(owner: $owner, name: $name) {
+                workflowRuns(first: 100, filterBy: {created: {start: $startDate, end: $endDate}}) {
+                  nodes {
+                    id
+                    name
+                    event
+                    conclusion
+                    workflow {
+                      name
+                    }
+                    jobs(first: 100) {
+                      nodes {
+                        id
+                        name
+                        conclusion
+                        databaseId
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f owner=${{ github.repository_owner }} -f name=${{ github.event.repository.name }} -f startDate=$START_DATE -f endDate=$END_DATE > runs.json
+          
+          # Process the results
+          jq -r '.data.repository.workflowRuns.nodes[] | select(.event == "schedule") | select(.conclusion == "failure") | .jobs.nodes[] | select(.conclusion == "failure") | [.databaseId, .name] | @tsv' runs.json | while IFS=$'\t' read -r job_id job_name; do
+            echo "Re-running failed job: $job_name (ID: $job_id)"
+            gh api -X POST /repos/${{ github.repository }}/actions/jobs/$job_id/rerun
+            echo "Successfully triggered re-run for $job_name"
+          done
