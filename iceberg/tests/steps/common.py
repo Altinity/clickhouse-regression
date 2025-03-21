@@ -173,10 +173,17 @@ def get_select_query_result(
     user_name=None,
     no_checks=True,
     node=None,
+    enable_filesystem_cache=True,
+    filesystem_cache_name="cache_for_s3",
+    format="TabSeparated",
 ):
     """Helper function to execute query and return result."""
 
     settings = []
+
+    if enable_filesystem_cache:
+        settings.append(("enable_filesystem_cache", 1))
+        settings.append(("filesystem_cache_name", filesystem_cache_name))
 
     if node is None:
         node = self.context.node
@@ -184,8 +191,12 @@ def get_select_query_result(
     if user_name is not None:
         settings.append(("user", user_name))
 
+    query = (
+        f"SELECT {select_columns} FROM {table_name} ORDER BY {order_by} FORMAT {format}"
+    )
+
     return node.query(
-        f"SELECT {select_columns} FROM {table_name} ORDER BY {order_by} FORMAT TabSeparated",
+        query,
         settings=settings,
         no_checks=no_checks,
     )
@@ -360,7 +371,7 @@ def compare_select_outputs(output1, output2, table_name1, rel_tol=1e-3, abs_tol=
 
         for (val1, val2), (col_name, col_type) in zip(
             zip(row1, row2), column_names_and_types
-        ): 
+        ):
             if col_type.startswith("Float") or col_type.startswith("Nullable(Float"):
                 if not math.isclose(val1, val2, rel_tol=rel_tol, abs_tol=abs_tol):
                     note(
