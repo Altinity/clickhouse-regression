@@ -10,7 +10,7 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_if_antalya_build
 
 from iceberg.requirements.requirements import *
 
@@ -33,6 +33,9 @@ xfails = {
     ],
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
+    ],
+    "/iceberg/iceberg engine/swarm/*": [
+        (Fail, "Only works with antalya build", check_if_antalya_build),
     ],
 }
 ffails = {

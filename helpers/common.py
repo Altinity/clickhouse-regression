@@ -115,6 +115,13 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
+def check_if_antalya_build(test):
+    """Check that build is Antalya build."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    note(f"binary path: {binary_path}")
+    return "antalya" not in binary_path
+
+
 def check_with_any_sanitizer(test):
     """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
     sanitizers = ["tsan", "asan", "ubsan", "msan"]
