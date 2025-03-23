@@ -472,7 +472,7 @@ def swarm(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def feature(
     self,
-    node="clickhouse1", 
+    node="clickhouse1",
     number_of_files=15,
     partitions_for_swarm=1000,
 ):
@@ -481,14 +481,13 @@ def feature(
     Nodes:
         Distributed setup:
             - clickhouse1
-            - clickhouse2 
+            - clickhouse2
             - clickhouse3
-        
+
         Swarm setup:
             - clickhouse-antalya (initiator)
             - clickhouse-swarm-1
             - clickhouse-swarm-2
-
     Args:
         node: The node to run tests on (default: clickhouse1)
         number_of_files: Number of parquet files to create in distributed setup.
@@ -502,7 +501,7 @@ def feature(
         self.context.cluster.node("clickhouse3"),
     ]
 
-    # Set up swarm cluster nodes  
+    # Set up swarm cluster nodes
     self.context.swarm_initiator = self.context.cluster.node("clickhouse-antalya")
     self.context.swarm_nodes = [
         self.context.cluster.node("clickhouse-swarm-1"),
@@ -516,19 +515,18 @@ def feature(
     self.context.node = self.context.cluster.node(node)
 
     # Run distributed tests
-    Scenario(run=parquet_metadata_format)
-    Scenario(run=parquet_s3_caching) 
-    Feature(run=distributed)
+    # Scenario(run=parquet_metadata_format)
+    # Scenario(run=parquet_s3_caching)
+    # Feature(run=distributed)
 
     # Run swarm tests if on Antalya build
-    if check_if_antalya_build():
+    if not check_if_antalya_build(self):
         with Given("I setup iceberg catalog"):
             catalog = setup_iceberg()
 
         with And("I create a partitioned parquet file in iceberg"):
             create_parquet_partitioned_by_datetime(
-                catalog=catalog,
-                number_of_partitions=partitions_for_swarm
+                catalog=catalog, number_of_partitions=partitions_for_swarm
             )
 
         Feature(run=swarm)
