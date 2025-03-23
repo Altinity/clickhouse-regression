@@ -314,7 +314,7 @@ class CreateParquetStructure:
 @TestStep(Given)
 def start_minio(
     self,
-    uri="localhost:9001",
+    uri="localhost:9002",
     access_key="minio",
     secret_key="minio123",
     timeout=30,
@@ -332,12 +332,13 @@ def start_minio(
                 objects = minio_client.list_objects(bucket.name, recursive=True)
                 object_names = [o.object_name for o in objects]
                 for name in object_names:
+                    if "warehouse" in bucket.name:
+                        continue
                     minio_client.remove_object(bucket.name, name)
 
-            buckets = ["root", "root2", "warehouse"]
+            buckets = ["root", "root2"]
             self.context.cluster.minio_bucket = "root"
             self.context.cluster.minio_bucket_2 = "root2"
-            self.context.cluster.minio_bucket_3 = "warehouse"
 
             for bucket in buckets:
                 if minio_client.bucket_exists(bucket):
