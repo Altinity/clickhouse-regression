@@ -8,7 +8,7 @@ services:
     init: true
     restart: always
     ports:
-      - "8080:8080"
+      - "8085:8085"
     entrypoint: tail -f /dev/null
     volumes:
         - "${CLICKHOUSE_TESTS_DIR}/data/json_files:/json_files"
