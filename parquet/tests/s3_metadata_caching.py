@@ -88,7 +88,6 @@ def check_caching_metadata_on_multiple_nodes(
     """Check to determine scenarios when metadata caching works on multiple node setup."""
     settings = random.choice(additional_setting)
 
-    """Check to determine scenarios when metadata caching works on multiple node setup."""
     with Given("I create a parquet files on s3"):
         files = create_parquet_files()
 
@@ -473,46 +472,63 @@ def swarm(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def feature(
     self,
-    node="clickhouse1",
+    node="clickhouse1", 
     number_of_files=15,
     partitions_for_swarm=1000,
-    altinity=False,
 ):
     """Tests that verify Parquet metadata caching for object storage.
 
-    nodes: clickhouse1, clickhouse2, clickhouse3 - used for testing distributed setup.
-    nodes: clickhouse-antalya, clickhouse-swarm-1, clickhouse-swarm-2 - used for testing swarm setup.
-    partitions_for_swarm: number of partitions for the parquet file in a swarm environment.
-    number_of_files: is the number of parquet files that we create in distributed setup, for tests with different locations the number of files is per location.
+    Nodes:
+        Distributed setup:
+            - clickhouse1
+            - clickhouse2 
+            - clickhouse3
+        
+        Swarm setup:
+            - clickhouse-antalya (initiator)
+            - clickhouse-swarm-1
+            - clickhouse-swarm-2
+
+    Args:
+        node: The node to run tests on (default: clickhouse1)
+        number_of_files: Number of parquet files to create in distributed setup.
+                        For tests with different locations, this is per location.
+        partitions_for_swarm: Number of partitions for parquet files in swarm environment.
     """
+    # Set up distributed cluster nodes
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
         self.context.cluster.node("clickhouse2"),
         self.context.cluster.node("clickhouse3"),
     ]
 
+    # Set up swarm cluster nodes  
     self.context.swarm_initiator = self.context.cluster.node("clickhouse-antalya")
     self.context.swarm_nodes = [
         self.context.cluster.node("clickhouse-swarm-1"),
         self.context.cluster.node("clickhouse-swarm-2"),
     ]
 
+    # Set up general test configuration
     self.context.cluster_name = "replicated_cluster"
     self.context.number_of_files = number_of_files
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
+    # Run distributed tests
     Scenario(run=parquet_metadata_format)
-    Scenario(run=parquet_s3_caching)
+    Scenario(run=parquet_s3_caching) 
     Feature(run=distributed)
 
-    if altinity:
+    # Run swarm tests if on Antalya build
+    if check_if_antalya_build():
         with Given("I setup iceberg catalog"):
             catalog = setup_iceberg()
 
         with And("I create a partitioned parquet file in iceberg"):
             create_parquet_partitioned_by_datetime(
-                catalog=catalog, number_of_partitions=partitions_for_swarm
+                catalog=catalog,
+                number_of_partitions=partitions_for_swarm
             )
 
         Feature(run=swarm)
