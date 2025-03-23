@@ -677,9 +677,10 @@ def regression(
 
         if "minio" in storages:
             self.context.storage = "minio"
-            self.context.uri = "http://minio:9001/root/data/parquet/"
+            self.context.uri = "http://minio:9000/root/data/parquet/"
             self.context.access_key_id = "minio"
             self.context.secret_access_key = "minio123"
+            self.context.warehouse_uri = "http://minio:9000/warehouse/data/data"
 
             with Given("I have a minio client"):
                 start_minio(access_key="minio", secret_key="minio123")
