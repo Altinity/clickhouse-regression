@@ -34,6 +34,10 @@ on:
       artifact_name:
         description: "Artifact name. Default: artifacts"
         type: string
+      run_s3_suites:
+        description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
     secrets:
       AWS_REPORT_KEY_ID:
         required: true
@@ -1747,4 +1751,187 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_aws:
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 300
+    env:
+      SUITE: s3
+      STORAGE: /aws
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws') }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_azure:
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 300
+    env:
+      SUITE: s3
+      STORAGE: /azure
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_azure' || inputs.suite == 's3_all') }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage azure
+              --azure-account-name ${{ secrets.AZURE_ACCOUNT_NAME }}
+              --azure-storage-key ${{ secrets.AZURE_STORAGE_KEY }}
+              --azure-container ${{ secrets.AZURE_CONTAINER_NAME }}
+              ${{ env.args }} || EXITCODE=$?;
+              .github/add_link_to_logs.sh;
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-azure-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_gcs:
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 180
+    env:
+      SUITE: s3
+      STORAGE: /gcs
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs') }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-gcs-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  parquet_s3:
+    runs-on: [self-hosted, arm64, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 300
+    env:
+      SUITE: parquet
+      STORAGE: /aws_s3
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws') }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --only "/parquet/aws s3/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-aws-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
