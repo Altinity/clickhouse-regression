@@ -2,7 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import combinations
 
-from helpers.common import getuid, check_if_antalya_build
+from helpers.common import getuid
 
 from datetime import date, timedelta
 
@@ -181,7 +181,7 @@ def get_select_query_result(
 
     settings = []
 
-    if enable_filesystem_cache and check_if_antalya_build(self):
+    if enable_filesystem_cache:
         settings.append(("enable_filesystem_cache", 1))
         settings.append(("filesystem_cache_name", filesystem_cache_name))
 
