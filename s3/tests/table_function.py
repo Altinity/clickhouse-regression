@@ -3,10 +3,10 @@ from testflows.core import *
 
 from s3.tests.common import *
 from s3.requirements import *
-
+from testflows.combinatorics import product
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_S3_Syntax("1.0"))
 def syntax(self):
     """Check that S3 storage works correctly for both imports and exports
     when accessed using a table function.
@@ -40,280 +40,274 @@ def syntax(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0")) #todo
+@Requirements(RQ_SRS_015_S3_TableFunction_S3Cluster_Syntax("1.0"))
 def syntax_s3Cluster(self):
     """Check that S3 storage works correctly for exports
     when accessed using an s3Cluster table function.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
     node = current().context.node
     expected = "427"
-    cluster_name = 'replicated_cluster'
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    for cluster_name in self.context.clusters:
+        with Combination(f"cluster_name = {cluster_name}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with And("I create a second table for comparison"):
-        replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
+            with And("I create a second table for comparison"):
+                distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-    with And(f"I store simple data in the first table {table1_name}"):
-        node.query(f"INSERT INTO {table1_name} VALUES (427)")
+            with And(f"I store simple data in the first table {table1_name}"):
+                node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-    with When(f"I export the data to S3 using the table function"):
-        insert_to_s3_function(filename=f"syntax_{cluster_name}.csv", table_name=table1_name)
+            with When(f"I export the data to S3 using the table function"):
+                insert_to_s3_function(filename=f"syntax_{cluster_name}.csv", table_name=table1_name)
 
-    with And(f"I import the data from S3 into the second table {table2_name}"):
-        insert_from_s3_function(filename=f"syntax_{cluster_name}.csv", cluster_name=cluster_name, table_name=table2_name)
+            with And(f"I import the data from S3 into the second table {table2_name}"):
+                insert_from_s3_function(filename=f"syntax_{cluster_name}.csv", cluster_name=cluster_name, table_name=table2_name)
 
-    with Then(
-        f"""I check that a simple SELECT * query on the second table
-                {table2_name} returns matching data on the second node"""
-    ):
-        r = self.context.cluster.node("clickhouse2").query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-        assert r == expected, error()
+            with Then(
+                f"""I check that a simple SELECT * query on the second table
+                        {table2_name} returns matching data"""
+            ):
+                r = self.context.cluster.node("clickhouse1").query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+                assert r == expected, error()
 
 
-@TestOutline(Scenario)
-@Examples(
-    "wildcard expected cluster_name",
-    [
-        ("*", "427\n427\n427\n427", None, Name("star")),
-        ("%3F", "427\n427\n427", None, Name("question")),
-        ("{2..3}", "427\n427", None, Name("nums")),
-        ("{1,3}", "427\n427", None, Name("strings")),
-        ("{1,3,4}", "427\n427", None, Name("strings_one_missing")),
-        ("*", "427\n427\n427\n427", "replicated_cluster", Name("star S3Cluster")),
-        ("%3F", "427\n427\n427", "replicated_cluster", Name("question S3Cluster")),
-        ("{2..3}", "427\n427", "replicated_cluster", Name("nums S3Cluster")),
-        ("{1,3}", "427\n427", "replicated_cluster", Name("strings S3Cluster")),
-        ("{1,3,4}", "427\n427", "replicated_cluster", Name("strings_one_missing S3Cluster")),
-    ],
-)
+@TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path_Glob("1.0"))
-def wildcard(self, wildcard, expected, cluster_name):
+def wildcard(self):
     """
     Check that imports from S3 storage using the S3 table function and s3Cluster table function
     work correctly when using wildcards in the path.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
     node = current().context.node
 
-    if self.context.storage == "minio":
-        with Given("If using MinIO, clear objects on directory path to avoid error"):
-            self.context.cluster.minio_client.remove_object(
-                self.context.cluster.minio_bucket, "data"
-            )
+    test_values = {
+        ("*", "427\n427\n427\n427"),
+        ("%3F", "427\n427\n427"),
+        ("{2..3}", "427\n427"),
+        ("{1,3}", "427\n427"),
+        ("{1,3,4}", "427\n427"),
+    }
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    test_clusters = {None}.union(set(self.context.clusters))
 
-    with And("I create a second table for comparison"):
-        if cluster_name is None:
-            simple_table(node=node, name=table2_name, policy="default")
-        else:
-            replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
-
-    with And(f"I store simple data in the first table {table1_name}"):
-        node.query(f"INSERT INTO {table1_name} VALUES (427)")
-
-    with When("I export the data to S3 using the table function"):
-        insert_to_s3_function(filename="subdata", table_name=table1_name)
-
-    with And("I export the data to a different path in my bucket"):
-        insert_to_s3_function(filename="subdata1", table_name=table1_name)
-
-    with And("I export the data to a different path in my bucket"):
-        insert_to_s3_function(filename="subdata2", table_name=table1_name)
-
-    with And("I export the data to yet another path in my bucket"):
-        insert_to_s3_function(filename="subdata3", table_name=table1_name)
-
-    with And(
-        f"""I import the data from external storage into the second
-                table {table2_name} using the wildcard '{wildcard}'"""
+    for i, combination in enumerate(
+        product(test_values, test_clusters)
     ):
-        insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name, cluster_name=cluster_name)
+        with Combination(f"test_values = {combination[0]}, cluster_name = {combination[1]}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            wildcard, expected = combination[0]
+            cluster_name = combination[1]
 
-    with Then(
-        f"""I check that a simple SELECT * query on the second table
-                {table2_name} returns expected data"""
-    ):
-        for retry in retries(timeout=600, delay=5):
-            with retry:
+            if self.context.storage == "minio":
+                with Given("If using MinIO, clear objects on directory path to avoid error"):
+                    self.context.cluster.minio_client.remove_object(
+                        self.context.cluster.minio_bucket, "data"
+                    )
+
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
+
+            with And("I create a second table for comparison"):
                 if cluster_name is None:
-                    r = node.query(
-                        f"SELECT * FROM {table2_name} FORMAT TabSeparated"
-                    ).output.strip()
+                    simple_table(node=node, name=table2_name, policy="default")
                 else:
-                    r = self.context.cluster.node("clickhouse2").query(
-                        f"SELECT * FROM {table2_name} FORMAT TabSeparated"
-                    ).output.strip()
+                    distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-                assert r == expected, error()
+            with And(f"I store simple data in the first table {table1_name}"):
+                node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-@TestOutline(Scenario)
-@Examples(
-    "compression_method cluster_name",
-    [
-        ("gzip", None, Name("Gzip")),
-        ("gz", None, Name("Gzip short")),
-        ("deflate", None, Name("Zlib")),
-        ("brotli", None, Name("Brotli")),
-        ("br", None, Name("Brotli short")),
-        ("LZMA", None, Name("Xz")),
-        ("xz", None, Name("Xz short")),
-        ("zstd", None, Name("Zstd")),
-        ("zst", None, Name("Zstd short")),
-        ("gzip", "replicated_cluster", Name("Gzip s3Cluster")),
-        ("gz", "replicated_cluster", Name("Gzip short s3Cluster")),
-        ("deflate", "replicated_cluster", Name("Zlib s3Cluster")),
-        ("brotli", "replicated_cluster", Name("Brotli s3Cluster")),
-        ("br", "replicated_cluster", Name("Brotli short s3Cluster")),
-        ("LZMA", "replicated_cluster", Name("Xz s3Cluster")),
-        ("xz", "replicated_cluster", Name("Xz short s3Cluster")),
-        ("zstd", "replicated_cluster", Name("Zstd s3Cluster")),
-        ("zst", "replicated_cluster", Name("Zstd short s3Cluster")),
-    ],
-)
+            with When("I export the data to S3 using the table function"):
+                insert_to_s3_function(filename="subdata", table_name=table1_name)
+
+            with And("I export the data to a different path in my bucket"):
+                insert_to_s3_function(filename="subdata1", table_name=table1_name)
+
+            with And("I export the data to a different path in my bucket"):
+                insert_to_s3_function(filename="subdata2", table_name=table1_name)
+
+            with And("I export the data to yet another path in my bucket"):
+                insert_to_s3_function(filename="subdata3", table_name=table1_name)
+
+            with And(
+                f"""I import the data from external storage into the second
+                        table {table2_name} using the wildcard '{wildcard}'"""
+            ):
+                insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name, cluster_name=cluster_name)
+
+            with Then(
+                f"""I check that a simple SELECT * query on the second table
+                        {table2_name} returns expected data"""
+            ):
+                for retry in retries(timeout=600, delay=5):
+                    with retry:
+                        if cluster_name is None:
+                            r = node.query(
+                                f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+                            ).output.strip()
+                        else:
+                            r = self.context.cluster.node("clickhouse1").query(
+                                f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+                            ).output.strip()
+
+                        assert r == expected, error()
+
+@TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Compression("1.0"))
-def compression(self, compression_method, cluster_name):
+def compression(self):
     """Check that ClickHouse can successfully use all supported compression
     methods for the S3 and s3Cluster table functions.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
+
     node = current().context.node
     expected = "427"
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    compression_methods = {
+        "gzip",
+        "gz",
+        "deflate",
+        "brotli",
+        "br",
+        "LZMA",
+        "xz",
+        "zstd",
+        "zst",
+    }
 
-    with And("I create a second table for comparison"):
-        if cluster_name is None:
-            simple_table(node=node, name=table2_name, policy="default")
-        else:
-            replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
+    test_clusters = {None}.union(set(self.context.clusters))
 
-    with And(f"I store simple data in the first table {table1_name}"):
-        node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    for compression_method, cluster_name in product(compression_methods, test_clusters):
+        with Combination(f"compression_method = {compression_method}, cluster_name = {cluster_name}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with When(
-        f"""I export the data to S3 using the table function with compression
-                parameter set to '{compression_method}'"""
-    ):
-        insert_to_s3_function(
-            filename="compression.csv",
-            table_name=table1_name,
-            compression=compression_method,
-        )
+            with And("I create a second table for comparison"):
+                if cluster_name is None:
+                    simple_table(node=node, name=table2_name, policy="default")
+                else:
+                    distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-    with And(
-        f"""I import the data from S3 into the second table {table2_name}
-                using the table function with compression parameter set to '{compression_method}'"""
-    ):
-        insert_from_s3_function(
-            filename="compression.csv",
-            table_name=table2_name,
-            compression=compression_method,
-            cluster_name=cluster_name
-        )
+            with And(f"I store simple data in the first table {table1_name}"):
+                node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-    with Then(
-        f"""I check that a simple SELECT * query on the second table
-                {table2_name} returns matching data"""
-    ):
-        if cluster_name is None:
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-        else:
-            r = self.context.cluster.node("clickhouse2").query(
-                f"SELECT * FROM {table2_name} FORMAT CSV"
-            ).output.strip()
+            with When(
+                f"""I export the data to S3 using the table function with compression
+                        parameter set to '{compression_method}'"""
+            ):
+                insert_to_s3_function(
+                    filename=f"compression_{compression_method}.csv",
+                    table_name=table1_name,
+                    compression=compression_method,
+                )
 
-        assert r == expected, error()
+            with And(
+                f"""I import the data from S3 into the second table {table2_name}
+                        using the table function with compression parameter set to '{compression_method}'"""
+            ):
+                insert_from_s3_function(
+                    filename=f"compression_{compression_method}.csv",
+                    table_name=table2_name,
+                    compression=compression_method,
+                    cluster_name=cluster_name
+                )
+
+            with Then(
+                f"""I check that a simple SELECT * query on the second table
+                        {table2_name} returns matching data"""
+            ):
+                if cluster_name is None:
+                    r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+                    assert r == expected, error()
+                else:
+                    for retry in retries(timeout=600, delay=5):
+                        with retry:
+                            r = self.context.cluster.node("clickhouse1").query(
+                                f"SELECT * FROM {table2_name} FORMAT CSV"
+                            ).output.strip()
+                            assert r == expected, error()
 
 
-@TestOutline(Scenario)
-@Examples(
-    "compression_method cluster_name",
-    [
-        ("gzip", None, Name("Gzip")),
-        ("gz", None, Name("Gzip short")),
-        ("deflate", None, Name("Zlib")),
-        ("brotli", None, Name("Brotli")),
-        ("br", None, Name("Brotli short")),
-        ("LZMA", None, Name("Xz")),
-        ("xz", None, Name("Xz short")),
-        ("zstd", None, Name("Zstd")),
-        ("zst", None, Name("Zstd short")),
-        ("gzip", "replicated_cluster", Name("Gzip s3Cluster")),
-        ("gz", "replicated_cluster", Name("Gzip short s3Cluster")),
-        ("deflate", "replicated_cluster", Name("Zlib s3Cluster")),
-        ("brotli", "replicated_cluster", Name("Brotli s3Cluster")),
-        ("br", "replicated_cluster", Name("Brotli short s3Cluster")),
-        ("LZMA", "replicated_cluster", Name("Xz s3Cluster")),
-        ("xz", "replicated_cluster", Name("Xz short s3Cluster")),
-        ("zstd", "replicated_cluster", Name("Zstd s3Cluster")),
-        ("zst", "replicated_cluster", Name("Zstd short s3Cluster")),
-    ],
-)
+@TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Compression_Auto("1.0"))
-def auto(self, compression_method, cluster_name):
+def auto(self):
     """Check that ClickHouse can successfully use 'auto' as the input to the
     compression parameter of the S3 and s3Cluster table functions to interpret files compressed
     using the supported compression methods.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
     node = current().context.node
     expected = "427"
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    compression_methods = {
+        "gzip",
+        "gz",
+        "deflate",
+        "brotli",
+        "br",
+        "LZMA",
+        "xz",
+        "zstd",
+        "zst",
+    }
 
-    with And("I create a second table for comparison"):
-        if cluster_name is None:
-            simple_table(node=node, name=table2_name, policy="default")
-        else:
-            replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
+    test_clusters = {None}.union(set(self.context.clusters))
 
-    with And(f"I store simple data in the first table {table1_name}"):
-        node.query(f"INSERT INTO {table1_name} VALUES (427)")
+    for compression_method, cluster_name in product(compression_methods, test_clusters):
+        with Combination(f"compression_method = {compression_method}, cluster_name = {cluster_name}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with When(
-        f"""I export the data to S3 using the table function with compression
-                parameter set to '{compression_method}'"""
-    ):
-        insert_to_s3_function(
-            filename=f"auto.{compression_method}",
-            table_name=table1_name,
-            compression=compression_method,
-        )
+            with And("I create a second table for comparison"):
+                if cluster_name is None:
+                    simple_table(node=node, name=table2_name, policy="default")
+                else:
+                    distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-    with And(
-        f"""I import the data from S3 into the second table {table2_name}
-                using the table function with compression parameter set to 'auto'"""
-    ):
-        insert_from_s3_function(
-            filename=f"auto.{compression_method}",
-            table_name=table2_name,
-            compression="auto",
-            cluster_name=cluster_name,
-        )
+            with And(f"I store simple data in the first table {table1_name}"):
+                node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-    with Then(
-        f"""I check that a simple SELECT * query on the second table
-                {table2_name} returns matching data"""
-    ):
-        if cluster_name is None:
-            r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-        else:
-            r = self.context.cluster.node("clickhouse2").query(
-                f"SELECT * FROM {table2_name} FORMAT CSV"
-            ).output.strip()
+            with When(
+                f"""I export the data to S3 using the table function with compression
+                        parameter set to '{compression_method}'"""
+            ):
+                insert_to_s3_function(
+                    filename=f"auto_{compression_method}.csv",
+                    table_name=table1_name,
+                    compression=compression_method,
+                )
 
-        assert r == expected, error()
+            with And(
+                f"""I import the data from S3 into the second table {table2_name}
+                        using the table function with compression parameter set to 'auto'"""
+            ):
+                insert_from_s3_function(
+                    filename=f"auto_{compression_method}.csv",
+                    table_name=table2_name,
+                    compression="auto",
+                    cluster_name=cluster_name
+                )
+
+            with Then(
+                f"""I check that a simple SELECT * query on the second table
+                        {table2_name} returns matching data"""
+            ):
+                if cluster_name is None:
+                    r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+                    assert r == expected, error()
+                else:
+                    for retry in retries(timeout=600, delay=5):
+                        with retry:
+                            r = self.context.cluster.node("clickhouse1").query(
+                                f"SELECT * FROM {table2_name} FORMAT CSV"
+                            ).output.strip()
+                            assert r == expected, error()
 
 
 @TestScenario
@@ -358,37 +352,38 @@ def credentials_s3Cluster(self):
     """Check that ClickHouse can import and export data from an S3 bucket
     when proper authentication credentials are provided using s3Cluster table function.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
     node = current().context.node
     expected = "427"
-    cluster_name = "replicated_cluster"
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    for cluster_name in self.context.clusters:
+        with Combination(f"cluster_name = {cluster_name}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with And("I create a second table for comparison"):
-        replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
+            with And("I create a second table for comparison"):
+                distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-    with And(f"I store simple data in the first table {table1_name}"):
-        for attempt in retries(timeout=600, delay=5):
-            with attempt:
-                node.query(f"INSERT INTO {table1_name} VALUES (427)")
+            with And(f"I store simple data in the first table {table1_name}"):
+                for attempt in retries(timeout=600, delay=5):
+                    with attempt:
+                        node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
-    with When("I export the data to S3 using the table function"):
-        insert_to_s3_function(filename="credentials.csv", table_name=table1_name)
+            with When("I export the data to S3 using the table function"):
+                insert_to_s3_function(filename="credentials.csv", table_name=table1_name)
 
-    with And(f"I import the data from S3 into the second table {table2_name}"):
-        insert_from_s3_function(filename="credentials.csv", table_name=table2_name, cluster_name=cluster_name)
+            with And(f"I import the data from S3 into the second table {table2_name}"):
+                insert_from_s3_function(filename="credentials.csv", table_name=table2_name, cluster_name=cluster_name)
 
-    with Then(
-        f"""I check that a simple SELECT * query on the second table
-                {table2_name} returns matching data"""
-    ):
-        r = self.context.cluster.node("clickhouse2").query(
-            f"SELECT * FROM {table2_name} FORMAT CSV"
-        ).output.strip()
-        assert r == expected, error()
+            with Then(
+                f"""I check that a simple SELECT * query on the second table
+                        {table2_name} returns matching data"""
+            ):
+                r = self.context.cluster.node("clickhouse1").query(
+                    f"SELECT * FROM {table2_name} FORMAT CSV"
+                ).output.strip()
+                assert r == expected, error()
 
 
 @TestScenario
@@ -425,23 +420,24 @@ def partition_s3Cluster(self):
     secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
-    cluster_name = "replicated_cluster"
 
-    with When("I export the data to S3 using the table function"):
-        sql = (
-            f"INSERT INTO FUNCTION s3('{uri}_partition_export_"
-            + "{_partition_id}.csv'"
-            + f", '{access_key_id}','{secret_access_key}', 'CSV', 'a String') PARTITION BY a VALUES ('x'),('y'),('z')"
-        )
-        node.query(sql)
+    for cluster_name in self.context.clusters:
+        with Combination(f"cluster_name = {cluster_name}"):
+            with When("I export the data to S3 using the table function"):
+                sql = (
+                    f"INSERT INTO FUNCTION s3('{uri}_partition_export_"
+                    + "{_partition_id}.csv'"
+                    + f", '{access_key_id}','{secret_access_key}', 'CSV', 'a String') PARTITION BY a VALUES ('x'),('y'),('z')"
+                )
+                node.query(sql)
 
-    for partition_id in ["x", "y", "z"]:
-        with Then(f"I check the data in the {partition_id} partition"):
-            output = self.context.cluster.node("clickhouse2").query(
-                f"""SELECT * FROM
-                s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
-            ).output
-            assert output == partition_id, error()
+            for partition_id in ["x", "y", "z"]:
+                with Then(f"I check the data in the {partition_id} partition"):
+                    output = self.context.cluster.node("clickhouse1").query(
+                        f"""SELECT * FROM
+                        s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
+                    ).output
+                    assert output == partition_id, error()
 
 
 @TestScenario
@@ -510,50 +506,52 @@ def multiple_columns(self):
         assert r == "3\tHorse\t12", error()
 
 
-@TestOutline(Scenario)
-@Examples("fmt cluster_name", [
-    ("ORC", None,  Name("ORC")),
-    ("PARQUET", None, Name("Parquet")),
-    ("ORC", "replicated_cluster",  Name("ORC s3Cluster")),
-    ("PARQUET", "replicated_cluster", Name("Parquet s3Cluster"))
-])
+@TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Format("1.0"))
-def data_format(self, fmt, cluster_name):
+def data_format(self):
     """Check that ClickHouse can import and export data with ORC and Parquet
     data formats.
     """
-    table1_name = "table_" + getuid()
-    table2_name = "table_" + getuid()
     node = current().context.node
 
-    with Given("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+    test_values = {
+        "ORC",
+        "PARQUET",
+    }
+    test_clusters = {None}.union(set(self.context.clusters))
 
-    with And("I create a second table for comparison"):
-        if cluster_name is None:
-            simple_table(node=node, name=table2_name, policy="default")
-        else:
-            replicated_table_cluster(table_name=table2_name, storage_policy="default", columns="d UInt64")
+    for fmt, cluster_name in product(test_values, test_clusters):
+        with Combination(f"fmt = {fmt}, cluster_name = {cluster_name}"):
+            table1_name = "table_" + getuid()
+            table2_name = "table_" + getuid()
+            with Given("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with When("I add data to the table"):
-        standard_inserts(node=node, table_name=table1_name)
+            with And("I create a second table for comparison"):
+                if cluster_name is None:
+                    simple_table(node=node, name=table2_name, policy="default")
+                else:
+                    distributed_table_cluster(table_name=table2_name, cluster_name=cluster_name, columns="d UInt64")
 
-    with When(
-        f"I export the data to external storage using the table function with {fmt} data format"
-    ):
-        insert_to_s3_function(
-            filename="data_format.csv", table_name=table1_name, fmt=fmt
-        )
+            with When("I add data to the table"):
+                standard_inserts(node=node, table_name=table1_name)
 
-    with And(
-        f"I import the data from external storage into the second table {table2_name} with {fmt} data format"
-    ):
-        insert_from_s3_function(
-            filename="data_format.csv", table_name=table2_name, fmt=fmt, cluster_name=cluster_name
-        )
+            with When(
+                f"I export the data to external storage using the table function with {fmt} data format"
+            ):
+                insert_to_s3_function(
+                    filename="data_format.csv", table_name=table1_name, fmt=fmt
+                )
 
-    with Then("I check simple queries"):
-        standard_selects(node=self.context.cluster.node("clickhouse2"), table_name=table2_name)
+            with And(
+                f"I import the data from external storage into the second table {table2_name} with {fmt} data format"
+            ):
+                insert_from_s3_function(
+                    filename="data_format.csv", table_name=table2_name, fmt=fmt, cluster_name=cluster_name
+                )
+
+            with Then("I check simple queries"):
+                standard_selects(node=self.context.cluster.node("clickhouse1"), table_name=table2_name)
 
 
 @TestScenario
@@ -669,45 +667,46 @@ def measure_file_size(self):
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_MeasureFileSize("1.0"))
 def measure_file_size_s3Cluster(self):
-
+    """Check that ClickHouse can measure file size using s3Cluster table function."""
     access_key_id = self.context.access_key_id
     secret_access_key = self.context.secret_access_key
     table1_name = "table_" + getuid()
     uri = self.context.uri + "measure-file-size/"
     bucket_path = self.context.bucket_path + "/measure-file-size"
-    cluster_name = "replicated_cluster"
 
-    node = current().context.node
+    for cluster_name in self.context.clusters:
+        with Combination(f"cluster_name = {cluster_name}"):
+            node = current().context.node
 
-    with Given("I get the size of the s3 bucket before adding data"):
-        size_before = measure_buckets_before_and_after(bucket_prefix=bucket_path)
+            with Given("I get the size of the s3 bucket before adding data"):
+                size_before = measure_buckets_before_and_after(bucket_prefix=bucket_path)
 
-    with And("I create a table"):
-        simple_table(node=node, name=table1_name, policy="default")
+            with And("I create a table"):
+                simple_table(node=node, name=table1_name, policy="default")
 
-    with When("I add data to the table"):
-        standard_inserts(node=node, table_name=table1_name)
+            with When("I add data to the table"):
+                standard_inserts(node=node, table_name=table1_name)
 
-    with And(f"I export the data to S3 using the table function"):
-        insert_to_s3_function(
-            filename="measure_me.csv",
-            table_name=table1_name,
-            uri=uri,
-        )
+            with And(f"I export the data to S3 using the table function"):
+                insert_to_s3_function(
+                    filename="measure_me.csv",
+                    table_name=table1_name,
+                    uri=uri,
+                )
 
-    with And("I get the size of the s3 bucket after adding data"):
-        size_after = get_stable_bucket_size(prefix=bucket_path, delay=20)
+            with And("I get the size of the s3 bucket after adding data"):
+                size_after = get_stable_bucket_size(prefix=bucket_path, delay=20)
 
-    with Then("I compare the size that clickhouse reports"):
-        r = node.query(
-            f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
-        )
-        size_clickhouse = int(r.output.strip())
-        assert size_after - size_before == size_clickhouse, error()
+            with Then("I compare the size that clickhouse reports"):
+                r = node.query(
+                    f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+                )
+                size_clickhouse = int(r.output.strip())
+                assert size_after - size_before == size_clickhouse, error()
 
 
 @TestOutline(Feature)
-@Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_S3("1.0"), RQ_SRS_015_S3_TableFunction_S3Cluster("1.0"))
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
 
