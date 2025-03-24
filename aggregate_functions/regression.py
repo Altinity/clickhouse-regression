@@ -449,6 +449,13 @@ xfails = {
             check_clickhouse_version(">=24.9"),
         ),
     ],
+    "/aggregate functions/function_list/untested function estimateCompressionRatio": [
+        (
+            Fail,
+            "Tests are not implemented for estimateCompressionRatio function.",
+            check_clickhouse_version(">=25.3"),
+        ),
+    ],
     "/aggregate functions/deltaSumTimestamp/*": [
         (
             Fail,
