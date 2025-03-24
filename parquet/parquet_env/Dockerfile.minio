@@ -1,0 +1,24 @@
+FROM ubuntu:latest
+
+# Install required packages
+RUN apt update
+RUN apt install --yes iproute2 procps wget
+
+# Install Minio
+RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio -O /usr/local/bin/minio \
+    && chmod +x /usr/local/bin/minio
+
+# Create data directory
+RUN mkdir -p /data
+
+# Set Minio environment variables
+ENV MINIO_ROOT_USER=minio
+ENV MINIO_ROOT_PASSWORD=minio123
+ENV MINIO_DOMAIN=minio
+
+# Expose Minio ports
+EXPOSE 9000 9001
+
+# Set the entrypoint
+ENTRYPOINT ["/usr/local/bin/minio"]
+CMD ["server", "/data", "--console-address", ":9001"] 

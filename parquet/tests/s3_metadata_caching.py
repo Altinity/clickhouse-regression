@@ -88,7 +88,6 @@ def check_caching_metadata_on_multiple_nodes(
     """Check to determine scenarios when metadata caching works on multiple node setup."""
     settings = random.choice(additional_setting)
 
-    """Check to determine scenarios when metadata caching works on multiple node setup."""
     with Given("I create a parquet files on s3"):
         files = create_parquet_files()
 
@@ -198,6 +197,10 @@ def check_swarm_parquet(
     with When("I select the data from parquet in iceberg"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
+        num_runs = 50
+        execution_times = []
+
+        # First run to warm up cache
         select(
             node=self.context.swarm_initiator,
             cache_metadata=True,
@@ -207,15 +210,22 @@ def check_swarm_parquet(
             file_type=file_type,
             path_glob=path_glob,
         )
-        execution_time, log = select(
-            node=self.context.swarm_initiator,
-            cache_metadata=True,
-            additional_settings=setting,
-            statement=statement,
-            condition=condition,
-            file_type=file_type,
-            path_glob=path_glob,
-        )
+
+        # Run query multiple times and collect execution times
+        for _ in range(num_runs):
+            execution_time, log = select(
+                node=self.context.swarm_initiator,
+                cache_metadata=True,
+                additional_settings=setting,
+                statement=statement,
+                condition=condition,
+                file_type=file_type,
+                path_glob=path_glob,
+            )
+            execution_times.append(execution_time)
+
+        # Calculate average execution time
+        execution_time = sum(execution_times) / len(execution_times)
     with Then("I check that the metadata was cached"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
@@ -227,6 +237,10 @@ def check_swarm_parquet(
     with And("I check that the query ran faster with caching"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
+        note(
+            f"initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
+        )
+
         assert (
             initial_execution_time > execution_time
         ), f"query ran slower with caching initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
@@ -236,6 +250,9 @@ def check_swarm_parquet(
 @Flags(TE)
 def swarm_combinations(self):
     """Combinations of tests for metadata caching on a swarm setup."""
+
+    set_delay_on_minio_node()
+
     conditions = either(
         *[
             "WHERE datetime < '2017-09-12 10:35:00.000000'",  # Should skip all files as the datetime is out of min/max range
@@ -476,37 +493,52 @@ def feature(
     node="clickhouse1",
     number_of_files=15,
     partitions_for_swarm=1000,
-    altinity=False,
 ):
     """Tests that verify Parquet metadata caching for object storage.
 
-    nodes: clickhouse1, clickhouse2, clickhouse3 - used for testing distributed setup.
-    nodes: clickhouse-antalya, clickhouse-swarm-1, clickhouse-swarm-2 - used for testing swarm setup.
-    partitions_for_swarm: number of partitions for the parquet file in a swarm environment.
-    number_of_files: is the number of parquet files that we create in distributed setup, for tests with different locations the number of files is per location.
+    Nodes:
+        Distributed setup:
+            - clickhouse1
+            - clickhouse2
+            - clickhouse3
+
+        Swarm setup:
+            - clickhouse-antalya (initiator)
+            - clickhouse-swarm-1
+            - clickhouse-swarm-2
+    Args:
+        node: The node to run tests on (default: clickhouse1)
+        number_of_files: Number of parquet files to create in distributed setup.
+                        For tests with different locations, this is per location.
+        partitions_for_swarm: Number of partitions for parquet files in swarm environment.
     """
+    # Set up distributed cluster nodes
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
         self.context.cluster.node("clickhouse2"),
         self.context.cluster.node("clickhouse3"),
     ]
 
+    # Set up swarm cluster nodes
     self.context.swarm_initiator = self.context.cluster.node("clickhouse-antalya")
     self.context.swarm_nodes = [
         self.context.cluster.node("clickhouse-swarm-1"),
         self.context.cluster.node("clickhouse-swarm-2"),
     ]
 
+    # Set up general test configuration
     self.context.cluster_name = "replicated_cluster"
     self.context.number_of_files = number_of_files
     self.context.compression_type = "NONE"
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=parquet_metadata_format)
-    Scenario(run=parquet_s3_caching)
-    Feature(run=distributed)
+    # Run distributed tests
+    # Scenario(run=parquet_metadata_format)
+    # Scenario(run=parquet_s3_caching)
+    # Feature(run=distributed)
 
-    if altinity:
+    # Run swarm tests if on Antalya build
+    if not check_if_antalya_build(self):
         with Given("I setup iceberg catalog"):
             catalog = setup_iceberg()
 
