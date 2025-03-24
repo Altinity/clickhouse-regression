@@ -5,7 +5,7 @@ from testflows.core import *
 
 from helpers.tables import *
 
-version_when_attach_partition_with_different_keys_merged = "25.4"
+version_when_attach_partition_with_different_keys_merged = "25.5"
 
 
 def clean_name(name):
@@ -614,21 +614,24 @@ def create_partitioned_replicated_table_with_datetime_data(
         node.query(
             f"INSERT INTO {table_name} (time, date, extra, sign) SELECT toDateTime('2012-01-01 00:00:00')+60*60*24+60*24, toDate('2010-01-01'), number+1000, 1 FROM numbers(10)"
         )
-        
+
     with And("wait until the data is replicated"):
         for attempt in retries(timeout=300, delay=10):
             with attempt:
                 data1 = (
-                    self.context.node_1
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_1.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 data2 = (
-                    self.context.node_2
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_2.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 data3 = (
-                    self.context.node_3
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_3.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 assert data1 == data2 == data3, "Data is not yet replicated"
 
@@ -785,16 +788,19 @@ def create_partitioned_replicated_table_with_data(
         for attempt in retries(timeout=300, delay=10):
             with attempt:
                 data1 = (
-                    self.context.node_1
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_1.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 data2 = (
-                    self.context.node_2
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_2.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 data3 = (
-                    self.context.node_3
-                    .query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+                    self.context.node_3.query(
+                        f"SELECT * FROM {table_name} ORDER BY tuple(*)"
+                    )
                 ).output.strip()
                 assert data1 == data2 == data3, "Data is not yet replicated"
 
