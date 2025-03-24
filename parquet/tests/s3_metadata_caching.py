@@ -197,6 +197,10 @@ def check_swarm_parquet(
     with When("I select the data from parquet in iceberg"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
+        num_runs = 50
+        execution_times = []
+
+        # First run to warm up cache
         select(
             node=self.context.swarm_initiator,
             cache_metadata=True,
@@ -206,15 +210,22 @@ def check_swarm_parquet(
             file_type=file_type,
             path_glob=path_glob,
         )
-        execution_time, log = select(
-            node=self.context.swarm_initiator,
-            cache_metadata=True,
-            additional_settings=setting,
-            statement=statement,
-            condition=condition,
-            file_type=file_type,
-            path_glob=path_glob,
-        )
+
+        # Run query multiple times and collect execution times
+        for _ in range(num_runs):
+            execution_time, log = select(
+                node=self.context.swarm_initiator,
+                cache_metadata=True,
+                additional_settings=setting,
+                statement=statement,
+                condition=condition,
+                file_type=file_type,
+                path_glob=path_glob,
+            )
+            execution_times.append(execution_time)
+
+        # Calculate average execution time
+        execution_time = sum(execution_times) / len(execution_times)
     with Then("I check that the metadata was cached"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
@@ -226,6 +237,10 @@ def check_swarm_parquet(
     with And("I check that the query ran faster with caching"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
+        note(
+            f"initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
+        )
+
         assert (
             initial_execution_time > execution_time
         ), f"query ran slower with caching initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
@@ -235,6 +250,9 @@ def check_swarm_parquet(
 @Flags(TE)
 def swarm_combinations(self):
     """Combinations of tests for metadata caching on a swarm setup."""
+
+    set_delay_on_minio_node()
+
     conditions = either(
         *[
             "WHERE datetime < '2017-09-12 10:35:00.000000'",  # Should skip all files as the datetime is out of min/max range
