@@ -151,6 +151,8 @@ services:
       default:
         aliases:
           - warehouse.minio
+    cap_add:
+      - NET_ADMIN
     ports:
         - 9001:9001
         - 9002:9000
