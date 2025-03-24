@@ -212,6 +212,7 @@ def check_swarm_parquet(
         )
 
         # Run query multiple times and collect execution times
+        
         for _ in range(num_runs):
             execution_time, log = select(
                 node=self.context.swarm_initiator,
@@ -240,7 +241,6 @@ def check_swarm_parquet(
         note(
             f"initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
         )
-
         assert (
             initial_execution_time > execution_time
         ), f"query ran slower with caching initial_execution_time={initial_execution_time}s execution_time={execution_time}s"
