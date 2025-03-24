@@ -10,10 +10,13 @@ from helpers.cluster import Cluster
 from helpers.common import experimental_analyzer
 from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 from s3.tests.common import *
+from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nodes
 
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
 
 xfails = {
+    ":/hive partitioning/": [(Fail, "not yet supported")],
+    ":/remote host filter/": [(Fail, "not yet supported")],
     ":/disk/generic url": [(Fail, "not yet supported")],
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
@@ -356,6 +359,12 @@ def minio_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("I add all possible clusters for nodes"):
+            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+        with And("I get all possible clusters for nodes"):
+            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+
         Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.table_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
@@ -388,7 +397,9 @@ def minio_regression(
         Feature(test=load("s3.tests.table_function_performance", "minio"))(
             uri=uri_bucket_file
         )
-        Feature(test=load("s3.tests.s3Cluster", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
+        Feature(test=load("s3.tests.hive_partitioning", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
+        Feature(test=load("s3.tests.remote_s3_function", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
+
 
 
 @TestFeature

@@ -1489,6 +1489,80 @@ def delete_replica(self, node, table_name, timeout=30):
 
 
 @TestStep(Given)
+def distributed_table_cluster(
+    self,
+    columns: str,
+    table_name: str = None,
+    cluster_name: str = "replicated_cluster",
+    order_by: str = None,
+    partition_by: str = None,
+    primary_key: str = None,
+    ttl: str = None,
+    allow_zero_copy: bool = None,
+    exitcode: int = 0,
+    no_cleanup=False,
+):
+    """Create a distributed table with the ON CLUSTER clause."""
+    
+    node = current().context.node
+
+    if table_name is None:
+        table_name = "table_" + getuid()
+
+    simple_table(node=self.context.cluster.node("clickhouse1"), name=table_name + '_local', policy="default")
+    simple_table(node=self.context.cluster.node("clickhouse2"), name=table_name + '_local', policy="default")
+    simple_table(node=self.context.cluster.node("clickhouse3"), name=table_name + '_local', policy="default")    
+
+    if order_by is None:
+        order_by = columns.split()[0]
+
+
+
+    if allow_zero_copy is not None:
+        settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
+
+    if partition_by is not None:
+        partition_by = f"PARTITION BY ({partition_by})"
+    else:
+        partition_by = ""
+
+    if primary_key is not None:
+        primary_key = f"PRIMARY KEY {primary_key}"
+    else:
+        primary_key = ""
+
+    if ttl is not None:
+        ttl = "TTL " + ttl
+    else:
+        ttl = ""
+
+    try:
+        with Given("I have a table"):
+            r = node.query(
+                f"""
+                CREATE TABLE IF NOT EXISTS {table_name} as {table_name}_local
+                ENGINE=Distributed({cluster_name}, default, {table_name}_local, rand())
+                """,
+                settings=[("distributed_ddl_task_timeout ", 360)],
+                exitcode=exitcode,
+            )
+
+        yield r, table_name
+
+    finally:
+        if not no_cleanup:
+            with Finally(f"I drop the table"):
+                for attempt in retries(timeout=120, delay=5):
+                    with attempt:
+                        node.query(
+                            f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
+                            timeout=60,
+                        )
+
+
+
+
+@TestStep(Given)
 def replicated_table_cluster(
     self,
     columns: str,
