@@ -1,5 +1,5 @@
 name: 🔬 Run Tests CI/CD on x86 All Versions
-run-name: 🔬 ${{ (inputs.suite == 'all' && format('All Versions | Full Regression | x86', inputs.suite)) || format('All Versions | {1} | x86', inputs.suite) }}
+run-name: 🔬 ${{ (inputs.suite == 'all' && format('All Versions | Full Regression | x86')) || format('All Versions | {0} | x86', inputs.suite) }}
 
 on:
   workflow_dispatch:
