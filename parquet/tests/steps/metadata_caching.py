@@ -5,19 +5,19 @@ from s3.tests.common import *
 
 
 @TestStep(Given)
-def set_delay_on_a_node(self, node=None):
+def set_delay_on_a_node(self, node=None, delay_ms=1500):
     """Set a delay on a network node."""
 
     if node is None:
         node = self.context.node
 
-    network_packet_delay(node=node)
+    network_packet_delay(node=node, delay_ms=delay_ms)
 
 
 @TestStep(Given)
-def set_delay_on_minio_node(self):
+def set_delay_on_minio_node(self, delay_ms=15):
     """Set a delay on the MinIO node."""
-    set_delay_on_a_node(node=self.context.cluster.node("minio"))
+    set_delay_on_a_node(node=self.context.cluster.node("minio"), delay_ms=delay_ms)
 
 
 @TestStep(Given)
