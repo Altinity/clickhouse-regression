@@ -112,7 +112,7 @@ def setup_iceberg(self, catalog_type=None, namespace=None):
 def create_parquet_partitioned_by_datetime(  # 3
     self, catalog, location=None, number_of_partitions=1000
 ):
-    """Create a partitioned table."""
+    """Create a partitioned table and return metadata size."""
     table_name = "table_" + getuid()
 
     if location is None:
@@ -158,6 +158,22 @@ def create_parquet_partitioned_by_datetime(  # 3
         data = generate_data(number_of_partitions)
         df = pa.Table.from_pylist(data)
         table.append(df)
+
+    with And("getting metadata size from the first parquet file"):
+        # Get the first parquet file path from the table
+        parquet_files = table.scan().plan_files()
+        if parquet_files:
+            first_file = parquet_files[0].file_path
+            # Read the parquet file metadata using PyArrow
+            parquet_file = pa.parquet.ParquetFile(first_file)
+            metadata = parquet_file.metadata
+            # Get the size of the metadata in bytes
+            metadata_size = metadata.serialized_size
+            note(f"Metadata size for first parquet file: {metadata_size} bytes")
+            return metadata_size
+        else:
+            note("No parquet files found in the table")
+            return None
 
 
 @TestStep(When)
@@ -284,11 +300,17 @@ def select_parquet_from_swarm_s3(
     file_type="Parquet",
     path_glob="**",
     retrieve_query=False,
+    use_filesystem_cache=False,
 ):
     """Select metadata of the Parquet file from Swarm on S3."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm', filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+
+    if use_filesystem_cache:
+        settings += (
+            ", filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+        )
 
     if node is None:
         node = self.context.node
@@ -326,11 +348,17 @@ def select_parquet_from_swarm_s3_cluster_join(
     cache_metadata=False,
     file_type="Parquet",
     path_glob="**",
+    use_filesystem_cache=False,
 ):
     """Select metadata of the Parquet file from Iceberg on S3."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm', filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, object_storage_cluster='swarm'"
+
+    if use_filesystem_cache:
+        settings += (
+            ", filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+        )
 
     if node is None:
         node = self.context.node
@@ -367,11 +395,17 @@ def select_parquet_from_swarm_s3_cluster(
     cache_metadata=False,
     file_type="Parquet",
     path_glob="**",
+    use_filesystem_cache=False,
 ):
     """Select metadata of the Parquet file from Iceberg on s3Cluster."""
 
     log_comment = "log_" + getuid()
-    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1, filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+    settings = f"optimize_count_from_files=0, remote_filesystem_read_prefetch=0, log_comment='{log_comment}', use_hive_partitioning=1"
+
+    if use_filesystem_cache:
+        settings += (
+            ", filesystem_cache_name = 'cache_for_s3', enable_filesystem_cache = 1"
+        )
 
     if node is None:
         node = self.context.node
