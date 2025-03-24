@@ -173,7 +173,14 @@ def parquet_s3_caching(self):
 
 @TestCheck
 def check_swarm_parquet(
-    self, select, additional_settings, condition, statement, file_type, path_glob
+    self,
+    select,
+    additional_settings,
+    condition,
+    statement,
+    file_type,
+    path_glob,
+    enable_filesystem_cache,
 ):
     """Check to determine scenarios when metadata caching works on a swarm setup."""
     setting = random.choice(additional_settings)
@@ -193,11 +200,12 @@ def check_swarm_parquet(
             condition=condition,
             file_type=file_type,
             path_glob=path_glob,
+            use_filesystem_cache=enable_filesystem_cache,
         )
     with When("I select the data from parquet in iceberg"):
         if file_type == "ParquetMetadata" and statement != "*":
             skip()
-        num_runs = 50
+        num_runs = self.context.num_runs
         execution_times = []
 
         # First run to warm up cache
@@ -209,10 +217,12 @@ def check_swarm_parquet(
             condition=condition,
             file_type=file_type,
             path_glob=path_glob,
+            use_filesystem_cache=enable_filesystem_cache,
         )
 
         # Run query multiple times and collect execution times
-        
+        pause()
+
         for _ in range(num_runs):
             execution_time, log = select(
                 node=self.context.swarm_initiator,
@@ -222,6 +232,7 @@ def check_swarm_parquet(
                 condition=condition,
                 file_type=file_type,
                 path_glob=path_glob,
+                use_filesystem_cache=enable_filesystem_cache,
             )
             execution_times.append(execution_time)
 
@@ -250,8 +261,8 @@ def check_swarm_parquet(
 @Flags(TE)
 def swarm_combinations(self):
     """Combinations of tests for metadata caching on a swarm setup."""
-
-    set_delay_on_minio_node()
+    with Given("I set a delay on the minio node"):
+        set_delay_on_minio_node()
 
     conditions = either(
         *[
@@ -273,6 +284,8 @@ def swarm_combinations(self):
             select_parquet_from_swarm_s3_cluster_join,
         ]
     )
+
+    enable_filesystem_cache = either(*[True, False])
 
     file_type = either(*["Parquet", "ParquetMetadata"])
     path_glob = either(*["**", "datetime_day=2019-08-17"])
@@ -338,6 +351,7 @@ def swarm_combinations(self):
         statement=statements,
         file_type=file_type,
         path_glob=path_glob,
+        enable_filesystem_cache=enable_filesystem_cache,
     )
 
 
@@ -465,6 +479,102 @@ def node_dies_during_query_execution(self):
             Then(test=stop_initiator_node, parallel=True, executor=pool)()
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_MaxSize("1.0")
+)
+def parquet_metadata_cache_slru_eviction(self):
+    """Test to validate that Parquet metadata cache uses SLRU (Segmented Least Recently Used) eviction strategy."""
+    log_comment = "test_" + getuid()
+    node = self.context.node
+
+    with Given("I create a test parquet file to measure metadata size"):
+        catalog = setup_iceberg()
+        metadata_size = create_parquet_partitioned_by_datetime(
+            catalog=catalog,
+            number_of_partitions=1,  # Create minimal file to measure metadata size
+        )
+        note(f"Metadata size for test file: {metadata_size} bytes")
+
+    with And("I calculate number of files needed to exceed cache size"):
+        # Cache size is 1000 bytes, we want to exceed it
+        num_files = (1000 // metadata_size) + 2  # Add 2 to ensure we exceed the limit
+        note(f"Creating {num_files} files to exceed cache size of 1000 bytes")
+
+    with And("I create multiple parquet files"):
+        files = []
+        for i in range(num_files):
+            catalog = setup_iceberg()
+            create_parquet_partitioned_by_datetime(
+                catalog=catalog, number_of_partitions=1
+            )
+            # Get the file path from the catalog
+            parquet_files = catalog.list_tables("iceberg")[0].scan().plan_files()
+            if parquet_files:
+                files.append(parquet_files[0].file_path)
+
+    with When("I access files in a pattern to test SLRU eviction"):
+        # First access pattern: fill cache
+        for file_name in files:
+            select_parquet_metadata_from_s3(
+                file_name=file_name,
+                node=node,
+                caching=True,
+                log_comment=f"{log_comment}_fill",
+            )
+
+        # Second access pattern: keep most recent files in cache
+        for file_name in files[:-1]:
+            select_parquet_metadata_from_s3(
+                file_name=file_name,
+                node=node,
+                caching=True,
+                log_comment=f"{log_comment}_keep",
+            )
+
+        # Access last file again (should be a miss since it was evicted)
+        select_parquet_metadata_from_s3(
+            file_name=files[-1],
+            node=node,
+            caching=True,
+            log_comment=f"{log_comment}_miss",
+        )
+
+    with Then("I verify cache hits and misses"):
+        node.query("SYSTEM FLUSH LOGS")
+
+        # Check hits for files that should be in cache (all except last)
+        for i in range(len(files) - 1):
+            hits = node.query(
+                f"""
+                SELECT ProfileEvents['ParquetMetaDataCacheHits'] 
+                FROM system.query_log 
+                WHERE log_comment = '{log_comment}_keep' 
+                AND query LIKE '%{files[i]}%'
+                AND type = 'QueryFinish'
+                ORDER BY event_time DESC 
+                LIMIT 1
+            """
+            )
+            assert (
+                int(hits.output.strip()) > 0
+            ), f"Expected cache hit for file {files[i]}"
+
+        # Check misses for file that should be evicted (last file)
+        misses = node.query(
+            f"""
+            SELECT ProfileEvents['ParquetMetaDataCacheMisses'] 
+            FROM system.query_log 
+            WHERE log_comment = '{log_comment}_miss' 
+            AND query LIKE '%{files[-1]}%'
+            AND type = 'QueryFinish'
+            ORDER BY event_time DESC 
+            LIMIT 1
+        """
+        )
+        assert int(misses.output.strip()) > 0, "Expected cache miss for evicted file"
+
+
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def distributed(self):
@@ -472,6 +582,7 @@ def distributed(self):
     Scenario(run=parquet_s3_caching)
     Scenario(run=parquet_metadata_format)
     Scenario(run=parquet_metadata_format_on_cluster)
+    Scenario(run=parquet_metadata_cache_slru_eviction)
 
 
 @TestSuite
@@ -493,6 +604,7 @@ def feature(
     node="clickhouse1",
     number_of_files=15,
     partitions_for_swarm=1000,
+    num_runs=50,
 ):
     """Tests that verify Parquet metadata caching for object storage.
 
@@ -513,6 +625,7 @@ def feature(
         partitions_for_swarm: Number of partitions for parquet files in swarm environment.
     """
     # Set up distributed cluster nodes
+    self.context.num_runs = num_runs
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node_list = [
         self.context.cluster.node("clickhouse2"),

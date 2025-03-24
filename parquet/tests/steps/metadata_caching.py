@@ -5,8 +5,11 @@ from s3.tests.common import *
 
 
 @TestStep(Given)
-def set_delay_on_a_node(self, node=None, delay_ms=1500):
+def set_delay_on_a_node(self, node=None, delay_ms=None):
     """Set a delay on a network node."""
+
+    if delay_ms is None:
+        delay_ms = 1500
 
     if node is None:
         node = self.context.node
@@ -15,7 +18,7 @@ def set_delay_on_a_node(self, node=None, delay_ms=1500):
 
 
 @TestStep(Given)
-def set_delay_on_minio_node(self, delay_ms=15):
+def set_delay_on_minio_node(self, delay_ms=150):
     """Set a delay on the MinIO node."""
     set_delay_on_a_node(node=self.context.cluster.node("minio"), delay_ms=delay_ms)
 
@@ -558,3 +561,67 @@ def select_parquet_metadata_from_s3(
     execution_time = time.time() - start_time
 
     return parquet, execution_time
+
+
+@TestStep(When)
+def create_parquet_file_with_size(self, file_name, size_bytes):
+    """Create a Parquet file with a specific size in bytes."""
+    if node is None:
+        node = self.context.node
+
+    # Create a table with enough rows to achieve the desired file size
+    # Each row will be approximately 1 byte
+    num_rows = size_bytes
+
+    node.query(
+        f"""
+        CREATE TABLE IF NOT EXISTS {file_name} (
+            id UInt32,
+            value String
+        ) ENGINE = MergeTree()
+        ORDER BY id
+    """
+    )
+
+    # Insert data to achieve desired file size
+    node.query(
+        f"""
+        INSERT INTO {file_name}
+        SELECT
+            number as id,
+            'x' as value
+        FROM numbers({num_rows})
+    """
+    )
+
+    # Export to Parquet
+    node.query(
+        f"""
+        SELECT *
+        FROM {file_name}
+        INTO OUTFILE '{file_name}'
+        FORMAT Parquet
+    """
+    )
+
+    yield
+    node.query(f"DROP TABLE IF EXISTS {file_name}")
+
+
+@TestStep(When)
+def get_parquet_metadata_size(self, file_name, node=None):
+    """Get the size of Parquet metadata in bytes."""
+    if node is None:
+        node = self.context.node
+
+    # Get metadata in JSON format to calculate size
+    metadata = select_parquet_from_s3(
+        file_name=file_name,
+        node=node,
+        type="ParquetMetadata",
+        output_format="JSONEachRow",
+    )
+
+    # Calculate size of metadata in bytes
+    metadata_size = len(metadata.output.encode("utf-8"))
+    return metadata_size
