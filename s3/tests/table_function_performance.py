@@ -105,7 +105,7 @@ def wildcard(self, wildcard, expected_time, expect_result):
 
 
 @TestOutline(Feature)
-@Requirements(RQ_SRS_015_S3_TableFunction("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_S3("1.0"))
 def outline(self, uri):
     """Test S3 and S3 compatible storage through storage disks."""
 

@@ -61,7 +61,8 @@ if [[ $clickhouse_path == "docker"* ]]; then
     pid=$(docker run -d $docker_image)
     echo $pid
     ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
-    echo "version=$(docker exec $pid clickhouse-client -q 'SELECT version()')" >>$GITHUB_ENV
+    export version=$(docker exec $pid clickhouse-client -q 'SELECT version()')
+    echo "version=$version" >>$GITHUB_ENV
     docker stop $pid
   fi
 fi
