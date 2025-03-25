@@ -1865,7 +1865,7 @@ def insert_from_s3_function(
     if cluster_name is None:
         query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
     else:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster({cluster_name}, '{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', '{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
 
     if compression:
         query += f", '{compression}'"
