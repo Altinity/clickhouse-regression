@@ -279,7 +279,7 @@ def auto(self):
                         parameter set to '{compression_method}'"""
             ):
                 insert_to_s3_function(
-                    filename=f"auto_{compression_method}.csv",
+                    filename=f"auto.{compression_method}",
                     table_name=table1_name,
                     compression=compression_method,
                 )
@@ -289,7 +289,7 @@ def auto(self):
                         using the table function with compression parameter set to 'auto'"""
             ):
                 insert_from_s3_function(
-                    filename=f"auto_{compression_method}.csv",
+                    filename=f"auto.{compression_method}",
                     table_name=table2_name,
                     compression="auto",
                     cluster_name=cluster_name
