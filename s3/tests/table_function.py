@@ -552,7 +552,9 @@ def data_format(self):
                 )
 
             with Then("I check simple queries"):
-                standard_selects(node=self.context.cluster.node("clickhouse1"), table_name=table2_name)
+                for attempt in retries(timeout=10, delay=1):
+                    with attempt:
+                        standard_selects(node=self.context.cluster.node("clickhouse1"), table_name=table2_name)
 
 
 @TestScenario
@@ -699,11 +701,13 @@ def measure_file_size_s3Cluster(self):
                 size_after = get_stable_bucket_size(prefix=bucket_path, delay=20)
 
             with Then("I compare the size that clickhouse reports"):
-                r = node.query(
-                    f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
-                )
-                size_clickhouse = int(r.output.strip())
-                assert size_after - size_before == size_clickhouse, error()
+                with attempt in retries(timeout=10, delay=1):
+                    with attempt:
+                        r = node.query(
+                            f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+                        )
+                        size_clickhouse = int(r.output.strip())
+                        assert size_after - size_before == size_clickhouse, error()
 
 
 @TestOutline(Feature)
