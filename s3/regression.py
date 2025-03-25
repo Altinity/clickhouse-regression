@@ -15,8 +15,8 @@ from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nod
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
 
 xfails = {
-    ":/:/hive partitioning/": [(Fail, "not yet supported")],
-    ":/:/remote s3 function call/": [(Fail, "not yet supported")],
+    ":/hive partitioning/*": [(Fail, "not yet supported")],
+    ":/remote s3 function call/*": [(Fail, "not yet supported")],
     ":/disk/generic url": [(Fail, "not yet supported")],
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
