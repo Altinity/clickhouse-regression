@@ -7,6 +7,7 @@
 * 2 [Requirements](#requirements)
     * 2.1 [Node Registration and Deregistration](#node-registration-and-deregistration)
         * 2.1.1 [RQ.SRS-044.Swarm.NodeRegistration](#rqsrs-044swarmnoderegistration)
+        * 2.1.2 [RQ.SRS-044.Swarm.NodeDeregistration ](#rqsrs-044swarmnodederegistration-)
     * 2.2 [Cluster Discovery](#cluster-discovery)
         * 2.2.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Path](#rqsrs-044swarmclusterdiscoverypath)
         * 2.2.2 [RQ.SRS-001.Swarm.ClusterDiscovery.Authentication](#rqsrs-001swarmclusterdiscoveryauthentication)
@@ -28,6 +29,7 @@
         * 2.5.4 [System Cache (???)](#system-cache-)
     * 2.6 [Settings](#settings)
         * 2.6.1 [RQ.SRS-044.Swarm.Settings.object_storage_max_nodes](#rqsrs-044swarmsettingsobject_storage_max_nodes)
+        * 2.6.2 [Observer (???)](#observer-)
     * 2.7 [RBAC](#rbac)
         * 2.7.1 [RQ.SRS-044.Swarm.RBAC.RowPolicy](#rqsrs-044swarmrbacrowpolicy)
         * 2.7.2 [RQ.SRS-044.Swarm.RBAC.ColumnPolicy](#rqsrs-044swarmrbaccolumnpolicy)
@@ -54,6 +56,12 @@ cache management, and parallel processing while maintaining fault tolerance and 
 version: 1.0  
 
 [ClickHouse] SHALL support node registration through configuration files.
+
+
+#### RQ.SRS-044.Swarm.NodeDeregistration 
+version: 1.0  
+
+[ClickHouse] SHALL support node deregistration through removal of section in configuration files.
 
 
 ### Cluster Discovery
@@ -175,6 +183,10 @@ To be defined
 version: 1.0  
 
 [ClickHouse] SHALL support the `object_storage_max_nodes` setting to limit the number of nodes used in swarm for a particular query
+
+#### Observer (???)
+
+To be defined
 
 ### RBAC
 
