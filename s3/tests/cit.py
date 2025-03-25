@@ -11,7 +11,7 @@ from s3.requirements import *
 
 
 @TestOutline(Scenario)
-@Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_S3_Syntax("1.0"))
 @Examples(
     "maybe_auth positive",
     [
@@ -54,7 +54,7 @@ def test_put(self, maybe_auth, positive):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_TableFunction_Syntax("1.0"))
+@Requirements(RQ_SRS_015_S3_TableFunction_S3_Syntax("1.0"))
 def test_empty_put(self, auth="'minio','minio123'"):
     """Check that an empty put operation via the S3 table function does not
     store any data.
