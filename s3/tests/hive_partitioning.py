@@ -44,17 +44,17 @@ def s3Cluster_hive(self, cluster_name):
     if cluster_name is not None:
         with And("I download data for the first date from s3 minio and time it"):
             started = time.time()
-            node.query(f"INSERT INTO {table2_name} SELECT * FROM " + \
-                    f"s3Cluster('{cluster_name}','{uri}date=2000-01-01,2,3,4/hive_{cluster_name}.csv', ".replace("1,2,3,4", "{1,2,3,4}") + \
+            node.query(f"INSERT INTO {table2_name} SELECT count(*) FROM "
+                    f"s3Cluster('{cluster_name}','{uri}date=2000-01-01/hive_{cluster_name}.csv', "
                     f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64')", settings=[("use_hive_partitioning", 1)])
 
             time_downloading_part_of_the_data  = time.time() - started
 
         with And("I download data for the first date from s3 minio using hive partitioning and time it"):
             started = time.time()
-            node.query(f"INSERT INTO {table3_name} SELECT * FROM "
+            node.query(f"INSERT INTO {table3_name} SELECT count(*) FROM "
                     f"s3Cluster('{cluster_name}','{uri}date=2000-01-*/hive_{cluster_name}.csv', "
-                    f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64') WHERE date<'2000-01-05'", 
+                    f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64') WHERE date='2000-01-01'", 
                     settings=[("use_hive_partitioning", 1)])
 
             time_downloading_part_of_the_data_with_hive = time.time() - started
@@ -62,17 +62,17 @@ def s3Cluster_hive(self, cluster_name):
     else:
         with And("I download data for the first dates from s3 minio and time it"):
             started = time.time()
-            node.query(f"INSERT INTO {table2_name} SELECT * FROM " + \
-                    f"s3('{uri}date=2000-01-01,2,3,4/hive_{cluster_name}.csv', ".replace("1,2,3,4", "{1,2,3,4}") + \
+            node.query(f"INSERT INTO {table2_name} SELECT count(*) FROM "
+                    f"s3('{uri}date=2000-01-01/hive_{cluster_name}.csv', "
                     f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64')", settings=[("use_hive_partitioning", 1)])
 
             time_downloading_part_of_the_data  = time.time() - started
 
         with And("I download data for the first dates from s3 minio using hive partitioning and time it"):
             started = time.time()
-            node.query(f"INSERT INTO {table3_name} SELECT * FROM "
+            node.query(f"INSERT INTO {table3_name} SELECT count(*) FROM "
                     f"s3('{uri}date=2000-01-*/hive_{cluster_name}.csv', "
-                    f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64') WHERE date<'2000-01-05'", 
+                    f"'minio_user', 'minio123', 'CSVWithNames', 'd UInt64') WHERE date='2000-01-01'", 
                     settings=[("use_hive_partitioning", 1)])
 
             time_downloading_part_of_the_data_with_hive = time.time() - started
