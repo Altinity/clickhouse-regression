@@ -62,15 +62,18 @@ def random_time():
         microsecond=random.randint(0, 999999),
     )
 
+
 def random_name(length=5):
     """Generate a random lowercase string of specified length."""
     return "".join(random.choices(string.ascii_lowercase, k=length))
+
 
 def random_datetime(start=datetime(2020, 1, 1), end=datetime.now()):
     """Generate a random datetime between start and end."""
     return start + timedelta(
         seconds=random.randint(0, int((end - start).total_seconds()))
     )
+
 
 def random_decimal(*, precision=9, scale=2):
     """Generate a random decimal number matching the given precision and scale."""
@@ -80,6 +83,7 @@ def random_decimal(*, precision=9, scale=2):
     integer_part = random.randint(-max_integer_part, max_integer_part)
     fractional_part = random.randint(0, 10**scale - 1)
     return Decimal(f"{integer_part}.{fractional_part:0{scale}d}")
+
 
 def random_primitive(iceberg_type):
     """Generate a random primitive value matching the specified Iceberg type."""
@@ -108,6 +112,7 @@ def random_primitive(iceberg_type):
     if isinstance(iceberg_type, BinaryType):
         return bytes(random_name(length=16), "utf-8")
     raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
+
 
 def random_field_type(max_depth=3):
     """Randomly generate an Iceberg type (primitive or nested struct, list, map)."""
@@ -151,6 +156,7 @@ def random_field_type(max_depth=3):
         return DecimalType(precision=9, scale=2)
     return selected_type()
 
+
 def iceberg_to_pyarrow(iceberg_type):
     """Convert Iceberg data type to corresponding PyArrow data type."""
     if isinstance(iceberg_type, StringType):
@@ -192,6 +198,7 @@ def iceberg_to_pyarrow(iceberg_type):
         )
     raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
 
+
 def random_data(iceberg_type):
     """Generate random data matching given Iceberg datatype."""
     if isinstance(iceberg_type, StructType):
@@ -212,7 +219,7 @@ def random_data(iceberg_type):
 
 
 @TestScenario
-def struct_list_map_test(self, minio_root_user, minio_root_password, num_columns):
+def datatypes_check(self, minio_root_user, minio_root_password, num_columns):
     """
     Create Iceberg table with specified number of columns and random datatypes:
     primitives, structs, lists, and maps. Insert random data into the table and check
@@ -302,7 +309,7 @@ def struct_list_map_test(self, minio_root_user, minio_root_password, num_columns
 def feature(self, minio_root_user, minio_root_password):
     """Check that ClickHouse Iceberg engine supports reading all Iceberg data types."""
     for num_columns in range(1, 1000, 50):
-        Scenario(name=f"number of columns {num_columns}", test=struct_list_map_test)(
+        Scenario(name=f"number of columns {num_columns}", test=datatypes_check)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
             num_columns=num_columns,
