@@ -1,37 +1,36 @@
+from datetime import date, timedelta
+import random
+
 from testflows.core import *
 
 import pyiceberg
 from pyiceberg.catalog import load_catalog
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
-    DoubleType,
-    StringType,
-    NestedField,
-    LongType,
     BooleanType,
-    IntegerType,
-    FloatType,
-    DecimalType,
-    UUIDType,
-    FixedType,
     BinaryType,
     DateType,
+    DecimalType,
+    DoubleType,
+    FixedType,
+    FloatType,
+    IntegerType,
+    LongType,
+    NestedField,
+    StringType,
     TimeType,
     TimestampType,
     TimestamptzType,
+    UUIDType,
 )
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
+import pyarrow as pa
 import boto3
 
-import pyarrow as pa
-
 from helpers.common import getuid
-
-from datetime import date
-
 CATALOG_TYPE = "rest"
 
 
@@ -152,8 +151,12 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
 
 
 @TestStep(Given)
-def create_iceberg_table_with_five_columns(self, catalog, namespace, table_name):
-    """Define schema, partition spec, sort order and create iceberg table with three columns."""
+def create_iceberg_table_with_five_columns(
+    self, catalog, namespace, table_name, number_of_rows=10, with_data=False
+):
+    """Create an Iceberg table with five columns and optionally insert random data.
+    Table partitioned by string column and sorted by the same column."""
+
     schema = Schema(
         NestedField(
             field_id=1, name="boolean_col", field_type=BooleanType(), required=False
@@ -167,15 +170,18 @@ def create_iceberg_table_with_five_columns(self, catalog, namespace, table_name)
         ),
         NestedField(field_id=5, name="date_col", field_type=DateType(), required=False),
     )
+
     partition_spec = PartitionSpec(
         PartitionField(
-            source_id=1,
+            source_id=4,
             field_id=1001,
             transform=IdentityTransform(),
             name="symbol_partition",
         ),
     )
-    sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
+
+    sort_order = SortOrder(SortField(source_id=4, transform=IdentityTransform()))
+
     table = create_iceberg_table(
         catalog=catalog,
         namespace=namespace,
@@ -185,6 +191,25 @@ def create_iceberg_table_with_five_columns(self, catalog, namespace, table_name)
         partition_spec=partition_spec,
         sort_order=sort_order,
     )
+
+    if with_data:
+        with By("insert random data into Iceberg table"):
+            data = []
+            for _ in range(number_of_rows):
+                data.append(
+                    {
+                        "boolean_col": random.choice([True, False]),
+                        "long_col": random.randint(1000, 10000),
+                        "double_col": round(random.uniform(1.0, 500.0), 2),
+                        "string_col": f"User{random.randint(1, 1000)}",
+                        "date_col": date.today()
+                        - timedelta(days=random.randint(0, 3650)),
+                    }
+                )
+
+            df = pa.Table.from_pylist(data)
+            table.append(df)
+
     return table
 
 
