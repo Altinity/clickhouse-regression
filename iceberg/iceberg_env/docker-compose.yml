@@ -23,6 +23,7 @@ services:
       - nessie.catalog.secrets.secret-key.secret=password
       - nessie.server.authentication.enabled=false
       - nessie.iceberg.compatibility=v1 
+      
   spark-iceberg:
     image: tabulario/spark-iceberg
     container_name: spark-iceberg
