@@ -367,7 +367,7 @@ def argparser_minio(parser):
         action="store",
         help="minio root user name (access key id)",
         type=Secret(name="minio_root_user"),
-        default="minio",
+        default="admin",
     )
 
     parser.add_argument(
@@ -375,7 +375,7 @@ def argparser_minio(parser):
         action="store",
         help="minio root user password (secret access key)",
         type=Secret(name="minio_root_password"),
-        default="minio123",
+        default="password",
     )
 
 

@@ -1,7 +1,3 @@
-
-networks:
-  nessie_network:
-
 services:
 
   nessie:
@@ -21,17 +17,12 @@ services:
       - nessie.catalog.service.s3.default-options.region=us-east-1
       - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
       - nessie.catalog.service.s3.default-options.secret-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.secret-key
-      - nessie.catalog.secrets.access-key.name=minio
-      - nessie.catalog.secrets.access-key.secret=minio123
-      - nessie.catalog.secrets.secret-key.name=minio
-      - nessie.catalog.secrets.secret-key.secret=minio123
+      - nessie.catalog.secrets.access-key.name=admin
+      - nessie.catalog.secrets.access-key.secret=password
+      - nessie.catalog.secrets.secret-key.name=admin
+      - nessie.catalog.secrets.secret-key.secret=password
       - nessie.server.authentication.enabled=false
       - nessie.iceberg.compatibility=v1 
-    networks:
-      - nessie_network
-    extra_hosts:
-      - "localhost:host-gateway"
-      
   spark-iceberg:
     image: tabulario/spark-iceberg
     container_name: spark-iceberg
@@ -40,8 +31,8 @@ services:
       - rest
       - minio
     environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
     ports:
       - 8080:8080
@@ -58,8 +49,8 @@ services:
     ports:
       - 8182:8181
     environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
       - CATALOG_WAREHOUSE=s3://iceberg_data/
       - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
@@ -69,9 +60,6 @@ services:
     extends:
       file: minio-service.yml
       service: minio
-    networks:
-      - nessie_network
-
   mc:
     extends:
       file: minio-client.yml
@@ -79,8 +67,6 @@ services:
     depends_on:
       minio:
         condition: service_healthy
-    networks:
-      - nessie_network
 
   zookeeper1:
     extends:
@@ -98,8 +84,6 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
-    networks:
-      - nessie_network
 
   clickhouse2:
     extends:
@@ -112,8 +96,6 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
-    networks:
-      - nessie_network
 
   clickhouse3:
     extends:
@@ -126,8 +108,6 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
-    networks:
-      - nessie_network
 
   keeper:
     image: altinity/clickhouse-keeper:24.12.2.20101.altinityantalya

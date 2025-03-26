@@ -3,7 +3,22 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
+
+from decimal import Decimal
+from pyiceberg.schema import Schema
+from pyiceberg.types import (
+    BooleanType,
+    StringType,
+    LongType,
+    DoubleType,
+    DecimalType,
+    StructType,
+    NestedField,
+)
+from pyiceberg.partitioning import PartitionSpec, PartitionField
+from pyiceberg.table.sorting import SortOrder, SortField
+from pyiceberg.transforms import IdentityTransform
 
 import pyarrow as pa
 
@@ -12,15 +27,15 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 
 @TestScenario
-def sanity_nessie(self, minio_root_user, minio_root_password):
-    """Test th Clickhouse Iceberg engine with Nessie catalog."""
+def sanity(self, minio_root_user, minio_root_password):
+    """Test the Clickhouse Iceberg engine with tabulario/iceberg-rest catalog."""
     namespace = f"namespace_{getuid()}"
     table_name = f"table_{getuid()}"
     database_name = f"iceberg_database_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:19120/iceberg",
+            uri="http://localhost:8182/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -33,6 +48,27 @@ def sanity_nessie(self, minio_root_user, minio_root_password):
     with When(f"create {namespace}.{table_name} table"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
+        )
+    with Then("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            namespace=namespace,
+            database_name=database_name,
+            rest_catalog_url="http://rest:8181/v1",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            catalog_type=catalog_steps.CATALOG_TYPE,
+            storage_endpoint="http://minio:9000/warehouse",
+        )
+
+    with And("list tables in the database"):
+        self.context.node.query(f"SHOW TABLES FROM {database_name}")
+
+    with And("check SHOW CREATE DATABASE"):
+        self.context.node.query(f"SHOW CREATE DATABASE {database_name}")
+
+    with And("check the tables in the database"):
+        iceberg_engine.show_create_table(
+            database_name=database_name, namespace=namespace, table_name=table_name
         )
 
     # with And(f"insert data into {namespace}.{table_name} table"):
@@ -49,36 +85,14 @@ def sanity_nessie(self, minio_root_user, minio_root_password):
         df = table.scan().to_pandas()
         note(df)
 
-    with Then("create database with Iceberg engine"):
-        iceberg_engine.create_experimental_iceberg_database(
-            namespace="warehouse",
-            database_name=database_name,
-            rest_catalog_url="http://nessie:19120/iceberg",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            storage_endpoint="http://minio:9000/warehouse",
-        )
-
-    with And("list tables in the database"):
-        self.context.node.query(f"SHOW TABLES FROM {database_name}")
-    
-    with And("check SHOW CREATE DATABASE"):
-        self.context.node.query(f"SHOW CREATE DATABASE {database_name}")
-
-    with And("check the tables in the database"):
-        iceberg_engine.show_create_table(
+    with And("read data in clickhouse from the previously created table"):
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
-
-    # with And("read data in clickhouse from the previously created table"):
-    # result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-    #     database_name=database_name, namespace=namespace, table_name=table_name
-    # )
 
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
-    Scenario(test=sanity_nessie)(
+    Scenario(test=sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
