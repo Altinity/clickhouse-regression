@@ -116,6 +116,9 @@ xfails = {
     ":/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
+    ":/table function/measure file size s3Cluster": [
+        (Fail, "Not implemented <24", check_clickhouse_version("<24"))
+    ],
     ":/combinatoric table/:n_cols=2000:part_type=compact": [
         (
             Fail,
