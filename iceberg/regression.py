@@ -44,7 +44,7 @@ ffails = {
         "Iceberg engine was introduced in 24.12",
         check_clickhouse_version("<24.12"),
     ),
-    "/iceberg/iceberg cache/iceberg database engine/cache": (
+    "/iceberg/iceberg cache/iceberg database engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
         check_clickhouse_version("<24.12"),
