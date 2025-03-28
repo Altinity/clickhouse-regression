@@ -55,13 +55,41 @@ cache management, and parallel processing while maintaining fault tolerance and 
 #### RQ.SRS-044.Swarm.NodeRegistration
 version: 1.0  
 
-[ClickHouse] SHALL support node registration through configuration files.
+[ClickHouse] SHALL support node registration through adding `<clickhouse><remote_servers><swarm>` section in the configuration file.
 
+Example:
+```xml
+<clickhouse>
+    <remote_servers>
+        <swarm>
+            <discovery>
+                <path>/clickhouse/discovery/swarm</path>
+                <secret>secret_key</secret>
+            </discovery>
+        </swarm>
+    </remote_servers>
+</clickhouse>
+```
 
 #### RQ.SRS-044.Swarm.NodeDeregistration 
 version: 1.0  
 
-[ClickHouse] SHALL support node deregistration through removal of section in configuration files.
+[ClickHouse] SHALL support node deregistration through removal of `<clickhouse><remote_servers><swarm>` section in configuration files.
+
+Example:
+```xml
+<!-- To deregister a node, remove this section from the configuration -->
+<clickhouse>
+    <remote_servers>
+        <swarm>
+            <discovery>
+                <path>/clickhouse/discovery/swarm</path>
+                <secret>secret_key</secret>
+            </discovery>
+        </swarm>
+    </remote_servers>
+</clickhouse>
+```
 
 
 ### Cluster Discovery
@@ -70,7 +98,7 @@ version: 1.0
 
 version: 1.0
 
-[ClickHouse] SHALL support automatic cluster discovery through a configured discovery path.
+[ClickHouse] SHALL support automatic cluster discovery through a configured discovery path which SHALL uniquely identify a specific swarm cluster.
 
 
 Example:
@@ -119,7 +147,7 @@ version: 1.0
 
 Initiator node SHALL plan query execution by breaking up execution of the query across all the nodes in the swarm cluster.
 
-#### RQ.SRS-044.Swarm.QueryProcessing.PartialQueries
+#### RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution
 version: 1.0  
 
 Initiator node SHALL send partial queries for specific data ranges to each swarm node.
@@ -139,7 +167,7 @@ Initiator node SHALL wait for all partial results from the swarm nodes and aggre
 #### RQ.SRS-044.Swarm.QueryProcessing.RetryMechanism.NodeFailure
 version: 1.0  
 
-[ClickHouse] SHALL support a retry mechanism for swarm queries in case of node failure.
+[ClickHouse] SHALL support a retry mechanism for swarm queries in case of node failure during any point of query execution.
 
 #### RQ.SRS-044.Swarm.QueryProcessing.RetryMechanism.ScaleDown
 version: 1.0  
