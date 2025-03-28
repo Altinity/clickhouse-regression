@@ -2,7 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import combinations
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 from datetime import date, timedelta
 
@@ -181,7 +181,7 @@ def get_select_query_result(
 
     settings = []
 
-    if enable_filesystem_cache:
+    if enable_filesystem_cache and check_clickhouse_version(">=24.10")(self):
         settings.append(("enable_filesystem_cache", 1))
         settings.append(("filesystem_cache_name", filesystem_cache_name))
 
