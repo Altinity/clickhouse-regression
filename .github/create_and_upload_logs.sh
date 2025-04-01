@@ -17,10 +17,12 @@ if [[ $1 == 1 ]];
 then
     echo "::notice title=$SUITE$STORAGE $(uname -i) s3 logs and reports::$REPORT_INDEX_URL"
 
-    set -e
     git clone https://github.com/Altinity/actions.git
-    python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html _instances _service_logs
-    set +e
+    python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html $SUITE/_instances $SUITE/_service_logs
+    if [[ $? -ne 0 ]]; then
+        # Leaked strings were found
+        exit 1
+    fi
 
     ./retry.sh 5 30 aws s3 cp pipeline_url.log.txt $JOB_S3_ROOT/pipeline_url.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp version.log.txt $SUITE_REPORT_BUCKET_PATH/version.log.txt --content-type "\"text/plain; charset=utf-8\""
