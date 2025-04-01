@@ -17,7 +17,10 @@ if [[ $1 == 1 ]];
 then
     echo "::notice title=$SUITE$STORAGE $(uname -i) s3 logs and reports::$REPORT_INDEX_URL"
 
+    sudo rm --recursive --force $SUITE/_instances/*/database/
+
     git clone https://github.com/Altinity/actions.git
+    git --git-dir actions checkout --quiet 46f8da1ccc668e800684fffd21981b507c20d86f
     python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html $SUITE/_instances $SUITE/_service_logs
     if [[ $? -ne 0 ]]; then
         # Leaked strings were found
@@ -30,7 +33,6 @@ then
     ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt $SUITE_REPORT_BUCKET_PATH/nice-new-fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp fails.log.txt $SUITE_REPORT_BUCKET_PATH/fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp report.html $SUITE_REPORT_BUCKET_PATH/report.html
-    sudo rm --recursive --force $SUITE/_instances/*/database/
     ./retry.sh 5 30 "aws s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
     ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
 fi
