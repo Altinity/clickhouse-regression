@@ -20,8 +20,8 @@ then
     sudo rm --recursive --force $SUITE/_instances/*/database/
 
     git clone https://github.com/Altinity/actions.git
-    git --git-dir actions checkout --quiet 46f8da1ccc668e800684fffd21981b507c20d86f
-    python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html $SUITE/_instances $SUITE/_service_logs
+    git --git-dir actions checkout --quiet 31b9ccc8b1c6e89f696c090ac8459bff401d77a7
+    python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html $SUITE/_service_logs && python actions/scripts/scan_artifacts.py files --pattern '[A-Z_]*(SECRET|ACCESS_KEY|TOKEN)[A-Z_]*' $SUITE/_instances
     if [[ $? -ne 0 ]]; then
         # Leaked strings were found
         exit 1
