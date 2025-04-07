@@ -683,7 +683,7 @@ def regression(
             self.context.warehouse_uri = "http://minio:9000/warehouse/data/data"
 
             with Given("I have a minio client"):
-                start_minio(access_key="minio", secret_key="minio123")
+                start_minio(access_key="minio", secret_key="minio123", uri="localhost:9002")
 
             with Feature("minio"):
                 Feature(run=load("parquet.tests.s3", "feature"))
