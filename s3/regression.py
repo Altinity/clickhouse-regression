@@ -190,6 +190,11 @@ xfails = {
 }
 
 ffails = {
+    "minio/table function/measure file size s3Cluster": (
+        Skip,
+        "S3Cluster table function correctly handles arguments since 23.8",
+        check_clickhouse_version("<23.8"),
+    ),
     "minio/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for minio tests.",
