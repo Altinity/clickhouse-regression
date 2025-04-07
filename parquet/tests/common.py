@@ -314,7 +314,7 @@ class CreateParquetStructure:
 @TestStep(Given)
 def start_minio(
     self,
-    uri="localhost:9002",
+    uri="localhost:9001",
     access_key="minio",
     secret_key="minio123",
     timeout=30,
