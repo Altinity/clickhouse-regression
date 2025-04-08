@@ -479,6 +479,12 @@ def aws_s3_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("I add all possible clusters for nodes"):
+            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+        with And("I get all possible clusters for nodes"):
+            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+
         Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
         Feature(test=load("s3.tests.table_function", "aws_s3"))(
             uri=uri, bucket_prefix=bucket_prefix
@@ -623,6 +629,12 @@ def gcs_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("I add all possible clusters for nodes"):
+            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+        with And("I get all possible clusters for nodes"):
+            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+            
         Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.table_function", "gcs"))(
             uri=uri, bucket_prefix=bucket_prefix
