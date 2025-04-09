@@ -8,7 +8,7 @@
     * 2.1 [Node Registration and Deregistration](#node-registration-and-deregistration)
         * 2.1.1 [RQ.SRS-044.Swarm.NodeRegistration](#rqsrs-044swarmnoderegistration)
         * 2.1.2 [RQ.SRS-044.Swarm.NodeRegistration.MultipleDiscoverySections](#rqsrs-044swarmnoderegistrationmultiplediscoverysections)
-        * 2.1.3 [RQ.SRS-044.Swarm.NodeDeregistration ](#rqsrs-044swarmnodederegistration-)
+        * 2.1.3 [RQ.SRS-044.Swarm.NodeDeregistration](#rqsrs-044swarmnodederegistration)
     * 2.2 [Cluster Discovery](#cluster-discovery)
         * 2.2.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Path](#rqsrs-044swarmclusterdiscoverypath)
         * 2.2.2 [RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath](#rqsrs-044swarmclusterdiscoverywrongpath)
@@ -26,11 +26,24 @@
         * 2.5.3 [RQ.SRS-044.Swarm.QueryProcessing.RetryMechanism.NodeLatency](#rqsrs-044swarmqueryprocessingretrymechanismnodelatency)
         * 2.5.4 [RQ.SRS-044.Swarm.QueryProcessing.RetryMechanism.NetworkFailure](#rqsrs-044swarmqueryprocessingretrymechanismnetworkfailure)
     * 2.6 [Caching](#caching)
-        * 2.6.1 [Disk Cache](#disk-cache)
-            * 2.6.1.1 [RQ.SRS-044.Swarm.Caching.SwarmLocalDiskCache](#rqsrs-044swarmcachingswarmlocaldiskcache)
-        * 2.6.2 [Query Cache (???)](#query-cache-)
+        * 2.6.1 [Local Disk Cache](#local-disk-cache)
+            * 2.6.1.1 [RQ.SRS-044.Swarm.Caching.LocalDiskCache](#rqsrs-044swarmcachinglocaldiskcache)
+            * 2.6.1.2 [RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy](#rqsrs-044swarmcachinglocaldiskcacheconsistancy)
+            * 2.6.1.3 [RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance](#rqsrs-044swarmcachinglocaldiskcacheperformance)
+            * 2.6.1.4 [RQ.SRS-044.Swarm.Caching.DiskCasheUpdates](#rqsrs-044swarmcachingdiskcasheupdates)
+            * 2.6.1.5 [RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace](#rqsrs-044swarmcachingdiskcashenodiskspace)
+        * 2.6.2 [Query Cache](#query-cache)
+            * 2.6.2.1 [RQ.SRS-044.Swarm.Caching.QueryCashe](#rqsrs-044swarmcachingquerycashe)
+            * 2.6.2.2 [RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy](#rqsrs-044swarmcachingquerycacheconsistancy)
+            * 2.6.2.3 [RQ.SRS-044.Swarm.Caching.QueryCachePerformance](#rqsrs-044swarmcachingquerycacheperformance)
+            * 2.6.2.4 [RQ.SRS-044.Swarm.Caching.QueryCasheUpdates](#rqsrs-044swarmcachingquerycasheupdates)
+            * 2.6.2.5 [RQ.SRS-044.Swarm.Caching.QueryCacheNoDiskSpace](#rqsrs-044swarmcachingquerycachenodiskspace)
         * 2.6.3 [Parquet Metadata Cache](#parquet-metadata-cache)
-        * 2.6.4 [System Cache (???)](#system-cache-)
+            * 2.6.3.1 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCache](#rqsrs-044swarmcachingparquetmetadatacache)
+            * 2.6.3.2 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy](#rqsrs-044swarmcachingparquetmetadatacacheconsistancy)
+            * 2.6.3.3 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCachePerformance](#rqsrs-044swarmcachingparquetmetadatacacheperformance)
+            * 2.6.3.4 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheUpdates](#rqsrs-044swarmcachingparquetmetadatacacheupdates)
+            * 2.6.3.5 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace](#rqsrs-044swarmcachingparquetmetadatacachenodiskspace)
     * 2.7 [Settings](#settings)
         * 2.7.1 [RQ.SRS-044.Swarm.Settings.object_storage_max_nodes](#rqsrs-044swarmsettingsobject_storage_max_nodes)
     * 2.8 [Observer](#observer)
@@ -219,24 +232,98 @@ version: 1.0
 
 ### Caching
 
-#### Disk Cache
+#### Local Disk Cache
 
-##### RQ.SRS-044.Swarm.Caching.SwarmLocalDiskCache
+##### RQ.SRS-044.Swarm.Caching.LocalDiskCache
 version: 1.0  
 
-Swarm nodes SHALL have local disk cache.
+Swarm nodes SHALL support local disk cache.
+Swarm nodes SHALL not download data from storage data files if it is cashed.
 
-#### Query Cache (???)
+##### RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy
+version: 1.0  
 
-To be defined
+Swarm nodes SHALL return the same result for queries with enabled and disabled local disk cache.
+
+##### RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance
+version: 1.0  
+
+Swarm nodes SHALL not run query much slower if data for the query is not cached in comparison with disabled local disk cashe.
+Swarm nodes SHALL run query faster if data for the query is cached in comparison with disabled local disk cashe.
+
+##### RQ.SRS-044.Swarm.Caching.DiskCasheUpdates
+version: 1.0  
+
+Swarm nodes SHALL run query and update disk cache if data for query is changed.
+
+##### RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace
+version: 1.0  
+
+Swarm nodes SHALL not cache the data if node has no enough space to cache it.
+
+
+#### Query Cache
+
+##### RQ.SRS-044.Swarm.Caching.QueryCashe
+version: 1.0  
+
+Swarm nodes SHALL support query cache. 
+Swarm nodes SHALL not run query if it is cashed on the node.
+
+
+##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy
+version: 1.0  
+
+Swarm nodes SHALL return the same result for queries with enabled and disabled query cache.
+
+##### RQ.SRS-044.Swarm.Caching.QueryCachePerformance
+version: 1.0  
+
+Swarm nodes SHALL not perform query much slower if query is not cached in comparison with disabled query cashe.
+Swarm nodes SHALL perform query faster if query is cached in comparison with disabled query cashe.
+
+##### RQ.SRS-044.Swarm.Caching.QueryCasheUpdates
+version: 1.0  
+
+Swarm nodes SHALL run query and update query cache if data for query is changed.
+
+##### RQ.SRS-044.Swarm.Caching.QueryCacheNoDiskSpace
+version: 1.0  
+
+Swarm nodes SHALL not cache the query if node has no enough space to cache it.
+
+
 
 #### Parquet Metadata Cache
 
-To be defined
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCache
+version: 1.0  
 
-#### System Cache (???)
+Swarm nodes SHALL support parquet metadata cache. 
+Swarm nodes SHALL not download parquet metadata from storage if parquet metadata is cashed.
 
-To be defined
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy
+version: 1.0  
+
+Swarm nodes SHALL return the same result for queries with enabled and disabled parquet metadata cache.
+
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCachePerformance
+version: 1.0  
+
+Swarm nodes SHALL not perform query much slower if parquet metadata is not cached in comparison with parquet metadata cashe.
+Swarm nodes SHALL perform query faster if parquet metadata is cached in comparison with disabled parquet metadata cashe.
+
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheUpdates
+version: 1.0  
+
+Swarm nodes SHALL run query and update parquet metadata cache if data for query is changed.
+
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace
+version: 1.0  
+
+Swarm nodes SHALL not cache the parquet metadata if node has no enough space to cache it.
+
+
 
 ### Settings
 
