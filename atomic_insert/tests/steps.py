@@ -250,7 +250,7 @@ def materialized_view_circle(self, node, core_table, mv_1):
             f"CREATE MATERIALIZED VIEW {mv_1}"
             f" TO {core_table}"
             " AS SELECT toStartOfFiveMinute(timestamp) AS timestamp,   host,"
-            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS quantiles_tdigest "
+            "  quantilesTDigestState(0.75, 0.9, 0.95, 0.99)(response_time) AS response_time "
             f"FROM {core_table} GROUP BY host,timestamp;"
         )
 
