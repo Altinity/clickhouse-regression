@@ -1,16 +1,6 @@
 <?xml version="1.0"?>
 <clickhouse>
-    <!-- Enable automatic cluster discovery. -->
-    <allow_experimental_cluster_discovery>1</allow_experimental_cluster_discovery>
     <remote_servers>
-        <!-- Swarm cluster built using remote discovery --> 
-        <swarm>
-            <discovery>
-                <path>/clickhouse/discovery/swarm</path>
-                <secret>secret_key</secret>
-            </discovery>
-        </swarm>
-        <!-- Cluster containing all servers to enable query across every replica -->
         <all>
             <shard>
                 <internal_replication>true</internal_replication>

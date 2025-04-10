@@ -64,6 +64,7 @@ def regression(
         )
         self.context.cluster = cluster
 
+    self.context.nodes = nodes["clickhouse"]
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
@@ -71,6 +72,11 @@ def regression(
     Feature(
         test=load("swarms.tests.sanity", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+
+    # Feature(
+    #     test=load("swarms.tests.cluster_discovery", "feature"),
+    # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
 
 if main():

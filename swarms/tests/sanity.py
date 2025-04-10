@@ -8,7 +8,7 @@ import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
-
+from swarms.tests.common import setup_swarm_cluster, remove_node_from_swarm, add_config_, create_xml_config_content
 
 @TestScenario
 def swarm_examples(self, minio_root_user, minio_root_password, node=None):
@@ -20,21 +20,26 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
     if node is None:
         node = self.context.node
 
+
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
             uri="http://localhost:8182/",
+            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_access_key_id=minio_root_user,
+            s3_endpoint="http://localhost:9002",
             s3_secret_access_key=minio_root_password,
         )
 
     with When(f"create namespace and create {namespace}.{table_name} table"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
         table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with Then("create database with Iceberg engine"):
         iceberg_engine.drop_database(database_name=database_name)
+
         iceberg_engine.create_experimental_iceberg_database(
             namespace=namespace,
             database_name=database_name,
@@ -109,6 +114,44 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
 @Name("swarm")
 def feature(self, minio_root_user, minio_root_password):
     """Run swarm examples."""
-    Scenario(test=swarm_examples)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
+    try:
+        cluster_name = "swarm"
+        secret = "secret_key"
+        entries = {
+            "allow_experimental_cluster_discovery": "1",
+            "remote_servers": {
+                cluster_name: [
+                    {
+                        "discovery": {
+                        "path": "/clickhouse/discovery/swarm",
+                        "secret": secret + "0"
+                        },
+                    },
+                    {
+                        "discovery": {
+                        "path": "/clickhouse/discovery/swarm",
+                        "secret": secret + "1"
+                        }
+                    }
+                ]
+            }
+        }
+
+        with Given("I add invalid config with multiple discovery sections"):
+            for node_name in self.context.nodes:
+                with By(f"adding invalid config with multiple discovery sections on {node_name} node"):
+                    add_config_(
+                        config=create_xml_config_content(root="clickhouse", entries=entries, config_file=f"remote_swarm.xml"),
+                        # message="Multiple discovery sections are not allowed",
+                        restart=True,
+                        node=self.context.cluster.node(node_name)
+                    )
+
+        Scenario(test=swarm_examples)(
+            minio_root_user=minio_root_user, minio_root_password=minio_root_password
+        )
+    finally:
+        with Finally("I remove nodes from swarm cluster"):
+            remove_node_from_swarm(config_name="remote_swarm.xml", node_name="clickhouse1")
+            remove_node_from_swarm(config_name="remote_swarm.xml", node_name="clickhouse2")
+            remove_node_from_swarm(config_name="remote_swarm.xml", node_name="clickhouse3")
