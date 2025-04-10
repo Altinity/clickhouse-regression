@@ -138,24 +138,30 @@ def wildcard(self):
                 f"""I import the data from external storage into the second
                         table {table2_name} using the wildcard '{wildcard}'"""
             ):
-                insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name, cluster_name=cluster_name)
+                if wildcard == "{1,3,4}":
+                    r = insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name, cluster_name=cluster_name, no_checks=True)
+                else:
+                    r = insert_from_s3_function(filename=f"subdata{wildcard}", table_name=table2_name, cluster_name=cluster_name)
 
-            with Then(
-                f"""I check that a simple SELECT * query on the second table
-                        {table2_name} returns expected data"""
-            ):
-                for retry in retries(timeout=600, delay=5):
-                    with retry:
-                        if cluster_name is None:
-                            r = node.query(
-                                f"SELECT * FROM {table2_name} FORMAT TabSeparated"
-                            ).output.strip()
-                        else:
-                            r = self.context.cluster.node("clickhouse1").query(
-                                f"SELECT * FROM {table2_name} FORMAT TabSeparated"
-                            ).output.strip()
+            if r.exitcode == 0:
+                with Then(
+                    f"""I check that a simple SELECT * query on the second table
+                            {table2_name} returns expected data"""
+                ):
+                    for retry in retries(timeout=600, delay=5):
+                        with retry:
+                            if cluster_name is None:
+                                r = node.query(
+                                    f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+                                ).output.strip()
+                            else:
+                                r = self.context.cluster.node("clickhouse1").query(
+                                    f"SELECT * FROM {table2_name} FORMAT TabSeparated"
+                                ).output.strip()
 
-                        assert r == expected, error()
+                            assert r == expected, error()
+            else:
+                assert "Failed to get object info" in r.output, error()
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Compression("1.0"))

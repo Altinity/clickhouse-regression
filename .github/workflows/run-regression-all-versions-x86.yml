@@ -82,6 +82,8 @@ jobs:
             artifact_name: altinityedge-24-8-x86-zookeeper
           - clickhouse_package: docker://clickhouse/clickhouse-server:head-alpine
             artifact_name: clickhouse-head-x86-zookeeper
+          - clickhouse_package: docker://altinity/clickhouse-server:24.12.2.20203.altinityantalya
+            artifact_name: altinityantaliya-24-12-x86-zookeeper
 
     uses: ./.github/workflows/reusable-workflow-x86.yml
     with:

@@ -15,8 +15,6 @@ from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nod
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
 
 xfails = {
-    ":/hive partitioning/*": [(Fail, "not yet supported")],
-    ":/remote s3 function call/*": [(Fail, "not yet supported")],
     ":/disk/generic url": [(Fail, "not yet supported")],
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
@@ -190,6 +188,13 @@ xfails = {
 }
 
 ffails = {
+    "minio/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") and check_if_antalya_build,),
+    "minio/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") and check_if_antalya_build,),
+    "minio/table function/measure file size s3Cluster": (
+        Skip,
+        "S3Cluster table function correctly handles arguments since 23.8",
+        check_clickhouse_version("<23.8"),
+    ),
     "minio/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for minio tests.",
@@ -474,6 +479,12 @@ def aws_s3_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("I add all possible clusters for nodes"):
+            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+        with And("I get all possible clusters for nodes"):
+            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+
         Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
         Feature(test=load("s3.tests.table_function", "aws_s3"))(
             uri=uri, bucket_prefix=bucket_prefix
@@ -617,6 +628,12 @@ def gcs_regression(
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
+
+        with And("I add all possible clusters for nodes"):
+            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+        with And("I get all possible clusters for nodes"):
+            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
         Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
         Feature(test=load("s3.tests.table_function", "gcs"))(

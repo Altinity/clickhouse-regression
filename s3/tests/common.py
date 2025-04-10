@@ -1854,7 +1854,7 @@ def insert_to_s3_function(
 
 @TestStep(When)
 def insert_from_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None, cluster_name=None
+    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None, cluster_name=None, no_checks=False
 ):
     """Import data from a file in s3 to a table."""
     access_key_id = self.context.access_key_id
@@ -1875,7 +1875,7 @@ def insert_from_s3_function(
     if fmt:
         query += f" FORMAT {fmt}"
 
-    node.query(query)
+    return node.query(query, no_checks=no_checks)
 
 
 @TestStep(Given)
