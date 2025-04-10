@@ -414,7 +414,11 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                 key=f"'{key[:key_len+1]}'",
                 mode=mode,
                 exitcode=198,
-                message="DB::Exception: Failed to decrypt",
+                message=(
+                    "DB::Exception: Failed to decrypt"
+                    if check_clickhouse_version("<25.4")(self)
+                    else "DB::Exception: EVP_DecryptFinal_ex failed"
+                ),
             )
         else:
             aes_decrypt_mysql(
@@ -440,7 +444,11 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                     iv=f"'{iv[:iv_len+1]}'",
                     mode=mode,
                     exitcode=198,
-                    message="DB::Exception: Failed to decrypt",
+                    message=(
+                        "DB::Exception: Failed to decrypt"
+                        if check_clickhouse_version("<25.4")(self)
+                        else "DB::Exception: EVP_DecryptFinal_ex failed"
+                    ),
                 )
             else:
                 aes_decrypt_mysql(
@@ -459,7 +467,11 @@ def key_or_iv_length_for_mode(self, mode, key_len, iv_len):
                     iv=f"'{iv}'",
                     mode=mode,
                     exitcode=198,
-                    message="DB::Exception: Failed to decrypt",
+                    message=(
+                        "DB::Exception: Failed to decrypt"
+                        if check_clickhouse_version("<25.4")(self)
+                        else "DB::Exception: EVP_DecryptFinal_ex failed"
+                    ),
                 )
             else:
                 aes_decrypt_mysql(
