@@ -124,7 +124,6 @@ Example:
 ### Cluster Discovery
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.Path
-
 version: 1.0
 
 [ClickHouse] SHALL support automatic cluster discovery through a configured discovery path which SHALL uniquely identify a specific swarm cluster.
@@ -146,14 +145,12 @@ Example:
 ```
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if path provided in `<clickhouse><remote_servers><swarm><discovery>` 
 is wrong.
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` 
@@ -162,7 +159,6 @@ contains multiple discovery sections.
 ### Authentification Using Secret
 
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication
-
 version: 1.0
 
 [ClickHouse] SHALL use the configured secret key for swarm cluster authentication.
@@ -183,18 +179,14 @@ Example:
 ```
 
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
 
-
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.
-
 
 ### Query Processing
 
@@ -261,7 +253,6 @@ version: 1.0
 
 Swarm nodes SHALL not cache the data if node has no enough space to cache it.
 
-
 #### Query Cache
 
 ##### RQ.SRS-044.Swarm.Caching.QueryCashe
@@ -269,7 +260,6 @@ version: 1.0
 
 Swarm nodes SHALL support query cache. 
 Swarm nodes SHALL not run query if it is cashed on the node.
-
 
 ##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy
 version: 1.0  
@@ -291,8 +281,6 @@ Swarm nodes SHALL run query and update query cache if data for query is changed.
 version: 1.0  
 
 Swarm nodes SHALL not cache the query if node has no enough space to cache it.
-
-
 
 #### Parquet Metadata Cache
 
@@ -322,8 +310,6 @@ Swarm nodes SHALL run query and update parquet metadata cache if data for query 
 version: 1.0  
 
 Swarm nodes SHALL not cache the parquet metadata if node has no enough space to cache it.
-
-
 
 ### Settings
 
