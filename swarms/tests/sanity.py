@@ -8,7 +8,7 @@ import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
-from swarms.tests.common import setup_swarm_cluster, remove_node_from_swarm, add_config_, create_xml_config_content
+from swarms.tests.common import setup_swarm_cluster, remove_node_from_swarm
 
 @TestScenario
 def swarm_examples(self, minio_root_user, minio_root_password, node=None):
@@ -117,35 +117,7 @@ def feature(self, minio_root_user, minio_root_password):
     try:
         cluster_name = "swarm"
         secret = "secret_key"
-        entries = {
-            "allow_experimental_cluster_discovery": "1",
-            "remote_servers": {
-                cluster_name: [
-                    {
-                        "discovery": {
-                        "path": "/clickhouse/discovery/swarm",
-                        "secret": secret + "0"
-                        },
-                    },
-                    {
-                        "discovery": {
-                        "path": "/clickhouse/discovery/swarm",
-                        "secret": secret + "1"
-                        }
-                    }
-                ]
-            }
-        }
-
-        with Given("I add invalid config with multiple discovery sections"):
-            for node_name in self.context.nodes:
-                with By(f"adding invalid config with multiple discovery sections on {node_name} node"):
-                    add_config_(
-                        config=create_xml_config_content(root="clickhouse", entries=entries, config_file=f"remote_swarm.xml"),
-                        # message="Multiple discovery sections are not allowed",
-                        restart=True,
-                        node=self.context.cluster.node(node_name)
-                    )
+        setup_swarm_cluster(initiator_node="clickhouse1", swarm_nodes=["clickhouse2", "clickhouse3"])
 
         Scenario(test=swarm_examples)(
             minio_root_user=minio_root_user, minio_root_password=minio_root_password

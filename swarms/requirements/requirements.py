@@ -96,6 +96,135 @@ RQ_SRS_044_Swarm_NodeDeregistration = Requirement(
     num='2.1.3'
 )
 
+RQ_SRS_044_Swarm_ClusterDiscovery_Path = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.Path',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support automatic cluster discovery through a configured discovery path which SHALL uniquely identify a specific swarm cluster.\n'
+        '\n'
+        '\n'
+        'Example:\n'
+        '```xml\n'
+        '<clickhouse>\n'
+        '    <remote_servers>\n'
+        '        <swarm>\n'
+        '            <discovery>\n'
+        '               <...>\n'
+        '               <path>/clickhouse/discovery/swarm</path>\n'
+        '               <...>\n'
+        '            </discovery>\n'
+        '        </swarm>\n'
+        '    </remote_servers>\n'
+        '</clickhouse>\n'
+        '```\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.2.1'
+)
+
+RQ_SRS_044_Swarm_ClusterDiscovery_WrongPath = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL return an error if path provided in `<clickhouse><remote_servers><swarm><discovery>` \n'
+        'is wrong.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.2.2'
+)
+
+RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` \n'
+        'contains multiple discovery sections.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.2.3'
+)
+
+RQ_SRS_001_Swarm_ClusterDiscovery_Authentication = Requirement(
+    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL use the configured secret key for swarm cluster authentication.\n'
+        '\n'
+        'Example:\n'
+        '```xml\n'
+        '<clickhouse>\n'
+        '    <remote_servers>\n'
+        '        <swarm>\n'
+        '            <discovery>\n'
+        '               <...>\n'
+        '               <secret>secret_key</secret>\n'
+        '               <...>\n'
+        '            </discovery>\n'
+        '        </swarm>\n'
+        '    </remote_servers>\n'
+        '</clickhouse>\n'
+        '```\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.3.1'
+)
+
+RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_WrongKey = Requirement(
+    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.3.2'
+)
+
+RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_MultipleKey = Requirement(
+    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='2.3.3'
+)
+
 RQ_SRS_044_Swarm_QueryProcessing_Planning = Requirement(
     name='RQ.SRS-044.Swarm.QueryProcessing.Planning',
     version='1.0',
@@ -290,7 +419,6 @@ RQ_SRS_044_Swarm_Caching_DiskCasheNoDiskSpace = Requirement(
         '\n'
         'Swarm nodes SHALL not cache the data if node has no enough space to cache it.\n'
         '\n'
-        '\n'
     ),
     link=None,
     level=4,
@@ -309,7 +437,6 @@ RQ_SRS_044_Swarm_Caching_QueryCashe = Requirement(
         '\n'
         'Swarm nodes SHALL support query cache. \n'
         'Swarm nodes SHALL not run query if it is cashed on the node.\n'
-        '\n'
         '\n'
     ),
     link=None,
@@ -383,8 +510,6 @@ RQ_SRS_044_Swarm_Caching_QueryCacheNoDiskSpace = Requirement(
         '  \n'
         '\n'
         'Swarm nodes SHALL not cache the query if node has no enough space to cache it.\n'
-        '\n'
-        '\n'
         '\n'
     ),
     link=None,
@@ -477,8 +602,6 @@ RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheNoDiskSpace = Requirement(
         '  \n'
         '\n'
         'Swarm nodes SHALL not cache the parquet metadata if node has no enough space to cache it.\n'
-        '\n'
-        '\n'
         '\n'
     ),
     link=None,
@@ -667,6 +790,12 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_NodeRegistration,
         RQ_SRS_044_Swarm_NodeRegistration_MultipleDiscoverySections,
         RQ_SRS_044_Swarm_NodeDeregistration,
+        RQ_SRS_044_Swarm_ClusterDiscovery_Path,
+        RQ_SRS_044_Swarm_ClusterDiscovery_WrongPath,
+        RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath,
+        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication,
+        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_WrongKey,
+        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_MultipleKey,
         RQ_SRS_044_Swarm_QueryProcessing_Planning,
         RQ_SRS_044_Swarm_QueryProcessing_PartialQueriesExecution,
         RQ_SRS_044_Swarm_QueryProcessing_RetryMechanism_NodeFailure,
@@ -752,8 +881,6 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         * 2.10.1 [RQ.SRS-044.Swarm.Performance](#rqsrs-044swarmperformance)
 
 
-
-
 ## Introduction
 
 This document describes the requirements for the [ClickHouse] Swarm Cluster functionality, which enables automatic cluster discovery and management of [ClickHouse] nodes. The swarm cluster architecture consists of two main components:
@@ -821,7 +948,6 @@ Example:
 ### Cluster Discovery
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.Path
-
 version: 1.0
 
 [ClickHouse] SHALL support automatic cluster discovery through a configured discovery path which SHALL uniquely identify a specific swarm cluster.
@@ -843,14 +969,12 @@ Example:
 ```
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if path provided in `<clickhouse><remote_servers><swarm><discovery>` 
 is wrong.
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` 
@@ -859,7 +983,6 @@ contains multiple discovery sections.
 ### Authentification Using Secret
 
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication
-
 version: 1.0
 
 [ClickHouse] SHALL use the configured secret key for swarm cluster authentication.
@@ -880,18 +1003,14 @@ Example:
 ```
 
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
 
-
 #### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey
-
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.
-
 
 ### Query Processing
 
@@ -958,7 +1077,6 @@ version: 1.0
 
 Swarm nodes SHALL not cache the data if node has no enough space to cache it.
 
-
 #### Query Cache
 
 ##### RQ.SRS-044.Swarm.Caching.QueryCashe
@@ -966,7 +1084,6 @@ version: 1.0
 
 Swarm nodes SHALL support query cache. 
 Swarm nodes SHALL not run query if it is cashed on the node.
-
 
 ##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy
 version: 1.0  
@@ -988,8 +1105,6 @@ Swarm nodes SHALL run query and update query cache if data for query is changed.
 version: 1.0  
 
 Swarm nodes SHALL not cache the query if node has no enough space to cache it.
-
-
 
 #### Parquet Metadata Cache
 
@@ -1019,8 +1134,6 @@ Swarm nodes SHALL run query and update parquet metadata cache if data for query 
 version: 1.0  
 
 Swarm nodes SHALL not cache the parquet metadata if node has no enough space to cache it.
-
-
 
 ### Settings
 

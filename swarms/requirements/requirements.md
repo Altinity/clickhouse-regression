@@ -55,8 +55,6 @@
         * 2.10.1 [RQ.SRS-044.Swarm.Performance](#rqsrs-044swarmperformance)
 
 
-
-
 ## Introduction
 
 This document describes the requirements for the [ClickHouse] Swarm Cluster functionality, which enables automatic cluster discovery and management of [ClickHouse] nodes. The swarm cluster architecture consists of two main components:

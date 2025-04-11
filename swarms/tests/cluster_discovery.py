@@ -9,7 +9,7 @@ import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 from swarms.requirements.requirements import *
-from swarms.tests.common import setup_swarm_cluster, remove_node_from_swarm, add_config_
+from swarms.tests.common import setup_swarm_cluster, remove_node_from_swarm
 
 
 @TestScenario
@@ -83,16 +83,17 @@ def multiple_discovery_sections(self, minio_root_user, minio_root_password):
     with Given("I add invalid config with multiple discovery sections"):
         for node_name in self.context.nodes:
             with By(f"adding invalid config with multiple discovery sections on {node_name} node"):
-                add_config_invalid(
+                add_invalid_config(
                     config=create_xml_config_content(root="clickhouse", entries=entries, config_file=f"remote_swarm.xml"),
                     message="Multiple discovery sections are not allowed",
                     restart=True,
-                    node=self.context.cluster.node(node_name)
+                    node=self.context.cluster.node(node_name),
+                    timeout=20
                 )
 
 
 @TestScenario
-@Requirements(RQ_SRS_044_Swarm_NodeRegistration_MultiplePaths("1.0"))
+@Requirements(RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath("1.0"))
 def multiple_paths(self, minio_root_user, minio_root_password):
     """Check that ClickHouse returns an error if multiple paths are defined."""
 
@@ -116,16 +117,17 @@ def multiple_paths(self, minio_root_user, minio_root_password):
     with Given("I add invalid config with multiple paths"):
         for node_name in self.context.nodes:
             with By(f"adding invalid config with multiple paths on {node_name} node"):
-                add_config_invalid(
+                add_invalid_config(
                     config=create_xml_config_content(root="clickhouse", entries=entries, config_file=f"remote_swarm.xml"),
                     message="Multiple paths are not allowed",
                     restart=True,
-                    node=self.context.cluster.node(node_name)
+                    node=self.context.cluster.node(node_name),
+                    timeout=20
                 )
 
 
 @TestScenario
-@Requirements(RQ_SRS_044_Swarm_NodeRegistration_WrongPath("1.0"))
+@Requirements(RQ_SRS_044_Swarm_ClusterDiscovery_WrongPath("1.0"))
 def wrong_path(self, minio_root_user, minio_root_password):
     """Check that ClickHouse returns an error if wrong path is defined."""
 
@@ -148,11 +150,12 @@ def wrong_path(self, minio_root_user, minio_root_password):
     with Given("I add invalid config with wrong path"):
         for node_name in self.context.nodes:
             with By(f"adding invalid config with wrong path on {node_name} node"):
-                add_config_invalid(
+                add_invalid_config(
                     config=create_xml_config_content(root="clickhouse", entries=entries, config_file=f"remote_swarm.xml"),
-                    message="Path is not allowed",
+                    message="Exception: Coordination error: Bad arguments",
                     restart=True,
-                    node=self.context.cluster.node(node_name)
+                    node=self.context.cluster.node(node_name),
+                    timeout=20
                 )
 
 
