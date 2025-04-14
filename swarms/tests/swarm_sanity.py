@@ -138,7 +138,10 @@ def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=Non
         assert "swarm" not in output.output, error()
         pause()
 
-        for retry in retries(10):
+    with And(
+        "check that initiator node sees that clickhouse2 is removed from the cluster"
+    ):
+        for retry in retries(count=10, delay=2):
             with retry:
                 output = swarm_steps.check_cluster_hostnames(
                     cluster_name="swarm", node=node
@@ -164,11 +167,11 @@ def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=Non
 @Name("swarm sanity checks")
 def feature(self, minio_root_user, minio_root_password):
     """Run swarm sanity checks."""
-    # Scenario(run=create_swarm_cluster)
-    # Scenario(test=cluster_with_only_one_observer_node)(
-    #     minio_root_user=minio_root_user,
-    #     minio_root_password=minio_root_password,
-    # )
+    Scenario(run=create_swarm_cluster)
+    Scenario(test=cluster_with_only_one_observer_node)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
     Scenario(test=check_scale_up_and_down)(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
