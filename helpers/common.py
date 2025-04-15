@@ -1177,3 +1177,61 @@ def repeat_until_stop(self, stop_event: Event, func, delay=0.5):
     while not stop_event.is_set():
         func()
         time.sleep(delay)
+
+
+@TestStep(Given)
+def allow_higher_cpu_wait_ratio(
+    self, min_os_cpu_wait_time_ratio_to_throw=10, max_os_cpu_wait_time_ratio_to_throw=20
+):
+    """
+    Temporarily increase the threshold for OS CPU wait time ratio
+    to reduce the chance of query rejection due to system overload.
+
+    This step updates the default query settings for the test context
+    by increasing the min and max OS CPU wait-to-busy time ratios.
+
+    Useful for tests that are expected to put high load on the system
+    and may otherwise be rejected due to CPU pressure.
+
+    Args:
+        min_ratio (float): Minimum ratio at which query rejection starts (default=10).
+        max_ratio (float): Maximum ratio at which rejection probability becomes 100% (default=20).
+    """
+    min_os_cpu_wait_time_ratio_to_throw_setting = (
+        "min_os_cpu_wait_time_ratio_to_throw",
+        min_os_cpu_wait_time_ratio_to_throw,
+    )
+    max_os_cpu_wait_time_ratio_to_throw_setting = (
+        "max_os_cpu_wait_time_ratio_to_throw",
+        max_os_cpu_wait_time_ratio_to_throw,
+    )
+    default_query_settings = None
+
+    try:
+        with By(
+            "adding relaxed OS CPU wait ratio thresholds to default query settings"
+        ):
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            default_query_settings.append(min_os_cpu_wait_time_ratio_to_throw_setting)
+            default_query_settings.append(max_os_cpu_wait_time_ratio_to_throw_setting)
+        yield
+    finally:
+        with Finally(
+            "removing the relaxed OS CPU wait ratio settings from default query settings"
+        ):
+            if default_query_settings:
+                try:
+                    default_query_settings.pop(
+                        default_query_settings.index(
+                            min_os_cpu_wait_time_ratio_to_throw_setting
+                        )
+                    )
+                    default_query_settings.pop(
+                        default_query_settings.index(
+                            max_os_cpu_wait_time_ratio_to_throw_setting
+                        )
+                    )
+                except ValueError:
+                    pass
