@@ -1,0 +1,111 @@
+version: '2.3'
+
+volumes:
+  data1-1:
+
+services:
+  minio1:
+    extends:
+      file: ../../docker-compose/minio-service.yml
+      service: minio1
+    depends_on:
+      - proxy1
+      - proxy2
+
+  proxy1:
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  proxy2:
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+
+  minio-client:
+    extends:
+      file: ../../docker-compose/minio-client.yml
+      service: minio-client
+    depends_on:
+      minio1:
+        condition: service_healthy
+
+  # azure-client:
+  #   image: mcr.microsoft.com/azure-cli:cbl-mariner2.0
+  #   init: true
+  #   entrypoint: tail -f /dev/null
+
+  zookeeper1:
+    extends:
+      file: ../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
+
+  keeper1:
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper1/logs/:/var/log/clickhouse-keeper/"
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share:/share"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependencies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+      keeper1:
+        condition: service_healthy
+      minio1:
+        condition: service_healthy
