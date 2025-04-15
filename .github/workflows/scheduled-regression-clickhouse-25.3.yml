@@ -1,0 +1,45 @@
+name: 🗓 Scheduled ClickHouse 25.3
+run-name: 🗓 Scheduled ClickHouse 25.3
+on:
+  workflow_dispatch:
+  #Run at 00:00 AM (UTC) on Sunday
+  schedule:
+    - cron: "0 0 * * 6"
+
+jobs:
+  get_clickhouse_version:
+    runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Pull Docker image
+        run: docker pull clickhouse/clickhouse-server:25.3
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION_25_3=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:25.3" | jq -r '.Config.Labels."com.clickhouse.build.version" | ltrimstr("v") | split("-")[0]')
+          echo "version=$VERSION_25_3" >> "$GITHUB_OUTPUT"
+          echo $VERSION_25_3
+
+  clickhouse-25-3-x86-with-analyzer_zookeeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-x86.yml
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer'
+      artifact_name: "clickhouse-25-3-x86-with-analyzer_zookeeper"
+    secrets: inherit
+
+  clickhouse-25-3-arm-with-analyzer_zookeeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/reusable-workflow-arm.yml
+    name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer'
+      artifact_name: "clickhouse-25-3-arm-with-analyzer_zookeeper"
+    secrets: inherit
