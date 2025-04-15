@@ -188,8 +188,11 @@ xfails = {
 }
 
 ffails = {
-    "minio/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") or check_if_antalya_build,),
-    "minio/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") or check_if_antalya_build,),
+    "minio/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12")),
+    "minio/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12")),
+    ":/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_if_antalya_build),
+    ":/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_if_antalya_build),
+    
     "minio/table function/measure file size s3Cluster": (
         Skip,
         "S3Cluster table function correctly handles arguments since 23.8",
@@ -360,7 +363,6 @@ def minio_regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
-
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
             uri_bucket_file = (
@@ -622,7 +624,6 @@ def gcs_regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
-
         with Given("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
