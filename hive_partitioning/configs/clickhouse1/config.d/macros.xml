@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<yandex>
+    <named_collections>
+        <s3_conn>
+            <url>http://minio:9001/root/data/</url>
+            <access_key_id>admin</access_key_id>
+            <secret_access_key>password</secret_access_key>
+            <structure>auto</structure>
+        </s3_conn>
+        <s3_conn_local>
+            <url>http://localhost:9001/root/data/</url>
+            <access_key_id>admin</access_key_id>
+            <secret_access_key>password</secret_access_key>
+            <structure>auto</structure>
+        </s3_conn_local>
+    </named_collections>
+    <macros>
+        <replica>clickhouse1</replica>
+        <shard>01</shard>
+        <shard2>01</shard2>
+    </macros>
+</yandex>
