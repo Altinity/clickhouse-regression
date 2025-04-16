@@ -272,11 +272,11 @@ def execute_schema_evolution_actions(
         merge_tree_table_name = "merge_tree_table_" + getuid()
         common.create_merge_tree_table(table_name=merge_tree_table_name)
 
-    with And("define columns list, do not include partition column"):
+    with And("define columns list, do not include partition column (String)"):
         self.context.columns = [
+            {"name": "boolean_col", "type": "Nullable(Bool)"},
             {"name": "long_col", "type": "Nullable(Int64)"},
             {"name": "double_col", "type": "Nullable(Float64)"},
-            {"name": "string_col", "type": "Nullable(String)"},
             {"name": "date_col", "type": "Nullable(Date)"},
         ]
 
