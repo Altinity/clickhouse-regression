@@ -48,6 +48,11 @@ ffails = {
         "Crashes before 23.11 https://github.com/ClickHouse/ClickHouse/pull/58638",
         check_clickhouse_version("<23.11"),
     ),
+    "/functions/insert": (
+        Skip,
+        "It is not allowed to use same columns in SummingMergeTree and in a sorting key from 25.4",
+        check_clickhouse_version(">=25.4"),
+    ),
 }
 
 
