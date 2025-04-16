@@ -82,7 +82,6 @@
 
 This document describes the requirements for the [ClickHouse] hive-style partitioning functionality. Hive-style partitioning refers to organizing files in a directory hierarchy where folder names encode column values (e.g. .../country=US/year=2021/file.parquet). [ClickHouse] provides functionality to read and write such partitioned data across various interfaces, including S3 and HDFS table functions and the Hive table engine. This allows users to query partitioned datasets efficiently by treating partition names as data columns and pruning unnecessary files. The following requirements describe the expected functionality and behavior for Hive-style partitioning support in [ClickHouse].
 
-
 ## Requirements
 
 ### Generic Behavior
@@ -97,22 +96,15 @@ version: 1.0
 
 [ClickHouse] SHALL use support setting `use_hive_partitioning` to toggle Hive-style partition recognition for file-based table engines and table functions. By default, in versions where it is disabled, users SHALL enable this setting to activate partition discovery.
 
-
 #### RQ.HivePartitioning.Generic.Pruning
 version: 1.0
 
 [ClickHouse] SHALL only read the files from the partitions that satisfy filters when Hive-style partitioning is enabled and queries include filters on partition columns. In other words, partition pruning SHALL occur to avoid listing or scanning files in irrelevant directories. This behavior improves query performance by reducing I/O on external storage.
 
-
 #### RQ.HivePartitioning.Generic.Performance
 version: 1.0
 
 [ClickHouse] SHALL execute queries with `use_hive_partitioning=1` faster than queries with `use_hive_partitioning=0` if some files from storage are pruned with `WHERE` clause.
-
-
-
-
-
 
 ### Virtual Columns
 
@@ -166,11 +158,6 @@ version: 1.0
 
 [Clickhouse] SHALL return `Unknown identifier` error if query refers to nonexisting partition key.
 
-
-
-
-
-
 ### Hive Partition Types
 
 #### RQ.HivePartitioning.HivePartitionTypes.Generic
@@ -187,11 +174,6 @@ Partition values extracted from paths SHALL have `LowCardinality(String)` type.
 version: 1.0
 
 The hive value SHALL be empty string if directory is missing a key.
-
-
-
-
-
 
 ### Wildcards
 
@@ -210,41 +192,30 @@ version: 1.0
 
 [ClickHouse] SHALL support `**` wildcard for hive partitioning. `**` wildcard SHALL match any sequence of characters including `/`.
 
-
 #### RQ.HivePartitioning.Wildcards.QuestionMark
 version: 1.0
 
 [ClickHouse] SHALL support `?` wildcard for hive partitioning. `?` wildcard SHALL match a single character except `/`.
-
 
 #### RQ.HivePartitioning.Wildcards.List
 version: 1.0
 
 [ClickHouse] SHALL support `{a[, b][, c]...}` wildcard for hive partitioning. `{a[, b][, c]...}` wildcard SHALL match one of the listed options.
 
-
 #### RQ.HivePartitioning.Wildcards.WrongList
 version: 1.0
 
 [ClickHouse] SHALL return an error if one or more options in `{a[, b][, c]...}` are invalid or path does not exists.
-
 
 #### RQ.HivePartitioning.Wildcards.Range
 version: 1.0
 
 [ClickHouse] SHALL support `{N..M}` wildcard for hive partitioning. `{N..M}` wildcard SHALL match numbers in a range.
 
-
 #### RQ.HivePartitioning.Wildcards.WrongRange
 version: 1.0
 
 [ClickHouse] SHALL return an error if one or more options in `{N..M}` are invalid or path does not exists.
-
-
-
-
-
-
 
 ### Supported Table Functions
 
@@ -260,22 +231,15 @@ FROM s3('s3://bucket/data/date=*/country=*/*.parquet', 'Parquet')
 WHERE country = 'Netherlands' AND date >= '2020-01-01';
 ```
 
-
 #### RQ.HivePartitioning.TableFunction.S3Cluster
 version: 1.0
 
 The [s3Cluster] table function SHALL equally support Hive-style partitioning for reading across a cluster. On each cluster node, the function SHALL interpret partition directories and prune files in the same manner as a local [s3] call. This ensures distributed querying of an S3-partitioned dataset is consistent and efficient, reading only the necessary partitions on each node.
 
-
-
 #### RQ.HivePartitioning.TableFunction.HDFS
 version: 1.0
 
 The [HDFS] table function SHALL support Hive-style partitions for reading in the provided URL path. If the path contains wildcard patterns corresponding to name=value directories and use_hive_partitioning is enabled, ClickHouse SHALL detect those patterns, expose corresponding virtual columns and prune not related to the query partitions.
-
-
-
-
 
 ### Supported Table Engines
 
@@ -308,7 +272,6 @@ ENGINE = HDFS(
 PARTITION BY date
 ```
 
-
 #### Hive Table Engine
 
 ##### RQ.HivePartitioning.TableEngines.Hive
@@ -320,10 +283,6 @@ version: 1.0
 CREATE TABLE hive_table(x Int64)
 ENGINE = Hive(...) 
 ```
-
-
-
-
 
 ### Hive Partition Writes
 
@@ -377,12 +336,10 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if bucket difined in S3 engine clause is read-only.
 
-
 ##### RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket
 version: 1.0
 
 [ClickHouse] SHALL return an error if bucket difined in S3 engine clause is not accessible.
-
 
 ##### RQ.HivePartitioning.HivePartitionWrites.ParallelInserts
 version: 1.0
@@ -394,7 +351,6 @@ version: 1.0
 
 [ClickHouse] SHALL fail the insert and SHALL not leave partial data if any object write fails.
 
-
 #### Partition By Clause For S3 Engine With Hive Partition Writes
 
 ##### RQ.HivePartitioning.HivePartitionWrites.PartitionBy
@@ -402,19 +358,16 @@ version: 1.0
 
 [ClickHouse] SHALL perform hive partition writes only if table engine definition contains `PARTITION BY` clause.
 
-
 ##### RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy
 version: 1.0
 
 [ClickHouse] SHALL return an error if user tries to insert into table with S3 table engine without `PARTITION BY` clause.
-
 
 ##### RQ.HivePartitioning.HivePartitionWrites.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL create path containing {/key=value/} for all columns defined in `PARTITION BY` clause and file on this path on insert, if file does not exists.
 Inserted data SHALL be located in this file.
-
 
 #### Hive Partition Writes Syntax
 
@@ -436,14 +389,12 @@ version: 1.0
 [ClickHouse] SHALL support 'hive' and 'auto' values for this parameter. [ClickHouse] SHALL enable hive partition writes if it is set to 'hive' and disable if it is set to 'auto'.
 `partition_stratagy` SHALL be 'auto' by default.
 
-
 ##### RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument
 version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_stratagy` parameter neither set to 'auto' and 'hive'.
 
-
-##### Hive Partition Strategy Write Partition Columns Into Files Parameter
+#### Hive Partition Strategy Write Partition Columns Into Files Parameter
 
 ##### RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles
 version: 1.0
@@ -492,7 +443,6 @@ version: 1.0
 
 [ClickHouse] SHALL not change behavior of the following parameters if `partition_stratagy` is set to 'hive':
 `aws_access_key_id`, `aws_secret_access_key`, `format`, `compression`.
-
 
 
 [ClickHouse]: https://clickhouse.com
