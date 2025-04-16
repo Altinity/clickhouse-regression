@@ -796,6 +796,13 @@ def regression(
         self.context.table_extra_data.insert_test_data(
             cardinality=5, shuffle_values=True
         )
+    
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=10,
+                max_os_cpu_wait_time_ratio_to_throw=20,
+            )
 
     Feature(run=load("aggregate_functions.tests.function_list", "feature"))
 
