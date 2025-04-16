@@ -42,7 +42,7 @@ ffails = {
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",
-        check_clickhouse_version("<24.12") and check_if_antalya_build,
+        check_clickhouse_version("<24.12"),
     ),
     "/iceberg/iceberg cache": (
         Skip,
