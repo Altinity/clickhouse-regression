@@ -188,11 +188,26 @@ xfails = {
 }
 
 ffails = {
-    "minio/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12")),
-    "minio/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12")),
-    ":/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_if_antalya_build),
-    ":/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_if_antalya_build),
-    
+    "minio/hive partitioning": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_clickhouse_version("<24.12"),
+    ),
+    "minio/remote s3 function call": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_clickhouse_version("<24.12"),
+    ),
+    ":/hive partitioning": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_if_antalya_build,
+    ),
+    ":/remote s3 function call": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_if_antalya_build,
+    ),
     "minio/table function/measure file size s3Cluster": (
         Skip,
         "S3Cluster table function correctly handles arguments since 23.8",
