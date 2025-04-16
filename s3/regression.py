@@ -188,8 +188,16 @@ xfails = {
 }
 
 ffails = {
-    "minio/hive partitioning": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") and check_if_antalya_build,),
-    "minio/remote s3 function call": (Skip, "implemented on antalya build with clickhouse version 24.12", check_clickhouse_version("<24.12") and check_if_antalya_build,),
+    "minio/hive partitioning": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_clickhouse_version("<24.12") and check_if_antalya_build,
+    ),
+    "minio/remote s3 function call": (
+        Skip,
+        "implemented on antalya build with clickhouse version 24.12",
+        check_clickhouse_version("<24.12") and check_if_antalya_build,
+    ),
     "minio/table function/measure file size s3Cluster": (
         Skip,
         "S3Cluster table function correctly handles arguments since 23.8",
@@ -374,6 +382,13 @@ def minio_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("allow higher cpu_wait_ratio "):
+            if check_clickhouse_version(">=25.4")(self):
+                allow_higher_cpu_wait_ratio(
+                    min_os_cpu_wait_time_ratio_to_throw=10,
+                    max_os_cpu_wait_time_ratio_to_throw=20,
+                )
+
         with And("I add all possible clusters for nodes"):
             add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
@@ -412,9 +427,12 @@ def minio_regression(
         Feature(test=load("s3.tests.table_function_performance", "minio"))(
             uri=uri_bucket_file
         )
-        Feature(test=load("s3.tests.hive_partitioning", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
-        Feature(test=load("s3.tests.remote_s3_function", "minio"))(uri=uri_bucket_file, bucket_prefix=bucket_prefix)
-
+        Feature(test=load("s3.tests.hive_partitioning", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.remote_s3_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
 
 
 @TestFeature
@@ -477,6 +495,13 @@ def aws_s3_regression(
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
+                )
+
+        with And("allow higher cpu_wait_ratio "):
+            if check_clickhouse_version(">=25.4")(self):
+                allow_higher_cpu_wait_ratio(
+                    min_os_cpu_wait_time_ratio_to_throw=10,
+                    max_os_cpu_wait_time_ratio_to_throw=20,
                 )
 
         with And("I add all possible clusters for nodes"):
@@ -568,6 +593,13 @@ def azure_regression(
                     node=cluster.node(node), with_analyzer=with_analyzer
                 )
 
+        with And("allow higher cpu_wait_ratio "):
+            if check_clickhouse_version(">=25.4")(self):
+                allow_higher_cpu_wait_ratio(
+                    min_os_cpu_wait_time_ratio_to_throw=10,
+                    max_os_cpu_wait_time_ratio_to_throw=20,
+                )
+
         Feature(test=load("s3.tests.sanity", "azure"))()
         Feature(test=load("s3.tests.alter", "feature"))(
             uri=uri, bucket_prefix=bucket_prefix
@@ -627,6 +659,13 @@ def gcs_regression(
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
+                )
+
+        with And("allow higher cpu_wait_ratio "):
+            if check_clickhouse_version(">=25.4")(self):
+                allow_higher_cpu_wait_ratio(
+                    min_os_cpu_wait_time_ratio_to_throw=10,
+                    max_os_cpu_wait_time_ratio_to_throw=20,
                 )
 
         with And("I add all possible clusters for nodes"):

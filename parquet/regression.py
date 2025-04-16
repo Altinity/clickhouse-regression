@@ -17,7 +17,7 @@ from helpers.argparser import (
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
-from helpers.common import experimental_analyzer, check_current_cpu
+from helpers.common import experimental_analyzer, check_current_cpu, allow_higher_cpu_wait_ratio
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
@@ -432,6 +432,13 @@ def regression(
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+    
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=10,
+                max_os_cpu_wait_time_ratio_to_throw=20,
+            )
 
     with And("I enable or disable the native parquet reader"):
         if native_parquet_reader:
