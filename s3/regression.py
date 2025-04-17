@@ -509,8 +509,8 @@ def aws_s3_regression(
         with And("allow higher cpu_wait_ratio "):
             if check_clickhouse_version(">=25.4")(self):
                 allow_higher_cpu_wait_ratio(
-                    min_os_cpu_wait_time_ratio_to_throw=10,
-                    max_os_cpu_wait_time_ratio_to_throw=20,
+                    min_os_cpu_wait_time_ratio_to_throw=15,
+                    max_os_cpu_wait_time_ratio_to_throw=25,
                 )
 
         with And("I add all possible clusters for nodes"):
