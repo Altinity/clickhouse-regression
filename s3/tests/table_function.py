@@ -713,6 +713,7 @@ def measure_file_size_s3Cluster(self):
                             f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
                         )
                         size_clickhouse = int(r.output.strip())
+                        debug(f"size_after: {size_after}, size_before: {size_before}, size_clickhouse: {size_clickhouse}")
                         assert size_after - size_before == size_clickhouse, error()
 
 
