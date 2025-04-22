@@ -311,6 +311,83 @@ class KeyWithAttributes:
         self.attributes = dict(attributes)
 
 
+def _create_xml_tree(entries, parent):
+    """
+    Helper function for create_xml_config_content_with_duplicate_tags.
+    Recursive helper that understands:
+      • dict            – one element per key
+      • list | tuple    – either a) list of dicts/KeyWithAttributes
+                          or b) list of scalars → duplicate tags
+    """
+
+    if isinstance(entries, (list, tuple)):
+        for item in entries:
+            _create_xml_tree(item, parent)
+        return
+
+    for k, v in entries.items():
+        if isinstance(k, KeyWithAttributes):
+            elem = xmltree.Element(k.name, **k.attributes)
+            if isinstance(v, (dict, list, tuple)):
+                _create_xml_tree(v, elem)
+            else:
+                elem.text = str(v)
+            parent.append(elem)
+            continue
+
+        if isinstance(v, (list, tuple)):
+            if all(
+                not isinstance(i, (dict, KeyWithAttributes, list, tuple)) for i in v
+            ):
+                for scalar in v:
+                    xml_append(parent, k, scalar)
+            else:
+                for item in v:
+                    elem = xmltree.Element(k)
+                    _create_xml_tree(item, elem)
+                    parent.append(elem)
+            continue
+
+        if isinstance(v, dict):
+            elem = xmltree.Element(k)
+            _create_xml_tree(v, elem)
+            parent.append(elem)
+            continue
+
+        xml_append(parent, k, v)
+
+
+def create_xml_config_content_with_duplicate_tags(
+    entries,
+    config_file,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    root_tag="clickhouse",
+    preprocessed_name="config.xml",
+):
+    """Create XML configuration file from a dictionary. This function is used
+    when we want to create a config file with duplicate tags. If you want normal
+    behavior, use create_xml_config_content.
+
+    :param entries: dictionary that defines xml
+    :param config_file: name of the config file
+    :param config_d_dir: config.d directory path, default: `/etc/clickhouse-server/config.d`
+    """
+    uid = getuid()
+    path = os.path.join(config_d_dir, config_file)
+    name = config_file
+
+    root = xmltree.Element(root_tag)
+    root.append(xmltree.Comment(text=f"config uid: {uid}"))
+
+    _create_xml_tree(entries, root)
+    xml_indent(root)
+
+    content = xml_with_utf8 + xmltree.tostring(
+        root, short_empty_elements=False, encoding="utf-8"
+    ).decode("utf-8")
+    return Config(content, path, name, uid, preprocessed_name)
+
+
 def create_xml_config_content(
     entries,
     config_file,
