@@ -1,27 +1,144 @@
 #!/usr/bin/env python3
-"""Manual GitLab CI/CD pipeline trigger script.
+"""Manual GitHub Actions workflow trigger script.
+
+This script allows triggering GitHub Actions workflows for running ClickHouse regression tests
+on either x86 or ARM architectures. It supports various test suites and configuration options.
+
+Example:
+    Run example test suite on x86:
+        python3 cicd-trigger.py --suite example
+
+    Run example test suite on ARM:
+        python3 cicd-trigger.py --suite example --arch arm
+
+    Run with debug output:
+        python3 cicd-trigger.py --suite example --debug
 """
 import os
 import sys
 import time
-import gitlab
+import requests
 import datetime
-import contextlib
-from argparse import ArgumentParser, ArgumentTypeError, RawTextHelpFormatter
+from argparse import ArgumentParser, RawTextHelpFormatter
 
-PROJECT_ID = 39540585
+# GitHub repository configuration
+REPO_OWNER = "altinity"
+REPO_NAME = "clickhouse-regression"
 PROGRESS = "\u2591"
 
+# Default values and choices
+DEFAULTS = {
+    "package": "docker://altinity/clickhouse-server:24.3.12.76.altinitystable",
+    "version": "24.3.12.76.altinitystable",
+    "flags": "none",
+    "suite": "all",
+    "output_format": "classic",
+    "artifacts": "internal",
+    "branch": "main",
+    "arch": "x86",
+}
 
-def timestamp():
-    """Return timestamp string."""
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    return dt.astimezone().strftime("%b %d,%Y %H:%M:%S.%f %Z")
-
+# Available choices for arguments
+CHOICES = {
+    "architectures": ["x86", "arm"],
+    "flags": [
+        "--use-keeper --with-analyzer",
+        "--use-keeper",
+        "none",
+        "--as-binary",
+        "--as-binary --use-keeper",
+        "--thread-fuzzer",
+        "--thread-fuzzer --use-keeper",
+        "--thread-fuzzer --as-binary",
+        "--thread-fuzzer --as-binary --use-keeper",
+        "--with-analyzer",
+        "--with-analyzer --use-keeper",
+        "--with-analyzer --as-binary",
+        "--with-analyzer --as-binary --use-keeper",
+        "--thread-fuzzer --with-analyzer",
+        "--thread-fuzzer --with-analyzer --use-keeper",
+        "--thread-fuzzer --with-analyzer --as-binary",
+        "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
+    ],
+    "output_formats": [
+        "nice-new-fails",
+        "brisk-new-fails",
+        "plain-new-fails",
+        "pnice-new-fails",
+        "new-fails",
+        "classic",
+        "nice",
+        "fails",
+        "slick",
+        "brisk",
+        "quiet",
+        "short",
+        "manual",
+        "dots",
+        "progress",
+        "raw"
+    ],
+    "artifact_locations": ["internal", "public"],
+    "suites": [
+        "all",
+        "all_aws",
+        "all_gcs",
+        "aes_encryption",
+        "aggregate_functions",
+        "atomic_insert",
+        "alter_all",
+        "alter_replace_partition",
+        "alter_attach_partition",
+        "alter_move_partition",
+        "attach",
+        "base_58",
+        "benchmark_all",
+        "benchmark_aws",
+        "benchmark_gcs",
+        "benchmark_minio",
+        "clickhouse_keeper",
+        "clickhouse_keeper_failover",
+        "data_types",
+        "datetime64_extended_range",
+        "disk_level_encryption",
+        "dns",
+        "engines",
+        "example",
+        "extended_precision_data_types",
+        "functions",
+        "iceberg",
+        "jwt_authentication",
+        "kafka",
+        "kerberos",
+        "key_value",
+        "ldap",
+        "lightweight_delete",
+        "memory",
+        "parquet_all",
+        "parquet",
+        "parquet_minio",
+        "parquet_s3",
+        "part_moves_between_shards",
+        "rbac",
+        "s3_all",
+        "s3_aws",
+        "s3_azure",
+        "s3_gcs",
+        "s3_minio",
+        "selects",
+        "session_timezone",
+        "ssl_server",
+        "tiered_storage_all",
+        "tiered_storage_aws",
+        "tiered_storage_gcs",
+        "tiered_storage_local",
+        "tiered_storage_minio",
+        "window_functions"
+    ]
+}
 
 class Action:
-    """Simple action wrapper."""
-
+    """Simple action wrapper for logging and error handling."""
     debug = False
 
     def __init__(self, name):
@@ -39,400 +156,278 @@ class Action:
         else:
             print(f"{timestamp()} \u2705 OK")
 
+def timestamp():
+    """Return formatted timestamp string."""
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    return dt.astimezone().strftime("%b %d,%Y %H:%M:%S.%f %Z")
 
-def get_or_create_pipeline_trigger(username, project, description=None):
-    """Create pipeline trigger."""
-    description = f"cicd-trigger-{username}"
-
-    for trigger in project.triggers.list():
-        if trigger.description == description:
-            return trigger
-
-    return project.triggers.create({"description": description})
-
-
-description = """Script to launch CI/CD pipeline.
-    
-    Either pass GitLab user token using the '--token' option (make sure it has the 'api' scope)
-    or even better set $GITLAB_TOKEN environment variable that will be used by default.
-    
-    Examples:
-    
-    Run all available suites on master branch with a specified token:
-        python3 cicd_trigger.py --branch master --token $GITLAB_TOKEN
-
-     Run all available suites wait for the run to complete:
-        python3 cicd_trigger.py --wait
-
-    Run all available suites and upload artifacts to public aws s3 bucket:
-        python3 cicd_trigger.py --artifacts public
-
-    Run all available suites on a specific build:
-        python3 cicd_trigger.py --package https://s3.amazonaws.com/altinity-build-artifacts/217/c14c89992f760772f487f91fdb8bb71367b51e81/package_release/clickhouse-common-static_22.8.11.17.altinityfips_amd64.deb --version 22.8.11.17.altinityfips
-
-    Run aes_encryption suite:
-        python3 cicd_trigger.py --suite aes_encryption
-
-    Run aggregate_function suite:
-        python3 cicd_trigger.py --suite aggregate_function
-
-    Run atomic_insert suite:
-        python3 cicd_trigger.py --suite atomic_insert
-
-    Run base_58 suite:
-        python3 cicd_trigger.py --suite base_58
-
-    Run clickhouse_keeper suite:
-        python3 cicd_trigger.py --suite clickhouse_keeper
-
-    Run datetime64_extended_range suite:
-        python3 cicd_trigger.py --suite datetime64_extended_range
-
-    Run disk_level_encryption suite:
-        python3 cicd_trigger.py --suite disk_level_encryption
-
-    Run dns suite:
-        python3 cicd_trigger.py --suite dns
-
-    Run example suite:
-        python3 cicd_trigger.py --suite example
-
-    Run extended_precision_data_types suite:
-        python3 cicd_trigger.py --suite extended_precision_data_types
-
-    Run extended_precision_data_types suite:
-        python3 cicd_trigger.py --suite functional
-
-    Run kafka suite:
-        python3 cicd_trigger.py --suite kafka
-
-    Run kerberos suite:
-        python3 cicd_trigger.py --suite kerberos
-
-    Run ldap suite:
-        python3 cicd_trigger.py --suite ldap
-
-    Run lightweight_delete suite:
-        python3 cicd_trigger.py --suite lightweight_delete
-
-    Run map_type suite:
-        python3 cicd_trigger.py --suite map_type
-
-    Run parquet suite:
-        python3 cicd_trigger.py --suite parquet
-
-    Run part_moves_between_shards suite:
-        python3 cicd_trigger.py --suite part_moves_between_shards
-
-    Run rbac suite:
-        python3 cicd_trigger.py --suite rbac
-
-    Run s3 suite:
-        python3 cicd_trigger.py --suite s3
-
-    Run s3_aws suite:
-        python3 cicd_trigger.py --suite s3_aws
-
-    Run s3_gcs suite:
-        python3 cicd_trigger.py --suite s3_gcs
-
-    Run selects suite:
-        python3 cicd_trigger.py --suite selects
-
-    Run ssl_server suite:
-        python3 cicd_trigger.py --suite ssl_server
-
-    Run tiered_storage suite:
-        python3 cicd_trigger.py --suite tiered_storage
-
-    Run tiered_storage_aws suite:
-        python3 cicd_trigger.py --suite tiered_storage_aws
-
-    Run tiered_storage_gcs suite:
-        python3 cicd_trigger.py --suite tiered_storage_gcs
-
-    Run window_functions suite:
-        python3 cicd_trigger.py --suite window_functions
-
-    Run benchmark suite:
-        python3 cicd_trigger.py --suite benchmark
-    """
-
-
-def argparser(parser):
-    """Argument parser for running the pipelines."""
-    suites = [
-        "all",
-        "aes_encryption",
-        "aggregate_functions",
-        "atomic_insert",
-        "base_58",
-        "clickhouse_keeper",
-        "datetime64_extended_range",
-        "disk_level_encryption",
-        "dns",
-        "example",
-        "extended_precision_data_types",
-        "functional",
-        "kafka",
-        "kerberos",
-        "ldap",
-        "lightweight_delete",
-        "map_type",
-        "parquet",
-        "part_moves_between_shards",
-        "rbac",
-        "s3",
-        "s3_aws",
-        "s3_gcs",
-        "selects",
-        "ssl_server",
-        "tiered_storage",
-        "tiered_storage_aws",
-        "tiered_storage_gcs",
-        "window_functions",
-        "benchmark",
-    ]
-    outputs = ["classic", "nice"]
-    arches = ["amd64", "arm64"]
-    package_post_fix_choices = ["all", "amd64"]
-    parallel_choices = ["on", "off"]
-    artifact_locations = ["internal", "public"]
-    default_package = "docker://clickhouse/clickhouse-server"
-    default_version = "22.3.9.19-alpine"
-    default_package_post_fix = "amd64"
-    default_suite = "all"
-    default_output = "classic"
-    default_parallel = "on"
-    default_artifact_location = "internal"
-    default_arch = "amd64"
-    default_branch = "main"
-
-    parser.add_argument(
-        "--wait",
-        action="store_true",
-        default=False,
-        help="wait for the pipeline to finish, default: False",
+def create_parser():
+    """Create and configure argument parser."""
+    parser = ArgumentParser(
+        "cicd-trigger.py",
+        description=__doc__,
+        formatter_class=RawTextHelpFormatter,
     )
-    parser.add_argument(
-        "--package",
-        metavar="deb://<url>|docker://<image>|https://<url>",
-        action="store",
-        help=(
-            "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests, "
-            f"default: {default_package}."
-            "For example: "
-            "'docker://altinity/clickhouse-server', 'docker://clickhouse/clickhouse-server', "
-            "'deb://builds.altinity.cloud/apt-repo/pool/main', "
-            "'deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release',"
-            "'https://s3.amazonaws.com/altinity-build-artifacts/217/acf34c9fc6932aaf9af69425612070b50529f484/package_release/clickhouse-client_22.8.11.17.altinitystable_amd64.deb'"
-        ),
-        default=default_package,
-    )
-    parser.add_argument(
-        "--version",
-        metavar="value",
-        action="store",
-        help=(
-            f"Version of clickhouse to use for tests, default: {default_version}. When package option "
-            "uses docker:// specifier then the version is the image tag. For example: "
-            "'22.3.9.19-alpine', '22.3.8.40.altinitystable', 'latest', etc."
-        ),
-        default=default_version,
-    )
-    parser.add_argument(
-        "--package-postfix",
-        metavar=f"{package_post_fix_choices}",
-        action="store",
-        help=(
-            f"Postfix of the clickhouse-server and clickhouse-client deb package; choices: {package_post_fix_choices}, default: '{default_package_post_fix}'. "
-            "Before 22.3 the server and client packages ended with '_all.deb' and starting with 22.3 they end with '_amd64.deb'."
-        ),
-        default=default_package_post_fix,
-    )
-    parser.add_argument(
-        "-s",
-        "--suite",
-        metavar="name",
-        type=str,
-        action="store",
-        default=default_suite,
-        choices=suites,
-        help=f"choose specific suite you want to run, choices: {suites}, default: '{default_suite}'",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        metavar="type",
-        action="store",
-        type=str,
-        default=default_output,
-        choices=outputs,
-        help=f"choose test program's output format, choices: {outputs}, default: '{default_output}'",
-    )
-    parser.add_argument(
-        "--parallel",
-        action="store",
-        help=f"Enable or disable running tests in parallel, choices: {parallel_choices}, default: '{default_parallel}'.",
-        default=default_parallel,
-        choices=parallel_choices,
-    )
-    parser.add_argument(
-        "--token",
-        metavar="value",
-        type=str,
-        help="GitLab personal access token or private token with api access to the project, default: $GITLAB_TOKEN env variable.",
-        default=os.getenv("GITLAB_TOKEN"),
-    )
-    parser.add_argument(
-        "--options",
-        metavar="value",
-        action="store",
-        help="Extra options that will be added to test run command, default: ''.",
-        default="",
-    )
+
+    # Add arguments with their choices and defaults
     parser.add_argument(
         "--arch",
-        metavar=f"{arches}",
-        action="store",
-        help=f"Architecture to run the tests on, choices: '{arches}', default: '{default_arch}'.",
-        default=default_arch,
-        choices=arches,
+        choices=CHOICES["architectures"],
+        default=DEFAULTS["arch"],
+        help=f"Choose architecture to run tests on, default: '{DEFAULTS['arch']}'",
     )
     parser.add_argument(
         "--branch",
-        action="store",
-        help=f"Choose which branch to run the tests on, default: '{default_branch}'",
-        default=default_branch,
+        default=DEFAULTS["branch"],
+        help=f"Choose which branch to run the tests on, default: '{DEFAULTS['branch']}'",
+    )
+    parser.add_argument(
+        "--package",
+        default=DEFAULTS["package"],
+        help=(
+            "Package specifier to use for tests. Either 'docker://' or 'https://'. "
+            f"default: {DEFAULTS['package']}. "
+            "Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', "
+            "or 'docker://altinity/clickhouse-server:23.8.8'"
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        default=DEFAULTS["version"],
+        help=f"Expected version of clickhouse to use for tests, default: {DEFAULTS['version']}",
+    )
+    parser.add_argument(
+        "--flags",
+        choices=CHOICES["flags"],
+        default=DEFAULTS["flags"],
+        help="Test flags to use",
+    )
+    parser.add_argument(
+        "-s", "--suite",
+        choices=CHOICES["suites"],
+        default=DEFAULTS["suite"],
+        help=f"Choose specific suite to run, default: '{DEFAULTS['suite']}'",
+    )
+    parser.add_argument(
+        "-o", "--output-format",
+        choices=CHOICES["output_formats"],
+        default=DEFAULTS["output_format"],
+        help=f"Choose test program's output format, default: '{DEFAULTS['output_format']}'",
     )
     parser.add_argument(
         "--artifacts",
-        action="store",
-        help=f"Specify whether to upload to internal or public s3 bucket, choices: '{artifact_locations}', default: '{default_artifact_location}'. \
-            'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public",
-        default=default_artifact_location,
-        choices=artifact_locations,
+        choices=CHOICES["artifact_locations"],
+        default=DEFAULTS["artifacts"],
+        help=f"Specify artifact location, default: '{DEFAULTS['artifacts']}'",
+    )
+    parser.add_argument(
+        "--ref",
+        help="Commit SHA to checkout. Default: current branch.",
+        default="",
+    )
+    parser.add_argument(
+        "--extra-args",
+        help="Extra test program arguments. Default: none.",
+        default="",
+    )
+    parser.add_argument(
+        "--custom-run-name",
+        help="Custom run name (optional)",
+        default="",
+    )
+    parser.add_argument(
+        "--token",
+        default=os.getenv("GITHUB_TOKEN"),
+        help="GitHub personal access token with workflow scope, default: $GITHUB_TOKEN env variable.",
+    )
+    parser.add_argument(
+        "--wait",
+        action="store_true",
+        help="Wait for the workflow to finish, default: False",
     )
     parser.add_argument(
         "--debug",
-        default=False,
         action="store_true",
-        help="Enable script debug mode, default: False",
-    )
-    parser.add_argument(
-        "--from-github",
-        default=False,
-        action="store_true",
-        help="Indicate whether the call was initialized from github workflows, default: False",
-    )
-    parser.add_argument(
-        "--commit-sha",
-        default=None,
-        action="store",
-        help="Provide latest commit sha, default: None",
-    )
-    parser.add_argument(
-        "--github-actor",
-        default=None,
-        action="store",
-        help="GitHub actor responsible for launching the pipeline, default: None",
+        help="Enable debug mode, default: False",
     )
 
     return parser
 
+def get_workflow_id(headers, arch):
+    """Get workflow ID for the specified architecture."""
+    response = requests.get(
+        f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows",
+        headers=headers
+    )
+    response.raise_for_status()
+    workflows = response.json()["workflows"]
+    
+    workflow_path = ".github/workflows/run-regression.yml" if arch == "x86" else ".github/workflows/run-arm-regression.yml"
+    try:
+        workflow = next(w for w in workflows if w["path"] == workflow_path)
+        print(f"   found workflow: {workflow['name']} ({workflow_path})")
+        return workflow["id"]
+    except StopIteration:
+        print(f"Error: Could not find workflow at path '{workflow_path}'")
+        print("Available workflows:")
+        for w in workflows:
+            print(f"  - {w['path']} ({w['name']})")
+        sys.exit(1)
+
+def prepare_inputs(args):
+    """Prepare workflow inputs from command line arguments."""
+    inputs = {}
+    if args.package:
+        assert (
+            args.package.startswith("docker://")
+            or args.package.startswith("https://")
+        ), "package name should start with docker:// or https://"
+        inputs["package"] = args.package
+    if args.version:
+        inputs["version"] = args.version
+    if args.flags and args.flags != "none":
+        inputs["flags"] = args.flags
+    if args.suite:
+        inputs["suite"] = args.suite
+    if args.output_format:
+        inputs["output_format"] = args.output_format
+    if args.artifacts:
+        inputs["artifacts"] = args.artifacts
+    if args.ref:
+        inputs["ref"] = args.ref
+    if args.extra_args:
+        inputs["extra_args"] = args.extra_args
+    if args.custom_run_name:
+        inputs["custom_run_name"] = args.custom_run_name
+
+    return inputs
+
+def wait_for_workflow(headers, branch):
+    """Wait for workflow to complete and check its status."""
+    i = 1
+    sys.stdout.write(f"{timestamp()}    {PROGRESS}")
+    sys.stdout.flush()
+    
+    try:
+        while True:
+            response = requests.get(
+                f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
+                headers=headers,
+                params={"branch": branch, "status": "in_progress"}
+            )
+            response.raise_for_status()
+            runs = response.json()["workflow_runs"]
+            
+            if not runs:
+                break
+                
+            if i > 1 and i % 40 == 0:
+                sys.stdout.write(f"\n{timestamp()}    ")
+            sys.stdout.write(PROGRESS)
+            sys.stdout.flush()
+            time.sleep(1)
+            i += 1
+    finally:
+        sys.stdout.write("\n")
+
+    # Check final status
+    response = requests.get(
+        f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
+        headers=headers,
+        params={"branch": branch, "status": "completed"}
+    )
+    response.raise_for_status()
+    runs = response.json()["workflow_runs"]
+    if runs and runs[0]["conclusion"] != "success":
+        print(f"Error: Workflow completed with status: {runs[0]['conclusion']}")
+        sys.exit(1)
 
 def trigger():
-    """CI/CD trigger."""
-    args = argparser(
-        ArgumentParser(
-            "cicd-trigger.py",
-            description=description,
-            formatter_class=RawTextHelpFormatter,
-        )
-    ).parse_args()
+    """Main function to trigger GitHub Actions workflow."""
+    args = create_parser().parse_args()
 
     if args.debug:
         Action.debug = True
 
-    with Action("Authenticate using token with https://gitlab.com"):
-        gl = gitlab.Gitlab("https://gitlab.com/", private_token=args.token)
-        gl.auth()
-        print(f"   authenticated as {gl.user.username}")
+    if not args.token:
+        print("Error: GitHub token is required. Set GITHUB_TOKEN environment variable or use --token option.")
+        sys.exit(1)
 
-    with Action(f"Get project {PROJECT_ID}"):
-        project = gl.projects.get(PROJECT_ID)
+    headers = {
+        "Authorization": f"token {args.token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
 
-    with Action(f"Get or create user pipeline trigger"):
-        trigger = get_or_create_pipeline_trigger(gl.user.username, project=project)
+    with Action("Authenticate with GitHub"):
+        response = requests.get("https://api.github.com/user", headers=headers)
+        response.raise_for_status()
+        user = response.json()
+        print(f"   authenticated as {user['login']}")
 
-    with Action("Trigger pipeline"):
-        variables = {}
-        if args.package:
-            assert (
-                args.package.startswith("deb://")
-                or args.package.startswith("docker://")
-                or args.package.startswith("https://")
-            ), "package name should start with deb://, docker:// or https://"
-            variables["package"] = args.package
-        if args.version:
-            variables["version"] = args.version
-        if args.package_postfix:
-            variables["package_postfix"] = args.package_postfix
-        if args.suite:
-            variables["suite"] = args.suite
-        if args.output:
-            variables["output"] = args.output
-        if args.parallel:
-            variables["parallel"] = args.parallel
-        if args.options:
-            variables["options"] = args.options
-        if args.arch:
-            variables["arch"] = args.arch
-        if args.artifacts:
-            variables["artifacts"] = args.artifacts
-            if args.artifacts == "internal":
-                log_path = "altinity-internal-test-reports"
-            elif args.artifacts == "public":
-                log_path = "altinity-test-reports"
-        if args.from_github:
-            variables["from_github"] = str(args.from_github)
-        if args.commit_sha:
-            variables["commit_sha"] = args.commit_sha
-        if args.github_actor:
-            variables["github_actor"] = args.github_actor
+    with Action("Get workflow ID"):
+        workflow_id = get_workflow_id(headers, args.arch)
 
-        pipeline = project.trigger_pipeline(
-            args.branch, trigger.token, variables=variables
-        )
+    with Action("Trigger workflow"):
+        inputs = prepare_inputs(args)
 
+        if args.debug:
+            print("\nDebug information:")
+            print(f"  Workflow ID: {workflow_id}")
+            print(f"  Branch: {args.branch}")
+            print("  Inputs:")
+            for k, v in inputs.items():
+                print(f"    {k}: {v}")
+
+        try:
+            payload = {
+                "ref": args.branch,
+                "inputs": inputs
+            }
+            if args.debug:
+                print("\n  Request payload:")
+                print(f"    {payload}")
+
+            response = requests.post(
+                f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows/{workflow_id}/dispatches",
+                headers=headers,
+                json=payload
+            )
+            
+            if args.debug:
+                print("\n  Response:")
+                print(f"    Status code: {response.status_code}")
+                print(f"    Response text: {response.text}")
+
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print(f"\nError triggering workflow: {e}")
+            if e.response.status_code == 404:
+                print("This might be because the workflow file doesn't exist or you don't have permission to access it.")
+            elif e.response.status_code == 422:
+                print("This might be because the inputs are invalid. Check the workflow file for valid input options.")
+            print(f"Response: {e.response.text}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"\nUnexpected error: {e}")
+            print(f"Error type: {type(e)}")
+            if hasattr(e, 'response'):
+                print(f"Response status: {e.response.status_code}")
+                print(f"Response text: {e.response.text}")
+            sys.exit(1)
+
+        log_path = "altinity-internal-test-reports" if args.artifacts == "internal" else "altinity-test-reports"
         print(
-            f"   Pipeline {pipeline.id} started by {pipeline.user['username']}, status: {pipeline.status} at\n"
-            f"   \u2728 https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/{pipeline.id} \u2728"
+            f"   Workflow triggered on branch {args.branch} for {args.arch} architecture\n"
+            f"   \u2728 https://github.com/{REPO_OWNER}/{REPO_NAME}/actions \u2728"
         )
-        print("\n".join(f"   {k}: {v}" for k, v in variables.items()))
+        print("\n".join(f"   {k}: {v}" for k, v in inputs.items()))
         print(
-            f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{variables['version']}/{pipeline.id}/testflows/ after the run is complete"
+            f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{inputs['version']}/testflows/ after the run is complete"
         )
 
     if args.wait:
-        with Action("Wait for pipeline to finish"):
-            i = 1
-            sys.stdout.write(f"{timestamp()}    {PROGRESS}")
-            sys.stdout.flush()
-            try:
-                while pipeline.finished_at is None:
-                    pipeline.refresh()
-                    if i > 1 and i % 40 == 0:
-                        sys.stdout.write(f"\n{timestamp()}    ")
-                    sys.stdout.write(PROGRESS)
-                    sys.stdout.flush()
-                    time.sleep(1)
-                    i += 1
-            finally:
-                sys.stdout.write("\n")
-
-            assert pipeline.status == "success", "not successful"
-
+        with Action("Wait for workflow to finish"):
+            wait_for_workflow(headers, args.branch)
 
 if __name__ == "__main__":
     trigger()
