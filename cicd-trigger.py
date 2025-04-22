@@ -13,6 +13,9 @@ Example:
 
     Run with debug output:
         python3 cicd-trigger.py --suite example --debug
+
+    List currently running workflows:
+        python3 cicd-trigger.py --list-running
 """
 import os
 import sys
@@ -33,7 +36,7 @@ DEFAULTS = {
     "flags": "none",
     "suite": "all",
     "output_format": "classic",
-    "artifacts": "internal",
+    "artifacts": "public",
     "branch": "main",
     "arch": "x86",
 }
@@ -58,7 +61,7 @@ CHOICES = {
         "--thread-fuzzer --with-analyzer",
         "--thread-fuzzer --with-analyzer --use-keeper",
         "--thread-fuzzer --with-analyzer --as-binary",
-        "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
+        "--thread-fuzzer --with-analyzer --as-binary --use-keeper",
     ],
     "output_formats": [
         "nice-new-fails",
@@ -76,7 +79,7 @@ CHOICES = {
         "manual",
         "dots",
         "progress",
-        "raw"
+        "raw",
     ],
     "artifact_locations": ["internal", "public"],
     "suites": [
@@ -133,33 +136,37 @@ CHOICES = {
         "tiered_storage_gcs",
         "tiered_storage_local",
         "tiered_storage_minio",
-        "window_functions"
-    ]
+        "window_functions",
+    ],
 }
+
 
 class Action:
     """Simple action wrapper for logging and error handling."""
+
     debug = False
 
     def __init__(self, name):
         self.name = name
 
     def __enter__(self):
-        print(f"{timestamp()} \u270D  {self.name}")
+        print(f"{timestamp()} \u270d  {self.name}")
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         if exc_value is not None:
-            print(f"{timestamp()} \u274C Error", BaseException)
+            print(f"{timestamp()} \u274c Error", BaseException)
             if self.debug:
                 raise
             sys.exit(1)
         else:
             print(f"{timestamp()} \u2705 OK")
 
+
 def timestamp():
     """Return formatted timestamp string."""
     dt = datetime.datetime.now(datetime.timezone.utc)
     return dt.astimezone().strftime("%b %d,%Y %H:%M:%S.%f %Z")
+
 
 def create_parser():
     """Create and configure argument parser."""
@@ -203,13 +210,15 @@ def create_parser():
         help="Test flags to use",
     )
     parser.add_argument(
-        "-s", "--suite",
+        "-s",
+        "--suite",
         choices=CHOICES["suites"],
         default=DEFAULTS["suite"],
         help=f"Choose specific suite to run, default: '{DEFAULTS['suite']}'",
     )
     parser.add_argument(
-        "-o", "--output-format",
+        "-o",
+        "--output-format",
         choices=CHOICES["output_formats"],
         default=DEFAULTS["output_format"],
         help=f"Choose test program's output format, default: '{DEFAULTS['output_format']}'",
@@ -250,19 +259,29 @@ def create_parser():
         action="store_true",
         help="Enable debug mode, default: False",
     )
+    parser.add_argument(
+        "--list-running",
+        action="store_true",
+        help="List all currently running workflows and exit",
+    )
 
     return parser
+
 
 def get_workflow_id(headers, arch):
     """Get workflow ID for the specified architecture."""
     response = requests.get(
         f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows",
-        headers=headers
+        headers=headers,
     )
     response.raise_for_status()
     workflows = response.json()["workflows"]
-    
-    workflow_path = ".github/workflows/run-regression.yml" if arch == "x86" else ".github/workflows/run-arm-regression.yml"
+
+    workflow_path = (
+        ".github/workflows/run-regression.yml"
+        if arch == "x86"
+        else ".github/workflows/run-arm-regression.yml"
+    )
     try:
         workflow = next(w for w in workflows if w["path"] == workflow_path)
         print(f"   found workflow: {workflow['name']} ({workflow_path})")
@@ -274,13 +293,13 @@ def get_workflow_id(headers, arch):
             print(f"  - {w['path']} ({w['name']})")
         sys.exit(1)
 
+
 def prepare_inputs(args):
     """Prepare workflow inputs from command line arguments."""
     inputs = {}
     if args.package:
-        assert (
-            args.package.startswith("docker://")
-            or args.package.startswith("https://")
+        assert args.package.startswith("docker://") or args.package.startswith(
+            "https://"
         ), "package name should start with docker:// or https://"
         inputs["package"] = args.package
     if args.version:
@@ -302,25 +321,26 @@ def prepare_inputs(args):
 
     return inputs
 
+
 def wait_for_workflow(headers, branch):
     """Wait for workflow to complete and check its status."""
     i = 1
     sys.stdout.write(f"{timestamp()}    {PROGRESS}")
     sys.stdout.flush()
-    
+
     try:
         while True:
             response = requests.get(
                 f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
                 headers=headers,
-                params={"branch": branch, "status": "in_progress"}
+                params={"branch": branch, "status": "in_progress"},
             )
             response.raise_for_status()
             runs = response.json()["workflow_runs"]
-            
+
             if not runs:
                 break
-                
+
             if i > 1 and i % 40 == 0:
                 sys.stdout.write(f"\n{timestamp()}    ")
             sys.stdout.write(PROGRESS)
@@ -334,13 +354,39 @@ def wait_for_workflow(headers, branch):
     response = requests.get(
         f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
         headers=headers,
-        params={"branch": branch, "status": "completed"}
+        params={"branch": branch, "status": "completed"},
     )
     response.raise_for_status()
     runs = response.json()["workflow_runs"]
     if runs and runs[0]["conclusion"] != "success":
         print(f"Error: Workflow completed with status: {runs[0]['conclusion']}")
         sys.exit(1)
+
+
+def list_running_workflows(headers):
+    """List all currently running workflows."""
+    response = requests.get(
+        f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
+        headers=headers,
+        params={"status": "in_progress"},
+    )
+    response.raise_for_status()
+    runs = response.json()["workflow_runs"]
+
+    if not runs:
+        print("No workflows are currently running.")
+        return
+
+    print("\nCurrently running workflows:")
+    print("-" * 80)
+    for run in runs:
+        print(f"Workflow: {run['name']}")
+        print(f"  ID: {run['id']}")
+        print(f"  Branch: {run['head_branch']}")
+        print(f"  Started: {run['created_at']}")
+        print(f"  URL: {run['html_url']}")
+        print("-" * 80)
+
 
 def trigger():
     """Main function to trigger GitHub Actions workflow."""
@@ -350,12 +396,14 @@ def trigger():
         Action.debug = True
 
     if not args.token:
-        print("Error: GitHub token is required. Set GITHUB_TOKEN environment variable or use --token option.")
+        print(
+            "Error: GitHub token is required. Set GITHUB_TOKEN environment variable or use --token option."
+        )
         sys.exit(1)
 
     headers = {
         "Authorization": f"token {args.token}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.v3+json",
     }
 
     with Action("Authenticate with GitHub"):
@@ -363,6 +411,11 @@ def trigger():
         response.raise_for_status()
         user = response.json()
         print(f"   authenticated as {user['login']}")
+
+    if args.list_running:
+        with Action("Listing running workflows"):
+            list_running_workflows(headers)
+        return
 
     with Action("Get workflow ID"):
         workflow_id = get_workflow_id(headers, args.arch)
@@ -379,10 +432,7 @@ def trigger():
                 print(f"    {k}: {v}")
 
         try:
-            payload = {
-                "ref": args.branch,
-                "inputs": inputs
-            }
+            payload = {"ref": args.branch, "inputs": inputs}
             if args.debug:
                 print("\n  Request payload:")
                 print(f"    {payload}")
@@ -390,9 +440,9 @@ def trigger():
             response = requests.post(
                 f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/workflows/{workflow_id}/dispatches",
                 headers=headers,
-                json=payload
+                json=payload,
             )
-            
+
             if args.debug:
                 print("\n  Response:")
                 print(f"    Status code: {response.status_code}")
@@ -402,20 +452,28 @@ def trigger():
         except requests.exceptions.HTTPError as e:
             print(f"\nError triggering workflow: {e}")
             if e.response.status_code == 404:
-                print("This might be because the workflow file doesn't exist or you don't have permission to access it.")
+                print(
+                    "This might be because the workflow file doesn't exist or you don't have permission to access it."
+                )
             elif e.response.status_code == 422:
-                print("This might be because the inputs are invalid. Check the workflow file for valid input options.")
+                print(
+                    "This might be because the inputs are invalid. Check the workflow file for valid input options."
+                )
             print(f"Response: {e.response.text}")
             sys.exit(1)
         except Exception as e:
             print(f"\nUnexpected error: {e}")
             print(f"Error type: {type(e)}")
-            if hasattr(e, 'response'):
+            if hasattr(e, "response"):
                 print(f"Response status: {e.response.status_code}")
                 print(f"Response text: {e.response.text}")
             sys.exit(1)
 
-        log_path = "altinity-internal-test-reports" if args.artifacts == "internal" else "altinity-test-reports"
+        log_path = (
+            "altinity-internal-test-reports"
+            if args.artifacts == "internal"
+            else "altinity-test-reports"
+        )
         print(
             f"   Workflow triggered on branch {args.branch} for {args.arch} architecture\n"
             f"   \u2728 https://github.com/{REPO_OWNER}/{REPO_NAME}/actions \u2728"
@@ -428,6 +486,7 @@ def trigger():
     if args.wait:
         with Action("Wait for workflow to finish"):
             wait_for_workflow(headers, args.branch)
+
 
 if __name__ == "__main__":
     trigger()
