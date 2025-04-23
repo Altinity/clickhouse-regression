@@ -1,81 +1,83 @@
-
 services:
-  spark-iceberg:
-    image: tabulario/spark-iceberg
-    container_name: spark-iceberg
-    build: spark/
-    depends_on:
-      - rest
-      - minio
-    environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-    ports:
-      - 8080:8080
-      - 10000:10000
-      - 10001:10001
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
-  rest:
-    image: tabulario/iceberg-rest
-    ports:
-      - 8182:8181
-    environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-      - CATALOG_WAREHOUSE=s3://iceberg_data/
-      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
-      - CATALOG_S3_ENDPOINT=http://minio:9000
+  # nessie:
+  #   image: ghcr.io/projectnessie/nessie:0.99.0
+  #   container_name: nessie
+  #   ports:
+  #     - "19120:19120"
+  #   environment:
+  #     - nessie.version.store.type=IN_MEMORY
+  #     - nessie.catalog.default-warehouse=warehouse
+  #     - nessie.catalog.warehouses.warehouse.location=s3://warehouse/
+  #     - nessie.catalog.service.s3.default-options.endpoint=http://minio:9000
+  #     # - nessie.catalog.service.s3.default-options.access-key=admin
+  #     # - nessie.catalog.service.s3.default-options.secret-key=password
+  #     - nessie.catalog.service.s3.default-options.path-style-access=true
+  #     - nessie.catalog.service.s3.default-options.auth-type=STATIC
+  #     - nessie.catalog.service.s3.default-options.region=us-east-1
+  #     - nessie.catalog.service.s3.default-options.access-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
+  #     - nessie.catalog.service.s3.default-options.secret-key=urn:nessie-secret:quarkus:nessie.catalog.secrets.secret-key
+  #     - nessie.catalog.secrets.access-key.name=admin
+  #     - nessie.catalog.secrets.access-key.secret=password
+  #     - nessie.catalog.secrets.secret-key.name=admin
+  #     - nessie.catalog.secrets.secret-key.secret=password
+  #     - nessie.server.authentication.enabled=false
+  #     - nessie.iceberg.compatibility=v1 
+      
+  # spark-iceberg:
+  #   image: tabulario/spark-iceberg
+  #   container_name: spark-iceberg
+  #   build: spark/
+  #   depends_on:
+  #     - rest
+  #     - minio
+  #   environment:
+  #     - AWS_ACCESS_KEY_ID=admin
+  #     - AWS_SECRET_ACCESS_KEY=password
+  #     - AWS_REGION=us-east-1
+  #   ports:
+  #     - 8080:8080
+  #     - 10000:10000
+  #     - 10001:10001
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
+  # rest:
+  #   image: tabulario/iceberg-rest
+  #   ports:
+  #     - 8182:8181
+  #   environment:
+  #     - AWS_ACCESS_KEY_ID=admin
+  #     - AWS_SECRET_ACCESS_KEY=password
+  #     - AWS_REGION=us-east-1
+  #     - CATALOG_WAREHOUSE=s3://iceberg_data/
+  #     - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+  #     - CATALOG_S3_ENDPOINT=http://minio:9000
+  ice-rest-catalog:
+    image: altinity/ice-rest-catalog:latest
+    restart: unless-stopped
+    ports:
+      - '5000:5000' # iceberg/http
+    configs:
+      - source: ice-rest-catalog-yaml
+        target: /etc/ice/ice-rest-catalog.yaml
+    volumes:
+      # for access to /var/lib/ice-rest-catalog/db.sqlite
+      - ./docker-compose.volumes/ice-rest-catalog/var/lib/ice-rest-catalog:/var/lib/ice-rest-catalog
   minio:
-    image: minio/minio
-    container_name: minio
-    environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=minio123
-      - MINIO_DOMAIN=minio
-    networks:
-      default:
-        aliases:
-          - warehouse.minio
-    ports:
-        - 9001:9001
-        - 9002:9000
-    command: ["server", "/data", "--console-address", ":9001"]
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
+    extends:
+      file: minio-service.yml
+      service: minio
   mc:
+    extends:
+      file: minio-client.yml
+      service: mc
     depends_on:
-      - minio
-    image: minio/mc
-    container_name: mc
-    environment:
-      - AWS_ACCESS_KEY_ID=minio
-      - AWS_SECRET_ACCESS_KEY=minio123
-      - AWS_REGION=us-east-1
-    entrypoint: >
-      /bin/sh -c "
-      until (/usr/bin/mc config host add minio http://minio:9000 minio minio123) do echo '...waiting...' && sleep 1; done;
-      /usr/bin/mc rm -r --force minio/warehouse;
-      /usr/bin/mc mb minio/warehouse --ignore-existing;
-      /usr/bin/mc policy set public minio/warehouse;
-      tail -f /dev/null
-      "
-    healthcheck:
-      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      minio:
+        condition: service_healthy
 
   zookeeper1:
     extends:
@@ -117,7 +119,18 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
-  
+
+  keeper:
+    image: altinity/clickhouse-keeper:24.12.2.20101.altinityantalya
+    container_name: keeper
+    hostname: keeper
+    ports:
+      - 2181:2181
+    volumes:
+      # Note special location of Keeper config overrides. 
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
@@ -133,7 +146,18 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-      spark-iceberg:
-        condition: service_healthy
+      # spark-iceberg:
+      #   condition: service_healthy
       mc:
         condition: service_healthy
+
+configs:
+  ice-rest-catalog-yaml:
+    content: |
+      uri: "jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500"
+      warehouse: s3://bucket1
+      s3.endpoint: http://minio:9000
+      s3.access-key-id: "admin"
+      s3.secret-access-key: "password"
+      ice.s3.region: us-east-1
+      
