@@ -19,15 +19,34 @@ def drop_database(self, database_name, node=None):
 @TestStep(Given)
 def create_experimental_iceberg_database(
     self,
-    namespace,
     s3_access_key_id,
     s3_secret_access_key,
     database_name=None,
-    node=None,
-    rest_catalog_url="http://rest:8181/v1",
+    warehouse="s3://bucket1/",
+    rest_catalog_url="http://ice-rest-catalog:5000",
     catalog_type=CATALOG_TYPE,
     storage_endpoint="http://minio:9000/warehouse",
+    auth_header=None,
+    exitcode=None,
+    message=None,
+    node=None,
 ):
+    """Create experimental iceberg database with given parameters.
+    Args:
+        warehouse: S3 bucket name.
+        s3_access_key_id: S3 access key id.
+        s3_secret_access_key: S3 secret access key.
+        database_name: Name of the database to create.
+        node: ClickHouse node to execute the query on.
+        rest_catalog_url: URL of the REST catalog.
+        catalog_type: Type of the catalog.
+        storage_endpoint: Storage endpoint.
+        auth_header: Authorization header.
+        exitcode: Exit code of the query.
+        message: Message of the query.
+    Returns:
+        Name of the created database.
+    """
     if node is None:
         node = self.context.node
 
@@ -37,15 +56,29 @@ def create_experimental_iceberg_database(
     database_engine_name = (
         "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
     )
+    settings = {}
+    if catalog_type:
+        settings["catalog_type"] = catalog_type
+    if storage_endpoint:
+        settings["storage_endpoint"] = storage_endpoint
+    if warehouse:
+        settings["warehouse"] = warehouse
+    if auth_header:
+        settings["auth_header"] = auth_header
 
-    node.query(
-        f"""
-            SET allow_experimental_database_iceberg=true;
-            CREATE DATABASE {database_name}
-            ENGINE = {database_engine_name}('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}')
-            SETTINGS catalog_type = '{catalog_type}', storage_endpoint = '{storage_endpoint}', warehouse = '{namespace}';
-        """
-    )
+    if settings:
+        settings_str = ",".join(
+            [f"{key} = '{value}'" for key, value in settings.items()]
+        )
+        settings_str = f"SETTINGS {settings_str}"
+
+    query = f"SET allow_experimental_database_iceberg=true; "
+    query += f"CREATE DATABASE {database_name} "
+    query += f"ENGINE = {database_engine_name}('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}') "
+    if settings:
+        query += f"{settings_str}"
+
+    node.query(query)
 
     return database_name
 
@@ -162,7 +195,7 @@ def get_iceberg_table_name(
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -185,9 +218,8 @@ def get_iceberg_table_name(
     with And("create database with Iceberg engine"):
         drop_database(database_name=database_name)
         create_experimental_iceberg_database(
-            namespace=namespace,
             database_name=database_name,
-            rest_catalog_url="http://rest:8181/v1",
+            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             catalog_type=catalog_steps.CATALOG_TYPE,
