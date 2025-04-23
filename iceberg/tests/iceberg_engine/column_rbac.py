@@ -81,7 +81,7 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -105,9 +105,8 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
         database_name = "column_rbac"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
-            namespace=namespace,
             database_name=database_name,
-            rest_catalog_url="http://rest:8181/v1",
+            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             catalog_type=catalog_steps.CATALOG_TYPE,
