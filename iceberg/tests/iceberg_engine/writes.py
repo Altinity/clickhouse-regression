@@ -20,7 +20,7 @@ def overwrite(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -38,9 +38,8 @@ def overwrite(self, minio_root_user, minio_root_password):
     with Then("create database with Iceberg engine"):
         database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
-            namespace=namespace,
             database_name=database_name,
-            rest_catalog_url="http://rest:8181/v1",
+            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             catalog_type=catalog_steps.CATALOG_TYPE,
@@ -107,7 +106,7 @@ def append(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -125,9 +124,8 @@ def append(self, minio_root_user, minio_root_password):
     with Then("create database with Iceberg engine"):
         database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
-            namespace=namespace,
             database_name=database_name,
-            rest_catalog_url="http://rest:8181/v1",
+            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             catalog_type=catalog_steps.CATALOG_TYPE,

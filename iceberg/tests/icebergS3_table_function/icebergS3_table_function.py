@@ -19,7 +19,7 @@ def sanity(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -84,7 +84,7 @@ def recreate_table(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -155,7 +155,7 @@ def recreate_table_and_insert_new_data(self, minio_root_user, minio_root_passwor
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
@@ -251,7 +251,7 @@ def recreate_table_and_insert_new_data_multiple_times(
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
