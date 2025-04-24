@@ -97,13 +97,22 @@ def read_data_from_clickhouse_iceberg_table(
     exitcode=None,
     message=None,
     format="TabSeparated",
+    log_comment=None,
 ):
     if node is None:
         node = self.context.node
 
+    settings = []
+    if user:
+        settings.append(("user", user))
+    if password:
+        settings.append(("password", f"{password}"))
+    if log_comment:
+        settings.append(("log_comment", f"{log_comment}"))
+
     result = node.query(
         f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` ORDER BY {order_by} FORMAT {format}",
-        settings=[("user", user), ("password", f"{password}")],
+        settings=settings,
         exitcode=exitcode,
         message=message,
     )
