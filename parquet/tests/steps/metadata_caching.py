@@ -625,3 +625,26 @@ def get_parquet_metadata_size(self, file_name, node=None):
     # Calculate size of metadata in bytes
     metadata_size = len(metadata.output.encode("utf-8"))
     return metadata_size
+
+
+@TestStep(Given)
+def flush_parquet_metadata_cache(self, node=None):
+    """Flush Parquet metadata cache on a single node."""
+    if node is None:
+        node = self.context.node
+
+    node.query("SYSTEM DROP PARQUET METADATA CACHE")
+
+
+@TestStep(Given)
+def flush_parquet_metadata_cache_on_cluster(self, node=None,cluster=None):
+    """Flush Parquet metadata cache on all nodes in a cluster."""
+
+    if node is None:
+        node = self.context.node
+
+    if cluster is None:
+        cluster = "replicated_cluster"
+
+    self.context.node.query(f"SYSTEM DROP PARQUET METADATA CACHE ON CLUSTER {cluster}")
+
