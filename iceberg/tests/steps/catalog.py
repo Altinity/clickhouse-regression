@@ -31,6 +31,7 @@ import pyarrow as pa
 import boto3
 
 from helpers.common import getuid
+
 CATALOG_TYPE = "rest"
 
 
