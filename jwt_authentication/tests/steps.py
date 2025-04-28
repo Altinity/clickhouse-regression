@@ -461,6 +461,38 @@ def create_user_with_jwt_auth(
             node.query(f"DROP USER IF EXISTS {user_name}")
 
 
+@TestStep(Given)
+def create_user_with_password_auth(
+    self,
+    user_name: str,
+    node: Node = None,
+    password: str = None,
+    cluster: str = None,
+    if_not_exists: bool = False,
+):
+    """Create a user with JWT authentication."""
+    if node is None:
+        node = self.context.node
+
+    if_not_exists = "IF NOT EXISTS" if if_not_exists else ""
+
+    query = f"CREATE USER {if_not_exists} {user_name} "
+
+    if cluster is not None:
+        query += f"ON CLUSTER {cluster} "
+
+    if password is not None:
+        query += f"IDENTIFIED WITH PLAINTEXT_PASSWORD BY {password} "
+
+    try:
+        node.query(query)
+        yield
+
+    finally:
+        with Finally("drop user"):
+            node.query(f"DROP USER IF EXISTS {user_name}")
+
+
 @TestStep(Then)
 def check_clickhouse_client_jwt_login(
     self,
