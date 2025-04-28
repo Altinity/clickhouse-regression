@@ -4,6 +4,7 @@ from helpers.common import getuid
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.icebergS3 as icebergS3
+from parquet.tests.steps.metadata_caching import check_hits
 
 
 @TestScenario
@@ -36,13 +37,35 @@ def cache(self, minio_root_user, minio_root_password):
         )
 
     with Then(
-        "read data in clickhouse using icebergS3 table function and check if it's empty"
+        "read data in clickhouse using icebergS3 table function for the first time"
     ):
-        result = icebergS3.read_data_with_icebergS3_table_function(
-            storage_endpoint="http://minio:9000/warehouse/data",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
+
+        cold_execution_time, _ = (
+            icebergS3.read_parquet_data_with_icebergS3_table_function(
+                storage_endpoint="http://minio:9000/warehouse/data/",
+                s3_access_key_id=minio_root_user,
+                s3_secret_access_key=minio_root_password,
+                cache_parquet_metadata=True,
+            )
         )
+
+    with And("read data in clickhouse using icebergS3 table function for 10 times"):
+        for i in range(10):
+            hot_execution_time, log_comment = (
+                icebergS3.read_parquet_data_with_icebergS3_table_function(
+                    storage_endpoint="http://minio:9000/warehouse/data/",
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
+                    cache_parquet_metadata=True,
+                )
+            )
+
+            assert hot_execution_time < cold_execution_time
+    with And("Check hits"):
+        hits = check_hits(
+            log_comment=log_comment, node=self.context.node, assertion=True
+        )
+        assert hits > 0, "cache was not hit"
 
 
 @TestFeature
