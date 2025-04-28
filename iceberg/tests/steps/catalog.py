@@ -31,6 +31,7 @@ import pyarrow as pa
 import boto3
 
 from helpers.common import getuid
+
 CATALOG_TYPE = "rest"
 
 
@@ -43,17 +44,23 @@ def create_catalog(
     name="rest_catalog",
     s3_endpoint="http://localhost:9002",
     catalog_type=CATALOG_TYPE,
+    auth_header="foo",
 ):
     try:
+        conf = {
+            "uri": uri,
+            "type": catalog_type,
+            "s3.endpoint": s3_endpoint,
+            "s3.access-key-id": s3_access_key_id,
+            "s3.secret-access-key": s3_secret_access_key,
+        }
+        
+        if auth_header:
+            conf["token"] = auth_header
+            
         catalog = load_catalog(
             name,
-            **{
-                "uri": uri,
-                "type": catalog_type,
-                "s3.endpoint": s3_endpoint,
-                "s3.access-key-id": s3_access_key_id,
-                "s3.secret-access-key": s3_secret_access_key,
-            },
+            **conf,
         )
         yield catalog
 
@@ -272,7 +279,7 @@ def create_catalog_and_iceberg_table_with_data(
 
     with By("create catalog"):
         catalog = create_catalog(
-            uri="http://localhost:8182/",
+            uri="http://localhost:5000/",
             catalog_type=CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
