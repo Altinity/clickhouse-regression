@@ -79,7 +79,9 @@ def drop_table(self, minio_root_user, minio_root_password, node=None):
 
     with And("check that table is dropped"):
         res = node.query(f"SHOW TABLES")
-        assert res.output == "", error()
+        for retry in retries(count=10, delay=1):
+            with retry:
+                assert res.output == "", error()
 
 
 @TestFeature
