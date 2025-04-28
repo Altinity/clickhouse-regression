@@ -69,7 +69,7 @@ def connect_to_catalog_minio(self, catalog_type=None):  # 1
         catalog_type = "rest"
 
     catalog = create_catalog(
-        uri="http://localhost:8182/",
+        uri="http://localhost:5000/",
         catalog_type=catalog_type,
         s3_access_key_id=self.context.access_key_id,
         s3_secret_access_key=self.context.secret_access_key,
