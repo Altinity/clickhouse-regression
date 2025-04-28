@@ -136,7 +136,6 @@ def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=Non
         swarm_steps.remove_node_from_swarm(node=self.context.node2)
         output = swarm_steps.show_clusters(node=self.context.node2)
         assert "swarm" not in output.output, error()
-        pause()
 
     with And(
         "check that initiator node sees that clickhouse2 is removed from the cluster"
