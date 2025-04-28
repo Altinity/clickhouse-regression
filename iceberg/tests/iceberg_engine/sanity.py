@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from testflows.core import *
 from testflows.asserts import error
 
@@ -213,7 +211,6 @@ def sort_order(self, minio_root_user, minio_root_password):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
-        pause()
 
 
 @TestScenario
@@ -697,5 +694,11 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=rename_table_from_iceberg_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=sort_order)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=multiple_tables)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
