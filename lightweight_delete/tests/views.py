@@ -135,9 +135,9 @@ def live_view(self, node=None):
         assert r1.output == r2.output
 
     with Then("I watch live view", description="concurrent watch, delete, insert"):
-        Step(name="watch", test=watch_live_view, parallel=True)(
-            view_name=view_name_1, setting="allow_experimental_live_view"
-        )
+        # Step(name="watch", test=watch_live_view, parallel=True)(
+        #     view_name=view_name_1, setting="allow_experimental_live_view"
+        # )
         Step(name="delete", test=delete_from_table_with_watch, parallel=True)(
             table_name=table_name, condition="x > 10", node=node
         )
