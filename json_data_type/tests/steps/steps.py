@@ -112,3 +112,13 @@ def insert_json_to_table(
         VALUES ('{json_str}')
         """
     )
+
+
+def dict_items_to_str(data):
+    """Recursively convert all dictionary values to strings without modifying the original dictionary."""
+    if isinstance(data, dict):
+        return {key: dict_items_to_str(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [dict_items_to_str(item) for item in data]
+    else:
+        return str(data)  # Convert values to string
