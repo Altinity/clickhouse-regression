@@ -94,24 +94,38 @@ def read_data_from_clickhouse_iceberg_table(
     user="default",
     password="",
     order_by="tuple()",
+    where_clause=None,
     exitcode=None,
     message=None,
     format="TabSeparated",
     log_comment=None,
+    iceberg_partition_pruning=False,
 ):
     if node is None:
         node = self.context.node
 
     settings = []
+    
     if user:
         settings.append(("user", user))
     if password:
         settings.append(("password", f"{password}"))
     if log_comment:
         settings.append(("log_comment", f"{log_comment}"))
+    if iceberg_partition_pruning:
+        settings.append(("use_iceberg_partition_pruning", 1))
+
+    query = f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\`"
+    
+    if where_clause:
+        query += f" WHERE {where_clause}"
+    if order_by:
+        query += f" ORDER BY {order_by}"
+    if format:
+        query += f" FORMAT {format}"
 
     result = node.query(
-        f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\` ORDER BY {order_by} FORMAT {format}",
+        query,
         settings=settings,
         exitcode=exitcode,
         message=message,
