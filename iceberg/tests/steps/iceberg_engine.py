@@ -99,6 +99,7 @@ def read_data_from_clickhouse_iceberg_table(
     message=None,
     format="TabSeparated",
     log_comment=None,
+    cache_parquet_metadata=False,
     iceberg_partition_pruning=False,
 ):
     if node is None:
@@ -112,6 +113,10 @@ def read_data_from_clickhouse_iceberg_table(
         settings.append(("password", f"{password}"))
     if log_comment:
         settings.append(("log_comment", f"{log_comment}"))
+    if cache_parquet_metadata:
+        settings.append(("input_format_parquet_use_metadata_cache", "1"))
+        settings.append(("optimize_count_from_files", "0"))
+        settings.append(("remote_filesystem_read_prefetch", "0"))
     if iceberg_partition_pruning:
         settings.append(("use_iceberg_partition_pruning", 1))
 
@@ -123,6 +128,7 @@ def read_data_from_clickhouse_iceberg_table(
         query += f" ORDER BY {order_by}"
     if format:
         query += f" FORMAT {format}"
+
 
     result = node.query(
         query,
