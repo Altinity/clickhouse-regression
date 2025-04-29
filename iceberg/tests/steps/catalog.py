@@ -5,23 +5,24 @@ from testflows.core import *
 
 import pyiceberg
 from pyiceberg.catalog import load_catalog
-from pyiceberg.schema import Schema
+from pyiceberg.schema import Schema, NestedField
 from pyiceberg.types import (
-    BooleanType,
-    BinaryType,
-    DateType,
-    DecimalType,
-    DoubleType,
-    FixedType,
-    FloatType,
+    StringType,
     IntegerType,
     LongType,
-    NestedField,
-    StringType,
-    TimeType,
+    FloatType,
+    DoubleType,
     TimestampType,
+    BooleanType,
     TimestamptzType,
+    DateType,
+    TimeType,
     UUIDType,
+    BinaryType,
+    DecimalType,
+    StructType,
+    ListType,
+    MapType,
 )
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
@@ -29,10 +30,29 @@ from pyiceberg.transforms import IdentityTransform
 
 import pyarrow as pa
 import boto3
+import string
+from datetime import datetime, time
+from decimal import Decimal
 
 from helpers.common import getuid
 
 CATALOG_TYPE = "rest"
+
+_PRIMITIVE_TYPES = [
+    StringType,
+    IntegerType,
+    LongType,
+    FloatType,
+    DoubleType,
+    TimestampType,
+    BooleanType,
+    TimestamptzType,
+    DateType,
+    TimeType,
+    # UUIDType,
+    BinaryType,
+    DecimalType,
+]
 
 
 @TestStep(Given)
@@ -269,7 +289,7 @@ def create_catalog_and_iceberg_table_with_data(
     with_data=True,
 ):
     """Combine all steps to create catalog, namespace, table with five
-    columns and insert data to the created table."""
+    columns and insert 4 rows of data to the created table."""
 
     if namespace is None:
         namespace = "namespace_" + getuid()
