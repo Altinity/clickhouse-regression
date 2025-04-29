@@ -225,14 +225,14 @@ ffails = {
         Skip,
         "GCS is not supported for zero copy replication",
     ),
-    "gcs/:/:/:/:the size of the s3 bucket*": (
-        Skip,
-        "needs investigation",
-    ),
-    "gcs/:/:/:the size of the s3 bucket*": (
-        Skip,
-        "needs investigation",
-    ),
+    # "gcs/:/:/:/:the size of the s3 bucket*": (
+    #     Skip,
+    #     "needs investigation",
+    # ),
+    # "gcs/:/:/:the size of the s3 bucket*": (
+    #     Skip,
+    #     "needs investigation",
+    # ),
     "gcs/table function/measure file size": (
         Skip,
         "needs investigation",
