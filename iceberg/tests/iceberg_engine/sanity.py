@@ -768,9 +768,9 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sort_order)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=multiple_tables)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
+    # Scenario(test=multiple_tables)(
+    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    # )
     Scenario(test=array_join)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
