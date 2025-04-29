@@ -846,7 +846,7 @@ def get_stable_bucket_size(
             name=name,
             prefix=prefix,
         )
-
+    debug(size_previous)
     start_time = time.time()
     while True:
         with And(f"waiting {delay}s"):
@@ -865,7 +865,7 @@ def get_stable_bucket_size(
             assert time.time() - start_time <= timeout, error(
                 f"Bucket size did not stabilize in {timeout}s"
             )
-
+    debug(start_time)
     return size
 
 
