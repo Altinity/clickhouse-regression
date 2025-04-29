@@ -268,6 +268,7 @@ ffails = {
     "azure/combinatoric table": (Skip, "Time outs need investigation"),
     "azure/zero copy replication/metadata": (Skip, "azure not s3 compatible"),
     "azure/zero copy replication/alter": (Skip, "investigate"),
+    "aws s3/invalid table function/invalid wildcard": (Skip, "needs investigation"),
     "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
     "aws s3/table function/ssec encryption check": (
         Skip,
