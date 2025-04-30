@@ -4,7 +4,7 @@ from testflows.asserts import error
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestScenario
@@ -83,7 +83,8 @@ def prewhere_clause(self, table_name, node=None):
     table_name_without_backslashes = table_name.replace("\\", "")
 
     exitcode = 182
-    message = f"DB::Exception: Storage IcebergS3 (table {table_name_without_backslashes}) does not support PREWHERE. (ILLEGAL_PREWHERE)"
+    storage_name = "IcebergS3" if check_clickhouse_version(">=25")(self) else "Iceberg"
+    message = f"DB::Exception: Storage {storage_name} (table {table_name_without_backslashes}) does not support PREWHERE. (ILLEGAL_PREWHERE)"
     node.query(
         f"""
             SELECT * FROM {table_name} 
@@ -187,7 +188,7 @@ def join_clause(self, table_name, node=None):
         node.query(
             f"""
             CREATE TABLE {merge_tree_table_name} (
-                boolean_col UInt8,
+                boolean_col Boolean,
                 long_col UInt64,
                 double_col Float64,
                 string_col String,
@@ -237,7 +238,7 @@ def join_clause(self, table_name, node=None):
         )
         assert (
             result.output.strip()
-            == "(false,2000,456.78,'Bob','2023-05-15',0,2,2,'b','2021-01-01'),(false,2000,456.78,'Bob','2023-05-15',0,4,4,'d','2021-01-01'),(false,4000,8.9,'1','2021-01-01',0,2,2,'b','2021-01-01'),(false,4000,8.9,'1','2021-01-01',0,4,4,'d','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',1,1,1,'a','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',1,3,3,'c','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',1,1,1,'a','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',1,3,3,'c','2021-01-01')"
+            == "(false,2000,456.78,'Bob','2023-05-15',false,2,2,'b','2021-01-01'),(false,2000,456.78,'Bob','2023-05-15',false,4,4,'d','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,2,2,'b','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,4,4,'d','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,1,1,'a','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,3,3,'c','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,1,1,'a','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,3,3,'c','2021-01-01')"
         ), error()
 
     with And("join iceberg table to merge tree table"):
@@ -253,7 +254,7 @@ def join_clause(self, table_name, node=None):
         )
         assert (
             result.output.strip()
-            == "(0,2,2,'b','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(0,2,2,'b','2021-01-01',false,4000,8.9,'1','2021-01-01'),(0,4,4,'d','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(0,4,4,'d','2021-01-01',false,4000,8.9,'1','2021-01-01'),(1,1,1,'a','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(1,1,1,'a','2021-01-01',true,3000,6.7,'Charlie','2022-01-01'),(1,3,3,'c','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(1,3,3,'c','2021-01-01',true,3000,6.7,'Charlie','2022-01-01')"
+            == "(false,2,2,'b','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,2,2,'b','2021-01-01',false,4000,8.9,'1','2021-01-01'),(false,4,4,'d','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,4,4,'d','2021-01-01',false,4000,8.9,'1','2021-01-01'),(true,1,1,'a','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,1,1,'a','2021-01-01',true,3000,6.7,'Charlie','2022-01-01'),(true,3,3,'c','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,3,3,'c','2021-01-01',true,3000,6.7,'Charlie','2022-01-01')"
         ), error()
 
 
@@ -266,7 +267,7 @@ def order_by_clause(self, table_name, node=None):
     result_order_by_boolean_col = node.query(
         f"""
             SELECT * FROM {table_name} 
-            ORDER BY boolean_col
+            ORDER BY boolean_col, long_col
             FORMAT Values
         """
     )
@@ -290,7 +291,7 @@ def order_by_clause(self, table_name, node=None):
     result_order_by_double_col = node.query(
         f"""
             SELECT * FROM {table_name} 
-            ORDER BY double_col
+            ORDER BY double_col, string_col
             FORMAT Values
         """
     )
