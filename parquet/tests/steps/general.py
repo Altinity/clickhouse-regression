@@ -28,6 +28,16 @@ from parquet.tests.steps.bloom_filter import (
 )
 
 
+def is_numeric(value):
+    if value is None:
+        return False
+    try:
+        float(value)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
 class JSONEncoder(json.JSONEncoder):
     """
     Custom JSON encoder:
@@ -317,7 +327,21 @@ def generate_parquet_file(self, json_file_path, output_path=None, no_checks=True
 
 
 @TestStep(Given)
-def extract_statistics(self, metadata_json, node=None):
+def select_parquet_metadata(self, file_name, node=None):
+    """Select the parquet metadata for a given file."""
+
+    if node is None:
+        node = self.context.node
+
+    with Given("I have a parquet file"):
+        result = node.query(
+            f"SELECT row_groups FROM file('{file_name}', ParquetMetadata) FORMAT JSON"
+        )
+        return result.output
+
+
+@TestStep(Given)
+def extract_statistics(self, file_name, node=None):
     """Extract statistics from parquet metadata and organize them by column name.
 
     Args:
@@ -331,7 +355,7 @@ def extract_statistics(self, metadata_json, node=None):
     if node is None:
         node = self.context.node
 
-    metadata = json.loads(metadata_json)
+    metadata = select_parquet_metadata(file_name=file_name, node=node)
     column_stats = defaultdict(list)
 
     for row_group in metadata["data"][0]["row_groups"]:
@@ -349,16 +373,6 @@ def extract_statistics(self, metadata_json, node=None):
             )
 
     return dict(column_stats)
-
-
-def is_numeric(value):
-    if value is None:
-        return False
-    try:
-        float(value)
-        return True
-    except (ValueError, TypeError):
-        return False
 
 
 def get_overall_min_max(column_stats, column_name):
@@ -401,24 +415,3 @@ def get_overall_min_max(column_stats, column_name):
                     overall_max = current_max
 
     return overall_min, overall_max
-
-
-@TestStep(Given)
-def select_parquet_metadata(self, file_name):
-    """Select the parquet metadata for a given file."""
-    with Given("I have a parquet file"):
-        result = self.context.node.query(
-            f"SELECT row_groups FROM file('{file_name}', ParquetMetadata) FORMAT JSON"
-        )
-        return result.output
-
-
-@TestStep(Given)
-def get_minx_and_max_from_parquet(self, file_name, column_name) -> dict:
-    """Get the overall minimum and maximum values across all row groups for a given column."""
-    with Given("I have a parquet file"):
-        result = select_parquet_metadata(file_name=file_name)
-
-        stats = extract_statistics(result)
-
-        return stats
