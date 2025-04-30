@@ -3,6 +3,7 @@ import random
 import base64
 import datetime
 import json
+from collections import defaultdict
 
 from decimal import Decimal
 from inspect import stack
@@ -313,3 +314,111 @@ def generate_parquet_file(self, json_file_path, output_path=None, no_checks=True
         output_path=output_path,
         no_checks=no_checks,
     )
+
+
+@TestStep(Given)
+def extract_statistics(self, metadata_json, node=None):
+    """Extract statistics from parquet metadata and organize them by column name.
+
+    Args:
+        metadata_json (str): JSON string containing parquet metadata
+
+    Returns:
+        dict: Dictionary where keys are column names and values are lists of statistics
+              for each row group
+    """
+
+    if node is None:
+        node = self.context.node
+
+    metadata = json.loads(metadata_json)
+    column_stats = defaultdict(list)
+
+    for row_group in metadata["data"][0]["row_groups"]:
+        for column in row_group["columns"]:
+            print(column)
+            stats = column["statistics"]
+            column_stats[column["name"]].append(
+                {
+                    "num_values": stats["num_values"],
+                    "null_count": stats["null_count"],
+                    "distinct_count": stats["distinct_count"],
+                    "min": stats["min"],
+                    "max": stats["max"],
+                }
+            )
+
+    return dict(column_stats)
+
+
+def is_numeric(value):
+    if value is None:
+        return False
+    try:
+        float(value)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+def get_overall_min_max(column_stats, column_name):
+    """Get the overall minimum and maximum values across all row groups for a given column.
+
+    Args:
+        column_stats (dict): Dictionary containing statistics for all columns
+        column_name (str): Name of the column to analyze
+
+    Returns:
+        tuple: (overall_min, overall_max) as strings, or (None, None) if column not found
+    """
+    if column_name not in column_stats or not column_stats[column_name]:
+        return None, None
+
+    stats_list = column_stats[column_name]
+    overall_min = stats_list[0]["min"]
+    overall_max = stats_list[0]["max"]
+
+    # Determine if we're dealing with numeric values
+    is_numeric_column = is_numeric(overall_min) and is_numeric(overall_max)
+
+    for stats in stats_list[1:]:
+        current_min, current_max = stats["min"], stats["max"]
+
+        if current_min is not None:
+            if is_numeric_column:
+                if overall_min is None or float(current_min) < float(overall_min):
+                    overall_min = current_min
+            else:
+                if overall_min is None or current_min < overall_min:
+                    overall_min = current_min
+
+        if current_max is not None:
+            if is_numeric_column:
+                if overall_max is None or float(current_max) > float(overall_max):
+                    overall_max = current_max
+            else:
+                if overall_max is None or current_max > overall_max:
+                    overall_max = current_max
+
+    return overall_min, overall_max
+
+
+@TestStep(Given)
+def select_parquet_metadata(self, file_name):
+    """Select the parquet metadata for a given file."""
+    with Given("I have a parquet file"):
+        result = self.context.node.query(
+            f"SELECT row_groups FROM file('{file_name}', ParquetMetadata) FORMAT JSON"
+        )
+        return result.output
+
+
+@TestStep(Given)
+def get_minx_and_max_from_parquet(self, file_name, column_name) -> dict:
+    """Get the overall minimum and maximum values across all row groups for a given column."""
+    with Given("I have a parquet file"):
+        result = select_parquet_metadata(file_name=file_name)
+
+        stats = extract_statistics(result)
+
+        return stats
