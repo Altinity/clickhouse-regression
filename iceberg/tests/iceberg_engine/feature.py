@@ -21,7 +21,7 @@ def feature(self, minio_root_user, minio_root_password):
         test=load("iceberg.tests.iceberg_engine.column_rbac", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
-        test=load("iceberg.tests.iceberg_engine.where_clause", "feature"),
+        test=load("iceberg.tests.iceberg_engine.sql_clauses", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load("iceberg.tests.iceberg_engine.alter", "feature"),
