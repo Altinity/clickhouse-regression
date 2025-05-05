@@ -16,13 +16,23 @@ mv raw.log.2 raw.log
 if [[ $1 == 1 ]];
 then
     echo "::notice title=$SUITE$STORAGE $(uname -i) s3 logs and reports::$REPORT_INDEX_URL"
+
+    sudo rm --recursive --force $SUITE/_instances/*/database/
+
+    git clone https://github.com/Altinity/actions.git
+    git --git-dir actions checkout --quiet ab328a10501cf1f40f46d46fe9bad1d5cfeb6279
+    python actions/scripts/scan_artifacts.py files pipeline_url.log.txt version.log.txt raw.log nice-new-fails.log.txt fails.log.txt report.html $SUITE/_service_logs && python actions/scripts/scan_artifacts.py files --pattern '[A-Z_]*(SECRET|ACCESS_KEY|TOKEN)[A-Z_]*' $SUITE/_instances
+    if [[ $? -ne 0 ]]; then
+        # Leaked strings were found
+        exit 1
+    fi
+
     ./retry.sh 5 30 aws s3 cp pipeline_url.log.txt $JOB_S3_ROOT/pipeline_url.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp version.log.txt $SUITE_REPORT_BUCKET_PATH/version.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp raw.log $SUITE_REPORT_BUCKET_PATH/raw.log
     ./retry.sh 5 30 aws s3 cp nice-new-fails.log.txt $SUITE_REPORT_BUCKET_PATH/nice-new-fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp fails.log.txt $SUITE_REPORT_BUCKET_PATH/fails.log.txt --content-type "\"text/plain; charset=utf-8\""
     ./retry.sh 5 30 aws s3 cp report.html $SUITE_REPORT_BUCKET_PATH/report.html
-    sudo rm --recursive --force $SUITE/_instances/*/database/
     ./retry.sh 5 30 "aws s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
     ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
 fi
