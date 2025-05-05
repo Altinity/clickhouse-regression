@@ -66,6 +66,7 @@ def run_query_with_timing(
         table_name=table_name,
         cache_parquet_metadata=cache_parquet_metadata,
         log_comment=log_comment,
+        where_clause="date_col > '3030-01-01'",
     )
     execution_time = time.time() - start_time
     return result, execution_time
@@ -94,7 +95,7 @@ def cache(self, minio_root_user, minio_root_password):
         )
 
     with And("read data in clickhouse from the previously created table with warm run"):
-        for _ in range(10):
+        for _ in range(100):
             _, warm_run_time = run_query_with_timing(
                 database_name=database_name,
                 namespace=namespace,

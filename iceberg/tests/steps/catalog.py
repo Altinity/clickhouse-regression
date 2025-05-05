@@ -74,10 +74,10 @@ def create_catalog(
             "s3.access-key-id": s3_access_key_id,
             "s3.secret-access-key": s3_secret_access_key,
         }
-        
+
         if auth_header:
             conf["token"] = auth_header
-            
+
         catalog = load_catalog(
             name,
             **conf,
