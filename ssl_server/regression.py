@@ -152,6 +152,11 @@ xfails = {
 xflags = {}
 
 ffails = {
+    "fips": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/79876",
+        check_clickhouse_version(">=25.5"),
+    ),
     "/ssl server/verification modes":(
         Skip,
         "native protocol supported on >=23.3",
