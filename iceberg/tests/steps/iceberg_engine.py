@@ -106,7 +106,7 @@ def read_data_from_clickhouse_iceberg_table(
         node = self.context.node
 
     settings = []
-    
+
     if user:
         settings.append(("user", user))
     if password:
@@ -117,18 +117,18 @@ def read_data_from_clickhouse_iceberg_table(
         settings.append(("input_format_parquet_use_metadata_cache", "1"))
         settings.append(("optimize_count_from_files", "0"))
         settings.append(("remote_filesystem_read_prefetch", "0"))
+        settings.append(("input_format_parquet_filter_push_down", "1"))
     if iceberg_partition_pruning:
         settings.append(("use_iceberg_partition_pruning", 1))
 
     query = f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\`"
-    
+
     if where_clause:
         query += f" WHERE {where_clause}"
     if order_by:
         query += f" ORDER BY {order_by}"
     if format:
         query += f" FORMAT {format}"
-
 
     result = node.query(
         query,
