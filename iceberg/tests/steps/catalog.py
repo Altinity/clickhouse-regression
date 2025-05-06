@@ -74,10 +74,10 @@ def create_catalog(
             "s3.access-key-id": s3_access_key_id,
             "s3.secret-access-key": s3_secret_access_key,
         }
-        
+
         if auth_header:
             conf["token"] = auth_header
-            
+
         catalog = load_catalog(
             name,
             **conf,
@@ -130,7 +130,11 @@ def create_iceberg_table(
     partition_spec,
     sort_order=None,
     format_version="2",
+    table_properties={},
 ):
+    """Create iceberg table."""
+    table_properties["format-version"] = format_version
+
     try:
         table = catalog.create_table(
             identifier=f"{namespace}.{table_name}",
@@ -138,9 +142,10 @@ def create_iceberg_table(
             location=location,
             sort_order=sort_order,
             partition_spec=partition_spec,
-            properties={"format-version": format_version},
+            properties=table_properties,
         )
         yield table
+
     finally:
         with Finally("drop table"):
             drop_iceberg_table(
@@ -373,3 +378,168 @@ def delete_transaction(self, iceberg_table, condition):
 def delete_rows_from_iceberg_table(self, iceberg_table, condition):
     """Delete rows from Iceberg table using transaction."""
     iceberg_table.delete(condition)
+
+
+def random_time():
+    """Generate a random time object with random hours, minutes, seconds, microseconds."""
+    return time(
+        hour=random.randint(0, 23),
+        minute=random.randint(0, 59),
+        second=random.randint(0, 59),
+        microsecond=random.randint(0, 999999),
+    )
+
+
+def random_name(length=5):
+    """Generate a random lowercase string of specified length."""
+    return "".join(random.choices(string.ascii_lowercase, k=length))
+
+
+def random_datetime(start=datetime(2020, 1, 1), end=datetime.now()):
+    """Generate a random datetime between start and end."""
+    return start + timedelta(
+        seconds=random.randint(0, int((end - start).total_seconds()))
+    )
+
+
+def random_decimal(*, precision=9, scale=2):
+    """Generate a random decimal number matching the given precision and scale."""
+    if scale > precision:
+        raise ValueError("Scale cannot exceed precision.")
+    max_integer_part = 10 ** (precision - scale) - 1
+    integer_part = random.randint(-max_integer_part, max_integer_part)
+    fractional_part = random.randint(0, 10**scale - 1)
+    return Decimal(f"{integer_part}.{fractional_part:0{scale}d}")
+
+
+def random_primitive(iceberg_type):
+    """Generate a random primitive value matching the specified Iceberg type."""
+    if isinstance(iceberg_type, StringType):
+        return random_name(length=8)
+    if isinstance(iceberg_type, IntegerType):
+        return random.randint(0, 10000)
+    if isinstance(iceberg_type, DoubleType):
+        return random.uniform(0, 100)
+    if isinstance(iceberg_type, TimeType):
+        return random_time()
+    if isinstance(iceberg_type, TimestampType):
+        return random_datetime()
+    if isinstance(iceberg_type, TimestamptzType):
+        return random_datetime()
+    if isinstance(iceberg_type, BooleanType):
+        return random.choice([True, False])
+    if isinstance(iceberg_type, LongType):
+        return random.randint(0, 10000)
+    if isinstance(iceberg_type, FloatType):
+        return random.uniform(0, 100)
+    if isinstance(iceberg_type, DecimalType):
+        return random_decimal()
+    if isinstance(iceberg_type, DateType):
+        return random_datetime().date()
+    if isinstance(iceberg_type, BinaryType):
+        return bytes(random_name(length=16), "utf-8")
+    raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
+
+
+def random_field_type(max_depth=3):
+    """Randomly generate an Iceberg type (primitive or nested struct, list, map)."""
+    if max_depth <= 0:
+        selected_type = random.choice(_PRIMITIVE_TYPES)
+        if selected_type is DecimalType:
+            return DecimalType(precision=9, scale=2)
+        return selected_type()
+
+    type_choice = random.choice(["struct", "list", "map", "primitive"])
+
+    if type_choice == "struct":
+        fields = [
+            NestedField(
+                field_id=i + 1,
+                name=random_name(),
+                field_type=random_field_type(max_depth=max_depth - 1),
+            )
+            for i in range(random.randint(1, 3))
+        ]
+        return StructType(*fields)
+
+    if type_choice == "list":
+        return ListType(
+            element_id=1,
+            element_type=random_field_type(max_depth=max_depth - 1),
+            element_required=False,
+        )
+
+    if type_choice == "map":
+        return MapType(
+            key_id=1,
+            key_type=StringType(),
+            value_id=2,
+            value_type=random_field_type(max_depth=max_depth - 1),
+            value_required=False,
+        )
+
+    selected_type = random.choice(_PRIMITIVE_TYPES)
+    if selected_type is DecimalType:
+        return DecimalType(precision=9, scale=2)
+    return selected_type()
+
+
+def iceberg_to_pyarrow(iceberg_type):
+    """Convert Iceberg data type to corresponding PyArrow data type."""
+    if isinstance(iceberg_type, StringType):
+        return pa.string()
+    if isinstance(iceberg_type, IntegerType):
+        return pa.int32()
+    if isinstance(iceberg_type, DoubleType):
+        return pa.float64()
+    if isinstance(iceberg_type, TimeType):
+        return pa.time64("us")
+    if isinstance(iceberg_type, TimestampType):
+        return pa.timestamp("ms")
+    if isinstance(iceberg_type, TimestamptzType):
+        return pa.timestamp("ms", tz="UTC")
+    if isinstance(iceberg_type, BooleanType):
+        return pa.bool_()
+    if isinstance(iceberg_type, LongType):
+        return pa.int64()
+    if isinstance(iceberg_type, FloatType):
+        return pa.float32()
+    if isinstance(iceberg_type, DecimalType):
+        return pa.decimal128(9, 2)
+    if isinstance(iceberg_type, DateType):
+        return pa.date32()
+    if isinstance(iceberg_type, BinaryType):
+        return pa.binary()
+    if isinstance(iceberg_type, StructType):
+        return pa.struct(
+            [
+                (f.name, iceberg_to_pyarrow(iceberg_type=f.field_type))
+                for f in iceberg_type.fields
+            ]
+        )
+    if isinstance(iceberg_type, ListType):
+        return pa.list_(iceberg_to_pyarrow(iceberg_type=iceberg_type.element_type))
+    if isinstance(iceberg_type, MapType):
+        return pa.map_(
+            pa.string(), iceberg_to_pyarrow(iceberg_type=iceberg_type.value_type)
+        )
+    raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
+
+
+def random_data(iceberg_type):
+    """Generate random data matching given Iceberg datatype."""
+    if isinstance(iceberg_type, StructType):
+        return {
+            f.name: random_data(iceberg_type=f.field_type) for f in iceberg_type.fields
+        }
+    if isinstance(iceberg_type, ListType):
+        return [
+            random_data(iceberg_type=iceberg_type.element_type)
+            for _ in range(random.randint(0, 3))
+        ]
+    if isinstance(iceberg_type, MapType):
+        return {
+            random_name(length=4): random_data(iceberg_type=iceberg_type.value_type)
+            for _ in range(random.randint(0, 3))
+        }
+    return random_primitive(iceberg_type=iceberg_type)
