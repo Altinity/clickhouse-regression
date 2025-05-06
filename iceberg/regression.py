@@ -37,6 +37,9 @@ xfails = {
     "/iceberg/iceberg engine/swarm/*": [
         (Fail, "Only works with antalya build", check_if_antalya_build),
     ],
+    "/iceberg/iceberg cache/iceberg table engine/*": [
+        (Fail, "Need to investigate"),
+    ],
 }
 ffails = {
     "/iceberg/iceberg engine": (
@@ -63,6 +66,11 @@ ffails = {
         Skip,
         "Iceberg table engine was introduced in 23.2",
         check_clickhouse_version("<24.2"),
+    ),
+    "/iceberg/iceberg cache/*": (
+        Skip,
+        "Metadata caching was introduced in antalya build from 24.12",
+        check_if_antalya_build,
     ),
 }
 

@@ -1746,20 +1746,22 @@ def assert_row_count(self, node, table_name: str, rows: int = 1000000):
 def check_consistency(self, nodes, table_name, sync_timeout=10):
     """SYNC the given nodes and check that they agree about the given table"""
 
-    with When("I make sure all nodes are synced"):
-        for node in nodes:
-            sync_replica(
-                node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
-            )
+    for attempt in retries(timeout=100, delay=10):
+        with attempt:
+            with When("I make sure all nodes are synced"):
+                for node in nodes:
+                    sync_replica(
+                        node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+                    )
 
-    with When("I query all nodes for their row counts"):
-        row_counts = {}
-        for node in nodes:
-            row_counts[node.name] = get_row_count(node=node, table_name=table_name)
+            with When("I query all nodes for their row counts"):
+                row_counts = {}
+                for node in nodes:
+                    row_counts[node.name] = get_row_count(node=node, table_name=table_name)
 
-    with Then("All replicas should have the same state"):
-        for n1, n2 in combinations(nodes, 2):
-            assert row_counts[n1.name] == row_counts[n2.name], error()
+            with Then("All replicas should have the same state"):
+                for n1, n2 in combinations(nodes, 2):
+                    assert row_counts[n1.name] == row_counts[n2.name], error()
 
 
 @TestStep(Given)

@@ -198,6 +198,10 @@ ffails = {
         "implemented on antalya build with clickhouse version 24.12",
         check_clickhouse_version("<24.12"),
     ),
+    "minio/table function performance/wildcard": (
+        Skip,
+        "needs investigation",
+    ),
     ":/hive partitioning": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",

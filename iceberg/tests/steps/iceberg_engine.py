@@ -124,7 +124,7 @@ def read_data_from_clickhouse_iceberg_table(
         settings.append(("input_format_parquet_use_metadata_cache", "1"))
         settings.append(("optimize_count_from_files", "0"))
         settings.append(("remote_filesystem_read_prefetch", "0"))
-
+        settings.append(("input_format_parquet_filter_push_down", "1"))
     if use_iceberg_partition_pruning:
         settings.append(("use_iceberg_partition_pruning", use_iceberg_partition_pruning))
 
