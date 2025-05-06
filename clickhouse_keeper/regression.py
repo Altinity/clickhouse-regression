@@ -113,6 +113,16 @@ xfails = {
 xflags = {}
 
 ffails = {
+    "ports ssl fips": (
+    Skip,
+    "https://github.com/ClickHouse/ClickHouse/issues/79876",
+    check_clickhouse_version(">=25.5"),
+    ),
+    "fips": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/79876",
+        check_clickhouse_version(">=25.5"),
+    ),
     "/clickhouse keeper/migration/migrate from zookeeper to standalone keeper": (
         XFail,
         "test doesn't work from 23.3",
