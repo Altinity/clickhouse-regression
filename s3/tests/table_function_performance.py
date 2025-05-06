@@ -37,12 +37,14 @@ def s3_create_many_files(self):
 
     @TestStep(When)
     def insert_files(self, folder_id, iteration):
-        node.query(
-            f"""INSERT INTO TABLE FUNCTION 
-            s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
-            PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
-            -- {iteration}/{num_folders}"""
-        )
+        for attempt in retries(timeout=100, delay=10):
+            with attempt:
+                node.query(
+                    f"""INSERT INTO TABLE FUNCTION 
+                    s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
+                    PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
+                    -- {iteration}/{num_folders}"""
+                )
 
     with Given("I have a table with data"):
         simple_table(node=node, name=table_name, policy="default")
