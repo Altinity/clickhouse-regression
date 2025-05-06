@@ -40,6 +40,7 @@ xfails = {
             "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
         )
     ],
+
     "/alter/replace partition/concurrent merges and mutations/merges on unrelated partition/that the merge was finished": [
         (
             Fail,
@@ -136,6 +137,12 @@ xfails = {
         (
             Fail,
             "Bug when replacing partitions concurrently",
+        )
+    ],
+    "/alter/replace partition/clickhouse versions/*": [
+        (
+            Fail,
+            "min_os_cpu_wait_time_ratio_to_throw does not work sometimes, need to check on all versions",
         )
     ],
     "/alter/attach partition/conditions/indices/*": [

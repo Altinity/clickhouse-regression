@@ -575,6 +575,100 @@ def parquet_metadata_cache_slru_eviction(self):
         assert int(misses.output.strip()) > 0, "Expected cache miss for evicted file"
 
 
+@TestScenario
+def parquet_metadata_cache_clearing(self):
+    """Check that clearing Parquet metadata cache works on a single node."""
+    log_comment = "test_" + getuid()
+
+    with Given("I create a parquet file on s3"):
+        files = create_multiple_parquet_files_with_all_datatypes(
+            number_of_files=self.context.number_of_files
+        )
+
+    with When("I select metadata of the Parquet file without caching"):
+        parquet, initial_time = select_parquet_metadata_from_s3(
+            file_name=files[0], caching=True
+        )
+
+    with And("I run the query multiple times with caching enabled"):
+        execution_times = []
+        for i in range(10):
+            parquet, execution_time = select_parquet_metadata_from_s3(
+                file_name=files[0],
+                caching=True,
+                log_comment=f"{log_comment}_cached_{i}",
+            )
+            execution_times.append(execution_time)
+
+        cached_time = execution_times[-1]  # Save the last execution time
+
+    with And("I flush the Parquet metadata cache"):
+        flush_parquet_metadata_cache()
+
+    with Then("I verify cache was invalidated by checking query performance"):
+        parquet, after_flush_time = select_parquet_metadata_from_s3(
+            file_name=files[0], caching=True, log_comment=f"{log_comment}_after_flush"
+        )
+
+        assert after_flush_time > cached_time, (
+            f"Query after cache flush should be slower than cached version. "
+            f"Cached time: {cached_time}, After flush time: {after_flush_time}"
+        )
+
+    with And("I check that we have cache misses after cache was dropped"):
+        misses = check_misses(log_comment=f"{log_comment}_after_flush")
+        assert 0 in int(
+            misses.output.strip()
+        ), "Expected cache miss after cache was dropped"
+
+
+@TestScenario
+def parquet_metadata_cache_clearing_on_cluster(self):
+    """Check that clearing Parquet metadata cache works on a cluster."""
+    log_comment = "test_" + getuid()
+
+    with Given("I create a parquet file on s3"):
+        files = create_multiple_parquet_files_with_all_datatypes(
+            number_of_files=self.context.number_of_files
+        )
+
+    with When("I select metadata of the Parquet file without caching"):
+        parquet, initial_time = select_parquet_metadata_from_s3(
+            file_name=files[0], caching=True
+        )
+
+    with And("I run the query multiple times with caching enabled"):
+        execution_times = []
+        for i in range(10):
+            parquet, execution_time = select_parquet_metadata_from_s3(
+                file_name=files[0],
+                caching=True,
+                log_comment=f"{log_comment}_cached_{i}",
+            )
+            execution_times.append(execution_time)
+
+        cached_time = execution_times[-1]  # Save the last execution time
+
+    with And("I flush the Parquet metadata cache on cluster"):
+        flush_parquet_metadata_cache_on_cluster()
+
+    with Then("I verify cache was invalidated by checking query performance"):
+        parquet, after_flush_time = select_parquet_metadata_from_s3(
+            file_name=files[0], caching=True, log_comment=f"{log_comment}_after_flush"
+        )
+
+        assert after_flush_time > cached_time, (
+            f"Query after cache flush should be slower than cached version. "
+            f"Cached time: {cached_time}, After flush time: {after_flush_time}"
+        )
+
+    with And("I check that we have cache misses after cache was dropped"):
+        misses = check_misses(log_comment=f"{log_comment}_after_flush")
+        assert 0 in int(
+            misses.output.strip()
+        ), "Expected cache miss after cache was dropped"
+
+
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage("1.0"))
 def distributed(self):

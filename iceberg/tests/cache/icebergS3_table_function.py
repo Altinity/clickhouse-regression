@@ -46,21 +46,27 @@ def cache(self, minio_root_user, minio_root_password):
                 s3_access_key_id=minio_root_user,
                 s3_secret_access_key=minio_root_password,
                 cache_parquet_metadata=True,
+                where_clause="date_col > '2030-01-01'",
             )
         )
 
     with And("read data in clickhouse using icebergS3 table function for 10 times"):
-        for i in range(10):
+        for i in range(100):
             hot_execution_time, log_comment = (
                 icebergS3.read_parquet_data_with_icebergS3_table_function(
                     storage_endpoint="http://minio:9000/warehouse/data/",
                     s3_access_key_id=minio_root_user,
                     s3_secret_access_key=minio_root_password,
                     cache_parquet_metadata=True,
+                    where_clause="date_col > '2030-01-01'",
                 )
             )
 
+            note(
+                f"hot_execution_time: {hot_execution_time} cold_execution_time: {cold_execution_time}"
+            )
             assert hot_execution_time < cold_execution_time
+
     with And("Check hits"):
         hits = check_hits(
             log_comment=log_comment, node=self.context.node, assertion=True

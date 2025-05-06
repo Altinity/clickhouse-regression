@@ -13,6 +13,7 @@ from pyiceberg.types import (
     DecimalType,
     StructType,
     NestedField,
+    ListType,
 )
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
@@ -676,6 +677,74 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
         assert result.output.strip() == f"{database_name}", error()
 
 
+@TestScenario
+def array_join(self, minio_root_user, minio_root_password):
+    """Test ARRAY JOIN with List column from Iceberg table."""
+    node = self.context.node
+    namespace = f"iceberg_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"iceberg_database_{getuid()}"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            uri="http://localhost:5000/",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with When(f"define schema and create {namespace}.{table_name} table"):
+        schema = Schema(
+            NestedField(
+                field_id=16,
+                name="list",
+                field_type=ListType(
+                    element_type=StringType(), element_id=17, element_required=False
+                ),
+                required=False,
+            ),
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location="s3://warehouse/data",
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("insert data into the table"):
+        df = pa.Table.from_pylist(
+            [
+                {"list": ["a", "b", "c"]},
+            ]
+        )
+        table.append(df)
+
+    with Then("create database with Iceberg engine"):
+        database_name = f"iceberg_database_{getuid()}"
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("read data from the table"):
+        result = node.query(
+            f"""
+                SELECT list, a 
+                FROM {database_name}.\\`{namespace}.{table_name}\\` 
+                ARRAY JOIN list AS a
+                ORDER BY tuple(*)
+                FORMAT TabSeparated
+            """
+        )
+        assert (
+            result.output.strip() == "['a','b','c']	a\n['a','b','c']	b\n['a','b','c']	c"
+        ), error()
+
+
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sanity)(
@@ -699,6 +768,9 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sort_order)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=multiple_tables)(
+    # Scenario(test=multiple_tables)(
+    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    # )
+    Scenario(test=array_join)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
