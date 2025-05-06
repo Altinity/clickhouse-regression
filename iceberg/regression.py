@@ -67,6 +67,11 @@ ffails = {
         "Iceberg table engine was introduced in 23.2",
         check_clickhouse_version("<24.2"),
     ),
+    "/iceberg/iceberg cache/*": (
+        Skip,
+        "Metadata caching was introduced in antalya build from 24.12",
+        check_if_antalya_build,
+    ),
 }
 
 
