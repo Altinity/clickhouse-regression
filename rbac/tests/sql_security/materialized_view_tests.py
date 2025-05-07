@@ -329,8 +329,12 @@ def check_select_insert_sql_security_definer_definer(
     with Given(
         "I create view's source and target tables and insert data into target table"
     ):
-        source_table_name = create_simple_MergeTree_table(column_name="x")
-        target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+        source_table_name = create_simple_MergeTree_table(
+            column_name="x", table_name="source_table_" + getuid()
+        )
+        target_table_name = create_simple_MergeTree_table(
+            column_name="x", rows=10, table_name="target_table_" + getuid()
+        )
 
     with And(
         "I create definer user and grant him privileges to mv's source and target tables"
@@ -942,8 +946,12 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
         with Given(
             "I create view's source and target tables and insert data into target table"
         ):
-            source_table_name = create_simple_MergeTree_table(column_name="x")
-            target_table_name = create_simple_MergeTree_table(column_name="x", rows=10)
+            source_table_name = create_simple_MergeTree_table(
+                column_name="x", table_name="source_table_" + getuid()
+            )
+            target_table_name = create_simple_MergeTree_table(
+                column_name="x", table_name="target_table_" + getuid()
+            )
 
         with And(
             "I create definer user and grant him SELECT privilege for mv's source and target tables"
@@ -1458,4 +1466,3 @@ def feature(self):
     Scenario(run=sql_security_not_specified)
     Scenario(run=check_default_values)
     Scenario(run=select_insert_sql_security_not_specified_definer_not_specified)
-    Scenario(run=check_default_values)
