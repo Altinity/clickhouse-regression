@@ -2,7 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 
 @TestStep(Given)
-def create_table(self, table_name=None, engine=None, partition_by=None, columns="d Int64", settings=None, modify=False, node=None):
+def create_table(self, table_name=None, engine=None, partition_by=None, columns="d Int64", settings=None, modify=False, node=None, exitcode=None, message=None):
     """Create table."""
     if node is None:
         node = self.context.node
@@ -24,7 +24,7 @@ def create_table(self, table_name=None, engine=None, partition_by=None, columns=
 
     try:
         with Given(f"I create table {table_name}"):
-            node.query(f"CREATE TABLE {table_name} ({columns}) ENGINE = {engine} {partition_by}", settings=settings)
+            node.query(f"CREATE TABLE {table_name} ({columns}) ENGINE = {engine} {partition_by}", settings=settings, exitcode=exitcode, message=message)
         
         yield table_name
 
@@ -55,14 +55,14 @@ def insert_into_bucket_s3_function_from_table(self, bucket_path, type, compressi
 
 
 @TestStep(When)
-def insert_into_table_values(self, table_name, values, settings, node=None):
+def insert_into_table_values(self, table_name, values, settings, node=None, exitcode=None, message=None):
     """Insert into table values."""
     
     if node is None:
         node = self.context.node
 
     with When(f"I insert into table {table_name} values"):
-        node.query(f"INSERT INTO {table_name} VALUES {values}", settings=settings)
+        node.query(f"INSERT INTO {table_name} VALUES {values}", settings=settings, exitcode=exitcode, message=message)
 
 @TestStep(When)
 def insert_into_table_select(self, table_name, select_statement, settings, node=None):
