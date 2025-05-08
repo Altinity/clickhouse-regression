@@ -1,6 +1,6 @@
 from testflows.core import *
 
-from helpers.common import getuid, check_clickhouse_version
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 import iceberg.tests.steps.catalog as catalog_steps
 
@@ -103,8 +103,8 @@ def read_data_from_clickhouse_iceberg_table(
     use_iceberg_partition_pruning=None,
     input_format_parquet_bloom_filter_push_down=None,
     input_format_parquet_filter_push_down=None,
+    use_iceberg_metadata_files_cache=None,
     use_cache_for_count_from_files="0",
-    iceberg_metadata_files_cache_size="0",
 ):
     if node is None:
         node = self.context.node
@@ -125,8 +125,11 @@ def read_data_from_clickhouse_iceberg_table(
         settings.append(("optimize_count_from_files", "0"))
         settings.append(("remote_filesystem_read_prefetch", "0"))
         settings.append(("input_format_parquet_filter_push_down", "1"))
+
     if use_iceberg_partition_pruning:
-        settings.append(("use_iceberg_partition_pruning", use_iceberg_partition_pruning))
+        settings.append(
+            ("use_iceberg_partition_pruning", use_iceberg_partition_pruning)
+        )
 
     if input_format_parquet_bloom_filter_push_down:
         settings.append(
@@ -149,6 +152,16 @@ def read_data_from_clickhouse_iceberg_table(
             (
                 "use_cache_for_count_from_files",
                 use_cache_for_count_from_files,
+            )
+        )
+
+    if use_iceberg_metadata_files_cache and (
+        check_clickhouse_version(">=25.4")(self) or not check_if_antalya_build(self)
+    ):
+        settings.append(
+            (
+                "use_iceberg_metadata_files_cache",
+                use_iceberg_metadata_files_cache,
             )
         )
 
