@@ -2,7 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import combinations
 
-from helpers.common import getuid, check_clickhouse_version
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 from datetime import date, timedelta
 
@@ -446,3 +446,42 @@ def compare_iceberg_and_merge_tree_schemas(self, merge_tree_table_name, iceberg_
     assert merge_tree_schema == iceberg_columns, error(
         "Schema mismatch between MergeTree and Iceberg tables!"
     )
+
+
+@TestStep(Given)
+def drop_all_caches(self, node=None):
+    """Drop all caches."""
+    if node is None:
+        node = self.context.node
+
+    query = f"""
+                SYSTEM DROP DNS CACHE;
+                SYSTEM DROP CONNECTIONS CACHE;
+                SYSTEM DROP MARK CACHE;
+                SYSTEM DROP PRIMARY INDEX CACHE;
+                SYSTEM DROP UNCOMPRESSED CACHE;
+                SYSTEM DROP INDEX MARK CACHE;
+                SYSTEM DROP INDEX UNCOMPRESSED CACHE;
+                SYSTEM DROP MMAP CACHE;
+                SYSTEM DROP QUERY CACHE;
+                SYSTEM DROP COMPILED EXPRESSION CACHE;
+                SYSTEM DROP FILESYSTEM CACHE;
+                SYSTEM DROP PAGE CACHE;
+                SYSTEM DROP SCHEMA CACHE;
+                SYSTEM DROP FORMAT SCHEMA CACHE;
+                SYSTEM DROP S3 CLIENT CACHE;
+            """
+
+    if not check_if_antalya_build(self):
+        query += "SYSTEM DROP PARQUET METADATA CACHE;"
+        query += "SYSTEM DROP ICEBERG METADATA CACHE;"
+
+    if check_clickhouse_version(">=25.3")(self):
+        query += "SYSTEM DROP QUERY CONDITION CACHE;"
+
+    if check_clickhouse_version(">=25.4")(self):
+        query += "SYSTEM DROP VECTOR SIMILARITY INDEX CACHE;"
+        query += "SYSTEM DROP ICEBERG METADATA CACHE;"
+
+    with By("drop all caches"):
+        node.query(query)
