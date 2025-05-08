@@ -324,7 +324,7 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.NullInColumn
 version: 1.0
 
-[ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause contains Null.
+[ClickHouse] SHALL return an error when attempting to insert a `NULL` value into a column that is specified in the `PARTITION BY` clause.
 
 ##### RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes
 version: 1.0
