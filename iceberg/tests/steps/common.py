@@ -122,10 +122,29 @@ def generate_data(num_rows=100):
 
 def transform_to_clickhouse_format(data):
     """Transform a list of dictionaries into a ClickHouse-compatible tuple format."""
-    transformed = [
-        f"({row['boolean_col']}, {row['long_col']}, round({row['double_col']}, 2), '{row['string_col']}', '{row['date_col']}')"
-        for row in data
-    ]
+    transformed = []
+    for row in data:
+        values = []
+        for key, value in row.items():
+            if isinstance(value, (int, float)):
+                if isinstance(value, float):
+                    values.append(f"round({value}, 2)")
+                else:
+                    values.append(str(value))
+            elif isinstance(value, str):
+                values.append(f"'{value}'")
+            elif isinstance(value, date):
+                values.append(f"'{value}'")
+            elif isinstance(value, bool):
+                values.append(str(value))
+            elif isinstance(value, list):
+                values.append(str(value))
+            elif isinstance(value, dict):
+                values.append(str(value))
+            else:
+                values.append(f"'{str(value)}'")
+        transformed.append(f"({', '.join(values)})")
+
     return ", ".join(transformed)
 
 
