@@ -403,13 +403,10 @@ def random_datetime(start=datetime(2020, 1, 1), end=datetime.now()):
 
 
 def random_decimal(*, precision=9, scale=2):
-    """Generate a random decimal number matching the given precision and scale."""
-    if scale > precision:
-        raise ValueError("Scale cannot exceed precision.")
-    max_integer_part = 10 ** (precision - scale) - 1
-    integer_part = random.randint(-max_integer_part, max_integer_part)
-    fractional_part = random.randint(0, 10**scale - 1)
-    return Decimal(f"{integer_part}.{fractional_part:0{scale}d}")
+    """Generate a random decimal matching the given precision and scale."""
+    max_value = 10 ** (precision - scale) - 1
+    value = round(random.uniform(-max_value, max_value), scale)
+    return Decimal(f"{value:.{scale}f}")
 
 
 def random_primitive(iceberg_type):
