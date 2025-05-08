@@ -1687,7 +1687,7 @@ jobs:
 
   s3_aws:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 300
+    timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /aws
@@ -1733,7 +1733,7 @@ jobs:
 
   s3_azure:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 300
+    timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /azure
@@ -1778,7 +1778,7 @@ jobs:
 
   s3_gcs:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 180
+    timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /gcs
@@ -1823,7 +1823,7 @@ jobs:
 
   s3_minio:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 240
+    timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /minio
