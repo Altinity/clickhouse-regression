@@ -100,7 +100,7 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
         )
 
     with Then("create ClickHouse table with Iceberg engine"):
-        iceberg_table_name = "iceberg_table_" + getuid()
+        iceberg_table_name = "table_with_iceberg_engine_" + getuid()
         iceberg_table_engine.create_table_with_iceberg_engine(
             table_name=iceberg_table_name,
             url="http://minio:9000/warehouse/data",
