@@ -194,25 +194,6 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
 
 
 @TestStep(Given)
-def create_named_collection(self, name=None, dict={}, node=None):
-    """Create named collection from dictionary."""
-    if node is None:
-        node = self.context.node
-
-    if name is None:
-        name = "named_collection_" + getuid()
-
-    params = ""
-
-    for key, value in dict.items():
-        params += f"{key} = '{value}', "
-
-    node.query(f"CREATE NAMED COLLECTION {name} AS {params[:-2]}")
-
-    return name
-
-
-@TestStep(Given)
 def get_iceberg_table_name(
     self,
     minio_root_user,
