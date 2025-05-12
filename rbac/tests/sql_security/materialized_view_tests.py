@@ -330,10 +330,13 @@ def check_select_insert_sql_security_definer_definer(
         "I create view's source and target tables and insert data into target table"
     ):
         source_table_name = create_simple_MergeTree_table(
-            column_name="x", table_name="source_table_" + getuid()
+            table_name="source_table_" + getuid(),
+            column_name="x",
         )
         target_table_name = create_simple_MergeTree_table(
-            column_name="x", rows=10, table_name="target_table_" + getuid()
+            table_name="target_table_" + getuid(),
+            column_name="x",
+            rows=10,
         )
 
     with And(
@@ -947,10 +950,13 @@ def select_insert_sql_security_not_specified_definer_not_specified(self):
             "I create view's source and target tables and insert data into target table"
         ):
             source_table_name = create_simple_MergeTree_table(
-                column_name="x", table_name="source_table_" + getuid()
+                table_name="source_table_" + getuid(),
+                column_name="x",
             )
             target_table_name = create_simple_MergeTree_table(
-                column_name="x", table_name="target_table_" + getuid()
+                table_name="target_table_" + getuid(),
+                column_name="x",
+                rows=10,
             )
 
         with And(
