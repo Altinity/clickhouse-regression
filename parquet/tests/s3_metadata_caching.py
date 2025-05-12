@@ -745,7 +745,7 @@ def feature(
     # Feature(run=distributed)
 
     # Run swarm tests if on Antalya build
-    if not check_if_antalya_build(self):
+    if check_if_antalya_build(self):
         with Given("I setup iceberg catalog"):
             catalog = setup_iceberg()
 

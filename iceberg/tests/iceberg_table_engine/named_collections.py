@@ -6,7 +6,7 @@ from testflows.asserts import error
 import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
-import iceberg.tests.steps.iceberg_engine as iceberg_engine
+import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
 
 from helpers.common import create_user, getuid
 
@@ -55,7 +55,7 @@ def sanity_named_collections_in_config(self, minio_root_user, minio_root_passwor
     with Then(
         "create table with Iceberg engine with named collection iceberg_conf defined in config.xml"
     ):
-        table_name = iceberg_engine.create_table_with_iceberg_engine_from_config(
+        table_name = iceberg_table_engine.create_table_with_iceberg_engine_from_config(
             config_name="iceberg_conf"
         )
 
@@ -109,7 +109,7 @@ def sanity_named_collections(self, minio_root_user, minio_root_password):
 
     with And("create named collection"):
         named_collection = "named_collection_" + getuid()
-        iceberg_engine.create_named_collection(
+        iceberg_table_engine.create_named_collection(
             name=named_collection,
             dict={
                 "url": "http://minio:9000/warehouse/",
@@ -121,7 +121,7 @@ def sanity_named_collections(self, minio_root_user, minio_root_password):
     with Then(
         "create table with Iceberg engine with named collection iceberg_conf defined in config.xml"
     ):
-        table_name = iceberg_engine.create_table_with_iceberg_engine_from_config(
+        table_name = iceberg_table_engine.create_table_with_iceberg_engine_from_config(
             config_name=named_collection
         )
 

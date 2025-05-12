@@ -450,10 +450,7 @@ def compare_iceberg_and_merge_tree_schemas(self, merge_tree_table_name, iceberg_
 
 @TestStep(Given)
 def drop_all_caches(self, node=None):
-    """Drop all caches."""
-    if node is None:
-        node = self.context.node
-
+    """Drop all caches. If node is not provided, drop caches in all nodes."""
     query = f"""
                 SYSTEM DROP DNS CACHE;
                 SYSTEM DROP CONNECTIONS CACHE;
@@ -472,7 +469,7 @@ def drop_all_caches(self, node=None):
                 SYSTEM DROP S3 CLIENT CACHE;
             """
 
-    if not check_if_antalya_build(self):
+    if check_if_antalya_build(self):
         query += "SYSTEM DROP PARQUET METADATA CACHE;"
         query += "SYSTEM DROP ICEBERG METADATA CACHE;"
 
@@ -483,5 +480,8 @@ def drop_all_caches(self, node=None):
         query += "SYSTEM DROP VECTOR SIMILARITY INDEX CACHE;"
         query += "SYSTEM DROP ICEBERG METADATA CACHE;"
 
-    with By("drop all caches"):
+    if node:
         node.query(query)
+    else:
+        for node in self.context.nodes:
+            node.query(query)
