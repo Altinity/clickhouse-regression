@@ -183,79 +183,83 @@ def join_clause(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    with Given("create simple MergeTree table and insert data"):
-        merge_tree_table_name = f"merge_tree_table_{getuid()}"
-        node.query(
-            f"""
-            CREATE TABLE {merge_tree_table_name} (
-                boolean_col Boolean,
-                long_col UInt64,
-                double_col Float64,
-                string_col String,
-                date_col Date
-            ) 
-            ENGINE = MergeTree()
-            ORDER BY boolean_col
-            """
-        )
-        node.query(
-            f"""
-            INSERT INTO {merge_tree_table_name} 
-            VALUES 
-                (true, 1, 1, 'a', '2021-01-01'), 
-                (false, 2, 2, 'b', '2021-01-01'), 
-                (true, 3, 3, 'c', '2021-01-01'), 
-                (false, 4, 4, 'd', '2021-01-01')
-            """
-        )
+    try:
+        with Given("create simple MergeTree table and insert data"):
+            merge_tree_table_name = f"merge_tree_table_{getuid()}"
+            node.query(
+                f"""
+                CREATE TABLE {merge_tree_table_name} (
+                    boolean_col Boolean,
+                    long_col UInt64,
+                    double_col Float64,
+                    string_col String,
+                    date_col Date
+                ) 
+                ENGINE = MergeTree()
+                ORDER BY boolean_col
+                """
+            )
+            node.query(
+                f"""
+                INSERT INTO {merge_tree_table_name} 
+                VALUES 
+                    (true, 1, 1, 'a', '2021-01-01'), 
+                    (false, 2, 2, 'b', '2021-01-01'), 
+                    (true, 3, 3, 'c', '2021-01-01'), 
+                    (false, 4, 4, 'd', '2021-01-01')
+                """
+            )
 
-    with Then("join iceberg table with itself"):
-        result = node.query(
-            f"""
-            SELECT *
-            FROM {table_name} AS t1
-            JOIN {table_name} AS t2
-            ON t1.boolean_col = t2.boolean_col
-            ORDER BY tuple(*)
-            FORMAT Values
-            """
-        )
-        assert (
-            result.output.strip()
-            == "(false,2000,456.78,'Bob','2023-05-15',false,2000,456.78,'Bob','2023-05-15'),(false,2000,456.78,'Bob','2023-05-15',false,4000,8.9,'1','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,4000,8.9,'1','2021-01-01',false,4000,8.9,'1','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,3000,6.7,'Charlie','2022-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,3000,6.7,'Charlie','2022-01-01')"
-        ), error()
+        with Then("join iceberg table with itself"):
+            result = node.query(
+                f"""
+                SELECT *
+                FROM {table_name} AS t1
+                JOIN {table_name} AS t2
+                ON t1.boolean_col = t2.boolean_col
+                ORDER BY tuple(*)
+                FORMAT Values
+                """
+            )
+            assert (
+                result.output.strip()
+                == "(false,2000,456.78,'Bob','2023-05-15',false,2000,456.78,'Bob','2023-05-15'),(false,2000,456.78,'Bob','2023-05-15',false,4000,8.9,'1','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,4000,8.9,'1','2021-01-01',false,4000,8.9,'1','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,3000,6.7,'Charlie','2022-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,3000,6.7,'Charlie','2022-01-01')"
+            ), error()
 
-    with And("join merge tree table to iceberg table"):
-        result = node.query(
-            f"""
-            SELECT *
-            FROM {table_name} AS t1
-            JOIN {merge_tree_table_name} AS t2
-            ON t1.boolean_col = t2.boolean_col
-            ORDER BY tuple(*)
-            FORMAT Values
-            """
-        )
-        assert (
-            result.output.strip()
-            == "(false,2000,456.78,'Bob','2023-05-15',false,2,2,'b','2021-01-01'),(false,2000,456.78,'Bob','2023-05-15',false,4,4,'d','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,2,2,'b','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,4,4,'d','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,1,1,'a','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,3,3,'c','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,1,1,'a','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,3,3,'c','2021-01-01')"
-        ), error()
+        with And("join merge tree table to iceberg table"):
+            result = node.query(
+                f"""
+                SELECT *
+                FROM {table_name} AS t1
+                JOIN {merge_tree_table_name} AS t2
+                ON t1.boolean_col = t2.boolean_col
+                ORDER BY tuple(*)
+                FORMAT Values
+                """
+            )
+            assert (
+                result.output.strip()
+                == "(false,2000,456.78,'Bob','2023-05-15',false,2,2,'b','2021-01-01'),(false,2000,456.78,'Bob','2023-05-15',false,4,4,'d','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,2,2,'b','2021-01-01'),(false,4000,8.9,'1','2021-01-01',false,4,4,'d','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,1,1,'a','2021-01-01'),(true,1000,456.78,'Alice','2024-01-01',true,3,3,'c','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,1,1,'a','2021-01-01'),(true,3000,6.7,'Charlie','2022-01-01',true,3,3,'c','2021-01-01')"
+            ), error()
 
-    with And("join iceberg table to merge tree table"):
-        result = node.query(
-            f"""
-            SELECT *
-            FROM {merge_tree_table_name} AS t1
-            JOIN {table_name} AS t2
-            ON t1.boolean_col = t2.boolean_col
-            ORDER BY tuple(*)
-            FORMAT Values
-            """
-        )
-        assert (
-            result.output.strip()
-            == "(false,2,2,'b','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,2,2,'b','2021-01-01',false,4000,8.9,'1','2021-01-01'),(false,4,4,'d','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,4,4,'d','2021-01-01',false,4000,8.9,'1','2021-01-01'),(true,1,1,'a','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,1,1,'a','2021-01-01',true,3000,6.7,'Charlie','2022-01-01'),(true,3,3,'c','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,3,3,'c','2021-01-01',true,3000,6.7,'Charlie','2022-01-01')"
-        ), error()
+        with And("join iceberg table to merge tree table"):
+            result = node.query(
+                f"""
+                SELECT *
+                FROM {merge_tree_table_name} AS t1
+                JOIN {table_name} AS t2
+                ON t1.boolean_col = t2.boolean_col
+                ORDER BY tuple(*)
+                FORMAT Values
+                """
+            )
+            assert (
+                result.output.strip()
+                == "(false,2,2,'b','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,2,2,'b','2021-01-01',false,4000,8.9,'1','2021-01-01'),(false,4,4,'d','2021-01-01',false,2000,456.78,'Bob','2023-05-15'),(false,4,4,'d','2021-01-01',false,4000,8.9,'1','2021-01-01'),(true,1,1,'a','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,1,1,'a','2021-01-01',true,3000,6.7,'Charlie','2022-01-01'),(true,3,3,'c','2021-01-01',true,1000,456.78,'Alice','2024-01-01'),(true,3,3,'c','2021-01-01',true,3000,6.7,'Charlie','2022-01-01')"
+            ), error()
+    finally:
+        with Finally("drop merge tree table"):
+            node.query(f"DROP TABLE {merge_tree_table_name}")
 
 
 @TestScenario
