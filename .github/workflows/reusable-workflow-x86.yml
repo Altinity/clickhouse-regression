@@ -1471,7 +1471,7 @@ jobs:
 
   s3_minio:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
-    timeout-minutes: 300
+    timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /minio
