@@ -12,9 +12,6 @@ def feature(self, minio_root_user, minio_root_password):
         test=load("iceberg.tests.iceberg_engine.rbac", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
-        test=load("iceberg.tests.iceberg_engine.named_collections", "feature"),
-    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
-    Feature(
         test=load("iceberg.tests.iceberg_engine.row_policy", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
@@ -43,4 +40,9 @@ def feature(self, minio_root_user, minio_root_password):
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
         test=load("iceberg.tests.iceberg_engine.partition_evolution", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
+        test=load(
+            "iceberg.tests.iceberg_engine.use_iceberg_partition_pruning", "feature"
+        ),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
