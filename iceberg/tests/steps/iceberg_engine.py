@@ -1,5 +1,4 @@
 from testflows.core import *
-
 from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 import iceberg.tests.steps.catalog as catalog_steps
@@ -192,38 +191,6 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
         f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
     )
     return result
-
-
-@TestStep(Given)
-def create_table_with_iceberg_engine_from_config(
-    self,
-    table_name=None,
-    node=None,
-    config_name="iceberg_conf",
-    filename="data",
-    allow_dynamic_metadata_for_data_lakes=False,
-):
-    """Create table with Iceberg table engine with named collection
-    config_name(iceberg_conf) in config.xml."""
-    if node is None:
-        node = self.context.node
-
-    if table_name is None:
-        table_name = "iceberg_table_" + getuid()
-
-    settings = ""
-    if allow_dynamic_metadata_for_data_lakes:
-        settings = "SETTINGS allow_dynamic_metadata_for_data_lakes = true"
-
-    node.query(
-        f"""
-        CREATE TABLE {table_name} 
-        ENGINE=IcebergS3({config_name}, filename = '{filename}')
-        {settings}
-        """
-    )
-
-    return table_name
 
 
 @TestStep(Given)
