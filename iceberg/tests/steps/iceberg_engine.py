@@ -77,9 +77,13 @@ def create_experimental_iceberg_database(
     if settings:
         query += f"{settings_str}"
 
-    node.query(query)
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield database_name
 
-    return database_name
+    finally:
+        with Finally("drop database"):
+            node.query(f"DROP DATABASE IF EXISTS {database_name}")
 
 
 @TestStep(Then)
@@ -155,7 +159,7 @@ def read_data_from_clickhouse_iceberg_table(
         )
 
     if use_iceberg_metadata_files_cache and (
-        check_clickhouse_version(">=25.4")(self) or not check_if_antalya_build(self)
+        check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)
     ):
         settings.append(
             (
@@ -191,25 +195,6 @@ def show_create_table(self, database_name, namespace, table_name, node=None):
         f"SHOW CREATE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
     )
     return result
-
-
-@TestStep(Given)
-def create_named_collection(self, name=None, dict={}, node=None):
-    """Create named collection from dictionary."""
-    if node is None:
-        node = self.context.node
-
-    if name is None:
-        name = "named_collection_" + getuid()
-
-    params = ""
-
-    for key, value in dict.items():
-        params += f"{key} = '{value}', "
-
-    node.query(f"CREATE NAMED COLLECTION {name} AS {params[:-2]}")
-
-    return name
 
 
 @TestStep(Given)

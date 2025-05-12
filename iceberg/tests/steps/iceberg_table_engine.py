@@ -40,6 +40,25 @@ def create_table_with_iceberg_engine(
 
 
 @TestStep(Given)
+def create_named_collection(self, name=None, dict={}, node=None):
+    """Create named collection from dictionary."""
+    if node is None:
+        node = self.context.node
+
+    if name is None:
+        name = "named_collection_" + getuid()
+
+    params = ""
+
+    for key, value in dict.items():
+        params += f"{key} = '{value}', "
+
+    node.query(f"CREATE NAMED COLLECTION {name} AS {params[:-2]}")
+
+    return name
+
+
+@TestStep(Given)
 def create_table_with_iceberg_engine_from_config(
     self,
     table_name=None,

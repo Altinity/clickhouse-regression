@@ -14,4 +14,7 @@
         <table>part_log</table>
         <flush_interval_milliseconds>500</flush_interval_milliseconds>
     </part_log>
+    <query_log>
+        <flush_interval_milliseconds>100</flush_interval_milliseconds>
+    </query_log>
 </clickhouse>

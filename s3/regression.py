@@ -205,12 +205,12 @@ ffails = {
     ":/hive partitioning": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
-        check_if_antalya_build,
+        check_if_not_antalya_build,
     ),
     ":/remote s3 function call": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
-        check_if_antalya_build,
+        check_if_not_antalya_build,
     ),
     "minio/table function/measure file size s3Cluster": (
         Skip,
