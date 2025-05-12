@@ -1,10 +1,5 @@
 from testflows.core import *
-
 from helpers.common import getuid
-
-import random
-
-random.seed(42)
 
 
 @TestStep(Given)
