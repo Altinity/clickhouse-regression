@@ -77,9 +77,13 @@ def create_experimental_iceberg_database(
     if settings:
         query += f"{settings_str}"
 
-    node.query(query)
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield database_name
 
-    return database_name
+    finally:
+        with Finally("drop database"):
+            node.query(f"DROP DATABASE IF EXISTS {database_name}")
 
 
 @TestStep(Then)
