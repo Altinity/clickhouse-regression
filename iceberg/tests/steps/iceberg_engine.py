@@ -155,7 +155,7 @@ def read_data_from_clickhouse_iceberg_table(
         )
 
     if use_iceberg_metadata_files_cache and (
-        check_clickhouse_version(">=25.4")(self) or not check_if_antalya_build(self)
+        check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)
     ):
         settings.append(
             (
