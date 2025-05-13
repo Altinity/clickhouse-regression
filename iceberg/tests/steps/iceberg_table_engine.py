@@ -87,7 +87,7 @@ def create_table_with_iceberg_engine_from_config(
             {settings}
             """
         )
-        return table_name
+        yield table_name
 
     finally:
         with Finally("drop table {table_name}"):
