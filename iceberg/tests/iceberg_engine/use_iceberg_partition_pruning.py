@@ -29,9 +29,12 @@ import iceberg.tests.steps.common as common
 
 @TestScenario
 def check_iceberg_partition_pruning_with_integer_type(
-    self, minio_root_user, minio_root_password
+    self, minio_root_user, minio_root_password, node=None
 ):
     """Check iceberg partition pruning with integer type."""
+    if node is None:
+        node = self.context.node
+
     table_name = f"table_{getuid()}"
     namespace = f"namespace_{getuid()}"
     database_name = f"database_{getuid()}"
@@ -117,7 +120,7 @@ def check_iceberg_partition_pruning_with_integer_type(
     with And("read data from ClickHouse with partition pruning enabled"):
         for i in range(length):
             with By("drop all caches"):
-                common.drop_all_caches()
+                common.drop_all_caches(node=node)
 
             with And("select with where clause on integer column"):
                 log_comment_with_partition_pruning = (
@@ -160,7 +163,7 @@ def check_iceberg_partition_pruning_with_integer_type(
     with And("read data from ClickHouse with partition pruning disabled"):
         for i in range(length):
             with By("drop all caches"):
-                common.drop_all_caches()
+                common.drop_all_caches(node=node)
 
             with And("select with where clause on integer column"):
                 log_comment_without_partition_pruning = (
