@@ -1,6 +1,8 @@
 import sys
-
 from testflows.core import *
+
+append_path(sys.path, "..")
+
 from helpers.cluster import create_cluster
 from helpers.argparser import (
     argparser_minio,
@@ -10,7 +12,7 @@ from helpers.argparser import (
 from helpers.common import check_clickhouse_version, check_if_not_antalya_build
 from iceberg.requirements.requirements import *
 
-append_path(sys.path, "..")
+
 
 xfails = {
     "/iceberg/icebergS3 table function/recreate table/*": [
