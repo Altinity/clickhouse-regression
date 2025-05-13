@@ -1,19 +1,16 @@
-#!/usr/bin/env python3
 import sys
+
 from testflows.core import *
-
-append_path(sys.path, "..")
-
 from helpers.cluster import create_cluster
 from helpers.argparser import (
     argparser_minio,
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
-from helpers.common import check_clickhouse_version, check_if_antalya_build
-
+from helpers.common import check_clickhouse_version, check_if_not_antalya_build
 from iceberg.requirements.requirements import *
 
+append_path(sys.path, "..")
 
 xfails = {
     "/iceberg/icebergS3 table function/recreate table/*": [
@@ -35,12 +32,13 @@ xfails = {
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
     ],
     "/iceberg/iceberg engine/swarm/*": [
-        (Fail, "Only works with antalya build", check_if_antalya_build),
+        (Fail, "Only works with antalya build", check_if_not_antalya_build),
     ],
     "/iceberg/iceberg cache/iceberg table engine/*": [
         (Fail, "Need to investigate"),
     ],
 }
+
 ffails = {
     "/iceberg/iceberg engine": (
         Skip,
@@ -70,7 +68,7 @@ ffails = {
     "/iceberg/iceberg cache/*": (
         Skip,
         "Metadata caching was introduced in antalya build from 24.12",
-        check_if_antalya_build,
+        check_if_not_antalya_build,
     ),
 }
 
@@ -123,6 +121,7 @@ def regression(
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
+    self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
 
     Feature(
         test=load("iceberg.tests.iceberg_engine.feature", "feature"),
