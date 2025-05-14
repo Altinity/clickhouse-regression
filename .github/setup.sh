@@ -22,7 +22,7 @@ echo "::endgroup::"
 echo "::group::Docker Caching"
 if [ -d "/mnt/cache" ]; then
     DOCKER_CACHE_DIR="/mnt/cache/docker"
-    mkdir -p "$DOCKER_CACHE_DIR"
+    sudo mkdir -p "$DOCKER_CACHE_DIR"
     echo "Using docker cache directory: $DOCKER_CACHE_DIR"
 else
     DOCKER_CACHE_DIR=""
@@ -31,10 +31,10 @@ fi
 
 if [ -n "$DOCKER_CACHE_DIR" ]; then
     echo "Setting up Docker data directory binding to cache"
-    systemctl stop docker
-    mkdir -p "$DOCKER_CACHE_DIR/data"
-    mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
-    systemctl start docker
+    sudo systemctl stop docker
+    sudo mkdir -p "$DOCKER_CACHE_DIR/data"
+    sudo mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
+    sudo systemctl start docker
 fi
 
 echo "::group::Python Setup"
