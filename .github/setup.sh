@@ -20,21 +20,25 @@ sudo apt-get update
 echo "::endgroup::"
 
 echo "::group::Docker Caching"
-if [ -d "/mnt/cache" ]; then
-    DOCKER_CACHE_DIR="/mnt/cache/docker"
-    sudo mkdir -p "$DOCKER_CACHE_DIR"
-    echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+if systemctl is-active --quiet docker; then
+    if [ -d "/mnt/cache" ]; then
+        DOCKER_CACHE_DIR="/mnt/cache/docker"
+        sudo mkdir -p "$DOCKER_CACHE_DIR"
+        echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+    else
+        DOCKER_CACHE_DIR=""
+        echo "No docker cache directory available, proceeding without caching"
+    fi
+    
+    if [ -n "$DOCKER_CACHE_DIR" ]; then
+        echo "Setting up Docker data directory binding to cache"
+        sudo systemctl stop docker
+        sudo mkdir -p "$DOCKER_CACHE_DIR/data" "/var/lib/docker"
+        sudo mount --bind "$DOCKER_CACHE_DIR/data" "/var/lib/docker"
+        sudo systemctl start docker
+    fi
 else
-    DOCKER_CACHE_DIR=""
-    echo "No docker cache directory available, proceeding without caching"
-fi
-
-if [ -n "$DOCKER_CACHE_DIR" ]; then
-    echo "Setting up Docker data directory binding to cache"
-    sudo systemctl stop docker
-    sudo mkdir -p "$DOCKER_CACHE_DIR/data" /var/lib/docker
-    sudo mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
-    sudo systemctl start docker
+    echo "Docker is not running or not available, skipping cache setup"
 fi
 echo "::endgroup::"
 
