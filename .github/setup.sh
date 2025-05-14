@@ -10,24 +10,50 @@ echo "::group::Print env"
 env
 echo "::endgroup::"
 
-echo "::group::Apt Update"
-sudo rm -rf /var/lib/apt/lists/*
-sudo rm -rf /var/cache/debconf
-sudo rm -rf /tmp/*
-
-sudo apt-get clean
-sudo apt-get update
+echo "::group::Docker Caching"
+if command -v systemctl >/dev/null && systemctl is-active --quiet docker; then
+    if [ -d "/mnt/cache" ]; then
+        DOCKER_DIRS="overlay2 image buildkit"
+        DOCKER_CACHE_DIR="/mnt/cache/docker"
+        echo "Using docker cache directory: $DOCKER_CACHE_DIR"       
+        # Create local and cache dirs for each component
+        for DIR in $DOCKER_DIRS; do
+            sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+        done
+        echo "Setting up bind mounts for Docker image layer caching"
+        sudo systemctl stop docker
+        for DIR in $DOCKER_DIRS; do
+            sudo mount --bind "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+        done
+        sudo systemctl start docker
+    else
+        echo "No docker cache directory available, proceeding without caching"
+    fi
+else
+    echo "Docker is not running or not available, skipping cache setup"
+fi
 echo "::endgroup::"
 
 echo "::group::Python Setup"
 echo "Install Python modules..."
 sudo apt-get install -y python3.12-venv
-
+echo "Configure Python caching"
+if [ -d "/mnt/cache" ]; then
+    PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
+    mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
+    sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
+    echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
+else
+    PYTHON_CACHE_DIR=""
+    echo "No Python venv cache directory available, proceeding without caching"
+fi
 echo "Create and activate Python virtual environment..."
-python3 -m venv venv
+if [ ! -f venv/bin/activate ]; then
+    python3 -m venv venv
+fi
 source venv/bin/activate
-echo PATH=$PATH >>$GITHUB_ENV
-
+echo "PATH=$PATH" >> "$GITHUB_ENV"
+echo "Pre-installing Python packages from requirements.txt..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
 echo "::endgroup::"
 
@@ -42,11 +68,36 @@ sudo mkswap /dev/zram0 && sudo swapon -p 100 /dev/zram0
 sudo sysctl vm.swappiness=100 # optional, makes zram usage more aggressive
 echo "::endgroup::"
 
-echo "::group::Docker Setup"
-echo "Install docker-compose..."
-sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+echo "::group::Install docker-compose"
+COMPOSE_VERSION="v2.23.1"
+COMPOSE_BIN_NAME="docker-compose-linux-x86_64"
+COMPOSE_URL="https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/${COMPOSE_BIN_NAME}"
+CACHE_PATH="/mnt/cache/docker-compose/${COMPOSE_VERSION}"
+TARGET_PATH="/usr/local/bin/docker-compose"
 
+if [ -d "/mnt/cache" ]; then
+    echo "Using cached docker-compose if available"
+    sudo mkdir -p "$CACHE_PATH"
+    if [ ! -f "$CACHE_PATH/docker-compose" ]; then
+        echo "Downloading docker-compose ${COMPOSE_VERSION}..."
+        sudo curl -SL "$COMPOSE_URL" -o "$CACHE_PATH/docker-compose"
+        sudo chmod +x "$CACHE_PATH/docker-compose"
+    else
+        echo "docker-compose ${COMPOSE_VERSION} already cached"
+    fi
+
+    echo "Linking cached docker-compose to ${TARGET_PATH}"
+    sudo ln -sf "$CACHE_PATH/docker-compose" "$TARGET_PATH"
+else
+    echo "No cache available, downloading docker-compose directly"
+    sudo curl -SL "$COMPOSE_URL" -o "$TARGET_PATH"
+    sudo chmod +x "$TARGET_PATH"
+fi
+
+docker-compose --version
+echo "::endgroup::"
+
+echo "::group::Docker Setup"
 mkdir $SUITE/_instances
 
 echo "Login to docker..."
