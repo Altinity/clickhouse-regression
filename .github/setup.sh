@@ -77,11 +77,36 @@ sudo mkswap /dev/zram0 && sudo swapon -p 100 /dev/zram0
 sudo sysctl vm.swappiness=100 # optional, makes zram usage more aggressive
 echo "::endgroup::"
 
-echo "::group::Docker Setup"
-echo "Install docker-compose..."
-sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+echo "::group::Install docker-compose"
+COMPOSE_VERSION="v2.23.1"
+COMPOSE_BIN_NAME="docker-compose-linux-x86_64"
+COMPOSE_URL="https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/${COMPOSE_BIN_NAME}"
+CACHE_PATH="/mnt/cache/docker-compose/${COMPOSE_VERSION}"
+TARGET_PATH="/usr/local/bin/docker-compose"
 
+if [ -d "/mnt/cache" ]; then
+    echo "Using cached docker-compose if available"
+    sudo mkdir -p "$CACHE_PATH"
+    if [ ! -f "$CACHE_PATH/docker-compose" ]; then
+        echo "Downloading docker-compose ${COMPOSE_VERSION}..."
+        sudo curl -SL "$COMPOSE_URL" -o "$CACHE_PATH/docker-compose"
+        sudo chmod +x "$CACHE_PATH/docker-compose"
+    else
+        echo "docker-compose ${COMPOSE_VERSION} already cached"
+    fi
+
+    echo "Linking cached docker-compose to ${TARGET_PATH}"
+    sudo ln -sf "$CACHE_PATH/docker-compose" "$TARGET_PATH"
+else
+    echo "No cache available, downloading docker-compose directly"
+    sudo curl -SL "$COMPOSE_URL" -o "$TARGET_PATH"
+    sudo chmod +x "$TARGET_PATH"
+fi
+
+docker-compose --version
+echo "::endgroup::"
+
+echo "::group::Docker Setup"
 mkdir $SUITE/_instances
 
 echo "Login to docker..."
