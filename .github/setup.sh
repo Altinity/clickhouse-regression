@@ -20,7 +20,7 @@ sudo apt-get update
 echo "::endgroup::"
 
 echo "::group::Docker Caching"
-if systemctl is-active --quiet docker; then
+if command -v systemctl >/dev/null && systemctl is-active --quiet docker; then
     if [ -d "/mnt/cache" ]; then
         DOCKER_CACHE_DIR="/mnt/cache/docker"
         sudo mkdir -p "$DOCKER_CACHE_DIR"
