@@ -46,7 +46,14 @@ echo "Create and activate Python virtual environment..."
 python3 -m venv venv
 source venv/bin/activate
 echo PATH=$PATH >>$GITHUB_ENV
+echo "::endgroup::"
 
+echo "::group::Python Caching"
+mkdir -p /mnt/cache/python3.12 $PWD/venv/lib/python3.12
+sudo mount --bind /mnt/cache/python3.12 $PWD/venv/lib/python3.12
+echo "::endgroup::"
+
+echo "Pre-installing Python packages from requirements.txt..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
 echo "::endgroup::"
 
