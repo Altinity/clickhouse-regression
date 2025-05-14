@@ -83,7 +83,7 @@ def create_table_with_iceberg_engine_from_config(
         node.query(
             f"""
             CREATE TABLE {table_name} 
-            ENGINE=IcebergS3({config_name}, filename = '{filename}')
+            ENGINE=Iceberg({config_name}, filename = '{filename}')
             {settings}
             """
         )
