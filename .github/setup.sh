@@ -13,20 +13,21 @@ echo "::endgroup::"
 echo "::group::Docker Caching"
 if command -v systemctl >/dev/null && systemctl is-active --quiet docker; then
     if [ -d "/mnt/cache" ]; then
+        DOCKER_DIRS="overlay2 image buildkit"
         DOCKER_CACHE_DIR="/mnt/cache/docker"
-        sudo mkdir -p "$DOCKER_CACHE_DIR"
-        echo "Using docker cache directory: $DOCKER_CACHE_DIR"
-    else
-        DOCKER_CACHE_DIR=""
-        echo "No docker cache directory available, proceeding without caching"
-    fi
-    
-    if [ -n "$DOCKER_CACHE_DIR" ]; then
-        echo "Setting up Docker data directory binding to cache"
+        echo "Using docker cache directory: $DOCKER_CACHE_DIR"       
+        # Create local and cache dirs for each component
+        for DIR in $DOCKER_DIRS; do
+            sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+        done
+        echo "Setting up bind mounts for Docker image layer caching"
         sudo systemctl stop docker
-        sudo mkdir -p "$DOCKER_CACHE_DIR/data" "/var/lib/docker"
-        sudo mount --bind "$DOCKER_CACHE_DIR/data" "/var/lib/docker"
+        for DIR in $DOCKER_DIRS; do
+            sudo mount --bind "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+        done
         sudo systemctl start docker
+    else
+        echo "No docker cache directory available, proceeding without caching"
     fi
 else
     echo "Docker is not running or not available, skipping cache setup"
@@ -36,10 +37,7 @@ echo "::endgroup::"
 echo "::group::Python Setup"
 echo "Install Python modules..."
 sudo apt-get install -y python3.12-venv
-
-echo "::group::Python Setup"
 echo "Configure Python caching"
-
 if [ -d "/mnt/cache" ]; then
     PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
     mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
@@ -49,16 +47,12 @@ else
     PYTHON_CACHE_DIR=""
     echo "No Python venv cache directory available, proceeding without caching"
 fi
-
 echo "Create and activate Python virtual environment..."
-
 if [ ! -f venv/bin/activate ]; then
     python3 -m venv venv
 fi
-
 source venv/bin/activate
 echo "PATH=$PATH" >> "$GITHUB_ENV"
-
 echo "Pre-installing Python packages from requirements.txt..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
 echo "::endgroup::"
