@@ -32,7 +32,7 @@ fi
 if [ -n "$DOCKER_CACHE_DIR" ]; then
     echo "Setting up Docker data directory binding to cache"
     sudo systemctl stop docker
-    sudo mkdir -p "$DOCKER_CACHE_DIR/data"
+    sudo mkdir -p "$DOCKER_CACHE_DIR/data" /var/lib/docker
     sudo mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
     sudo systemctl start docker
 fi
@@ -51,7 +51,7 @@ echo "::endgroup::"
 echo "::group::Python Caching"
 if [ -d "/mnt/cache" ]; then
     PYTHON_CACHE_DIR="/mnt/cache/python3.12"
-    sudo mkdir -p "$PYTHON_CACHE_DIR"
+    sudo mkdir -p "$PYTHON_CACHE_DIR" $PWD/venv/lib/python3.12
     echo "Using Python cache directory: $PYTHON_CACHE_DIR"
 else
     PYTHON_CACHE_DIR=""
