@@ -46,9 +46,8 @@ echo "Create and activate Python virtual environment..."
 python3 -m venv venv
 source venv/bin/activate
 echo PATH=$PATH >>$GITHUB_ENV
-echo "::endgroup::"
 
-echo "::group::Python Caching"
+echo "Configure Python caching"
 if [ -d "/mnt/cache" ]; then
     PYTHON_CACHE_DIR="/mnt/cache/python3.12"
     mkdir -p $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
@@ -58,7 +57,6 @@ else
     PYTHON_CACHE_DIR=""
     echo "No Python cache directory available, proceeding without caching"
 fi
-echo "::endgroup::"
 
 echo "Pre-installing Python packages from requirements.txt..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
