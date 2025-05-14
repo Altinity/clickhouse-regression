@@ -51,15 +51,13 @@ echo "::endgroup::"
 echo "::group::Python Caching"
 if [ -d "/mnt/cache" ]; then
     PYTHON_CACHE_DIR="/mnt/cache/python3.12"
-    sudo mkdir -p "$PYTHON_CACHE_DIR" $PWD/venv/lib/python3.12
+    mkdir -p $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
+    sudo mount --bind $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
     echo "Using Python cache directory: $PYTHON_CACHE_DIR"
 else
     PYTHON_CACHE_DIR=""
     echo "No Python cache directory available, proceeding without caching"
 fi
-
-mkdir -p $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
-sudo mount --bind $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
 echo "::endgroup::"
 
 echo "Pre-installing Python packages from requirements.txt..."
