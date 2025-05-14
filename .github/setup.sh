@@ -19,6 +19,24 @@ sudo apt-get clean
 sudo apt-get update
 echo "::endgroup::"
 
+echo "::group::Docker Caching"
+if [ -d "/mnt/cache" ]; then
+    DOCKER_CACHE_DIR="/mnt/cache/docker"
+    mkdir -p "$DOCKER_CACHE_DIR"
+    echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+else
+    DOCKER_CACHE_DIR=""
+    echo "No docker cache directory available, proceeding without caching"
+fi
+
+if [ -n "$DOCKER_CACHE_DIR" ]; then
+    echo "Setting up Docker data directory binding to cache"
+    systemctl stop docker
+    mkdir -p "$DOCKER_CACHE_DIR/data"
+    mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
+    systemctl start docker
+fi
+
 echo "::group::Python Setup"
 echo "Install Python modules..."
 sudo apt-get install -y python3.12-venv
