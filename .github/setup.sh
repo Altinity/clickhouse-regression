@@ -36,6 +36,7 @@ if [ -n "$DOCKER_CACHE_DIR" ]; then
     sudo mount --bind "$DOCKER_CACHE_DIR/data" /var/lib/docker
     sudo systemctl start docker
 fi
+echo "::endgroup::"
 
 echo "::group::Python Setup"
 echo "Install Python modules..."
