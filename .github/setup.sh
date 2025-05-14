@@ -10,15 +10,6 @@ echo "::group::Print env"
 env
 echo "::endgroup::"
 
-echo "::group::Apt Update"
-sudo rm -rf /var/lib/apt/lists/*
-sudo rm -rf /var/cache/debconf
-sudo rm -rf /tmp/*
-
-sudo apt-get clean
-sudo apt-get update
-echo "::endgroup::"
-
 echo "::group::Docker Caching"
 if command -v systemctl >/dev/null && systemctl is-active --quiet docker; then
     if [ -d "/mnt/cache" ]; then
