@@ -37,21 +37,27 @@ echo "::group::Python Setup"
 echo "Install Python modules..."
 sudo apt-get install -y python3.12-venv
 
+echo "::group::Python Setup"
 echo "Configure Python caching"
+
 if [ -d "/mnt/cache" ]; then
-    PYTHON_CACHE_DIR="/mnt/cache/python3.12"
-    mkdir -p $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
-    sudo mount --bind $PYTHON_CACHE_DIR $PWD/venv/lib/python3.12
-    echo "Using Python cache directory: $PYTHON_CACHE_DIR"
+    PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
+    mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
+    sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
+    echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
 else
     PYTHON_CACHE_DIR=""
-    echo "No Python cache directory available, proceeding without caching"
+    echo "No Python venv cache directory available, proceeding without caching"
 fi
 
 echo "Create and activate Python virtual environment..."
-python3 -m venv venv
+
+if [ ! -f venv/bin/activate ]; then
+    python3 -m venv venv
+fi
+
 source venv/bin/activate
-echo PATH=$PATH >>$GITHUB_ENV
+echo "PATH=$PATH" >> "$GITHUB_ENV"
 
 echo "Pre-installing Python packages from requirements.txt..."
 ./retry.sh 60 2 "pip install -r requirements.txt"
