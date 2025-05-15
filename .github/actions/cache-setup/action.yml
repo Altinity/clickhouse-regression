@@ -24,18 +24,24 @@ runs:
 
             echo "Stopping Docker to prepare cache"
             sudo systemctl stop docker
+            sudo sync
 
-            echo "Mounting image and buildkit from cache"
-            for DIR in image buildkit; do
-                if ! mountpoint -q "/var/lib/docker/$DIR"; then
-                    sudo mount --bind "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
-                fi
-            done
+            echo "Copying buildkit from cache if exists"
+            if [ -d "$DOCKER_CACHE_DIR/buildkit" ]; then
+                sudo rm -rf /var/lib/docker/buildkit
+                sudo cp -a "$DOCKER_CACHE_DIR/buildkit" /var/lib/docker/buildkit
+            fi
 
             echo "Copying overlay2 from cache if exists"
             if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
                 sudo rm -rf /var/lib/docker/overlay2
                 sudo cp -a "$DOCKER_CACHE_DIR/overlay2" /var/lib/docker/overlay2
+            fi
+
+            echo "Copying image from cache if exists"
+            if [ -d "$DOCKER_CACHE_DIR/image" ]; then
+                sudo rm -rf /var/lib/docker/image
+                sudo cp -a "$DOCKER_CACHE_DIR/image" /var/lib/docker/image
             fi
 
             sudo systemctl start docker
