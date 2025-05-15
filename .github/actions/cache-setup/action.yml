@@ -18,31 +18,17 @@ runs:
             DOCKER_CACHE_DIR="/mnt/cache/docker"
             echo "Using docker cache directory: $DOCKER_CACHE_DIR"
 
-            # Ensure target cache directories exist
-            sudo mkdir -p "$DOCKER_CACHE_DIR/image" "$DOCKER_CACHE_DIR/buildkit" "$DOCKER_CACHE_DIR/overlay2"
-            sudo mkdir -p "/var/lib/docker/image" "/var/lib/docker/buildkit" "/var/lib/docker/overlay2"
-
             echo "Stopping Docker to prepare cache"
             sudo systemctl stop docker
             sudo sync
 
-            echo "Copying buildkit from cache if exists"
-            if [ -d "$DOCKER_CACHE_DIR/buildkit" ]; then
-                sudo rm -rf /var/lib/docker/buildkit
-                sudo cp -a "$DOCKER_CACHE_DIR/buildkit" /var/lib/docker/buildkit
-            fi
-
-            echo "Copying overlay2 from cache if exists"
-            if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
-                sudo rm -rf /var/lib/docker/overlay2
-                sudo cp -a "$DOCKER_CACHE_DIR/overlay2" /var/lib/docker/overlay2
-            fi
-
-            echo "Copying image from cache if exists"
-            if [ -d "$DOCKER_CACHE_DIR/image" ]; then
-                sudo rm -rf /var/lib/docker/image
-                sudo cp -a "$DOCKER_CACHE_DIR/image" /var/lib/docker/image
-            fi
+            for DIR in image overlay2 buildkit; do
+                if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
+                    echo "Restoring $DIR from cache"
+                    sudo rm -rf "/var/lib/docker/$DIR"
+                    sudo cp -a "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+                fi
+            done
 
             sudo sync
             sudo systemctl start docker
