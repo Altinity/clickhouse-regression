@@ -18,9 +18,10 @@ runs:
 
           echo "Copying overlay2, image and buildkit to /mnt/cache/docker"
           sudo mkdir -p /mnt/cache/docker /var/lib/docker/overlay2 /var/lib/docker/image /var/lib/docker/buildkit
-          sudo cp -a /var/lib/docker/overlay2 /mnt/cache/docker/overlay2
-          sudo cp -a /var/lib/docker/image /mnt/cache/docker/image
-          sudo cp -a /var/lib/docker/buildkit /mnt/cache/docker/buildkit
+
+          sudo rsync -aH --delete /var/lib/docker/overlay2/ /mnt/cache/docker/overlay2/
+          sudo rsync -aH --delete /var/lib/docker/image/ /mnt/cache/docker/image/
+          sudo rsync -aH --delete /var/lib/docker/buildkit/ /mnt/cache/docker/buildkit/
         else
           echo "/mnt/cache not available — skipping Docker cache sync"
         fi

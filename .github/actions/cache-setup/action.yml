@@ -44,6 +44,7 @@ runs:
                 sudo cp -a "$DOCKER_CACHE_DIR/image" /var/lib/docker/image
             fi
 
+            sudo sync
             sudo systemctl start docker
         else
             echo "No docker cache directory available, proceeding without caching"
