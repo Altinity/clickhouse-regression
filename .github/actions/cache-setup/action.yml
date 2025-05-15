@@ -8,7 +8,6 @@ runs:
       shell: bash
       run: |
         echo "::group::Docker Caching"
-
         if ! systemctl is-active --quiet docker; then
             echo "Docker is not running, skipping Docker cache setup"
             echo "::endgroup::"
@@ -43,11 +42,12 @@ runs:
         else
             echo "No docker cache directory available, proceeding without caching"
         fi
+        echo "::endgroup::"
 
     - name: Setup Python cache
       shell: bash
       run: |
-        echo "Python venv caching"
+        echo "::group::Python venv caching"
         if [ -d "/mnt/cache" ]; then
             PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
             mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
@@ -57,3 +57,4 @@ runs:
             PYTHON_CACHE_DIR=""
             echo "No Python venv cache directory available, proceeding without caching"
         fi
+        echo "::endgroup::"
