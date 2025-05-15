@@ -32,8 +32,6 @@ if command -v systemctl >/dev/null && systemctl is-active --quiet docker; then
 else
     echo "Docker is not running or not available, skipping cache setup"
 fi
-echo "Check disk space for Docker volumes..."
-df -h /var/lib/docker/volumes
 echo "::endgroup::"
 
 echo "::group::Python Setup"
