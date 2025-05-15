@@ -241,7 +241,6 @@ def get_iceberg_table_name(
         )
 
     with And("create database with Iceberg engine"):
-        drop_database(database_name=database_name)
         create_experimental_iceberg_database(
             database_name=database_name,
             rest_catalog_url="http://ice-rest-catalog:5000",

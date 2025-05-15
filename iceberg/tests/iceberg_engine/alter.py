@@ -8,13 +8,15 @@ from helpers.common import getuid, check_clickhouse_version
 
 @TestScenario
 def alter_column(self, minio_root_user, minio_root_password, node=None):
-    """Check that ALTER TABLE ADD COLUMN, DROP COLUMN, RENAME COLUMN are
-    not supported for Iceberg tables."""
+    """Check that ALTER TABLE ADD COLUMN, DROP COLUMN, RENAME COLUMN,
+    CLEAR COLUMN, MODIFY COLUMN, MODIFY SETTINGS, RESET SETTINGS are not supported
+    for tables from Iceberg database.
+    """
 
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
@@ -90,13 +92,13 @@ def alter_column(self, minio_root_user, minio_root_password, node=None):
 
 @TestScenario
 def alter_partitions(self, minio_root_user, minio_root_password, node=None):
-    """Check that ALTER TABLE ADD PARTITION, DROP PARTITION, DROP PARTITION are
-    not supported for Iceberg tables."""
-
+    """Check that different partitioning operations are not supported for
+    tables from Iceberg database.
+    """
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
@@ -196,7 +198,7 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
         assert message in output.output or message2 in output.output, error()
 
     with And("try to FREEZE PARTITION in ClickHouse table with Iceberg engine"):
-        node.query(
+        output = node.query(
             f"ALTER TABLE {iceberg_table_name} FREEZE PARTITION 'all_2_2_0'",
             no_checks=True,
         )
@@ -258,7 +260,7 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
         exitcode = 48
         message = "DB::Exception: Table engine IcebergS3 doesn't support mutations. (NOT_IMPLEMENTED)"
         message2 = "DB::Exception: Table engine Iceberg doesn't support mutations. (NOT_IMPLEMENTED)"
-        node.query(
+        output = node.query(
             f"ALTER TABLE {iceberg_table_name} DELETE IN PARTITION 2 WHERE p = 2;",
             no_checks=True,
         )
@@ -279,12 +281,12 @@ def alter_partitions(self, minio_root_user, minio_root_password, node=None):
 
 @TestScenario
 def alter_comment_columns(self, minio_root_user, minio_root_password, node=None):
-    """Check that COMMENT COLUMN works for Iceberg tables."""
+    """Check that COMMENT COLUMN works for tables from Iceberg database."""
 
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
@@ -317,18 +319,18 @@ def alter_comment_columns(self, minio_root_user, minio_root_password, node=None)
 
 @TestScenario
 def alter_delete(self, minio_root_user, minio_root_password, node=None):
-    """Check that DELETE FROM TABLE is not supported for Iceberg tables."""
+    """Check that DELETE FROM TABLE is not supported for tables from Iceberg database."""
 
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
 
-    with Then("try to DELETE FROM ClickHouse table with Iceberg engine"):
+    with Then("try to DELETE from table from Iceberg database"):
         exitcode = 48
         message = "DB::Exception: Table engine IcebergS3 doesn't support mutations. (NOT_IMPLEMENTED)"
         message2 = "DB::Exception: Table engine Iceberg doesn't support mutations. (NOT_IMPLEMENTED)"
@@ -342,18 +344,18 @@ def alter_delete(self, minio_root_user, minio_root_password, node=None):
 
 @TestScenario
 def alter_settings(self, minio_root_user, minio_root_password, node=None):
-    """Check that settings manipulation is not supported for Iceberg tables."""
+    """Check that settings manipulation is not supported for tables from Iceberg database."""
 
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
 
-    with Then("try to modify settings in ClickHouse table with Iceberg engine"):
+    with Then("try to modify settings in table from Iceberg database"):
         exitcode1 = 48
         message1 = "DB::Exception: Alter of type 'MODIFY_SETTING' is not supported by storage Iceberg"
 
@@ -371,20 +373,20 @@ def alter_settings(self, minio_root_user, minio_root_password, node=None):
 
 @TestScenario
 def alter_order_by(self, minio_root_user, minio_root_password, node=None):
-    """Check that ORDER BY is not supported for Iceberg tables."""
+    """Check that ORDER BY is not supported for tables from Iceberg database."""
 
     if node is None:
         node = self.context.node
 
-    with Given("get table with Iceberg engine"):
+    with Given("get table from Iceberg database"):
         iceberg_table_name = iceberg_engine.get_iceberg_table_name(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
 
-    with Then("try to use ORDER BY in ClickHouse table with Iceberg engine"):
+    with Then("try to use ORDER BY in table from Iceberg database"):
         exitcode = 48
-        message = "DB::Exception: Received from localhost:9000. DB::Exception: Alter of type 'MODIFY_ORDER_BY' is not supported by storage Iceberg"
+        message = "DB::Exception: Alter of type 'MODIFY_ORDER_BY' is not supported by storage Iceberg"
         node.query(
             f"ALTER TABLE {iceberg_table_name} MODIFY ORDER BY long_col",
             exitcode=exitcode,
@@ -394,6 +396,7 @@ def alter_order_by(self, minio_root_user, minio_root_password, node=None):
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
+    """Check that different ALTER TABLE operations are not supported for tables from Iceberg database."""
     Scenario(test=alter_column)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
