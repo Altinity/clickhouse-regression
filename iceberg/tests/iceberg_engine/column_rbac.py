@@ -1,15 +1,13 @@
+import random
+
+import iceberg.tests.steps.common as common
+import iceberg.tests.steps.catalog as catalog_steps
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
+
 from testflows.core import *
 from testflows.combinatorics import product
 
-import pyarrow as pa
-
-import iceberg.tests.steps.catalog as catalog_steps
-import iceberg.tests.steps.iceberg_engine as iceberg_engine
-import iceberg.tests.steps.common as common
-
 from helpers.common import create_user, getuid, create_role
-
-import random
 
 random.seed(42)
 
@@ -26,8 +24,8 @@ def check_column_rbac(
     iceberg_table_name,
 ):
     """Check that specified restriction on columns works the same for table from
-    Iceberg database engine and MergeTree table."""
-
+    Iceberg database and MergeTree table.
+    """
     with Given(
         "grant same select privileges for specified columns and users on both tables"
     ):
@@ -42,13 +40,17 @@ def check_column_rbac(
             user_and_role_names=user_and_role_names,
         )
 
-    with Then(
-        "check that select query show the same output for each user for both tables"
+    with When(
+        "choose 10 random column combinations + add all columns to use in select queries"
     ):
-        table_column_names_options = random.sample(table_column_names_options, 10) + [
+        table_column_names = random.sample(table_column_names_options, 10) + [
             table_columns
         ]
-        for num, columns_combination_option in enumerate(table_column_names_options):
+
+    with Then(
+        "check that select queries show the same output for each user for both tables"
+    ):
+        for num, columns_combination_option in enumerate(table_column_names):
             with By(f"select #{num}"):
                 for user_name in [user_name1, user_name2]:
                     merge_tree_result = common.get_select_query_result(
@@ -69,60 +71,50 @@ def check_column_rbac(
 
 
 @TestFeature
-def column_rbac(self, minio_root_user, minio_root_password, node=None):
-    """Run combinatorial tests for RBAC column-level restrictions on
-    tables from Iceberg database engine."""
-
+@Name("column rbac")
+def feature(self, minio_root_user, minio_root_password, node=None):
+    """Test RBAC for ClickHouse tables from Iceberg database engine."""
     if node is None:
         node = self.context.node
 
-    namespace = "row_policy"
+    namespace = f"column_rbac_namespace_{getuid()}"
     table_name = f"table_{getuid()}"
+    database_name = f"column_rbac_database_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
             uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
-
-    with And(f"define schema and create {namespace}.{table_name} Iceberg table"):
+    with And(f"create {namespace}.{table_name} Iceberg table"):
         iceberg_table = catalog_steps.create_iceberg_table_with_five_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with And("create database with Iceberg engine"):
-        database_name = "column_rbac"
-        iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            storage_endpoint="http://minio:9000/warehouse",
         )
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(
+            table_name=merge_tree_table_name
+        )
 
-    with And("insert same data into both tables"):
+    with And("insert same data into iceberg table and merge tree table"):
         common.insert_same_data_to_iceberg_and_merge_tree_tables(
             iceberg_table=iceberg_table, merge_tree_table_name=merge_tree_table_name
         )
 
-    with And("create users and roles that will be used in row policies"):
+    with And("create 2 users and 2 roles"):
         user_name1 = f"user1_{getuid()}"
         user_name2 = f"user2_{getuid()}"
         role_name1 = f"role1_{getuid()}"
@@ -133,7 +125,7 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
         create_role(role_name=role_name2)
         all_roles_and_users = [user_name1, user_name2, role_name1, role_name2]
 
-    with And("grant roles to users"):
+    with And("grant role1 to user1 and role2 to user2"):
         node.query(f"GRANT {role_name1} TO {user_name1}")
         node.query(f"GRANT {role_name2} TO {user_name2}")
 
@@ -165,11 +157,3 @@ def column_rbac(self, minio_root_user, minio_root_password, node=None):
             merge_tree_table_name=merge_tree_table_name,
             iceberg_table_name=f"{database_name}.\\`{namespace}.{table_name}\\`",
         )
-
-
-@TestFeature
-def feature(self, minio_root_user, minio_root_password):
-    """Test RBAC for ClickHouse tables from Iceberg database engine."""
-    Feature(test=column_rbac)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
