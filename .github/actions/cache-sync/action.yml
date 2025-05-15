@@ -16,7 +16,7 @@ runs:
           sudo systemctl stop docker
 
           echo "Copying overlay2 and image to /mnt/cache/docker..."
-          mkdir -p /mnt/cache/docker /var/lib/docker/overlay2
+          sudo mkdir -p /mnt/cache/docker /var/lib/docker/overlay2
           sudo cp -a /var/lib/docker/overlay2 /mnt/cache/docker/overlay2
         else
           echo "/mnt/cache not available — skipping Docker cache sync"
