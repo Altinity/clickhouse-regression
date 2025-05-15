@@ -65,8 +65,8 @@ def create_row_policy(
 
 
 @TestStep(Given)
-def create_merge_tree_table(self, table_name=None, node=None):
-    """Create MergeTree table."""
+def create_merge_tree_table_with_five_columns(self, table_name=None, node=None):
+    """Create MergeTree table with five columns."""
     if node is None:
         node = self.context.node
 
@@ -125,7 +125,7 @@ def transform_to_clickhouse_format(data):
     transformed = []
     for row in data:
         values = []
-        for key, value in row.items():
+        for column_name, value in row.items():
             if isinstance(value, (int, float)):
                 if isinstance(value, float):
                     values.append(f"round({value}, 2)")
@@ -178,7 +178,6 @@ def get_all_combinations(items, max_length=None):
 
     all_combinations = []
     for r in range(1, max_length + 1):
-        note([", ".join(combo) for combo in combinations(items, r)])
         all_combinations.extend([", ".join(combo) for combo in combinations(items, r)])
     return all_combinations
 
@@ -287,6 +286,7 @@ def grant_select(self, table_name, user_and_role_names, table_columns, node=None
             f"GRANT SELECT({table_columns}) ON {table_name} TO {user_and_role_names}"
         )
         yield
+        
     finally:
         with Finally("revoke select privilege"):
             node.query(

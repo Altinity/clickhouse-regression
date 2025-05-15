@@ -100,7 +100,7 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(table_name=merge_tree_table_name)
 
     with And("insert same data into both tables"):
         common.insert_same_data_to_iceberg_and_merge_tree_tables(
