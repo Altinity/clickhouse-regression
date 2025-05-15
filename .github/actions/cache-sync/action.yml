@@ -8,22 +8,31 @@ runs:
       shell: bash
       run: |
         echo "::group::Sync Docker cache"
+
+        if ! command -v docker >/dev/null; then
+            echo "Docker is not installed, skipping cache sync"
+            echo "::endgroup::"
+            exit 0
+        fi
+
         if [ -d "/mnt/cache" ]; then
-          echo "Stopping containers and cleaning up..."
-          sudo docker stop $(sudo docker ps -q) || true
-          sudo docker rm -fv $(sudo docker ps -a -q) || true
-          sudo docker system prune -f || true
-          sudo systemctl stop docker
-          sudo sync
+            echo "Stopping containers and cleaning up..."
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm -fv $(sudo docker ps -a -q) || true
 
-          echo "Copying overlay2, image and buildkit to /mnt/cache/docker"
-          sudo mkdir -p /mnt/cache/docker /var/lib/docker/overlay2 /var/lib/docker/image /var/lib/docker/buildkit
+            echo "Stopping Docker daemon"
+            sudo systemctl stop docker
+            sudo sync
 
-          sudo rsync -aH --delete /var/lib/docker/overlay2/ /mnt/cache/docker/overlay2/
-          sudo rsync -aH --delete /var/lib/docker/image/ /mnt/cache/docker/image/
-          sudo rsync -aH --delete /var/lib/docker/buildkit/ /mnt/cache/docker/buildkit/
+            echo "Syncing docker folders to cache"
+            sudo mkdir -p /mnt/cache/docker
+
+            for DIR in overlay2 image buildkit; do
+                sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
+            done
+            sudo sync
         else
-          echo "/mnt/cache not available — skipping Docker cache sync"
+            echo "/mnt/cache not available — skipping Docker cache sync"
         fi
         echo "::endgroup::"
         
