@@ -7,8 +7,6 @@ runs:
     - name: Sync Docker cache
       shell: bash
       run: |
-        echo "::group::Sync Docker cache"
-
         if ! command -v docker >/dev/null; then
             echo "Docker is not installed, skipping cache sync"
             echo "::endgroup::"
@@ -34,5 +32,4 @@ runs:
         else
             echo "/mnt/cache not available — skipping Docker cache sync"
         fi
-        echo "::endgroup::"
         
