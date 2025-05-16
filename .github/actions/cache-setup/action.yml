@@ -20,7 +20,23 @@ runs:
             sudo systemctl stop docker
             sudo sync
 
-            for DIR in image overlay2 buildkit; do
+            if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
+                echo "Restoring overlay2 from cache"
+                sudo rm -rf "/var/lib/docker/overlay2"
+                sudo mkdir -p "/var/lib/docker/overlay2"
+                targets=$(sudo find "$DOCKER_CACHE_DIR/overlay2" -mindepth 1 -maxdepth 1)
+                if [ -z "$targets" ]; then
+                    echo "⚠️  No entries found in $DOCKER_CACHE_DIR/overlay2 — skipping"
+                else
+                    for target in $targets; do
+                        id=$(basename "$target")
+                        echo "Mounting $target to /var/lib/docker/overlay2/$id"
+                        sudo mount --bind "$target" "/var/lib/docker/overlay2/$id"
+                    done
+                fi
+            fi
+
+            for DIR in image buildkit; do
                 if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
                     echo "Restoring $DIR from cache"
                     sudo rm -rf "/var/lib/docker/$DIR"
