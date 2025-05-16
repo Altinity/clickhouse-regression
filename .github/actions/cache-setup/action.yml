@@ -32,6 +32,7 @@ runs:
                         echo "Mounting $target to /var/lib/docker/overlay2/$id"
                         sudo mkdir -p "/var/lib/docker/overlay2/$id"
                         sudo mount --bind "$target" "/var/lib/docker/overlay2/$id"
+                        echo "/var/lib/docker/overlay2/$id" | sudo tee -a /etc/docker-cache-mounts > /dev/null
                     done
                 fi
             fi

@@ -24,6 +24,12 @@ runs:
             echo "Syncing docker folders to cache"
             sudo mkdir -p /mnt/cache/docker
 
+            echo "Unmounting docker cache mounts"
+            if [ -f /etc/docker-cache-mounts ]; then
+                echo "Unmounting $(cat /etc/docker-cache-mounts)"
+                sudo xargs -a /etc/docker-cache-mounts -r umount || true
+            fi
+
             for DIR in overlay2 image buildkit; do
                 sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
             done
