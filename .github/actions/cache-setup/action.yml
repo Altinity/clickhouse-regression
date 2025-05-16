@@ -9,7 +9,6 @@ runs:
       run: |
         if ! systemctl is-active --quiet docker; then
             echo "Docker is not running, skipping Docker cache setup"
-            echo "::endgroup::"
             exit 0
         fi
 
@@ -22,21 +21,10 @@ runs:
             sudo sync
 
             for DIR in image overlay2 buildkit; do
-                if sudo test -d "$DOCKER_CACHE_DIR/$DIR"; then
+                if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
                     echo "Restoring $DIR from cache"
                     sudo rm -rf "/var/lib/docker/$DIR"
-                    sudo mkdir -p "/var/lib/docker/$DIR"
-                    targets=$(sudo find "$DOCKER_CACHE_DIR/$DIR" -mindepth 1 -maxdepth 1)
-                    if [ -z "$targets" ]; then
-                        echo "⚠️  No entries found in $DOCKER_CACHE_DIR/$DIR — skipping"
-                        continue
-                    fi
-                    for target in $targets; do
-                        id=$(basename "$target")
-                        link="/var/lib/docker/$DIR/$id"
-                        echo "Linking $target to $link"
-                        sudo ln -s "$target" "$link"
-                    done
+                    sudo cp -a "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
                 fi
             done
 
