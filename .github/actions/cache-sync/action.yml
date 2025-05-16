@@ -26,12 +26,14 @@ runs:
             echo "Syncing docker folders to cache"           
             for DIR in overlay2 image buildkit; do
                 if [ -d "/var/lib/docker/$DIR" ]; then
+                    echo "Syncing /var/lib/docker/$DIR"
                     sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR"
                     shopt -s nullglob
                     for target in /var/lib/docker/$DIR/*; do
                         id=$(basename "$target")
                         if [ ! -L "$target" ]; then
-                            sudo rsync -aH --delete "/var/lib/docker/$DIR/$id" "$DOCKER_CACHE_DIR/$DIR/$id"
+                            echo "Syncing $target to $DOCKER_CACHE_DIR/$DIR/$id"
+                            sudo rsync -aH --delete "$target" "$DOCKER_CACHE_DIR/$DIR/$id"
                         fi
                     done
                     shopt -u nullglob
