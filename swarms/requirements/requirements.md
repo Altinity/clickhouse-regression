@@ -152,7 +152,7 @@ is wrong.
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` 
-contains multiple discovery sections.
+contains multiple discovery paths.
 
 ### Authentification Using Secret
 
