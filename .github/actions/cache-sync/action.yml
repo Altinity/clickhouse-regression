@@ -37,7 +37,11 @@ runs:
                         id=$(basename "$target")
                         if sudo test ! -L "$target"; then
                             echo "Syncing $target to $DOCKER_CACHE_DIR/$DIR/$id"
-                            sudo rsync -aH --delete "$target/" "$DOCKER_CACHE_DIR/$DIR/$id"
+                            if sudo test -d "$target"; then
+                                sudo rsync -aH --delete "$target/" "$DOCKER_CACHE_DIR/$DIR/$id"
+                            else
+                                sudo rsync -aH "$target" "$DOCKER_CACHE_DIR/$DIR/$id"
+                            fi
                         fi
                     done
                 fi
