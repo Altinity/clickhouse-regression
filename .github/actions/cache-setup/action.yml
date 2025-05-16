@@ -29,6 +29,7 @@ runs:
                     for target in "$DOCKER_CACHE_DIR/$DIR"/*; do
                         id=$(basename "$target")
                         link="/var/lib/docker/$DIR/$id"
+                        echo "Linking $target to $link"
                         sudo ln -s "$target" "$link"
                     done
                 fi
