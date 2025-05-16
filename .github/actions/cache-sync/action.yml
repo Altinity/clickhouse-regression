@@ -9,11 +9,12 @@ runs:
       run: |
         if ! command -v docker >/dev/null; then
             echo "Docker is not installed, skipping cache sync"
-            echo "::endgroup::"
             exit 0
         fi
 
         if [ -d "/mnt/cache" ]; then
+            DOCKER_CACHE_DIR="/mnt/cache/docker"
+
             echo "Stopping containers and cleaning up..."
             sudo docker stop $(sudo docker ps -q) || true
             sudo docker rm -fv $(sudo docker ps -a -q) || true
@@ -22,11 +23,17 @@ runs:
             sudo systemctl stop docker
             sudo sync
 
-            echo "Syncing docker folders to cache"
-            sudo mkdir -p /mnt/cache/docker
-
+            echo "Syncing docker folders to cache"           
             for DIR in overlay2 image buildkit; do
-                sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
+                if [ -d "/var/lib/docker/$DIR" ]; then
+                    sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR"
+                    for target in "/var/lib/docker/$DIR"/*; do
+                        id=$(basename "$target")
+                        if [ ! -L "$target" ]; then
+                            sudo rsync -aH --delete "/var/lib/docker/$DIR/$id" "$DOCKER_CACHE_DIR/$DIR/$id"
+                        fi
+                    done
+                fi
             done
             sudo sync
         else
