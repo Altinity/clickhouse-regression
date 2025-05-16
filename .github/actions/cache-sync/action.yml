@@ -27,12 +27,14 @@ runs:
             for DIR in overlay2 image buildkit; do
                 if [ -d "/var/lib/docker/$DIR" ]; then
                     sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR"
-                    for target in "/var/lib/docker/$DIR"/*; do
+                    shopt -s nullglob
+                    for target in /var/lib/docker/$DIR/*; do
                         id=$(basename "$target")
                         if [ ! -L "$target" ]; then
                             sudo rsync -aH --delete "/var/lib/docker/$DIR/$id" "$DOCKER_CACHE_DIR/$DIR/$id"
                         fi
                     done
+                    shopt -u nullglob
                 fi
             done
             sudo sync
