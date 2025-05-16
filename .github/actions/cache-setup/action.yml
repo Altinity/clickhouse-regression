@@ -1,10 +1,49 @@
-name: 'Cache Setup'
-description: 'Setup caching'
+name: 'Cache setup'
+description: 'Cache setup'
 
 runs:
   using: 'composite'
   steps:
-    - name: Dummy step
+    - name: Setup Docker cache
       shell: bash
       run: |
-        echo "Hello There"
+        if ! systemctl is-active --quiet docker; then
+            echo "Docker is not running, skipping Docker cache setup"
+            echo "::endgroup::"
+            exit 0
+        fi
+
+        if [ -d "/mnt/cache" ]; then
+            DOCKER_CACHE_DIR="/mnt/cache/docker"
+            echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+
+            echo "Stopping Docker to prepare cache"
+            sudo systemctl stop docker
+            sudo sync
+
+            for DIR in image overlay2 buildkit; do
+                if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
+                    echo "Restoring $DIR from cache"
+                    sudo rm -rf "/var/lib/docker/$DIR"
+                    sudo cp -a "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
+                fi
+            done
+
+            sudo sync
+            sudo systemctl start docker
+        else
+            echo "No docker cache directory available, proceeding without caching"
+        fi
+
+    - name: Setup Python cache
+      shell: bash
+      run: |
+        if [ -d "/mnt/cache" ]; then
+            PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
+            mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
+            sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
+            echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
+        else
+            PYTHON_CACHE_DIR=""
+            echo "No Python venv cache directory available, proceeding without caching"
+        fi
