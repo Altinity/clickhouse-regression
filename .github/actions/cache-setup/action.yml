@@ -23,7 +23,6 @@ runs:
             if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
                 echo "Restoring overlay2 from cache"
                 sudo rm -rf "/var/lib/docker/overlay2"
-                sudo mkdir -p "/var/lib/docker/overlay2"
                 targets=$(sudo find "$DOCKER_CACHE_DIR/overlay2" -mindepth 1 -maxdepth 1)
                 if [ -z "$targets" ]; then
                     echo "⚠️  No entries found in $DOCKER_CACHE_DIR/overlay2 — skipping"
@@ -31,6 +30,7 @@ runs:
                     for target in $targets; do
                         id=$(basename "$target")
                         echo "Mounting $target to /var/lib/docker/overlay2/$id"
+                        sudo mkdir -p "/var/lib/docker/overlay2/$id"
                         sudo mount --bind "$target" "/var/lib/docker/overlay2/$id"
                     done
                 fi
