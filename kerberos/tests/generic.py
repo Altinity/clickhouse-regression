@@ -13,10 +13,12 @@ def ping(self):
     cmd = "timeout 0.1 curl -v telnet://kerberos:88"
 
     for i in range(3):
-        with When(f"ch_{i} {cmd}"):
-            r = ch_nodes[i].command(cmd, no_checks=True)
-        with Then(f"Connection should succeed"):
-            assert "Connected to kerberos" in r.output, error()
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                with When(f"ch_{i} {cmd}"):
+                    r = ch_nodes[i].command(cmd, no_checks=True)
+                with Then(f"Connection should succeed"):
+                    assert "Connected to kerberos" in r.output, error()
 
 
 @TestScenario

@@ -13,8 +13,6 @@ runs:
         fi
 
         if [ -d "/mnt/cache" ]; then
-            DOCKER_CACHE_DIR="/mnt/cache/docker"
-
             echo "Stopping containers and cleaning up..."
             sudo docker stop $(sudo docker ps -q) || true
             sudo docker rm -fv $(sudo docker ps -a -q) || true
@@ -23,19 +21,26 @@ runs:
             sudo systemctl stop docker
             sudo sync
 
-            echo "Syncing docker folders to cache"           
-            for DIR in overlay2 image buildkit; do
-                if [ -d "/var/lib/docker/$DIR" ]; then
-                    echo "Syncing /var/lib/docker/$DIR"
-                    sudo mkdir -p "$DOCKER_CACHE_DIR/$DIR"
-                    sudo find "/var/lib/docker/$DIR" -mindepth 1 -maxdepth 1 | while read target; do
+            echo "Syncing docker folders to cache"
+            sudo mkdir -p /mnt/cache/docker
+
+            if sudo test -d "/var/lib/docker/overlay2"; then
+                sudo mkdir -p /mnt/cache/docker/overlay2
+                targets=$(sudo find "/var/lib/docker/overlay2" -mindepth 1 -maxdepth 1)
+                if [ -z "$targets" ]; then
+                    echo "⚠️  No entries found in /var/lib/docker/overlay2 — skipping"
+                else
+                    for target in $targets; do
                         id=$(basename "$target")
-                        if [ ! -L "$target" ]; then
-                            echo "Syncing $target to $DOCKER_CACHE_DIR/$DIR/$id"
-                            sudo rsync -aH --delete "$target/" "$DOCKER_CACHE_DIR/$DIR/$id"
+                        if [ ! -f /etc/docker-cache-mounts ] || ! grep -Fxq "$target" /etc/docker-cache-mounts; then
+                            sudo rsync -aH --delete "$target/" /mnt/cache/docker/overlay2/$id/
                         fi
                     done
                 fi
+            fi
+
+            for DIR in image buildkit; do
+                sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
             done
             sudo sync
         else
