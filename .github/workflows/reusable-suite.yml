@@ -2,6 +2,19 @@ name: Test Suite
 on:
   workflow_call:
     inputs:
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      clickhouse_path:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      args:
+        required: true
+        type: string
       suite_name:
         required: true
         type: string
@@ -24,6 +37,9 @@ on:
         required: false
         type: string
         default: '["self-hosted", "x86", "type-cx42", "type-cpx41", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
+      artifacts:
+        required: true
+        type: string
       artifact_name:
         required: false
         type: string
@@ -47,6 +63,24 @@ jobs:
       CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
       CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
       CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+      # Python encoding
+      PYTHONIOENCODING: utf-8
+      # ClickHouse
+      clickhouse_path: ${{ inputs.clickhouse_path }}
+      version: ${{ inputs.version }}
+      # Args
+      args: ${{ inputs.args }}
+      # Artifacts
+      artifacts: ${{ inputs.artifacts }}
+      artifact_paths: |
+        ./report.html
+        ./*.log.txt
+        ./*.log
+        ./*.html
+        ./*/_instances/*.log
+        ./*/_instances/*/logs/*.log
+        ./*/*/_instances/*/logs/*.log
+        ./*/*/_instances/*.log
 
     steps:
       - name: ⤵️ Checkout
