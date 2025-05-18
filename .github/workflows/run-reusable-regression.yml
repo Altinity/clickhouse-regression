@@ -452,7 +452,7 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /aws_s3
-      regression_args: "--storage aws_s3 --aws-s3-bucket ${{ env.AWS_BUCKET }} --aws-s3-region ${{ env.AWS_REGION }} --aws-s3-key-id ${{ env.AWS_KEY_ID }} --aws-s3-access-key ${{ env.AWS_ACCESS_KEY }} --only \"/parquet/aws s3/*\""
+      regression_args: "--storage aws_s3 --aws-s3-bucket ${{ AWS_BUCKET }} --aws-s3-region ${{ AWS_REGION }} --aws-s3-key-id ${{ AWS_KEY_ID }} --aws-s3-access-key ${{ AWS_ACCESS_KEY }} --only \"/parquet/aws s3/*\""
       condition: ${{ inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
       artifact_name: parquet-aws-artifacts
     secrets: inherit
