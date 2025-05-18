@@ -248,6 +248,7 @@ jobs:
       condition: ${{ inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' }}
       artifact_name: benchmark-aws-artifacts
       runner_server_type: "type-cx52, type-cpx51"
+    secrets: inherit
 
   benchmark_gcs:
     uses: ./.github/workflows/reusable-suite.yml
@@ -259,6 +260,7 @@ jobs:
       condition: ${{ inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' }}
       artifact_name: benchmark-gcs-artifacts
       runner_server_type: "type-cx52, type-cpx51"
+    secrets: inherit
 
   benchmark_minio:
     uses: ./.github/workflows/reusable-suite.yml
@@ -453,6 +455,7 @@ jobs:
       regression_args: "--storage aws_s3 --aws-s3-bucket ${{ secrets.AWS_BUCKET }} --aws-s3-region ${{ secrets.AWS_REGION }} --aws-s3-key-id ${{ secrets.AWS_KEY_ID }} --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }} --only \"/parquet/aws s3/*\""
       condition: ${{ inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
       artifact_name: parquet-aws-artifacts
+    secrets: inherit
 
   part_moves_between_shards:
     uses: ./.github/workflows/reusable-suite.yml
@@ -477,6 +480,7 @@ jobs:
       regression_args: "--storage aws_s3 --aws-s3-bucket ${{ secrets.AWS_BUCKET }} --aws-s3-region ${{ secrets.AWS_REGION }} --aws-s3-key-id ${{ secrets.AWS_KEY_ID }} --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}"
       condition: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
       artifact_name: s3-aws-artifacts
+    secrets: inherit
 
   s3_azure:
     uses: ./.github/workflows/reusable-suite.yml
@@ -487,6 +491,7 @@ jobs:
       regression_args: "--storage azure --azure-account-name ${{ secrets.AZURE_ACCOUNT_NAME }} --azure-storage-key ${{ secrets.AZURE_STORAGE_KEY }} --azure-container ${{ secrets.AZURE_CONTAINER_NAME }}"
       condition: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
       artifact_name: s3-azure-artifacts
+    secrets: inherit
 
   s3_gcs:
     uses: ./.github/workflows/reusable-suite.yml
@@ -497,6 +502,7 @@ jobs:
       regression_args: "--storage gcs --gcs-uri ${{ secrets.GCS_URI }} --gcs-key-id ${{ secrets.GCS_KEY_ID }} --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}"
       condition: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
       artifact_name: s3-gcs-artifacts
+    secrets: inherit
 
   s3_minio:
     uses: ./.github/workflows/reusable-suite.yml
@@ -538,6 +544,7 @@ jobs:
       regression_args: "--with-s3amazon --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }} --aws-s3-key-id ${{ secrets.AWS_KEY_ID }} --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/"
       condition: ${{ inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' }}
       artifact_name: tiered_storage-aws-artifacts
+    secrets: inherit
 
   tiered_storage_gcs:
     uses: ./.github/workflows/reusable-suite.yml
@@ -548,6 +555,7 @@ jobs:
       regression_args: "--with-s3gcs --gcs-uri ${{ secrets.GCS_URI }} --gcs-key-id ${{ secrets.GCS_KEY_ID }} --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}"
       condition: ${{ inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' }}
       artifact_name: tiered_storage-gcs-artifacts
+    secrets: inherit
 
   tiered_storage_local:
     uses: ./.github/workflows/reusable-suite.yml
