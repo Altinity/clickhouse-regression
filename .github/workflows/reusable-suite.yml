@@ -43,14 +43,11 @@ on:
 
 jobs:
   suite:
-    runs-on: [
-      self-hosted,
-      x86,
-      "${{ inputs.runner_server_type }}",
-      "${{ inputs.runner_server_in }}",
-      "${{ inputs.runner_image }}",
-      "${{ inputs.runner_volume }}"
-    ]
+    runs-on: ${{ fromJSON('["self-hosted", "x86", "' 
+      + inputs.runner_image + '", "' 
+      + inputs.runner_volume + '"]') 
+      + fromJSON(inputs.runner_server_type) 
+      + fromJSON(inputs.runner_server_in) }}
     timeout-minutes: ${{ inputs.timeout_minutes }}
     env:
       SUITE: ${{ inputs.suite_name }}
