@@ -186,7 +186,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 300
       storage_path: /replace_partition
-      regression_args: "--only \"/alter/replace partition/*\""
+      regression_args: '--only "\"/alter/replace partition/*\""'
       artifact_name: alter-replace-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -205,7 +205,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 600
       storage_path: /attach_partition
-      regression_args: "--only \"/alter/attach partition/*\""
+      regression_args: '--only "\"/alter/attach partition/*\""'
       artifact_name: alter-attach-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -224,7 +224,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 600
       storage_path: /move_partition
-      regression_args: "--only \"/alter/move partition/*\""
+      regression_args: '--only "\"/alter/move partition/*\""'
       artifact_name: alter-move-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -242,7 +242,7 @@ jobs:
     with:
       suite_name: attach
       timeout_minutes: 600
-      regression_args: "--only \"/attach/*\""
+      regression_args: '--only "\"/attach/*\""'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -274,7 +274,7 @@ jobs:
       suite_name: ontime_benchmark
       timeout_minutes: 240
       storage_path: /aws
-      regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}"
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: benchmark-aws-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -293,7 +293,7 @@ jobs:
       suite_name: ontime_benchmark
       timeout_minutes: 240
       storage_path: /gcs
-      regression_args: "--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: benchmark-gcs-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -312,7 +312,7 @@ jobs:
       suite_name: ontime_benchmark
       timeout_minutes: 180
       storage_path: /minio
-      regression_args: "--storage minio"
+      regression_args: '--storage minio'
       artifact_name: benchmark-minio-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -347,7 +347,7 @@ jobs:
       suite_name: clickhouse_keeper
       timeout_minutes: 180
       storage_path: /ssl
-      regression_args: "--ssl"
+      regression_args: '--ssl'
       artifact_name: clickhouse_keeper-ssl-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -670,7 +670,7 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /minio
-      regression_args: "--storage minio --only \"/parquet/minio/*\""
+      regression_args: '--storage minio --only "\"/parquet/minio/*\""'
       artifact_name: parquet-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -688,7 +688,7 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /aws_s3
-      regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only \"/parquet/aws s3/*\""
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "\"/parquet/aws s3/*\""'
       artifact_name: parquet-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -736,7 +736,7 @@ jobs:
       suite_name: s3
       timeout_minutes: 360
       storage_path: /aws
-      regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}"
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -754,7 +754,7 @@ jobs:
       suite_name: s3
       timeout_minutes: 360
       storage_path: /azure
-      regression_args: "--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}"
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -772,7 +772,7 @@ jobs:
       suite_name: s3
       timeout_minutes: 360
       storage_path: /gcs
-      regression_args: "--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -790,7 +790,7 @@ jobs:
       suite_name: s3
       timeout_minutes: 360
       storage_path: /minio
-      regression_args: "--storage minio"
+      regression_args: '--storage minio'
       artifact_name: s3-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -853,7 +853,7 @@ jobs:
       suite_name: tiered_storage
       timeout_minutes: 180
       storage_path: /aws
-      regression_args: "--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/"
+      regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
       artifact_name: tiered_storage-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -871,7 +871,7 @@ jobs:
       suite_name: tiered_storage
       timeout_minutes: 180
       storage_path: /gcs
-      regression_args: "--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
+      regression_args: '--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: tiered_storage-gcs-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -904,7 +904,7 @@ jobs:
       suite_name: tiered_storage
       timeout_minutes: 180
       storage_path: /minio
-      regression_args: "--with-minio"
+      regression_args: '--with-minio'
       artifact_name: tiered_storage-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
