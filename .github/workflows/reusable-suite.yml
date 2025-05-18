@@ -72,7 +72,7 @@ jobs:
       # Python encoding
       PYTHONIOENCODING: utf-8
       # ClickHouse
-      clickhouse_path: ${{ inputs.clickhouse_path }}
+      clickhouse_path: ${{ inputs.package }}
       version: ${{ inputs.version }}
       # Artifacts
       artifacts: ${{ inputs.artifacts }}
