@@ -20,22 +20,10 @@ on:
         required: false
         type: string
         default: "true"
-      runner_server_type:
+      runner_labels:
         required: false
         type: string
-        default: '["type-cx42", "type-cpx41"]'
-      runner_server_in:
-        required: false
-        type: string
-        default: '["in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin"]'
-      runner_image:
-        required: false
-        type: string
-        default: "image-x86-app-docker-ce"
-      runner_volume:
-        required: false
-        type: string
-        default: "volume-cache-20GB"
+        default: '["self-hosted", "x86", "type-cx42", "type-cpx41", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       artifact_name:
         required: false
         type: string
@@ -43,11 +31,7 @@ on:
 
 jobs:
   suite:
-    runs-on: ${{ fromJSON('["self-hosted", "x86", "' 
-      + inputs.runner_image + '", "' 
-      + inputs.runner_volume + '"]') 
-      + fromJSON(inputs.runner_server_type) 
-      + fromJSON(inputs.runner_server_in) }}
+    runs-on: ${{ fromJSON(inputs.runner_labels) }}
     timeout-minutes: ${{ inputs.timeout_minutes }}
     env:
       SUITE: ${{ inputs.suite_name }}
