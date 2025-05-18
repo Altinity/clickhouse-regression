@@ -12,6 +12,11 @@ runs:
             exit 0
         fi
 
+        if [ -f "/etc/hetzner-volumes" ]; then
+            echo "Hetzner volumes"
+            cat /etc/hetzner-volumes
+        fi
+
         if [ -d "/mnt/cache" ]; then
             DOCKER_CACHE_DIR="/mnt/cache/docker"
             echo "Using docker cache directory: $DOCKER_CACHE_DIR"
