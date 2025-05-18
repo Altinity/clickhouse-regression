@@ -23,11 +23,11 @@ on:
       runner_server_type:
         required: false
         type: string
-        default: "type-cx42, type-cpx41"
+        default: '["type-cx42", "type-cpx41"]'
       runner_server_in:
         required: false
         type: string
-        default: "in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin"
+        default: '["in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin"]'
       runner_image:
         required: false
         type: string
