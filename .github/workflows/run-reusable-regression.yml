@@ -133,20 +133,6 @@ on:
         description: '📝 Custom run name (optional)'
         required: false
 
-env:
-  args: --test-to-end
-    --no-colors
-    --local
-    --clickhouse ${{ inputs.package }}
-    --clickhouse-version ${{ inputs.version }}
-    --collect-service-logs
-    --output ${{ inputs.output_format }}
-    --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
-    --log raw.log
-    ${{ inputs.flags != 'none' && inputs.flags || ''}}
-    ${{ inputs.extra_args }}
-
 jobs:
   aes_encryption:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
@@ -154,10 +140,12 @@ jobs:
     with:
       suite_name: aes_encryption
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -167,10 +155,12 @@ jobs:
     with:
       suite_name: aggregate_functions
       timeout_minutes: 360
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -180,10 +170,12 @@ jobs:
     with:
       suite_name: atomic_insert
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -197,10 +189,12 @@ jobs:
       regression_args: "--only \"/alter/replace partition/*\""
       artifact_name: alter-replace-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -214,10 +208,12 @@ jobs:
       regression_args: "--only \"/alter/attach partition/*\""
       artifact_name: alter-attach-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -231,10 +227,12 @@ jobs:
       regression_args: "--only \"/alter/move partition/*\""
       artifact_name: alter-move-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -245,10 +243,12 @@ jobs:
       suite_name: attach
       timeout_minutes: 600
       regression_args: "--only \"/attach/*\""
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -258,10 +258,12 @@ jobs:
     with:
       suite_name: base_58
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -275,10 +277,12 @@ jobs:
       regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}"
       artifact_name: benchmark-aws-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -292,10 +296,12 @@ jobs:
       regression_args: "--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
       artifact_name: benchmark-gcs-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -309,10 +315,12 @@ jobs:
       regression_args: "--storage minio"
       artifact_name: benchmark-minio-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -323,10 +331,12 @@ jobs:
       suite_name: clickhouse_keeper
       timeout_minutes: 180
       storage_path: /no_ssl
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -339,10 +349,12 @@ jobs:
       storage_path: /ssl
       regression_args: "--ssl"
       artifact_name: clickhouse_keeper-ssl-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -353,10 +365,12 @@ jobs:
       suite_name: clickhouse_keeper_failover
       timeout_minutes: 180
       storage_path: /failover
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -366,10 +380,12 @@ jobs:
     with:
       suite_name: data_types
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -379,10 +395,12 @@ jobs:
     with:
       suite_name: datetime64_extended_range
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -392,10 +410,12 @@ jobs:
     with:
       suite_name: disk_level_encryption
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -405,10 +425,12 @@ jobs:
     with:
       suite_name: dns
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -418,10 +440,12 @@ jobs:
     with:
       suite_name: engines
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -431,10 +455,12 @@ jobs:
     with:
       suite_name: example
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -444,10 +470,12 @@ jobs:
     with:
       suite_name: extended_precision_data_types
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -457,10 +485,12 @@ jobs:
     with:
       suite_name: functions
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -470,10 +500,12 @@ jobs:
     with:
       suite_name: iceberg
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -483,10 +515,12 @@ jobs:
     with:
       suite_name: jwt_authentication
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -496,10 +530,12 @@ jobs:
     with:
       suite_name: kafka
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -509,10 +545,12 @@ jobs:
     with:
       suite_name: kerberos
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -522,10 +560,12 @@ jobs:
     with:
       suite_name: key_value
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -536,10 +576,12 @@ jobs:
       suite_name: ldap/authentication
       timeout_minutes: 180
       artifact_name: ldap-authentication-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -550,10 +592,12 @@ jobs:
       suite_name: ldap/external_user_directory
       timeout_minutes: 180
       artifact_name: ldap-external_user_directory-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -564,10 +608,12 @@ jobs:
       suite_name: ldap/role_mapping
       timeout_minutes: 180
       artifact_name: ldap-role_mapping-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -577,10 +623,12 @@ jobs:
     with:
       suite_name: lightweight_delete
       timeout_minutes: 240
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -590,10 +638,12 @@ jobs:
     with:
       suite_name: memory
       timeout_minutes: 1800
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -604,10 +654,12 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /no_s3
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -620,10 +672,12 @@ jobs:
       storage_path: /minio
       regression_args: "--storage minio --only \"/parquet/minio/*\""
       artifact_name: parquet-minio-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -636,10 +690,12 @@ jobs:
       storage_path: /aws_s3
       regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only \"/parquet/aws s3/*\""
       artifact_name: parquet-aws-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -649,10 +705,12 @@ jobs:
     with:
       suite_name: part_moves_between_shards
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -662,10 +720,12 @@ jobs:
     with:
       suite_name: rbac
       timeout_minutes: 540
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -678,10 +738,12 @@ jobs:
       storage_path: /aws
       regression_args: "--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}"
       artifact_name: s3-aws-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -694,10 +756,12 @@ jobs:
       storage_path: /azure
       regression_args: "--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}"
       artifact_name: s3-azure-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -710,10 +774,12 @@ jobs:
       storage_path: /gcs
       regression_args: "--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
       artifact_name: s3-gcs-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -726,10 +792,12 @@ jobs:
       storage_path: /minio
       regression_args: "--storage minio"
       artifact_name: s3-minio-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -739,10 +807,12 @@ jobs:
     with:
       suite_name: selects
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -752,10 +822,12 @@ jobs:
     with:
       suite_name: session_timezone
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -765,10 +837,12 @@ jobs:
     with:
       suite_name: ssl_server
       timeout_minutes: 360
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -781,10 +855,12 @@ jobs:
       storage_path: /aws
       regression_args: "--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/"
       artifact_name: tiered_storage-aws-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -797,10 +873,12 @@ jobs:
       storage_path: /gcs
       regression_args: "--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}"
       artifact_name: tiered_storage-gcs-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -810,10 +888,12 @@ jobs:
     with:
       suite_name: tiered_storage
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -826,10 +906,12 @@ jobs:
       storage_path: /minio
       regression_args: "--with-minio"
       artifact_name: tiered_storage-minio-artifacts
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -839,9 +921,11 @@ jobs:
     with:
       suite_name: window_functions
       timeout_minutes: 180
-      args: ${{ env.args }}
       ref: ${{ inputs.ref }}
-      clickhouse_path: ${{ inputs.package }}
+      package: ${{ inputs.package }}
       version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit

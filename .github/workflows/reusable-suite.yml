@@ -6,14 +6,20 @@ on:
         description: "Commit SHA to checkout. Default: current (empty string)."
         type: string
         default: ""
-      clickhouse_path:
+      package:
         required: true
         type: string
       version:
         required: true
         type: string
-      args:
+      flags:
+        required: false
+        type: string
+      output_format:
         required: true
+        type: string
+      extra_args:
+        required: false
         type: string
       suite_name:
         required: true
@@ -68,10 +74,21 @@ jobs:
       # ClickHouse
       clickhouse_path: ${{ inputs.clickhouse_path }}
       version: ${{ inputs.version }}
-      # Args
-      args: ${{ inputs.args }}
       # Artifacts
       artifacts: ${{ inputs.artifacts }}
+      # Args
+      args: --test-to-end
+        --no-colors
+        --local
+        --clickhouse ${{ inputs.package }}
+        --clickhouse-version ${{ inputs.version }}
+        --collect-service-logs
+        --output ${{ inputs.output_format }}
+        --parallel ${{ vars.PARALLEL }}
+        --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+        --log raw.log
+        ${{ inputs.flags != 'none' && inputs.flags || ''}}
+        ${{ inputs.extra_args }}
       artifact_paths: |
         ./report.html
         ./*.log.txt
