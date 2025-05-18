@@ -127,7 +127,7 @@ jobs:
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_ACCOUNT_NAME}}'/${{ secrets.AZURE_ACCOUNT_NAME }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_STORAGE_KEY}}'/${{ secrets.AZURE_STORAGE_KEY }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_CONTAINER_NAME}}'/${{ secrets.AZURE_CONTAINER_NAME }}}"
-          echo "REGRESSION_ARGS=$REGRESSION_ARGS" >> $GITHUB_ENV
+          echo "REGRESSION_ARGS=\"$REGRESSION_ARGS\"" >> $GITHUB_ENV
 
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
