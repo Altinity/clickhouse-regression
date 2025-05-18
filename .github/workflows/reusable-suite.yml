@@ -46,10 +46,10 @@ jobs:
     runs-on: [
       self-hosted,
       x86,
-      ${{ inputs.runner_server_type }},
-      ${{ inputs.runner_server_in }},
-      ${{ inputs.runner_image }},
-      ${{ inputs.runner_volume }}
+      "${{ inputs.runner_server_type }}",
+      "${{ inputs.runner_server_in }}",
+      "${{ inputs.runner_image }}",
+      "${{ inputs.runner_volume }}"
     ]
     timeout-minutes: ${{ inputs.timeout_minutes }}
     env:
