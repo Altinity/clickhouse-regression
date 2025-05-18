@@ -1,0 +1,90 @@
+name: Test Suite
+on:
+  workflow_call:
+    inputs:
+      suite_name:
+        required: true
+        type: string
+      timeout_minutes:
+        required: true
+        type: number
+      storage_path:
+        required: false
+        type: string
+        default: ""
+      regression_args:
+        required: false
+        type: string
+        default: ""
+      condition:
+        required: false
+        type: string
+        default: "true"
+      runner_server_type:
+        required: false
+        type: string
+        default: "type-cx42, type-cpx41"
+      runner_server_in:
+        required: false
+        type: string
+        default: "in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin"
+      runner_image:
+        required: false
+        type: string
+        default: "image-x86-app-docker-ce"
+      runner_volume:
+        required: false
+        type: string
+        default: "volume-cache-20GB"
+      artifact_name:
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  test:
+    runs-on: self-hosted, x86, ${{ inputs.runner_server_type }}, ${{ inputs.runner_server_in }}, ${{ inputs.runner_image }}, ${{ inputs.runner_volume }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    if: ${{ inputs.condition }}
+    env:
+      SUITE: ${{ inputs.suite_name }}
+      STORAGE: ${{ inputs.storage_path }}
+
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              ${{ inputs.regression_args }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.artifact_name || format('{0}-artifacts', env.SUITE) }}
+          path: ${{ env.artifact_paths }}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync 
