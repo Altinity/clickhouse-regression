@@ -1981,7 +1981,7 @@ jobs:
         if: always()
         uses: ./.github/actions/cache-sync
 
-  s3_minio:
+  s3_minio_part_1:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
     timeout-minutes: 360
     env:
@@ -2004,6 +2004,7 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
+              --only "/s3/minio/part 1/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -2020,7 +2021,101 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: ${{ env.SUITE }}-minio-part-1-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  s3_minio_part_2:
+    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: s3
+      STORAGE: /minio
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --only "/s3/minio/part 2/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-part-2-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  s3_minio_part_3:
+    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: s3
+      STORAGE: /minio
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --only "/s3/minio/part 3/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-part-3-artifacts
           path: ${{ env.artifact_paths}}
 
       - name: ♻️ Cache sync
