@@ -1678,7 +1678,7 @@ jobs:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  ssl_server:
+  ssl_server_part_1:
     runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
     timeout-minutes: 360
     env:
@@ -1699,6 +1699,7 @@ jobs:
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
+              --only "/ssl_server/part 1/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1715,7 +1716,89 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
+          name: ${{ env.SUITE }}-part-1-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+  
+  ssl_server_part_2:
+    runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
+    timeout-minutes: 360
+    env:
+      SUITE: ssl_server
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --only "/ssl_server/part 2/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-part-2-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  ssl_server_part_3:
+    runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
+    timeout-minutes: 360
+    env:
+      SUITE: ssl_server
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Cache Python dependencies
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --only "/ssl_server/part 3/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-part-3-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_local:
