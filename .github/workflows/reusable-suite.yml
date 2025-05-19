@@ -43,10 +43,26 @@ on:
         required: false
         type: string
         default: "true"
-      runner_labels:
+      runner_type:
         required: false
         type: string
-        default: '["self-hosted", "x86", "type-cx42", "type-cpx41", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
+        default: "type-cpx41"
+      runner_location:
+        required: false
+        type: string
+        default: "in-hel1"
+      runner_arch:
+        required: false
+        type: string
+        default: "x86"
+      runner_image:
+        required: false
+        type: string
+        default: "image-x86-app-docker-ce"
+      runner_volume:
+        required: false
+        type: string
+        default: "volume-cache-20GB"
       artifacts:
         required: true
         type: string
@@ -57,7 +73,14 @@ on:
 
 jobs:
   suite:
-    runs-on: ${{ fromJSON(inputs.runner_labels) }}
+    runs-on: [
+      "self-hosted",
+      "${{ inputs.runner_arch }}",
+      "${{ inputs.runner_type }}",
+      "${{ inputs.runner_location }}",
+      "${{ inputs.runner_image }}",
+      "${{ inputs.runner_volume }}"
+    ]
     timeout-minutes: ${{ inputs.timeout_minutes }}
     env:
       SUITE: ${{ inputs.suite_name }}
