@@ -186,7 +186,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 300
       storage_path: /replace_partition
-      regression_args: '--only "\"/alter/replace partition/*\""'
+      regression_args: '--only "/alter/replace partition/*"'
       artifact_name: alter-replace-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -205,7 +205,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 600
       storage_path: /attach_partition
-      regression_args: '--only "\"/alter/attach partition/*\""'
+      regression_args: '--only "/alter/attach partition/*"'
       artifact_name: alter-attach-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -224,7 +224,7 @@ jobs:
       suite_name: alter
       timeout_minutes: 600
       storage_path: /move_partition
-      regression_args: '--only "\"/alter/move partition/*\""'
+      regression_args: '--only "/alter/move partition/*"'
       artifact_name: alter-move-partition-artifacts
       runner_labels: '["self-hosted", "x86", "type-cx52", "type-cpx51", "in-hel1", "in-fsn1", "in-nbg1", "in-ash", "in-hil", "in-sin", "image-x86-app-docker-ce", "volume-cache-20GB"]'
       ref: ${{ inputs.ref }}
@@ -242,7 +242,7 @@ jobs:
     with:
       suite_name: attach
       timeout_minutes: 600
-      regression_args: '--only "\"/attach/*\""'
+      regression_args: '--only "/attach/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -670,7 +670,7 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /minio
-      regression_args: '--storage minio --only "\"/parquet/minio/*\""'
+      regression_args: '--storage minio --only "/parquet/minio/*"'
       artifact_name: parquet-minio-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -688,7 +688,7 @@ jobs:
       suite_name: parquet
       timeout_minutes: 300
       storage_path: /aws_s3
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "\"/parquet/aws s3/*\""'
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
       artifact_name: parquet-aws-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
