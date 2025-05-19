@@ -791,6 +791,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      part: part_1
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -809,6 +810,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      part: part_2
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -827,6 +829,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      part: part_3
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -914,7 +917,7 @@ jobs:
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit 
-    
+
   tiered_storage_aws:
     if: ${{ inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' }}
     uses: ./.github/workflows/reusable-suite.yml
