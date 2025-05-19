@@ -1699,7 +1699,7 @@ jobs:
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --only "/ssl_server/part 1/*"
+              --only "/ssl server/part 1/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1740,7 +1740,7 @@ jobs:
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --only "/ssl_server/part 2/*"
+              --only "/ssl server/part 2/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -1781,7 +1781,7 @@ jobs:
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
-              --only "/ssl_server/part 3/*"
+              --only "/ssl server/part 3/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
