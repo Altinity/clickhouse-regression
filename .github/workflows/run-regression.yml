@@ -194,10 +194,6 @@ jobs:
           .github/add_link_to_logs.sh;
           exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -212,6 +208,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   aggregate_functions:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -238,10 +238,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -256,6 +252,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   atomic_insert:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -271,7 +271,7 @@ jobs:
 
       - name: ♻️ Cache setup
         uses: ./.github/actions/cache-setup
-
+  
       - name: 🛠️ Setup
         run: .github/setup.sh
 
@@ -281,10 +281,6 @@ jobs:
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
 
       - name: 📝 Create and upload logs
         if: always()
@@ -300,6 +296,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+      
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   alter_replace_partition:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -328,10 +328,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -346,6 +342,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-replace-partition-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   alter_attach_partition:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -374,10 +374,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -392,7 +388,11 @@ jobs:
         with:
           name: ${{ env.SUITE }}-attach-partition-artifacts
           path: ${{ env.artifact_paths}}
-    
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
   alter_move_partition:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
     timeout-minutes: 600
@@ -420,10 +420,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -439,6 +435,10 @@ jobs:
           name: ${{ env.SUITE }}-move-partition-artifacts
           path: ${{ env.artifact_paths}}
   
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
   attach:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
     timeout-minutes: 600
@@ -465,10 +465,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -483,6 +479,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   base_58:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -510,10 +510,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -528,6 +524,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   benchmark_aws:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -560,10 +560,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -578,6 +574,10 @@ jobs:
         with:
           name: benchmark-aws-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   benchmark_gcs:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -609,10 +609,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -627,6 +623,10 @@ jobs:
         with:
           name: benchmark-gcs-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   benchmark_minio:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -655,10 +655,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -673,6 +669,10 @@ jobs:
         with:
           name: benchmark-minio-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   clickhouse_keeper:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -700,10 +700,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -718,6 +714,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   clickhouse_keeper_ssl:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -746,10 +746,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -764,6 +760,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-ssl-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   clickhouse_keeper_failover:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -791,10 +791,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -809,6 +805,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   data_types:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -835,10 +835,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -853,6 +849,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   datetime64_extended_range:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -879,10 +879,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -897,6 +893,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   disk_level_encryption:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -923,10 +923,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -941,6 +937,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   dns:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -967,10 +967,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -985,6 +981,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   engines:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1011,10 +1011,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1029,6 +1025,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   example:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1055,10 +1055,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1073,6 +1069,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   extended_precision_data_types:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1099,10 +1099,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1117,6 +1113,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   functions:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1143,10 +1143,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1161,6 +1157,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   iceberg:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1187,10 +1187,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1205,6 +1201,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   jwt_authentication:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1231,10 +1231,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1249,6 +1245,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   kafka:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1275,10 +1275,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1293,6 +1289,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   kerberos:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1319,10 +1319,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1337,6 +1333,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   key_value:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1363,10 +1363,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1381,6 +1377,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   ldap_authentication:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1407,10 +1407,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1425,6 +1421,10 @@ jobs:
         with:
           name: ldap-authentication-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   ldap_external_user_directory:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1451,10 +1451,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1469,6 +1465,10 @@ jobs:
         with:
           name: ldap-external_user_directory-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   ldap_role_mapping:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1495,10 +1495,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1513,6 +1509,10 @@ jobs:
         with:
           name: ldap-role_mapping-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   lightweight_delete:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1539,10 +1539,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1557,6 +1553,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   memory:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1583,10 +1583,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1601,6 +1597,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   parquet:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1628,10 +1628,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1646,6 +1642,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   parquet_minio:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1675,10 +1675,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1693,6 +1689,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   parquet_aws_s3:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1726,10 +1726,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1744,6 +1740,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   part_moves_between_shards:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1770,10 +1770,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1788,6 +1784,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   rbac:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1814,10 +1814,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1832,6 +1828,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   s3_aws:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1864,10 +1864,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1882,6 +1878,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   s3_azure:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1913,10 +1913,6 @@ jobs:
               .github/add_link_to_logs.sh;
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1931,6 +1927,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-azure-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   s3_gcs:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -1962,10 +1962,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -1981,12 +1977,17 @@ jobs:
           name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
-  s3_minio:
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  s3_minio_part_1:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
     timeout-minutes: 360
     env:
       SUITE: s3
       STORAGE: /minio
+      PART: part_1
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
       - name: ⤵️ Checkout
@@ -2004,13 +2005,10 @@ jobs:
         run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
+              --only "/s3/minio/part 1/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
 
       - name: 📝 Create and upload logs
         if: always()
@@ -2024,8 +2022,108 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-minio-artifacts
+          name: ${{ env.SUITE }}-minio-part-1-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  s3_minio_part_2:
+    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: s3
+      STORAGE: /minio
+      PART: part_2
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --only "/s3/minio/part 2/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-part-2-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  s3_minio_part_3:
+    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: s3
+      STORAGE: /minio
+      PART: part_3
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --only "/s3/minio/part 3/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-part-3-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   selects:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2052,10 +2150,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2070,6 +2164,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   session_timezone:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2096,10 +2194,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2115,11 +2209,16 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  ssl_server:
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  ssl_server_part_1:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
     timeout-minutes: 360
     env:
       SUITE: ssl_server
+      PART: part_1
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
       - name: ⤵️ Checkout
@@ -2136,13 +2235,10 @@ jobs:
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/regression.py
+              --only "/ssl server/part 1/*"
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
 
       - name: 📝 Create and upload logs
         if: always()
@@ -2156,8 +2252,104 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-part-1-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  ssl_server_part_2:
+    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: ssl_server
+      PART: part_2
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --only "/ssl server/part 2/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-part-2-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
+
+  ssl_server_part_3:
+    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
+    timeout-minutes: 360
+    env:
+      SUITE: ssl_server
+      PART: part_3
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --only "/ssl server/part 3/*"
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-part-3-artifacts
+          path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   tiered_storage_aws:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2189,10 +2381,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2207,6 +2395,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   tiered_storage_gcs:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2238,10 +2430,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2256,6 +2444,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   tiered_storage_local:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2282,10 +2474,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2300,6 +2488,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   tiered_storage_minio:
     runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2328,10 +2520,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2346,6 +2534,10 @@ jobs:
         with:
           name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync
 
   window_functions:
     runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
@@ -2372,10 +2564,6 @@ jobs:
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
       - name: 📝 Create and upload logs
         if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
@@ -2390,3 +2578,7 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync

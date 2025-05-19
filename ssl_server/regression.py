@@ -27,58 +27,58 @@ def argparser(parser):
 
 
 xfails = {
-    "ssl context/enable ssl with server key passphrase": [
+    ":/ssl context/enable ssl with server key passphrase": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
-    "ssl context/enable ssl no server key passphrase dynamically": [
+    ":/ssl context/enable ssl no server key passphrase dynamically": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
-    "ssl context/enable ssl with server key passphrase dynamically": [
+    ":/ssl context/enable ssl with server key passphrase dynamically": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
     # fips
-    ":/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
-        (Fail, "not supported by SSL library")
-    ],
-    ":/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
-        (Fail, "not supported by SSL library")
-    ],
     ":/:/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
     ":/:/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    ":/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+    ":/:/:/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
-    ":/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+    ":/:/:/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+    ":/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/fips/server/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/server/:/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+    ":/fips/server/:/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/:/:/:/just disabling TLSv1_1 suite connection should work": [
+    ":/fips/:/:/:/just disabling TLSv1_1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    ":/:/just disabling TLSv1_1 suite connection should work": [
+    ":/:/:/just disabling TLSv1_1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/clickhouse client/:/:/: should be rejected": [
+    ":/fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
+    ":/fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
+    ":/fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
-    "check certificate/system certificates": [(Fail, "unstable test")],
+    ":/check certificate/system certificates": [(Fail, "unstable test")],
     # zookeeper ssl
-    "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256/:": [
+    ":/zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -86,7 +86,7 @@ xfails = {
             r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
-    "zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384/:": [
+    ":/zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -94,7 +94,7 @@ xfails = {
             r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
-    "zookeepe:/fips/AES128-GCM-SHA256/:": [
+    ":/zookeepe:/fips/AES128-GCM-SHA256/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -102,7 +102,7 @@ xfails = {
             r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
-    "zookeepe:/fips/AES256-GCM-SHA384/:": [
+    ":/zookeepe:/fips/AES256-GCM-SHA384/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -110,7 +110,7 @@ xfails = {
             r".*(SSLV3_ALERT_HANDSHAKE_FAILURE|tls alert handshake failure).*",
         )
     ],
-    ":/https server:checks/:onnection:should:": [
+    ":/:/https server:checks/:onnection:should:": [
         (
             Error,
             "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
@@ -118,7 +118,7 @@ xfails = {
             r"ExpectTimeoutError.+https_server[\w]+connection.+node.query\($",
         )
     ],
-    "fips/clickhouse server acting as a client/:/:onnection:should:": [
+    ":/fips/clickhouse server acting as a client/:/:onnection:should:": [
         (
             Error,
             "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
@@ -126,21 +126,21 @@ xfails = {
             r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
         )
     ],
-    "fips/server/all protocols disabled/tcp connection/clickhouse-client/:/:": [
+    ":/fips/server/all protocols disabled/tcp connection/clickhouse-client/:/:": [
         (
             Fail,
             "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
             check_clickhouse_version(">=24.4"),
         )
     ],
-    "ca chain/:/:/missing :": [
+    ":/ca chain/:/:/missing :": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/67984",
             check_clickhouse_version(">=24.4"),
         )
     ],
-    "ca chain/:/:/:/missing :": [
+    ":/ca chain/:/:/:/missing :": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/67984",
@@ -152,63 +152,63 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "fips": (
+    ":/fips": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/79876",
         check_clickhouse_version(">=25.5"),
     ),
-    "/ssl server/verification modes":(
+    "/ssl server/:/verification modes":(
         Skip,
         "native protocol supported on >=23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/ssl server/ca chain": (
+    "/ssl server/:/ca chain": (
         Skip,
         "native protocol supported on >=23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "check certificate/system certificates": (
+    ":/check certificate/system certificates": (
         Skip,
         "supported on >=22.8",
         check_clickhouse_version("<22.8"),
     ),
-    "check certificate/show certificate": (
+    ":/check certificate/show certificate": (
         Skip,
         "supported on >=22.8",
         check_clickhouse_version("<22.8"),
     ),
-    "ssl context/enable ssl no server key passphrase dynamically": (
+    ":/ssl context/enable ssl no server key passphrase dynamically": (
         Skip,
         "supported on >=22.3",
         check_clickhouse_version("<22.3"),
     ),
-    "ssl context/enable ssl with server key passphrase dynamically": (
+    ":/ssl context/enable ssl with server key passphrase dynamically": (
         Skip,
         "supported on >=22.3",
         check_clickhouse_version("<22.3"),
     ),
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:": (
+    ":/fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:": (
         XFail,
         "not supported by SSL library",
     ),
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:": (
+    ":/fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:": (
         XFail,
         "not supported by SSL library",
     ),
-    "fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": (
+    ":/fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": (
         XFail,
         "not supported by SSL library",
     ),
-    "fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": (
+    ":/fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": (
         XFail,
         "not supported by SSL library",
     ),
-    "fips/:/:/connection using non-FIPS compatible cipher TLS_*": (
+    ":/fips/:/:/connection using non-FIPS compatible cipher TLS_*": (
         XFail,
         "not supported by TLSv1.2",
     ),
     # skip zookeeper fips on ARM
-    "zookeeper fips": (Skip, "not supported on ARM", check_current_cpu("aarch64")),
+    ":/zookeeper fips": (Skip, "not supported on ARM", check_current_cpu("aarch64")),
 }
 
 
@@ -263,17 +263,22 @@ def regression(
         if "fips" in current().context.clickhouse_version or force_fips:
             self.context.fips_mode = True
 
-    Feature(run=load("ssl_server.tests.check_certificate", "feature"))
-    Feature(run=load("ssl_server.tests.sanity", "feature"))
-    Feature(run=load("ssl_server.tests.ssl_context", "feature"))
-    Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
-    Feature(run=load("ssl_server.tests.verification_mode", "feature"))
-    Feature(run=load("ssl_server.tests.url_table_function", "feature"))
-    Feature(run=load("ssl_server.tests.dictionary", "feature"))
-    Feature(run=load("ssl_server.tests.fips", "feature"))
-    Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
-    Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
-    Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
+    with Feature("part 1"):
+        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
+        Feature(run=load("ssl_server.tests.sanity", "feature"))
+        Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+        Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
+        Feature(run=load("ssl_server.tests.verification_mode", "feature"))
+        Feature(run=load("ssl_server.tests.url_table_function", "feature"))
+    
+    with Feature("part 2"):
+        Feature(run=load("ssl_server.tests.dictionary", "feature"))
+        Feature(run=load("ssl_server.tests.fips", "feature"))
+    
+    with Feature("part 3"):
+        Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
+        Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 
 if main():
