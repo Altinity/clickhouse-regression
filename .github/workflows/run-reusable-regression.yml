@@ -272,6 +272,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
+      suite_executable: benchmark.py
       timeout_minutes: 240
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
@@ -291,6 +292,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
+      suite_executable: benchmark.py
       timeout_minutes: 240
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
@@ -310,6 +312,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
+      suite_executable: benchmark.py
       timeout_minutes: 180
       storage_path: /minio
       regression_args: '--storage minio'
