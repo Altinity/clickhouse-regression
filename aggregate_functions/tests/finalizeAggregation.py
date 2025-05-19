@@ -155,7 +155,7 @@ def feature(self, extra_data=None):
             test_funcs.remove(i)
 
     if extra_data is not None:
-        with Pool(10) as executor:
+        with Pool(15) as executor:
             for name in funcs_to_run_with_extra_data:
                 try:
                     scenario = load(f"aggregate_functions.tests.{name}", "scenario")
@@ -172,7 +172,7 @@ def feature(self, extra_data=None):
                     )(scenario=scenario, short_name=name, extra_data=extra_data)
             join()
     else:
-        with Pool(10) as executor:
+        with Pool(15) as executor:
             for name in test_funcs:
                 try:
                     scenario = load(f"aggregate_functions.tests.{name}", "scenario")
