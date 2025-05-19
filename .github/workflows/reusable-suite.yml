@@ -46,11 +46,11 @@ on:
       runner_type:
         required: false
         type: string
-        default: "type-cpx41"
+        default: "type-cx42-cpx41"
       runner_location:
         required: false
         type: string
-        default: "in-hel1"
+        default: "in-hel1-fsn1-nbg1"
       runner_arch:
         required: false
         type: string
