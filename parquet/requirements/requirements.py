@@ -4276,6 +4276,59 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects_SameBucket = Requiremen
     num="19.5.3.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects_UserCredentials = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.UserCredentials",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not cache user credentials when caching the ListObjects. The credentials SHALL be passed to the object storage backend each time a request is made.\n"
+        "\n"
+        "For example, the correct behavior is:\n"
+        "\n"
+        "When we select the data with credentials for the first time and with `use_object_storage_list_objects_cache = 1` the query returns  the data and caches the ListObjects.\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3('http://localhost:11111/test/root/**.parquet', 'clickhous', 'clickhous')\n"
+        "SETTINGS use_object_storage_list_objects_cache = 1\n"
+        "\n"
+        "\n"
+        "   ┌─id─┐\n"
+        "1. │  0 │\n"
+        "2. │  1 │\n"
+        "3. │  2 │\n"
+        "4. │  3 │\n"
+        "5. │  4 │\n"
+        "   └────┘\n"
+        "\n"
+        "5 rows in set. Elapsed: 0.030 sec. \n"
+        "```\n"
+        "\n"
+        "When we execute the same query but without credentials we SHALL get an exception.\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM s3('http://localhost:11111/test/root/**.parquet')\n"
+        "SETTINGS use_object_storage_list_objects_cache = 1\n"
+        "\n"
+        "Query id: 0f2c41f5-7fc1-403f-964b-ad0fc8af9ba0\n"
+        "\n"
+        "\n"
+        "Elapsed: 0.135 sec. \n"
+        "\n"
+        "Received exception from server (version 25.2.2):\n"
+        "Code: 117. DB::Exception: Received from localhost:9000. DB::Exception: IOError: Code: 499. DB::Exception: The Access Key Id you provided does not exist in our records.: while reading key: root/{_partition_id}.parquet, from bucket: test. (S3_ERROR) (version 25.2.2.20000.altinityantalya): (in file/uri test/root/{_partition_id}.parquet): While executing ParquetBlockInputFormat: While executing S3(_table_function.s3)Source. (INCORRECT_DATA)\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="19.5.4.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage",
     version="1.0",
@@ -7247,6 +7300,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="19.5.3.1",
         ),
+        Heading(name="Caching User Credentials", level=3, num="19.5.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.UserCredentials",
+            level=4,
+            num="19.5.4.1",
+        ),
         Heading(name="Caching for Object Storage", level=2, num="19.6"),
         Heading(name="Test Schema For Metadata Caching", level=3, num="19.6.1"),
         Heading(
@@ -8003,6 +8062,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects_Settings,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects_SameBucket,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_Cache_ListObjects_UserCredentials,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Caching_ObjectStorage_SettingPropagation_ProfileSettings,
@@ -8452,6 +8512,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             * 19.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.Settings](#rqsrs-032clickhouseparquetmetadatacachelistobjectssettings)
         * 19.5.3 [Caching ListObjects When the Same Bucket Exists in Different Storage Providers](#caching-listobjects-when-the-same-bucket-exists-in-different-storage-providers)
             * 19.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.SameBucket](#rqsrs-032clickhouseparquetmetadatacachelistobjectssamebucket)
+        * 19.5.4 [Caching User Credentials](#caching-user-credentials)
+            * 19.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.UserCredentials](#rqsrs-032clickhouseparquetmetadatacachelistobjectsusercredentials)
     * 19.6 [Caching for Object Storage](#caching-for-object-storage)
         * 19.6.1 [Test Schema For Metadata Caching](#test-schema-for-metadata-caching)
         * 19.6.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Caching.ObjectStorage](#rqsrs-032clickhouseparquetmetadatacachingobjectstorage)
@@ -11281,6 +11343,50 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL ensure that there are no collisions between different storage providers in scenarios where buckets with the same name containing the same directories exist in multiple object storage providers (e.g., AWS S3, GCS, etc.). Each storage provider's bucket SHALL be uniquely identified and handled independently to avoid conflicts.
+
+#### Caching User Credentials
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Cache.ListObjects.UserCredentials
+version: 1.0
+
+[ClickHouse] SHALL not cache user credentials when caching the ListObjects. The credentials SHALL be passed to the object storage backend each time a request is made.
+
+For example, the correct behavior is:
+
+When we select the data with credentials for the first time and with `use_object_storage_list_objects_cache = 1` the query returns  the data and caches the ListObjects.
+
+```sql
+SELECT *
+FROM s3('http://localhost:11111/test/root/**.parquet', 'clickhous', 'clickhous')
+SETTINGS use_object_storage_list_objects_cache = 1
+
+
+   ┌─id─┐
+1. │  0 │
+2. │  1 │
+3. │  2 │
+4. │  3 │
+5. │  4 │
+   └────┘
+
+5 rows in set. Elapsed: 0.030 sec. 
+```
+
+When we execute the same query but without credentials we SHALL get an exception.
+
+```sql
+SELECT *
+FROM s3('http://localhost:11111/test/root/**.parquet')
+SETTINGS use_object_storage_list_objects_cache = 1
+
+Query id: 0f2c41f5-7fc1-403f-964b-ad0fc8af9ba0
+
+
+Elapsed: 0.135 sec. 
+
+Received exception from server (version 25.2.2):
+Code: 117. DB::Exception: Received from localhost:9000. DB::Exception: IOError: Code: 499. DB::Exception: The Access Key Id you provided does not exist in our records.: while reading key: root/{_partition_id}.parquet, from bucket: test. (S3_ERROR) (version 25.2.2.20000.altinityantalya): (in file/uri test/root/{_partition_id}.parquet): While executing ParquetBlockInputFormat: While executing S3(_table_function.s3)Source. (INCORRECT_DATA)
+```
 
 ### Caching for Object Storage
 
