@@ -15,53 +15,53 @@ from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nod
 from s3.requirements import SRS_015_ClickHouse_S3_External_Storage
 
 xfails = {
-    ":/disk/generic url": [(Fail, "not yet supported")],
+    ":/:/disk/generic url": [(Fail, "not yet supported")],
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
     "gcs/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
-    ":/zero copy replication/alter/count=10": [
+    ":/:/zero copy replication/alter/count=10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22516")
     ],
-    ":/zero copy replication/ttl move": [
+    ":/:/zero copy replication/ttl move": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/zero copy replication/ttl delete": [
+    ":/:/zero copy replication/ttl delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/22679")
     ],
-    ":/zero copy replication/delete": [
+    ":/:/zero copy replication/delete": [
         (Fail, "test is slow to clean up, needs investigation")
     ],
-    ":/zero copy replication/:mutation/:/the size of the s3 bucket:": [
+    ":/:/zero copy replication/:mutation/:/the size of the s3 bucket:": [
         (Fail, "test doesn't clean up, needs investigation")
     ],
-    "minio/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
-    "minio/disk/environment credentials/:": [
+    "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
+    "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    "minio/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
+    "minio/:/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
     "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
     "gcs/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
-    ":/backup/:/metadata non restorable schema": [
+    ":/:/backup/:/metadata non restorable schema": [
         (Fail, "send_metadata is deprecated")
     ],
-    ":/zero copy replication/the size of the s3 bucket should be the same as before": [
+    ":/:/zero copy replication/the size of the s3 bucket should be the same as before": [
         (Fail, "Data cleanup needs investigation")
     ],
     "aws s3/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
-    "minio/zero copy replication/performance alter": [
+    "minio/:/zero copy replication/performance alter": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "minio/zero copy replication/performance select": [
+    "minio/:/zero copy replication/performance select": [
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
@@ -71,7 +71,7 @@ xfails = {
     "gcs/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
-    ":/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
+    ":/:/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
     "gcs/disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
@@ -84,40 +84,40 @@ xfails = {
     "aws s3/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ":/table function performance/wildcard/:": [
+    ":/:/table function performance/wildcard/:": [
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/pull/62120",
             check_clickhouse_version("<24.5"),
         )
     ],
-    ":/disk/low cardinality offset": [
+    ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
-    ":/zero copy replication/bad detached part": [
+    ":/:/zero copy replication/bad detached part": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/58333",
             check_clickhouse_version("<23.11"),
         )
     ],
-    ":/alter/:/projection": [
+    ":/:/alter/:/projection": [
         (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
     ],
-    ":/alter/zero copy encrypted/:": [
+    ":/:/alter/zero copy encrypted/:": [
         (
             Fail,
             "Bug in 23.3 https://github.com/ClickHouse/ClickHouse/pull/68821",
             check_clickhouse_version("<23.8"),
         ),
     ],
-    ":/table function/measure file size": [
+    ":/:/table function/measure file size": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
-    ":/table function/measure file size s3Cluster": [
+    ":/:/table function/measure file size s3Cluster": [
         (Fail, "Not implemented <24", check_clickhouse_version("<24"))
     ],
-    ":/combinatoric table/:n_cols=2000:part_type=compact": [
+    ":/:/combinatoric table/:n_cols=2000:part_type=compact": [
         (
             Fail,
             "Compact parts require too much memory with 2000 columns",
@@ -125,7 +125,7 @@ xfails = {
             ".*MEMORY_LIMIT_EXCEEDED.*",
         )
     ],
-    ":/combinatoric table/engine=VersionedCollapsingMergeTree,replicated=True,n_cols=2000,n_tables=3,part_type=wide": [
+    ":/:/combinatoric table/engine=VersionedCollapsingMergeTree,replicated=True,n_cols=2000,n_tables=3,part_type=wide": [
         (
             Fail,
             "Needs investigation, MEMORY_LIMIT_EXCEEDED",
@@ -133,7 +133,7 @@ xfails = {
             ".*MEMORY_LIMIT_EXCEEDED.*",
         )
     ],
-    ":/combinatoric table/engine=:,replicated=True,n_cols=2000,n_tables=3,part_type=:": [
+    ":/:/combinatoric table/engine=:,replicated=True,n_cols=2000,n_tables=3,part_type=:": [
         (
             Fail,
             "Needs investigation, rows not appearing",
@@ -168,17 +168,17 @@ xfails = {
             ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
         ),
     ],
-    ":/invalid table function/invalid region": [
+    ":/:/invalid table function/invalid region": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/59084")
     ],
-    ":/invalid table function/invalid path": [
+    ":/:/invalid table function/invalid path": [
         (
             Error,
             "https://github.com/ClickHouse/ClickHouse/issues/59084",
             check_clickhouse_version(">=24.9"),
         )
     ],
-    ":/invalid table function/invalid wildcard": [
+    ":/:/invalid table function/invalid wildcard": [
         (
             Fail,
             "doesn't work <25.1 https://github.com/ClickHouse/ClickHouse/issues/75492",
@@ -188,36 +188,36 @@ xfails = {
 }
 
 ffails = {
-    "minio/hive partitioning": (
+    "minio/:/hive partitioning": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
         check_clickhouse_version("<24.12"),
     ),
-    "minio/remote s3 function call": (
+    "minio/:/remote s3 function call": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
         check_clickhouse_version("<24.12"),
     ),
-    "minio/table function performance/wildcard": (
+    "minio/:/table function performance/wildcard": (
         Skip,
         "needs investigation",
     ),
-    ":/hive partitioning": (
+    ":/:/hive partitioning": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
         check_if_not_antalya_build,
     ),
-    ":/remote s3 function call": (
+    ":/:/remote s3 function call": (
         Skip,
         "implemented on antalya build with clickhouse version 24.12",
         check_if_not_antalya_build,
     ),
-    "minio/table function/measure file size s3Cluster": (
+    "minio/:/table function/measure file size s3Cluster": (
         Skip,
         "S3Cluster table function correctly handles arguments since 23.8",
         check_clickhouse_version("<23.8"),
     ),
-    "minio/disk/environment credentials": (
+    "minio/:/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for minio tests.",
     ),
@@ -290,75 +290,75 @@ ffails = {
         Skip,
         "SSEC currently not working. Timeout",
     ),
-    ":/disk/cache*": (
+    ":/:/disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/invalid disk/cache*": (
+    ":/:/invalid disk/cache*": (
         XFail,
         "Under development for 22.8 and newer.",
         check_clickhouse_version(">=22.8"),
     ),
-    ":/disk/no restart": (
+    ":/:/disk/no restart": (
         XFail,
         "https://github.com/ClickHouse/ClickHouse/issues/58924",
         check_clickhouse_version(">=23.12"),
     ),
-    ":/table function performance": (
+    ":/:/table function performance": (
         Skip,
         "not supported <23.8",
         check_clickhouse_version("<23.8"),
     ),
-    ":/settings/setting combinations": (
+    ":/:/settings/setting combinations": (
         Skip,
         "Many settings not supported <23.8",
         check_clickhouse_version("<23.8"),
     ),
-    ":/orphans": (
+    ":/:/orphans": (
         Skip,
         "not supported <24",
         check_clickhouse_version("<24"),
     ),
-    ":/orphans/zero copy replication/:etach:": (
+    ":/:/orphans/zero copy replication/:etach:": (
         Skip,
         "detach not enabled with zero copy replication",
     ),
-    ":/orphans/zero copy replication/:reeze:": (
+    ":/:/orphans/zero copy replication/:reeze:": (
         Skip,
         "freeze not enabled with zero copy replication <24.10",
         check_clickhouse_version("<24.10"),
     ),
-    ":/alter/:/update delete": (
+    ":/:/alter/:/update delete": (
         Skip,
         "Not supported <22.8",
         check_clickhouse_version("<23"),
     ),
-    ":/alter/zero copy encrypted/update delete": (
+    ":/:/alter/zero copy encrypted/update delete": (
         XError,
         "Timeout 23.3",
         check_clickhouse_version("<23.8"),
     ),
-    ":/alter/zero cop:/projection": (
+    ":/:/alter/zero cop:/projection": (
         Skip,
         "Not supported <23",
         check_clickhouse_version("<23"),
     ),
-    ":/alter/zero cop:/freeze": (
+    ":/:/alter/zero cop:/freeze": (
         Skip,
         "not supported <24.10",
         check_clickhouse_version("<24.10"),
     ),
-    ":/alter/zero cop:/d:": (
+    ":/:/alter/zero cop:/d:": (
         Skip,
         "not supported",
     ),
-    ":/alter/zero cop:/fetch": (
+    ":/:/alter/zero cop:/fetch": (
         Skip,
         "not supported",
     ),
-    ":/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
-    ":/backup/:/system unfreeze": (
+    ":/:/backup/:/metadata:": (XFail, "SYSTEM RESTART DISK is not implemented"),
+    ":/:/backup/:/system unfreeze": (
         XFail,
         "doesn't work <22.8",
         check_clickhouse_version("<22.8"),
