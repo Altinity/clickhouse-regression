@@ -263,17 +263,22 @@ def regression(
         if "fips" in current().context.clickhouse_version or force_fips:
             self.context.fips_mode = True
 
-    Feature(run=load("ssl_server.tests.check_certificate", "feature"))
-    Feature(run=load("ssl_server.tests.sanity", "feature"))
-    Feature(run=load("ssl_server.tests.ssl_context", "feature"))
-    Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
-    Feature(run=load("ssl_server.tests.verification_mode", "feature"))
-    Feature(run=load("ssl_server.tests.url_table_function", "feature"))
-    Feature(run=load("ssl_server.tests.dictionary", "feature"))
-    Feature(run=load("ssl_server.tests.fips", "feature"))
-    Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
-    Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
-    Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
+    with Feature("part 1"):
+        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
+        Feature(run=load("ssl_server.tests.sanity", "feature"))
+        Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+        Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
+        Feature(run=load("ssl_server.tests.verification_mode", "feature"))
+        Feature(run=load("ssl_server.tests.url_table_function", "feature"))
+    
+    with Feature("part 2"):
+        Feature(run=load("ssl_server.tests.dictionary", "feature"))
+        Feature(run=load("ssl_server.tests.fips", "feature"))
+    
+    with Feature("part 3"):
+        Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
+        Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 
 if main():

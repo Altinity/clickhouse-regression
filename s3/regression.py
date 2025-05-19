@@ -420,45 +420,48 @@ def minio_regression(
 
         with And("I get all possible clusters for nodes"):
             self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
-
-        Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.table_function", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.backup", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-            uri=uri_bucket_file
-        )
-        Feature(test=load("s3.tests.disk", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.alter", "feature"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.combinatoric_table", "feature"))(
-            uri=uri_bucket_file
-        )
-        Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.orphans", "feature"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
-        Feature(test=load("s3.tests.table_function_performance", "minio"))(
-            uri=uri_bucket_file
-        )
-        Feature(test=load("s3.tests.hive_partitioning", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.remote_s3_function", "minio"))(
-            uri=uri_bucket_file, bucket_prefix=bucket_prefix
-        )
+        
+        with Feature("part 1"):
+            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
+            Feature(test=load("s3.tests.table_function", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.backup", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "minio"))(
+                uri=uri_bucket_file
+            )
+            Feature(test=load("s3.tests.disk", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
+        with Feature("part 2"):
+            Feature(test=load("s3.tests.alter", "feature"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(
+                uri=uri_bucket_file
+            )
+            Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
+            Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.orphans", "feature"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+        with Feature("part 3"):
+            Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
+            Feature(test=load("s3.tests.table_function_performance", "minio"))(
+                uri=uri_bucket_file
+            )
+            Feature(test=load("s3.tests.hive_partitioning", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.remote_s3_function", "minio"))(
+                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+            )
 
 
 @TestFeature
