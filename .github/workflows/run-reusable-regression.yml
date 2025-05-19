@@ -802,7 +802,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 1/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-1
     secrets: inherit
 
   s3_minio_part_2:
@@ -821,7 +821,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 2/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-2
     secrets: inherit
 
   s3_minio_part_3:
@@ -840,7 +840,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-3
     secrets: inherit
 
   selects:
@@ -885,7 +885,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 1/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-1
     secrets: inherit
 
   ssl_server_part_2:
@@ -900,7 +900,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 2/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-2
     secrets: inherit
 
   ssl_server_part_3:
@@ -915,7 +915,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
-      artifacts: ${{ inputs.artifacts }}
+      artifacts: ${{ inputs.artifacts }}-part-3
     secrets: inherit 
 
   tiered_storage_aws:
