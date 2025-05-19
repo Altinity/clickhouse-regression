@@ -33,7 +33,7 @@ xfails = {
     ":/ssl context/enable ssl no server key passphrase dynamically": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
-    "ssl context/enable ssl with server key passphrase dynamically": [
+    ":/ssl context/enable ssl with server key passphrase dynamically": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
     # fips
