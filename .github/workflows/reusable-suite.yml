@@ -70,7 +70,10 @@ on:
         required: false
         type: string
         default: ""
-
+      part:
+        required: false
+        type: string
+        default: ""
 jobs:
   suite:
     runs-on: [
@@ -86,6 +89,7 @@ jobs:
       SUITE: ${{ inputs.suite_name }}
       SUITE_EXECUTABLE: ${{ inputs.suite_executable }}
       STORAGE: ${{ inputs.storage_path }}
+      PART: ${{ inputs.part }}
       # AWS credentials
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
