@@ -1987,6 +1987,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /minio
+      PART: part_1
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
       - name: ⤵️ Checkout
@@ -2034,6 +2035,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /minio
+      PART: part_2
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
       - name: ⤵️ Checkout
@@ -2081,6 +2083,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /minio
+      PART: part_3
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
       - name: ⤵️ Checkout
@@ -2215,6 +2218,7 @@ jobs:
     timeout-minutes: 360
     env:
       SUITE: ssl_server
+      PART: part_1
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
       - name: ⤵️ Checkout
@@ -2260,6 +2264,7 @@ jobs:
     timeout-minutes: 360
     env:
       SUITE: ssl_server
+      PART: part_2
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
       - name: ⤵️ Checkout
@@ -2305,6 +2310,7 @@ jobs:
     timeout-minutes: 360
     env:
       SUITE: ssl_server
+      PART: part_3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
       - name: ⤵️ Checkout
