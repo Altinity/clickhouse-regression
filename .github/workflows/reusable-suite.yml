@@ -24,6 +24,10 @@ on:
       suite_name:
         required: true
         type: string
+      suite_executable:
+        required: false
+        type: string
+        default: "regression.py"
       timeout_minutes:
         required: true
         type: number
@@ -57,6 +61,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     env:
       SUITE: ${{ inputs.suite_name }}
+      SUITE_EXECUTABLE: ${{ inputs.suite_executable }}
       STORAGE: ${{ inputs.storage_path }}
       # AWS credentials
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -131,7 +136,7 @@ jobs:
 
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
-              -u ${{ env.SUITE }}/regression.py
+              -u ${{ env.SUITE }}/${{ env.SUITE_EXECUTABLE }}
               ${{ env.REGRESSION_ARGS }}
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
