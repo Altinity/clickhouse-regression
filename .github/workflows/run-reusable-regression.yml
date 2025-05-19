@@ -786,7 +786,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_minio:
+  s3_minio_part_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -800,7 +800,43 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  s3_minio_part_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  s3_minio_part_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -834,7 +870,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  ssl_server:
+  ssl_server_part_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -845,10 +881,40 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
+  ssl_server_part_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  ssl_server_part_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit 
+    
   tiered_storage_aws:
     if: ${{ inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' }}
     uses: ./.github/workflows/reusable-suite.yml
