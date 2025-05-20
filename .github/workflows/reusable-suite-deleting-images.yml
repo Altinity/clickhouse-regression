@@ -1,0 +1,192 @@
+name: Test Suite
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      package:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      flags:
+        required: false
+        type: string
+      output_format:
+        required: true
+        type: string
+      extra_args:
+        required: false
+        type: string
+      suite_name:
+        required: true
+        type: string
+      suite_executable:
+        required: false
+        type: string
+        default: "regression.py"
+      timeout_minutes:
+        required: true
+        type: number
+      storage_path:
+        required: false
+        type: string
+        default: ""
+      regression_args:
+        required: false
+        type: string
+        default: ""
+      condition:
+        required: false
+        type: string
+        default: "true"
+      runner_type:
+        required: false
+        type: string
+        default: "type-cx42-cpx41"
+      runner_location:
+        required: false
+        type: string
+        default: "in-hel1-fsn1-nbg1"
+      runner_arch:
+        required: false
+        type: string
+        default: "x86"
+      runner_image:
+        required: false
+        type: string
+        default: "image-x86-app-docker-ce"
+      runner_volume:
+        required: false
+        type: string
+        default: "volume-cache-20GB"
+      artifacts:
+        required: true
+        type: string
+      artifact_name:
+        required: false
+        type: string
+        default: ""
+      part:
+        required: false
+        type: string
+        default: ""
+jobs:
+  suite:
+    runs-on: [
+      "self-hosted",
+      "${{ inputs.runner_arch }}",
+      "${{ inputs.runner_type }}",
+      "${{ inputs.runner_location }}",
+      "${{ inputs.runner_image }}",
+      "${{ inputs.runner_volume }}"
+    ]
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    env:
+      SUITE: ${{ inputs.suite_name }}
+      SUITE_EXECUTABLE: ${{ inputs.suite_executable }}
+      STORAGE: ${{ inputs.storage_path }}
+      PART: ${{ inputs.part }}
+      # AWS credentials
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+      # Docker credentials
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      # Database credentials
+      CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
+      CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
+      CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
+      # Python encoding
+      PYTHONIOENCODING: utf-8
+      # ClickHouse
+      clickhouse_path: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      # Artifacts
+      artifacts: ${{ inputs.artifacts }}
+      # Args
+      args: --test-to-end
+        --no-colors
+        --local
+        --clickhouse ${{ inputs.package }}
+        --clickhouse-version ${{ inputs.version }}
+        --collect-service-logs
+        --output ${{ inputs.output_format }}
+        --parallel ${{ vars.PARALLEL }}
+        --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
+        --log raw.log
+        ${{ inputs.flags != 'none' && inputs.flags || ''}}
+        ${{ inputs.extra_args }}
+      artifact_paths: |
+        ./report.html
+        ./*.log.txt
+        ./*.log
+        ./*.html
+        ./*/_instances/*.log
+        ./*/_instances/*/logs/*.log
+        ./*/*/_instances/*/logs/*.log
+        ./*/*/_instances/*.log
+
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: ♻️ Cache setup
+        uses: ./.github/actions/cache-setup
+
+      - name: 🛠️ Setup
+        run: .github/setup.sh
+
+      - name: 🔄 Process regression args
+        run: |
+          REGRESSION_ARGS='${{ inputs.regression_args }}'
+          # AWS replacements
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_BUCKET}}'/${{ secrets.AWS_BUCKET }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_REGION}}'/${{ secrets.AWS_REGION }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_KEY_ID}}'/${{ secrets.AWS_KEY_ID }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_ACCESS_KEY}}'/${{ secrets.AWS_ACCESS_KEY }}}"
+          # GCS replacements
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{GCS_URI}}'/${{ secrets.GCS_URI }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{GCS_KEY_ID}}'/${{ secrets.GCS_KEY_ID }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{GCS_KEY_SECRET}}'/${{ secrets.GCS_KEY_SECRET }}}"
+          # Azure replacements
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_ACCOUNT_NAME}}'/${{ secrets.AZURE_ACCOUNT_NAME }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_STORAGE_KEY}}'/${{ secrets.AZURE_STORAGE_KEY }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_CONTAINER_NAME}}'/${{ secrets.AZURE_CONTAINER_NAME }}}"
+          echo "REGRESSION_ARGS=$REGRESSION_ARGS" >> $GITHUB_ENV
+
+      - name: Check images
+        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+        
+      - name: 🧪 Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/${{ env.SUITE_EXECUTABLE }}
+              ${{ env.REGRESSION_ARGS }}
+              ${{ env.args }} || EXITCODE=$?; 
+              .github/add_link_to_logs.sh; 
+              exit $EXITCODE
+
+      - name: 📝 Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - name: 📤 Upload logs to results database
+        if: always()
+        timeout-minutes: 20
+        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.artifact_name || format('{0}-artifacts', env.SUITE) }}${{ inputs.part }}
+          path: ${{ env.artifact_paths }}
+
+      - name: ♻️ Cache sync
+        if: always()
+        uses: ./.github/actions/cache-sync 
