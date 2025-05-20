@@ -1001,7 +1001,7 @@ def attach_partition_from(self, with_id=False):
         empty_partitioned_ReplicatedGraphiteMergeTree,
     }
 
-    if not self.context.stress:
+    if self.context.stress:
         source_table_types = {
             partitioned_MergeTree,
             partitioned_small_MergeTree,
@@ -1012,22 +1012,31 @@ def attach_partition_from(self, with_id=False):
             empty_partitioned_MergeTree,
             empty_partitioned_ReplicatedMergeTree,
         }
-        partition_keys_pairs = product(
-            source_partition_keys, destination_partition_keys
-        )
+        # since pr that allows to attach partition with different partition keys is not implemented,
+        # there is no need to test all combinations
+
+        # partition_keys_pairs = product(
+        #     source_partition_keys, destination_partition_keys
+        # )
+        partition_keys = source_partition_keys
         table_pairs = product(source_table_types, destination_table_types)
-        combinations = product(partition_keys_pairs, table_pairs)
+        combinations = product(partition_keys, table_pairs)
     else:
+        # combinations_dict = {
+        #     "source_table": source_table_types,
+        #     "destination_table": destination_table_types,
+        #     "source_key": source_partition_keys,
+        #     "destination_key": destination_partition_keys,
+        # }
         combinations_dict = {
-            "source_table": source_table_types,
-            "destination_table": destination_table_types,
-            "source_key": source_partition_keys,
-            "destination_key": destination_partition_keys,
+            "source_table": list(source_table_types),
+            "destination_table": list(destination_table_types),
+            "partition_key": list(source_partition_keys),
         }
         covering_array = CoveringArray(combinations_dict, strength=3)
         combinations = [
             (
-                (item["source_key"], item["destination_key"]),
+                item["partition_key"],
                 (item["source_table"], item["destination_table"]),
             )
             for item in covering_array
@@ -1035,22 +1044,21 @@ def attach_partition_from(self, with_id=False):
 
     with Pool(4) as executor:
         for partition_keys, tables in combinations:
-            source_partition_key, destination_partition_key = partition_keys
+            partition_key = partition_keys
             source_table, destination_table = tables
 
-            source_partition_key_str = clean_name(source_partition_key)
-            destination_partition_key_str = clean_name(destination_partition_key)
+            partition_key_str = clean_name(partition_key)
 
             Scenario(
-                f"combination partition keys {source_partition_key_str} {destination_partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
+                f"combination partition keys {partition_key_str} tables {source_table.__name__} {destination_table.__name__}",
                 test=check_attach_partition_from,
                 parallel=True,
                 executor=executor,
             )(
                 source_table=source_table,
                 destination_table=destination_table,
-                source_partition_key=source_partition_key,
-                destination_partition_key=destination_partition_key,
+                source_partition_key=partition_key,
+                destination_partition_key=partition_key,
                 with_id=with_id,
             )
         join()
