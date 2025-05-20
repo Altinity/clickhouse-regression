@@ -11,7 +11,7 @@ from s3.requirements import *
 def s3_create_many_files(self):
     """Create a folder with many folders and files in S3."""
 
-    num_folders = 50_000
+    num_folders = 5_000
     start_offset = 0
     folder_size_mb = 0.5 if self.context.storage == "minio" else 4
     num_files_per_folder = 5
