@@ -39,6 +39,12 @@ xfails = {
     "/iceberg/iceberg cache/iceberg table engine/*": [
         (Fail, "Need to investigate"),
     ],
+    "/iceberg/iceberg engine/predicate push down/issue with decimal column": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/80200")
+    ],
+    "/iceberg/iceberg engine/predicate push down/issue with float column": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/80200")
+    ],
 }
 
 ffails = {
