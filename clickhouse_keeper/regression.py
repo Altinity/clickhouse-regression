@@ -282,8 +282,8 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.non_distributed_ddl_queries", "feature")
             )
-            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
         with Feature("part 2"):
+            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
             Feature(run=load("clickhouse_keeper.tests.alter_column_distributed", "feature"))
             Feature(
                 run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
@@ -304,8 +304,8 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.non_distributed_ddl_queries", "feature")
             )
-            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
         with Feature("part 2"):
+            Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
             Feature(run=load("clickhouse_keeper.tests.alter_column_distributed", "feature"))
             Feature(
                 run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
