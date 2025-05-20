@@ -376,7 +376,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/ssl/part 1/*"
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -395,7 +395,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/ssl/part 2/*"
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
