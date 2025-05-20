@@ -182,7 +182,7 @@ jobs:
         if: always()
         with:
           name: ${{ inputs.artifact_name || format('{0}-artifacts', env.SUITE) }}
-          path: ${{ env.artifact_paths }}
+          path: ${{ env.artifact_paths }}${{ inputs.part }}
 
       - name: ♻️ Cache sync
         if: always()
