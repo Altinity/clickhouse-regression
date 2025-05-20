@@ -916,6 +916,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
+      part: part_1
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -931,6 +932,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
+      part: part_2
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
