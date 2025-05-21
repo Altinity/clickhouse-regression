@@ -64,9 +64,9 @@ services:
     configs:
       - source: ice-rest-catalog-yaml
         target: /etc/ice/ice-rest-catalog.yaml
-    volumes:
+    tmpfs:
       # for access to /var/lib/ice-rest-catalog/db.sqlite
-      - ./data/docker-compose/ice-rest-catalog/var/lib/ice-rest-catalog:/var/lib/ice-rest-catalog
+      - /var/lib/ice-rest-catalog 
     depends_on:
       minio:
         condition: service_healthy
