@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import sys
 from testflows.core import *
 
 append_path(sys.path, "..")
 
+from iceberg.requirements.requirements import *
 from helpers.cluster import create_cluster
 from helpers.argparser import (
     argparser_minio,
@@ -10,8 +12,6 @@ from helpers.argparser import (
     CaptureMinioArgs,
 )
 from helpers.common import check_clickhouse_version, check_if_not_antalya_build
-from iceberg.requirements.requirements import *
-
 
 
 xfails = {
