@@ -450,9 +450,9 @@ def minio_regression(
             Feature(test=load("s3.tests.orphans", "feature"))(
                 uri=uri_bucket_file, bucket_prefix=bucket_prefix
             )
-        with Feature("part 3"):
             Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
             Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
+        with Feature("part 3"):
             Feature(test=load("s3.tests.table_function_performance", "minio"))(
                 uri=uri_bucket_file
             )
