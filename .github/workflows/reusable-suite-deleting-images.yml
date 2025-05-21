@@ -161,6 +161,9 @@ jobs:
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AZURE_CONTAINER_NAME}}'/${{ secrets.AZURE_CONTAINER_NAME }}}"
           echo "REGRESSION_ARGS=$REGRESSION_ARGS" >> $GITHUB_ENV
 
+      - name: Check images
+        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+        
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/${{ env.SUITE_EXECUTABLE }}

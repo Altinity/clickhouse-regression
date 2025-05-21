@@ -327,11 +327,12 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  clickhouse_keeper:
+  clickhouse_keeper_part_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
+      part: part_1
       timeout_minutes: 180
       storage_path: /no_ssl
       ref: ${{ inputs.ref }}
@@ -339,15 +340,33 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
-
-  clickhouse_keeper_ssl:
+  
+  clickhouse_keeper_part_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
+      part: part_2
+      timeout_minutes: 180
+      storage_path: /no_ssl
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  clickhouse_keeper_ssl_part_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      part: part_1
       timeout_minutes: 180
       storage_path: /ssl
       regression_args: '--ssl'
@@ -357,7 +376,26 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  clickhouse_keeper_ssl_part_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      part: part_2
+      timeout_minutes: 180
+      storage_path: /ssl
+      regression_args: '--ssl'
+      artifact_name: clickhouse_keeper-ssl-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
@@ -454,7 +492,7 @@ jobs:
 
   example:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
-    uses: ./.github/workflows/reusable-suite.yml
+    uses: ./.github/workflows/reusable-suite-deleting-images.yml
     with:
       suite_name: example
       timeout_minutes: 180
@@ -802,7 +840,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 1/*"
-      artifacts: ${{ inputs.artifacts }}-part-1
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
   s3_minio_part_2:
@@ -821,7 +859,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 2/*"
-      artifacts: ${{ inputs.artifacts }}-part-2
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
   s3_minio_part_3:
@@ -840,7 +878,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/*"
-      artifacts: ${{ inputs.artifacts }}-part-3
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
   selects:
@@ -878,6 +916,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
+      part: part_1
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -885,7 +924,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 1/*"
-      artifacts: ${{ inputs.artifacts }}-part-1
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
   ssl_server_part_2:
@@ -893,6 +932,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
+      part: part_2
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -900,7 +940,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 2/*"
-      artifacts: ${{ inputs.artifacts }}-part-2
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
   ssl_server_part_3:
@@ -915,7 +955,7 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
-      artifacts: ${{ inputs.artifacts }}-part-3
+      artifacts: ${{ inputs.artifacts }}
     secrets: inherit 
 
   tiered_storage_aws:

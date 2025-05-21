@@ -177,7 +177,7 @@ def feature(
                 access_key_id=environ["S3_AMAZON_KEY_ID"],
                 storage="aws_s3",
             )
-            environ["S3_AMAZON_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}/"
+            environ["S3_AMAZON_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}/"
 
     if with_s3gcs:
         with Given("a temporary GCS path"):
@@ -193,7 +193,7 @@ def feature(
                 secret_access_key=environ["GCS_KEY_SECRET"],
                 storage="gcs",
             )
-            environ["GCS_URI"] = f"{base_uri}/tiered_storage/{temp_s3_path}"
+            environ["GCS_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}"
 
     with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
         Scenario(
