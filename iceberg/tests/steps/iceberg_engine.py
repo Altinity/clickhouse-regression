@@ -25,7 +25,7 @@ def create_experimental_iceberg_database(
     rest_catalog_url="http://ice-rest-catalog:5000",
     catalog_type=CATALOG_TYPE,
     storage_endpoint="http://minio:9000/warehouse",
-    auth_header=None,
+    auth_header="Authorization: Bearer foo",
     exitcode=None,
     message=None,
     node=None,
