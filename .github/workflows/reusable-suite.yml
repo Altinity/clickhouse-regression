@@ -46,19 +46,15 @@ on:
       runner_type:
         required: false
         type: string
-        default: "type-cx42-cpx41"
-      runner_location:
-        required: false
-        type: string
-        default: "in-hel1-fsn1-nbg1"
+        default: ""
       runner_arch:
         required: false
         type: string
         default: "x86"
-      runner_image:
+      runner_location:
         required: false
         type: string
-        default: "image-x86-app-docker-ce"
+        default: "in-hel1-fsn1-nbg1"
       runner_volume:
         required: false
         type: string
@@ -79,9 +75,9 @@ jobs:
     runs-on: [
       "self-hosted",
       "${{ inputs.runner_arch }}",
-      "${{ inputs.runner_type }}",
+      "${{ inputs.runner_type != '' && inputs.runner_type || (inputs.runner_arch == 'x86' && 'type-cx42-cpx41' || 'type-cax41') }}",
       "${{ inputs.runner_location }}",
-      "${{ inputs.runner_image }}",
+      "${{ inputs.runner_arch == 'x86' && 'image-x86-app-docker-ce' || 'image-arm-app-docker-ce' }}",
       "${{ inputs.runner_volume }}"
     ]
     timeout-minutes: ${{ inputs.timeout_minutes }}
