@@ -198,3 +198,10 @@ jobs:
       - name: ♻️ Cache sync
         if: always()
         uses: ./.github/actions/cache-sync 
+      
+      - name: Check Cache
+        run: |
+          if [ -f "/etc/hetzner-volumes" ]; then
+              echo "Hetzner volumes"
+              cat /etc/hetzner-volumes
+          fi
