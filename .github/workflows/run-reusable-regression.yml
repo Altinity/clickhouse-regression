@@ -327,7 +327,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  clickhouse_keeper_part_1:
+  clickhouse_keeper_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -344,7 +344,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
   
-  clickhouse_keeper_part_2:
+  clickhouse_keeper_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -361,7 +361,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  clickhouse_keeper_ssl_part_1:
+  clickhouse_keeper_ssl_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -380,7 +380,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  clickhouse_keeper_ssl_part_2:
+  clickhouse_keeper_ssl_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -770,12 +770,13 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_aws:
+  s3_aws_1:
     if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
@@ -784,16 +785,36 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_azure:
+  s3_aws_2:
+    if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  s3_azure_1:
     if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
@@ -802,16 +823,37 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_gcs:
+  
+  s3_azure_2:
+    if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+
+  s3_gcs_1:
     if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
@@ -820,11 +862,30 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 1/*"
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_minio_part_1:
+  s3_gcs_2:
+    if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+    secrets: inherit
+    
+  s3_minio_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -843,7 +904,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_minio_part_2:
+  s3_minio_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -862,7 +923,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  s3_minio_part_3:
+  s3_minio_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -911,7 +972,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  ssl_server_part_1:
+  ssl_server_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -927,7 +988,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  ssl_server_part_2:
+  ssl_server_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -943,7 +1004,7 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
     secrets: inherit
 
-  ssl_server_part_3:
+  ssl_server_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
