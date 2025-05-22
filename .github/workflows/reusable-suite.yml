@@ -77,7 +77,7 @@ jobs:
       "${{ inputs.runner_arch }}",
       "${{ inputs.runner_type != '' && inputs.runner_type || (inputs.runner_arch == 'x86' && 'type-cx42-cpx41' || (inputs.runner_arch == 'arm' || inputs.runner_arch == 'arm64' || inputs.runner_arch == 'aarch64') && 'type-cax41' || 'type-cx42-cpx41') }}",
       "${{ inputs.runner_location }}",
-      "${{ inputs.runner_arch == 'x86' && 'image-x86-app-docker-ce' || (inputs.runner_arch == 'arm' || inputs.runner_arch == 'arm64' || inputs.runner_arch == 'aarch64') && format('image-{0}-app-docker-ce', inputs.runner_arch) || 'image-x86-app-docker-ce' }}",
+      "image-${{ inputs.runner_arch }}-app-docker-ce",
       "${{ inputs.runner_volume }}"
     ]
     timeout-minutes: ${{ inputs.timeout_minutes }}
