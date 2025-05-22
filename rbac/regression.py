@@ -247,6 +247,13 @@ xfails = {
             check_clickhouse_version(">=25.1"),
         ),
     ],
+    "/rbac/SQL security/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/79951",
+            check_clickhouse_version(">25.4"),
+        ),
+    ],
 }
 
 xflags = {
