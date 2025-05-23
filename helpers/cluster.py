@@ -2083,6 +2083,33 @@ class Cluster(object):
                         exitcode=0,
                     )
 
+            with By("building the clickhouse image"):
+                self.command(
+                        None,
+                        f'docker build ' \
+                        f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" ' \
+                        f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" ' \
+                        f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" ' \
+                        f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]} ' \
+                        f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] else "clickhouse"}.Dockerfile ' \
+                        f'{current_dir()}/../',
+                        exitcode=0,
+                    )
+
+            if self.clickhouse_docker_image_name != self.keeper_docker_image_name:
+                with By("building the keeper image"):
+                    self.command(
+                        None,
+                        f'docker build ' \
+                        f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" ' \
+                        f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" ' \
+                        f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" ' \
+                        f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"]} ' \
+                        f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] else "clickhouse"}.Dockerfile ' \
+                        f'{current_dir()}/../',
+                        exitcode=0,
+                    )
+
             with By("executing docker-compose up"):
                 up_args = (
                     "" if self.reuse_env else "--renew-anon-volumes --force-recreate"

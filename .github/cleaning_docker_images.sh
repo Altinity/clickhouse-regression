@@ -18,7 +18,7 @@ while read -r line; do
 
     key="${repo}:${tag}"
 
-    if [[ "$repo" != "<none>" && "$tag" == "<none>" ]]; then
+    if [[ "$repo" == "<none>" || "$tag" == "<none>" ]]; then
         echo "Removing image with no tag/digest: $image_id"
         docker rmi -f "$image_id"
         continue

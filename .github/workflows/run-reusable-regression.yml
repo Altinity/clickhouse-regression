@@ -21,7 +21,7 @@ on:
         type: choice
         options:
           - x86
-          - arm
+          - arm64
         required: true
         default: x86
       flags:
