@@ -162,8 +162,8 @@ jobs:
           echo "REGRESSION_ARGS=$REGRESSION_ARGS" >> $GITHUB_ENV
 
       - name: Check images
-        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
-        
+        run: docker images
+
       - name: 🧪 Run ${{ env.SUITE }} suite
         run: python3
               -u ${{ env.SUITE }}/${{ env.SUITE_EXECUTABLE }}
@@ -188,12 +188,13 @@ jobs:
           path: ${{ env.artifact_paths }}
 
       - name: Check images
-        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+        run: docker images
       
       - name: Delete images
         run: .github/cleaning_docker_images.sh
+
       - name: Check images
-        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+        run: docker images 
 
       - name: ♻️ Cache sync
         if: always()
