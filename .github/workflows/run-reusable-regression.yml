@@ -1,5 +1,5 @@
-name: 🔬 Run (Reusable) Tests CI/CD on x86
-run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | x86', inputs.version)) || format('{0} | {1} | x86', inputs.version, inputs.suite)}}
+name: 🔬 Run (Reusable) Tests CI/CD
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
   ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
 
@@ -16,6 +16,14 @@ on:
         type: string
         required: true
         default: 24.3.12.76.altinitystable
+      arch:
+        description: "🏗️ Architecture"
+        type: choice
+        options:
+          - x86
+          - arm
+        required: true
+        default: x86
       flags:
         description: "🚩 Flags"
         type: choice
@@ -147,6 +155,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   aggregate_functions:
@@ -162,6 +171,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   atomic_insert:
@@ -177,6 +187,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   alter_replace_partition:
@@ -196,6 +207,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   alter_attach_partition:
@@ -215,6 +227,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   alter_move_partition:
@@ -234,6 +247,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   attach:
@@ -250,6 +264,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   base_58:
@@ -265,6 +280,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   benchmark_aws:
@@ -285,6 +301,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   benchmark_gcs:
@@ -305,6 +322,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   benchmark_minio:
@@ -325,9 +343,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  clickhouse_keeper_part_1:
+  clickhouse_keeper_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -342,9 +361,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
   
-  clickhouse_keeper_part_2:
+  clickhouse_keeper_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -359,9 +379,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  clickhouse_keeper_ssl_part_1:
+  clickhouse_keeper_ssl_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -378,9 +399,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  clickhouse_keeper_ssl_part_2:
+  clickhouse_keeper_ssl_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -397,6 +419,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   clickhouse_keeper_failover:
@@ -413,6 +436,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   data_types:
@@ -428,6 +452,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   datetime64_extended_range:
@@ -443,6 +468,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   disk_level_encryption:
@@ -458,6 +484,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   dns:
@@ -473,6 +500,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   engines:
@@ -488,6 +516,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   example:
@@ -503,6 +532,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   extended_precision_data_types:
@@ -518,6 +548,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   functions:
@@ -533,6 +564,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   iceberg:
@@ -548,6 +580,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   jwt_authentication:
@@ -563,6 +596,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   kafka:
@@ -578,6 +612,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   kerberos:
@@ -593,6 +628,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   key_value:
@@ -608,6 +644,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   ldap_authentication:
@@ -624,6 +661,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   ldap_external_user_directory:
@@ -640,6 +678,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   ldap_role_mapping:
@@ -656,6 +695,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   lightweight_delete:
@@ -671,6 +711,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   memory:
@@ -686,6 +727,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   parquet:
@@ -702,6 +744,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   parquet_minio:
@@ -720,6 +763,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   parquet_aws_s3:
@@ -738,6 +782,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   part_moves_between_shards:
@@ -753,6 +798,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   rbac:
@@ -768,14 +814,16 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_aws:
+  s3_aws_1:
     if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
@@ -784,16 +832,38 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_azure:
+  s3_aws_2:
+    if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_azure_1:
     if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
@@ -802,16 +872,39 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_gcs:
+  
+  s3_azure_2:
+    if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_gcs_1:
     if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
       timeout_minutes: 360
+      part: part_1
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
@@ -820,11 +913,32 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_minio_part_1:
+  s3_gcs_2:
+    if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      timeout_minutes: 360
+      part: part_2
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+    
+  s3_minio_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -841,9 +955,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_minio_part_2:
+  s3_minio_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -860,9 +975,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 2/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  s3_minio_part_3:
+  s3_minio_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -879,6 +995,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   selects:
@@ -894,6 +1011,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   session_timezone:
@@ -909,9 +1027,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  ssl_server_part_1:
+  ssl_server_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -925,9 +1044,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 1/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  ssl_server_part_2:
+  ssl_server_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -941,9 +1061,10 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 2/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  ssl_server_part_3:
+  ssl_server_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
@@ -956,6 +1077,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit 
 
   tiered_storage_aws:
@@ -974,6 +1096,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   tiered_storage_gcs:
@@ -992,6 +1115,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   tiered_storage_local:
@@ -1007,6 +1131,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   tiered_storage_minio:
@@ -1025,6 +1150,7 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
   window_functions:
@@ -1040,4 +1166,5 @@ jobs:
       output_format: ${{ inputs.output_format }}
       extra_args: ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
     secrets: inherit

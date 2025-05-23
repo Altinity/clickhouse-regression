@@ -19,7 +19,7 @@ xfails = {
     ":/:/remote host filter": [
         (Fail, "remote host filter does not work with disk storage")
     ],
-    "gcs/disk invalid/:": [
+    "gcs/:/disk invalid/:": [
         (Fail, "Google Cloud Storage does not work with disk storage")
     ],
     ":/:/zero copy replication/alter/count=10": [
@@ -42,10 +42,10 @@ xfails = {
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
     "minio/:/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
-    "aws s3/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
-    "aws s3/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
-    "aws s3/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
-    "gcs/disk/environment credentials/:": [
+    "aws s3/:/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/:/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
+    "aws s3/:/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
+    "gcs/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for gcs tests.")
     ],
     ":/:/backup/:/metadata non restorable schema": [
@@ -54,7 +54,7 @@ xfails = {
     ":/:/zero copy replication/the size of the s3 bucket should be the same as before": [
         (Fail, "Data cleanup needs investigation")
     ],
-    "aws s3/backup/:/:": [
+    "aws s3/:/backup/:/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/30510")
     ],
     "minio/:/zero copy replication/performance alter": [
@@ -65,23 +65,23 @@ xfails = {
         (Error, "Unstable test"),
         (Fail, "Unstable test"),
     ],
-    "aws s3/zero copy replication/stale alter replica": [
+    "aws s3/:/zero copy replication/stale alter replica": [
         (Error, "Timeout on 22.x", check_clickhouse_version("<=23"))
     ],
-    "gcs/table function/wildcard/:": [
+    "gcs/:/table function/wildcard/:": [
         (Fail, "Fixed by https://github.com/ClickHouse/ClickHouse/pull/37344")
     ],
     ":/:/disk/delete/delete one row": [(Fail, "Bug that needs to be investigated")],
-    "gcs/disk/delete/gcs truncate err log": [
+    "gcs/:/disk/delete/gcs truncate err log": [
         (Fail, "Exception appears in error log but not in ClickHouse.")
     ],
-    "aws s3/table function/ssec/:": [
+    "aws s3/:/table function/ssec/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3/table function/ssec/:/:": [
+    "aws s3/:/table function/ssec/:/:": [
         (Fail, "https://altinity.atlassian.net/browse/CH-241")
     ],
-    "aws s3/table function/ssec encryption check": [
+    "aws s3/:/table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
     ":/:/table function performance/wildcard/:": [
@@ -141,10 +141,10 @@ xfails = {
             ".*assert rows == actual_count.*",
         )
     ],
-    "gcs/combinatoric table": [
+    "gcs/:/combinatoric table": [
         (Fail, "Time outs need investigation"),
     ],
-    "gcs/combinatoric table/:": [
+    "gcs/:/combinatoric table/:": [
         (
             Error,
             "Times out, needs investigation",
@@ -152,7 +152,7 @@ xfails = {
             ".*testflows.uexpect.uexpect.ExpectTimeoutError.*",
         ),
     ],
-    "azure/combinatoric table/:": [
+    "azure/:/combinatoric table/:": [
         (
             Fail,
             "Times out, needs investigation",
@@ -160,7 +160,7 @@ xfails = {
             ".*TIMEOUT_EXCEEDED.*",
         ),
     ],
-    "azure/combinatoric table/:": [
+    "azure/:/combinatoric table/:": [
         (
             Error,
             "Times out, needs investigation",
@@ -221,11 +221,11 @@ ffails = {
         Skip,
         "AWS S3 credentials not set for minio tests.",
     ),
-    "gcs/disk/environment credentials": (
+    "gcs/:/disk/environment credentials": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
     ),
-    "gcs/zero copy replication": (
+    "gcs/:/zero copy replication": (
         Skip,
         "GCS is not supported for zero copy replication",
     ),
@@ -237,25 +237,29 @@ ffails = {
         Skip,
         "needs investigation",
     ),
-    "gcs/table function/measure file size": (
+    "gcs/:/table function/measure file size": (
         Skip,
         "needs investigation",
     ),
-    "gcs/table function/measure file size s3Cluster": (
+    "gcs/:/table function/measure file size s3Cluster": (
         Skip,
         "needs investigation",
     ),
-    "gcs/table function performance/wildcard/nums no match": (
+    "gcs/:/table function performance/wildcard/nums no match": (
         Skip,
         "needs investigation",
     ),
-    "gcs/table function performance/wildcard/range no match": (
+    "gcs/:/table function performance/wildcard/range no match": (
         Skip,
         "needs investigation",
     ),
-    "gcs/orphans": (
+    "gcs/:/orphans": (
         Skip,
         "AWS S3 credentials not set for gcs tests.",
+    ),
+    "azure/:/:/:/:/:he size of the s3 bucket*": (
+        Skip,
+        "azure not s3 compatible",
     ),
     "azure/:/:/:/:he size of the s3 bucket*": (
         Skip,
@@ -265,28 +269,24 @@ ffails = {
         Skip,
         "azure not s3 compatible",
     ),
-    "azure/:/:he size of the s3 bucket*": (
+    "azure/:/disk/environment credentials": (
         Skip,
         "azure not s3 compatible",
     ),
-    "azure/disk/environment credentials": (
+    "azure/:/disk/:ports": (
         Skip,
         "azure not s3 compatible",
     ),
-    "azure/disk/:ports": (
-        Skip,
-        "azure not s3 compatible",
-    ),
-    "azure/invalid disk/access failed skip check": (
+    "azure/:/invalid disk/access failed skip check": (
         XFail,
         "Not working, needs investigation",
     ),
-    "azure/combinatoric table": (Skip, "Time outs need investigation"),
-    "azure/zero copy replication/metadata": (Skip, "azure not s3 compatible"),
-    "azure/zero copy replication/alter": (Skip, "investigate"),
-    "aws s3/invalid table function/invalid wildcard": (Skip, "needs investigation"),
-    "aws s3/disk/ssec": (Skip, "SSEC option with disk not working"),
-    "aws s3/table function/ssec encryption check": (
+    "azure/:/combinatoric table": (Skip, "Time outs need investigation"),
+    "azure/:/zero copy replication/metadata": (Skip, "azure not s3 compatible"),
+    "azure/:/zero copy replication/alter": (Skip, "investigate"),
+    "aws s3/:/invalid table function/invalid wildcard": (Skip, "needs investigation"),
+    "aws s3/:/disk/ssec": (Skip, "SSEC option with disk not working"),
+    "aws s3/:/table function/ssec encryption check": (
         Skip,
         "SSEC currently not working. Timeout",
     ),
@@ -539,31 +539,33 @@ def aws_s3_regression(
         with And("I get all possible clusters for nodes"):
             self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
-        Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.table_function", "aws_s3"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.disk", "aws_s3"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-        Feature(test=load("s3.tests.backup", "aws_s3"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.orphans", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
+        with Feature("part 1"):
+            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.table_function", "aws_s3"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.disk", "aws_s3"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.alter", "feature"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+        with Feature("part 2"):
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
+            Feature(test=load("s3.tests.backup", "aws_s3"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.orphans", "feature"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
 @TestFeature
@@ -629,20 +631,22 @@ def azure_regression(
                     max_os_cpu_wait_time_ratio_to_throw=25,
                 )
 
-        Feature(test=load("s3.tests.sanity", "azure"))()
-        Feature(test=load("s3.tests.alter", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.disk", "azure"))()
-        Feature(test=load("s3.tests.disk_invalid", "azure"))()
-        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
-        Feature(test=load("s3.tests.reconnect", "azure"))()
-        Feature(test=load("s3.tests.backup", "azure"))()
-        # Feature(test=load("s3.tests.orphans", "feature"))(
-        #     uri=uri, bucket_prefix=bucket_prefix
-        # )
-        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        with Feature("part 1"):
+            Feature(test=load("s3.tests.sanity", "azure"))()
+            Feature(test=load("s3.tests.alter", "feature"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.disk", "azure"))()
+            Feature(test=load("s3.tests.disk_invalid", "azure"))()
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        with Feature("part 2"):
+            Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
+            Feature(test=load("s3.tests.reconnect", "azure"))()
+            Feature(test=load("s3.tests.backup", "azure"))()
+            # Feature(test=load("s3.tests.orphans", "feature"))(
+            #     uri=uri, bucket_prefix=bucket_prefix
+            # )
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
 
 
 @TestFeature
@@ -702,28 +706,30 @@ def gcs_regression(
         with And("I get all possible clusters for nodes"):
             self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
-        Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.table_function", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
-        Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-        Feature(test=load("s3.tests.alter", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.backup", "gcs"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.orphans", "feature"))(
-            uri=uri, bucket_prefix=bucket_prefix
-        )
-        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-        Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
+        with Feature("part 1"):
+            Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.table_function", "gcs"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
+            Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
+            Feature(test=load("s3.tests.alter", "feature"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+        with Feature("part 2"):
+            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.backup", "gcs"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.orphans", "feature"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
+            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+            Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
 @TestModule
