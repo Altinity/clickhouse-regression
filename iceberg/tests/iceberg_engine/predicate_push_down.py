@@ -65,7 +65,7 @@ def check_read_with_predicate_push_down(
             log_comment=log_comment_with_pruning,
         )
         assert int(read_rows.output.strip()) == 0, error(
-            f"Expected 0 rows to be read, with where clause: {where_clause}"
+            f"Expected 0 rows to be read, with where clause: {where_clause}, but got {read_rows.output.strip()}"
         )
 
 
@@ -97,7 +97,7 @@ def check_read_without_predicate_push_down(
             log_comment=log_comment_without_pruning,
         )
         assert int(read_rows.output.strip()) == length, error(
-            f"Expected {length} rows to be read, with where clause: {where_clause}"
+            f"Expected {length} rows to be read, with where clause: {where_clause}, but got {read_rows.output.strip()}"
         )
 
 
