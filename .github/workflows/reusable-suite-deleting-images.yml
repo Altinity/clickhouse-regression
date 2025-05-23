@@ -187,6 +187,21 @@ jobs:
           name: ${{ inputs.artifact_name || format('{0}-artifacts', env.SUITE) }}${{ inputs.part }}
           path: ${{ env.artifact_paths }}
 
+      - name: Check images
+        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+      
+      - name: Delete images
+        run: .github/cleaning_docker_images.sh
+      - name: Check images
+        run: docker images --digests --format '{{.Repository}} {{.Tag}} {{.Digest}} {{.ID}} {{.CreatedAt}}' | sort > /tmp/docker_images_list.txt; cat /tmp/docker_images_list.txt
+
       - name: ♻️ Cache sync
         if: always()
         uses: ./.github/actions/cache-sync 
+      
+      - name: Check Cache
+        run: |
+          if [ -f "/etc/hetzner-volumes" ]; then
+              echo "Hetzner volumes"
+              cat /etc/hetzner-volumes
+          fi
