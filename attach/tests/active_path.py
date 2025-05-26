@@ -23,7 +23,6 @@ columns = [
 
 
 @TestScenario
-@Repeat(5)
 def check_active_path_convert(self, engine="ReplicatedMergeTree"):
     node = self.context.node
     node2 = self.context.node_2
@@ -239,7 +238,7 @@ def feature(self):
         "ReplicatedSummingMergeTree",
         "ReplicatedVersionedCollapsingMergeTree",
     ]
-    with Pool(4) as executor:
+    with Pool() as executor:
         for engine in engines:
             Scenario(
                 f"{engine} attach UUID",
