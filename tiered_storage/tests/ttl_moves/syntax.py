@@ -171,6 +171,11 @@ def scenario(self, name, engine):
             )
 
         with When("TTL expressions with non-date type"):
+            if check_clickhouse_version(">=25.6")(self):
+                message = "DB::Exception: TTL expression result column should have Date, Date32, DateTime or DateTime64 type, but has String"
+            else:
+                message = "Exception: TTL expression result column should have DateTime or Date type, but has String"
+
             node.query(
                 f"""
                 CREATE TABLE {name} (
@@ -185,7 +190,7 @@ def scenario(self, name, engine):
                 SETTINGS storage_policy='jbods_with_external'
             """,
                 exitcode=194,
-                message="Exception: TTL expression result column should have DateTime or Date type, but has String",
+                message=message,
             )
 
     finally:
