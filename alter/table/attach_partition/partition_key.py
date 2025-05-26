@@ -1001,7 +1001,7 @@ def attach_partition_from(self, with_id=False):
         empty_partitioned_ReplicatedGraphiteMergeTree,
     }
 
-    if self.context.stress:
+    if not self.context.stress:
         source_table_types = {
             partitioned_MergeTree,
             partitioned_small_MergeTree,
