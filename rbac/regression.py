@@ -247,13 +247,6 @@ xfails = {
             check_clickhouse_version(">=25.1"),
         ),
     ],
-    "/rbac/SQL security/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/79951",
-            check_clickhouse_version(">25.4"),
-        ),
-    ],
 }
 
 xflags = {
@@ -379,6 +372,11 @@ ffails = {
         Skip,
         "check privilege was introduced in 25.1",
         check_clickhouse_version("<25.1"),
+    ),
+    "/rbac/SQL security": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/79951",
+        check_clickhouse_version(">=25.5"),
     ),
 }
 
