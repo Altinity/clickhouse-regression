@@ -20,7 +20,7 @@ def feature(self):
         self.context.cluster.node("clickhouse3"),
     ]
 
-    with Pool(7) as pool:
+    with Pool() as pool:
         Feature(
             run=load("alter.table.attach_partition.partition_types", "feature"),
             parallel=True,
