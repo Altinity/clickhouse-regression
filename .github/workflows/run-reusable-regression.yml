@@ -800,19 +800,54 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-
-  rbac:
+  
+  rbac_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
       timeout_minutes: 540
+      part: part_1
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  rbac_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 540
+      part: part_2
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  rbac_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 540
+      part: part_3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 3/*"
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit

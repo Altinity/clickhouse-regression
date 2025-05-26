@@ -42,205 +42,198 @@ issue_65134 = "https://github.com/ClickHouse/ClickHouse/issues/65134"
 issue_70898 = "https://github.com/ClickHouse/ClickHouse/issues/70898"
 
 xfails = {
-    "syntax/show create quota/I show create quota current": [
+    "part 1/syntax/show create quota/I show create quota current": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/12495")
     ],
-    "views/:/create with subquery privilege granted directly or via role/:": [
+    "part 1/views/:/create with subquery privilege granted directly or via role/:": [
         (Fail, issue_14091)
     ],
-    "views/:/create with join query privilege granted directly or via role/:": [
+    "part 1/views/:/create with join query privilege granted directly or via role/:": [
         (Fail, issue_14091)
     ],
-    "views/:/create with union query privilege granted directly or via role/:": [
+    "part 1/views/:/create with union query privilege granted directly or via role/:": [
         (Fail, issue_14091)
     ],
-    "views/:/create with join union subquery privilege granted directly or via role/:": [
+    "part 1/views/:/create with join union subquery privilege granted directly or via role/:": [
         (Fail, issue_14091)
     ],
-    "views/:/create with nested views privilege granted directly or via role/:": [
+    "part 1/views/:/create with nested views privilege granted directly or via role/:": [
         (Fail, issue_14091)
     ],
-    "views/view/select with join query privilege granted directly or via role/:": [
+    "part 1/views/view/select with join query privilege granted directly or via role/:": [
         (Fail, issue_14149)
     ],
-    "views/view/select with join union subquery privilege granted directly or via role/:": [
+    "part 1/views/view/select with join union subquery privilege granted directly or via role/:": [
         (Fail, issue_14149)
     ],
-    "views/view/select with nested views privilege granted directly or via role/:": [
+    "part 1/views/view/select with nested views privilege granted directly or via role/:": [
         (Fail, issue_14149)
     ],
-    "views/live view/refresh with privilege granted directly or via role/:": [
+    "part 1/views/live view/refresh with privilege granted directly or via role/:": [
         (Fail, issue_14224)
     ],
-    "views/live view/refresh with privilege revoked directly or from role/:": [
+    "part 1/views/live view/refresh with privilege revoked directly or from role/:": [
         (Fail, issue_14224)
     ],
-    "views/live view/select:": [(Fail, issue_14418)],
-    "views/live view/select:/:": [(Fail, issue_14418)],
-    "views/materialized view/select with:": [(Fail, issue_14451)],
-    "views/materialized view/select with:/:": [(Fail, issue_14451)],
-    "views/materialized view/modify query:": [(Fail, issue_14674)],
-    "views/materialized view/modify query:/:": [(Fail, issue_14674)],
-    "views/materialized view/insert on source table privilege granted directly or via role/:": [
+    "part 1/views/live view/select:": [(Fail, issue_14418)],
+    "part 1/views/live view/select:/:": [(Fail, issue_14418)],
+    "part 1/views/materialized view/select with:": [(Fail, issue_14451)],
+    "part 1/views/materialized view/select with:/:": [(Fail, issue_14451)],
+    "part 1/views/materialized view/modify query:": [(Fail, issue_14674)],
+    "part 1/views/materialized view/modify query:/:": [(Fail, issue_14674)],
+    "part 1/views/materialized view/insert on source table privilege granted directly or via role/:": [
         (Fail, issue_14810)
     ],
-    "privileges/alter ttl/table_type=:/user with some privileges": [
+    "part 1/privileges/alter ttl/table_type=:/user with some privileges": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/role with some privileges": [
+    "part 1/privileges/alter ttl/table_type=:/role with some privileges": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/user with privileges on cluster": [
+    "part 1/privileges/alter ttl/table_type=:/user with privileges on cluster": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/user with privileges from user with grant option": [
+    "part 1/privileges/alter ttl/table_type=:/user with privileges from user with grant option": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/user with privileges from role with grant option": [
+    "part 1/privileges/alter ttl/table_type=:/user with privileges from role with grant option": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/role with privileges from user with grant option": [
+    "part 1/privileges/alter ttl/table_type=:/role with privileges from user with grant option": [
         (Fail, issue_14566)
     ],
-    "privileges/alter ttl/table_type=:/role with privileges from role with grant option": [
+    "part 1/privileges/alter ttl/table_type=:/role with privileges from role with grant option": [
         (Fail, issue_14566)
     ],
-    "privileges/distributed table/:/special cases/insert with table on source table of materialized view:": [
+    "part 1/privileges/distributed table/:/special cases/insert with table on source table of materialized view:": [
         (Fail, issue_14810)
     ],
-    "privileges/distributed table/cluster tests/cluster='sharded*": [
+    "part 1/privileges/distributed table/cluster tests/cluster='sharded*": [
         (Fail, issue_15165)
     ],
-    "privileges/distributed table/cluster tests/cluster=:/special cases/insert with table on source table of materialized view privilege granted directly or via role/:": [
+    "part 1/privileges/distributed table/cluster tests/cluster=:/special cases/insert with table on source table of materialized view privilege granted directly or via role/:": [
         (Fail, issue_14810)
     ],
-    "views/materialized view/select from implicit target table privilege granted directly or via role/select from implicit target table, privilege granted directly": [
+    "part 1/views/materialized view/select from implicit target table privilege granted directly or via role/select from implicit target table, privilege granted directly": [
         (Fail, ".inner table is not created as expected")
     ],
-    "views/materialized view/insert on target table privilege granted directly or via role/insert on target table, privilege granted through a role": [
+    "part 1/views/materialized view/insert on target table privilege granted directly or via role/insert on target table, privilege granted through a role": [
         (Fail, ".inner table is not created as expected")
     ],
-    "views/materialized view/select from implicit target table privilege granted directly or via role/select from implicit target table, privilege granted through a role": [
+    "part 1/views/materialized view/select from implicit target table privilege granted directly or via role/select from implicit target table, privilege granted through a role": [
         (Fail, ".inner table is not created as expected")
     ],
-    "views/materialized view/insert on target table privilege granted directly or via role/insert on target table, privilege granted directly": [
+    "part 1/views/materialized view/insert on target table privilege granted directly or via role/insert on target table, privilege granted directly": [
         (Fail, ".inner table is not created as expected")
     ],
-    "views/materialized view/select from source table privilege granted directly or via role/select from implicit target table, privilege granted directly": [
+    "part 1/views/materialized view/select from source table privilege granted directly or via role/select from implicit target table, privilege granted directly": [
         (Fail, ".inner table is not created as expected")
     ],
-    "views/materialized view/select from source table privilege granted directly or via role/select from implicit target table, privilege granted through a role": [
+    "part 1/views/materialized view/select from source table privilege granted directly or via role/select from implicit target table, privilege granted through a role": [
         (Fail, ".inner table is not created as expected")
     ],
-    "privileges/alter move/:/:/:/:/move partition to implicit target table of a materialized view": [
+    "part 1/privileges/alter move/:/:/:/:/move partition to implicit target table of a materialized view": [
         (Fail, ".inner table is not created as expected")
     ],
-    "privileges/alter move/:/:/:/:/user without ALTER MOVE PARTITION privilege/": [
+    "part 1/privileges/alter move/:/:/:/:/user without ALTER MOVE PARTITION privilege/": [
         (Fail, issue_16403)
     ],
-    "privileges/alter move/:/:/:/:/user with revoked ALTER MOVE PARTITION privilege/": [
+    "part 1/privileges/alter move/:/:/:/:/user with revoked ALTER MOVE PARTITION privilege/": [
         (Fail, issue_16403)
     ],
-    "privileges/create table/create with join query privilege granted directly or via role/:": [
+    "part 1/privileges/create table/create with join query privilege granted directly or via role/:": [
         (Fail, issue_17653)
     ],
-    "privileges/create table/create with join union subquery privilege granted directly or via role/:": [
+    "part 1/privileges/create table/create with join union subquery privilege granted directly or via role/:": [
         (Fail, issue_17653)
     ],
-    "privileges/create table/create with nested tables privilege granted directly or via role/:": [
+    "part 1/privileges/create table/create with nested tables privilege granted directly or via role/:": [
         (Fail, issue_17653)
     ],
-    "privileges/kill mutation/no privilege/kill mutation on cluster": [
+    "part 1/privileges/kill mutation/no privilege/kill mutation on cluster": [
         (Fail, issue_17146)
     ],
-    "privileges/kill query/privilege granted directly or via role/:/": [
+    "part 1/privileges/kill query/privilege granted directly or via role/:/": [
         (Fail, issue_17147)
     ],
-    "privileges/show dictionaries/:/check privilege/:/exists/EXISTS with privilege": [
+    "part 1/privileges/show dictionaries/:/check privilege/:/exists/EXISTS with privilege": [
         (Fail, issue_17655)
     ],
-    "privileges/public tables/sensitive tables": [
+    "part 1/privileges/public tables/sensitive tables": [
         (Fail, issue_18110, check_clickhouse_version("<24.4"))
     ],
-    "privileges/: row policy/nested live:": [(Fail, issue_21083)],
-    "privileges/: row policy/nested mat:": [(Fail, issue_21084)],
-    "privileges/show dictionaries/:/check privilege/check privilege=SHOW DICTIONARIES/show dict/SHOW DICTIONARIES with privilege": [
+    "part 1/privileges/: row policy/nested live:": [(Fail, issue_21083)],
+    "part 1/privileges/: row policy/nested mat:": [(Fail, issue_21084)],
+    "part 1/privileges/show dictionaries/:/check privilege/check privilege=SHOW DICTIONARIES/show dict/SHOW DICTIONARIES with privilege": [
         (Fail, "new bug")
     ],
-    "privileges/show dictionaries/:/check privilege/check privilege=CREATE DICTIONARY/show dict/SHOW DICTIONARIES with privilege": [
+    "part 1/privileges/show dictionaries/:/check privilege/check privilege=CREATE DICTIONARY/show dict/SHOW DICTIONARIES with privilege": [
         (Fail, "new bug")
     ],
-    "privileges/show dictionaries/:/check privilege/check privilege=DROP DICTIONARY/show dict/SHOW DICTIONARIES with privilege": [
+    "part 1/privileges/show dictionaries/:/check privilege/check privilege=DROP DICTIONARY/show dict/SHOW DICTIONARIES with privilege": [
         (Fail, "new bug")
     ],
-    "privileges/kill mutation/:/:/KILL ALTER : without privilege": [
+    "part 1/privileges/kill mutation/:/:/KILL ALTER : without privilege": [
         (Fail, issue_25413)
     ],
-    "privileges/kill mutation/:/:/KILL ALTER : with revoked privilege": [
+    "part 1/privileges/kill mutation/:/:/KILL ALTER : with revoked privilege": [
         (Fail, issue_25413)
     ],
-    "privileges/kill mutation/:/:/KILL ALTER : with revoked ALL privilege": [
+    "part 1/privileges/kill mutation/:/:/KILL ALTER : with revoked ALL privilege": [
         (Fail, issue_25413)
     ],
-    "privileges/create table/create with subquery privilege granted directly or via role/create with subquery, privilege granted directly": [
+    "part 1/privileges/create table/create with subquery privilege granted directly or via role/create with subquery, privilege granted directly": [
         (Fail, issue_26746)
     ],
-    "privileges/create table/create with subquery privilege granted directly or via role/create with subquery, privilege granted through a role": [
+    "part 1/privileges/create table/create with subquery privilege granted directly or via role/create with subquery, privilege granted through a role": [
         (Fail, issue_26746)
     ],
-    "views/live view/create with join subquery privilege granted directly or via role/create with join subquery, privilege granted directly": [
+    "part 1/views/live view/create with join subquery privilege granted directly or via role/create with join subquery, privilege granted directly": [
         (Fail, issue_26746)
     ],
-    "views/live view/create with join subquery privilege granted directly or via role/create with join subquery, privilege granted through a role": [
+    "part 1/views/live view/create with join subquery privilege granted directly or via role/create with join subquery, privilege granted through a role": [
         (Fail, issue_26746)
     ],
-    "privileges/table functions/cluster": [(Fail, issue_37389)],
-    "privileges/table functions/remote": [(Fail, issue_37389)],
-    "privileges/create row policy/remote": [(Fail, issue_37580)],
-    "privileges/system drop replica/:/drop replica/check privilege:/:": [
+    "part 1/privileges/table functions/cluster": [(Fail, issue_37389)],
+    "part 1/privileges/table functions/remote": [(Fail, issue_37389)],
+    "part 1/privileges/create row policy/remote": [(Fail, issue_37580)],
+    "part 1/privileges/system drop replica/:/drop replica/check privilege:/:": [
         (Fail, issue_38716)
     ],
-    "privileges/orphaned role": [(Fail, pull_47002)],
-    "privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
+    "part 1/privileges/orphaned role": [(Fail, pull_47002)],
+    "part 1/privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
         (Fail, "unstable test")
     ],
-    "/rbac/SQL security/materialized view with definer/check default values/*": [
+    "/rbac/part 2/SQL security/materialized view with definer/check default values/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
-    "/rbac/SQL security/materialized view with definer/check change default values/I try to select from materialized view with second user/*": [
+    "/rbac/part 2/SQL security/materialized view with definer/check change default values/I try to select from materialized view with second user/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
-    "/rbac/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
+    "/rbac/part 2/SQL security/view with definer/check default sql security with definer/I try to select from view with user/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/63564")
     ],
-    "privileges/create row policy/or replace/*": [
+    "part 1/privileges/create row policy/or replace/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/64486",
             check_clickhouse_version("<24.4"),
         ),
     ],
-    "/rbac/multiple authentication methods/valid until/sha 256 hash auth method/*": [
+    "/rbac/part 3/multiple authentication methods/valid until/sha 256 hash auth method/*": [
         (Fail, "Should be fixed soon")
     ],
-    "/rbac/privileges/valid until/check old behavior/no_password/*": [
+    "/rbac/part 1/privileges/valid until/check old behavior/no_password/*": [
         (
             Fail,
             "Does not include no_password in SHOW CREATE USER before 24.9",
             check_clickhouse_version("<24.9"),
         )
     ],
-    "/rbac/multiple authentication methods/ssh key/multiple ssh keys exceeding limit/*": [
+    "/rbac/part 3/multiple authentication methods/ssh key/multiple ssh keys exceeding limit/*": [
         (Fail, issue_70898),
     ],
-    "/rbac/privileges/alter user/alter user granted directly/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/74372",
-            check_clickhouse_version(">=25.1"),
-        ),
-    ],
-    "/rbac/privileges/alter user/alter user granted via role/*": [
+    "/rbac/part 1/privileges/alter user/alter user granted directly/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/74372",
@@ -250,24 +243,24 @@ xfails = {
 }
 
 xflags = {
-    "privileges/alter index/table_type='ReplicatedVersionedCollapsingMergeTree-sharded_cluster'/role with privileges from role with grant option/granted=:/I try to ALTER INDEX with given privileges/I check order by when privilege is granted": (
+    "part 1/privileges/alter index/table_type='ReplicatedVersionedCollapsingMergeTree-sharded_cluster'/role with privileges from role with grant option/granted=:/I try to ALTER INDEX with given part 1/privileges/I check order by when privilege is granted": (
         SKIP,
         0,
     )
 }
 
 ffails = {
-    "/rbac/privileges/sources/HDFS*": (
+    "/rbac/part 1/privileges/sources/HDFS*": (
         Skip,
         "Not supportted in ARM builds",
         (lambda test: platform.machine() == "aarch64"),
     ),
-    "/rbac/privileges/system drop cache/compiled expression cache*": (
+    "/rbac/part 1/privileges/system drop cache/compiled expression cache*": (
         Skip,
         "Not supportted in ARM builds",
         (lambda test: platform.machine() == "aarch64"),
     ),
-    "rbac/privileges/:/table_type='ReplicatedReplacingMergeTree-sharded_cluster": (
+    "rbac/part 1/privileges/:/table_type='ReplicatedReplacingMergeTree-sharded_cluster": (
         Skip,
         "Causes clickhouse timeout on 21.10",
         (
@@ -275,7 +268,7 @@ ffails = {
             and check_clickhouse_version("<21.11")(test)
         ),
     ),
-    "rbac/views": (
+    "rbac/part 1/views": (
         Skip,
         "Does not work on clickhouse 21.09",
         (
@@ -283,97 +276,97 @@ ffails = {
             and check_clickhouse_version("<21.10")(test)
         ),
     ),
-    "rbac/privileges/system merges": (
+    "rbac/part 1/privileges/system merges": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "rbac/privileges/system ttl merges": (
+    "rbac/part 1/privileges/system ttl merges": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "rbac/privileges/system moves": (
+    "rbac/part 1/privileges/system moves": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "rbac/privileges/system sends": (
+    "rbac/part 1/privileges/system sends": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "rbac/privileges/system fetches": (
+    "rbac/part 1/privileges/system fetches": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "rbac/privileges/system replication queues": (
+    "rbac/part 1/privileges/system replication queues": (
         XFail,
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
-    "/rbac/privileges/row policy/:": (
+    "/rbac/part 1/privileges/row policy/:": (
         XFail,
         "Does not work on clickhouse 22.8 https://github.com/ClickHouse/ClickHouse/issues/40956",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
-    "/rbac/privileges/system restart disk": (
+    "/rbac/part 1/privileges/system restart disk": (
         Skip,
         "No longer supported",
         (lambda test: check_clickhouse_version(">=23.2")(test)),
     ),
-    "privileges/system reload/:/symbols/*": (
+    "part 1/privileges/system reload/:/symbols/*": (
         Skip,
         "SYMBOLS was removed https://github.com/ClickHouse/ClickHouse/pull/51873",
         (lambda test: check_clickhouse_version(">=23.8")(test)),
     ),
-    "/rbac/SQL security": (
+    "/rbac/part 2/SQL security": (
         Skip,
         "SQL security was introduced in 24.2",
         check_clickhouse_version("<24.2"),
     ),
-    "/rbac/SQL security/modify materialized view SQL security/modify sql security on cluster": (
+    "/rbac/part 2/SQL security/modify materialized view SQL security/modify sql security on cluster": (
         Skip,
         "Crashes the server.",
         check_clickhouse_version("<24.6"),
     ),
-    "/rbac/SQL security/joins/Select:PASTE:": (
+    "/rbac/part 2/SQL security/joins/Select:PASTE:": (
         Skip,
         issue_65134,
         check_clickhouse_version(">=24.3") and check_clickhouse_version("<24.5"),
     ),
-    "/rbac/privileges/valid until": (
+    "/rbac/part 1/privileges/valid until": (
         Skip,
         "valid until was introduced in 23.9",
         check_clickhouse_version("<23.9"),
     ),
-    "/rbac/privileges/valid until timezones": (
+    "/rbac/part 1/privileges/valid until timezones": (
         Skip,
         "valid until was introduced in 23.9",
         check_clickhouse_version("<23.9"),
     ),
-    "/rbac/multiple authentication methods": (
+    "/rbac/part 3/multiple authentication methods": (
         Skip,
         "multiple authentication methods were introduced in 24.9",
         check_clickhouse_version("<24.9"),
     ),
-    "/rbac/multiple authentication methods/valid until clause combinatorics": (
+    "/rbac/part 3/multiple authentication methods/valid until clause combinatorics": (
         Skip,
         "multiple authentication methods were introduced in 24.12",
         check_clickhouse_version("<24.12"),
     ),
-    "/rbac/multiple authentication methods/valid until": (
+    "/rbac/part 3/multiple authentication methods/valid until": (
         Skip,
         "multiple authentication methods were introduced in 24.12",
         check_clickhouse_version("<24.12"),
     ),
-    "/rbac/privileges/check table": (
+    "/rbac/part 1/privileges/check table": (
         Skip,
         "check privilege was introduced in 25.1",
         check_clickhouse_version("<25.1"),
     ),
-    "/rbac/SQL security": (
+    "/rbac/part 2/SQL security": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/79951",
         check_clickhouse_version(">=25.5"),
@@ -423,13 +416,18 @@ def regression(
         for node in nodes["clickhouse"]:
             add_rbac_config_file(node=cluster.node(node))
 
-    Feature(run=load("rbac.tests.syntax.feature", "feature"))
-    Feature(run=load("rbac.tests.privileges.feature", "feature"))
-    Feature(run=load("rbac.tests.views.feature", "feature"))
-    Feature(run=load("rbac.tests.sql_security.feature", "feature"))
-    Feature(
-        run=load("rbac.tests.multiple_auth_methods.feature", "feature"),
-    )
+    with Feature("part 1"):
+        Feature(run=load("rbac.tests.syntax.feature", "feature"))
+        Feature(run=load("rbac.tests.privileges.feature", "feature"))
+        Feature(run=load("rbac.tests.views.feature", "feature"))
+
+    with Feature("part 2"):
+        Feature(run=load("rbac.tests.sql_security.feature", "feature"))
+
+    with Feature("part 3"):
+        Feature(
+            run=load("rbac.tests.multiple_auth_methods.feature", "feature"),
+        )
 
 
 if main():
