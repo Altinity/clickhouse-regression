@@ -127,7 +127,7 @@ def finalizeAggregation(self, scenario, short_name, extra_data=None):
         "1.0"
     )
 )
-def feature(self, extra_data=None):
+def feature(self, extra_data=None, aggregate_functions=aggregate_functions):
     """Check aggregate function finalizeAggregation."""
     not_implemented = [
         "quantileDeterministic",
