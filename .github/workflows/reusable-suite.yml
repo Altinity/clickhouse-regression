@@ -72,7 +72,7 @@ on:
         default: ""
 jobs:
   suite:
-    name: ${{ inputs.suite_name }}
+    name: ${{ inputs.suite_name }}${{ inputs.part != '' && format('_{0}', inputs.part) || '' }}
     runs-on: [
       "self-hosted",
       "${{ inputs.runner_arch }}",
