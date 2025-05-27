@@ -72,6 +72,7 @@ on:
         default: ""
 jobs:
   suite:
+    name: ${{ inputs.suite_name }}
     runs-on: [
       "self-hosted",
       "${{ inputs.runner_arch }}",
