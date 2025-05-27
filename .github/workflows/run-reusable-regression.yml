@@ -243,6 +243,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: alter
+      job_name: alter_replace_partition
       timeout_minutes: 300
       storage_path: /replace_partition
       regression_args: '--only "/alter/replace partition/*"'
@@ -263,6 +264,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: alter
+      job_name: alter_attach_partition
       timeout_minutes: 600
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/*"'
@@ -283,6 +285,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: alter
+      job_name: alter_move_partition
       timeout_minutes: 600
       storage_path: /move_partition
       regression_args: '--only "/alter/move partition/*"'
@@ -700,6 +703,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ldap/authentication
+      job_name: ldap_authentication
       timeout_minutes: 180
       artifact_name: ldap-authentication-artifacts
       ref: ${{ inputs.ref }}
@@ -717,6 +721,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ldap/external_user_directory
+      job_name: ldap_external_user_directory
       timeout_minutes: 180
       artifact_name: ldap-external_user_directory-artifacts
       ref: ${{ inputs.ref }}
@@ -734,6 +739,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ldap/role_mapping
+      job_name: ldap_role_mapping
       timeout_minutes: 180
       artifact_name: ldap-role_mapping-artifacts
       ref: ${{ inputs.ref }}
@@ -800,6 +806,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
+      job_name: parquet_minio
       timeout_minutes: 300
       storage_path: /minio
       regression_args: '--storage minio --only "/parquet/minio/*"'
@@ -819,6 +826,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
+      job_name: parquet_aws_s3
       timeout_minutes: 300
       storage_path: /aws_s3
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
@@ -905,6 +913,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_aws
       timeout_minutes: 360
       part: part_1
       storage_path: /aws
@@ -925,6 +934,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_aws
       timeout_minutes: 360
       part: part_2
       storage_path: /aws
@@ -945,6 +955,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_azure
       timeout_minutes: 360
       part: part_1
       storage_path: /azure
@@ -966,6 +977,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_azure
       timeout_minutes: 360
       part: part_2
       storage_path: /azure
@@ -986,6 +998,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_gcs
       timeout_minutes: 360
       part: part_1
       storage_path: /gcs
@@ -1006,6 +1019,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_gcs
       timeout_minutes: 360
       part: part_2
       storage_path: /gcs
@@ -1026,6 +1040,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_minio
       part: part_1
       timeout_minutes: 360
       storage_path: /minio
@@ -1046,6 +1061,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_minio
       part: part_2
       timeout_minutes: 360
       storage_path: /minio
@@ -1066,6 +1082,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
+      job_name: s3_minio
       part: part_3
       timeout_minutes: 360
       storage_path: /minio
@@ -1152,6 +1169,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
+      part: part_3
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1168,6 +1186,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
+      job_name: tiered_storage_aws
       timeout_minutes: 180
       storage_path: /aws
       regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
@@ -1187,6 +1206,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
+      job_name: tiered_storage_gcs
       timeout_minutes: 180
       storage_path: /gcs
       regression_args: '--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
@@ -1206,6 +1226,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
+      job_name: tiered_storage_local
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1222,6 +1243,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
+      job_name: tiered_storage_minio
       timeout_minutes: 180
       storage_path: /minio
       regression_args: '--with-minio'
