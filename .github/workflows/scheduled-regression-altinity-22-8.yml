@@ -20,5 +20,5 @@ jobs:
     with:
       package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
       version: '22.8.15.25'
-      arch: arm6
+      arch: arm64
     secrets: inherit
