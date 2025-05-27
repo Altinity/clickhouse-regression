@@ -66,13 +66,17 @@ on:
         required: false
         type: string
         default: ""
+      job_name:
+        required: false
+        type: string
+        default: ""
       part:
         required: false
         type: string
         default: ""
 jobs:
   suite:
-    name: ${{ inputs.suite_name }}${{ inputs.part != '' && format('_{0}', inputs.part) || '' }}
+    name: ${{ format('{0}{1}', inputs.job_name != '' && inputs.job_name || inputs.suite_name, inputs.part != '' && format('_{0}', inputs.part) || '') }}
     runs-on: [
       "self-hosted",
       "${{ inputs.runner_arch }}",
