@@ -157,7 +157,7 @@ on:
       flags:
         description: "🚩 Flags"
         type: string
-        required: true
+        required: false
         default: "none"
       suite:
         description: "🧪 Test suite to run"
@@ -167,12 +167,12 @@ on:
       artifacts:
         description: "Artifact S3 bucket"
         type: string
-        required: true
+        required: false
         default: public
       output_format:
         description: "📜 Testflows output style."
         type: string
-        required: true
+        required: false
         default: new-fails
       ref:
         description: "Commit SHA to checkout. Default: current (empty string)."
