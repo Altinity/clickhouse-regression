@@ -57,6 +57,7 @@ def check_read_with_predicate_push_down(
             input_format_parquet_filter_push_down="1",
             log_comment=log_comment_with_pruning,
             use_iceberg_metadata_files_cache="0",
+            use_iceberg_partition_pruning="0",
         )
         assert result.output.strip() == "", error()
 
@@ -89,6 +90,7 @@ def check_read_without_predicate_push_down(
             input_format_parquet_filter_push_down="0",
             log_comment=log_comment_without_pruning,
             use_iceberg_metadata_files_cache="0",
+            use_iceberg_partition_pruning="0",
         )
         assert result.output.strip() == "", error()
 
@@ -248,7 +250,7 @@ def check_input_format_parquet_filter_push_down(
             where_clauses = [
                 "string < '0'",
                 "string > 'a'",
-                f"string = 'a'",
+                "string = 'a'",
             ]
 
         check_predicate_pushdown_clauses(
