@@ -238,7 +238,7 @@ def feature(self):
         "ReplicatedSummingMergeTree",
         "ReplicatedVersionedCollapsingMergeTree",
     ]
-    with Pool() as executor:
+    with Pool(4) as executor:
         for engine in engines:
             Scenario(
                 f"{engine} attach UUID",
