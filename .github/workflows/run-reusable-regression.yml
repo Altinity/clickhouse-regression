@@ -140,6 +140,54 @@ on:
       custom_run_name:
         description: '📝 Custom run name (optional)'
         required: false
+  workflow_call:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        required: true
+        type: string
+      version:
+        description: "🎯 Expected version. Example: 23.3.1.64"
+        type: string
+        required: true
+      arch:
+        description: "🏗️ Architecture"
+        type: string
+        required: true
+      flags:
+        description: "🚩 Flags"
+        type: string
+        required: false
+        default: "none"
+      suite:
+        description: "🧪 Test suite to run"
+        type: string
+        required: true
+        default: all
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        required: false
+        default: public
+      output_format:
+        description: "📜 Testflows output style."
+        type: string
+        required: false
+        default: new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        required: false
+        default: ""
+      extra_args:
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
+        type: string
+        required: false
+        default: ""
+      custom_run_name:
+        description: '📝 Custom run name (optional)'
+        type: string
+        required: false
 
 jobs:
   aes_encryption:
@@ -521,7 +569,7 @@ jobs:
 
   example:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
-    uses: ./.github/workflows/reusable-suite-deleting-images.yml
+    uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: example
       timeout_minutes: 180
