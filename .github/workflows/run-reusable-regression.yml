@@ -402,7 +402,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
-      part: part_1
+      part: 1
       timeout_minutes: 180
       storage_path: /no_ssl
       ref: ${{ inputs.ref }}
@@ -420,7 +420,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
-      part: part_2
+      part: 2
       timeout_minutes: 180
       storage_path: /no_ssl
       ref: ${{ inputs.ref }}
@@ -437,8 +437,8 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
-      suite_name: clickhouse_keeper
-      part: part_1
+      suite_name: clickhouse_keeper_ssl
+      part: 1
       timeout_minutes: 180
       storage_path: /ssl
       regression_args: '--ssl'
@@ -457,8 +457,8 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
-      suite_name: clickhouse_keeper
-      part: part_2
+      suite_name: clickhouse_keeper_ssl
+      part: 2
       timeout_minutes: 180
       storage_path: /ssl
       regression_args: '--ssl'
@@ -863,7 +863,7 @@ jobs:
     with:
       suite_name: rbac
       timeout_minutes: 540
-      part: part_1
+      part: 1
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -880,7 +880,7 @@ jobs:
     with:
       suite_name: rbac
       timeout_minutes: 540
-      part: part_2
+      part: 2
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -897,7 +897,7 @@ jobs:
     with:
       suite_name: rbac
       timeout_minutes: 540
-      part: part_3
+      part: 3
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -915,7 +915,7 @@ jobs:
       suite_name: s3
       job_name: s3_aws
       timeout_minutes: 360
-      part: part_1
+      part: 1
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
@@ -936,7 +936,7 @@ jobs:
       suite_name: s3
       job_name: s3_aws
       timeout_minutes: 360
-      part: part_2
+      part: 2
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
@@ -957,7 +957,7 @@ jobs:
       suite_name: s3
       job_name: s3_azure
       timeout_minutes: 360
-      part: part_1
+      part: 1
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
@@ -979,7 +979,7 @@ jobs:
       suite_name: s3
       job_name: s3_azure
       timeout_minutes: 360
-      part: part_2
+      part: 2
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
@@ -1000,7 +1000,7 @@ jobs:
       suite_name: s3
       job_name: s3_gcs
       timeout_minutes: 360
-      part: part_1
+      part: 1
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
@@ -1021,7 +1021,7 @@ jobs:
       suite_name: s3
       job_name: s3_gcs
       timeout_minutes: 360
-      part: part_2
+      part: 2
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
@@ -1041,7 +1041,7 @@ jobs:
     with:
       suite_name: s3
       job_name: s3_minio
-      part: part_1
+      part: 1
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -1062,7 +1062,7 @@ jobs:
     with:
       suite_name: s3
       job_name: s3_minio
-      part: part_2
+      part: 2
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -1083,7 +1083,7 @@ jobs:
     with:
       suite_name: s3
       job_name: s3_minio
-      part: part_3
+      part: 3
       timeout_minutes: 360
       storage_path: /minio
       regression_args: '--storage minio'
@@ -1135,7 +1135,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
-      part: part_1
+      part: 1
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1152,7 +1152,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
-      part: part_2
+      part: 2
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1169,7 +1169,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ssl_server
-      part: part_3
+      part: 3
       timeout_minutes: 360
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
