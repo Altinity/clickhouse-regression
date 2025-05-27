@@ -162,7 +162,7 @@ on:
       suite:
         description: "🧪 Test suite to run"
         type: string
-        required: true
+        required: false
         default: all
       artifacts:
         description: "Artifact S3 bucket"
