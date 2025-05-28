@@ -182,7 +182,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ inputs.artifact_name || format('{0}-artifacts-{1}', env.SUITE, inputs.runner_arch) }}${{ inputs.part }}
+          name: ${{ inputs.artifact_name || format('{0}{1}-artifacts-{2}', inputs.job_name != '' && inputs.job_name || inputs.suite_name, inputs.part != '' && format('_{0}', inputs.part) || '', inputs.runner_arch) }}
           path: ${{ env.artifact_paths }}
 
       - name: ♻️ Cache sync
