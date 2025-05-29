@@ -343,6 +343,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
+      job_name: ontime_benchmark_aws
       suite_executable: benchmark.py
       timeout_minutes: 240
       storage_path: /aws
@@ -364,6 +365,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
+      job_name: ontime_benchmark_gcs
       suite_executable: benchmark.py
       timeout_minutes: 240
       storage_path: /gcs
