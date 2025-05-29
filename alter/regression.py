@@ -222,6 +222,11 @@ ffails = {
         Skip,
         "min_os_cpu_wait_time_ratio_to_throw does not work sometimes, need to check on all versions",
     ),
+    "/alter/attach partition/part level/reset when equal to legacy max level": (
+        Skip,
+        "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
+        check_with_any_sanitizer,
+    ),
 }
 
 

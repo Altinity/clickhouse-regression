@@ -137,7 +137,7 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
 @TestFeature
 @Name("merge")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
-def feature(self, extra_data=None):
+def feature(self, extra_data=None, aggregate_functions=aggregate_functions):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
         "windowFunnel",

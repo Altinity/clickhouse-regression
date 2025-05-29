@@ -35,6 +35,7 @@ import random
 import string
 import pyarrow as pa
 
+random.seed(42)
 
 _PRIMITIVE_TYPES = [
     StringType,
@@ -304,7 +305,7 @@ def datatypes_check(self, minio_root_user, minio_root_password, num_columns):
 
 
 @TestFeature
-@Name("datatypes")
+@Name("nested datatypes")
 def feature(self, minio_root_user, minio_root_password):
     """Check that ClickHouse Iceberg engine supports reading all Iceberg data types."""
     for num_columns in range(1, 1000, 50):
