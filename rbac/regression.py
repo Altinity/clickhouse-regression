@@ -323,8 +323,8 @@ ffails = {
     ),
     "/rbac/part 2/SQL security": (
         Skip,
-        "SQL security was introduced in 24.2",
-        check_clickhouse_version("<24.2"),
+        "SQL security was introduced in 24.2 and https://github.com/ClickHouse/ClickHouse/issues/79951",
+        check_clickhouse_version("<24.2") and check_clickhouse_version(">=25.5"),
     ),
     "/rbac/part 2/SQL security/modify materialized view SQL security/modify sql security on cluster": (
         Skip,
@@ -365,11 +365,6 @@ ffails = {
         Skip,
         "check privilege was introduced in 25.1",
         check_clickhouse_version("<25.1"),
-    ),
-    "/rbac/part 2/SQL security": (
-        Skip,
-        "https://github.com/ClickHouse/ClickHouse/issues/79951",
-        check_clickhouse_version(">=25.5"),
     ),
 }
 
