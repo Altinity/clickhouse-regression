@@ -13,7 +13,6 @@ jobs:
       package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
       version: '22.8.15.25'
       arch: x86
-      suite: example
     secrets: inherit
 
   altinitystable-22-8-arm-zookeeper:
@@ -22,5 +21,4 @@ jobs:
       package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
       version: '22.8.15.25'
       arch: arm64
-      suite: example
     secrets: inherit
