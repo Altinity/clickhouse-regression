@@ -339,7 +339,7 @@ jobs:
     secrets: inherit
 
   benchmark_aws:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
@@ -998,7 +998,7 @@ jobs:
     secrets: inherit
 
   s3_gcs_1:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
