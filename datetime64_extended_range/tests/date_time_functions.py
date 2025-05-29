@@ -775,11 +775,12 @@ def to_time(self):
                             expected = f"1970-01-02 {dt.strftime('%H:%M:%S')}"
                         with And("forming ClickHouse query"):
                             dt_str = dt.strftime("%Y-%m-%d %H:%M:%S")
-                            to_time = (
-                                "toTime"
-                                if check_clickhouse_version("<25.5")(self)
-                                else "toTimeWithFixedDate"
-                            )
+                            # to_time = (
+                            #     "toTime"
+                            #     if check_clickhouse_version("<25.5")(self)
+                            #     else "toTimeWithFixedDate"
+                            # )
+                            to_time = "toTime"
                             query = (
                                 f"SELECT {to_time}(toDateTime64('{dt_str}', 0, '{tz}'))"
                             )

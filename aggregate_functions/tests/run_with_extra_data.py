@@ -7,7 +7,7 @@ from aggregate_functions.tests.steps import *
 def feature(self, table=None):
     """Run chosen aggregate function tests on a table with extra data."""
 
-    with Pool(10) as executor:
+    with Pool() as executor:
         for name in funcs_to_run_with_extra_data:
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")

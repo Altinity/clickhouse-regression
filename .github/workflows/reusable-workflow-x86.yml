@@ -131,9 +131,15 @@ jobs:
           name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  aggregate_functions:
+  aggregate_functions_parts:
     runs-on: [self-hosted, x86, type-cx52, image-x86-app-docker-ce]
     timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        PART: [part_1, part_2, part_3, part_4]
+
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -149,9 +155,10 @@ jobs:
       - name: 🛠️ Setup
         run: .github/setup.sh
 
-      - name: 🧪 Run ${{ env.SUITE }} suite
+      - name: 🧪 Run ${{ env.SUITE }} ${{ matrix.PART }}
         run: python3
               -u ${{ env.SUITE }}/regression.py
+              --only "/aggregate_functions/${{ matrix.PART }}/*" 
               ${{ env.args }} || EXITCODE=$?; 
               .github/add_link_to_logs.sh; 
               exit $EXITCODE
@@ -168,8 +175,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ env.SUITE }}-${{ inputs.artifact_name }}-artifacts
-          path: ${{ env.artifact_paths}}
+          name: ${{ env.SUITE }}-${{ matrix.PART }}-${{ inputs.artifact_name }}-artifacts
+          path: ${{ env.artifact_paths }}
 
   atomic_insert:
     runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]

@@ -9,8 +9,8 @@ from helpers.common import getuid
 @TestScenario
 @Flags(TE)
 def check_part_level_reset(self, engine="MergeTree"):
-    """Check that when attach a part or partition to a MergeTree table,
-    the chunk level will be reseted."""
+    """Check that when attaching a part or partition to a MergeTree table,
+    the chunk level will be reset."""
     node = self.context.node
     source_table = "source_" + getuid()
 
@@ -62,8 +62,8 @@ def check_part_level_reset(self, engine="MergeTree"):
 @TestScenario
 @Flags(TE)
 def check_part_level_reset_replicated(self, engine):
-    """Check that when attach a part or partition to a MergeTree table,
-    the chunk level will be reseted."""
+    """Check that when attaching a part or partition to a MergeTree table,
+    the chunk level will be reset."""
     source_table = "source_" + getuid()
 
     with Given("I create a source table"):

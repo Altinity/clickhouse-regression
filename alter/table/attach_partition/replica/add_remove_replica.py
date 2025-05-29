@@ -83,7 +83,7 @@ def parallel_add_remove_replica_and_attach(
     source_table_engine,
     destination_table_engine,
 ):
-    with Pool(2) as executor:
+    with Pool() as executor:
         Scenario(
             test=attach_partition,
             parallel=True,

@@ -93,6 +93,48 @@ def create_catalog(
                 s3_secret_access_key=s3_secret_access_key,
             )
 
+@TestStep(Given)
+def list_sizes(
+    self,
+    bucket_name: str,
+    prefix: str,
+    s3_endpoint: str,
+    s3_access_key_id: str,
+    s3_secret_access_key: str,
+):
+    """
+    Return a tuple (sizes_dict, total_bytes).
+
+    * sizes_dict  –  {object_key: size_bytes}
+    * total_bytes –  sum of all object sizes under the prefix
+
+    Example call:
+        sizes, total = list_sizes(
+            bucket_name="warehouse",
+            prefix="data/",              # "" for whole bucket
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_user,
+            s3_secret_access_key=minio_pass,
+        )
+    """
+    s3_client = boto3.client(
+        "s3",
+        endpoint_url=s3_endpoint,
+        aws_access_key_id=s3_access_key_id,
+        aws_secret_access_key=s3_secret_access_key,
+    )
+
+    paginator = s3_client.get_paginator("list_objects_v2")
+    sizes = {}
+    total = 0
+
+    for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+        for obj in page.get("Contents", []):
+            sizes[obj["Key"]] = obj["Size"]
+            total += obj["Size"]
+
+    note(f"Found {len(sizes)} objects • {total / 1_048_576:.2f} MiB under {bucket_name}/{prefix}")
+    return sizes, total
 
 @TestStep(Given)
 def create_namespace(self, catalog, namespace):
