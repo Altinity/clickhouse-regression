@@ -23,6 +23,7 @@ columns = [
 
 
 @TestScenario
+@Repeat(5)
 def check_active_path_convert(self, engine="ReplicatedMergeTree"):
     node = self.context.node
     node2 = self.context.node_2
