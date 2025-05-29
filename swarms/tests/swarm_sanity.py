@@ -7,7 +7,7 @@ from iceberg.tests.steps.icebergS3 import (
     read_data_with_icebergS3Cluster_table_function,
 )
 
-import swarms.tests.common as swarm_steps
+import swarms.tests.steps.swarm_steps as swarm_steps
 import swarms.tests.steps.s3_steps as s3_steps
 
 
