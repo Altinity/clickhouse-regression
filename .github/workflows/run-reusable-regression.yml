@@ -24,6 +24,10 @@ on:
           - arm64
         required: true
         default: x86
+      run_s3_suites:
+        description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
       flags:
         description: "🚩 Flags"
         type: choice
@@ -909,7 +913,7 @@ jobs:
     secrets: inherit
 
   s3_aws_1:
-    if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
