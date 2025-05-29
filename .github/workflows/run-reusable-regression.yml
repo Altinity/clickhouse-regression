@@ -24,10 +24,6 @@ on:
           - arm64
         required: true
         default: x86
-      run_s3_suites:
-        description: "Whether to run S3 and Parquet S3 suites"
-        type: boolean
-        default: false
       flags:
         description: "🚩 Flags"
         type: choice
@@ -192,6 +188,10 @@ on:
         description: '📝 Custom run name (optional)'
         type: string
         required: false
+      run_s3_suites:
+        description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
 
 jobs:
   aes_encryption:
