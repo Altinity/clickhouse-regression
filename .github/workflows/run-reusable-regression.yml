@@ -360,7 +360,7 @@ jobs:
     secrets: inherit
 
   benchmark_gcs:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ontime_benchmark
@@ -826,7 +826,7 @@ jobs:
     secrets: inherit
 
   parquet_aws_s3:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
@@ -977,7 +977,7 @@ jobs:
 
   
   s3_azure_2:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_azure' || inputs.suite == 's3_all') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1019,7 +1019,7 @@ jobs:
     secrets: inherit
 
   s3_gcs_2:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1186,7 +1186,7 @@ jobs:
     secrets: inherit 
 
   tiered_storage_aws:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
@@ -1206,7 +1206,7 @@ jobs:
     secrets: inherit
 
   tiered_storage_gcs:
-    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs') }}
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
