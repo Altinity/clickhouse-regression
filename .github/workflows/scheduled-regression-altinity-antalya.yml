@@ -8,21 +8,21 @@ on:
 
 jobs:
   altinitystable-25-2-antalya-x86-with-analyzer-zookeeper:
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.2.2.28788.altinityantalya
       version: '25.2.2.28788'
       extra_args: '--with-analyzer'
-      artifact_name: altinityedge-25-2-antalya-x86-with-analyzer-zookeeper
       run_s3_suites: true
+      arch: x86
     secrets: inherit
 
   altinitystable-25-2-antalya-arm-with-analyzer-zookeeper:
-    uses: ./.github/workflows/reusable-workflow-arm.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.2.2.28788.altinityantalya
       version: '25.2.2.28788'
       extra_args: '--with-analyzer'
-      artifact_name: altinityedge-25-2-antalya-arm-with-analyzer-zookeeper
       run_s3_suites: true
+      arch: arm64
     secrets: inherit
