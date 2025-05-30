@@ -395,6 +395,7 @@ def minio_regression(
             **cluster_args,
             nodes=nodes,
             environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
+            configs_dir=current_dir(),
         )
     self.context.cluster = cluster
 
