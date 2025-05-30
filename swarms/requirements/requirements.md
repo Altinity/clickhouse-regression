@@ -16,7 +16,7 @@
     * 2.3 [Authentication Using Secret](#authentication-using-secret)
         * 2.3.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication](#rqsrs-044swarmclusterdiscoveryauthentication)
         * 2.3.2 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey](#rqsrs-044swarmclusterdiscoveryauthenticationwrongkey)
-        * 2.3.3 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey](#rqsrs-044swarmclusterdiscoveryauthenticationmultiplekey)
+        * 2.3.3 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys](#rqsrs-044swarmclusterdiscoveryauthenticationmultiplekeys)
     * 2.4 [Query Processing](#query-processing)
         * 2.4.1 [RQ.SRS-044.Swarm.QueryProcessing.Planning](#rqsrs-044swarmqueryprocessingplanning)
         * 2.4.2 [RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution](#rqsrs-044swarmqueryprocessingpartialqueriesexecution)
@@ -181,7 +181,7 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
 
-#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey
+#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.

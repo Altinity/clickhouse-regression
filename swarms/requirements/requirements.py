@@ -209,8 +209,8 @@ RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_WrongKey = Requirement(
     num='2.3.2'
 )
 
-RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKey = Requirement(
-    name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey',
+RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKeys = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys',
     version='1.0',
     priority=None,
     group=None,
@@ -748,7 +748,7 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         Heading(name='Authentication Using Secret', level=2, num='2.3'),
         Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication', level=3, num='2.3.1'),
         Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey', level=3, num='2.3.2'),
-        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey', level=3, num='2.3.3'),
+        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys', level=3, num='2.3.3'),
         Heading(name='Query Processing', level=2, num='2.4'),
         Heading(name='RQ.SRS-044.Swarm.QueryProcessing.Planning', level=3, num='2.4.1'),
         Heading(name='RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution', level=3, num='2.4.2'),
@@ -795,7 +795,7 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePaths,
         RQ_SRS_044_Swarm_ClusterDiscovery_Authentication,
         RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_WrongKey,
-        RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKey,
+        RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKeys,
         RQ_SRS_044_Swarm_QueryProcessing_Planning,
         RQ_SRS_044_Swarm_QueryProcessing_PartialQueriesExecution,
         RQ_SRS_044_Swarm_QueryProcessing_RetryMechanism_NodeFailure,
@@ -842,7 +842,7 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
     * 2.3 [Authentication Using Secret](#authentication-using-secret)
         * 2.3.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication](#rqsrs-044swarmclusterdiscoveryauthentication)
         * 2.3.2 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey](#rqsrs-044swarmclusterdiscoveryauthenticationwrongkey)
-        * 2.3.3 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey](#rqsrs-044swarmclusterdiscoveryauthenticationmultiplekey)
+        * 2.3.3 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys](#rqsrs-044swarmclusterdiscoveryauthenticationmultiplekeys)
     * 2.4 [Query Processing](#query-processing)
         * 2.4.1 [RQ.SRS-044.Swarm.QueryProcessing.Planning](#rqsrs-044swarmqueryprocessingplanning)
         * 2.4.2 [RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution](#rqsrs-044swarmqueryprocessingpartialqueriesexecution)
@@ -1007,7 +1007,7 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
 
-#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey
+#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.
