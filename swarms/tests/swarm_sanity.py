@@ -6,6 +6,7 @@ from iceberg.tests.steps.icebergS3 import (
     read_data_with_icebergS3_table_function,
     read_data_with_icebergS3Cluster_table_function,
 )
+from swarms.requirements.requirements import *
 
 import swarms.tests.steps.swarm_steps as swarm_steps
 import swarms.tests.steps.s3_steps as s3_steps
@@ -15,6 +16,11 @@ EXPECTED_DATA = "('Alice',195.23,20),('Bob',123.45,30),('Charlie',67.89,40),('Da
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_044_Swarm_NodeRegistration("1.0"),
+    RQ_SRS_044_Swarm_ClusterDiscovery_Path("1.0"),
+    RQ_SRS_044_Swarm_ClusterDiscovery_Authentication("1.0"),
+)
 def create_swarm_cluster(self):
     """Swarm cluster creation check."""
     with Given("create swarm cluster by adding first node as observer"):
@@ -56,6 +62,7 @@ def create_swarm_cluster(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_044_Swarm_ClusterDiscovery_Path("1.0"))
 def cluster_with_only_one_observer_node(
     self, minio_root_user, minio_root_password, node=None
 ):
@@ -176,6 +183,9 @@ def cluster_with_one_observer_node_and_one_swarm_node(
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_044_Swarm_NodeDeregistration("1.0"),
+)
 def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=None):
     """
     Test the scaling capabilities of a swarm cluster by:
