@@ -163,9 +163,7 @@ def check_clickhouse_version(version):
             return False
 
         version_list = version.translate({ord(i): None for i in "<>="}).split(".")
-        debug(f"version_list: {version_list}")
         clickhouse_version_list = test.context.clickhouse_version.split(".")
-        debug(f"clickhouse_version_list: {clickhouse_version_list}")
         for index, i in enumerate(clickhouse_version_list):
             if not i.isnumeric():
                 break
