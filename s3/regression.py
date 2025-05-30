@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import Cluster, create_cluster
 from helpers.common import experimental_analyzer
 from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 from s3.tests.common import *
