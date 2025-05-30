@@ -39,56 +39,56 @@ issue_64745 = "https://github.com/ClickHouse/ClickHouse/issues/64745"
 issue_69192 = "https://github.com/ClickHouse/ClickHouse/issues/69192"
 
 xfails = {
-    "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
-    "/aggregate functions/singleValueOrNull/Array:": [(Fail, issue_43140)],
-    "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, issue_43140)],
-    "/aggregate functions/welchTTest/datatypes/permutations/float64:": [
+    "/aggregate functions/part */singleValueOrNull/Map:": [(Fail, issue_43140)],
+    "/aggregate functions/part */singleValueOrNull/Array:": [(Fail, issue_43140)],
+    "/aggregate functions/part */singleValueOrNull/Tuple:": [(Fail, issue_43140)],
+    "/aggregate functions/part */welchTTest/datatypes/permutations/float64:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/welchTTest/datatypes/permutations/nullable_float64_:": [
+    "/aggregate functions/part */welchTTest/datatypes/permutations/nullable_float64_:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/welchTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
+    "/aggregate functions/part */welchTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/welchTTest/datatypes/permutations/lowcardinality_float64_:": [
+    "/aggregate functions/part */welchTTest/datatypes/permutations/lowcardinality_float64_:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/studentTTest/datatypes/permutations/float64:": [
+    "/aggregate functions/part */studentTTest/datatypes/permutations/float64:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/studentTTest/datatypes/permutations/nullable_float64_:": [
+    "/aggregate functions/part */studentTTest/datatypes/permutations/nullable_float64_:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/studentTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
+    "/aggregate functions/part */studentTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/studentTTest/datatypes/permutations/lowcardinality_float64_:": [
+    "/aggregate functions/part */studentTTest/datatypes/permutations/lowcardinality_float64_:": [
         (Fail, *issue_44511)
     ],
-    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/date:": [
+    "/aggregate functions/part */quantileTDigestWeighted/datatypes/permutations/date:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
-    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
+    "/aggregate functions/part */quantileTDigestWeighted/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
-    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/date:": [
+    "/aggregate functions/part */state/quantileTDigestWeightedState/datatypes/permutations/date:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
-    "/aggregate functions/state/quantileTDigestWeightedState/datatypes/permutations/:_date_:": [
+    "/aggregate functions/part */state/quantileTDigestWeightedState/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
-    "/aggregate functions/state/topKWeightedState/datatypes/permutations/:": [
+    "/aggregate functions/part */state/topKWeightedState/datatypes/permutations/:": [
         (Fail, issue_55997)
     ],
-    "/aggregate functions/state/maxIntersectionsState/:": [
+    "/aggregate functions/part */state/maxIntersectionsState/:": [
         (
             Fail,
             "Another value on 22.8.13.22; needs to be investigated",
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsPositionState/:": [
+    "/aggregate functions/part */state/maxIntersectionsPositionState/:": [
         (
             Fail,
             "Another value on 22.8.13.22; needs to be investigated",
@@ -96,7 +96,7 @@ xfails = {
         )
     ],
     # 23.2
-    "/aggregate functions/state/singleValueOrNullState/:": [
+    "/aggregate functions/part */state/singleValueOrNullState/:": [
         (
             Fail,
             issue_47142,
@@ -104,387 +104,387 @@ xfails = {
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
         )
     ],
-    "/aggregate functions/:/quantilesGK:/:": [
+    "/aggregate functions/part */:/quantilesGK:/:": [
         (
             Fail,
             issue_57683,
         )
     ],
-    "/aggregate functions/merge/quantileGKMerge/*": [
+    "/aggregate functions/part */merge/quantileGKMerge/*": [
         (
             Fail,
             "Need to investigate",
         )
     ],
-    "/aggregate functions/sumMapFiltered/inf, -inf, nan/*": [
+    "/aggregate functions/part */sumMapFiltered/inf, -inf, nan/*": [
         (
             Fail,
             issue_58741,
             check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
         )
     ],
-    "/aggregate functions/sumMapFilteredWithOverflow/inf, -inf, nan/*": [
+    "/aggregate functions/part */sumMapFilteredWithOverflow/inf, -inf, nan/*": [
         (
             Fail,
             issue_58741,
             check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
         )
     ],
-    "/aggregate functions/simpleLinearRegression/*": [
+    "/aggregate functions/part */simpleLinearRegression/*": [
         (
             Fail,
             "need to investigate on aarch",
             check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
         )
     ],
-    "/aggregate functions/:/simpleLinearRegression*/*": [
+    "/aggregate functions/part */:/simpleLinearRegression*/*": [
         (
             Fail,
             "need to investigate on aarch",
             check_clickhouse_version(">=23.11") and check_current_cpu("aarch64"),
         )
     ],
-    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,inf/*": [
+    "/aggregate functions/part */state/corrStableState/inf, -inf, nan/nan,inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/corrStableState/inf, -inf, nan/nan,-inf/*": [
+    "/aggregate functions/part */state/corrStableState/inf, -inf, nan/nan,-inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,inf/*": [
+    "/aggregate functions/part */state/covarPopStableState/inf, -inf, nan/nan,inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/covarPopStableState/inf, -inf, nan/nan,-inf/*": [
+    "/aggregate functions/part */state/covarPopStableState/inf, -inf, nan/nan,-inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,inf/*": [
+    "/aggregate functions/part */state/covarSampStableState/inf, -inf, nan/nan,inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
+    "/aggregate functions/part */state/covarSampStableState/inf, -inf, nan/nan,-inf/*": [
         (Fail, "different state representation of nan", check_current_cpu("x86_64"))
     ],
-    "/aggregate functions/merge/welchTTestMerge/*": [
+    "/aggregate functions/part */merge/welchTTestMerge/*": [
         (
             Fail,
             "Error in function boost::math::students_t_distribution<double>",
             check_clickhouse_version("<22.9"),
         )
     ],
-    "/aggregate functions/finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": [
+    "/aggregate functions/part */finalizeAggregation/welchTTest_finalizeAggregation_Merge/*": [
         (
             Fail,
             "Error in function boost::math::students_t_distribution<double>",
             check_clickhouse_version("<22.9"),
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/NULL value handling/*": [
+    "/aggregate functions/part */state/sequenceNextNodeState/NULL value handling/*": [
         (
             Fail,
             "need to investigate",
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/sequenceNextNodeState/single NULL value/*": [
+    "/aggregate functions/part */state/sequenceNextNodeState/single NULL value/*": [
         (
             Fail,
             "need to investigate",
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/retentionState/NULL value handling/*": [
+    "/aggregate functions/part */state/retentionState/NULL value handling/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/retentionState/single NULL value/*": [
+    "/aggregate functions/part */state/retentionState/single NULL value/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/sequenceCountState/NULL value handling/*": [
+    "/aggregate functions/part */state/sequenceCountState/NULL value handling/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/:/studentTTest*Merge/*": [
+    "/aggregate functions/part */:/studentTTest*Merge/*": [
         (
             Fail,
             issue_41176,
             check_clickhouse_version("<23.3"),
         )
     ],
-    "/aggregate functions/state/windowFunnelState/NULL value handling/*": [
+    "/aggregate functions/part */state/windowFunnelState/NULL value handling/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/windowFunnelState/single NULL value/*": [
+    "/aggregate functions/part */state/windowFunnelState/single NULL value/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/state/sequenceMatchState/NULL value handling/*": [
+    "/aggregate functions/part */state/sequenceMatchState/NULL value handling/*": [
         (
             Fail,
             issue_57801,
             check_clickhouse_version("<23"),
         )
     ],
-    "/aggregate functions/sumMapFiltered/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */sumMapFiltered/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/sumMapFilteredState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/sumMapFilteredState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/sumMapFilteredWithOverflow/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */sumMapFilteredWithOverflow/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/sumMapFilteredWithOverflowState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/sumMapFilteredWithOverflowState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/sumMapWithOverflow/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */sumMapWithOverflow/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/sumMapWithOverflowState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/sumMapWithOverflowState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/sumMappedArrays/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */sumMappedArrays/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/sumMappedArraysState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/sumMappedArraysState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/sumMap_alias/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */sumMap_alias/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/sumMap_aliasState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/sumMap_aliasState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/maxMappedArrays/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */maxMappedArrays/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/maxMappedArraysState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/maxMap_alias/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */maxMap_alias/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/maxMap_aliasState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/minMappedArrays/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */minMappedArrays/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/minMappedArraysState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/minMap_alias/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */minMap_alias/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
+    "/aggregate functions/part */state/minMap_aliasState/datatypes/permutations/*LowCardinality*": [
         (
             Fail,
             issue_41057,
             check_clickhouse_version("<22.6"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+    "/aggregate functions/part */state/maxIntersectionsPositionState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+    "/aggregate functions/part */state/maxIntersectionsPositionState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
+    "/aggregate functions/part */state/maxIntersectionsState/datatypes/permutations/Nullable（Float32）,Nullable（Float32）/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
+    "/aggregate functions/part */state/maxIntersectionsState/datatypes/permutations/LowCardinality（Float32）,LowCardinality（Float32）/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
+    "/aggregate functions/part */state/maxIntersectionsState/datatypes/permutations/Float32,Float32/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
+    "/aggregate functions/part */state/maxIntersectionsPositionState/datatypes/permutations/Float32,Float32/*": [
         (
             Fail,
             "Different intermediate state representation of zero",
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/mannWhitneyUTest/*": [
+    "/aggregate functions/part */mannWhitneyUTest/*": [
         (
             Fail,
             issue_69192,
             check_clickhouse_version(">=24.9"),
         )
     ],
-    "/aggregate functions/merge/mannWhitneyUTestMerge/*": [
+    "/aggregate functions/part */merge/mannWhitneyUTestMerge/*": [
         (
             Fail,
             issue_69192,
             check_clickhouse_version(">=24.9"),
         )
     ],
-    "/aggregate functions/finalizeAggregation/mannWhitneyUTest_finalizeAggregation_Merge/*": [
+    "/aggregate functions/part */finalizeAggregation/mannWhitneyUTest_finalizeAggregation_Merge/*": [
         (
             Fail,
             issue_69192,
             check_clickhouse_version(">=24.9"),
         )
     ],
-    "/aggregate functions/function_list/untested function distinctJSONPathsAndTypes": [
+    "/aggregate functions/part */function_list/untested function distinctJSONPathsAndTypes": [
         (
             Fail,
             "Tests are not implemented for distinctJSONPathsAndTypes function.",
             check_clickhouse_version(">=24.9"),
         ),
     ],
-    "/aggregate functions/function_list/untested function distinctJSONPaths": [
+    "/aggregate functions/part */function_list/untested function distinctJSONPaths": [
         (
             Fail,
             "Tests are not implemented for distinctJSONPaths function.",
             check_clickhouse_version(">=24.9"),
         ),
     ],
-    "/aggregate functions/function_list/untested function distinctDynamicTypes": [
+    "/aggregate functions/part */function_list/untested function distinctDynamicTypes": [
         (
             Fail,
             "Tests are not implemented for distinctDynamicTypes function.",
             check_clickhouse_version(">=24.9"),
         ),
     ],
-    "/aggregate functions/function_list/untested function estimateCompressionRatio": [
+    "/aggregate functions/part */function_list/untested function estimateCompressionRatio": [
         (
             Fail,
             "Tests are not implemented for estimateCompressionRatio function.",
             check_clickhouse_version(">=25.3"),
         ),
     ],
-    "/aggregate functions/deltaSumTimestamp/*": [
+    "/aggregate functions/part */deltaSumTimestamp/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/72189",
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/state/deltaSumTimestampState/*": [
+    "/aggregate functions/part */state/deltaSumTimestampState/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/72189",
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/finalizeAggregation/deltaSumTimestamp_finalizeAggregation_Merge/*": [
+    "/aggregate functions/part */finalizeAggregation/deltaSumTimestamp_finalizeAggregation_Merge/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/72189",
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/merge/deltaSumTimestampMerge/*": [
+    "/aggregate functions/part */merge/deltaSumTimestampMerge/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/72189",
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/state/*": [
+    "/aggregate functions/part */state/*": [
         (
             Fail,
             "Not deterministic, need to investigate",
@@ -495,243 +495,243 @@ xfails = {
 
 
 ffails = {
-    "/aggregate functions/window_functions/ntile": (
+    "/aggregate functions/part */window_functions/ntile": (
         Skip,
         "ntile works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/window_functions/nonNegativeDerivative": (
+    "/aggregate functions/part */window_functions/nonNegativeDerivative": (
         Skip,
         "nonNegativeDerivative was introduced in 22.6",
         check_clickhouse_version("<22.6"),
     ),
-    "/aggregate functions/window_functions/nth value": (
+    "/aggregate functions/part */window_functions/nth value": (
         Skip,
         "nth value was introduced in 22.5",
         check_clickhouse_version("<22.5"),
     ),
-    "/aggregate functions/analysisOfVariance": (
+    "/aggregate functions/part */analysisOfVariance": (
         Skip,
         "analysisOfVariance works from 22.10",
         check_clickhouse_version("<=22.9"),
     ),
-    "/aggregate functions/:/analysisOfVariance:": (
+    "/aggregate functions/part */:/analysisOfVariance:": (
         Skip,
         "analysisOfVariance works from 22.10",
         check_clickhouse_version("<=22.9"),
     ),
-    "/aggregate functions/corrMatrix": (
+    "/aggregate functions/part */corrMatrix": (
         Skip,
         "corrMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/corrMatrix:": (
+    "/aggregate functions/part */:/corrMatrix:": (
         Skip,
         "corrMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/covarSampMatrix": (
+    "/aggregate functions/part */covarSampMatrix": (
         Skip,
         "covarSampMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/covarSampMatrix:": (
+    "/aggregate functions/part */:/covarSampMatrix:": (
         Skip,
         "covarSampMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/covarPopMatrix": (
+    "/aggregate functions/part */covarPopMatrix": (
         Skip,
         "covarPopMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/:/covarPopMatrix:": (
+    "/aggregate functions/part */:/covarPopMatrix:": (
         Skip,
         "covarPopMatrix works from 23.2",
         check_clickhouse_version("<=23.1"),
     ),
-    "/aggregate functions/groupArrayLast": (
+    "/aggregate functions/part */groupArrayLast": (
         Skip,
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/:/groupArrayLast:": (
+    "/aggregate functions/part */:/groupArrayLast:": (
         Skip,
         "groupArrayLast works from 23",
         check_clickhouse_version("<23"),
     ),
-    "/aggregate functions/groupArrayIntersect": (
+    "/aggregate functions/part */groupArrayIntersect": (
         Skip,
         "groupArrayIntersect works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/:/*groupArrayIntersect*": (
+    "/aggregate functions/part */:/*groupArrayIntersect*": (
         Skip,
         "groupArrayIntersect works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/groupArraySorted": (
+    "/aggregate functions/part */groupArraySorted": (
         Skip,
         "groupArraySorted works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/:/*groupArraySorted*": (
+    "/aggregate functions/part */:/*groupArraySorted*": (
         Skip,
         "groupArraySorted works from 24.2",
         check_clickhouse_version("<=24.1"),
     ),
-    "/aggregate functions/kolmogorovSmirnovTest": (
+    "/aggregate functions/part */kolmogorovSmirnovTest": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/kolmogorovSmirnovTest:": (
+    "/aggregate functions/part */:/kolmogorovSmirnovTest:": (
         Skip,
         "kolmogorovSmirnovTest works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/quantileGK": (
+    "/aggregate functions/part */quantileGK": (
         Skip,
         "quantileGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/quantileGK:": (
+    "/aggregate functions/part */:/quantileGK:": (
         Skip,
         "quantileGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/quantilesGK": (
+    "/aggregate functions/part */quantilesGK": (
         Skip,
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/:/quantilesGK:": (
+    "/aggregate functions/part */:/quantilesGK:": (
         Skip,
         "quantilesGK works from 23.4",
         check_clickhouse_version("<23.4"),
     ),
-    "/aggregate functions/largestTriangleThreeBuckets": (
+    "/aggregate functions/part */largestTriangleThreeBuckets": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/:/largestTriangleThreeBuckets*": (
+    "/aggregate functions/part */:/largestTriangleThreeBuckets*": (
         Skip,
         "largestTriangleThreeBuckets works from 23.10",
         check_clickhouse_version("<23.10"),
     ),
-    "/aggregate functions/first_value_respect_nulls": (
+    "/aggregate functions/part */first_value_respect_nulls": (
         Skip,
         "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/:/first_value_respect_nulls*": (
+    "/aggregate functions/part */:/first_value_respect_nulls*": (
         Skip,
         "first_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/last_value_respect_nulls": (
+    "/aggregate functions/part */last_value_respect_nulls": (
         Skip,
         "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/:/last_value_respect_nulls*": (
+    "/aggregate functions/part */:/last_value_respect_nulls*": (
         Skip,
         "last_value_respect_nulls works from 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/aggregate functions/flameGraph": (
+    "/aggregate functions/part */flameGraph": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
     ),
-    "/aggregate functions/:/flameGraph*": (
+    "/aggregate functions/part */:/flameGraph*": (
         Skip,
         "flameGraph works from 23.8",
         check_clickhouse_version("<23.8"),
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/float64:": (
+    "/aggregate functions/part */state/welchTTestState/datatypes/permutations/float64:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/nullable_float64_:": (
+    "/aggregate functions/part */state/welchTTestState/datatypes/permutations/nullable_float64_:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:": (
+    "/aggregate functions/part */state/welchTTestState/datatypes/permutations/lowcardinality_nullable_float64__:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/state/welchTTestState/datatypes/permutations/lowcardinality_float64_:": (
+    "/aggregate functions/part */state/welchTTestState/datatypes/permutations/lowcardinality_float64_:": (
         Skip,
         *issue_44511,
     ),
-    "/aggregate functions/:/sumMapFiltered*/inf, -inf, nan": (
+    "/aggregate functions/part */:/sumMapFiltered*/inf, -inf, nan": (
         Skip,
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/:/sumMapFilteredWithOverflow*/inf, -inf, nan": (
+    "/aggregate functions/part */:/sumMapFilteredWithOverflow*/inf, -inf, nan": (
         Skip,
         issue_58741,
         check_clickhouse_version(">=23.11") and check_clickhouse_version("<24"),
     ),
-    "/aggregate functions/largestTriangleThreeBuckets/inf, -inf, nan": (
+    "/aggregate functions/part */largestTriangleThreeBuckets/inf, -inf, nan": (
         Skip,
         issue_64745,
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/state/largestTriangleThreeBucketsState/inf, -inf, nan": (
+    "/aggregate functions/part */state/largestTriangleThreeBucketsState/inf, -inf, nan": (
         Skip,
         issue_64745,
         check_clickhouse_version(">=23.11"),
     ),
-    "/aggregate functions/approx_top_k": (
+    "/aggregate functions/part */approx_top_k": (
         Skip,
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/:/*approx_top_k*": (
+    "/aggregate functions/part */:/*approx_top_k*": (
         Skip,
         "approx_top_k works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/approx_top_sum": (
+    "/aggregate functions/part */approx_top_sum": (
         Skip,
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/:/*approx_top_sum*": (
+    "/aggregate functions/part */:/*approx_top_sum*": (
         Skip,
         "approx_top_sum works from 24.3",
         check_clickhouse_version("<24.3"),
     ),
-    "/aggregate functions/groupConcat": (
+    "/aggregate functions/part */groupConcat": (
         Skip,
         "groupConcat was introduced in 24.7",
         check_clickhouse_version("<24.7"),
     ),
-    "/aggregate functions/:/*groupConcat*": (
+    "/aggregate functions/part */:/*groupConcat*": (
         Skip,
         "groupConcat was introduced in 24.7",
         check_clickhouse_version("<24.7"),
     ),
-    "/aggregate functions/function_list/untested function quantilesExactWeightedInterpolated": (
+    "/aggregate functions/part */function_list/untested function quantilesExactWeightedInterpolated": (
         Skip,
         "quantilesExactWeightedInterpolated test is not implemented",
         check_clickhouse_version(">=24.10"),
     ),
-    "/aggregate functions/function_list/untested function quantileExactWeightedInterpolated": (
+    "/aggregate functions/part */function_list/untested function quantileExactWeightedInterpolated": (
         Skip,
         "quantileExactWeightedInterpolated test is not implemented",
         check_clickhouse_version(">=24.10"),
     ),
-    "/aggregate functions/:/*sequenceMatchEvents*": (
+    "/aggregate functions/part */:/*sequenceMatchEvents*": (
         Skip,
         "sequenceMatchEvents was introduced in 25.1",
         check_clickhouse_version("<25.1"),
     ),
-    "/aggregate functions/sequenceMatchEvents": (
+    "/aggregate functions/part */sequenceMatchEvents": (
         Skip,
         "sequenceMatchEvents was introduced in 25.1",
         check_clickhouse_version("<25.1"),
@@ -804,46 +804,51 @@ def regression(
                 max_os_cpu_wait_time_ratio_to_throw=20,
             )
 
-    Feature(run=load("aggregate_functions.tests.function_list", "feature"))
+    with Feature("part 1"):
+        Feature(run=load("aggregate_functions.tests.function_list", "feature"))
+        with Pool() as executor:
+            for name in [
+                name for name in aggregate_functions if name not in window_functions
+            ]:
+                try:
+                    scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+                except ModuleNotFoundError:
+                    with Scenario(f"{name}"):
+                        skip(reason=f"{name} test is not implemented")
+                    continue
 
-    with Pool(10) as executor:
-        for name in [
-            name for name in aggregate_functions if name not in window_functions
-        ]:
-            try:
-                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
-            except ModuleNotFoundError:
-                with Scenario(f"{name}"):
-                    skip(reason=f"{name} test is not implemented")
-                continue
+                Scenario(test=scenario, parallel=True, executor=executor)()
 
-            Scenario(test=scenario, parallel=True, executor=executor)()
+            join()
 
-        join()
-
-    Feature(run=load("aggregate_functions.tests.state", "feature"))
-
-    with Pool(5) as executor:
-        Feature(
-            test=load("aggregate_functions.tests.merge", "feature"),
-            parallel=True,
-            executor=executor,
-        )()
-        Feature(
-            test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
-            parallel=True,
-            executor=executor,
-        )()
-        Feature(
-            test=load("aggregate_functions.tests.window_functions", "feature"),
-            parallel=True,
-            executor=executor,
-        )()
-        join()
-
-    Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(
-        table=self.context.table_extra_data
-    )
+    with Feature("part 2"):
+        with Pool() as executor:
+            Feature(
+                test=load("aggregate_functions.tests.state", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
+            Feature(
+                test=load("aggregate_functions.tests.merge", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
+            Feature(
+                test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
+            Feature(
+                test=load("aggregate_functions.tests.window_functions", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
+            Feature(
+                test=load("aggregate_functions.tests.run_with_extra_data", "feature"),
+                parallel=True,
+                executor=executor,
+            )(table=self.context.table_extra_data)
+            join()
 
 
 if main():
