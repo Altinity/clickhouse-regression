@@ -82,24 +82,24 @@ xfails = {
             "Replacing partition when two tables have different structures is expected to fail",
         )
     ],
-    "/alter/attach partition/temporary table/*": [
+    "/alter/attach partition/part 1/temporary table/*": [
         (
             Error,
             "Temporary tables can only be created with ENGINE = Memory, not MergeTree before 23.3.",
             check_clickhouse_version("<23.3"),
         )
     ],
-    "/alter/attach partition/partition key datetime/*": [
+    "/alter/attach partition/part 1/partition key datetime/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24.2"))
     ],
-    "/alter/attach partition/storage/attach partition on tiered and default storages/*": [
+    "/alter/attach partition/part 1/storage/attach partition on tiered and default storages/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/62764",
             check_clickhouse_version(">=24.3"),
         )
     ],
-    "/alter/attach partition/storage/attach partition on minio and default disks/*": [
+    "/alter/attach partition/part 1/storage/attach partition on minio and default disks/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/62764",
@@ -120,13 +120,13 @@ xfails = {
             check_clickhouse_version(">=24.3"),
         )
     ],
-    "/alter/attach partition/part level/merge increment/*": [
-        (
-            Fail,
-            "Need to investigate",
-        )
-    ],
-    "/alter/attach partition/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
+    # "/alter/attach partition/part 1/part level/merge increment/*": [
+    #     (
+    #         Fail,
+    #         "Need to investigate",
+    #     )
+    # ],
+    "/alter/attach partition/part 1/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
         (
             Fail,
             "Need to investigate",
@@ -138,60 +138,54 @@ xfails = {
             "Bug when replacing partitions concurrently",
         )
     ],
-    "/alter/attach partition/conditions/indices/*": [
+    "/alter/attach partition/part 1/conditions/indices/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/54896",
             check_clickhouse_version("<23.3"),
         )
     ],
-    "/alter/attach partition/conditions/projections/*": [
+    "/alter/attach partition/part 1/conditions/projections/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/54896",
             check_clickhouse_version("<23.3"),
         )
     ],
-    "attach partition/conditions/primary key/:": [
+    "attach partition/part 1/conditions/primary key/:": [
         (
             Fail,
             "Bug fixed in 23 https://github.com/ClickHouse/ClickHouse/issues/41783",
             check_clickhouse_version("<23"),
         )
     ],
-    "/alter/attach partition/part level/too high level/:/I check that part was not attached by checking the parts state": [
+    "/alter/attach partition/part 1/part level/too high level/:/I check that part was not attached by checking the parts state": [
         (
             Fail,
             "Need to investigate why part name stays the same",
             check_clickhouse_version("<22.12"),
         )
     ],
-    "/alter/attach partition/operations on attached partitions/multiple operations/*": [
+    "/alter/attach partition/part 1/operations on attached partitions/multiple operations/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/68052",
             check_clickhouse_version("<24.3.6"),
         )
     ],
-    "/alter/attach partition/partition key/attach partition from with id/*": [
+    "/alter/attach partition/part 1/partition key/attach partition from with id/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/pull/68052",
             check_clickhouse_version("<24.3.6"),
         )
     ],
-    "/alter/attach partition/part level/reset when equal to legacy max level/*": [
+    "/alter/attach partition/part 1/part level/reset when equal to legacy max level/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/69001",
             check_clickhouse_version(">24.8"),
         )
-    ],
-    "/alter/attach partition/partition key/attach partition from with id/*": [
-        (Fail, "Need to investigate")
-    ],
-    "/alter/attach partition/partition key/attach partition from without id/*": [
-        (Fail, "Need to investigate")
     ],
 }
 
@@ -203,7 +197,7 @@ ffails = {
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/alter/attach partition/part level/part levels user example/*": (
+    "/alter/attach partition/part 1/part level/part levels user example/*": (
         Skip,
         "Crashes before 24.3",
         check_clickhouse_version("<24.3"),
@@ -213,7 +207,7 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/62459",
         check_clickhouse_version("<24.4"),
     ),
-    "/alter/attach partition/part level/part levels user example": (
+    "/alter/attach partition/part 1/part level/part levels user example": (
         Skip,
         "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
         check_with_any_sanitizer,
@@ -222,7 +216,7 @@ ffails = {
         Skip,
         "min_os_cpu_wait_time_ratio_to_throw does not work sometimes, need to check on all versions",
     ),
-    "/alter/attach partition/part level/reset when equal to legacy max level": (
+    "/alter/attach partition/part 1/part level/reset when equal to legacy max level": (
         Skip,
         "Crashes with sanitizers https://github.com/ClickHouse/ClickHouse/issues/70844",
         check_with_any_sanitizer,
