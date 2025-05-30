@@ -14,8 +14,8 @@ on:
       version:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
-        required: false
-        default: ""
+        required: true
+        default: 24.3.12.76.altinitystable
       flags:
         description: "🚩 Flags"
         type: choice
@@ -150,6 +150,7 @@ env:
     --no-colors
     --local
     --clickhouse ${{ inputs.package }}
+    --clickhouse-version ${{ inputs.version }}
     --collect-service-logs
     --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
