@@ -57,7 +57,7 @@
 
 ## Introduction
 
-This document describes the requirements for the [ClickHouse] Swarm Cluster functionality, which enables automatic cluster discovery and management of [ClickHouse] nodes. The swarm cluster architecture consists of two main components:
+This document describes the requirements for the [Ability Antalya] Swarm Cluster functionality, which enables automatic cluster discovery and management of ClickHouse nodes. The swarm cluster architecture consists of two main components:
 
 1. An `initiator cluster` that accepts and plans queries. The queries are load-balanced using a classic network load-balancer.
 2. A `swarm cluster` that is used to parallelize query execution. 
@@ -100,7 +100,7 @@ contains multiple discovery sections.
 #### RQ.SRS-044.Swarm.NodeDeregistration
 version: 1.0  
 
-[ClickHouse] SHALL support node deregistration through removal of `<clickhouse><remote_servers><swarm>` section in configuration files. Removing node from the swarm cluster does not require node restart.
+[ClickHouse] SHALL support node deregistration through removal of `<clickhouse><remote_servers><swarm><discovery>` section in swarm node configuration files. Removing node from the swarm cluster does not require initiator node restart.
 
 Example:
 ```xml
@@ -126,7 +126,6 @@ version: 1.0
 
 [ClickHouse] SHALL support automatic cluster discovery through a configured discovery path which SHALL uniquely identify a specific swarm cluster.
 
-
 Example:
 ```xml
 <clickhouse>
@@ -145,8 +144,7 @@ Example:
 #### RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath
 version: 1.0
 
-[ClickHouse] SHALL return an error if path provided in `<clickhouse><remote_servers><swarm><discovery>` 
-is wrong.
+[ClickHouse] SHALL not add node to the swarm cluster if path provided in `<clickhouse><remote_servers><swarm><discovery>` is different from the path provided in the initiator node configuration.
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePaths
 version: 1.0
@@ -159,7 +157,7 @@ contains multiple discovery paths.
 #### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication
 version: 1.0
 
-[ClickHouse] SHALL use the configured secret key for swarm cluster authentication.
+[ClickHouse] SHALL use the configured secret key for swarm cluster node authentication.
 
 Example:
 ```xml
@@ -179,7 +177,7 @@ Example:
 #### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey
 version: 1.0
 
-[ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
+[ClickHouse] SHALL not add node to the swarm cluster if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is different from the secret key provided in the initiator node configuration.
 
 #### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKeys
 version: 1.0
@@ -233,7 +231,7 @@ Swarm nodes SHALL not download data from storage data files if it is cached.
 ##### RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistency
 version: 1.0  
 
-Swarm nodes SHALL return the same result for queries with enabled and disabled local disk cache.
+Swarm nodes SHALL return the same result for queries when local disk cache is enabled and disabled.
 
 ##### RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance
 version: 1.0  
@@ -262,7 +260,7 @@ Swarm nodes SHALL not run query if it is cached on the node.
 ##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistency
 version: 1.0  
 
-Swarm nodes SHALL return the same result for queries with enabled and disabled query cache.
+Swarm nodes SHALL return the same result for queries when query cache is enabled and disabled.
 
 ##### RQ.SRS-044.Swarm.Caching.QueryCachePerformance
 version: 1.0  
@@ -314,7 +312,7 @@ Swarm nodes SHALL not cache the parquet metadata if node has no enough space to 
 #### RQ.SRS-044.Swarm.Settings.object_storage_max_nodes
 version: 1.0  
 
-[ClickHouse] SHALL support the `object_storage_max_nodes` setting to limit the number of nodes used in swarm for a particular query
+[ClickHouse] SHALL support the `object_storage_max_nodes` setting to limit the number of nodes used in swarm cluster for a particular query
 
 ### Observer
 
@@ -363,3 +361,4 @@ for queries that accesses data from multiple files in average.
 
 
 [ClickHouse]: https://clickhouse.com
+[Ability Antalya]: https://altinity.com/blog/getting-started-with-altinitys-project-antalya
