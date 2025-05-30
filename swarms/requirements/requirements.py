@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.250110.1002922.
+# document by TestFlows v2.0.241127.1225014.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -145,8 +145,8 @@ RQ_SRS_044_Swarm_ClusterDiscovery_WrongPath = Requirement(
     num='2.2.2'
 )
 
-RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath = Requirement(
-    name='RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath',
+RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePaths = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePaths',
     version='1.0',
     priority=None,
     group=None,
@@ -154,7 +154,7 @@ RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` \n'
-        'contains multiple discovery sections.\n'
+        'contains multiple discovery paths.\n'
         '\n'
     ),
     link=None,
@@ -162,8 +162,8 @@ RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath = Requirement(
     num='2.2.3'
 )
 
-RQ_SRS_001_Swarm_ClusterDiscovery_Authentication = Requirement(
-    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication',
+RQ_SRS_044_Swarm_ClusterDiscovery_Authentication = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication',
     version='1.0',
     priority=None,
     group=None,
@@ -193,8 +193,8 @@ RQ_SRS_001_Swarm_ClusterDiscovery_Authentication = Requirement(
     num='2.3.1'
 )
 
-RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_WrongKey = Requirement(
-    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey',
+RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_WrongKey = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey',
     version='1.0',
     priority=None,
     group=None,
@@ -209,8 +209,8 @@ RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_WrongKey = Requirement(
     num='2.3.2'
 )
 
-RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_MultipleKey = Requirement(
-    name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey',
+RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKey = Requirement(
+    name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey',
     version='1.0',
     priority=None,
     group=None,
@@ -344,7 +344,7 @@ RQ_SRS_044_Swarm_Caching_LocalDiskCache = Requirement(
         '  \n'
         '\n'
         'Swarm nodes SHALL support local disk cache.\n'
-        'Swarm nodes SHALL not download data from storage data files if it is cashed.\n'
+        'Swarm nodes SHALL not download data from storage data files if it is cached.\n'
         '\n'
     ),
     link=None,
@@ -352,8 +352,8 @@ RQ_SRS_044_Swarm_Caching_LocalDiskCache = Requirement(
     num='2.6.1.1'
 )
 
-RQ_SRS_044_Swarm_Caching_LocalDiskCacheConsistancy = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy',
+RQ_SRS_044_Swarm_Caching_LocalDiskCacheConsistency = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistency',
     version='1.0',
     priority=None,
     group=None,
@@ -380,8 +380,8 @@ RQ_SRS_044_Swarm_Caching_LocalDiskCachePerformance = Requirement(
     description=(
         '  \n'
         '\n'
-        'Swarm nodes SHALL not run query much slower if data for the query is not cached in comparison with disabled local disk cashe.\n'
-        'Swarm nodes SHALL run query faster if data for the query is cached in comparison with disabled local disk cashe.\n'
+        'Swarm nodes SHALL not run query much slower if data for the query is not cached in comparison with disabled local disk cache.\n'
+        'Swarm nodes SHALL run query faster if data for the query is cached in comparison with disabled local disk cache.\n'
         '\n'
     ),
     link=None,
@@ -389,8 +389,8 @@ RQ_SRS_044_Swarm_Caching_LocalDiskCachePerformance = Requirement(
     num='2.6.1.3'
 )
 
-RQ_SRS_044_Swarm_Caching_DiskCasheUpdates = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.DiskCasheUpdates',
+RQ_SRS_044_Swarm_Caching_DiskCacheUpdates = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.DiskCacheUpdates',
     version='1.0',
     priority=None,
     group=None,
@@ -407,8 +407,8 @@ RQ_SRS_044_Swarm_Caching_DiskCasheUpdates = Requirement(
     num='2.6.1.4'
 )
 
-RQ_SRS_044_Swarm_Caching_DiskCasheNoDiskSpace = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace',
+RQ_SRS_044_Swarm_Caching_DiskCacheNoDiskSpace = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.DiskCacheNoDiskSpace',
     version='1.0',
     priority=None,
     group=None,
@@ -425,8 +425,8 @@ RQ_SRS_044_Swarm_Caching_DiskCasheNoDiskSpace = Requirement(
     num='2.6.1.5'
 )
 
-RQ_SRS_044_Swarm_Caching_QueryCashe = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.QueryCashe',
+RQ_SRS_044_Swarm_Caching_QueryCache = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.QueryCache',
     version='1.0',
     priority=None,
     group=None,
@@ -436,7 +436,7 @@ RQ_SRS_044_Swarm_Caching_QueryCashe = Requirement(
         '  \n'
         '\n'
         'Swarm nodes SHALL support query cache. \n'
-        'Swarm nodes SHALL not run query if it is cashed on the node.\n'
+        'Swarm nodes SHALL not run query if it is cached on the node.\n'
         '\n'
     ),
     link=None,
@@ -444,8 +444,8 @@ RQ_SRS_044_Swarm_Caching_QueryCashe = Requirement(
     num='2.6.2.1'
 )
 
-RQ_SRS_044_Swarm_Caching_QueryCacheConsistancy = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy',
+RQ_SRS_044_Swarm_Caching_QueryCacheConsistency = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.QueryCacheConsistency',
     version='1.0',
     priority=None,
     group=None,
@@ -472,8 +472,8 @@ RQ_SRS_044_Swarm_Caching_QueryCachePerformance = Requirement(
     description=(
         '  \n'
         '\n'
-        'Swarm nodes SHALL not perform query much slower if query is not cached in comparison with disabled query cashe.\n'
-        'Swarm nodes SHALL perform query faster if query is cached in comparison with disabled query cashe.\n'
+        'Swarm nodes SHALL not perform query much slower if query is not cached in comparison with disabled query cache.\n'
+        'Swarm nodes SHALL perform query faster if query is cached in comparison with disabled query cache.\n'
         '\n'
     ),
     link=None,
@@ -481,8 +481,8 @@ RQ_SRS_044_Swarm_Caching_QueryCachePerformance = Requirement(
     num='2.6.2.3'
 )
 
-RQ_SRS_044_Swarm_Caching_QueryCasheUpdates = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.QueryCasheUpdates',
+RQ_SRS_044_Swarm_Caching_QueryCacheUpdates = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.QueryCacheUpdates',
     version='1.0',
     priority=None,
     group=None,
@@ -528,7 +528,7 @@ RQ_SRS_044_Swarm_Caching_ParquetMetadataCache = Requirement(
         '  \n'
         '\n'
         'Swarm nodes SHALL support parquet metadata cache. \n'
-        'Swarm nodes SHALL not download parquet metadata from storage if parquet metadata is cashed.\n'
+        'Swarm nodes SHALL not download parquet metadata from storage if parquet metadata is cached.\n'
         '\n'
     ),
     link=None,
@@ -536,8 +536,8 @@ RQ_SRS_044_Swarm_Caching_ParquetMetadataCache = Requirement(
     num='2.6.3.1'
 )
 
-RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheConsistancy = Requirement(
-    name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy',
+RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheConsistency = Requirement(
+    name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistency',
     version='1.0',
     priority=None,
     group=None,
@@ -564,8 +564,8 @@ RQ_SRS_044_Swarm_Caching_ParquetMetadataCachePerformance = Requirement(
     description=(
         '  \n'
         '\n'
-        'Swarm nodes SHALL not perform query much slower if parquet metadata is not cached in comparison with parquet metadata cashe.\n'
-        'Swarm nodes SHALL perform query faster if parquet metadata is cached in comparison with disabled parquet metadata cashe.\n'
+        'Swarm nodes SHALL not perform query much slower if parquet metadata is not cached in comparison with parquet metadata cache.\n'
+        'Swarm nodes SHALL perform query faster if parquet metadata is cached in comparison with disabled parquet metadata cache.\n'
         '\n'
     ),
     link=None,
@@ -744,11 +744,11 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         Heading(name='Cluster Discovery', level=2, num='2.2'),
         Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Path', level=3, num='2.2.1'),
         Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath', level=3, num='2.2.2'),
-        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath', level=3, num='2.2.3'),
-        Heading(name='Authentification Using Secret', level=2, num='2.3'),
-        Heading(name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication', level=3, num='2.3.1'),
-        Heading(name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey', level=3, num='2.3.2'),
-        Heading(name='RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey', level=3, num='2.3.3'),
+        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePaths', level=3, num='2.2.3'),
+        Heading(name='Authentication Using Secret', level=2, num='2.3'),
+        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication', level=3, num='2.3.1'),
+        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey', level=3, num='2.3.2'),
+        Heading(name='RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey', level=3, num='2.3.3'),
         Heading(name='Query Processing', level=2, num='2.4'),
         Heading(name='RQ.SRS-044.Swarm.QueryProcessing.Planning', level=3, num='2.4.1'),
         Heading(name='RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution', level=3, num='2.4.2'),
@@ -760,19 +760,19 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         Heading(name='Caching', level=2, num='2.6'),
         Heading(name='Local Disk Cache', level=3, num='2.6.1'),
         Heading(name='RQ.SRS-044.Swarm.Caching.LocalDiskCache', level=4, num='2.6.1.1'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy', level=4, num='2.6.1.2'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistency', level=4, num='2.6.1.2'),
         Heading(name='RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance', level=4, num='2.6.1.3'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.DiskCasheUpdates', level=4, num='2.6.1.4'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace', level=4, num='2.6.1.5'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.DiskCacheUpdates', level=4, num='2.6.1.4'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.DiskCacheNoDiskSpace', level=4, num='2.6.1.5'),
         Heading(name='Query Cache', level=3, num='2.6.2'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCashe', level=4, num='2.6.2.1'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy', level=4, num='2.6.2.2'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCache', level=4, num='2.6.2.1'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCacheConsistency', level=4, num='2.6.2.2'),
         Heading(name='RQ.SRS-044.Swarm.Caching.QueryCachePerformance', level=4, num='2.6.2.3'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCasheUpdates', level=4, num='2.6.2.4'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.QueryCacheUpdates', level=4, num='2.6.2.4'),
         Heading(name='RQ.SRS-044.Swarm.Caching.QueryCacheNoDiskSpace', level=4, num='2.6.2.5'),
         Heading(name='Parquet Metadata Cache', level=3, num='2.6.3'),
         Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCache', level=4, num='2.6.3.1'),
-        Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy', level=4, num='2.6.3.2'),
+        Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistency', level=4, num='2.6.3.2'),
         Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCachePerformance', level=4, num='2.6.3.3'),
         Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheUpdates', level=4, num='2.6.3.4'),
         Heading(name='RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace', level=4, num='2.6.3.5'),
@@ -792,10 +792,10 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_NodeDeregistration,
         RQ_SRS_044_Swarm_ClusterDiscovery_Path,
         RQ_SRS_044_Swarm_ClusterDiscovery_WrongPath,
-        RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePath,
-        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication,
-        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_WrongKey,
-        RQ_SRS_001_Swarm_ClusterDiscovery_Authentication_MultipleKey,
+        RQ_SRS_044_Swarm_ClusterDiscovery_MultiplePaths,
+        RQ_SRS_044_Swarm_ClusterDiscovery_Authentication,
+        RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_WrongKey,
+        RQ_SRS_044_Swarm_ClusterDiscovery_Authentication_MultipleKey,
         RQ_SRS_044_Swarm_QueryProcessing_Planning,
         RQ_SRS_044_Swarm_QueryProcessing_PartialQueriesExecution,
         RQ_SRS_044_Swarm_QueryProcessing_RetryMechanism_NodeFailure,
@@ -803,17 +803,17 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_QueryProcessing_RetryMechanism_NodeLatency,
         RQ_SRS_044_Swarm_QueryProcessing_RetryMechanism_NetworkFailure,
         RQ_SRS_044_Swarm_Caching_LocalDiskCache,
-        RQ_SRS_044_Swarm_Caching_LocalDiskCacheConsistancy,
+        RQ_SRS_044_Swarm_Caching_LocalDiskCacheConsistency,
         RQ_SRS_044_Swarm_Caching_LocalDiskCachePerformance,
-        RQ_SRS_044_Swarm_Caching_DiskCasheUpdates,
-        RQ_SRS_044_Swarm_Caching_DiskCasheNoDiskSpace,
-        RQ_SRS_044_Swarm_Caching_QueryCashe,
-        RQ_SRS_044_Swarm_Caching_QueryCacheConsistancy,
+        RQ_SRS_044_Swarm_Caching_DiskCacheUpdates,
+        RQ_SRS_044_Swarm_Caching_DiskCacheNoDiskSpace,
+        RQ_SRS_044_Swarm_Caching_QueryCache,
+        RQ_SRS_044_Swarm_Caching_QueryCacheConsistency,
         RQ_SRS_044_Swarm_Caching_QueryCachePerformance,
-        RQ_SRS_044_Swarm_Caching_QueryCasheUpdates,
+        RQ_SRS_044_Swarm_Caching_QueryCacheUpdates,
         RQ_SRS_044_Swarm_Caching_QueryCacheNoDiskSpace,
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCache,
-        RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheConsistancy,
+        RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheConsistency,
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCachePerformance,
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheUpdates,
         RQ_SRS_044_Swarm_Caching_ParquetMetadataCacheNoDiskSpace,
@@ -838,11 +838,11 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
     * 2.2 [Cluster Discovery](#cluster-discovery)
         * 2.2.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Path](#rqsrs-044swarmclusterdiscoverypath)
         * 2.2.2 [RQ.SRS-044.Swarm.ClusterDiscovery.WrongPath](#rqsrs-044swarmclusterdiscoverywrongpath)
-        * 2.2.3 [RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath](#rqsrs-044swarmclusterdiscoverymultiplepath)
-    * 2.3 [Authentification Using Secret](#authentification-using-secret)
-        * 2.3.1 [RQ.SRS-001.Swarm.ClusterDiscovery.Authentication](#rqsrs-001swarmclusterdiscoveryauthentication)
-        * 2.3.2 [RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey](#rqsrs-001swarmclusterdiscoveryauthenticationwrongkey)
-        * 2.3.3 [RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey](#rqsrs-001swarmclusterdiscoveryauthenticationmultiplekey)
+        * 2.2.3 [RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePaths](#rqsrs-044swarmclusterdiscoverymultiplepaths)
+    * 2.3 [Authentication Using Secret](#authentication-using-secret)
+        * 2.3.1 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication](#rqsrs-044swarmclusterdiscoveryauthentication)
+        * 2.3.2 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey](#rqsrs-044swarmclusterdiscoveryauthenticationwrongkey)
+        * 2.3.3 [RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey](#rqsrs-044swarmclusterdiscoveryauthenticationmultiplekey)
     * 2.4 [Query Processing](#query-processing)
         * 2.4.1 [RQ.SRS-044.Swarm.QueryProcessing.Planning](#rqsrs-044swarmqueryprocessingplanning)
         * 2.4.2 [RQ.SRS-044.Swarm.QueryProcessing.PartialQueriesExecution](#rqsrs-044swarmqueryprocessingpartialqueriesexecution)
@@ -854,19 +854,19 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
     * 2.6 [Caching](#caching)
         * 2.6.1 [Local Disk Cache](#local-disk-cache)
             * 2.6.1.1 [RQ.SRS-044.Swarm.Caching.LocalDiskCache](#rqsrs-044swarmcachinglocaldiskcache)
-            * 2.6.1.2 [RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy](#rqsrs-044swarmcachinglocaldiskcacheconsistancy)
+            * 2.6.1.2 [RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistency](#rqsrs-044swarmcachinglocaldiskcacheconsistency)
             * 2.6.1.3 [RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance](#rqsrs-044swarmcachinglocaldiskcacheperformance)
-            * 2.6.1.4 [RQ.SRS-044.Swarm.Caching.DiskCasheUpdates](#rqsrs-044swarmcachingdiskcasheupdates)
-            * 2.6.1.5 [RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace](#rqsrs-044swarmcachingdiskcashenodiskspace)
+            * 2.6.1.4 [RQ.SRS-044.Swarm.Caching.DiskCacheUpdates](#rqsrs-044swarmcachingdiskcacheupdates)
+            * 2.6.1.5 [RQ.SRS-044.Swarm.Caching.DiskCacheNoDiskSpace](#rqsrs-044swarmcachingdiskcachenodiskspace)
         * 2.6.2 [Query Cache](#query-cache)
-            * 2.6.2.1 [RQ.SRS-044.Swarm.Caching.QueryCashe](#rqsrs-044swarmcachingquerycashe)
-            * 2.6.2.2 [RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy](#rqsrs-044swarmcachingquerycacheconsistancy)
+            * 2.6.2.1 [RQ.SRS-044.Swarm.Caching.QueryCache](#rqsrs-044swarmcachingquerycache)
+            * 2.6.2.2 [RQ.SRS-044.Swarm.Caching.QueryCacheConsistency](#rqsrs-044swarmcachingquerycacheconsistency)
             * 2.6.2.3 [RQ.SRS-044.Swarm.Caching.QueryCachePerformance](#rqsrs-044swarmcachingquerycacheperformance)
-            * 2.6.2.4 [RQ.SRS-044.Swarm.Caching.QueryCasheUpdates](#rqsrs-044swarmcachingquerycasheupdates)
+            * 2.6.2.4 [RQ.SRS-044.Swarm.Caching.QueryCacheUpdates](#rqsrs-044swarmcachingquerycacheupdates)
             * 2.6.2.5 [RQ.SRS-044.Swarm.Caching.QueryCacheNoDiskSpace](#rqsrs-044swarmcachingquerycachenodiskspace)
         * 2.6.3 [Parquet Metadata Cache](#parquet-metadata-cache)
             * 2.6.3.1 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCache](#rqsrs-044swarmcachingparquetmetadatacache)
-            * 2.6.3.2 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy](#rqsrs-044swarmcachingparquetmetadatacacheconsistancy)
+            * 2.6.3.2 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistency](#rqsrs-044swarmcachingparquetmetadatacacheconsistency)
             * 2.6.3.3 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCachePerformance](#rqsrs-044swarmcachingparquetmetadatacacheperformance)
             * 2.6.3.4 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheUpdates](#rqsrs-044swarmcachingparquetmetadatacacheupdates)
             * 2.6.3.5 [RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheNoDiskSpace](#rqsrs-044swarmcachingparquetmetadatacachenodiskspace)
@@ -974,15 +974,15 @@ version: 1.0
 [ClickHouse] SHALL return an error if path provided in `<clickhouse><remote_servers><swarm><discovery>` 
 is wrong.
 
-#### RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePath
+#### RQ.SRS-044.Swarm.ClusterDiscovery.MultiplePaths
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` 
-contains multiple discovery sections.
+contains multiple discovery paths.
 
-### Authentification Using Secret
+### Authentication Using Secret
 
-#### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication
+#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication
 version: 1.0
 
 [ClickHouse] SHALL use the configured secret key for swarm cluster authentication.
@@ -1002,12 +1002,12 @@ Example:
 </clickhouse>
 ```
 
-#### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.WrongKey
+#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.WrongKey
 version: 1.0
 
 [ClickHouse] SHALL return an error if secret key provided in `<clickhouse><remote_servers><swarm><discovery>` is wrong.
 
-#### RQ.SRS-001.Swarm.ClusterDiscovery.Authentication.MultipleKey
+#### RQ.SRS-044.Swarm.ClusterDiscovery.Authentication.MultipleKey
 version: 1.0
 
 [ClickHouse] SHALL return an error if `<clickhouse><remote_servers><swarm><discovery>` contains multiple secret keys.
@@ -1054,9 +1054,9 @@ version: 1.0
 version: 1.0  
 
 Swarm nodes SHALL support local disk cache.
-Swarm nodes SHALL not download data from storage data files if it is cashed.
+Swarm nodes SHALL not download data from storage data files if it is cached.
 
-##### RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistancy
+##### RQ.SRS-044.Swarm.Caching.LocalDiskCacheConsistency
 version: 1.0  
 
 Swarm nodes SHALL return the same result for queries with enabled and disabled local disk cache.
@@ -1064,28 +1064,28 @@ Swarm nodes SHALL return the same result for queries with enabled and disabled l
 ##### RQ.SRS-044.Swarm.Caching.LocalDiskCachePerformance
 version: 1.0  
 
-Swarm nodes SHALL not run query much slower if data for the query is not cached in comparison with disabled local disk cashe.
-Swarm nodes SHALL run query faster if data for the query is cached in comparison with disabled local disk cashe.
+Swarm nodes SHALL not run query much slower if data for the query is not cached in comparison with disabled local disk cache.
+Swarm nodes SHALL run query faster if data for the query is cached in comparison with disabled local disk cache.
 
-##### RQ.SRS-044.Swarm.Caching.DiskCasheUpdates
+##### RQ.SRS-044.Swarm.Caching.DiskCacheUpdates
 version: 1.0  
 
 Swarm nodes SHALL run query and update disk cache if data for query is changed.
 
-##### RQ.SRS-044.Swarm.Caching.DiskCasheNoDiskSpace
+##### RQ.SRS-044.Swarm.Caching.DiskCacheNoDiskSpace
 version: 1.0  
 
 Swarm nodes SHALL not cache the data if node has no enough space to cache it.
 
 #### Query Cache
 
-##### RQ.SRS-044.Swarm.Caching.QueryCashe
+##### RQ.SRS-044.Swarm.Caching.QueryCache
 version: 1.0  
 
 Swarm nodes SHALL support query cache. 
-Swarm nodes SHALL not run query if it is cashed on the node.
+Swarm nodes SHALL not run query if it is cached on the node.
 
-##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistancy
+##### RQ.SRS-044.Swarm.Caching.QueryCacheConsistency
 version: 1.0  
 
 Swarm nodes SHALL return the same result for queries with enabled and disabled query cache.
@@ -1093,10 +1093,10 @@ Swarm nodes SHALL return the same result for queries with enabled and disabled q
 ##### RQ.SRS-044.Swarm.Caching.QueryCachePerformance
 version: 1.0  
 
-Swarm nodes SHALL not perform query much slower if query is not cached in comparison with disabled query cashe.
-Swarm nodes SHALL perform query faster if query is cached in comparison with disabled query cashe.
+Swarm nodes SHALL not perform query much slower if query is not cached in comparison with disabled query cache.
+Swarm nodes SHALL perform query faster if query is cached in comparison with disabled query cache.
 
-##### RQ.SRS-044.Swarm.Caching.QueryCasheUpdates
+##### RQ.SRS-044.Swarm.Caching.QueryCacheUpdates
 version: 1.0  
 
 Swarm nodes SHALL run query and update query cache if data for query is changed.
@@ -1112,9 +1112,9 @@ Swarm nodes SHALL not cache the query if node has no enough space to cache it.
 version: 1.0  
 
 Swarm nodes SHALL support parquet metadata cache. 
-Swarm nodes SHALL not download parquet metadata from storage if parquet metadata is cashed.
+Swarm nodes SHALL not download parquet metadata from storage if parquet metadata is cached.
 
-##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistancy
+##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheConsistency
 version: 1.0  
 
 Swarm nodes SHALL return the same result for queries with enabled and disabled parquet metadata cache.
@@ -1122,8 +1122,8 @@ Swarm nodes SHALL return the same result for queries with enabled and disabled p
 ##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCachePerformance
 version: 1.0  
 
-Swarm nodes SHALL not perform query much slower if parquet metadata is not cached in comparison with parquet metadata cashe.
-Swarm nodes SHALL perform query faster if parquet metadata is cached in comparison with disabled parquet metadata cashe.
+Swarm nodes SHALL not perform query much slower if parquet metadata is not cached in comparison with parquet metadata cache.
+Swarm nodes SHALL perform query faster if parquet metadata is cached in comparison with disabled parquet metadata cache.
 
 ##### RQ.SRS-044.Swarm.Caching.ParquetMetadataCacheUpdates
 version: 1.0  
