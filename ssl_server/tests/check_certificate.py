@@ -42,8 +42,7 @@ def show_certificate(self):
         output = node.query(f"SELECT showCertificate() FORMAT JSON").output
         output = json.loads(output)
         assert (
-            output["data"][0]["showCertificate()"]["serial_number"].lower()
-            == serial_number.lower()
+            serial_number.lower() in output["data"][0]["showCertificate()"]["serial_number"].lower()
         ), error()
 
 

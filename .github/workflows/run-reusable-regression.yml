@@ -443,7 +443,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
-      suite_name: clickhouse_keeper_ssl
+      suite_name: clickhouse_keeper
       part: 1
       timeout_minutes: 180
       storage_path: /ssl
@@ -463,7 +463,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
-      suite_name: clickhouse_keeper_ssl
+      suite_name: clickhouse_keeper
       part: 2
       timeout_minutes: 180
       storage_path: /ssl
