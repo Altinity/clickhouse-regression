@@ -14,8 +14,8 @@ on:
       version:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
-        required: true
-        default: 24.3.12.76.altinitystable
+        required: false
+        default: ""
       flags:
         description: "🚩 Flags"
         type: choice
