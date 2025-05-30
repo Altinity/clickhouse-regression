@@ -796,7 +796,7 @@ def regression(
         self.context.table_extra_data.insert_test_data(
             cardinality=5, shuffle_values=True
         )
-    
+
     with And("allow higher cpu_wait_ratio "):
         if check_clickhouse_version(">=25.4")(self):
             allow_higher_cpu_wait_ratio(
@@ -839,46 +839,6 @@ def regression(
             parallel=True,
             executor=executor,
         )()
-        # Feature(
-        #     test=load(
-        #         "aggregate_functions.tests.combinators.argMinCombinator_const_expr",
-        #         "feature",
-        #     ),
-        #     parallel=True,
-        #     executor=executor,
-        # )()
-        # Feature(
-        #     test=load(
-        #         "aggregate_functions.tests.combinators.argMinStateCombinator_const_expr",
-        #         "feature",
-        #     ),
-        #     parallel=True,
-        #     executor=executor,
-        # )()
-        # Feature(
-        #     test=load(
-        #         "aggregate_functions.tests.argMinMergeCombinator_const_expr",
-        #         "feature",
-        #     ),
-        #     parallel=True,
-        #     executor=executor,
-        # )()
-        # Feature(
-        #     test=load(
-        #         "aggregate_functions.tests.combinators.argMaxCombinator_const_expr",
-        #         "feature",
-        #     ),
-        #     parallel=True,
-        #     executor=executor,
-        # )()
-        # Feature(
-        #     test=load(
-        #         "aggregate_functions.tests.combinators.argMaxStateCombinator_const_expr",
-        #         "feature",
-        #     ),
-        #     parallel=True,
-        #     executor=executor,
-        # )()
         join()
 
     Feature(test=load("aggregate_functions.tests.run_with_extra_data", "feature"))(
