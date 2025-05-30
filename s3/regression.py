@@ -374,6 +374,7 @@ def minio_regression(
     root_user,
     root_password,
     cluster_args,
+    clickhouse_version,
     with_analyzer=False,
 ):
     """Setup and run minio tests."""
@@ -383,6 +384,7 @@ def minio_regression(
     root_password = root_password.value
     uri = uri.value
 
+    self.context.clickhouse_version = clickhouse_version
     self.context.storage = "minio"
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
@@ -788,6 +790,7 @@ def regression(
     if "minio" in storages:
         Feature(test=minio_regression)(
             cluster_args=cluster_args,
+            clickhouse_version=clickhouse_version,
             uri=s3_args["minio_uri"],
             root_user=s3_args["minio_root_user"],
             root_password=s3_args["minio_root_password"],
