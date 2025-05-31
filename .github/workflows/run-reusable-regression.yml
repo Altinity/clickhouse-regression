@@ -381,6 +381,7 @@ jobs:
   benchmark_aws:
     if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_aws
     with:
       suite_name: ontime_benchmark
       job_name: ontime_benchmark_aws
@@ -403,6 +404,7 @@ jobs:
   benchmark_gcs:
     if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_gcs
     with:
       suite_name: ontime_benchmark
       job_name: ontime_benchmark_gcs
