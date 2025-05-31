@@ -10,7 +10,6 @@ on:
         required: true
         type: string
       version:
-        required: true
         type: string
       flags:
         required: false
@@ -114,7 +113,7 @@ jobs:
         --no-colors
         --local
         --clickhouse ${{ inputs.package }}
-        --clickhouse-version ${{ inputs.version }}
+        ${{ inputs.version != '' && format('--clickhouse-version {0}', inputs.version) || '' }}
         --collect-service-logs
         --output ${{ inputs.output_format }}
         --parallel ${{ vars.PARALLEL }}
