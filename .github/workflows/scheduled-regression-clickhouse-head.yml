@@ -8,33 +8,33 @@ on:
 
 jobs:
   clickhouse-head-x86-with-analyzer-zookeeper:
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer'
-      artifact_name: clickhouse-head-x86-with-analyzer-zookeeper
+      arch: x86
     secrets: inherit
 
   clickhouse-head-arm-with-analyzer-zookeeper:
-    uses: ./.github/workflows/reusable-workflow-arm.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer'
-      artifact_name: clickhouse-head-arm-with-analyzer-zookeeper
+      arch: arm64
     secrets: inherit
 
   clickhouse-head-x86-with-analyzer-keeper:
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer --use-keeper'
-      artifact_name: clickhouse-head-x86-with-analyzer-keeper
+      arch: x86
     secrets: inherit
 
   clickhouse-head-arm-with-analyzer-keeper:
-    uses: ./.github/workflows/reusable-workflow-arm.yml
+    uses: ./.github/workflows/run-reusable-regression.yml
     with:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer --use-keeper'
-      artifact_name: clickhouse-head-arm-with-analyzer-keeper
+      arch: arm64
     secrets: inherit
