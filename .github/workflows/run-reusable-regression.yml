@@ -149,7 +149,6 @@ on:
       version:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
-        required: true
       arch:
         description: "🏗️ Architecture"
         type: string
