@@ -285,9 +285,17 @@ def datatypes_check(self, minio_root_user, minio_root_password, num_columns):
         note(f"PyIceberg data:\n{df}")
 
     with And("verify data via ClickHouse"):
-        self.context.node.query(
+        table_description = self.context.node.query(
             f"DESCRIBE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
         )
+        note(f"Table description:\n{table_description}")
+        result_values = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+            database_name=database_name,
+            namespace=namespace,
+            table_name=table_name,
+            format="Values",
+        )
+        note(f"ClickHouse data:\n{result_values}")
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name,
             namespace=namespace,
