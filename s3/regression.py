@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from helpers.cluster import Cluster, create_cluster
 from helpers.common import experimental_analyzer
 from helpers.argparser import argparser_s3, CaptureClusterArgs, CaptureS3Args
 from s3.tests.common import *
@@ -388,80 +388,84 @@ def minio_regression(
     self.context.secret_access_key = root_password
     bucket_prefix = "data"
 
-    with Cluster(
-        **cluster_args,
-        nodes=nodes,
-        environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
-    ) as cluster:
-        self.context.cluster = cluster
-        self.context.node = cluster.node("clickhouse1")
-        with Given("I have a minio client"):
-            start_minio(access_key=root_user, secret_key=root_password)
-            uri_bucket_file = (
-                uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
-            )
-            self.context.bucket_name = self.context.cluster.minio_bucket
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            **cluster_args,
+            nodes=nodes,
+            environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
+            configs_dir=current_dir(),
+        )
+    self.context.cluster = cluster
 
-        with And("I enable or disable experimental analyzer if needed"):
-            for node in nodes["clickhouse"]:
-                experimental_analyzer(
-                    node=cluster.node(node), with_analyzer=with_analyzer
-                )
 
-        with And("allow higher cpu_wait_ratio "):
-            if check_clickhouse_version(">=25.4")(self):
-                allow_higher_cpu_wait_ratio(
-                    min_os_cpu_wait_time_ratio_to_throw=15,
-                    max_os_cpu_wait_time_ratio_to_throw=25,
-                )
+    self.context.node = cluster.node("clickhouse1")
+    with Given("I have a minio client"):
+        start_minio(access_key=root_user, secret_key=root_password)
+        uri_bucket_file = (
+            uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
+        )
+        self.context.bucket_name = self.context.cluster.minio_bucket
 
-        with And("I add all possible clusters for nodes"):
-            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(
+                node=cluster.node(node), with_analyzer=with_analyzer
+            )
 
-        with And("I get all possible clusters for nodes"):
-            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
-        
-        with Feature("part 1"):
-            Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.table_function", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
             )
-            Feature(test=load("s3.tests.backup", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.table_function_invalid", "minio"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.disk", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
-        with Feature("part 2"):
-            Feature(test=load("s3.tests.alter", "feature"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
-            Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.orphans", "feature"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
-        with Feature("part 3"):
-            Feature(test=load("s3.tests.table_function_performance", "minio"))(
-                uri=uri_bucket_file
-            )
-            Feature(test=load("s3.tests.hive_partitioning", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.remote_s3_function", "minio"))(
-                uri=uri_bucket_file, bucket_prefix=bucket_prefix
-            )
+
+    with And("I add all possible clusters for nodes"):
+        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+
+    with And("I get all possible clusters for nodes"):
+        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+    
+    with Feature("part 1"):
+        Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.table_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.backup", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.table_function_invalid", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.disk", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk_invalid", "minio"))(uri=uri_bucket_file)
+    with Feature("part 2"):
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.reconnect", "minio"))(uri=uri_bucket_file)
+        Feature(test=load("s3.tests.zero_copy_replication", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.cit", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri_bucket_file)
+    with Feature("part 3"):
+        Feature(test=load("s3.tests.table_function_performance", "minio"))(
+            uri=uri_bucket_file
+        )
+        Feature(test=load("s3.tests.hive_partitioning", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.remote_s3_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
 
 
 @TestFeature
