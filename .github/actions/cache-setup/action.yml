@@ -18,13 +18,21 @@ runs:
         fi
 
         if [ -d "/mnt/cache" ]; then
-            DOCKER_CACHE_DIR="/mnt/cache/docker"
-            echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+            {
+                DOCKER_CACHE_DIR="/mnt/cache/docker"
+                echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+            }
+            {
+                echo "Stopping Docker to prepare cache"
+                sudo systemctl stop docker
+                sudo sync
+            }
 
-            echo "Stopping Docker to prepare cache"
-            sudo systemctl stop docker
-            sudo sync
-
+            {
+                echo "Deleting empty overlay2 directories"
+                sudo find "$DOCKER_CACHE_DIR/overlay2" -maxdepth 1 -mindepth 1 -type d -empty -delete
+            }
+            {
             if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
                 echo "Restoring overlay2 from cache"
                 sudo rm -rf "/var/lib/docker/overlay2"
@@ -41,17 +49,19 @@ runs:
                     done
                 fi
             fi
-
-            for DIR in image buildkit; do
-                if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
+            }
+            {
+                for DIR in image buildkit; do
+                    if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
                     echo "Restoring $DIR from cache"
                     sudo rm -rf "/var/lib/docker/$DIR"
                     sudo cp -a "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
-                fi
-            done
+                    fi
+                done
 
-            sudo sync
-            sudo systemctl start docker
+                sudo sync
+                sudo systemctl start docker
+            }
         else
             echo "No docker cache directory available, proceeding without caching"
         fi
