@@ -224,7 +224,6 @@ def check_input_format_parquet_filter_push_down(
     with And("create Iceberg database"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -442,7 +441,6 @@ def issue_with_decimal_column(self, minio_root_user, minio_root_password):
     with And("create Iceberg database"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -514,7 +512,6 @@ def issue_with_float_column(self, minio_root_user, minio_root_password):
     with And("create Iceberg database"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
