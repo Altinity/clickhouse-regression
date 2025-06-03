@@ -97,7 +97,9 @@ def read_data_from_clickhouse_iceberg_table(
     user="default",
     password="",
     order_by="tuple()",
+    group_by=None,
     where_clause=None,
+    object_storage_cluster=None,
     exitcode=None,
     message=None,
     format="TabSeparated",
@@ -168,12 +170,25 @@ def read_data_from_clickhouse_iceberg_table(
             )
         )
 
+    if object_storage_cluster:
+        settings.append(
+            (
+                "object_storage_cluster",
+                object_storage_cluster,
+            )
+        )
+
     query = f"SELECT {columns} FROM {database_name}.\\`{namespace}.{table_name}\\`"
 
     if where_clause:
         query += f" WHERE {where_clause}"
+
+    if group_by:
+        query += f" GROUP BY {group_by}"
+
     if order_by:
         query += f" ORDER BY {order_by}"
+
     if format:
         query += f" FORMAT {format}"
 
