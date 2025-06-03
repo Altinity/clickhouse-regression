@@ -58,14 +58,17 @@ _PRIMITIVE_TYPES = [
 @TestStep(Given)
 def create_catalog(
     self,
-    uri,
-    s3_access_key_id,
-    s3_secret_access_key,
-    name="rest_catalog",
+    uri="http://localhost:5000/",
+    name=None,
+    s3_access_key_id="test",
+    s3_secret_access_key="test",
     s3_endpoint="http://localhost:9002",
     catalog_type=CATALOG_TYPE,
     auth_header="foo",
 ):
+    if name is None:
+        name = f"catalog_{getuid()}"
+
     try:
         conf = {
             "uri": uri,
@@ -92,6 +95,47 @@ def create_catalog(
                 s3_access_key_id=s3_access_key_id,
                 s3_secret_access_key=s3_secret_access_key,
             )
+
+
+@TestStep(Given)
+def create_glue_catalog(
+    self,
+    s3_access_key_id,
+    s3_secret_access_key,
+    name=None,
+    glue_endpoint="http://localhost:4566",
+    glue_region="us-east-1",
+    glue_access_key_id="test",
+    glue_secret_access_key="test",
+    s3_endpoint="http://localhost:9002",
+):
+    if name is None:
+        name = f"glue_catalog_{getuid()}"
+    try:
+        glue_catalog = load_catalog(
+            name,
+            type="glue",
+            **{
+                "glue.access-key-id": glue_access_key_id,
+                "glue.secret-access-key": glue_secret_access_key,
+                "glue.endpoint": glue_endpoint,
+                "glue.region": glue_region,
+                "s3.endpoint": s3_endpoint,
+                "s3.access-key-id": s3_access_key_id,
+                "s3.secret-access-key": s3_secret_access_key,
+            },
+        )
+        yield glue_catalog
+
+    finally:
+        with Finally("drop catalog"):
+            clean_minio_bucket(
+                bucket_name="warehouse",
+                s3_endpoint=s3_endpoint,
+                s3_access_key_id=s3_access_key_id,
+                s3_secret_access_key=s3_secret_access_key,
+            )
+
 
 @TestStep(Given)
 def list_sizes(
@@ -346,8 +390,6 @@ def create_catalog_and_iceberg_table_with_data(
 
     with By("create catalog"):
         catalog = create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
