@@ -1043,7 +1043,7 @@ class ClickHouseNode(Node):
                 if specified, the output will be redirected to the specified file instead of being displayed on the console.
                 default: None
         :param rewrite_settings: specifies whether to rewrite the default query settings with the provided settings.
-                if set to True, the default query settings will be rewrited by the same settings that are provided in the 'settings' parameter.
+                if set to True, the default query settings will be rewritten by the same settings that are provided in the 'settings' parameter.
                 default: False
         """
         r = None
