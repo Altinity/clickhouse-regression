@@ -486,6 +486,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
+      job_name: clickhouse_keeper_ssl
       part: 1
       timeout_minutes: 180
       storage_path: /ssl
@@ -506,6 +507,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
+      job_name: clickhouse_keeper_ssl
       part: 2
       timeout_minutes: 180
       storage_path: /ssl
