@@ -74,6 +74,79 @@ def create_experimental_iceberg_database(
     query = f"SET allow_experimental_database_iceberg=true; "
     query += f"CREATE DATABASE {database_name} "
     query += f"ENGINE = {database_engine_name}('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}') "
+
+    if settings:
+        query += f"{settings_str}"
+
+    try:
+        node.query(query, exitcode=exitcode, message=message)
+        yield database_name
+
+    finally:
+        with Finally("drop database"):
+            node.query(f"DROP DATABASE IF EXISTS {database_name}")
+
+
+@TestStep(Given)
+def create_glue_experimental_datalakecatalog_database(
+    self,
+    s3_access_key_id,
+    s3_secret_access_key,
+    catalog_type="glue",
+    region="us-east-1",
+    database_name=None,
+    endpoint_url="http://localstack:4566",
+    storage_endpoint="http://minio:9000/warehouse",
+    exitcode=None,
+    message=None,
+    node=None,
+):
+    """Create experimental glue DataLakeCatalog database with given parameters.
+    Args:
+        aws_access_key_id: AWS access key id.
+        aws_secret_access_key: AWS secret access key.
+        database_name: Name of the database to create.
+        node: ClickHouse node to execute the query on.
+        endpoint_url: URL of the endpoint.
+        catalog_type: Type of the catalog.
+        region: Region of the catalog.
+        storage_endpoint: Storage endpoint.
+        exitcode: Exit code of the query.
+        message: Message of the query.
+    Returns:
+        Name of the created database.
+    """
+    if node is None:
+        node = self.context.node
+
+    settings = {}
+
+    if database_name is None:
+        database_name = "iceberg_database_" + getuid()
+
+    database_engine_name = (
+        "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
+    )
+    if catalog_type:
+        settings["catalog_type"] = catalog_type
+    if storage_endpoint:
+        settings["storage_endpoint"] = storage_endpoint
+    if region:
+        settings["region"] = region
+    if s3_access_key_id:
+        settings["aws_access_key_id"] = s3_access_key_id
+    if s3_secret_access_key:
+        settings["aws_secret_access_key"] = s3_secret_access_key
+
+    if settings:
+        settings_str = ",".join(
+            [f"{key} = '{value}'" for key, value in settings.items()]
+        )
+        settings_str = f"SETTINGS {settings_str}"
+
+    query = f"SET allow_experimental_database_glue_catalog=1; "
+    query += f"CREATE DATABASE {database_name} ENGINE = {database_engine_name}('{endpoint_url}') "
+
     if settings:
         query += f"{settings_str}"
 
@@ -235,8 +308,6 @@ def get_iceberg_table_name(
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -258,10 +329,8 @@ def get_iceberg_table_name(
     with And("create database with Iceberg engine"):
         create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
