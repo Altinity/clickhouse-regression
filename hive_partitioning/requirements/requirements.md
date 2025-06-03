@@ -46,15 +46,16 @@
     * 2.7 [Hive Partition Writes](#hive-partition-writes)
         * 2.7.1 [Generic](#generic)
             * 2.7.1.1 [RQ.HivePartitioning.HivePartitionWrites.S3](#rqhivepartitioninghivepartitionwritess3)
-            * 2.7.1.2 [RQ.HivePartitioning.HivePartitionWrites.WrongEngine](#rqhivepartitioninghivepartitionwriteswrongengine)
-            * 2.7.1.3 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
-            * 2.7.1.4 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
-            * 2.7.1.5 [RQ.HivePartitioning.HivePartitionWrites.NullInColumn](#rqhivepartitioninghivepartitionwritesnullincolumn)
-            * 2.7.1.6 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
-            * 2.7.1.7 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
-            * 2.7.1.8 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
-            * 2.7.1.9 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
-            * 2.7.1.10 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
+            * 2.7.1.2 [RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions](#rqhivepartitioninghivepartitionwritesusehivepartitions)
+            * 2.7.1.3 [RQ.HivePartitioning.HivePartitionWrites.WrongEngine](#rqhivepartitioninghivepartitionwriteswrongengine)
+            * 2.7.1.4 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
+            * 2.7.1.5 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
+            * 2.7.1.6 [RQ.HivePartitioning.HivePartitionWrites.NullInColumn](#rqhivepartitioninghivepartitionwritesnullincolumn)
+            * 2.7.1.7 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
+            * 2.7.1.8 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
+            * 2.7.1.9 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
+            * 2.7.1.10 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
+            * 2.7.1.11 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
         * 2.7.2 [Partition By Clause For S3 Engine With Hive Partition Writes](#partition-by-clause-for-s3-engine-with-hive-partition-writes)
             * 2.7.2.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionBy](#rqhivepartitioninghivepartitionwritespartitionby)
             * 2.7.2.2 [RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy](#rqhivepartitioninghivepartitionwritesmissingpartitionby)
@@ -64,18 +65,19 @@
         * 2.7.4 [Partition Stratagy Parameter](#partition-stratagy-parameter)
             * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy](#rqhivepartitioninghivepartitionwritespartitionstratagy)
             * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstratagywrongargument)
-            * 2.7.4.3 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
-            * 2.7.4.4 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
-            * 2.7.4.5 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
-        * 2.7.5 [Path Parameter](#path-parameter)
-            * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWrites.Path](#rqhivepartitioninghivepartitionwritespath)
-            * 2.7.5.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidPath](#rqhivepartitioninghivepartitionwritesinvalidpath)
-        * 2.7.6 [Filename Parameter](#filename-parameter)
-            * 2.7.6.1 [RQ.HivePartitioning.HivePartitionWrites.Filename](#rqhivepartitioninghivepartitionwritesfilename)
-            * 2.7.6.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidFilename](#rqhivepartitioninghivepartitionwritesinvalidfilename)
-            * 2.7.6.3 [RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename](#rqhivepartitioninghivepartitionwritesnotdefinedfilename)
-        * 2.7.7 [S3 Engine Parameters](#s3-engine-parameters)
-            * 2.7.7.1 [RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters](#rqhivepartitioninghivepartitionwritess3engineparameters)
+        * 2.7.5 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
+            * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
+            * 2.7.5.2 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
+        * 2.7.6 [Path Parameter](#path-parameter)
+            * 2.7.6.1 [RQ.HivePartitioning.HivePartitionWrites.Path](#rqhivepartitioninghivepartitionwritespath)
+            * 2.7.6.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidPath](#rqhivepartitioninghivepartitionwritesinvalidpath)
+        * 2.7.7 [Filename Parameter](#filename-parameter)
+            * 2.7.7.1 [RQ.HivePartitioning.HivePartitionWrites.Filename](#rqhivepartitioninghivepartitionwritesfilename)
+            * 2.7.7.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidFilename](#rqhivepartitioninghivepartitionwritesinvalidfilename)
+            * 2.7.7.3 [RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename](#rqhivepartitioninghivepartitionwritesnotdefinedfilename)
+        * 2.7.8 [S3 Engine Parameters](#s3-engine-parameters)
+            * 2.7.8.1 [RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters](#rqhivepartitioninghivepartitionwritess3engineparameters)
+
 
 
 ## Introduction
@@ -305,6 +307,12 @@ INSERT INTO hive_writes VALUES
     (2022, 'Canada', 2);
 ```
 
+
+##### RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions
+version: 1.0
+
+[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_stratagy=hive`.
+
 ##### RQ.HivePartitioning.HivePartitionWrites.WrongEngine
 version: 1.0
 
@@ -434,7 +442,7 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename
 version: 1.0
 
-[ClickHouse] SHALL return an error if defined `filename` parameter is not defined but `partition_stratagy` is set to 'hive'.
+[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_stratagy` is set to 'hive'.
 
 #### S3 Engine Parameters
 
