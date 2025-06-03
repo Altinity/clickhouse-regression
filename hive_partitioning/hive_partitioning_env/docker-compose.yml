@@ -12,6 +12,14 @@ services:
       - proxy1
       - proxy2
 
+  # minio_readonly:
+  #   extends:
+  #     file: ../../docker-compose/minio-service-readonly.yml
+  #     service: minio_readonly
+  #   depends_on:
+  #     - proxy1
+  #     - proxy2
+
   proxy1:
     image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
@@ -34,6 +42,14 @@ services:
     depends_on:
       minio1:
         condition: service_healthy
+
+  # minio-client-readonly:
+  #   extends:
+  #     file: ../../docker-compose/minio-client-readonly.yml
+  #     service: minio-client-readonly
+  #   depends_on:
+  #     minio_readonly:
+  #       condition: service_healthy
 
   # azure-client:
   #   image: mcr.microsoft.com/azure-cli:cbl-mariner2.0
@@ -109,3 +125,5 @@ services:
         condition: service_healthy
       minio1:
         condition: service_healthy
+      # minio_readonly:
+      #   condition: service_healthy

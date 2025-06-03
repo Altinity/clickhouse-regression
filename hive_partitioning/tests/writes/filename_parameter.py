@@ -6,39 +6,34 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_InvalidFilename("1.0"),
 )
-def partition_by_missing(
-    self,
-    uri=None,
-    minio_root_user=None,
-    minio_root_password=None,
-    uri_readonly=None,
-    node=None,
+def invalid_filename(
+    self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
 ):
-    """Run partition by missing writes test."""
+    """Check that ClickHouse returns an error if `filename` parameter is invalid."""
+    if uri is None:
+        uri = self.context.uri
 
-    if node is None:
-        node = self.context.node
+    table_name = "invalid_filename"
 
-    table_name = "partition_by_missing"
-
-    with Given("I create table without partition by"):
+    with Given("I create table with invalid filename"):
         create_table(
             table_name=table_name,
-            engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
-            node=node,
+            columns="d Int32, i Int32",
+            partition_by="d",
+            engine=f"S3(s3_conn, format = Parquet, filename='invalid_filename//', partition_strategy='hive')",
             settings=[("use_hive_partitioning", "1")],
-            message="DB::Exception: Partition strategy hive can not be used without a PARTITION BY expression.",
             exitcode=36,
+            message="DB::Exception: Invalid S3 key",
         )
 
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionKey("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename("1.0"),
 )
-def partition_by_key(
+def not_defined_filename(
     self,
     uri=None,
     minio_root_user=None,
@@ -46,20 +41,17 @@ def partition_by_key(
     uri_readonly=None,
     node=None,
 ):
-    """Run partition by key writes test."""
-
+    """Check that ClickHouse writes table in the root directory if `filename` parameter is not defined."""
     if node is None:
         node = self.context.node
 
-    table_name = "partition_by_key"
-
-    with Given("I create table with partition by"):
+    table_name = "not_defined_filename"
+    with Given("I create table with not defined filename"):
         create_table(
             table_name=table_name,
             columns="d Int32, i Int32",
-            engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
             partition_by="d",
-            node=node,
+            engine=f"S3(s3_conn, format = Parquet, partition_strategy='hive')",
             settings=[("use_hive_partitioning", "1")],
         )
 
@@ -68,23 +60,19 @@ def partition_by_key(
             table_name=table_name,
             values="(1, 1)",
             settings=[("use_hive_partitioning", "1")],
-            node=node,
         )
 
     with Then("I check files in bucket"):
         files = get_bucket_files_list(node=node)
-        assert f"{table_name}/d=1/" in files, error()
+        assert f"d=1/" in files, error()
 
 
 @TestFeature
-@Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionBy("1.0"),
-)
-@Name("partition by")
+@Name("filename parameter")
 def feature(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
 ):
-    """Run partition by writes test."""
+    """Run filename parameter writes test."""
     if uri is None:
         uri = self.context.uri
     if minio_root_user is None:
