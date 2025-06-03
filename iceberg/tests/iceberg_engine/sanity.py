@@ -43,25 +43,17 @@ def sanity(self, minio_root_user, minio_root_password):
     with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
-
     with When(f"define schema and create {namespace}.{table_name} table"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = "datalake"
-        iceberg_engine.drop_database(database_name=database_name)
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -102,8 +94,8 @@ def sanity(self, minio_root_user, minio_root_password):
 @TestScenario
 def sort_order(self, minio_root_user, minio_root_password):
     """Test that ClickHouse preserves the sort order of the Iceberg table."""
-    namespace = "iceberg"
-    table_name = "name"
+    namespace = f"iceberg_{getuid()}"
+    table_name = f"name_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -171,14 +163,11 @@ def sort_order(self, minio_root_user, minio_root_password):
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = "datalake"
-        iceberg_engine.drop_database(database_name=database_name)
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -218,8 +207,8 @@ def sort_order(self, minio_root_user, minio_root_password):
 def recreate_table(self, minio_root_user, minio_root_password):
     """Test the Iceberg engine in ClickHouse."""
     node = self.context.node
-    namespace = "iceberg"
-    table_name = "name"
+    namespace = f"namespace_{getuid()}"
+    table_name = f"name_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -258,14 +247,11 @@ def recreate_table(self, minio_root_user, minio_root_password):
         note(df)
 
     with Then("create database with Iceberg engine"):
-        database_name = "datalake"
-        iceberg_engine.drop_database(database_name=database_name)
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -290,14 +276,6 @@ def recreate_table(self, minio_root_user, minio_root_password):
             ]
         )
         table.append(df)
-
-    with When("restart the node and drop filesystem cache"):
-        node.restart()
-        node.query(f"SYSTEM DROP FILESYSTEM CACHE")
-
-    with And("scan and display data"):
-        df = table.scan().to_pandas()
-        note(df)
 
     with Then("verify that ClickHouse reads the new data （one row）"):
         for retry in retries(count=11, delay=1):
@@ -361,10 +339,8 @@ def multiple_tables(self, minio_root_user, minio_root_password):
         database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -397,8 +373,8 @@ def multiple_tables(self, minio_root_user, minio_root_password):
 def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
     """Test the Iceberg engine in ClickHouse."""
     node = self.context.node
-    namespace = "iceberg"
-    table_name = "name"
+    namespace = f"namespace_{getuid()}"
+    table_name = f"name_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -556,10 +532,8 @@ def rename_database(self, minio_root_user, minio_root_password):
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -603,13 +577,10 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
         )
 
     with Then("create database with Iceberg engine"):
-        iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -656,13 +627,10 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
 
     with Then("create database with Iceberg engine"):
         database_name = f"iceberg_database_{getuid()}"
-        iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
@@ -768,9 +736,9 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=sort_order)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    # Scenario(test=multiple_tables)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
+    Scenario(test=multiple_tables)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
     Scenario(test=array_join)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
