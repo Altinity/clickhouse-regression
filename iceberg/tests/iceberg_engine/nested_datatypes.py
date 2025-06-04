@@ -233,12 +233,10 @@ def datatypes_check(self, minio_root_user, minio_root_password, num_columns):
     with Given("create database and catalog"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -283,19 +281,20 @@ def datatypes_check(self, minio_root_user, minio_root_password, num_columns):
     with Then("verify data via PyIceberg"):
         df = table.scan().to_pandas()
         note(f"PyIceberg data:\n{df}")
+        note(f"Full Iceberg schema JSON:\n{schema.model_dump_json()}")
 
     with And("verify data via ClickHouse"):
         table_description = self.context.node.query(
             f"DESCRIBE TABLE {database_name}.\\`{namespace}.{table_name}\\`"
         )
-        note(f"Table description:\n{table_description}")
+        note(f"Table description:\n{table_description.output}")
         result_values = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name,
             namespace=namespace,
             table_name=table_name,
             format="Values",
         )
-        note(f"ClickHouse data:\n{result_values}")
+        note(f"ClickHouse data:\n{result_values.output}")
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name,
             namespace=namespace,
