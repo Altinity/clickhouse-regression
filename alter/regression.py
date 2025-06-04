@@ -120,12 +120,12 @@ xfails = {
             check_clickhouse_version(">=24.3"),
         )
     ],
-    # "/alter/attach partition/part 1/part level/merge increment/*": [
-    #     (
-    #         Fail,
-    #         "Need to investigate",
-    #     )
-    # ],
+    "/alter/attach partition/part 1/part level/merge increment/*": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
     "/alter/attach partition/part 1/part level/part level reset/*": [  # ReplicatedReplacingMergeTree
         (
             Fail,
