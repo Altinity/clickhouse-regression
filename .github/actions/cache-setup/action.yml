@@ -30,6 +30,7 @@ runs:
 
             {
                 echo "Deleting empty overlay2 directories"
+                mkdir -p "$DOCKER_CACHE_DIR/overlay2"
                 sudo find "$DOCKER_CACHE_DIR/overlay2" -maxdepth 1 -mindepth 1 -type d -empty -delete
             }
             {
