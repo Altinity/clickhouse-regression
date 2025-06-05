@@ -1,4 +1,4 @@
-name: 🔬 Run Tests CI/CD on x86 All Versions
+name: 🔬 Run Regression on All Versions
 run-name: 🔬 ${{ (inputs.suite == 'all' && format('All Versions | Full Regression | x86')) || format('All Versions | {0} | x86', inputs.suite) }}
 
 on:
@@ -62,6 +62,13 @@ on:
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions
+      arch:
+        description: "Architecture to run tests on (default: x86)"
+        type: choice
+        options:
+          - x86
+          - arm64
+        default: x86
 
 jobs:
   example_matrix:
@@ -85,9 +92,9 @@ jobs:
           - clickhouse_package: docker://altinity/clickhouse-server:24.12.2.20203.altinityantalya
             artifact_name: altinityantaliya-24-12-x86-zookeeper
 
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: ${{ matrix.clickhouse_package }}
-      artifact_name: ${{ matrix.artifact_name }}
+      arch: ${{ inputs.arch }}
       suite: ${{ inputs.suite }}
     secrets: inherit
