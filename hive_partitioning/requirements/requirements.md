@@ -47,15 +47,14 @@
         * 2.7.1 [Generic](#generic)
             * 2.7.1.1 [RQ.HivePartitioning.HivePartitionWrites.S3](#rqhivepartitioninghivepartitionwritess3)
             * 2.7.1.2 [RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions](#rqhivepartitioninghivepartitionwritesusehivepartitions)
-            * 2.7.1.3 [RQ.HivePartitioning.HivePartitionWrites.WrongEngine](#rqhivepartitioninghivepartitionwriteswrongengine)
-            * 2.7.1.4 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
-            * 2.7.1.5 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
-            * 2.7.1.6 [RQ.HivePartitioning.HivePartitionWrites.NullInColumn](#rqhivepartitioninghivepartitionwritesnullincolumn)
-            * 2.7.1.7 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
-            * 2.7.1.8 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
-            * 2.7.1.9 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
-            * 2.7.1.10 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
-            * 2.7.1.11 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
+            * 2.7.1.3 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
+            * 2.7.1.4 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
+            * 2.7.1.5 [RQ.HivePartitioning.HivePartitionWrites.NullInColumn](#rqhivepartitioninghivepartitionwritesnullincolumn)
+            * 2.7.1.6 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
+            * 2.7.1.7 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
+            * 2.7.1.8 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
+            * 2.7.1.9 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
+            * 2.7.1.10 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
         * 2.7.2 [Partition By Clause For S3 Engine With Hive Partition Writes](#partition-by-clause-for-s3-engine-with-hive-partition-writes)
             * 2.7.2.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionBy](#rqhivepartitioninghivepartitionwritespartitionby)
             * 2.7.2.2 [RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy](#rqhivepartitioninghivepartitionwritesmissingpartitionby)
@@ -313,11 +312,6 @@ version: 1.0
 
 [ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_stratagy=hive`.
 
-##### RQ.HivePartitioning.HivePartitionWrites.WrongEngine
-version: 1.0
-
-[ClickHouse] SHALL return an error if user tries to insert using hive-style partitions into table with not S3 Engine.
-
 ##### RQ.HivePartitioning.HivePartitionWrites.FileExist
 version: 1.0
 
@@ -407,13 +401,13 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles
 version: 1.0
 
-[ClickHouse] SHALL support `hive_partition_strategy_write_partition_columns_into_files` parameter for S3 engine that SHALL define if [ClickHouse] writes partition columns into files or not.
-`hive_partition_strategy_write_partition_columns_into_files` SHALL be False by default.
+[ClickHouse] SHALL support `partition_columns_in_data_file` parameter for S3 engine that SHALL define if [ClickHouse] writes partition columns into files or not.
+`partition_columns_in_data_file` SHALL be False by default.
 
 ##### RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument
 version: 1.0
 
-[ClickHouse] SHALL return an error if `hive_partition_strategy_write_partition_columns_into_files` parameter gets argument that cannot be casted to boolean.
+[ClickHouse] SHALL return an error if `partition_columns_in_data_file` parameter gets argument that cannot be casted to boolean.
 
 #### Path Parameter
 
@@ -425,7 +419,7 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.InvalidPath
 version: 1.0
 
-[ClickHouse] SHALL return an error if defined `path` is invalid or `path` points to a file with `partition_stratagy='hive'`.
+[ClickHouse] SHALL return an error if defined `path` is invalid.
 
 #### Filename Parameter
 

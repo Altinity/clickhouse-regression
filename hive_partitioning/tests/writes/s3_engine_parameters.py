@@ -1,6 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
-from hive_partitioning.requirements import *
+from hive_partitioning.requirements.requirements import *
 from hive_partitioning.tests.steps import *
 from testflows.combinatorics import product
 
