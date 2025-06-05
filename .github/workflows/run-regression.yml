@@ -104,7 +104,7 @@ on:
           - tiered_storage_minio
           - window_functions
       artifacts:
-        description: "Artifact S3 bucket"
+        description: "🏺 Artifact S3 bucket"
         type: choice
         options:
           - public
@@ -130,7 +130,7 @@ on:
           - progress
           - raw
       ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
         type: string
         default: ""
       extra_args:
@@ -150,7 +150,7 @@ on:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
       arch:
-        description: "🏗️ Architecture"
+        description: "🖥 Architecture"
         type: string
         required: true
       flags:
