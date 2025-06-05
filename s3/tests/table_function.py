@@ -68,12 +68,14 @@ def syntax_s3Cluster(self):
             with And(f"I import the data from S3 into the second table {table2_name}"):
                 insert_from_s3_function(filename=f"syntax_{cluster_name}.csv", cluster_name=cluster_name, table_name=table2_name)
 
-            with Then(
-                f"""I check that a simple SELECT * query on the second table
-                        {table2_name} returns matching data"""
-            ):
-                r = self.context.cluster.node("clickhouse1").query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
-                assert r == expected, error()
+            for attempt in retries(timeout=30, delay=5):
+                with attempt:
+                    with Then(
+                        f"""I check that a simple SELECT * query on the second table
+                                {table2_name} returns matching data"""
+                    ):
+                        r = self.context.cluster.node("clickhouse1").query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
+                        assert r == expected, error()
 
 
 @TestScenario
@@ -148,8 +150,8 @@ def wildcard(self):
                     f"""I check that a simple SELECT * query on the second table
                             {table2_name} returns expected data"""
                 ):
-                    for retry in retries(timeout=600, delay=5):
-                        with retry:
+                    for attempt in retries(timeout=600, delay=5):
+                        with attempt:
                             if cluster_name is None:
                                 r = node.query(
                                     f"SELECT * FROM {table2_name} FORMAT TabSeparated"
@@ -232,8 +234,8 @@ def compression(self):
                     r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
                     assert r == expected, error()
                 else:
-                    for retry in retries(timeout=600, delay=5):
-                        with retry:
+                    for attempt in retries(timeout=600, delay=5):
+                        with attempt:
                             r = self.context.cluster.node("clickhouse1").query(
                                 f"SELECT * FROM {table2_name} FORMAT CSV"
                             ).output.strip()
@@ -309,8 +311,8 @@ def auto(self):
                     r = node.query(f"SELECT * FROM {table2_name} FORMAT CSV").output.strip()
                     assert r == expected, error()
                 else:
-                    for retry in retries(timeout=600, delay=5):
-                        with retry:
+                    for attempt in retries(timeout=600, delay=5):
+                        with attempt:
                             r = self.context.cluster.node("clickhouse1").query(
                                 f"SELECT * FROM {table2_name} FORMAT CSV"
                             ).output.strip()
@@ -383,14 +385,16 @@ def credentials_s3Cluster(self):
             with And(f"I import the data from S3 into the second table {table2_name}"):
                 insert_from_s3_function(filename="credentials.csv", table_name=table2_name, cluster_name=cluster_name)
 
-            with Then(
-                f"""I check that a simple SELECT * query on the second table
-                        {table2_name} returns matching data"""
-            ):
-                r = self.context.cluster.node("clickhouse1").query(
-                    f"SELECT * FROM {table2_name} FORMAT CSV"
-                ).output.strip()
-                assert r == expected, error()
+            for attempt in retries(timeout=30, delay=5):
+                with attempt:
+                    with Then(
+                        f"""I check that a simple SELECT * query on the second table
+                                {table2_name} returns matching data"""
+                    ):
+                        r = self.context.cluster.node("clickhouse1").query(
+                            f"SELECT * FROM {table2_name} FORMAT CSV"
+                        ).output.strip()
+                        assert r == expected, error()
 
 
 @TestScenario
@@ -440,11 +444,13 @@ def partition_s3Cluster(self):
 
             for partition_id in ["x", "y", "z"]:
                 with Then(f"I check the data in the {partition_id} partition"):
-                    output = self.context.cluster.node("clickhouse1").query(
-                        f"""SELECT * FROM
-                        s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
-                    ).output
-                    assert output == partition_id, error()
+                    for attempt in retries(timeout=30, delay=5):
+                        with attempt:
+                            output = self.context.cluster.node("clickhouse1").query(
+                                f"""SELECT * FROM
+                                s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
+                            ).output
+                            assert output == partition_id, error()
 
 
 @TestScenario
