@@ -19,8 +19,7 @@ runs:
                 sudo docker rm -fv $(sudo docker ps -a -q) || true
             }
             {
-                echo "Cleaning up Docker images"
-                echo "Scanning Docker images..."
+                echo "Cleaning up old Docker digest images"
 
                 # Get all images with repository and tag
                 docker images --digests --format '{{.Repository}} {{.Tag}} {{.ID}}' | sort > /tmp/docker_images_list.txt
@@ -41,7 +40,7 @@ runs:
                     
                 done < /tmp/docker_images_list.txt
 
-                echo "Cleanup complete."
+                echo "Cleanup complete"
             }
             {
                 sudo sync
