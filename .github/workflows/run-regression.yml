@@ -1,4 +1,4 @@
-name: 🔬 Run Regression
+name: 🔬 Run regression
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
   ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
