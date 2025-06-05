@@ -481,13 +481,16 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  clickhouse_keeper_ssl_1:
+  clickhouse_keeper_ssl:
+    strategy:
+      matrix:
+        part: [1, 2]
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: clickhouse_keeper
       job_name: clickhouse_keeper_ssl
-      part: 1
+      part: ${{ matrix.part }}
       timeout_minutes: 180
       storage_path: /ssl
       regression_args: '--ssl'
@@ -497,28 +500,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 1/*"
-      artifacts: ${{ inputs.artifacts }}
-      runner_arch: ${{ inputs.arch }}
-    secrets: inherit
-
-  clickhouse_keeper_ssl_2:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
-    uses: ./.github/workflows/reusable-suite.yml
-    with:
-      suite_name: clickhouse_keeper
-      job_name: clickhouse_keeper_ssl
-      part: 2
-      timeout_minutes: 180
-      storage_path: /ssl
-      regression_args: '--ssl'
-      artifact_name: clickhouse_keeper-ssl-artifacts
-      ref: ${{ inputs.ref }}
-      package: ${{ inputs.package }}
-      version: ${{ inputs.version }}
-      flags: ${{ inputs.flags }}
-      output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part 2/*"
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part ${{ matrix.part }}/*"
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
