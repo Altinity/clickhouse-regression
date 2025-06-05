@@ -8,7 +8,7 @@ on:
 
 jobs:
   clickhouse-23-8-x86-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://clickhouse/clickhouse-server:23.8.16.16-alpine
       version: '23.8.16.16'
@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
 
   clickhouse-23-8-arm-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://clickhouse/clickhouse-server:23.8.16.16-alpine
       version: '23.8.16.16'
