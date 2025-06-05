@@ -1,0 +1,18 @@
+version: '2.3'
+
+services:
+  minio_readonly:
+    image: minio/minio:RELEASE.2022-06-11T19-55-32Z
+    volumes:
+      - data1-1:/data1:ro
+    ports:
+      - "9002:9002"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+    command: server --address :9002 /data1-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/minio/health/live"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
