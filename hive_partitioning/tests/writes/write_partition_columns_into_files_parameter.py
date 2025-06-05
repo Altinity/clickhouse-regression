@@ -4,10 +4,11 @@ from hive_partitioning.tests.steps import *
 from hive_partitioning.requirements.requirements import *
 
 
-
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles(
+        "1.0"
+    ),
 )
 def write_partition_columns_into_files(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -49,14 +50,25 @@ def write_partition_columns_into_files(
         )
 
     with Then("I check that files in bucket are different"):
-        files_1 = get_bucket_files_list(filename=table_name_1).split('\n')[-2][:-1] + '/' + get_bucket_files_list(filename=table_name_1).split('\n')[-1]
-        files_2 = get_bucket_files_list(filename=table_name_2).split('\n')[-2][:-1] + '/' + get_bucket_files_list(filename=table_name_2).split('\n')[-1]
-        assert not ('random_string' in get_bucket_file(file_path=files_1)), error()
-        assert 'random_string' in get_bucket_file(file_path=files_2), error()
+        files_1 = (
+            get_bucket_files_list(filename=table_name_1).split("\n")[-2][:-1]
+            + "/"
+            + get_bucket_files_list(filename=table_name_1).split("\n")[-1]
+        )
+        files_2 = (
+            get_bucket_files_list(filename=table_name_2).split("\n")[-2][:-1]
+            + "/"
+            + get_bucket_files_list(filename=table_name_2).split("\n")[-1]
+        )
+        assert not ("random_string" in get_bucket_file(file_path=files_1)), error()
+        assert "random_string" in get_bucket_file(file_path=files_2), error()
+
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles(
+        "1.0"
+    ),
 )
 def write_partition_columns_into_files_default(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -83,12 +95,19 @@ def write_partition_columns_into_files_default(
         )
 
     with Then("I check that partition columns are not in data file"):
-        files = get_bucket_files_list(filename=table_name).split('\n')[-2][:-1] + '/' + get_bucket_files_list(filename=table_name).split('\n')[-1]
-        assert not ('random_string' in get_bucket_file(file_path=files)), error()
+        files = (
+            get_bucket_files_list(filename=table_name).split("\n")[-2][:-1]
+            + "/"
+            + get_bucket_files_list(filename=table_name).split("\n")[-1]
+        )
+        assert not ("random_string" in get_bucket_file(file_path=files)), error()
+
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument(
+        "1.0"
+    ),
 )
 def write_partition_columns_into_files_wrong_argument(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
