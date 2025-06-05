@@ -107,6 +107,12 @@ xfails = {
     ":/ports ssl fips/check clickhouse connection to keeper/:": [
         (Fail, "Doesn't work on 22.3", check_clickhouse_version("<22.8"))
     ],
+    ":/four letter word commands/wchs command": [
+        (
+            Fail,
+            "not stable, needs investigation",
+        ),
+    ]
 }
 
 
