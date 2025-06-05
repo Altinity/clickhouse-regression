@@ -184,7 +184,7 @@ jobs:
 
   x86:
     if: ${{ needs.define-matrix.outputs.run_x86 == 'true' }}
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-regression.yml
     secrets: inherit
     needs: define-matrix
     strategy:
@@ -201,11 +201,11 @@ jobs:
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
-      artifact_name: ${{ matrix.parallel_id }}-x86
-    
+      arch: x86
+
   ARM:
     if: ${{ needs.define-matrix.outputs.run_arm == 'true' }}
-    uses: ./.github/workflows/reusable-workflow-arm.yml
+    uses: ./.github/workflows/run-regression.yml
     secrets: inherit
     needs: define-matrix
     strategy:
@@ -222,4 +222,4 @@ jobs:
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
-      artifact_name: ${{ matrix.parallel_id }}-arm
+      arch: arm64
