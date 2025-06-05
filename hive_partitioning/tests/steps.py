@@ -85,7 +85,7 @@ def insert_into_bucket_s3_function_from_table(
 
 @TestStep(When)
 def insert_into_table_values(
-    self, table_name, values, settings, node=None, exitcode=None, message=None
+    self, table_name, values, settings=None, node=None, exitcode=None, message=None
 ):
     """Insert into table values."""
 
@@ -102,7 +102,7 @@ def insert_into_table_values(
 
 
 @TestStep(When)
-def insert_into_table_select(self, table_name, select_statement, settings, node=None):
+def insert_into_table_select(self, table_name, select_statement, settings=None, node=None):
     """Insert into table values from select statement."""
 
     if node is None:
@@ -160,10 +160,31 @@ def get_bucket_files_list(self, filename="", node=None):
 
 
 @TestStep(When)
-def get_bucket_file(self, bucket_path, file_name, node=None):
+def get_bucket_file_size(self, filename, node=None):
+    """Get bucket file size."""
+
+    if node is None:
+        node = self.context.node
+
+    with Then(f"I get bucket file size"):
+        r = self.context.cluster.command(
+            None,
+            f"docker exec -it hive_partitioning_env-minio1-1 sh -c 'du -s data1-1/root/data/{filename}'",
+            exitcode=0,
+        )
+        return int(r.output.split('\t')[0])
+
+@TestStep(Then)
+def get_bucket_file(self, file_path, node=None):
     """Get bucket file."""
 
     if node is None:
         node = self.context.node
 
-    pass
+    with Then(f"I get bucket file"):
+        r = self.context.cluster.command(
+            None,
+            f"docker exec -it hive_partitioning_env-minio1-1 sh -c 'cat {file_path}'",
+            exitcode=0,
+        )
+        return r.output

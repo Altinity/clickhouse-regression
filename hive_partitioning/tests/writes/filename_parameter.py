@@ -68,6 +68,9 @@ def not_defined_filename(
 
 
 @TestFeature
+@Requirements(
+    RQ_HivePartitioning_HivePartitionWrites_Filename("1.0"),
+)
 @Name("filename parameter")
 def feature(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None

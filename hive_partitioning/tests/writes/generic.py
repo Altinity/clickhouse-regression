@@ -23,7 +23,7 @@ def s3(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None)
         ("UUID", "'123e4567-e89b-12d3-a456-426614174000'"),
         ("IPv4", "'192.168.1.1'"),
         ("IPv6", "'2001:db8:85a3:8d3:1319:8a2e:370:7348'"),
-        ("Decimal", "123.45"),
+        ("Decimal(10, 3)", "123.45"),
         ("Float", "123.45"),
         ("Double", "123.45"),
     ]
@@ -32,7 +32,7 @@ def s3(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None)
         input_formats, hive_partition_column_types_values
     ):
         with Scenario(name=f"{input_format} {type_value[0]}"):
-            table_name = f"generic_s3_{input_format}_{type_value[0]}"
+            table_name = f"generic_s3_{input_format}_{type_value[0].replace('(', '_').replace(')', '').replace(',', '_').replace(' ', '_')}"
 
             if input_format == "named_collections":
                 with Given("I create table for hive partition writes"):
@@ -61,15 +61,60 @@ def s3(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None)
                     values=f"({type_value[1]}, 1)",
                     settings=[("use_hive_partitioning", "1")],
                 )
+            if type_value[0] == "Float":
+                with Then("I check data in table"):
+                    check_select(
+                        select=f"SELECT i FROM {table_name} WHERE d = '{type_value[1]}' ORDER BY i",
+                        expected_result="1",
+                        node=node,
+                        settings=[("use_hive_partitioning", "1")],
+                    )
+            else:
+                with Then("I check data in table"):
+                    check_select(
+                        select=f"SELECT i FROM {table_name} WHERE d = {type_value[1]} ORDER BY i",
+                        expected_result="1",
+                        node=node,
+                        settings=[("use_hive_partitioning", "1")],
+                    )
 
-            with Then("I check data in table"):
-                check_select(
-                    select=f"SELECT i FROM {table_name} WHERE d = {type_value[1]} ORDER BY i",
-                    expected_result=None,
-                    node=node,
-                    settings=[("use_hive_partitioning", "1")],
-                )
+@TestScenario
+@Requirements(
+    RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions("1.0"),
+)
+def s3_use_hive_partitioning(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+    """Check that ClickHouse ignores `use_hive_partitioning=0` if `partition_stratagy=hive`."""
 
+    if node is None:
+        node = self.context.node
+
+    table_name = "s3_use_hive_partitioning"
+
+    with Given("I create table for hive partition writes"):
+        create_table(
+            columns="d Int32, i Int32",
+            table_name=table_name,
+            engine=f"S3(s3_conn, format = Parquet, filename='{table_name}/', partition_strategy='hive')",
+            partition_by="d",
+            node=node,
+        )
+    with When("I insert data into table"):
+        insert_into_table_values(
+            node=node,
+            table_name=table_name,
+            values="(1, 1)",
+        )
+
+    with Then("I check data in table"):
+        check_select(
+            select=f"SELECT i FROM {table_name} WHERE d = 1 ORDER BY i",
+            expected_result="1",
+            node=node,
+        )
+
+    with Then("I check that file path"):
+        files = get_bucket_files_list(node=node, filename=table_name)
+        assert f"{table_name}/d=1/" in files, error()
 
 @TestScenario
 @Requirements(
@@ -90,7 +135,7 @@ def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_pass
         ("UUID", "'123e4567-e89b-12d3-a456-426614174000'"),
         ("IPv4", "'192.168.1.1'"),
         ("IPv6", "'2001:db8:85a3:8d3:1319:8a2e:370:7348'"),
-        ("Decimal", "123.45"),
+        ("Decimal(10, 3)", "123.45"),
         ("Float", "123.45"),
         ("Double", "123.45"),
     ]
@@ -99,7 +144,7 @@ def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_pass
         input_formats, hive_partition_column_types_values
     ):
         with Scenario(name=f"{input_format} {type_value[0]}"):
-            table_name = f"generic_s3_many_partitions_{input_format}_{type_value[0]}"
+            table_name = f"generic_s3_many_partitions_{input_format}_{type_value[0].replace('(', '_').replace(')', '').replace(',', '_').replace(' ', '_')}"
 
             if input_format == "named_collections":
                 with Given("I create table for hive partition writes"):
@@ -129,17 +174,28 @@ def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_pass
                     settings=[("use_hive_partitioning", "1")],
                 )
 
-            with Then("I check data in table"):
-                check_select(
-                    select=f"SELECT i FROM {table_name} WHERE d1 = {type_value[1]} AND d2 = {type_value[1]} ORDER BY i",
-                    expected_result=None,
-                    node=node,
-                    settings=[("use_hive_partitioning", "1")],
-                )
             with Then("I check files in bucket"):
                 files = get_bucket_files_list(node=node, filename=table_name)
-                value = f"{type_value[1]}" if type_value[0] in ("Int32", "Decimal", "Float", "Double") else f"{type_value[1][1:-1]}"
+                value = f"{type_value[1]}" if type_value[0] in ("Int32", "Decimal(10, 3)", "Float", "Double") else f"{type_value[1][1:-1]}"
                 assert f"{table_name}/d1={value}/d2={value}/" in files, error()
+
+            if type_value[0] == "Float":
+                
+                with Then("I check data in table"):
+                    check_select(
+                        select=f"SELECT i FROM {table_name} WHERE d1 = '{type_value[1]}' AND d2 = '{type_value[1]}' ORDER BY i",
+                        expected_result="1",
+                        node=node,
+                        settings=[("use_hive_partitioning", "1")],
+                    )
+            else:
+                with Then("I check data in table"):
+                    check_select(
+                        select=f"SELECT i FROM {table_name} WHERE d1 = {type_value[1]} AND d2 = {type_value[1]} ORDER BY i",
+                        expected_result="1",
+                        node=node,
+                        settings=[("use_hive_partitioning", "1")],
+                    )
 
 @TestScenario
 @Requirements(
@@ -310,36 +366,36 @@ def unsupported_types(
         )
 
 
-# @TestScenario
-# @Requirements(
-#     RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket("1.0"),
-# )
-# def read_only_bucket(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
-#     """Check that clickhouse returns an error when trying to write to a read-only bucket."""
+@TestScenario
+@Requirements(
+    RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket("1.0"),
+)
+def read_only_bucket(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+    """Check that clickhouse returns an error when trying to write to a read-only bucket."""
 
-#     if node is None:
-#         node = self.context.node
+    if node is None:
+        node = self.context.node
 
-#     table_name = "read_only_s3"
+    table_name = "read_only_s3"
 
-#     with Given("I create table for hive partition writes"):
-#         create_table(
-#             columns="d Int32, i Int32",
-#             table_name=table_name,
-#             engine=f"S3('{uri_readonly}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
-#             partition_by="d",
-#             node=node,
-#         )
+    with Given("I create table for hive partition writes"):
+        create_table(
+            columns="d Int32, i Int32",
+            table_name=table_name,
+            engine=f"S3('{uri_readonly}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
+            partition_by="d",
+            node=node,
+        )
 
-#     with When("I insert data into table"):
-#         insert_into_table_values(
-#             node=node,
-#             table_name=table_name,
-#             values="(1, 1)",
-#             settings=[("use_hive_partitioning", "1")],
-#             exitcode=499,
-#             message="DB::Exception: Failed to check existence"
-#         )
+    with When("I insert data into table"):
+        insert_into_table_values(
+            node=node,
+            table_name=table_name,
+            values="(1, 1)",
+            settings=[("use_hive_partitioning", "1")],
+            exitcode=243,
+            message="DB::Exception: Failed to check existence"
+        )
 
 
 @TestScenario

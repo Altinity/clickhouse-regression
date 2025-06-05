@@ -49,7 +49,7 @@ def s3_table_engine(
 
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
-            # start_minio(access_key=root_user, secret_key=root_password, uri="localhost:9002")
+            start_minio(access_key=root_user, secret_key=root_password, uri="localhost:9002")
             uri_bucket_file = (
                 uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
             )
@@ -87,7 +87,6 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.stress = stress
     self.context.with_analyzer = with_analyzer
-
     Feature(test=s3_table_engine)(
         cluster_args=cluster_args,
         uri=minio_args["minio_uri"],
