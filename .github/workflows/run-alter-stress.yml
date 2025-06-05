@@ -1,4 +1,4 @@
-name: 🦾 Stress Tests
+name: 🦾 Stress tests
 run-name: 🦾 ${{ inputs.custom_run_name || format('{0} | Stress {1} | Provider {2} | Arch {3}', inputs.version, inputs.scenario, inputs.storage_provider, inputs.architecture) }}
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Reusable Suite
+name: Reusable suite
 on:
   workflow_call:
     inputs:

@@ -1,4 +1,4 @@
-name: 🔬 Run Regression on All Versions
+name: 🔬 Run regression on all versions
 run-name: 🔬 ${{ (inputs.suite == 'all' && format('All Versions | Full Regression | x86')) || format('All Versions | {0} | x86', inputs.suite) }}
 
 on:
