@@ -8,7 +8,7 @@ on:
 
 jobs:
   altinitystable-23-8-x86-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.16.43.altinitystable
       version: '23.8.16.43'
@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
 
   altinitystable-23-8-arm-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:23.8.16.43.altinitystable
       version: '23.8.16.43'

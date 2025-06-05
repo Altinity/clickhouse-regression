@@ -61,9 +61,9 @@
             * 2.7.2.3 [RQ.HivePartitioning.HivePartitionWrites.PartitionKey](#rqhivepartitioninghivepartitionwritespartitionkey)
         * 2.7.3 [Hive Partition Writes Syntax](#hive-partition-writes-syntax)
             * 2.7.3.1 [RQ.HivePartitioning.HivePartitionWritesSyntax.Generic](#rqhivepartitioninghivepartitionwritessyntaxgeneric)
-        * 2.7.4 [Partition Stratagy Parameter](#partition-stratagy-parameter)
-            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy](#rqhivepartitioninghivepartitionwritespartitionstratagy)
-            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstratagywrongargument)
+        * 2.7.4 [Partition Strategy Parameter](#partition-strategy-parameter)
+            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy](#rqhivepartitioninghivepartitionwritespartitionstrategy)
+            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstrategywrongargument)
         * 2.7.5 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
             * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
             * 2.7.5.2 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
@@ -310,7 +310,7 @@ INSERT INTO hive_writes VALUES
 ##### RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions
 version: 1.0
 
-[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_stratagy=hive`.
+[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_strategy=hive`.
 
 ##### RQ.HivePartitioning.HivePartitionWrites.FileExist
 version: 1.0
@@ -379,22 +379,22 @@ version: 1.0
 S3 table Engine SHALL have the following syntax:
 
 ```SQL
-ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_stratagy][, hive_partition_strategy_write_partition_columns_into_files])
+ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_strategy][, hive_partition_strategy_write_partition_columns_into_files])
 ```
 
-#### Partition Stratagy Parameter
+#### Partition Strategy Parameter
 
-##### RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy
 version: 1.0
 
-[ClickHouse] SHALL support `partition_stratagy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.
+[ClickHouse] SHALL support `partition_strategy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.
 [ClickHouse] SHALL support 'hive' and 'auto' values for this parameter. [ClickHouse] SHALL enable hive partition writes if it is set to 'hive' and disable if it is set to 'auto'.
-`partition_stratagy` SHALL be 'auto' by default.
+`partition_strategy` SHALL be 'auto' by default.
 
-##### RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument
 version: 1.0
 
-[ClickHouse] SHALL return an error if `partition_stratagy` parameter neither set to 'auto' and 'hive'.
+[ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.
 
 #### Hive Partition Strategy Write Partition Columns Into Files Parameter
 
@@ -436,14 +436,14 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename
 version: 1.0
 
-[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_stratagy` is set to 'hive'.
+[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_strategy` is set to 'hive'.
 
 #### S3 Engine Parameters
 
 ##### RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters
 version: 1.0
 
-[ClickHouse] SHALL not change behavior of the following parameters if `partition_stratagy` is set to 'hive':
+[ClickHouse] SHALL not change behavior of the following parameters if `partition_strategy` is set to 'hive':
 `aws_access_key_id`, `aws_secret_access_key`, `format`, `compression`.
 
 

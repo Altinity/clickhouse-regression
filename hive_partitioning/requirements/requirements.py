@@ -9,920 +9,913 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_HivePartitioning_Generic_Support = Requirement(
-    name='RQ.HivePartitioning.Generic.Support',
-    version='1.0',
+    name="RQ.HivePartitioning.Generic.Support",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support interpreting Hive-style partitioned paths (subdirectories in the form name=value) as virtual columns when accessing external data sources. This enables querying partitioned data without manual parsing of file paths.\n'
-        '\n'
+        "[ClickHouse] SHALL support interpreting Hive-style partitioned paths (subdirectories in the form name=value) as virtual columns when accessing external data sources. This enables querying partitioned data without manual parsing of file paths.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.1.1'
+    num="2.1.1",
 )
 
 RQ_HivePartitioning_Generic_EnableSetting = Requirement(
-    name='RQ.HivePartitioning.Generic.EnableSetting',
-    version='1.0',
+    name="RQ.HivePartitioning.Generic.EnableSetting",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL use support setting `use_hive_partitioning` to toggle Hive-style partition recognition for file-based table engines and table functions. By default, in versions where it is disabled, users SHALL enable this setting to activate partition discovery.\n'
-        '\n'
+        "[ClickHouse] SHALL use support setting `use_hive_partitioning` to toggle Hive-style partition recognition for file-based table engines and table functions. By default, in versions where it is disabled, users SHALL enable this setting to activate partition discovery.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.1.2'
+    num="2.1.2",
 )
 
 RQ_HivePartitioning_Generic_Pruning = Requirement(
-    name='RQ.HivePartitioning.Generic.Pruning',
-    version='1.0',
+    name="RQ.HivePartitioning.Generic.Pruning",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL only read the files from the partitions that satisfy filters when Hive-style partitioning is enabled and queries include filters on partition columns. In other words, partition pruning SHALL occur to avoid listing or scanning files in irrelevant directories. This behavior improves query performance by reducing I/O on external storage.\n'
-        '\n'
+        "[ClickHouse] SHALL only read the files from the partitions that satisfy filters when Hive-style partitioning is enabled and queries include filters on partition columns. In other words, partition pruning SHALL occur to avoid listing or scanning files in irrelevant directories. This behavior improves query performance by reducing I/O on external storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.1.3'
+    num="2.1.3",
 )
 
 RQ_HivePartitioning_Generic_Performance = Requirement(
-    name='RQ.HivePartitioning.Generic.Performance',
-    version='1.0',
+    name="RQ.HivePartitioning.Generic.Performance",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL execute queries with `use_hive_partitioning=1` faster than queries with `use_hive_partitioning=0` if some files from storage are pruned with `WHERE` clause.\n'
-        '\n'
+        "[ClickHouse] SHALL execute queries with `use_hive_partitioning=1` faster than queries with `use_hive_partitioning=0` if some files from storage are pruned with `WHERE` clause.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.1.4'
+    num="2.1.4",
 )
 
 RQ_HivePartitioning_VirtualColumns_Generic = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.Generic',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.Generic",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[Clickhouse] SHALL create virtual column for each partition key present in the file path with the same name as the partition key. \n'
-        '\n'
+        "[Clickhouse] SHALL create virtual column for each partition key present in the file path with the same name as the partition key. \n"
+        "\n"
         'For example, given a path segment /city=London/, a virtual column city will be provided with value "London" for all rows read from that directory.\n'
-        '\n'
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.1'
+    num="2.2.1",
 )
 
 RQ_HivePartitioning_VirtualColumns_ReadOnly = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.ReadOnly',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.ReadOnly",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Virtual columns created by hive partitioning SHALL be read-only.\n'
-        '\n'
+        "Virtual columns created by hive partitioning SHALL be read-only.\n" "\n"
     ),
     link=None,
     level=3,
-    num='2.2.2'
+    num="2.2.2",
 )
 
 RQ_HivePartitioning_VirtualColumns_Appearance = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.Appearance',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.Appearance",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Virtual columns created by hive partitioning SHALL not appear in query output, when query does not select this queries.\n'
-        '\n'
-        'For example:\n'
-        '`SELECT *` \n'
-        'This query SHALL not return virtual columns.\n'
-        '\n'
+        "Virtual columns created by hive partitioning SHALL not appear in query output, when query does not select this queries.\n"
+        "\n"
+        "For example:\n"
+        "`SELECT *` \n"
+        "This query SHALL not return virtual columns.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.3'
+    num="2.2.3",
 )
 
 RQ_HivePartitioning_VirtualColumns_Accessability = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.Accessability',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.Accessability",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Virtual columns created by hive partitioning SHALL be accessible in queries.\n'
-        '\n'
-        'For example:\n'
+        "Virtual columns created by hive partitioning SHALL be accessible in queries.\n"
+        "\n"
+        "For example:\n"
         "`SELECT date FROM s3(...) WHERE date='01-01-2020'`\n"
-        '\n'
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.4'
+    num="2.2.4",
 )
 
 RQ_HivePartitioning_VirtualColumns_InvalidPath = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.InvalidPath',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.InvalidPath",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if path defined in query is invalid or storage does not contain defined files.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if path defined in query is invalid or storage does not contain defined files.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.5'
+    num="2.2.5",
 )
 
 RQ_HivePartitioning_VirtualColumns_NameConflict = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.NameConflict',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.NameConflict",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL not use virtual column if name of the virtual column matches with the name of table column.\n'
-        '\n'
+        "[ClickHouse] SHALL not use virtual column if name of the virtual column matches with the name of table column.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.6'
+    num="2.2.6",
 )
 
 RQ_HivePartitioning_VirtualColumns_HiveDisabled = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.HiveDisabled',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.HiveDisabled",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[Clickhouse] SHALL not create virtual column if `use_hive_partitioning` setting is disabled.\n'
-        '\n'
-        '\n'
+        "[Clickhouse] SHALL not create virtual column if `use_hive_partitioning` setting is disabled.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.7'
+    num="2.2.7",
 )
 
 RQ_HivePartitioning_VirtualColumns_NonExistingKey = Requirement(
-    name='RQ.HivePartitioning.VirtualColumns.NonExistingKey',
-    version='1.0',
+    name="RQ.HivePartitioning.VirtualColumns.NonExistingKey",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[Clickhouse] SHALL return `Unknown identifier` error if query refers to nonexisting partition key.\n'
-        '\n'
+        "[Clickhouse] SHALL return `Unknown identifier` error if query refers to nonexisting partition key.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.2.8'
+    num="2.2.8",
 )
 
 RQ_HivePartitioning_HivePartitionTypes_Generic = Requirement(
-    name='RQ.HivePartitioning.HivePartitionTypes.Generic',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionTypes.Generic",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Partition values extracted from paths SHALL be treated as strings with no implicit type inference.\n'
-        '\n'
+        "Partition values extracted from paths SHALL be treated as strings with no implicit type inference.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.3.1'
+    num="2.3.1",
 )
 
 RQ_HivePartitioning_HivePartitionTypes_DefaultType = Requirement(
-    name='RQ.HivePartitioning.HivePartitionTypes.DefaultType',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionTypes.DefaultType",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'Partition values extracted from paths SHALL have `LowCardinality(String)` type.\n'
-        '\n'
+        "Partition values extracted from paths SHALL have `LowCardinality(String)` type.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.3.2'
+    num="2.3.2",
 )
 
 RQ_HivePartitioning_HivePartitionTypes_EmptyValue = Requirement(
-    name='RQ.HivePartitioning.HivePartitionTypes.EmptyValue',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionTypes.EmptyValue",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The hive value SHALL be empty string if directory is missing a key.\n'
-        '\n'
+        "The hive value SHALL be empty string if directory is missing a key.\n" "\n"
     ),
     link=None,
     level=3,
-    num='2.3.3'
+    num="2.3.3",
 )
 
 RQ_HivePartitioning_Wildcards_Generic = Requirement(
-    name='RQ.HivePartitioning.Wildcards.Generic',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.Generic",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support glob-style wildcards for hive partitioning.\n'
-        '\n'
+        "[ClickHouse] SHALL support glob-style wildcards for hive partitioning.\n" "\n"
     ),
     link=None,
     level=3,
-    num='2.4.1'
+    num="2.4.1",
 )
 
 RQ_HivePartitioning_Wildcards_SingleStar = Requirement(
-    name='RQ.HivePartitioning.Wildcards.SingleStar',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.SingleStar",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `*` wildcard for hive partitioning. `*` wildcard SHALL match any sequence of characters except `/`.\n'
-        '\n'
+        "[ClickHouse] SHALL support `*` wildcard for hive partitioning. `*` wildcard SHALL match any sequence of characters except `/`.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.2'
+    num="2.4.2",
 )
 
 RQ_HivePartitioning_Wildcards_DoubleStart = Requirement(
-    name='RQ.HivePartitioning.Wildcards.DoubleStart',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.DoubleStart",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `**` wildcard for hive partitioning. `**` wildcard SHALL match any sequence of characters including `/`.\n'
-        '\n'
+        "[ClickHouse] SHALL support `**` wildcard for hive partitioning. `**` wildcard SHALL match any sequence of characters including `/`.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.3'
+    num="2.4.3",
 )
 
 RQ_HivePartitioning_Wildcards_QuestionMark = Requirement(
-    name='RQ.HivePartitioning.Wildcards.QuestionMark',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.QuestionMark",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `?` wildcard for hive partitioning. `?` wildcard SHALL match a single character except `/`.\n'
-        '\n'
+        "[ClickHouse] SHALL support `?` wildcard for hive partitioning. `?` wildcard SHALL match a single character except `/`.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.4'
+    num="2.4.4",
 )
 
 RQ_HivePartitioning_Wildcards_List = Requirement(
-    name='RQ.HivePartitioning.Wildcards.List',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.List",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `{a[, b][, c]...}` wildcard for hive partitioning. `{a[, b][, c]...}` wildcard SHALL match one of the listed options.\n'
-        '\n'
+        "[ClickHouse] SHALL support `{a[, b][, c]...}` wildcard for hive partitioning. `{a[, b][, c]...}` wildcard SHALL match one of the listed options.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.5'
+    num="2.4.5",
 )
 
 RQ_HivePartitioning_Wildcards_WrongList = Requirement(
-    name='RQ.HivePartitioning.Wildcards.WrongList',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.WrongList",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if one or more options in `{a[, b][, c]...}` are invalid or path does not exists.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if one or more options in `{a[, b][, c]...}` are invalid or path does not exists.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.6'
+    num="2.4.6",
 )
 
 RQ_HivePartitioning_Wildcards_Range = Requirement(
-    name='RQ.HivePartitioning.Wildcards.Range',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.Range",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `{N..M}` wildcard for hive partitioning. `{N..M}` wildcard SHALL match numbers in a range.\n'
-        '\n'
+        "[ClickHouse] SHALL support `{N..M}` wildcard for hive partitioning. `{N..M}` wildcard SHALL match numbers in a range.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.7'
+    num="2.4.7",
 )
 
 RQ_HivePartitioning_Wildcards_WrongRange = Requirement(
-    name='RQ.HivePartitioning.Wildcards.WrongRange',
-    version='1.0',
+    name="RQ.HivePartitioning.Wildcards.WrongRange",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if one or more options in `{N..M}` are invalid or path does not exists.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if one or more options in `{N..M}` are invalid or path does not exists.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.4.8'
+    num="2.4.8",
 )
 
 RQ_HivePartitioning_TableFunction_S3 = Requirement(
-    name='RQ.HivePartitioning.TableFunction.S3',
-    version='1.0',
+    name="RQ.HivePartitioning.TableFunction.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The [s3] table function SHALL support Hive-style partitions for reading in the provided URL path. If the S3 path contains wildcard patterns corresponding to name=value directories and use_hive_partitioning is enabled, ClickHouse SHALL detect those patterns, expose corresponding virtual columns and prune not related to the query partitions. For example, a query:\n'
-        '\n'
-        '```SQL\n'
-        'SET use_hive_partitioning = 1;\n'
-        'SELECT COUNT(*) \n'
+        "The [s3] table function SHALL support Hive-style partitions for reading in the provided URL path. If the S3 path contains wildcard patterns corresponding to name=value directories and use_hive_partitioning is enabled, ClickHouse SHALL detect those patterns, expose corresponding virtual columns and prune not related to the query partitions. For example, a query:\n"
+        "\n"
+        "```SQL\n"
+        "SET use_hive_partitioning = 1;\n"
+        "SELECT COUNT(*) \n"
         "FROM s3('s3://bucket/data/date=*/country=*/*.parquet', 'Parquet') \n"
         "WHERE country = 'Netherlands' AND date >= '2020-01-01';\n"
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.5.1'
+    num="2.5.1",
 )
 
 RQ_HivePartitioning_TableFunction_S3Cluster = Requirement(
-    name='RQ.HivePartitioning.TableFunction.S3Cluster',
-    version='1.0',
+    name="RQ.HivePartitioning.TableFunction.S3Cluster",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The [s3Cluster] table function SHALL equally support Hive-style partitioning for reading across a cluster. On each cluster node, the function SHALL interpret partition directories and prune files in the same manner as a local [s3] call. This ensures distributed querying of an S3-partitioned dataset is consistent and efficient, reading only the necessary partitions on each node.\n'
-        '\n'
+        "The [s3Cluster] table function SHALL equally support Hive-style partitioning for reading across a cluster. On each cluster node, the function SHALL interpret partition directories and prune files in the same manner as a local [s3] call. This ensures distributed querying of an S3-partitioned dataset is consistent and efficient, reading only the necessary partitions on each node.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.5.2'
+    num="2.5.2",
 )
 
 RQ_HivePartitioning_TableFunction_HDFS = Requirement(
-    name='RQ.HivePartitioning.TableFunction.HDFS',
-    version='1.0',
+    name="RQ.HivePartitioning.TableFunction.HDFS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'The [HDFS] table function SHALL support Hive-style partitions for reading in the provided URL path. If the path contains wildcard patterns corresponding to name=value directories and use_hive_partitioning is enabled, ClickHouse SHALL detect those patterns, expose corresponding virtual columns and prune not related to the query partitions.\n'
-        '\n'
+        "The [HDFS] table function SHALL support Hive-style partitions for reading in the provided URL path. If the path contains wildcard patterns corresponding to name=value directories and use_hive_partitioning is enabled, ClickHouse SHALL detect those patterns, expose corresponding virtual columns and prune not related to the query partitions.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='2.5.3'
+    num="2.5.3",
 )
 
 RQ_HivePartitioning_TableEngines_S3 = Requirement(
-    name='RQ.HivePartitioning.TableEngines.S3',
-    version='1.0',
+    name="RQ.HivePartitioning.TableEngines.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading from S3 table engine with hive partitioning. Hive partitioning columns SHALL be defined in PARTITION BY statement.\n'
-        '\n'
-        '```SQL\n'
-        'CREATE TABLE s3_engine_table(x Int64)\n'
-        'ENGINE = S3(...)\n'
-        'PARTITION BY date\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support reading from S3 table engine with hive partitioning. Hive partitioning columns SHALL be defined in PARTITION BY statement.\n"
+        "\n"
+        "```SQL\n"
+        "CREATE TABLE s3_engine_table(x Int64)\n"
+        "ENGINE = S3(...)\n"
+        "PARTITION BY date\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.6.1.1'
+    num="2.6.1.1",
 )
 
 RQ_HivePartitioning_TableEngines_HDFS = Requirement(
-    name='RQ.HivePartitioning.TableEngines.HDFS',
-    version='1.0',
+    name="RQ.HivePartitioning.TableEngines.HDFS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading from HDFS table engine with hive partitioning. Hive partitioning columns SHALL be defined in PARTITION BY statement.\n'
-        '\n'
-        '```SQL\n'
-        'CREATE TABLE hdfs_sales(x Int64)\n'
-        'ENGINE = HDFS(\n'
+        "[ClickHouse] SHALL support reading from HDFS table engine with hive partitioning. Hive partitioning columns SHALL be defined in PARTITION BY statement.\n"
+        "\n"
+        "```SQL\n"
+        "CREATE TABLE hdfs_sales(x Int64)\n"
+        "ENGINE = HDFS(\n"
         "    'hdfs:///data/{date}/file.parquet', \n"
         "    'Parquet'\n"
-        ')\n'
-        'PARTITION BY date\n'
-        '```\n'
-        '\n'
+        ")\n"
+        "PARTITION BY date\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.6.2.1'
+    num="2.6.2.1",
 )
 
 RQ_HivePartitioning_TableEngines_Hive = Requirement(
-    name='RQ.HivePartitioning.TableEngines.Hive',
-    version='1.0',
+    name="RQ.HivePartitioning.TableEngines.Hive",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading from Hive table engine with hive partitioning. Hive partitioning columns SHALL be defined in Hive Metastore.\n'
-        '\n'
-        '```SQL\n'
-        'CREATE TABLE hive_table(x Int64)\n'
-        'ENGINE = Hive(...) \n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support reading from Hive table engine with hive partitioning. Hive partitioning columns SHALL be defined in Hive Metastore.\n"
+        "\n"
+        "```SQL\n"
+        "CREATE TABLE hive_table(x Int64)\n"
+        "ENGINE = Hive(...) \n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.6.3.1'
+    num="2.6.3.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_S3 = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.S3',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support hive-style partition writes by using S3 table engine.\n'
-        '\n'
-        '\n'
-        'For example:\n'
-        '```SQL\n'
-        'CREATE TABLE hive_writes(year UInt16, country String, x UInt8)\n'
+        "[ClickHouse] SHALL support hive-style partition writes by using S3 table engine.\n"
+        "\n"
+        "\n"
+        "For example:\n"
+        "```SQL\n"
+        "CREATE TABLE hive_writes(year UInt16, country String, x UInt8)\n"
         "ENGINE = S3(s3_conn, filename = 'filename', format = Parquet, partition_strategy='hive')\n"
-        'PARTITION BY (year, country);\n'
-        '\n'
-        'INSERT INTO hive_writes VALUES\n'
+        "PARTITION BY (year, country);\n"
+        "\n"
+        "INSERT INTO hive_writes VALUES\n"
         "    (2022, 'USA', 1),\n"
         "    (2022, 'Canada', 2);\n"
-        '```\n'
-        '\n'
-        '\n'
+        "```\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.1'
+    num="2.7.1.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_stratagy=hive`.\n'
-        '\n'
+        "[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_strategy=hive`.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.2'
+    num="2.7.1.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_FileExist = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.FileExist',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.FileExist",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL properly add data to the file if file already exists. This operation SHALL not delete or overwrite existing data.\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL properly add data to the file if file already exists. This operation SHALL not delete or overwrite existing data.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.3'
+    num="2.7.1.3",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_MissingColumn = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.MissingColumn',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.MissingColumn",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause is missing.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause is missing.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.4'
+    num="2.7.1.4",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_NullInColumn = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.NullInColumn',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.NullInColumn",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error when attempting to insert a `NULL` value into a column that is specified in the `PARTITION BY` clause.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error when attempting to insert a `NULL` value into a column that is specified in the `PARTITION BY` clause.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.5'
+    num="2.7.1.5",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_UnsupportedTypes = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse] SHALL return an error if type of the column defined in the `PARTITION BY` clause can't be casted into string.\n"
-        '\n'
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.6'
+    num="2.7.1.6",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if bucket difined in S3 engine clause is read-only.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if bucket difined in S3 engine clause is read-only.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.7'
+    num="2.7.1.7",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_NonAccessibleBucket = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if bucket difined in S3 engine clause is not accessible.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if bucket difined in S3 engine clause is not accessible.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.8'
+    num="2.7.1.8",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_ParallelInserts = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.ParallelInserts',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.ParallelInserts",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] SHALL support parallel inserts into one file.\n'
-        '\n'
-    ),
+    description=("[ClickHouse] SHALL support parallel inserts into one file.\n" "\n"),
     link=None,
     level=4,
-    num='2.7.1.9'
+    num="2.7.1.9",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_WriteFail = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.WriteFail',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.WriteFail",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL fail the insert and SHALL not leave partial data if any object write fails.\n'
-        '\n'
+        "[ClickHouse] SHALL fail the insert and SHALL not leave partial data if any object write fails.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.1.10'
+    num="2.7.1.10",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionBy = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.PartitionBy',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.PartitionBy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL perform hive partition writes only if table engine definition contains `PARTITION BY` clause.\n'
-        '\n'
+        "[ClickHouse] SHALL perform hive partition writes only if table engine definition contains `PARTITION BY` clause.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.2.1'
+    num="2.7.2.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if user tries to insert into table with S3 table engine without `PARTITION BY` clause.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if user tries to insert into table with S3 table engine without `PARTITION BY` clause.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.2.2'
+    num="2.7.2.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionKey = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.PartitionKey',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.PartitionKey",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL create path containing {/key=value/} for all columns defined in `PARTITION BY` clause and file on this path on insert, if file does not exists.\n'
-        'Inserted data SHALL be located in this file.\n'
-        '\n'
+        "[ClickHouse] SHALL create path containing {/key=value/} for all columns defined in `PARTITION BY` clause and file on this path on insert, if file does not exists.\n"
+        "Inserted data SHALL be located in this file.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.2.3'
+    num="2.7.2.3",
 )
 
 RQ_HivePartitioning_HivePartitionWritesSyntax_Generic = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWritesSyntax.Generic',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWritesSyntax.Generic",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        'S3 table Engine SHALL have the following syntax:\n'
-        '\n'
-        '```SQL\n'
-        'ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_stratagy][, hive_partition_strategy_write_partition_columns_into_files])\n'
-        '```\n'
-        '\n'
+        "S3 table Engine SHALL have the following syntax:\n"
+        "\n"
+        "```SQL\n"
+        "ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_strategy][, hive_partition_strategy_write_partition_columns_into_files])\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.3.1'
+    num="2.7.3.1",
 )
 
-RQ_HivePartitioning_HivePartitionWrites_PartitionStratagy = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy',
-    version='1.0',
+RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `partition_stratagy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.\n'
+        "[ClickHouse] SHALL support `partition_strategy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.\n"
         "[ClickHouse] SHALL support 'hive' and 'auto' values for this parameter. [ClickHouse] SHALL enable hive partition writes if it is set to 'hive' and disable if it is set to 'auto'.\n"
-        "`partition_stratagy` SHALL be 'auto' by default.\n"
-        '\n'
+        "`partition_strategy` SHALL be 'auto' by default.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.4.1'
+    num="2.7.4.1",
 )
 
-RQ_HivePartitioning_HivePartitionWrites_PartitionStratagyWrongArgument = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument',
-    version='1.0',
+RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an error if `partition_stratagy` parameter neither set to 'auto' and 'hive'.\n"
-        '\n'
+        "[ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.4.2'
+    num="2.7.4.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `partition_columns_in_data_file` parameter for S3 engine that SHALL define if [ClickHouse] writes partition columns into files or not.\n'
-        '`partition_columns_in_data_file` SHALL be False by default.\n'
-        '\n'
+        "[ClickHouse] SHALL support `partition_columns_in_data_file` parameter for S3 engine that SHALL define if [ClickHouse] writes partition columns into files or not.\n"
+        "`partition_columns_in_data_file` SHALL be False by default.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.5.1'
+    num="2.7.5.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if `partition_columns_in_data_file` parameter gets argument that cannot be casted to boolean.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if `partition_columns_in_data_file` parameter gets argument that cannot be casted to boolean.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.5.2'
+    num="2.7.5.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_Path = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.Path',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.Path",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `path` parameter that defines path to the bucket for hive partition writes.\n'
-        '\n'
+        "[ClickHouse] SHALL support `path` parameter that defines path to the bucket for hive partition writes.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.6.1'
+    num="2.7.6.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_InvalidPath = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.InvalidPath',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.InvalidPath",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if defined `path` is invalid.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if defined `path` is invalid.\n" "\n"
     ),
     link=None,
     level=4,
-    num='2.7.6.2'
+    num="2.7.6.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_Filename = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.Filename',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.Filename",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `filename` parameter that defines filename for hive partition writes.\n'
-        '\n'
+        "[ClickHouse] SHALL support `filename` parameter that defines filename for hive partition writes.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.7.1'
+    num="2.7.7.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_InvalidFilename = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.InvalidFilename',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.InvalidFilename",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if defined `filename` is invalid or points to a directory.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if defined `filename` is invalid or points to a directory.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.7.2'
+    num="2.7.7.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_stratagy` is set to 'hive'.\n"
-        '\n'
+        "[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_strategy` is set to 'hive'.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='2.7.7.3'
+    num="2.7.7.3",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_S3EngineParameters = Requirement(
-    name='RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters',
-    version='1.0',
+    name="RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not change behavior of the following parameters if `partition_stratagy` is set to 'hive':\n"
-        '`aws_access_key_id`, `aws_secret_access_key`, `format`, `compression`.\n'
-        '\n'
-        '\n'
-        '[ClickHouse]: https://clickhouse.com\n'
-        '[s3]: https://clickhouse.com/docs/sql-reference/table-functions/s3\n'
-        '[s3Cluster]: https://clickhouse.com/docs/sql-reference/table-functions/s3Cluster\n'
-        '[HDFS]: https://clickhouse.com/docs/sql-reference/table-functions/hdfs\n'
+        "[ClickHouse] SHALL not change behavior of the following parameters if `partition_strategy` is set to 'hive':\n"
+        "`aws_access_key_id`, `aws_secret_access_key`, `format`, `compression`.\n"
+        "\n"
+        "\n"
+        "[ClickHouse]: https://clickhouse.com\n"
+        "[s3]: https://clickhouse.com/docs/sql-reference/table-functions/s3\n"
+        "[s3Cluster]: https://clickhouse.com/docs/sql-reference/table-functions/s3Cluster\n"
+        "[HDFS]: https://clickhouse.com/docs/sql-reference/table-functions/hdfs\n"
     ),
     link=None,
     level=4,
-    num='2.7.8.1'
+    num="2.7.8.1",
 )
 
 SRS_045_Hive_Partitioning = Specification(
-    name='SRS-045 Hive Partitioning',
+    name="SRS-045 Hive Partitioning",
     description=None,
     author=None,
     date=None,
@@ -938,80 +931,214 @@ SRS_045_Hive_Partitioning = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Introduction', level=1, num='1'),
-        Heading(name='Requirements', level=1, num='2'),
-        Heading(name='Generic Behavior', level=2, num='2.1'),
-        Heading(name='RQ.HivePartitioning.Generic.Support', level=3, num='2.1.1'),
-        Heading(name='RQ.HivePartitioning.Generic.EnableSetting', level=3, num='2.1.2'),
-        Heading(name='RQ.HivePartitioning.Generic.Pruning', level=3, num='2.1.3'),
-        Heading(name='RQ.HivePartitioning.Generic.Performance', level=3, num='2.1.4'),
-        Heading(name='Virtual Columns', level=2, num='2.2'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.Generic', level=3, num='2.2.1'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.ReadOnly', level=3, num='2.2.2'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.Appearance', level=3, num='2.2.3'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.Accessability', level=3, num='2.2.4'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.InvalidPath', level=3, num='2.2.5'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.NameConflict', level=3, num='2.2.6'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.HiveDisabled', level=3, num='2.2.7'),
-        Heading(name='RQ.HivePartitioning.VirtualColumns.NonExistingKey', level=3, num='2.2.8'),
-        Heading(name='Hive Partition Types', level=2, num='2.3'),
-        Heading(name='RQ.HivePartitioning.HivePartitionTypes.Generic', level=3, num='2.3.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionTypes.DefaultType', level=3, num='2.3.2'),
-        Heading(name='RQ.HivePartitioning.HivePartitionTypes.EmptyValue', level=3, num='2.3.3'),
-        Heading(name='Wildcards', level=2, num='2.4'),
-        Heading(name='RQ.HivePartitioning.Wildcards.Generic', level=3, num='2.4.1'),
-        Heading(name='RQ.HivePartitioning.Wildcards.SingleStar', level=3, num='2.4.2'),
-        Heading(name='RQ.HivePartitioning.Wildcards.DoubleStart', level=3, num='2.4.3'),
-        Heading(name='RQ.HivePartitioning.Wildcards.QuestionMark', level=3, num='2.4.4'),
-        Heading(name='RQ.HivePartitioning.Wildcards.List', level=3, num='2.4.5'),
-        Heading(name='RQ.HivePartitioning.Wildcards.WrongList', level=3, num='2.4.6'),
-        Heading(name='RQ.HivePartitioning.Wildcards.Range', level=3, num='2.4.7'),
-        Heading(name='RQ.HivePartitioning.Wildcards.WrongRange', level=3, num='2.4.8'),
-        Heading(name='Supported Table Functions', level=2, num='2.5'),
-        Heading(name='RQ.HivePartitioning.TableFunction.S3', level=3, num='2.5.1'),
-        Heading(name='RQ.HivePartitioning.TableFunction.S3Cluster', level=3, num='2.5.2'),
-        Heading(name='RQ.HivePartitioning.TableFunction.HDFS', level=3, num='2.5.3'),
-        Heading(name='Supported Table Engines', level=2, num='2.6'),
-        Heading(name='S3 Table Engine', level=3, num='2.6.1'),
-        Heading(name='RQ.HivePartitioning.TableEngines.S3', level=4, num='2.6.1.1'),
-        Heading(name='HDFS Table Engine', level=3, num='2.6.2'),
-        Heading(name='RQ.HivePartitioning.TableEngines.HDFS', level=4, num='2.6.2.1'),
-        Heading(name='Hive Table Engine', level=3, num='2.6.3'),
-        Heading(name='RQ.HivePartitioning.TableEngines.Hive', level=4, num='2.6.3.1'),
-        Heading(name='Hive Partition Writes', level=2, num='2.7'),
-        Heading(name='Generic', level=3, num='2.7.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.S3', level=4, num='2.7.1.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions', level=4, num='2.7.1.2'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.FileExist', level=4, num='2.7.1.3'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.MissingColumn', level=4, num='2.7.1.4'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.NullInColumn', level=4, num='2.7.1.5'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes', level=4, num='2.7.1.6'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket', level=4, num='2.7.1.7'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket', level=4, num='2.7.1.8'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.ParallelInserts', level=4, num='2.7.1.9'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.WriteFail', level=4, num='2.7.1.10'),
-        Heading(name='Partition By Clause For S3 Engine With Hive Partition Writes', level=3, num='2.7.2'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.PartitionBy', level=4, num='2.7.2.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy', level=4, num='2.7.2.2'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.PartitionKey', level=4, num='2.7.2.3'),
-        Heading(name='Hive Partition Writes Syntax', level=3, num='2.7.3'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWritesSyntax.Generic', level=4, num='2.7.3.1'),
-        Heading(name='Partition Stratagy Parameter', level=3, num='2.7.4'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy', level=4, num='2.7.4.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument', level=4, num='2.7.4.2'),
-        Heading(name='Hive Partition Strategy Write Partition Columns Into Files Parameter', level=3, num='2.7.5'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles', level=4, num='2.7.5.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument', level=4, num='2.7.5.2'),
-        Heading(name='Path Parameter', level=3, num='2.7.6'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.Path', level=4, num='2.7.6.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.InvalidPath', level=4, num='2.7.6.2'),
-        Heading(name='Filename Parameter', level=3, num='2.7.7'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.Filename', level=4, num='2.7.7.1'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.InvalidFilename', level=4, num='2.7.7.2'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename', level=4, num='2.7.7.3'),
-        Heading(name='S3 Engine Parameters', level=3, num='2.7.8'),
-        Heading(name='RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters', level=4, num='2.7.8.1'),
+        Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Requirements", level=1, num="2"),
+        Heading(name="Generic Behavior", level=2, num="2.1"),
+        Heading(name="RQ.HivePartitioning.Generic.Support", level=3, num="2.1.1"),
+        Heading(name="RQ.HivePartitioning.Generic.EnableSetting", level=3, num="2.1.2"),
+        Heading(name="RQ.HivePartitioning.Generic.Pruning", level=3, num="2.1.3"),
+        Heading(name="RQ.HivePartitioning.Generic.Performance", level=3, num="2.1.4"),
+        Heading(name="Virtual Columns", level=2, num="2.2"),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.Generic", level=3, num="2.2.1"
         ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.ReadOnly", level=3, num="2.2.2"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.Appearance", level=3, num="2.2.3"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.Accessability",
+            level=3,
+            num="2.2.4",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.InvalidPath", level=3, num="2.2.5"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.NameConflict", level=3, num="2.2.6"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.HiveDisabled", level=3, num="2.2.7"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.VirtualColumns.NonExistingKey",
+            level=3,
+            num="2.2.8",
+        ),
+        Heading(name="Hive Partition Types", level=2, num="2.3"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionTypes.Generic", level=3, num="2.3.1"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionTypes.DefaultType",
+            level=3,
+            num="2.3.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionTypes.EmptyValue",
+            level=3,
+            num="2.3.3",
+        ),
+        Heading(name="Wildcards", level=2, num="2.4"),
+        Heading(name="RQ.HivePartitioning.Wildcards.Generic", level=3, num="2.4.1"),
+        Heading(name="RQ.HivePartitioning.Wildcards.SingleStar", level=3, num="2.4.2"),
+        Heading(name="RQ.HivePartitioning.Wildcards.DoubleStart", level=3, num="2.4.3"),
+        Heading(
+            name="RQ.HivePartitioning.Wildcards.QuestionMark", level=3, num="2.4.4"
+        ),
+        Heading(name="RQ.HivePartitioning.Wildcards.List", level=3, num="2.4.5"),
+        Heading(name="RQ.HivePartitioning.Wildcards.WrongList", level=3, num="2.4.6"),
+        Heading(name="RQ.HivePartitioning.Wildcards.Range", level=3, num="2.4.7"),
+        Heading(name="RQ.HivePartitioning.Wildcards.WrongRange", level=3, num="2.4.8"),
+        Heading(name="Supported Table Functions", level=2, num="2.5"),
+        Heading(name="RQ.HivePartitioning.TableFunction.S3", level=3, num="2.5.1"),
+        Heading(
+            name="RQ.HivePartitioning.TableFunction.S3Cluster", level=3, num="2.5.2"
+        ),
+        Heading(name="RQ.HivePartitioning.TableFunction.HDFS", level=3, num="2.5.3"),
+        Heading(name="Supported Table Engines", level=2, num="2.6"),
+        Heading(name="S3 Table Engine", level=3, num="2.6.1"),
+        Heading(name="RQ.HivePartitioning.TableEngines.S3", level=4, num="2.6.1.1"),
+        Heading(name="HDFS Table Engine", level=3, num="2.6.2"),
+        Heading(name="RQ.HivePartitioning.TableEngines.HDFS", level=4, num="2.6.2.1"),
+        Heading(name="Hive Table Engine", level=3, num="2.6.3"),
+        Heading(name="RQ.HivePartitioning.TableEngines.Hive", level=4, num="2.6.3.1"),
+        Heading(name="Hive Partition Writes", level=2, num="2.7"),
+        Heading(name="Generic", level=3, num="2.7.1"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.S3", level=4, num="2.7.1.1"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions",
+            level=4,
+            num="2.7.1.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.FileExist",
+            level=4,
+            num="2.7.1.3",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.MissingColumn",
+            level=4,
+            num="2.7.1.4",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.NullInColumn",
+            level=4,
+            num="2.7.1.5",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes",
+            level=4,
+            num="2.7.1.6",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket",
+            level=4,
+            num="2.7.1.7",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket",
+            level=4,
+            num="2.7.1.8",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.ParallelInserts",
+            level=4,
+            num="2.7.1.9",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.WriteFail",
+            level=4,
+            num="2.7.1.10",
+        ),
+        Heading(
+            name="Partition By Clause For S3 Engine With Hive Partition Writes",
+            level=3,
+            num="2.7.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.PartitionBy",
+            level=4,
+            num="2.7.2.1",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy",
+            level=4,
+            num="2.7.2.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.PartitionKey",
+            level=4,
+            num="2.7.2.3",
+        ),
+        Heading(name="Hive Partition Writes Syntax", level=3, num="2.7.3"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWritesSyntax.Generic",
+            level=4,
+            num="2.7.3.1",
+        ),
+        Heading(name="Partition Strategy Parameter", level=3, num="2.7.4"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy",
+            level=4,
+            num="2.7.4.1",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument",
+            level=4,
+            num="2.7.4.2",
+        ),
+        Heading(
+            name="Hive Partition Strategy Write Partition Columns Into Files Parameter",
+            level=3,
+            num="2.7.5",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles",
+            level=4,
+            num="2.7.5.1",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument",
+            level=4,
+            num="2.7.5.2",
+        ),
+        Heading(name="Path Parameter", level=3, num="2.7.6"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.Path", level=4, num="2.7.6.1"
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.InvalidPath",
+            level=4,
+            num="2.7.6.2",
+        ),
+        Heading(name="Filename Parameter", level=3, num="2.7.7"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.Filename",
+            level=4,
+            num="2.7.7.1",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.InvalidFilename",
+            level=4,
+            num="2.7.7.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename",
+            level=4,
+            num="2.7.7.3",
+        ),
+        Heading(name="S3 Engine Parameters", level=3, num="2.7.8"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters",
+            level=4,
+            num="2.7.8.1",
+        ),
+    ),
     requirements=(
         RQ_HivePartitioning_Generic_Support,
         RQ_HivePartitioning_Generic_EnableSetting,
@@ -1056,8 +1183,8 @@ SRS_045_Hive_Partitioning = Specification(
         RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy,
         RQ_HivePartitioning_HivePartitionWrites_PartitionKey,
         RQ_HivePartitioning_HivePartitionWritesSyntax_Generic,
-        RQ_HivePartitioning_HivePartitionWrites_PartitionStratagy,
-        RQ_HivePartitioning_HivePartitionWrites_PartitionStratagyWrongArgument,
+        RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy,
+        RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument,
         RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles,
         RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument,
         RQ_HivePartitioning_HivePartitionWrites_Path,
@@ -1066,8 +1193,8 @@ SRS_045_Hive_Partitioning = Specification(
         RQ_HivePartitioning_HivePartitionWrites_InvalidFilename,
         RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename,
         RQ_HivePartitioning_HivePartitionWrites_S3EngineParameters,
-        ),
-    content=r'''
+    ),
+    content=r"""
 # SRS-045 Hive Partitioning
 # Software Requirements Specification
 
@@ -1131,9 +1258,9 @@ SRS_045_Hive_Partitioning = Specification(
             * 2.7.2.3 [RQ.HivePartitioning.HivePartitionWrites.PartitionKey](#rqhivepartitioninghivepartitionwritespartitionkey)
         * 2.7.3 [Hive Partition Writes Syntax](#hive-partition-writes-syntax)
             * 2.7.3.1 [RQ.HivePartitioning.HivePartitionWritesSyntax.Generic](#rqhivepartitioninghivepartitionwritessyntaxgeneric)
-        * 2.7.4 [Partition Stratagy Parameter](#partition-stratagy-parameter)
-            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy](#rqhivepartitioninghivepartitionwritespartitionstratagy)
-            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstratagywrongargument)
+        * 2.7.4 [Partition Strategy Parameter](#partition-strategy-parameter)
+            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy](#rqhivepartitioninghivepartitionwritespartitionstrategy)
+            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstrategywrongargument)
         * 2.7.5 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
             * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
             * 2.7.5.2 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
@@ -1380,7 +1507,7 @@ INSERT INTO hive_writes VALUES
 ##### RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions
 version: 1.0
 
-[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_stratagy=hive`.
+[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_strategy=hive`.
 
 ##### RQ.HivePartitioning.HivePartitionWrites.FileExist
 version: 1.0
@@ -1449,22 +1576,22 @@ version: 1.0
 S3 table Engine SHALL have the following syntax:
 
 ```SQL
-ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_stratagy][, hive_partition_strategy_write_partition_columns_into_files])
+ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_strategy][, hive_partition_strategy_write_partition_columns_into_files])
 ```
 
-#### Partition Stratagy Parameter
+#### Partition Strategy Parameter
 
-##### RQ.HivePartitioning.HivePartitionWrites.PartitionStratagy
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy
 version: 1.0
 
-[ClickHouse] SHALL support `partition_stratagy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.
+[ClickHouse] SHALL support `partition_strategy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.
 [ClickHouse] SHALL support 'hive' and 'auto' values for this parameter. [ClickHouse] SHALL enable hive partition writes if it is set to 'hive' and disable if it is set to 'auto'.
-`partition_stratagy` SHALL be 'auto' by default.
+`partition_strategy` SHALL be 'auto' by default.
 
-##### RQ.HivePartitioning.HivePartitionWrites.PartitionStratagyWrongArgument
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument
 version: 1.0
 
-[ClickHouse] SHALL return an error if `partition_stratagy` parameter neither set to 'auto' and 'hive'.
+[ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.
 
 #### Hive Partition Strategy Write Partition Columns Into Files Parameter
 
@@ -1506,14 +1633,14 @@ version: 1.0
 ##### RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename
 version: 1.0
 
-[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_stratagy` is set to 'hive'.
+[ClickHouse] SHALL write table in the root directory if `filename` parameter is not defined but `partition_strategy` is set to 'hive'.
 
 #### S3 Engine Parameters
 
 ##### RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters
 version: 1.0
 
-[ClickHouse] SHALL not change behavior of the following parameters if `partition_stratagy` is set to 'hive':
+[ClickHouse] SHALL not change behavior of the following parameters if `partition_strategy` is set to 'hive':
 `aws_access_key_id`, `aws_secret_access_key`, `format`, `compression`.
 
 
@@ -1521,5 +1648,5 @@ version: 1.0
 [s3]: https://clickhouse.com/docs/sql-reference/table-functions/s3
 [s3Cluster]: https://clickhouse.com/docs/sql-reference/table-functions/s3Cluster
 [HDFS]: https://clickhouse.com/docs/sql-reference/table-functions/hdfs
-'''
+""",
 )

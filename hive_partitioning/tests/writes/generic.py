@@ -78,11 +78,14 @@ def s3(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None)
                         settings=[("use_hive_partitioning", "1")],
                     )
 
+
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions("1.0"),
 )
-def s3_use_hive_partitioning(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_use_hive_partitioning(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse ignores `use_hive_partitioning=0` if `partition_stratagy=hive`."""
 
     if node is None:
@@ -116,11 +119,14 @@ def s3_use_hive_partitioning(self, uri, uri_readonly, minio_root_user, minio_roo
         files = get_bucket_files_list(node=node, filename=table_name)
         assert f"{table_name}/d=1/" in files, error()
 
+
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_HivePartitionWrites_S3("1.0"),
 )
-def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_many_partitions(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Run generic writes test."""
 
     if node is None:
@@ -176,11 +182,15 @@ def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_pass
 
             with Then("I check files in bucket"):
                 files = get_bucket_files_list(node=node, filename=table_name)
-                value = f"{type_value[1]}" if type_value[0] in ("Int32", "Decimal(10, 3)", "Float", "Double") else f"{type_value[1][1:-1]}"
+                value = (
+                    f"{type_value[1]}"
+                    if type_value[0] in ("Int32", "Decimal(10, 3)", "Float", "Double")
+                    else f"{type_value[1][1:-1]}"
+                )
                 assert f"{table_name}/d1={value}/d2={value}/" in files, error()
 
             if type_value[0] == "Float":
-                
+
                 with Then("I check data in table"):
                     check_select(
                         select=f"SELECT i FROM {table_name} WHERE d1 = '{type_value[1]}' AND d2 = '{type_value[1]}' ORDER BY i",
@@ -196,6 +206,7 @@ def s3_many_partitions(self, uri, uri_readonly, minio_root_user, minio_root_pass
                         node=node,
                         settings=[("use_hive_partitioning", "1")],
                     )
+
 
 @TestScenario
 @Requirements(
@@ -370,7 +381,9 @@ def unsupported_types(
 @Requirements(
     RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket("1.0"),
 )
-def read_only_bucket(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def read_only_bucket(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that clickhouse returns an error when trying to write to a read-only bucket."""
 
     if node is None:
@@ -394,7 +407,7 @@ def read_only_bucket(self, uri, uri_readonly, minio_root_user, minio_root_passwo
             values="(1, 1)",
             settings=[("use_hive_partitioning", "1")],
             exitcode=243,
-            message="DB::Exception: Failed to check existence"
+            message="DB::Exception: Failed to check existence",
         )
 
 

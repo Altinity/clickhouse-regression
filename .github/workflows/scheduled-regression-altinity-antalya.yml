@@ -8,7 +8,7 @@ on:
 
 jobs:
   altinitystable-25-2-antalya-x86-with-analyzer-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.2.2.28788.altinityantalya
       version: '25.2.2.28788'
@@ -18,7 +18,7 @@ jobs:
     secrets: inherit
 
   altinitystable-25-2-antalya-arm-with-analyzer-zookeeper:
-    uses: ./.github/workflows/run-reusable-regression.yml
+    uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.2.2.28788.altinityantalya
       version: '25.2.2.28788'

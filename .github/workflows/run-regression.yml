@@ -1,5 +1,5 @@
-name: 🔬 Run Tests CI/CD on x86 (Deprecated)
-run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | x86', inputs.version)) || format('{0} | {1} | x86', inputs.version, inputs.suite)}}
+name: 🔬 Run Regression
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
   ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
 
@@ -16,6 +16,14 @@ on:
         type: string
         required: true
         default: 24.3.12.76.altinitystable
+      arch:
+        description: "🏗️ Architecture"
+        type: choice
+        options:
+          - x86
+          - arm64
+        required: true
+        default: x86
       flags:
         description: "🚩 Flags"
         type: choice
@@ -132,2453 +140,1153 @@ on:
       custom_run_name:
         description: '📝 Custom run name (optional)'
         required: false
-
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}
-  CHECKS_DATABASE_USER: ${{ secrets.CHECKS_DATABASE_USER }}
-  CHECKS_DATABASE_PASSWORD: ${{ secrets.CHECKS_DATABASE_PASSWORD }}
-  PYTHONIOENCODING: utf-8
-  clickhouse_path: ${{ inputs.package }}
-  version: ${{ inputs.version }}
-  artifacts: ${{ inputs.artifacts }}
-  args: --test-to-end
-    --no-colors
-    --local
-    --clickhouse ${{ inputs.package }}
-    --clickhouse-version ${{ inputs.version }}
-    --collect-service-logs
-    --output ${{ inputs.output_format }}
-    --parallel ${{ vars.PARALLEL }}
-    --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$(git rev-parse HEAD)" job.name=$GITHUB_JOB job.retry=$GITHUB_RUN_ATTEMPT job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)" report.url=$SUITE_REPORT_INDEX_URL
-    --log raw.log
-    ${{ inputs.flags != 'none' && inputs.flags || ''}}
-    ${{ inputs.extra_args }}
-  artifact_paths: |
-    ./report.html
-    ./*.log.txt
-    ./*.log
-    ./*.html
-    ./*/_instances/*.log
-    ./*/_instances/*/logs/*.log
-    ./*/*/_instances/*/logs/*.log
-    ./*/*/_instances/*.log
+  workflow_call:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        required: true
+        type: string
+      version:
+        description: "🎯 Expected version. Example: 23.3.1.64"
+        type: string
+      arch:
+        description: "🏗️ Architecture"
+        type: string
+        required: true
+      flags:
+        description: "🚩 Flags"
+        type: string
+        required: false
+        default: "none"
+      suite:
+        description: "🧪 Test suite to run"
+        type: string
+        required: false
+        default: all
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        required: false
+        default: public
+      output_format:
+        description: "📜 Testflows output style."
+        type: string
+        required: false
+        default: new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        required: false
+        default: ""
+      extra_args:
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
+        type: string
+        required: false
+        default: ""
+      custom_run_name:
+        description: '📝 Custom run name (optional)'
+        type: string
+        required: false
+      run_s3_suites:
+        description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
 
 jobs:
   aes_encryption:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aes_encryption
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: EXITCODE=0;
-          python3 -u ${{ env.SUITE }}/regression.py
-          ${{ env.args }} || EXITCODE=$?;
-          .github/add_link_to_logs.sh;
-          exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  aggregate_functions:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: aggregate_functions
+  aggregate_functions_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      part: 1
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/aggregate functions/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  aggregate_functions_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      part: 2
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/aggregate functions/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   atomic_insert:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-  
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-      
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: atomic_insert
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   alter_replace_partition:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 300
-    env:
-      SUITE: alter
-      STORAGE: /replace_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_replace_partition
+      timeout_minutes: 300
+      storage_path: /replace_partition
+      regression_args: '--only "/alter/replace partition/*"'
+      artifact_name: alter-replace-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/replace partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-replace-partition-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  alter_attach_partition:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 600
-    env:
-      SUITE: alter
-      STORAGE: /attach_partition
+  alter_attach_partition_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/attach partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-attach-partition-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 1
+      timeout_minutes: 180
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 1/*"'
+      artifact_name: alter-attach-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  alter_attach_partition_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 2
+      timeout_minutes: 180
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   alter_move_partition:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 600
-    env:
-      SUITE: alter
-      STORAGE: /move_partition
     if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/alter/move partition/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-move-partition-artifacts
-          path: ${{ env.artifact_paths}}
-  
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_move_partition
+      timeout_minutes: 600
+      storage_path: /move_partition
+      regression_args: '--only "/alter/move partition/*"'
+      artifact_name: alter-move-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   attach:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 600
-    env:
-      SUITE: attach
     if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/attach/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: attach
+      timeout_minutes: 600
+      regression_args: '--only "/attach/*"'
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   base_58:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: EXITCODE=0
-            python3 
-            -u ${{ env.SUITE }}/regression.py 
-            ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: base_58
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   benchmark_aws:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 240
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /aws
-    if: ${{ inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-aws-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_aws
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_aws
+      suite_executable: benchmark.py
+      timeout_minutes: 240
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: benchmark-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   benchmark_gcs:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 240
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-gcs-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_gcs
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_gcs
+      suite_executable: benchmark.py
+      timeout_minutes: 240
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: benchmark-gcs-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   benchmark_minio:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: ontime_benchmark
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/benchmark.py
-              --storage minio
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: benchmark-minio-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ontime_benchmark
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: benchmark-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   clickhouse_keeper:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper
-      STORAGE: /no_ssl
+    strategy:
+      matrix:
+        part: [1, 2]
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      part: ${{ matrix.part }}
+      timeout_minutes: 180
+      storage_path: /no_ssl
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part ${{ matrix.part }}/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   clickhouse_keeper_ssl:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper
-      STORAGE: /ssl
+    strategy:
+      matrix:
+        part: [1, 2]
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --ssl
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-ssl-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      job_name: clickhouse_keeper_ssl
+      part: ${{ matrix.part }}
+      timeout_minutes: 180
+      storage_path: /ssl
+      regression_args: '--ssl'
+      artifact_name: clickhouse_keeper-ssl-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/clickhouse keeper/part ${{ matrix.part }}/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   clickhouse_keeper_failover:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: clickhouse_keeper_failover
-      STORAGE: /failover
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper_failover
+      timeout_minutes: 180
+      storage_path: /failover
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   data_types:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: data_types
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   datetime64_extended_range:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: datetime64_extended_range
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   disk_level_encryption:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: disk_level_encryption
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   dns:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: dns
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   engines:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: engines
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   example:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: example
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   extended_precision_data_types:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: extended_precision_data_types
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   functions:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: functions
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   iceberg:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: iceberg
     if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: iceberg
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   jwt_authentication:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: jwt_authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'jwt_authentication' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: jwt_authentication
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   kafka:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: kafka
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   kerberos:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: kerberos
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   key_value:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: key_value
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   ldap_authentication:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-authentication-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/authentication
+      job_name: ldap_authentication
+      timeout_minutes: 180
+      artifact_name: ldap-authentication-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   ldap_external_user_directory:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-external_user_directory-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/external_user_directory
+      job_name: ldap_external_user_directory
+      timeout_minutes: 180
+      artifact_name: ldap-external_user_directory-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   ldap_role_mapping:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ldap-role_mapping-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/role_mapping
+      job_name: ldap_role_mapping
+      timeout_minutes: 180
+      artifact_name: ldap-role_mapping-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   lightweight_delete:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 240
-    env:
-      SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      timeout_minutes: 240
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   memory:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 1800
-    env:
-      SUITE: memory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: memory
+      timeout_minutes: 1800
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   parquet:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /no_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      timeout_minutes: 300
+      storage_path: /no_s3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   parquet_minio:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --only "/parquet/minio/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_minio
+      timeout_minutes: 300
+      storage_path: /minio
+      regression_args: '--storage minio --only "/parquet/minio/*"'
+      artifact_name: parquet-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   parquet_aws_s3:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 300
-    env:
-      SUITE: parquet
-      STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --only "/parquet/aws s3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_aws_s3
+      timeout_minutes: 300
+      storage_path: /aws_s3
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
+      artifact_name: parquet-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   part_moves_between_shards:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  rbac:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 540
-    env:
-      SUITE: rbac
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: part_moves_between_shards
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  rbac_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 540
+      part: 1
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  rbac_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 540
+      part: 2
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
+  rbac_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 540
+      part: 3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/rbac/part 3/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: 🛠️ Setup
-        run: .github/setup.sh
+  s3_aws_1:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_aws
+      timeout_minutes: 360
+      part: 1
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
+  s3_aws_2:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_aws
+      timeout_minutes: 360
+      part: 2
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/aws s3/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+  s3_azure_1:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_azure' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_azure
+      timeout_minutes: 360
+      part: 1
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
+  
+  s3_azure_2:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_azure
+      timeout_minutes: 360
+      part: 2
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/azure/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
+  s3_gcs_1:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_gcs
+      timeout_minutes: 360
+      part: 1
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_aws:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /aws
-    if: ${{ inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage aws_s3
-              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-              --aws-s3-region ${{ secrets.AWS_REGION }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_azure:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /azure
-    if: ${{ inputs.suite == 's3_azure' || inputs.suite == 's3_all' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage azure
-              --azure-account-name ${{ secrets.AZURE_ACCOUNT_NAME }}
-              --azure-storage-key ${{ secrets.AZURE_STORAGE_KEY }}
-              --azure-container ${{ secrets.AZURE_CONTAINER_NAME }}
-              ${{ env.args }} || EXITCODE=$?;
-              .github/add_link_to_logs.sh;
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-azure-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_gcs:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-gcs-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_minio_part_1:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /minio
-      PART: part_1
+  s3_gcs_2:
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_gcs
+      timeout_minutes: 360
+      part: 2
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/gcs/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+    
+  s3_minio_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 1
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --only "/s3/minio/part 1/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-part-1-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_minio_part_2:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /minio
-      PART: part_2
+  s3_minio_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 2
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --only "/s3/minio/part 2/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-part-2-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  s3_minio_part_3:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: s3
-      STORAGE: /minio
-      PART: part_3
+  s3_minio_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --only "/s3/minio/part 3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-part-3-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 3
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   selects:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: selects
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   session_timezone:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: session_timezone
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  ssl_server_part_1:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: ssl_server
-      PART: part_1
+  ssl_server_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 1
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 1/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/ssl server/part 1/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-part-1-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  ssl_server_part_2:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: ssl_server
-      PART: part_2
+  ssl_server_2:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 2
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 2/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/ssl server/part 2/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-part-2-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
-
-  ssl_server_part_3:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 360
-    env:
-      SUITE: ssl_server
-      PART: part_3
+  ssl_server_3:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --only "/ssl server/part 3/*"
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-part-3-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 3
+      timeout_minutes: 360
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/ssl server/part 3/*"
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit 
 
   tiered_storage_aws:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /aws
-    if: ${{ inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-s3amazon
-              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-              --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-aws-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_aws
+      timeout_minutes: 180
+      storage_path: /aws
+      regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
+      artifact_name: tiered_storage-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /gcs
-    if: ${{ inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-s3gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-gcs-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_gcs
+      timeout_minutes: 180
+      storage_path: /gcs
+      regression_args: '--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: tiered_storage-gcs-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   tiered_storage_local:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_local
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   tiered_storage_minio:
-    runs-on: [self-hosted, x86, type-cx52, type-cpx51, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --with-minio
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_minio
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--with-minio'
+      artifact_name: tiered_storage-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   window_functions:
-    runs-on: [self-hosted, x86, type-cx42, type-cpx41, image-x86-app-docker-ce, in-hel1, in-fsn1, in-nbg1, in-ash, in-hil, in-sin, volume-cache-20GB]
-    timeout-minutes: 180
-    env:
-      SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
-    steps:
-      - name: ⤵️ Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: ♻️ Cache setup
-        uses: ./.github/actions/cache-setup
-
-      - name: 🛠️ Setup
-        run: .github/setup.sh
-
-      - name: 🧪 Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              ${{ env.args }} || EXITCODE=$?; 
-              .github/add_link_to_logs.sh; 
-              exit $EXITCODE
-
-      - name: 📝 Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - name: 📤 Upload logs to results database
-        if: always()
-        timeout-minutes: 20
-        run: .github/upload_results_to_database.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-      - name: ♻️ Cache sync
-        if: always()
-        uses: ./.github/actions/cache-sync
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: window_functions
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
