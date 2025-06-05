@@ -17,7 +17,7 @@ on:
         required: true
         default: 24.3.12.76.altinitystable
       arch:
-        description: "🏗️ Architecture"
+        description: "🖥 Architecture"
         type: choice
         options:
           - x86
