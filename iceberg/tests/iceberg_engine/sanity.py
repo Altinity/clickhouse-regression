@@ -33,8 +33,6 @@ def sanity(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -99,8 +97,6 @@ def sort_order(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -212,8 +208,6 @@ def recreate_table(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -261,7 +255,7 @@ def recreate_table(self, minio_root_user, minio_root_password):
         )
 
     with And("check the tables in the database after deleting the table"):
-        result = node.query("SHOW TABLES from datalake")
+        result = node.query(f"SHOW TABLES from {database_name}")
         assert table_name not in result.output, error()
 
     with And("recreate table with same name"):
@@ -298,7 +292,6 @@ def multiple_tables(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -378,8 +371,6 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -413,7 +404,7 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
         note(df)
 
     with Then("create database with Iceberg engine"):
-        database_name = "datalake"
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
@@ -435,7 +426,7 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
         )
 
     with And("check the tables in the database after deleting the table"):
-        result = node.query("SHOW TABLES from datalake")
+        result = node.query(f"SHOW TABLES from {database_name}")
         assert table_name not in result.output, error()
 
     with And("recreate table with same name"):
@@ -466,7 +457,7 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
                 assert "David\t20\t27" in result.output, error()
 
     with Then("recreate database with Iceberg engine"):
-        database_name = "datalake"
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
@@ -485,7 +476,7 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
                 assert "David\t20\t27" in result.output, error()
 
     with Then("recreate database with Iceberg engine"):
-        database_name = "datalake"
+        database_name = f"datalake_{getuid()}"
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
@@ -513,8 +504,6 @@ def rename_database(self, minio_root_user, minio_root_password):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -561,8 +550,6 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -610,8 +597,6 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -655,7 +640,6 @@ def array_join(self, minio_root_user, minio_root_password):
 
     with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
