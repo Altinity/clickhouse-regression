@@ -39,8 +39,6 @@ runs:
                     fi
                     
                 done < /tmp/docker_images_list.txt
-
-                echo "Cleanup complete"
             }
             {
                 sudo sync
