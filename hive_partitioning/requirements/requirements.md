@@ -382,16 +382,16 @@ S3 table Engine SHALL have the following syntax:
 ENGINE = S3(path [, NOSIGN | aws_access_key_id, aws_secret_access_key,] format[, compression][, filename][, partition_strategy][, hive_partition_strategy_write_partition_columns_into_files])
 ```
 
-#### Partition strategy Parameter
+#### Partition Strategy Parameter
 
-##### RQ.HivePartitioning.HivePartitionWrites.Partitionstrategy
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy
 version: 1.0
 
 [ClickHouse] SHALL support `partition_strategy` parameter for S3 engine that SHALL define if [ClickHouse] enables hive partition writes or no.
 [ClickHouse] SHALL support 'hive' and 'auto' values for this parameter. [ClickHouse] SHALL enable hive partition writes if it is set to 'hive' and disable if it is set to 'auto'.
 `partition_strategy` SHALL be 'auto' by default.
 
-##### RQ.HivePartitioning.HivePartitionWrites.PartitionstrategyWrongArgument
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument
 version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.

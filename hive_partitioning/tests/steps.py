@@ -102,7 +102,9 @@ def insert_into_table_values(
 
 
 @TestStep(When)
-def insert_into_table_select(self, table_name, select_statement, settings=None, node=None):
+def insert_into_table_select(
+    self, table_name, select_statement, settings=None, node=None
+):
     """Insert into table values from select statement."""
 
     if node is None:
@@ -172,7 +174,8 @@ def get_bucket_file_size(self, filename, node=None):
             f"docker exec -it hive_partitioning_env-minio1-1 sh -c 'du -s data1-1/root/data/{filename}'",
             exitcode=0,
         )
-        return int(r.output.split('\t')[0])
+        return int(r.output.split("\t")[0])
+
 
 @TestStep(Then)
 def get_bucket_file(self, file_path, node=None):

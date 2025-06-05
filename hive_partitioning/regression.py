@@ -18,6 +18,7 @@ from requirements.requirements import *
 xfails = {}
 ffails = {}
 
+
 @TestFeature
 @Name("S3 Table Engine")
 def s3_table_engine(
@@ -49,20 +50,23 @@ def s3_table_engine(
 
         with Given("I have a minio client"):
             start_minio(access_key=root_user, secret_key=root_password)
-            start_minio(access_key=root_user, secret_key=root_password, uri="localhost:9002")
+            start_minio(
+                access_key=root_user, secret_key=root_password, uri="localhost:9002"
+            )
             uri_bucket_file = (
                 uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
             )
             uri_bucket_file_readonly = (
-                "http://minio_readonly:9002" + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
+                "http://minio_readonly:9002"
+                + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
             )
             self.context.bucket_name = self.context.cluster.minio_bucket
 
         Feature(test=load("hive_partitioning.tests.writes_feature", "feature"))(
-            uri=uri_bucket_file, 
+            uri=uri_bucket_file,
             uri_readonly=uri_bucket_file_readonly,
-            minio_root_user=root_user, 
-            minio_root_password=root_password
+            minio_root_user=root_user,
+            minio_root_password=root_password,
         )
 
 
@@ -94,6 +98,7 @@ def regression(
         root_password=minio_args["minio_root_password"],
         with_analyzer=with_analyzer,
     )
+
 
 if main():
     regression()
