@@ -97,6 +97,7 @@ on:
           - selects
           - session_timezone
           - ssl_server
+          - swarms
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
@@ -1198,6 +1199,22 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit 
 
+  swarms:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'swarms' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: swarms
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+    
   tiered_storage_aws:
     if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
