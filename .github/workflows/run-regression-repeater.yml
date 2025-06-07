@@ -176,8 +176,8 @@ jobs:
           else
             count=${{ inputs.repeat }}
           fi
-          if [ $count -eq 0 ]; then
-            echo "parallel_ids_arm=[]" >> $GITHUB_OUTPUT
+          if [ $count -eq 0 ] && [ "${{ env.run_arm }}" = "true" ]; then
+            echo "parallel_ids_arm=[\"1\"]" >> $GITHUB_OUTPUT
           else
             echo parallel_ids_arm=[\"$(seq -s '","' 1 $count)\"] >> $GITHUB_OUTPUT
           fi
