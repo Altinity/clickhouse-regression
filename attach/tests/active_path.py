@@ -8,6 +8,8 @@ from attach.requirements.requirements import (
     RQ_SRS_039_ClickHouse_Attach_ReplicaPath_ActivePath,
 )
 
+import random
+
 
 columns = [
     Column(name="id", datatype=Int32()),
@@ -68,6 +70,7 @@ def check_active_path_convert(self, engine="ReplicatedMergeTree"):
         node2.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
+        pause()
 
     with And("I drop table"):
         drop_table(table=table2, node=node2)
@@ -257,9 +260,16 @@ def feature(self):
             )(engine=engine)
         join()
 
-    for engine in engines:
+    if self.context.stress:
+        for engine in engines:
+            Scenario(
+                f"check active path convert {engine}",
+                test=check_active_path_convert,
+                flags=TE,
+            )(engine=engine)
+    else:
         Scenario(
             f"check active path convert {engine}",
             test=check_active_path_convert,
             flags=TE,
-        )(engine=engine)
+        )(engine=random.choice(engines))
