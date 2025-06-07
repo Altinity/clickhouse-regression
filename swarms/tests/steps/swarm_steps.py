@@ -58,7 +58,7 @@ def create_swarm_cluster_entry(
 def add_node_to_swarm(
     self,
     node,
-    cluster_name,
+    cluster_name=None,
     config_name="remote_swarm.xml",
     secret="secret_key",
     path="/clickhouse/discovery/swarm",
