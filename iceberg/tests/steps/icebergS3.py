@@ -1,24 +1,227 @@
 import time
 from testflows.core import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 
 @TestStep(Then)
 def read_data_with_icebergS3_table_function(
     self,
-    storage_endpoint,
     s3_access_key_id,
     s3_secret_access_key,
+    storage_endpoint="http://minio:9000/warehouse/data",
     node=None,
     columns="*",
+    where_clause=None,
+    order_by=None,
+    group_by=None,
+    user=None,
+    password=None,
+    log_comment=None,
+    exitcode=None,
+    message=None,
+    input_format_parquet_filter_push_down=None,
+    use_iceberg_partition_pruning=None,
+    use_iceberg_metadata_files_cache=None,
+    use_cache_for_count_from_files=None,
+    input_format_parquet_bloom_filter_push_down=None,
+    format="TabSeparated",
+    object_storage_cluster=None,
 ):
     """Read Iceberg tables from S3 using the icebergS3 table function."""
     if node is None:
         node = self.context.node
 
+    settings = []
+
+    if user:
+        settings.append(("user", user))
+
+    if password:
+        settings.append(("password", f"{password}"))
+
+    if log_comment:
+        settings.append(("log_comment", f"{log_comment}"))
+
+    if input_format_parquet_filter_push_down:
+        settings.append(
+            (
+                "input_format_parquet_filter_push_down",
+                f"{input_format_parquet_filter_push_down}",
+            )
+        )
+
+    if use_iceberg_partition_pruning:
+        settings.append(
+            (
+                "use_iceberg_partition_pruning",
+                f"{use_iceberg_partition_pruning}",
+            )
+        )
+
+    if use_iceberg_metadata_files_cache and (
+        check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)
+    ):
+        settings.append(
+            (
+                "use_iceberg_metadata_files_cache",
+                use_iceberg_metadata_files_cache,
+            )
+        )
+
+    if use_cache_for_count_from_files:
+        settings.append(
+            (
+                "use_cache_for_count_from_files",
+                f"{use_cache_for_count_from_files}",
+            )
+        )
+
+    if input_format_parquet_bloom_filter_push_down:
+        settings.append(
+            (
+                "input_format_parquet_bloom_filter_push_down",
+                f"{input_format_parquet_bloom_filter_push_down}",
+            )
+        )
+
+    if object_storage_cluster:
+        settings.append(("object_storage_cluster", object_storage_cluster))
+
+    query = f"""
+                SELECT {columns} 
+                FROM icebergS3('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')
+            """
+
+    if where_clause:
+        query += f" WHERE {where_clause}"
+
+    if group_by:
+        query += f" GROUP BY {group_by}"
+
+    if order_by:
+        query += f" ORDER BY {order_by}"
+
+    if format:
+        query += f" FORMAT {format}"
+
     result = node.query(
-        f"SELECT {columns} FROM iceberg('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')"
+        query,
+        settings=settings,
+        exitcode=exitcode,
+        message=message,
+    )
+    return result
+
+
+@TestStep(Then)
+def read_data_with_icebergS3Cluster_table_function(
+    self,
+    cluster_name,
+    s3_access_key_id,
+    s3_secret_access_key,
+    storage_endpoint="http://minio:9000/warehouse/data",
+    node=None,
+    columns="*",
+    where_clause=None,
+    order_by=None,
+    group_by=None,
+    user=None,
+    password=None,
+    log_comment=None,
+    exitcode=None,
+    message=None,
+    input_format_parquet_filter_push_down=None,
+    use_iceberg_partition_pruning=None,
+    use_iceberg_metadata_files_cache=None,
+    use_cache_for_count_from_files=None,
+    input_format_parquet_bloom_filter_push_down=None,
+    format="TabSeparated",
+):
+    """Read Iceberg tables from S3 using the icebergS3 table function."""
+    if node is None:
+        node = self.context.node
+
+    settings = []
+
+    if user:
+        settings.append(("user", user))
+
+    if password:
+        settings.append(("password", f"{password}"))
+
+    if log_comment:
+        settings.append(("log_comment", f"{log_comment}"))
+
+    if input_format_parquet_filter_push_down:
+        settings.append(
+            (
+                "input_format_parquet_filter_push_down",
+                f"{input_format_parquet_filter_push_down}",
+            )
+        )
+
+    if use_iceberg_partition_pruning:
+        settings.append(
+            (
+                "use_iceberg_partition_pruning",
+                f"{use_iceberg_partition_pruning}",
+            )
+        )
+
+    if use_iceberg_metadata_files_cache and (
+        check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self)
+    ):
+        settings.append(
+            (
+                "use_iceberg_metadata_files_cache",
+                use_iceberg_metadata_files_cache,
+            )
+        )
+
+    if use_cache_for_count_from_files:
+        settings.append(
+            (
+                "use_cache_for_count_from_files",
+                f"{use_cache_for_count_from_files}",
+            )
+        )
+
+    if input_format_parquet_bloom_filter_push_down:
+        settings.append(
+            (
+                "input_format_parquet_bloom_filter_push_down",
+                f"{input_format_parquet_bloom_filter_push_down}",
+            )
+        )
+
+    query = f"""
+                SELECT {columns}
+                FROM icebergS3Cluster(
+                    '{cluster_name}',
+                    '{storage_endpoint}',
+                    '{s3_access_key_id}',
+                    '{s3_secret_access_key}'
+                )
+            """
+
+    if where_clause:
+        query += f" WHERE {where_clause}"
+
+    if group_by:
+        query += f" GROUP BY {group_by}"
+
+    if order_by:
+        query += f" ORDER BY {order_by}"
+
+    if format:
+        query += f" FORMAT {format}"
+
+    result = node.query(
+        query,
+        settings=settings,
+        exitcode=exitcode,
+        message=message,
     )
     return result
 
