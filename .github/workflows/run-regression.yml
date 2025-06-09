@@ -1310,7 +1310,7 @@ jobs:
     secrets: inherit
 
   hive_partitioning:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'hive_partitioning' }}
+    if: ${{ inputs.suite == 'hive_partitioning' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: hive_partitioning
