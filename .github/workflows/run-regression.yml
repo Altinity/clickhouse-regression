@@ -103,6 +103,7 @@ on:
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions
+          - hive_partitioning
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
@@ -1280,6 +1281,22 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: window_functions
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  hive_partitioning:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'hive_partitioning' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: hive_partitioning
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
