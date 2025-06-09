@@ -62,7 +62,7 @@ def sanity_nessie(self, minio_root_user, minio_root_password):
 
     with And("list tables in the database"):
         self.context.node.query(f"SHOW TABLES FROM {database_name}")
-    
+
     with And("check SHOW CREATE DATABASE"):
         self.context.node.query(f"SHOW CREATE DATABASE {database_name}")
 

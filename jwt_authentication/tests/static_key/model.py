@@ -104,6 +104,7 @@ class Key:
 
 class Model:
     """Behavior model of jwt authentication with static key validator."""
+
     def __init__(self, user, token, validator):
         self.user = user
         self.token = token

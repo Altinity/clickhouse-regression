@@ -77,10 +77,12 @@ def memory_usage_for_column_input(self, node=None):
                     f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003' FORMAT TabSeparated"
                 )
                 b58_decode_memory_usage = int(r.output)
-                debug(f"b58_encode_memory_usage: {b58_encode_memory_usage},\n"
+                debug(
+                    f"b58_encode_memory_usage: {b58_encode_memory_usage},\n"
                     f"b64_encode_memory_usage: {b64_encode_memory_usage},\n"
                     f"b58_decode_memory_usage: {b58_decode_memory_usage},\n"
-                    f"b64_decode_memory_usage: {b64_decode_memory_usage}")
+                    f"b64_decode_memory_usage: {b64_decode_memory_usage}"
+                )
 
                 assert b58_encode_memory_usage > 0, error()
                 assert b64_encode_memory_usage > 0, error()
@@ -133,8 +135,12 @@ def memory_usage_for_constant_input(self, node=None):
                     b64_decoded_string = r.output
 
                 with Then("I check strings are not changed after encode, decode"):
-                    assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
-                    assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
+                    assert (
+                        b58_decoded_string == string_of_all_askii_symbols() * 1000
+                    ), error()
+                    assert (
+                        b64_decoded_string == string_of_all_askii_symbols() * 1000
+                    ), error()
 
                 for attempt_1 in retries(timeout=100, delay=10):
                     with attempt_1:
@@ -164,12 +170,18 @@ def memory_usage_for_constant_input(self, node=None):
                             assert b64_decode_memory_usage > 0, error()
 
                 with Then("I check memory usages are similar"):
-                    debug(f"b58_encode_memory_usage: {b58_encode_memory_usage},\n"
-                          f"b64_encode_memory_usage: {b64_encode_memory_usage},\n"
-                          f"b58_decode_memory_usage: {b58_decode_memory_usage},\n"
-                          f"b64_decode_memory_usage: {b64_decode_memory_usage}")
-                    assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
-                    assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
+                    debug(
+                        f"b58_encode_memory_usage: {b58_encode_memory_usage},\n"
+                        f"b64_encode_memory_usage: {b64_encode_memory_usage},\n"
+                        f"b58_decode_memory_usage: {b58_decode_memory_usage},\n"
+                        f"b64_decode_memory_usage: {b64_decode_memory_usage}"
+                    )
+                    assert (
+                        b58_encode_memory_usage <= b64_encode_memory_usage * 2
+                    ), error()
+                    assert (
+                        b58_decode_memory_usage <= b64_decode_memory_usage * 2
+                    ), error()
 
 
 @TestFeature

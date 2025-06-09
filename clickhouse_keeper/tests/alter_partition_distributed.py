@@ -63,7 +63,7 @@ def alter_detach_partition(self):
 
         with And("I get part name"):
             part_name = get_part_name_for_table(table_name=table_name)
-            
+
         with And("I detach part"):
             node.query(f"ALTER TABLE {table_name} DETACH PART '{part_name}'")
 

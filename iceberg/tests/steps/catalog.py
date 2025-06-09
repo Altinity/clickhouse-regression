@@ -177,8 +177,11 @@ def list_sizes(
             sizes[obj["Key"]] = obj["Size"]
             total += obj["Size"]
 
-    note(f"Found {len(sizes)} objects • {total / 1_048_576:.2f} MiB under {bucket_name}/{prefix}")
+    note(
+        f"Found {len(sizes)} objects • {total / 1_048_576:.2f} MiB under {bucket_name}/{prefix}"
+    )
     return sizes, total
+
 
 @TestStep(Given)
 def create_namespace(self, catalog, namespace):

@@ -19,7 +19,9 @@ def datatype(self, func, table, col1_name, col2_name):
 
 @TestScenario
 @Name("sequenceMatchEvents")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_sequenceMatchEvents("1.0")
+)
 def scenario(
     self,
     func="sequenceMatchEvents({params})",
@@ -32,7 +34,7 @@ def scenario(
     """Check sequenceMatchEvents parametric aggregate function"""
 
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
-    
+
     if "Merge" in self.name:
         _func = func.replace("({params})", f"('(?1)(?2)')({{params}})")
         return self.context.snapshot_id, _func.replace("({params})", "")
