@@ -32,9 +32,9 @@ def s3_table_engine(
     """Setup and run S3 Table Engine tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    # root_user = root_user.value
-    # root_password = root_password.value
-    # uri = uri.value
+    root_user = root_user.value
+    root_password = root_password.value
+    uri = uri.value
 
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
