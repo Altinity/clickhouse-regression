@@ -159,7 +159,7 @@ configs:
   ice-rest-catalog-yaml:
     content: |
       uri: jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500
-      warehouse: s3://bucket1
+      warehouse: s3://warehouse/
       s3:
         endpoint: http://minio:9000
         pathStyleAccess: true
