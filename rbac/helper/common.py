@@ -241,7 +241,7 @@ def create_user(
 
     if not_identified:
         query += " NOT IDENTIFIED"
-    
+
     if valid_until:
         query += f" VALID UNTIL '{valid_until}'"
 

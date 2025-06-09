@@ -37,7 +37,9 @@ bcrypt_password_2 = "some_password_14"
 bcrypt_hash_password = "some_password_15"
 bcrypt_hash = generate_bcrypt_hash(password=bcrypt_hash_password).replace("$", r"\$")
 bcrypt_hash_password_2 = "some_password_16"
-bcrypt_hash_2 = generate_bcrypt_hash(password=bcrypt_hash_password_2).replace("$", r"\$")
+bcrypt_hash_2 = generate_bcrypt_hash(password=bcrypt_hash_password_2).replace(
+    "$", r"\$"
+)
 
 authentication_methods_with_passwords = {
     "no_password": "",

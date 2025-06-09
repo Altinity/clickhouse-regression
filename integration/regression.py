@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Integration tests high-level runner using TestFlows framework.
-"""
+"""Integration tests high-level runner using TestFlows framework."""
 import os
 import json
 import time

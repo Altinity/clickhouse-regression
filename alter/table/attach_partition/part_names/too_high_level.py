@@ -41,7 +41,7 @@ def check_too_high_level_attach_partition(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2 ** 32 + 1)
+        high_level = str(2**32 + 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,
@@ -95,7 +95,7 @@ def check_too_high_level_attach_part(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2 ** 32 + 1)
+        high_level = str(2**32 + 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,
@@ -183,7 +183,7 @@ def check_reset_when_equal_to_legacy_max_level(self, engine, partition_key):
             table_name=table_name,
             part_name=part_name,
         )
-        high_level = str(2 ** 32 - 1)
+        high_level = str(2**32 - 1)
         new_part_name = "_".join(part_name.split("_")[:-1] + [high_level])
         rename_detached_part(
             table_name=table_name,

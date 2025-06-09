@@ -435,7 +435,6 @@ def without_caconfig_missing_last_trusted_ca_on_one_node(
         error_tlsv1_alert_unknown_ca = get_error_tlsv1_alert_unknown_ca()
         error_authentication_failed = get_error_authentication_failed()
 
-
     without_caconfig_missing_trusted_ca(
         ca_store=ca_store,
         ca_chain_crt=ca_chain_crt,

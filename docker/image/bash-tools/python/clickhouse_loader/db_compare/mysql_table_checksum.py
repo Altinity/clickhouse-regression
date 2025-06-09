@@ -3,9 +3,9 @@
 # -- ============================================================================
 # -- FileName     : mysql_table_checksum
 # -- Date         :
-# -- Summary      : calculate a checksum for a mysql table 
+# -- Summary      : calculate a checksum for a mysql table
 # -- Credits      : https://www.sisense.com/blog/hashing-tables-to-ensure-consistency-in-postgres-redshift-and-mysql/
-# --                
+# --
 """
 import logging
 import argparse

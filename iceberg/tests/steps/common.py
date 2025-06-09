@@ -286,7 +286,7 @@ def grant_select(self, table_name, user_and_role_names, table_columns, node=None
             f"GRANT SELECT({table_columns}) ON {table_name} TO {user_and_role_names}"
         )
         yield
-        
+
     finally:
         with Finally("revoke select privilege"):
             node.query(

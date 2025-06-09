@@ -13,6 +13,7 @@ description = """Get the deb url from the builds report for the builds pipeline.
 
 ARCH = platform.uname()[-1]
 
+
 def argparser():
     """Command line argument parser."""
     parser = ArgumentParser(
