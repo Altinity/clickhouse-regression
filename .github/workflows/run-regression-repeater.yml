@@ -1,4 +1,4 @@
-name: 🔬 Suite Repeater
+name: 🔬 Suite repeater
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression', inputs.version)) || format('{0} | {1}', inputs.version, inputs.suite) }}
   ${{ !contains(inputs.package, 'arm64') && !contains(inputs.package, 'aarch64')  && ' | x86' || '' }}
   ${{ !contains(inputs.package, 'x86') && !contains(inputs.package, 'amd64') && ' | ARM' || '' }}
@@ -176,15 +176,15 @@ jobs:
           else
             count=${{ inputs.repeat }}
           fi
-          if [ $count -eq 0 ]; then
-            echo "parallel_ids_arm=[]" >> $GITHUB_OUTPUT
+          if [ $count -eq 0 ] && [ "${{ env.run_arm }}" = "true" ]; then
+            echo "parallel_ids_arm=[\"1\"]" >> $GITHUB_OUTPUT
           else
             echo parallel_ids_arm=[\"$(seq -s '","' 1 $count)\"] >> $GITHUB_OUTPUT
           fi
 
   x86:
     if: ${{ needs.define-matrix.outputs.run_x86 == 'true' }}
-    uses: ./.github/workflows/reusable-workflow-x86.yml
+    uses: ./.github/workflows/run-regression.yml
     secrets: inherit
     needs: define-matrix
     strategy:
@@ -201,11 +201,11 @@ jobs:
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
-      artifact_name: ${{ matrix.parallel_id }}-x86
-    
+      arch: x86
+
   ARM:
     if: ${{ needs.define-matrix.outputs.run_arm == 'true' }}
-    uses: ./.github/workflows/reusable-workflow-arm.yml
+    uses: ./.github/workflows/run-regression.yml
     secrets: inherit
     needs: define-matrix
     strategy:
@@ -222,4 +222,4 @@ jobs:
       output_format: ${{ inputs.output_format }}
       ref: ${{ inputs.ref }}
       extra_args: ${{ inputs.flags != 'none' && inputs.flags || ''}} ${{ inputs.extra_args }}
-      artifact_name: ${{ matrix.parallel_id }}-arm
+      arch: arm64

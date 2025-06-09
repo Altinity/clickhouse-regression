@@ -1,4 +1,4 @@
-name: 🔬 Run Regression
+name: 🔬 Run regression
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
   ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
@@ -17,7 +17,7 @@ on:
         required: true
         default: 24.3.12.76.altinitystable
       arch:
-        description: "🏗️ Architecture"
+        description: "🖥 Architecture"
         type: choice
         options:
           - x86
@@ -97,6 +97,7 @@ on:
           - selects
           - session_timezone
           - ssl_server
+          - swarms
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
@@ -105,7 +106,7 @@ on:
           - window_functions
           - hive_partitioning
       artifacts:
-        description: "Artifact S3 bucket"
+        description: "🏺 Artifact S3 bucket"
         type: choice
         options:
           - public
@@ -131,7 +132,7 @@ on:
           - progress
           - raw
       ref:
-        description: "Commit SHA to checkout. Default: current (empty string)."
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
         type: string
         default: ""
       extra_args:
@@ -151,7 +152,7 @@ on:
         description: "🎯 Expected version. Example: 23.3.1.64"
         type: string
       arch:
-        description: "🏗️ Architecture"
+        description: "🖥 Architecture"
         type: string
         required: true
       flags:
@@ -1199,6 +1200,22 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit 
 
+  swarms:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'swarms' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: swarms
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+    
   tiered_storage_aws:
     if: ${{ inputs.run_s3_suites && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml

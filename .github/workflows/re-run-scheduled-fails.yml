@@ -1,4 +1,4 @@
-name: 🔄 Re-run Failed Scheduled Jobs
+name: 🔄 Re-run failed scheduled jobs
 
 on:
   workflow_dispatch:

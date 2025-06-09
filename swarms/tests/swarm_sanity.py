@@ -354,17 +354,19 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         )
 
     with And("select with s3 table function using swarm cluster"):
-        result = s3_steps.read_data_with_s3_table_function(
-            columns="hostName() AS host, count()",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            object_storage_cluster=cluster_name,
-            group_by="host",
-            use_hive_partitioning=1,
-        )
-        assert "clickhouse2" in result.output, error()
-        assert "clickhouse3" in result.output, error()
-        assert "clickhouse1" not in result.output, error()
+        for retry in retries(count=10, delay=1):
+            with retry:
+                result = s3_steps.read_data_with_s3_table_function(
+                    columns="hostName() AS host, count()",
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
+                    object_storage_cluster=cluster_name,
+                    group_by="host",
+                    use_hive_partitioning=1,
+                )
+                assert "clickhouse2" in result.output, error()
+                assert "clickhouse3" in result.output, error()
+                assert "clickhouse1" not in result.output, error()
 
         result_rows = s3_steps.read_data_with_s3_table_function(
             columns="*",
@@ -378,16 +380,18 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         assert result_rows.output == EXPECTED_DATA, error()
 
     with And("select with s3Cluster table function"):
-        result = s3_steps.read_data_with_s3Cluster_table_function(
-            cluster_name=cluster_name,
-            columns="hostName() AS host, count()",
-            group_by="host",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-        assert "clickhouse2" in result.output, error()
-        assert "clickhouse3" in result.output, error()
-        assert "clickhouse1" not in result.output, error()
+        for retry in retries(count=10, delay=1):
+            with retry:
+                result = s3_steps.read_data_with_s3Cluster_table_function(
+                    cluster_name=cluster_name,
+                    columns="hostName() AS host, count()",
+                    group_by="host",
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
+                )
+                assert "clickhouse2" in result.output, error()
+                assert "clickhouse3" in result.output, error()
+                assert "clickhouse1" not in result.output, error()
 
         result_rows = s3_steps.read_data_with_s3Cluster_table_function(
             cluster_name=cluster_name,
@@ -400,16 +404,18 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         assert result_rows.output == EXPECTED_DATA, error()
 
     with And("select with iceberg table function using swarm cluster"):
-        result = read_data_with_icebergS3_table_function(
-            columns="hostName() AS host, count()",
-            group_by="host",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-            object_storage_cluster=cluster_name,
-        )
-        assert "clickhouse2" in result.output, error()
-        assert "clickhouse3" in result.output, error()
-        assert "clickhouse1" not in result.output, error()
+        for retry in retries(count=10, delay=1):
+            with retry:
+                result = read_data_with_icebergS3_table_function(
+                    columns="hostName() AS host, count()",
+                    group_by="host",
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
+                    object_storage_cluster=cluster_name,
+                )
+                assert "clickhouse2" in result.output, error()
+                assert "clickhouse3" in result.output, error()
+                assert "clickhouse1" not in result.output, error()
 
         result_rows = read_data_with_icebergS3_table_function(
             columns="*",
@@ -422,16 +428,18 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         assert result_rows.output == EXPECTED_DATA, error()
 
     with And("select with icebergS3Cluster table function"):
-        result = read_data_with_icebergS3Cluster_table_function(
-            cluster_name=cluster_name,
-            columns="hostName() AS host, count()",
-            group_by="host",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-        assert "clickhouse2" in result.output, error()
-        assert "clickhouse3" in result.output, error()
-        assert "clickhouse1" not in result.output, error()
+        for retry in retries(count=10, delay=1):
+            with retry:
+                result = read_data_with_icebergS3Cluster_table_function(
+                    cluster_name=cluster_name,
+                    columns="hostName() AS host, count()",
+                    group_by="host",
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
+                )
+                assert "clickhouse2" in result.output, error()
+                assert "clickhouse3" in result.output, error()
+                assert "clickhouse1" not in result.output, error()
 
         result_rows = read_data_with_icebergS3Cluster_table_function(
             cluster_name=cluster_name,
