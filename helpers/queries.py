@@ -15,6 +15,7 @@ from helpers.cluster import ClickHouseNode
 # 2. JSONCompactEachRow ensures that the output can be parsed as JSON.
 # The extra [0] could be avoided with TSV format, but that does not guarantee valid JSON.
 
+
 @TestStep(When)
 def sync_replica(
     self, node: ClickHouseNode, table_name: str, raise_on_timeout=False, **kwargs

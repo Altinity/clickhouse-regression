@@ -896,6 +896,7 @@ def start_minio(
     secret_key="minio123",
     timeout=30,
     secure=False,
+    cleanup=True,
 ):
     minio_client = Minio(
         uri, access_key=access_key, secret_key=secret_key, secure=secure
@@ -903,28 +904,31 @@ def start_minio(
     start = time.time()
     while time.time() - start < timeout:
         try:
-            buckets_to_delete = minio_client.list_buckets()
+            if cleanup:
+                buckets_to_delete = minio_client.list_buckets()
 
-            for bucket in buckets_to_delete:
-                objects = minio_client.list_objects(bucket.name, recursive=True)
-                object_names = [o.object_name for o in objects]
-                for name in object_names:
-                    minio_client.remove_object(bucket.name, name)
-
-            buckets = ["root", "root2"]
-            self.context.cluster.minio_bucket = "root"
-
-            for bucket in buckets:
-                if minio_client.bucket_exists(bucket):
-                    objects = minio_client.list_objects(bucket, recursive=True)
+                for bucket in buckets_to_delete:
+                    objects = minio_client.list_objects(bucket.name, recursive=True)
                     object_names = [o.object_name for o in objects]
                     for name in object_names:
-                        minio_client.remove_object(bucket, name)
-                    minio_client.remove_bucket(bucket)
-                minio_client.make_bucket(bucket)
+                        minio_client.remove_object(bucket.name, name)
 
-            self.context.cluster.minio_client = minio_client
-            return
+                buckets = ["root", "root2"]
+                self.context.cluster.minio_bucket = "root"
+
+                for bucket in buckets:
+                    if minio_client.bucket_exists(bucket):
+                        objects = minio_client.list_objects(bucket, recursive=True)
+                        object_names = [o.object_name for o in objects]
+                        for name in object_names:
+                            minio_client.remove_object(bucket, name)
+                        minio_client.remove_bucket(bucket)
+                    minio_client.make_bucket(bucket)
+
+                self.context.cluster.minio_client = minio_client
+                return
+            else:
+                return
         except Exception as ex:
             time.sleep(1)
 
@@ -1524,20 +1528,30 @@ def distributed_table_cluster(
     no_cleanup=False,
 ):
     """Create a distributed table with the ON CLUSTER clause."""
-    
+
     node = current().context.node
 
     if table_name is None:
         table_name = "table_" + getuid()
 
-    simple_table(node=self.context.cluster.node("clickhouse1"), name=table_name + '_local', policy="default")
-    simple_table(node=self.context.cluster.node("clickhouse2"), name=table_name + '_local', policy="default")
-    simple_table(node=self.context.cluster.node("clickhouse3"), name=table_name + '_local', policy="default")    
+    simple_table(
+        node=self.context.cluster.node("clickhouse1"),
+        name=table_name + "_local",
+        policy="default",
+    )
+    simple_table(
+        node=self.context.cluster.node("clickhouse2"),
+        name=table_name + "_local",
+        policy="default",
+    )
+    simple_table(
+        node=self.context.cluster.node("clickhouse3"),
+        name=table_name + "_local",
+        policy="default",
+    )
 
     if order_by is None:
         order_by = columns.split()[0]
-
-
 
     if allow_zero_copy is not None:
         settings.append(f"allow_remote_fs_zero_copy_replication={int(allow_zero_copy)}")
@@ -1579,8 +1593,6 @@ def distributed_table_cluster(
                             f"DROP TABLE IF EXISTS {table_name} ON CLUSTER '{cluster_name}' SYNC",
                             timeout=60,
                         )
-
-
 
 
 @TestStep(Given)
@@ -1751,13 +1763,18 @@ def check_consistency(self, nodes, table_name, sync_timeout=10):
             with When("I make sure all nodes are synced"):
                 for node in nodes:
                     sync_replica(
-                        node=node, table_name=table_name, timeout=sync_timeout, no_checks=True
+                        node=node,
+                        table_name=table_name,
+                        timeout=sync_timeout,
+                        no_checks=True,
                     )
 
             with When("I query all nodes for their row counts"):
                 row_counts = {}
                 for node in nodes:
-                    row_counts[node.name] = get_row_count(node=node, table_name=table_name)
+                    row_counts[node.name] = get_row_count(
+                        node=node, table_name=table_name
+                    )
 
             with Then("All replicas should have the same state"):
                 for n1, n2 in combinations(nodes, 2):
@@ -1856,7 +1873,15 @@ def insert_to_s3_function(
 
 @TestStep(When)
 def insert_from_s3_function(
-    self, filename, table_name, columns="d UInt64", compression=None, fmt=None, uri=None, cluster_name=None, no_checks=False
+    self,
+    filename,
+    table_name,
+    columns="d UInt64",
+    compression=None,
+    fmt=None,
+    uri=None,
+    cluster_name=None,
+    no_checks=False,
 ):
     """Import data from a file in s3 to a table."""
     access_key_id = self.context.access_key_id

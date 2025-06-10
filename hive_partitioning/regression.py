@@ -62,7 +62,7 @@ def s3_table_engine(
             )
             self.context.bucket_name = self.context.cluster.minio_bucket
 
-        Feature(test=load("hive_partitioning.tests.writes_feature", "feature"))(
+        Feature(test=load("hive_partitioning.tests.writes.feature", "feature"))(
             uri=uri_bucket_file,
             uri_readonly=uri_bucket_file_readonly,
             minio_root_user=root_user,
