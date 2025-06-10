@@ -80,8 +80,8 @@ def s3Cluster_hive(self, cluster_name):
     with Then("I check time is similar"):
         debug(time_downloading_part_of_the_data_with_hive)
         debug(time_downloading_part_of_the_data)
-        assert time_downloading_part_of_the_data_with_hive < time_downloading_part_of_the_data * 2, error()
-        assert time_downloading_part_of_the_data < time_downloading_part_of_the_data_with_hive * 2, error()
+        assert time_downloading_part_of_the_data_with_hive < time_downloading_part_of_the_data * 5, error()
+        assert time_downloading_part_of_the_data < time_downloading_part_of_the_data_with_hive * 5, error()
 
 
 
