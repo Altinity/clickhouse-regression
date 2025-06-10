@@ -64,7 +64,6 @@ def clickhouse_local(self, query, statistics=False):
         capture_output=True,
     )
 
-
     assert (
         result.returncode == 0
     ), f"ClickHouse local {query} failed with exit code {result.returncode}. Error: {result.stderr}"

@@ -178,13 +178,15 @@ def login(self, user: CreateUser, node=None):
         with By(
             f"trying to login with {user.username} and {password} for {auth_method.method}"
         ):
-            query=Select().set_query("SELECT current_user()")
-            connection_options=[("user", user.username), ("password", password)]
+            query = Select().set_query("SELECT current_user()")
+            connection_options = [("user", user.username), ("password", password)]
             query.add_connection_options(connection_options)
-            
-            r = node.query(str(query), no_checks=True, steps=False, settings=connection_options)
+
+            r = node.query(
+                str(query), no_checks=True, steps=False, settings=connection_options
+            )
             query.add_result(r)
-        
+
             self.context.behavior.append(query)
 
             Then(test=self.context.model.expect())(r=r)

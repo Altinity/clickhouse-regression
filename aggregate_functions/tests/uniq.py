@@ -21,7 +21,7 @@ def scenario(self, func="uniq({params})", table=None, snapshot_id=None):
         clickhouse_version = ">=23.12"
     else:
         clickhouse_version = ">=23.2"
-        
+
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id,
         clickhouse_version=clickhouse_version,

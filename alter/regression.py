@@ -197,7 +197,7 @@ ffails = {
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),
     ),
-    "/alter/attach partition/part1/temporary table": (
+    "/alter/attach partition/part 1/temporary table": (
         Skip,
         "Not implemented before 23.5",
         check_clickhouse_version("<23.5"),

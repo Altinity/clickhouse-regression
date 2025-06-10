@@ -209,7 +209,9 @@ def attach_partition_from_table(
 
     with And("I get the list of partitions and validate partition keys pair"):
         partition_list_query = f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT TabSeparated"
-        get_node(self, "source").query(f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT Values")
+        get_node(self, "source").query(
+            f"SELECT partition FROM system.parts WHERE table='{source_table_name}' ORDER BY partition_id FORMAT Values"
+        )
         partition_ids = sorted(
             list(
                 set(get_node(self, "source").query(partition_list_query).output.split())
@@ -240,7 +242,7 @@ def attach_partition_from_table(
                     destination_partition_data = get_node(self, "destination").query(
                         f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
                     )
-                    
+
                     with By("read the data in Values() format for debugging"):
                         get_node(self, "destination").query(
                             f"SELECT * FROM {destination_table_name} ORDER BY tuple(*) FORMAT Values"
@@ -248,7 +250,7 @@ def attach_partition_from_table(
                         get_node(self, "source").query(
                             f"SELECT * FROM {source_table_name} ORDER BY tuple(*) FORMAT Values"
                         )
-                    
+
                     assert (
                         destination_partition_data.output
                         == source_partition_data.output

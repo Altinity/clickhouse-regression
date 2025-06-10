@@ -400,7 +400,8 @@ def minio_regression(
             },
             configs_dir=current_dir(),
         )
-        self.context.cluster = cluster
+
+    self.context.cluster = cluster
 
     self.context.node = cluster.node("clickhouse1")
     with Given("I have a minio client"):

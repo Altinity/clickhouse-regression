@@ -10,13 +10,21 @@ from helpers.argparser import (
     CaptureClusterArgs,
     CaptureMinioArgs,
 )
-from helpers.common import check_clickhouse_version, check_if_antalya_build
+from helpers.common import (
+    check_if_not_antalya_build,
+)
 
 from iceberg.requirements.requirements import *
 
 
 xfails = {}
-ffails = {}
+ffails = {
+    "/swarms/feature": (
+        Skip,
+        "swarms work only with antalya",
+        check_if_not_antalya_build,
+    ),
+}
 
 
 @TestModule

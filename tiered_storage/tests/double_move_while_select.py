@@ -118,7 +118,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     "if select locked old part on the destination disk the move shall fail"
                                 ):
                                     assert r == [
-                                        ("jbod1" if positive else "external")
+                                        "jbod1" if positive else "external"
                                     ], error()
                         finally:
                             with Finally("I join the thread"):

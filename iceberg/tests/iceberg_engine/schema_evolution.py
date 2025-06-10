@@ -246,7 +246,6 @@ def execute_schema_evolution_actions(
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -269,7 +268,9 @@ def execute_schema_evolution_actions(
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table_with_five_columns(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(
+            table_name=merge_tree_table_name
+        )
 
     with And("define columns list, do not include partition column (String)"):
         self.context.columns = [
@@ -294,6 +295,9 @@ def execute_schema_evolution_actions(
                 iceberg_table=iceberg_table,
             )
             self.context.node.query(f"describe table {merge_tree_table_name}")
+            self.context.node.query(f"describe table {clickhouse_iceberg_table_name}")
+            df = iceberg_table.scan().to_pandas()
+            note(df)
             common.compare_data_in_two_tables(
                 table_name1=merge_tree_table_name,
                 table_name2=clickhouse_iceberg_table_name,

@@ -18,7 +18,14 @@ def kill_clickhouse_process(self, signal="SIGKILL", node=None):
     with And("checking pid does not exist"):
         for attempt in retries(timeout=100, delay=1):
             with attempt:
-                if node.command(f"ps {pid} | grep -v grep | grep ' {pid} '", steps=False, no_checks=True).exitcode != 1:
+                if (
+                    node.command(
+                        f"ps {pid} | grep -v grep | grep ' {pid} '",
+                        steps=False,
+                        no_checks=True,
+                    ).exitcode
+                    != 1
+                ):
                     fail("pid still alive")
 
     with And("deleting clickhouse server pid file"):

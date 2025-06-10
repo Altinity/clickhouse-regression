@@ -17,7 +17,11 @@ from helpers.argparser import (
 from parquet.requirements import *
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
-from helpers.common import experimental_analyzer, check_current_cpu, allow_higher_cpu_wait_ratio
+from helpers.common import (
+    experimental_analyzer,
+    check_current_cpu,
+    allow_higher_cpu_wait_ratio,
+)
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
@@ -432,7 +436,7 @@ def regression(
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
-    
+
     with And("allow higher cpu_wait_ratio "):
         if check_clickhouse_version(">=25.4")(self):
             allow_higher_cpu_wait_ratio(
@@ -690,7 +694,9 @@ def regression(
             self.context.warehouse_uri = "http://minio:9000/warehouse/data/data"
 
             with Given("I have a minio client"):
-                start_minio(access_key="minio", secret_key="minio123", uri="localhost:9002")
+                start_minio(
+                    access_key="minio", secret_key="minio123", uri="localhost:9002"
+                )
 
             with Feature("minio"):
                 Feature(run=load("parquet.tests.s3", "feature"))
