@@ -157,7 +157,7 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/79876",
         check_clickhouse_version(">=25.5"),
     ),
-    "/ssl server/:/verification modes":(
+    "/ssl server/:/verification modes": (
         Skip,
         "native protocol supported on >=23.3",
         check_clickhouse_version("<23.3"),
@@ -270,11 +270,11 @@ def regression(
         Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
         Feature(run=load("ssl_server.tests.verification_mode", "feature"))
         Feature(run=load("ssl_server.tests.url_table_function", "feature"))
-    
+
     with Feature("part 2"):
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
-    
+
     with Feature("part 3"):
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
         Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))

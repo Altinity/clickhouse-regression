@@ -545,9 +545,11 @@ def create_ca_certificate(
         use_stash=use_stash,
     ) as stash:
         try:
-            print(f"openssl req -new -{type} -days {days} -key {key} "
+            print(
+                f"openssl req -new -{type} -days {days} -key {key} "
                 f"-{hash} -extensions {extensions} -out {outfile} "
-                '-addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=keyCertSign, cRLSign"')
+                '-addext "basicConstraints=critical,CA:TRUE" -addext "keyUsage=keyCertSign, cRLSign"'
+            )
             with bash(
                 f"openssl req -new -{type} -days {days} -key {key} "
                 f"-{hash} -extensions {extensions} -out {outfile} "
@@ -722,7 +724,15 @@ def sign_certificate(
 
     with stashed.filepath(
         outfile,
-        id=stashed.hash(os.path.basename(csr), ca_certificate, ca_key, ca_passphrase, type, hash, days),
+        id=stashed.hash(
+            os.path.basename(csr),
+            ca_certificate,
+            ca_key,
+            ca_passphrase,
+            type,
+            hash,
+            days,
+        ),
         use_stash=use_stash,
     ) as stash:
         try:

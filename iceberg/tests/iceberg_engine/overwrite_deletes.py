@@ -107,7 +107,7 @@ def delete_greater_than(self, merge_tree_table_name, iceberg_table, column):
     """Delete rows where given column value is greater than some value."""
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
-    
+
     quote = "" if isinstance(value, (int, float)) else "'"
 
     perform_delete(
@@ -139,7 +139,7 @@ def delete_greater_than_or_equal(self, merge_tree_table_name, iceberg_table, col
     """Delete rows where given column value is greater than or equal to some value."""
     if (value := get_reference_value(column, merge_tree_table_name)) is None:
         return
-    
+
     quote = "" if isinstance(value, (int, float)) else "'"
 
     perform_delete(
@@ -285,7 +285,6 @@ def equality_delete(self, minio_root_user, minio_root_password, actions, node=No
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -307,7 +306,9 @@ def equality_delete(self, minio_root_user, minio_root_password, actions, node=No
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table_with_five_columns(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(
+            table_name=merge_tree_table_name
+        )
 
     with And("insert same data into both tables"):
         num_rows = 100

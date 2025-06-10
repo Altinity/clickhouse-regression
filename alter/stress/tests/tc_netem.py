@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-The test steps in this module use tc-netem to apply adverse 
+The test steps in this module use tc-netem to apply adverse
 network conditions to outgoing packets on a given container.
 
 https://www.man7.org/linux/man-pages/man8/tc-netem.8.html
