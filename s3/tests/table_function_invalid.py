@@ -65,6 +65,7 @@ def insert_from_s3_function_invalid(
 
     node.query(query, message=message, exitcode=exitcode, timeout=timeout)
 
+
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
 def empty_path(self):
@@ -123,14 +124,13 @@ def invalid_path(self):
 @TestScenario
 @Requirements(RQ_SRS_015_S3_TableFunction_Path("1.0"))
 def invalid_wildcard(self):
-    """Check that ClickHouse returns an error when the wildcard in path is invalid.
-    """
+    """Check that ClickHouse returns an error when the wildcard in path is invalid."""
 
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
     node = current().context.node
 
-    wildcard_invalid = define('wildcard_invalid', '{1,2}')
+    wildcard_invalid = define("wildcard_invalid", "{1,2}")
 
     if self.context.storage == "minio":
         with Given("If using MinIO, clear objects on directory path to avoid error"):
@@ -159,7 +159,7 @@ def invalid_wildcard(self):
             filename=f"subdata{wildcard_invalid}",
             table_name=table2_name,
             message="DB::Exception: Failed to get object info",
-            exitcode=243
+            exitcode=243,
         )
 
 

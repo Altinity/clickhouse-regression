@@ -180,6 +180,7 @@ def list_sizes(
     return meta_bytes, parquet_bytes, total_bytes
 
 
+
 @TestStep(Given)
 def create_namespace(self, catalog, namespace):
     try:

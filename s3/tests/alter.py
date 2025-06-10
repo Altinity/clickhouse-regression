@@ -27,6 +27,7 @@ retry_args = {
 
 INSERT_SIZE = 100_000
 
+
 @TestStep(When)
 def detach_from_table(self, table_name: str, item: str, node=None, exitcode=0):
     """Detach an item from a table."""

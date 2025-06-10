@@ -41,7 +41,9 @@ xfails = {
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
     ],
-    "minio/:/disk/log/:": [(Fail, "Not working 22.X", check_clickhouse_version("<=23"))],
+    "minio/:/disk/log/:": [
+        (Fail, "Not working 22.X", check_clickhouse_version("<=23"))
+    ],
     "aws s3/:/disk/:/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/:/disk/:/:the size of the s3 bucket*": [(Fail, "fails on runners")],
     "aws s3/:/backup/:/:/:/the size of the s3 bucket*": [(Fail, "needs review")],
@@ -392,25 +394,23 @@ def minio_regression(
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
+            environ={
+                "MINIO_ROOT_PASSWORD": root_password,
+                "MINIO_ROOT_USER": root_user,
+            },
             configs_dir=current_dir(),
         )
     self.context.cluster = cluster
 
-
     self.context.node = cluster.node("clickhouse1")
     with Given("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
-        uri_bucket_file = (
-            uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
-        )
+        uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
         self.context.bucket_name = self.context.cluster.minio_bucket
 
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
-            experimental_analyzer(
-                node=cluster.node(node), with_analyzer=with_analyzer
-            )
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     with And("allow higher cpu_wait_ratio "):
         if check_clickhouse_version(">=25.4")(self):
@@ -424,7 +424,7 @@ def minio_regression(
 
     with And("I get all possible clusters for nodes"):
         self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
-    
+
     with Feature("part 1"):
         Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
         Feature(test=load("s3.tests.table_function", "minio"))(
@@ -716,7 +716,9 @@ def gcs_regression(
                 uri=uri, bucket_prefix=bucket_prefix
             )
             Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
+            Feature(test=load("s3.tests.disk", "gcs"))(
+                uri=uri, bucket_prefix=bucket_prefix
+            )
             Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
             Feature(test=load("s3.tests.alter", "feature"))(
                 uri=uri, bucket_prefix=bucket_prefix

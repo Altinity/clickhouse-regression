@@ -465,13 +465,11 @@ def check_hits(self, log_comment, node=None, assertion=True):
     if assertion:
         for retry in retries(count=10, delay=2):
             with retry:
-                hits = node.query(r).output.strip().split('\n')[0]
-                assert (
-                    int(hits) > 0
-                ), f"number of hits is less than 1 and = {hits}"
+                hits = node.query(r).output.strip().split("\n")[0]
+                assert int(hits) > 0, f"number of hits is less than 1 and = {hits}"
                 return int(hits)
     else:
-        hits = node.query(r).output.strip().split('\n')[0]
+        hits = node.query(r).output.strip().split("\n")[0]
         return int(hits)
 
 
@@ -639,7 +637,7 @@ def flush_parquet_metadata_cache(self, node=None):
 
 
 @TestStep(Given)
-def flush_parquet_metadata_cache_on_cluster(self, node=None,cluster=None):
+def flush_parquet_metadata_cache_on_cluster(self, node=None, cluster=None):
     """Flush Parquet metadata cache on all nodes in a cluster."""
 
     if node is None:
@@ -649,4 +647,3 @@ def flush_parquet_metadata_cache_on_cluster(self, node=None,cluster=None):
         cluster = "replicated_cluster"
 
     self.context.node.query(f"SYSTEM DROP PARQUET METADATA CACHE ON CLUSTER {cluster}")
-

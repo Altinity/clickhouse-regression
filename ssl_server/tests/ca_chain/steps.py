@@ -16,6 +16,7 @@ def get_error_tlsv1_alert_unknown_ca(self):
     else:
         return "Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"
 
+
 @TestStep(Given)
 def get_error_authentication_failed(self):
 

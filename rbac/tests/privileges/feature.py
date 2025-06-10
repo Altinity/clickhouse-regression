@@ -84,7 +84,7 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
-            
+
             Feature(
                 run=load("rbac.tests.privileges.check.check_table", "feature"),
                 parallel=True,
@@ -473,7 +473,9 @@ def feature(self):
                 executor=pool,
             )
             Feature(
-                run=load("rbac.tests.privileges.valid_until_supported_timezones", "feature"),
+                run=load(
+                    "rbac.tests.privileges.valid_until_supported_timezones", "feature"
+                ),
                 parallel=True,
                 executor=pool,
             )

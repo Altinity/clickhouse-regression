@@ -63,11 +63,12 @@ def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 1
     finally:
         node.command("kdestroy", no_checks=True, shell_command="sh")
 
+
 @TestStep(Given)
 def create_server_principal(self, node):
     """
     Helper for obtaining Kerberos ticket for server
-    
+
     Ticket is copied manually to avoid requiring kinit to be installed.
     """
     kerberos = self.context.krb_server

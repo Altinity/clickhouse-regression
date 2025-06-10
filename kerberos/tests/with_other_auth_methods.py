@@ -251,4 +251,3 @@ def feature(self):
     Scenario(run=add_kerberos_auth)
     Scenario(run=kerberos_with_valid_until)
     Scenario(run=revoke_kerberos_auth)
-    

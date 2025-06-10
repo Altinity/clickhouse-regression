@@ -268,7 +268,9 @@ def execute_schema_evolution_actions(
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table_with_five_columns(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(
+            table_name=merge_tree_table_name
+        )
 
     with And("define columns list, do not include partition column (String)"):
         self.context.columns = [
