@@ -45,6 +45,9 @@ xfails = {
     "/iceberg/iceberg engine/predicate push down/issue with float column": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/80200")
     ],
+    "/iceberg/iceberg engine/feature/multiple tables": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187", check_clickhouse_version("<25.3")),
+    ],
 }
 
 ffails = {
