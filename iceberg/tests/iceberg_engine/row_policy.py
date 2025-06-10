@@ -1,15 +1,12 @@
 from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import combinations, product
-
-
-import iceberg.tests.steps.catalog as catalog_steps
-import iceberg.tests.steps.iceberg_engine as iceberg_engine
-import iceberg.tests.steps.common as common
-
 from helpers.common import create_user, getuid, create_role
 
 import random
+import iceberg.tests.steps.catalog as catalog_steps
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
+import iceberg.tests.steps.common as common
 
 random.seed(42)
 
@@ -66,8 +63,6 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -91,16 +86,16 @@ def row_policies(self, minio_root_user, minio_root_password, node=None):
         iceberg_engine.drop_database(database_name=database_name)
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             storage_endpoint="http://minio:9000/warehouse",
         )
 
     with And("create MergeTree table with same structure"):
         merge_tree_table_name = "merge_tree_table_" + getuid()
-        common.create_merge_tree_table_with_five_columns(table_name=merge_tree_table_name)
+        common.create_merge_tree_table_with_five_columns(
+            table_name=merge_tree_table_name
+        )
 
     with And("insert same data into both tables"):
         common.insert_same_data_to_iceberg_and_merge_tree_tables(

@@ -147,38 +147,38 @@ def list_sizes(
     s3_secret_access_key: str,
 ):
     """
-    Return a tuple (sizes_dict, total_bytes).
+    Return (metadata_bytes, parquet_bytes, total_bytes) for everything
+    under `bucket_name/prefix`  on the given MinIO endpoint.
 
-    * sizes_dict  –  {object_key: size_bytes}
-    * total_bytes –  sum of all object sizes under the prefix
-
-    Example call:
-        sizes, total = list_sizes(
-            bucket_name="warehouse",
-            prefix="data/",              # "" for whole bucket
-            s3_endpoint="http://localhost:9002",
-            s3_access_key_id=minio_user,
-            s3_secret_access_key=minio_pass,
-        )
+    * “metadata” = any key that contains "/metadata/"
+    * “parquet”  = any key that ends with ".parquet"
+    * the rest is ignored for the two subtotals but still counted in total
     """
-    s3_client = boto3.client(
+    s3 = boto3.client(
         "s3",
         endpoint_url=s3_endpoint,
         aws_access_key_id=s3_access_key_id,
         aws_secret_access_key=s3_secret_access_key,
     )
 
-    paginator = s3_client.get_paginator("list_objects_v2")
-    sizes = {}
-    total = 0
+    paginator = s3.get_paginator("list_objects_v2")
+    meta_bytes = parquet_bytes = total_bytes = 0
 
     for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
-        for obj in page.get("Contents", []):
-            sizes[obj["Key"]] = obj["Size"]
-            total += obj["Size"]
+        for o in page.get("Contents", []):
+            size = o["Size"]
+            key = o["Key"]
+            total_bytes += size
+            if "/metadata/" in key:
+                meta_bytes += size
+            elif key.endswith(".parquet"):
+                parquet_bytes += size
 
-    note(f"Found {len(sizes)} objects • {total / 1_048_576:.2f} MiB under {bucket_name}/{prefix}")
-    return sizes, total
+    note(
+        f"metadata={meta_bytes:,} B  parquet={parquet_bytes:,} B  total={total_bytes:,} B"
+    )
+    return meta_bytes, parquet_bytes, total_bytes
+
 
 @TestStep(Given)
 def create_namespace(self, catalog, namespace):
