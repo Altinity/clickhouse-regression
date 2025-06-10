@@ -1,10 +1,10 @@
 """
 # -- ============================================================================
 # -- FileName     : clickhouse_table_checksum
-# -- Date         : 
-# -- Summary      : calculate a checksum for a clickhouse table 
-# -- Credits      : https://www.sisense.com/blog/hashing-tables-to-ensure-consistency-in-postgres-redshift-and-mysql/               
-# --                
+# -- Date         :
+# -- Summary      : calculate a checksum for a clickhouse table
+# -- Credits      : https://www.sisense.com/blog/hashing-tables-to-ensure-consistency-in-postgres-redshift-and-mysql/
+# --
 """
 
 import logging

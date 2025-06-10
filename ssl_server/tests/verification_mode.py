@@ -8,7 +8,11 @@ from ssl_server.requirements import *
 @TestOutline
 @Name("check connections")
 def check_connections(
-    self, openssl_options="", curl_options="", clickhouse_client_options=None, user="default",
+    self,
+    openssl_options="",
+    curl_options="",
+    clickhouse_client_options=None,
+    user="default",
 ):
     """Check connections to the clickhouse-server using openssl s_client https and tcp, curl, and clickhouse-client."""
 
@@ -24,7 +28,9 @@ def check_connections(
 
     with Then("I connect to clickhouse-server using clickhouse-client tcp"):
         clickhouse_client_connection(
-            port=self.context.secure_tcp_port, options=clickhouse_client_options, user=user,
+            port=self.context.secure_tcp_port,
+            options=clickhouse_client_options,
+            user=user,
         )
 
     with And("I connect to clickhouse-server using curl tcp"):
@@ -62,7 +68,7 @@ def once(self):
         openssl_options="-cert /client.crt -key /client.key",
         curl_options="--cert /client.crt --key /client.key",
         clickhouse_client_options=self.context.clickhouse_client_entries,
-        user="cert_user"
+        user="cert_user",
     )
 
 
@@ -84,7 +90,7 @@ def relaxed(self):
         openssl_options="-cert /client.crt -key /client.key",
         curl_options="--cert /client.crt --key /client.key",
         clickhouse_client_options=self.context.clickhouse_client_entries,
-        user="cert_user"
+        user="cert_user",
     )
 
 
@@ -105,7 +111,7 @@ def strict(self):
         openssl_options="-cert /client.crt -key /client.key",
         curl_options="--cert /client.crt --key /client.key",
         clickhouse_client_options=self.context.clickhouse_client_entries,
-        user="cert_user"
+        user="cert_user",
     )
 
 
@@ -134,5 +140,3 @@ def feature(self, node="clickhouse1"):
     Suite(run=strict)
     with Suite("fail cases"):
         xfail("not implemented.")
-
-

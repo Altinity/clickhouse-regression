@@ -1,4 +1,5 @@
 import os
+import re
 import uuid
 import time
 import platform
@@ -161,6 +162,26 @@ def check_clickhouse_version(version):
     def check(test):
         if getattr(test.context, "clickhouse_version", None) is None:
             return False
+
+        if callable(version):
+            return version(test.context.clickhouse_version)
+
+        if version.startswith("~~"):
+            # full regex matching
+            return bool(re.match("^" + version[2:], test.context.clickhouse_version))
+
+        if version.startswith("~"):
+            # simplified pattern matching
+            if "\\*" in version:
+                raise ValueError(
+                    "literal '*' character is not allowed in simplified pattern matching. Use ~~ for full regex matching."
+                )
+            return bool(
+                re.match(
+                    "^" + version[1:].replace(".", "\\.").replace("*", ".*"),
+                    test.context.clickhouse_version,
+                )
+            )
 
         version_list = version.translate({ord(i): None for i in "<>="}).split(".")
         clickhouse_version_list = test.context.clickhouse_version.split(".")

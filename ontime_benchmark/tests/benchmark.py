@@ -16,7 +16,7 @@ def insert_ontime_data(self, from_year, to_year, table_name, node=None):
 
     node.query(
         f"INSERT INTO {table_name} SELECT * FROM ontime_data WHERE Year BETWEEN {from_year} AND {to_year}",
-        timeout = 1200
+        timeout=1200,
     )
 
 
