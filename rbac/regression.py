@@ -240,6 +240,13 @@ xfails = {
             check_clickhouse_version(">=25.1"),
         ),
     ],
+    "/rbac/part 2/SQL security/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/79951",
+            check_clickhouse_version(">=25.5"),
+        )
+    ],
 }
 
 xflags = {
@@ -324,7 +331,7 @@ ffails = {
     "/rbac/part 2/SQL security": (
         Skip,
         "SQL security was introduced in 24.2 and https://github.com/ClickHouse/ClickHouse/issues/79951",
-        check_clickhouse_version("<24.2") or check_clickhouse_version(">=25.5"),
+        check_clickhouse_version("<24.2"),
     ),
     "/rbac/part 2/SQL security/modify materialized view SQL security/modify sql security on cluster": (
         Skip,
@@ -334,7 +341,10 @@ ffails = {
     "/rbac/part 2/SQL security/joins/Select:PASTE:": (
         Skip,
         issue_65134,
-        check_clickhouse_version(">=24.3") or check_clickhouse_version("<24.5"),
+        (
+            lambda test: check_clickhouse_version(">=24.3")(test)
+            or check_clickhouse_version("<24.5")(test)
+        ),
     ),
     "/rbac/part 1/privileges/valid until": (
         Skip,
