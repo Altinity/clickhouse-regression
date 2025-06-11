@@ -2,9 +2,9 @@ name: 🗓 Scheduled Altinity 25.2 Antalya
 run-name: 🗓 Scheduled Altinity 25.2 Antalya 
 on:
   workflow_dispatch:
-  #Run at 00:00 AM (UTC) on Sunday
+  #Run at 10:00 PM (UTC) on Saturday
   schedule:
-    - cron: "0 0 * * 6"
+    - cron: "0 22 * * 6"
 
 jobs:
   altinitystable-25-2-antalya-x86-with-analyzer-zookeeper:
