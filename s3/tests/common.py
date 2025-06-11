@@ -896,6 +896,7 @@ def start_minio(
     secret_key="minio123",
     timeout=30,
     secure=False,
+    cleanup=True,
 ):
     minio_client = Minio(
         uri, access_key=access_key, secret_key=secret_key, secure=secure
@@ -903,28 +904,31 @@ def start_minio(
     start = time.time()
     while time.time() - start < timeout:
         try:
-            buckets_to_delete = minio_client.list_buckets()
+            if cleanup:
+                buckets_to_delete = minio_client.list_buckets()
 
-            for bucket in buckets_to_delete:
-                objects = minio_client.list_objects(bucket.name, recursive=True)
-                object_names = [o.object_name for o in objects]
-                for name in object_names:
-                    minio_client.remove_object(bucket.name, name)
-
-            buckets = ["root", "root2"]
-            self.context.cluster.minio_bucket = "root"
-
-            for bucket in buckets:
-                if minio_client.bucket_exists(bucket):
-                    objects = minio_client.list_objects(bucket, recursive=True)
+                for bucket in buckets_to_delete:
+                    objects = minio_client.list_objects(bucket.name, recursive=True)
                     object_names = [o.object_name for o in objects]
                     for name in object_names:
-                        minio_client.remove_object(bucket, name)
-                    minio_client.remove_bucket(bucket)
-                minio_client.make_bucket(bucket)
+                        minio_client.remove_object(bucket.name, name)
 
-            self.context.cluster.minio_client = minio_client
-            return
+                buckets = ["root", "root2"]
+                self.context.cluster.minio_bucket = "root"
+
+                for bucket in buckets:
+                    if minio_client.bucket_exists(bucket):
+                        objects = minio_client.list_objects(bucket, recursive=True)
+                        object_names = [o.object_name for o in objects]
+                        for name in object_names:
+                            minio_client.remove_object(bucket, name)
+                        minio_client.remove_bucket(bucket)
+                    minio_client.make_bucket(bucket)
+
+                self.context.cluster.minio_client = minio_client
+                return
+            else:
+                return
         except Exception as ex:
             time.sleep(1)
 
