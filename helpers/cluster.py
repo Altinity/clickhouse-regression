@@ -54,17 +54,24 @@ def download_http_binary(binary_source):
     file_dir = f"{current_dir()}/../binaries/"
     os.makedirs(file_dir, exist_ok=True)
     file_path = file_dir + file_name
-    if not os.path.exists(file_path):
-        with Shell() as bash:
-            bash.timeout = 300
-            try:
-                note(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
-                cmd = bash(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
-                assert cmd.exitcode == 0
-            except BaseException:
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-                raise
+    
+    for retry in retries(count=10, delay=10):
+        with retry:
+            if not os.path.exists(file_path):
+                with Shell() as bash:
+                    bash.timeout = 300
+                    try:
+                        note(
+                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                        )
+                        cmd = bash(
+                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                        )
+                        assert cmd.exitcode == 0
+                    except BaseException:
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        raise
 
     return file_path
 
