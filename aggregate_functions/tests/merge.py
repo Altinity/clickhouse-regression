@@ -81,7 +81,7 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
 
-    with Pool(7) as executor:
+    with Pool() as executor:
         for key, value in snapshot_attrs.items():
             with By("I break single snapshot value into lines"):
                 data = value.strip().split("\n")
@@ -200,7 +200,7 @@ def feature(self, extra_data=None, aggregate_functions=aggregate_functions):
             test_funcs.remove(i)
 
     if extra_data is not None:
-        with Pool(15) as executor:
+        with Pool() as executor:
             for name in funcs_to_run_with_extra_data:
                 try:
                     scenario = load(f"aggregate_functions.tests.{name}", "scenario")
@@ -225,7 +225,7 @@ def feature(self, extra_data=None, aggregate_functions=aggregate_functions):
                     )
             join()
     else:
-        with Pool(15) as executor:
+        with Pool() as executor:
             for name in test_funcs:
                 try:
                     scenario = load(f"aggregate_functions.tests.{name}", "scenario")

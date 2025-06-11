@@ -23,7 +23,7 @@ def feature(self, table=None, extra_data=None):
     that serializes the state of the function."""
 
     if extra_data is not None:
-        with Pool(15) as executor:
+        with Pool() as executor:
             for name in funcs_to_run_with_extra_data:
                 if "alias" in name:
                     name_ = name.replace("_alias", "")
@@ -44,7 +44,7 @@ def feature(self, table=None, extra_data=None):
                     )(func=func, scenario=scenario, table=table, extra_data=extra_data)
             join()
     else:
-        with Pool(15) as executor:
+        with Pool() as executor:
             for name in aggregate_functions:
                 if "alias" in name:
                     name_ = name.replace("_alias", "")

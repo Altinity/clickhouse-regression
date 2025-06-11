@@ -822,17 +822,7 @@ def regression(
             join()
 
     with Feature("part 2"):
-        with Pool() as executor:
-            Feature(
-                test=load("aggregate_functions.tests.state", "feature"),
-                parallel=True,
-                executor=executor,
-            )()
-            Feature(
-                test=load("aggregate_functions.tests.merge", "feature"),
-                parallel=True,
-                executor=executor,
-            )()
+        with Pool(3) as executor:
             Feature(
                 test=load("aggregate_functions.tests.finalizeAggregation", "feature"),
                 parallel=True,
@@ -848,6 +838,20 @@ def regression(
                 parallel=True,
                 executor=executor,
             )(table=self.context.table_extra_data)
+            join()
+
+    with Feature("part 3"):
+        with Pool(2) as executor:
+            Feature(
+                test=load("aggregate_functions.tests.state", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
+            Feature(
+                test=load("aggregate_functions.tests.merge", "feature"),
+                parallel=True,
+                executor=executor,
+            )()
             join()
 
 
