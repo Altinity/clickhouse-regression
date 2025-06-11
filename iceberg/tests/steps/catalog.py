@@ -271,7 +271,7 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
 
 @TestStep(Given)
 def create_iceberg_table_with_five_columns(
-    self, catalog, namespace, table_name, number_of_rows=10, with_data=False
+    self, catalog, namespace, table_name, number_of_rows=10, with_data=False, location="s3://warehouse/data"
 ):
     """Create an Iceberg table with five columns and optionally insert random data.
     Table partitioned by string column and sorted by the same column."""
@@ -306,7 +306,7 @@ def create_iceberg_table_with_five_columns(
         namespace=namespace,
         table_name=table_name,
         schema=schema,
-        location="s3://warehouse/data",
+        location=location,
         partition_spec=partition_spec,
         sort_order=sort_order,
     )
