@@ -2,9 +2,9 @@ name: 🗓 Scheduled Altinity 24.3
 run-name: 🗓 Scheduled Altinity 24.3
 on:
   workflow_dispatch:
-  #Run at 00:00 AM (UTC) on Sunday
+  #Run at 10:00 PM (UTC) on Saturday
   schedule:
-    - cron: "0 0 * * 6"
+    - cron: "0 22 * * 6"
 
 jobs:
   altinitystable-24-3-x86-with-analyzer-zookeeper:
