@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   #Run at 10:00 PM (UTC) on Sunday
   schedule:
-    - cron: "0 22 * * 7"
+    - cron: "0 22 * * 0"
 
 jobs:
   get_clickhouse_version:
