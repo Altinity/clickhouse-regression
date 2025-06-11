@@ -14,7 +14,7 @@ from helpers.common import (
     check_if_not_antalya_build,
 )
 
-from iceberg.requirements.requirements import *
+from swarms.requirements.requirements import *
 
 
 xfails = {}
@@ -32,7 +32,7 @@ ffails = {
 @FFails(ffails)
 @XFails(xfails)
 @ArgumentParser(argparser_minio)
-@Specifications(Apache_Iceberg_Table)
+@Specifications(SRS_044_Swarm_Cluster_Query_Execution)
 @CaptureClusterArgs
 @CaptureMinioArgs
 def regression(
