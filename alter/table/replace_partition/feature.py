@@ -15,7 +15,7 @@ from alter.table.replace_partition.requirements.requirements import (
 @Name("replace partition")
 def feature(self):
     """Run features from the replace partition suite."""
-    with Pool(2) as pool:
+    with Pool() as pool:
         Feature(
             run=load("alter.table.replace_partition.partition_types", "feature"),
             parallel=True,
