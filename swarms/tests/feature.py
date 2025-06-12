@@ -2,7 +2,6 @@ from testflows.core import *
 
 
 @TestFeature
-@Name("swarm")
 def feature(self, minio_root_user, minio_root_password):
     """Check swarm cluster functionality."""
     Feature(
