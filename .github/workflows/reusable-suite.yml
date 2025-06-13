@@ -54,10 +54,10 @@ on:
         required: false
         type: string
         default: "in-hel1-fsn1-nbg1"
-      runner_volume:
-        required: false
-        type: string
-        default: "volume-cache-35GB"
+      # runner_volume:
+      #   required: false
+      #   type: string
+      #   default: "volume-cache-35GB"
       artifacts:
         required: true
         type: string
