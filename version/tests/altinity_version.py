@@ -45,7 +45,7 @@ def test_issues_link(self):
 
     # Want to match the link to the issues page, but not links to individual issues
     assert "github.com/ClickHouse/ClickHouse/issues" not in result.replace(
-        "issues/", ""
+        "issues/", "_"
     ), error(
         f"ClickHouse/issues link is not correct, expected to not find upstream link but got: '{result}'"
     )
