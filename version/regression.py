@@ -7,18 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer
-
-
-def check_altinity_build(node):
-    """
-    Check if the build is from Altinity.
-
-    The check needs to be robust, it's possible that a test build
-    will not have the version set correctly.
-    """
-    res = node.command("grep -i -a altinity /usr/bin/clickhouse", no_checks=True)
-    return res.exitcode == 0
+from helpers.common import experimental_analyzer, check_is_altinity_build
 
 
 @TestFeature
@@ -51,7 +40,7 @@ def regression(
         self.context.cluster = cluster
 
     node = cluster.node("clickhouse1")
-    is_altinity_build = check_altinity_build(node)
+    is_altinity_build = check_is_altinity_build(node)
     if not is_altinity_build:
         skip("This suite is for Altinity builds only")
 
