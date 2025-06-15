@@ -12,7 +12,7 @@ VERSION_REGEX_CLI = re.compile(
 
 
 @TestScenario
-def test_stacktrace(self):
+def stacktrace(self):
     node = self.context.cluster.node("clickhouse1")
     query = "SELECT throwIf(1, 'throw')"
     result = node.command(f'clickhouse local --stacktrace -q "{query}"', exitcode=139)
@@ -22,7 +22,7 @@ def test_stacktrace(self):
 
 
 @TestScenario
-def test_version(self):
+def version_format(self):
     node = self.context.cluster.node("clickhouse1")
     query = "SELECT version()"
     result = node.query(query).output
@@ -37,7 +37,7 @@ def test_version(self):
 
 
 @TestScenario
-def test_issues_link(self):
+def issues_link(self):
     node = self.context.cluster.node("clickhouse1")
     result = node.command(
         "grep --color=never -i -a clickhouse/issues /usr/bin/clickhouse"
@@ -55,7 +55,7 @@ def test_issues_link(self):
 
 
 @TestScenario
-def test_error_message(self):
+def error_message(self):
     node = self.context.cluster.node("clickhouse1")
 
     # Send error signal
