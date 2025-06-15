@@ -13,53 +13,73 @@ VERSION_REGEX_CLI = re.compile(
 
 @TestScenario
 def stacktrace(self):
-    node = self.context.cluster.node("clickhouse1")
-    query = "SELECT throwIf(1, 'throw')"
-    result = node.command(f'clickhouse local --stacktrace -q "{query}"', exitcode=139)
-    assert "FunctionThrowIf::executeImpl" in result.output, error(
-        "Stacktrace is not enabled"
-    )
+    """Check that stacktrace is enabled and symbols aren't stripped."""
+
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("running a query that throws an exception"):
+        query = "SELECT throwIf(1, 'throw')"
+        result = node.command(
+            f'clickhouse local --stacktrace -q "{query}"', exitcode=139
+        )
+
+    with Then("the exception is not stripped"):
+        assert "FunctionThrowIf::executeImpl" in result.output, error(
+            "Stacktrace is not enabled"
+        )
 
 
 @TestScenario
 def version_format(self):
-    node = self.context.cluster.node("clickhouse1")
-    query = "SELECT version()"
-    result = node.query(query).output
-    assert VERSION_REGEX_QUERY.search(result), error(
-        f"Version on query not formatted correctly, expected match for: '{VERSION_REGEX_QUERY.pattern}' but got: '{result}'"
-    )
+    """Check that the version is formatted as expected."""
 
-    result = node.command("clickhouse --version").output
-    assert VERSION_REGEX_CLI.search(result), error(
-        f"Version on cli not formatted correctly, expected match for: '{VERSION_REGEX_CLI.pattern}' but got: '{result}'"
-    )
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("running a query to get the version"):
+        query = "SELECT version()"
+        result = node.query(query).output
+
+    with Then("the version is formatted correctly"):
+        assert VERSION_REGEX_QUERY.search(result), error(
+            f"Version on query not formatted correctly, expected match for: '{VERSION_REGEX_QUERY.pattern}' but got: '{result}'"
+        )
+
+    with When("running the clickhouse command to get the version"):
+        result = node.command("clickhouse --version").output
+
+    with Then("the version is formatted correctly"):
+        assert VERSION_REGEX_CLI.search(result), error(
+            f"Version on cli not formatted correctly, expected match for: '{VERSION_REGEX_CLI.pattern}' but got: '{result}'"
+        )
 
 
 @TestScenario
-def issues_link(self):
-    node = self.context.cluster.node("clickhouse1")
-    result = node.command(
-        "grep --color=never -i -a clickhouse/issues /usr/bin/clickhouse"
-    ).output
+def issue_link(self):
+    """Check that the issue link is correct and not pointing to upstream."""
 
-    # Want to match the link to the issues page, but not links to individual issues
-    assert "github.com/ClickHouse/ClickHouse/issues" not in result.replace(
-        "issues/", "_"
-    ), error(
-        f"ClickHouse/issues link is not correct, expected to not find upstream link but got: '{result}'"
-    )
-    assert "github.com/Altinity/ClickHouse/issues" in result, error(
-        f"ClickHouse/issues link is not correct, expected to find Altinity link but got: '{result}'"
-    )
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("checking links to github that are embedded in the binary"):
+        result = node.command(
+            "grep --color=never -i -a clickhouse/issues /usr/bin/clickhouse"
+        ).output
+
+    with Then("the issue link is not pointing to upstream"):
+        # Want to match the link to the issues page, but not links to individual issues
+        assert "github.com/ClickHouse/ClickHouse/issues" not in result.replace(
+            "issues/", "_"
+        ), error()
+
+    with Then("the issue link is pointing to Altinity's issues page"):
+        assert "github.com/Altinity/ClickHouse/issues" in result, error()
 
 
 @TestScenario
 def error_message(self):
-    node = self.context.cluster.node("clickhouse1")
-
-    # Send error signal
-    node.command("kill -SEGV $(pidof clickhouse)")
+    """Check contents of log messages when an error occurs."""
 
     def grep_in_log(message):
         return node.command(
@@ -67,40 +87,48 @@ def error_message(self):
             no_checks=True,
         ).output.splitlines()
 
-    if grep_in_log("ClickHouse/issues"):
-        assert grep_in_log(
-            "github.com/Altinity/ClickHouse/issues"
-        ), "ClickHouse/issues link is not correct"
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    signal = "SEGV"
+    with When(f"the ClickHouse process is killed with a {signal} signal"):
+        node.command(f"kill -{signal} $(pidof clickhouse)")
+
+    with Then("the issues link is pointing to Altinity's issues page, if it's present"):
+        if grep_in_log("ClickHouse/issues"):
+            assert grep_in_log(
+                "github.com/Altinity/ClickHouse/issues"
+            ), "ClickHouse/issues link is not correct"
 
     unexpected_messages = [
         "github.com/ClickHouse/ClickHouse",
         "not official",
         "(official build)",
     ]
-
     for message in unexpected_messages:
-        match = grep_in_log(message)
-        assert not match, error(f"Unexpected message '{message}' found in log: {match}")
+        with Then(f"the log does not contain unexpected message '{message}'"):
+            match = grep_in_log(message)
+            assert not match, error()
 
     expected_messages = [
         "(altinity build)",
     ]
-
     for message in expected_messages:
-        match = grep_in_log(message)
-        assert match, error(f"Expected message '{message}' not found in log")
+        with Then(f"the log contains the expected message '{message}'"):
+            match = grep_in_log(message)
+            assert match, error()
 
-    version_messages = grep_in_log("(version ")
-    assert len(version_messages) > 0, error("No version messages found in log")
+    with Then("the log contains a version message"):
+        version_messages = grep_in_log("(version ")
+        assert len(version_messages) > 0, error("No version messages found in log")
 
-    for version_message in version_messages:
-        assert VERSION_REGEX_CLI.search(version_message), error(
-            f"Version is not formatted correctly, expected match for: '{VERSION_REGEX_CLI.pattern}' but got: {version_message}"
-        )
+    with Then("the version message is formatted correctly"):
+        for version_message in version_messages:
+            assert VERSION_REGEX_CLI.search(version_message), error()
 
 
 @TestFeature
-@Name("altinity version")
+@Name("altinity")
 def feature(self):
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario, flags=TE)
