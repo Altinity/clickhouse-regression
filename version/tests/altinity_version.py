@@ -90,41 +90,46 @@ def error_message(self):
     with Given("a ClickHouse instance"):
         node = self.context.cluster.node("clickhouse1")
 
-    signal = "SEGV"
-    with When(f"the ClickHouse process is killed with a {signal} signal"):
-        node.command(f"kill -{signal} $(pidof clickhouse)")
+    try:
+        signal = "SEGV"
+        with When(f"the ClickHouse process is killed with a {signal} signal"):
+            node.command(f"kill -{signal} $(pidof clickhouse)")
 
-    with Then("the issues link is pointing to Altinity's issues page, if it's present"):
-        if grep_in_log("ClickHouse/issues"):
-            assert grep_in_log(
-                "github.com/Altinity/ClickHouse/issues"
-            ), "ClickHouse/issues link is not correct"
+        with Then("the issues link is pointing to Altinity's issues page, if present"):
+            if grep_in_log("ClickHouse/issues"):
+                assert grep_in_log(
+                    "github.com/Altinity/ClickHouse/issues"
+                ), "ClickHouse/issues link is not correct"
 
-    unexpected_messages = [
-        "github.com/ClickHouse/ClickHouse",
-        "not official",
-        "(official build)",
-    ]
-    for message in unexpected_messages:
-        with Then(f"the log does not contain unexpected message '{message}'"):
-            match = grep_in_log(message)
-            assert not match, error()
+        unexpected_messages = [
+            "github.com/ClickHouse/ClickHouse",
+            "not official",
+            "(official build)",
+        ]
+        for message in unexpected_messages:
+            with Then(f"the log does not contain unexpected message '{message}'"):
+                match = grep_in_log(message)
+                assert not match, error()
 
-    expected_messages = [
-        "(altinity build)",
-    ]
-    for message in expected_messages:
-        with Then(f"the log contains the expected message '{message}'"):
-            match = grep_in_log(message)
-            assert match, error()
+        expected_messages = [
+            "(altinity build)",
+        ]
+        for message in expected_messages:
+            with Then(f"the log contains the expected message '{message}'"):
+                match = grep_in_log(message)
+                assert match, error()
 
-    with Then("the log contains a version message"):
-        version_messages = grep_in_log("(version ")
-        assert len(version_messages) > 0, error("No version messages found in log")
+        with Then("the log contains a version message"):
+            version_messages = grep_in_log("(version ")
+            assert len(version_messages) > 0, error("No version messages found in log")
 
-    with Then("the version message is formatted correctly"):
-        for version_message in version_messages:
-            assert VERSION_REGEX_CLI.search(version_message), error()
+        with Then("the version message is formatted correctly"):
+            for version_message in version_messages:
+                assert VERSION_REGEX_CLI.search(version_message), error()
+
+    finally:
+        with Finally("the ClickHouse process is restarted"):
+            node.restart()
 
 
 @TestFeature
