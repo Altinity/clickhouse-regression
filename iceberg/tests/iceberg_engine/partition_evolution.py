@@ -203,7 +203,6 @@ def partition_evolution_check(self, minio_root_user, minio_root_password, action
 
     with And("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -212,7 +211,6 @@ def partition_evolution_check(self, minio_root_user, minio_root_password, action
     with And("create database with Iceberg engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
-            rest_catalog_url="http://ice-rest-catalog:5000",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )

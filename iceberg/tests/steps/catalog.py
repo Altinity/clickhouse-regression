@@ -27,6 +27,7 @@ from pyiceberg.types import (
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
+from pyiceberg.catalog.glue import GlueCatalog
 
 import pyarrow as pa
 import boto3
@@ -56,7 +57,7 @@ _PRIMITIVE_TYPES = [
 
 
 @TestStep(Given)
-def create_catalog(
+def create_rest_catalog(
     self,
     uri="http://localhost:5000/",
     name=None,
@@ -138,6 +139,25 @@ def create_glue_catalog(
 
 
 @TestStep(Given)
+def create_catalog(self, **kwargs):
+    if self.context.catalog == "rest":
+        return create_rest_catalog(**kwargs)
+    elif self.context.catalog == "glue":
+        return create_glue_catalog(**kwargs)
+    else:
+        raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
+
+
+@TestStep(Given)
+def create_aws_glue_catalog(self, warehouse, name=None):
+    if name is None:
+        name = f"glue_catalog_{getuid()}"
+
+    catalog = GlueCatalog(name=name, warehouse=warehouse)
+    yield catalog
+
+
+@TestStep(Given)
 def list_sizes(
     self,
     bucket_name: str,
@@ -178,7 +198,6 @@ def list_sizes(
         f"metadata={meta_bytes:,} B  parquet={parquet_bytes:,} B  total={total_bytes:,} B"
     )
     return meta_bytes, parquet_bytes, total_bytes
-
 
 
 @TestStep(Given)
@@ -248,14 +267,6 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
         NestedField(field_id=2, name="double", field_type=DoubleType(), required=False),
         NestedField(field_id=3, name="integer", field_type=LongType(), required=False),
     )
-    partition_spec = PartitionSpec(
-        PartitionField(
-            source_id=1,
-            field_id=1001,
-            transform=IdentityTransform(),
-            name="symbol_partition",
-        ),
-    )
     sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
     table = create_iceberg_table(
         catalog=catalog,
@@ -263,7 +274,7 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
         table_name=table_name,
         schema=schema,
         location="s3://warehouse/data",
-        partition_spec=partition_spec,
+        partition_spec=PartitionSpec(),
         sort_order=sort_order,
     )
     return table
@@ -271,7 +282,13 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
 
 @TestStep(Given)
 def create_iceberg_table_with_five_columns(
-    self, catalog, namespace, table_name, number_of_rows=10, with_data=False, location="s3://warehouse/data"
+    self,
+    catalog,
+    namespace,
+    table_name,
+    number_of_rows=10,
+    with_data=False,
+    location="s3://warehouse/data",
 ):
     """Create an Iceberg table with five columns and optionally insert random data.
     Table partitioned by string column and sorted by the same column."""
