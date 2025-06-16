@@ -23,13 +23,15 @@ import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
+from iceberg.tests.steps.common import random_string
 
 
 @TestScenario
 def sanity(self, minio_root_user, minio_root_password):
-    """Test the Iceberg engine in ClickHouse."""
-    namespace = "iceberg"
-    table_name = "name"
+    """Sanity check for DataLakeCatalog database engine in ClickHouse."""
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -46,8 +48,7 @@ def sanity(self, minio_root_user, minio_root_password):
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with Then("create database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
+    with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -55,12 +56,7 @@ def sanity(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("check the tables in the database"):
-        iceberg_engine.show_create_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
-
-    with And("read data in clickhouse from the previously created table"):
+    with And("read data in ClickHouse from table from DataLakeCatalog database"):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
@@ -76,11 +72,11 @@ def sanity(self, minio_root_user, minio_root_password):
         )
         table.append(df)
 
-    with And("scan and display data"):
+    with And("scan with PyIceberg and display data"):
         df = table.scan().to_pandas()
         note(df)
 
-    with And("read data in clickhouse from the previously created table"):
+    with And("read data in ClickHouse from table from DataLakeCatalog database"):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
@@ -94,6 +90,7 @@ def sort_order(self, minio_root_user, minio_root_password):
     """Test that ClickHouse preserves the sort order of the Iceberg table."""
     namespace = f"iceberg_{getuid()}"
     table_name = f"name_{getuid()}"
+    database_name = f"datalake_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -108,7 +105,7 @@ def sort_order(self, minio_root_user, minio_root_password):
     with When(f"define schema and create {namespace}.{table_name} table"):
         schema = Schema(
             NestedField(
-                field_id=1, name="name", field_type=StringType(), required=False
+                field_id=1, name="string", field_type=StringType(), required=False
             ),
             NestedField(
                 field_id=2, name="double", field_type=DoubleType(), required=False
@@ -121,7 +118,7 @@ def sort_order(self, minio_root_user, minio_root_password):
             ),
             NestedField(
                 field_id=5,
-                name="details",
+                name="struct",
                 field_type=StructType(
                     NestedField(
                         field_id=4,
@@ -139,14 +136,7 @@ def sort_order(self, minio_root_user, minio_root_password):
                 required=False,
             ),
         )
-        partition_spec = PartitionSpec(
-            PartitionField(
-                source_id=1,
-                field_id=1001,
-                transform=IdentityTransform(),
-                name="symbol_partition",
-            ),
-        )
+
         sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
         table = catalog_steps.create_iceberg_table(
             catalog=catalog,
@@ -154,57 +144,77 @@ def sort_order(self, minio_root_user, minio_root_password):
             table_name=table_name,
             schema=schema,
             location="s3://warehouse/data",
-            partition_spec=partition_spec,
+            partition_spec=PartitionSpec(),
             sort_order=sort_order,
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
         )
 
     with And(f"insert data into {namespace}.{table_name} table"):
+        length = 100
+        string_values = [random_string(length=10) for _ in range(length)]
+        double_values = [float(i + 2.5) for i in range(length)]
+        integer_values = [i for i in range(length)]
+        boolean_values = [False for _ in range(length)]
+        struct_values = [{"created_by": f"name_{i}"} for i in range(length)]
+        decimal_values = [Decimal(i + 0.5) for i in range(length)]
+
         data = [
             {
-                "name": "AAPL",
-                "double": 150.5,
-                "integer": 151,
-                "boolean": True,
-                "details": {"created_by": "Alice"},  # Nested Struct
-                "decimal": Decimal("150.5"),
-            },
-            {
-                "name": "GOOG",
-                "double": 2800.1,
-                "integer": 2805,
-                "boolean": False,
-                "details": {"created_by": "Bob"},  # Nested Struct
-                "decimal": Decimal("2800.1"),
-            },
+                "string": string_values[i],
+                "double": double_values[i],
+                "integer": integer_values[i],
+                "boolean": boolean_values[i],
+                "struct": struct_values[i],
+                "decimal": decimal_values[i],
+            }
+            for i in range(length)
         ]
-        df = pa.Table.from_pylist(data)
+        arrow_schema = pa.schema(
+            [
+                ("string", pa.string()),
+                ("double", pa.float64()),
+                ("integer", pa.int64()),
+                ("boolean", pa.bool_()),
+                ("struct", pa.struct([pa.field("created_by", pa.string())])),
+                ("decimal", pa.decimal128(9, 2)),
+            ]
+        )
+        df = pa.Table.from_pylist(data, schema=arrow_schema)
         table.append(df)
 
-    with And("scan and display data"):
+    with And("scan with PyIceberg and display data"):
         df = table.scan().to_pandas()
         note(df)
 
-    with And("read data in clickhouse from the previously created table"):
-        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name, namespace=namespace, table_name=table_name
-        )
+    with And("read data in ClickHouse from table from DataLakeCatalog database"):
+        for i in range(100):
+            result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+                columns="string",
+                format="Values",
+            )
+            assert (
+                ",".join(f"('{i}')" for i in string_values) == result.output.strip()
+            ), error()
 
 
 @TestScenario
 def recreate_table(self, minio_root_user, minio_root_password):
-    """Test the Iceberg engine in ClickHouse."""
+    """Check that ClickHouse can read correct data after recreating
+    the table with same name.
+    """
     node = self.context.node
     namespace = f"namespace_{getuid()}"
-    table_name = f"name_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -215,11 +225,6 @@ def recreate_table(self, minio_root_user, minio_root_password):
 
     with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
 
     with When(f"define schema and create {namespace}.{table_name} table"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
@@ -236,12 +241,7 @@ def recreate_table(self, minio_root_user, minio_root_password):
         )
         table.append(df)
 
-    with And("scan and display data"):
-        df = table.scan().to_pandas()
-        note(df)
-
-    with Then("create database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
+    with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -271,7 +271,7 @@ def recreate_table(self, minio_root_user, minio_root_password):
         )
         table.append(df)
 
-    with Then("verify that ClickHouse reads the new data （one row）"):
+    with And("verify that ClickHouse reads the new data （one row）"):
         for retry in retries(count=11, delay=1):
             with retry:
                 result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
@@ -284,21 +284,23 @@ def recreate_table(self, minio_root_user, minio_root_password):
 
 @TestScenario
 def multiple_tables(self, minio_root_user, minio_root_password):
-    """Test creating multiple tables in same Iceberg database."""
-
+    """Check that ClickHouse can read correct data from multiple tables
+    in same database.
+    """
     namespace = f"iceberg_{getuid()}"
-    table_name_1 = "iceberg_table_1"
-    table_name_2 = "iceberg_table_2"
+    database_name = f"datalake_{getuid()}"
+    table_name_1 = f"table_1_{getuid()}"
+    table_name_2 = f"table_2_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with When(f"create namespace {namespace} and two tables under {namespace}"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with When(f"create two tables under namespace {namespace}"):
         table_1 = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name_1
         )
@@ -306,7 +308,7 @@ def multiple_tables(self, minio_root_user, minio_root_password):
             catalog=catalog, namespace=namespace, table_name=table_name_2
         )
 
-    with And(f"insert data into both tables"):
+    with And(f"insert different data into both tables"):
         df1 = pa.Table.from_pylist(
             [
                 {"name": "Alice", "double": 195.23, "integer": 20},
@@ -328,8 +330,7 @@ def multiple_tables(self, minio_root_user, minio_root_password):
         note(data1)
         note(data2)
 
-    with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
+    with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -337,52 +338,51 @@ def multiple_tables(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("check the tables in the database after deleting the table"):
+    with And("check that both tables are created in the database"):
         result = self.context.node.query(f"SHOW TABLES from {database_name}")
         assert table_name_1 in result.output, error()
         assert table_name_2 in result.output, error()
 
-    with Then("verify that ClickHouse reads correct data from both tables"):
+    with And("verify that ClickHouse reads correct data from both tables"):
         for retry in retries(count=10, delay=1):
             with retry:
                 result_1 = iceberg_engine.read_data_from_clickhouse_iceberg_table(
                     database_name=database_name,
                     namespace=namespace,
                     table_name=table_name_1,
+                    format="Values",
                 )
-                assert "Alice\t195.23\t20" in result_1.output, error()
-                assert "Bob\t123.45\t30" in result_1.output, error()
-
+                assert (
+                    result_1.output.strip() == "('Alice',195.23,20),('Bob',123.45,30)"
+                ), error()
                 result_2 = iceberg_engine.read_data_from_clickhouse_iceberg_table(
                     database_name=database_name,
                     namespace=namespace,
                     table_name=table_name_2,
+                    format="Values",
                 )
-                assert "David\t20\t27" in result_2.output, error()
-                assert "Eve\t30\t35" in result_2.output, error()
+                assert (
+                    result_2.output.strip() == "('David',20,27),('Eve',30,35)"
+                ), error()
 
 
 @TestScenario
-def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
-    """Test the Iceberg engine in ClickHouse."""
+def recreate_table_and_database(self, minio_root_user, minio_root_password):
+    """Check that ClickHouse can read correct data after recreating
+    the table and recreating the database with same names.
+    """
     node = self.context.node
     namespace = f"namespace_{getuid()}"
-    table_name = f"name_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"datalake_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
 
     with When(f"define schema and create {namespace}.{table_name} table"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
@@ -403,16 +403,14 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
         df = table.scan().to_pandas()
         note(df)
 
-    with Then("create database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
-        iceberg_engine.drop_database(database_name=database_name)
+    with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
 
-    with And("read data in clickhouse from the previously created table"):
+    with And("read data from the table from DataLakeCatalog database"):
         result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
             database_name=database_name, namespace=namespace, table_name=table_name
         )
@@ -425,11 +423,11 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with And("check the tables in the database after deleting the table"):
+    with And("check that the table is not visible in the database"):
         result = node.query(f"SHOW TABLES from {database_name}")
         assert table_name not in result.output, error()
 
-    with And("recreate table with same name"):
+    with And("recreate iceberg table with same name"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
@@ -456,60 +454,40 @@ def recreate_table_multiple_times(self, minio_root_user, minio_root_password):
                 )
                 assert "David\t20\t27" in result.output, error()
 
-    with Then("recreate database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
-        iceberg_engine.drop_database(database_name=database_name)
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    with Then("verify that ClickHouse reads the new data （one row）"):
-        for retry in retries(count=11, delay=1):
-            with retry:
-                result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+    with Then("recreate database with DataLakeCatalog engine and verify data"):
+        for _ in range(5):
+            with By("recreate database"):
+                iceberg_engine.drop_database(database_name=database_name)
+                iceberg_engine.create_experimental_iceberg_database(
                     database_name=database_name,
-                    namespace=namespace,
-                    table_name=table_name,
+                    s3_access_key_id=minio_root_user,
+                    s3_secret_access_key=minio_root_password,
                 )
-                assert "David\t20\t27" in result.output, error()
-
-    with Then("recreate database with Iceberg engine"):
-        database_name = f"datalake_{getuid()}"
-        iceberg_engine.drop_database(database_name=database_name)
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    with Then("verify that ClickHouse reads the new data （one row）"):
-        for retry in retries(count=11, delay=1):
-            with retry:
-                result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-                    database_name=database_name,
-                    namespace=namespace,
-                    table_name=table_name,
-                )
-                assert "David\t20\t27" in result.output, error()
+            with And("verify that ClickHouse reads the new data （one row）"):
+                for retry in retries(count=11, delay=1):
+                    with retry:
+                        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                            database_name=database_name,
+                            namespace=namespace,
+                            table_name=table_name,
+                        )
+                        assert "David\t20\t27" in result.output, error()
 
 
 @TestScenario
 def rename_database(self, minio_root_user, minio_root_password):
-    """Test renaming the database with Iceberg engine in ClickHouse."""
+    """Check that renaming of database with DataLakeCatalog engine is not supported."""
+    node = self.context.node
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
     database_name = f"iceberg_database_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with When(f"define schema and create {namespace}.{table_name} table"):
@@ -517,8 +495,7 @@ def rename_database(self, minio_root_user, minio_root_password):
             catalog=catalog, namespace=namespace, table_name=table_name
         )
 
-    with Then("create database with Iceberg engine"):
-        iceberg_engine.drop_database(database_name=database_name)
+    with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -526,24 +503,22 @@ def rename_database(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("check that rename Iceberg database is not supported"):
+    with And("check that renaming of DataLakeCatalog database is not supported"):
         new_database_name = f"new_iceberg_database_{getuid()}"
-        exitcode = 48
         database_engine_name = (
             "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
         )
-        message = f"DB::Exception: {database_engine_name}: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)"
-        rename_query = f"RENAME DATABASE {database_name} TO {new_database_name}"
-        self.context.node.query(
-            rename_query,
-            exitcode=exitcode,
-            message=message,
+        node.query(
+            f"RENAME DATABASE {database_name} TO {new_database_name}",
+            exitcode=48,
+            message=f"DB::Exception: {database_engine_name}: RENAME DATABASE is not supported. (NOT_IMPLEMENTED)",
         )
 
 
 @TestScenario
 def rename_table_from_iceberg_database(self, minio_root_user, minio_root_password):
-    """Test renaming the database with Iceberg engine in ClickHouse."""
+    """Check that renaming of iceberg table from DataLakeCatalog database is not supported."""
+    node = self.context.node
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
     database_name = f"iceberg_database_{getuid()}"
@@ -573,36 +548,30 @@ def rename_table_from_iceberg_database(self, minio_root_user, minio_root_passwor
 
     with And("check that rename table from Iceberg database is not supported"):
         new_table_name = f"new_table_{getuid()}"
-        exitcode = 48
         database_engine_name = (
             "Iceberg" if check_clickhouse_version("<25.3")(self) else "DataLakeCatalog"
         )
-        message = f"DB::Exception: {database_engine_name}: renameTable() is not supported. (NOT_IMPLEMENTED)"
-        rename_query = f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}"
-        self.context.node.query(
-            rename_query,
-            exitcode=exitcode,
-            message=message,
+        node.query(
+            f"RENAME TABLE {database_name}.\\`{namespace}.{table_name}\\` TO {new_table_name}",
+            exitcode=48,
+            message=f"DB::Exception: {database_engine_name}: renameTable() is not supported. (NOT_IMPLEMENTED)",
         )
 
 
 @TestScenario
 def use_database(self, minio_root_user, minio_root_password, node=None):
-    """Test using the database with Iceberg engine in ClickHouse."""
-    if node is None:
-        node = self.context.node
-
+    """Check `USE database` statement with DataLakeCatalog engine."""
+    node = self.context.node if node is None else node
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
+    database_name = f"iceberg_database_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
     with When(f"define schema and create {namespace}.{table_name} table"):
@@ -619,20 +588,20 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with And("use the database"):
+    with And("check that `USE database` statement works"):
         result = node.query(
             f"USE {database_name}; SELECT currentDatabase(); SHOW TABLES;"
         )
         assert f"{namespace}.{table_name}" in result.output, error()
 
-    with And("check the current database"):
+    with And("check that the current database is set to the correct database"):
         result = node.query(f"USE {database_name}; SELECT currentDatabase()")
         assert result.output.strip() == f"{database_name}", error()
 
 
 @TestScenario
 def array_join(self, minio_root_user, minio_root_password):
-    """Test ARRAY JOIN with List column from Iceberg table."""
+    """Check `ARRAY JOIN` with List column from Iceberg table."""
     node = self.context.node
     namespace = f"iceberg_{getuid()}"
     table_name = f"table_{getuid()}"
@@ -669,13 +638,12 @@ def array_join(self, minio_root_user, minio_root_password):
     with And("insert data into the table"):
         df = pa.Table.from_pylist(
             [
-                {"list": ["a", "b", "c"]},
+                {"list": ["a", "b", "c", "abc"]},
             ]
         )
         table.append(df)
 
     with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -689,38 +657,40 @@ def array_join(self, minio_root_user, minio_root_password):
                 FROM {database_name}.\\`{namespace}.{table_name}\\` 
                 ARRAY JOIN list AS a
                 ORDER BY tuple(*)
-                FORMAT TabSeparated
+                FORMAT Values
             """
         )
         assert (
-            result.output.strip() == "['a','b','c']	a\n['a','b','c']	b\n['a','b','c']	c"
+            result.output.strip()
+            == "(['a','b','c','abc'],'a'),(['a','b','c','abc'],'b'),(['a','b','c','abc'],'c'),(['a','b','c','abc'],'abc')"
         ), error()
 
 
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
+    """Sanity checks for DataLakeCatalog database engine in ClickHouse."""
     Scenario(test=sanity)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=recreate_table)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=recreate_table_multiple_times)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=rename_database)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=use_database)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
-    Scenario(test=rename_table_from_iceberg_database)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=sort_order)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
+    Scenario(test=recreate_table)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
     Scenario(test=multiple_tables)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=recreate_table_and_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_table_from_iceberg_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=use_database)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=array_join)(
