@@ -1,25 +1,15 @@
-from testflows.core import *
-from testflows.asserts import error
-from testflows.combinatorics import combinations
-
-from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
-
-from datetime import date, timedelta
-
 import re
 import math
 import random
 import string
 import pyarrow as pa
 
-from pyiceberg.types import (
-    DoubleType,
-    StringType,
-    LongType,
-    DateType,
-    IntegerType,
-    FloatType,
-)
+from testflows.core import *
+from testflows.asserts import error
+from testflows.combinatorics import combinations
+from datetime import date, timedelta
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
+
 
 random.seed(42)
 
