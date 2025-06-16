@@ -1,7 +1,8 @@
+import os
+import iceberg.tests.steps.catalog as catalog_steps
+
 from testflows.core import *
 from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
-
-import iceberg.tests.steps.catalog as catalog_steps
 
 CATALOG_TYPE = "rest"
 
@@ -16,7 +17,7 @@ def drop_database(self, database_name, node=None):
 
 
 @TestStep(Given)
-def create_experimental_iceberg_database(
+def create_experimental_iceberg_database_with_rest_catalog(
     self,
     s3_access_key_id,
     s3_secret_access_key,
@@ -88,7 +89,7 @@ def create_experimental_iceberg_database(
 
 
 @TestStep(Given)
-def create_glue_experimental_datalakecatalog_database(
+def create_experimental_iceberg_database_with_glue_catalog(
     self,
     s3_access_key_id,
     s3_secret_access_key,
@@ -157,6 +158,23 @@ def create_glue_experimental_datalakecatalog_database(
     finally:
         with Finally("drop database"):
             node.query(f"DROP DATABASE IF EXISTS {database_name}")
+
+
+@TestStep(Given)
+def create_experimental_iceberg_database(
+    self,
+    **kwargs,
+):
+    if self.context.catalog == "rest":
+        return create_experimental_iceberg_database_with_rest_catalog(
+            **kwargs,
+        )
+    elif self.context.catalog == "glue":
+        return create_experimental_iceberg_database_with_glue_catalog(
+            **kwargs,
+        )
+    else:
+        raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
 
 
 @TestStep(Then)

@@ -330,6 +330,7 @@ def order_by_clause(self, table_name, node=None):
 
 
 @TestFeature
+@Name("sql clauses")
 def feature(self, minio_root_user, minio_root_password):
     """Test various SQL operations on Iceberg database tables including WHERE, GROUP BY, HAVING,
     LIMIT, DISTINCT, and JOIN clauses."""

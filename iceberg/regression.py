@@ -24,29 +24,42 @@ xfails = {
     "/iceberg/icebergS3 table function/recreate table and insert new data multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg engine/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/iceberg engine/* catalog/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/iceberg engine/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/iceberg engine/* catalog/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
     ],
-    "/iceberg/iceberg engine/swarm/*": [
+    "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),
     ],
     "/iceberg/iceberg cache/iceberg table engine/*": [
         (Fail, "Need to investigate"),
     ],
-    "/iceberg/iceberg engine/predicate push down/issue with decimal column": [
+    "/iceberg/iceberg engine/* catalog/predicate push down/issue with decimal column": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/80200")
     ],
-    "/iceberg/iceberg engine/predicate push down/issue with float column": [
+    "/iceberg/iceberg engine/* catalog/predicate push down/issue with float column": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/80200")
     ],
-    "/iceberg/iceberg engine/feature/multiple tables": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187", check_clickhouse_version("<25.3")),
+    "/iceberg/iceberg engine/* catalog/feature/multiple tables": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/75187",
+            check_clickhouse_version("<25.3"),
+        ),
+    ],
+    "/iceberg/iceberg engine/glue catalog/schema evolution/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/81272",
+        )
+    ],
+    "/iceberg/iceberg engine/glue catalog/nested datatypes/*": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/81301")
     ],
 }
 
