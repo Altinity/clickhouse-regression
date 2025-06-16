@@ -215,6 +215,16 @@ def check_clickhouse_version(version):
     return check
 
 
+def check_is_altinity_build(node):
+    """
+    Check if the build is from Altinity.
+
+    The check needs to be robust, it's possible that a test build
+    will not have the version set correctly.
+    """
+    res = node.command("grep -i -a altinity /usr/bin/clickhouse", no_checks=True)
+    return res.exitcode == 0
+
 def getuid(with_test_name=False):
     if not with_test_name:
         return str(uuid.uuid1()).replace("-", "_")
