@@ -454,7 +454,7 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: benchmark-minio-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
