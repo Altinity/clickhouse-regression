@@ -282,7 +282,7 @@ def partition_evolution_check(self, minio_root_user, minio_root_password, action
         to both Iceberg and MergeTree tables"""
     ):
         for num, action in enumerate(action_list):
-            with By(f"apply action #{num}"):
+            with By(f"apply action #{num} - {action.__name__}"):
                 action(table=table)
                 data = add_data(
                     iceberg_table=table,
@@ -292,6 +292,7 @@ def partition_evolution_check(self, minio_root_user, minio_root_password, action
                     merge_tree_table=merge_tree_table_name,
                     data=data,
                 )
+                note(f"Table partition spec: {table.spec()}")
 
     with Then("verify data via PyIceberg"):
         df = table.scan().to_pandas()
