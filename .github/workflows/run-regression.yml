@@ -1166,6 +1166,22 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
+  
+  settings:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'settings' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: settings
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
 
   ssl_server_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}

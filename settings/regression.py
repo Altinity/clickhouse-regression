@@ -10,9 +10,51 @@ from helpers.argparser import (
     CaptureClusterArgs,
 )
 
+from helpers.common import check_clickhouse_version
 
-xfails = {}
-ffails = {}
+xfails = {
+    "/settings/default values/parallel_replicas_mark_segment_size": [
+        (
+            Fail,
+            "https://altinity.slack.com/archives/C07TTAQ7GN5/p1750239551029079",
+            lambda test: check_clickhouse_version(">=24.8")(test)
+            and check_clickhouse_version("<24.9")(test),
+        )
+    ],
+    "/settings/default values/query_plan_merge_filters": [
+        (
+            Fail,
+            "altinity 1, upstream 0",
+            lambda test: check_clickhouse_version(">=24.8")(test)
+            and check_clickhouse_version("<24.9")(test),
+        )
+    ],
+    "/settings/default values/input_format_parquet_filter_push_down": [
+        (
+            Fail,
+            "Altinity 0, upstream 1",
+            lambda test: check_clickhouse_version(">=24.3")(test)
+            and check_clickhouse_version("<24.4")(test),
+        )
+    ],
+    '/settings/default values/compile_expressions': [
+        (
+            Fail,
+            "Altinity 0, upstream 1",
+            lambda test: check_clickhouse_version(">=23.3")(test)
+            and check_clickhouse_version("<23.4")(test),
+        )
+    ],
+    
+}
+
+ffails = {
+    "/settings/default values": (
+        Skip,
+        "Skip before 22.8",
+        check_clickhouse_version("<22.8"),
+    )
+}
 
 
 @TestModule
