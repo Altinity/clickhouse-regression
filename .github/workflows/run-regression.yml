@@ -96,6 +96,7 @@ on:
           - s3_minio
           - selects
           - session_timezone
+          - settings
           - ssl_server
           - swarms
           - tiered_storage_all
