@@ -55,6 +55,7 @@ on:
           - s3_minio
           - selects
           - session_timezone
+          - settings
           - ssl_server
           - tiered_storage_all
           - tiered_storage_aws
