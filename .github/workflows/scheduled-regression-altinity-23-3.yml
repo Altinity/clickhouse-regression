@@ -15,10 +15,10 @@ jobs:
       arch: x86
     secrets: inherit
 
-  altinitystable-23-3-arm-zookeeper:
-    uses: ./.github/workflows/run-regression.yml
-    with:
-      package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
-      version: '23.3.19.33'
-      arch: arm64
-    secrets: inherit
+  # altinitystable-23-3-arm-zookeeper:
+  #   uses: ./.github/workflows/run-regression.yml
+  #   with:
+  #     package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
+  #     version: '23.3.19.33'
+  #     arch: arm64
+  #   secrets: inherit
