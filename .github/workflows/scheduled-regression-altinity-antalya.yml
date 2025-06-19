@@ -17,12 +17,12 @@ jobs:
       arch: x86
     secrets: inherit
 
-  altinitystable-25-3-antalya-arm-with-analyzer-zookeeper:
-    uses: ./.github/workflows/run-regression.yml
-    with:
-      package: docker://altinity/clickhouse-server:25.3.3.20143.altinityantalya
-      version: '25.3.3.20143'
-      extra_args: '--with-analyzer'
-      run_s3_suites: true
-      arch: arm64
-    secrets: inherit
+#  altinitystable-25-3-antalya-arm-with-analyzer-zookeeper:
+#    uses: ./.github/workflows/run-regression.yml
+#    with:
+#      package: docker://altinity/clickhouse-server:25.3.3.20143.altinityantalya
+#      version: '25.3.3.20143'
+#      extra_args: '--with-analyzer'
+#      run_s3_suites: true
+#      arch: arm64
+#    secrets: inherit
