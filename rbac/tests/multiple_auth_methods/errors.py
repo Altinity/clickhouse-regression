@@ -1,3 +1,7 @@
+from testflows.core import current
+from helpers.common import check_clickhouse_version
+
+
 def syntax_error():
     exitcode, message = 62, "Exception: Syntax error: failed at position"
     return exitcode, message
@@ -17,6 +21,12 @@ def no_user(user_name):
             192,
             f"DB::Exception: There is no user `{user_name}` in user directories. (UNKNOWN_USER)",
         )
+        
+        if check_clickhouse_version(">=25.6")(current()):
+            message = (
+                f"DB::Exception: There is no user `{user_name}` in `user directories`"
+            )
+            
         return exitcode, message
 
     return return_exitcode_and_message

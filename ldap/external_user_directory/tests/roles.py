@@ -3,6 +3,8 @@ from testflows.core import *
 from ldap.external_user_directory.tests.common import *
 from ldap.external_user_directory.requirements import *
 
+from helpers.common import check_clickhouse_version
+
 
 @TestScenario
 @Requirements(RQ_SRS_009_LDAP_ExternalUserDirectory_Role_New("1.0"))
@@ -56,6 +58,9 @@ def new_role(self, server):
 
                         message = "DB::Exception: There is no role `{user}` in user directories"
                         exitcode = 255
+                        
+                        if check_clickhouse_version(">=25.6")(self):
+                            message = "DB::Exception: There is no role `{user}` in `user directories`"
 
                         with And("I try to grant new role to the non-cached LDAP user"):
                             node.query(
