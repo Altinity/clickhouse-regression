@@ -370,7 +370,7 @@ ffails = {
         check_clickhouse_version("<25.1"),
     ),
     "/rbac/part 2/SQL security/*": (
-        Fail,
+        Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/79951",
         check_clickhouse_version(">=25.5"),
     ),
