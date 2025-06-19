@@ -124,6 +124,12 @@ def valid_until_invalid_date(self):
             192,
             f"DB::Exception: There is no user `{user_name}` in user directories.",
         )
+
+        if check_clickhouse_version(">=25.6")(self):
+            message = (
+                f"DB::Exception: There is no user `{user_name}` in `user directories`"
+            )
+
         self.context.node.query(
             f"SHOW CREATE USER {user_name}", exitcode=exitcode, message=message
         )
@@ -168,6 +174,10 @@ def invalid_string_in_valid_until_clause(self):
                 192,
                 f"DB::Exception: There is no user `{user_name}` in user directories.",
             )
+
+            if check_clickhouse_version(">=25.6")(self):
+                message = f"DB::Exception: There is no user `{user_name}` in `user directories`"
+
             self.context.node.query(
                 f"SHOW CREATE USER {user_name}", exitcode=exitcode, message=message
             )
