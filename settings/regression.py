@@ -37,7 +37,7 @@ xfails = {
             and check_clickhouse_version("<24.4")(test),
         )
     ],
-    '/settings/default values/compile_expressions': [
+    "/settings/default values/compile_expressions": [
         (
             Fail,
             "Altinity 0, upstream 1",
@@ -45,14 +45,13 @@ xfails = {
             and check_clickhouse_version("<23.4")(test),
         )
     ],
-    
 }
 
 ffails = {
     "/settings/default values": (
         Skip,
-        "Skip before 22.8",
-        check_clickhouse_version("<22.8"),
+        "Skip before 23.3",
+        check_clickhouse_version("<23.3"),
     )
 }
 

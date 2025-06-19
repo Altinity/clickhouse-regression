@@ -22,7 +22,7 @@ def check_default_value(self, setting):
 
     with Given(f"check the default value for {setting}"):
         default_and_changed = node.query(
-            f"SELECT value, changed FROM system.settings WHERE name = '{setting}' FORMAT JSONEachRow"
+            f"SELECT default FROM system.settings WHERE name = '{setting}' FORMAT JSONEachRow"
         )
         snapshot_name = f"{setting}"
 
@@ -70,5 +70,12 @@ def feature(self):
     with Given("get all settings from system.settings table"):
         all_settings = get_all_settings()
 
-    for setting in all_settings:
-        Scenario(name=f"{setting}", test=check_default_value)(setting=setting)
+    with Pool() as pool:
+        for setting in all_settings:
+            Scenario(
+                name=f"{setting}",
+                test=check_default_value,
+                parallel=True,
+                executor=pool,
+            )(setting=setting)
+        join()
