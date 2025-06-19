@@ -726,6 +726,34 @@ ffails = {
         "quantileExactWeightedInterpolated test is not implemented",
         check_clickhouse_version(">=24.10"),
     ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesInstantDeltaToGrid": (
+        Skip,
+        "timeSeriesInstantDeltaToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesInstantRateToGrid": (
+        Skip,
+        "timeSeriesInstantRateToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesRateToGrid": (
+        Skip,
+        "timeSeriesRateToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function groupNumericIndexedVector": (
+        Skip,
+        "groupNumericIndexedVector test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesResampleToGridWithStaleness": (
+        Skip,
+        "timeSeriesResampleToGridWithStaleness test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesDeltaToGrid": (
+        Skip,
+        "timeSeriesDeltaToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesLastTwoSamples": (
+        Skip,
+        "timeSeriesLastTwoSamples test is not implemented",
+    ),
     "/aggregate functions/part */:/*sequenceMatchEvents*": (
         Skip,
         "sequenceMatchEvents was introduced in 25.1",
