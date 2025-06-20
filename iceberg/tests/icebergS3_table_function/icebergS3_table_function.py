@@ -16,6 +16,7 @@ def sanity(self, minio_root_user, minio_root_password):
     icebergS3 table function."""
     namespace = "icebergS3"
     table_name = "sanity"
+    self.context.catalog = "rest"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
