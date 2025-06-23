@@ -16,7 +16,6 @@ def sanity(self, minio_root_user, minio_root_password):
     icebergS3 table function."""
     namespace = "icebergS3"
     table_name = "sanity"
-    self.context.catalog = "rest"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -326,6 +325,7 @@ def recreate_table_and_insert_new_data_multiple_times(
 @TestFeature
 @Name("icebergS3 table function")
 def icebergS3_table_function(self, minio_root_user, minio_root_password):
+    self.context.catalog = "rest"
     Scenario(test=sanity)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
