@@ -269,7 +269,12 @@ def execute_query(
         settings = [("allow_suspicious_low_cardinality_types", 1)]
 
     if snapshot_name is None:
-        snapshot_name = current().name.replace("/part 1", "").replace("/part 2", "")
+        snapshot_name = (
+            current()
+            .name.replace("/part 1", "")
+            .replace("/part 2", "")
+            .replace("/part 3", "")
+        )
 
     if "DateTime64" in snapshot_name:
         if check_clickhouse_version(">=22.8")(current()):
