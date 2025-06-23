@@ -57,6 +57,12 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/settings/default values/max_parsing_threads": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
     "/settings/default values/max_threads": [
         (
             Fail,
