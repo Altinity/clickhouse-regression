@@ -55,7 +55,7 @@ def s3_table_function(self, minio_root_user, minio_root_password):
 
     with Then("read data in clickhouse using s3 table function"):
         s3_steps.read_data_with_s3_table_function(
-            endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
+            endpoint="http://minio:9000/warehouse/data/data/**.parquet",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
