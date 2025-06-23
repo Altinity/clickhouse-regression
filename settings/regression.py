@@ -69,6 +69,12 @@ xfails = {
             "Need to investigate",
         )
     ],
+    "/settings/default values/enable_job_stack_trace": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
 }
 
 ffails = {
