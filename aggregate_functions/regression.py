@@ -764,6 +764,14 @@ ffails = {
         "sequenceMatchEvents was introduced in 25.1",
         check_clickhouse_version("<25.1"),
     ),
+    "/aggregate functions/part 1/function_list/untested function lead": (
+        Skip,
+        "Test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function lag": (
+        Skip,
+        "Test is not implemented",
+    ),
 }
 
 
