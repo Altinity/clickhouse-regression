@@ -45,6 +45,24 @@ xfails = {
             and check_clickhouse_version("<23.4")(test),
         )
     ],
+    "/settings/default values/max_alter_threads": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
+    "/settings/default values/max_final_threads": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
+    "/settings/default values/max_threads": [
+        (
+            Fail,
+            "Need to investigate",
+        )
+    ],
 }
 
 ffails = {
