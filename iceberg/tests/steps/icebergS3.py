@@ -1,6 +1,7 @@
 import time
-from testflows.core import *
+import random
 
+from testflows.core import *
 from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 
@@ -28,7 +29,7 @@ def read_data_with_icebergS3_table_function(
     format="TabSeparated",
     object_storage_cluster=None,
 ):
-    """Read Iceberg tables from S3 using the icebergS3 table function."""
+    """Read Iceberg tables from S3 using the icebergS3(iceberg) table function."""
     if node is None:
         node = self.context.node
 
@@ -88,9 +89,14 @@ def read_data_with_icebergS3_table_function(
     if object_storage_cluster:
         settings.append(("object_storage_cluster", object_storage_cluster))
 
+    if check_clickhouse_version(">=24.9")(self):
+        function_name = random.choice(["iceberg", "icebergS3"])
+    else:
+        function_name = "iceberg"
+
     query = f"""
                 SELECT {columns} 
-                FROM icebergS3('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')
+                FROM {function_name}('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}')
             """
 
     if where_clause:
