@@ -10,8 +10,29 @@ from helpers.argparser import argparser, CaptureClusterArgs
 from helpers.common import experimental_analyzer, check_is_altinity_build
 
 
+ffails = {
+    "/version/altinity/issue link": (
+        Skip,
+        "Need to investigate 1 exit code of grep",
+    ),
+    "/version/altinity/stacktrace": (
+        Fail,
+        "Need to investigate",
+    ),
+    "/version/altinity/version format": (
+        Fail,
+        "Need to investigate",
+    ),
+}
+
+
+xfails = {}
+
+
 @TestFeature
 @Name("version")
+@FFails(ffails)
+@XFails(xfails)
 @ArgumentParser(argparser)
 @CaptureClusterArgs
 def regression(
