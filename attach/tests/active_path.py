@@ -70,7 +70,6 @@ def check_active_path_convert(self, engine="ReplicatedMergeTree"):
         node2.query(
             f"SELECT table, replica_path, is_readonly, replica_is_active FROM system.replicas WHERE table = '{table1}' or table = '{table2}' FORMAT Vertical"
         )
-        pause()
 
     with And("I drop table"):
         drop_table(table=table2, node=node2)
