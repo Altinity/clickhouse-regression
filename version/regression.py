@@ -15,14 +15,6 @@ ffails = {
         Skip,
         "Need to investigate 1 exit code of grep",
     ),
-    "/version/altinity/stacktrace": (
-        Fail,
-        "Need to investigate",
-    ),
-    "/version/altinity/version format": (
-        Fail,
-        "Need to investigate",
-    ),
 }
 
 
