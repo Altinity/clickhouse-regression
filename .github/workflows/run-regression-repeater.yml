@@ -93,6 +93,7 @@ on:
           - tiered_storage_gcs
           - tiered_storage_local
           - tiered_storage_minio
+          - version
           - window_functions
       artifacts:
         description: "Artifact S3 bucket"
