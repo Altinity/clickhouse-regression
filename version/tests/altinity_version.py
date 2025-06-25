@@ -132,6 +132,22 @@ def error_message(self):
             node.restart()
 
 
+@TestScenario
+def embedded_logos(self):
+    """Check that the embedded logos are correct."""
+
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("checking logos that are embedded in the binary"):
+        upstream_embedded = node.command(
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaH' /usr/bin/clickhouse"
+        ).output
+
+    with Then("upstream logos are absent"):
+        assert upstream_embedded == "", error()
+
+
 @TestFeature
 @Name("altinity")
 def feature(self):
