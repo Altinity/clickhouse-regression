@@ -506,6 +506,22 @@ RQ_HivePartitioning_TableEngines_Hive = Requirement(
     num="2.6.3.1",
 )
 
+RQ_HivePartitioning_HivePartitionWrites_DuckDB_SupportedTypes = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[DuckDB] SHALL support all DuckDB datatypes for hive partitioning partiton.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.7.1.1",
+)
+
 RQ_HivePartitioning_HivePartitionWrites_S3 = Requirement(
     name="RQ.HivePartitioning.HivePartitionWrites.S3",
     version="1.0",
@@ -515,7 +531,6 @@ RQ_HivePartitioning_HivePartitionWrites_S3 = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support hive-style partition writes by using S3 table engine.\n"
-        "\n"
         "\n"
         "For example:\n"
         "```SQL\n"
@@ -528,11 +543,10 @@ RQ_HivePartitioning_HivePartitionWrites_S3 = Requirement(
         "    (2022, 'Canada', 2);\n"
         "```\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
-    num="2.7.1.1",
+    num="2.7.3.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions = Requirement(
@@ -545,10 +559,43 @@ RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions = Requirement(
     description=(
         "[ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_strategy=hive`.\n"
         "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num="2.7.1.2",
+    num="2.7.3.2",
+)
+
+RQ_HivePartitioning_HivePartitionWrites_PartitionsParts = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.PartitionsParts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support multiple partitions and parts for hive partitioning.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.7.3.3",
+)
+
+RQ_HivePartitioning_HivePartitionWrites_Expressions = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.Expressions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL return an error if `PARTITION BY` clause contains expression. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.7.3.4",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_FileExist = Requirement(
@@ -561,11 +608,10 @@ RQ_HivePartitioning_HivePartitionWrites_FileExist = Requirement(
     description=(
         "[ClickHouse] SHALL properly add data to the file if file already exists. This operation SHALL not delete or overwrite existing data.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
-    num="2.7.1.3",
+    num="2.7.3.5",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_MissingColumn = Requirement(
@@ -581,23 +627,64 @@ RQ_HivePartitioning_HivePartitionWrites_MissingColumn = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.1.4",
+    num="2.7.3.6",
 )
 
-RQ_HivePartitioning_HivePartitionWrites_NullInColumn = Requirement(
-    name="RQ.HivePartitioning.HivePartitionWrites.NullInColumn",
+RQ_HivePartitioning_HivePartitionWrites_NullableDataType = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.NullableDataType",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an error when attempting to insert a `NULL` value into a column that is specified in the `PARTITION BY` clause.\n"
+        "[ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause is Nullable.\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="2.7.1.5",
+    num="2.7.3.7",
+)
+
+RQ_HivePartitioning_HivePartitionWrites_SupportedTypes = Requirement(
+    name="RQ.HivePartitioning.HivePartitionWrites.SupportedTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the following types for hive partitioning writes.\n"
+        "[ClickHouse] SHALL support all the values that meets the following conditions:\n"
+        "\n"
+        "* lenth of the value less then 1024 characters\n"
+        '* it not contains the special characters, such as "{}\\/"\'*?"\n'
+        "\n"
+        "\n"
+        "| Data Type               | Supported                |\n"
+        "|-------------------------|--------------------------|\n"
+        "| Int8                    | ✅ Yes                   |\n"
+        "| Int16                   | ✅ Yes                   |\n"
+        "| Int32                   | ✅ Yes                   |\n"
+        "| Int64                   | ✅ Yes                   |\n"
+        "| Int128                  | ✅ Yes                   |\n"
+        "| Int256                  | ✅ Yes                   |\n"
+        "| UInt8                   | ✅ Yes                   |\n"
+        "| UInt16                  | ✅ Yes                   |\n"
+        "| UInt32                  | ✅ Yes                   |\n"
+        "| UInt64                  | ✅ Yes                   |\n"
+        "| UInt128                 | ✅ Yes                   |\n"
+        "| UInt256                 | ✅ Yes                   |\n"
+        "| String                  | ✅ Yes                   |\n"
+        "| FixedString(N)          | ✅ Yes                   |\n"
+        "| Date                    | ✅ Yes                   |\n"
+        "| DateTime                | ✅ Yes                   |\n"
+        "| Bool                    | ✅ Yes                   |\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.7.3.8",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_UnsupportedTypes = Requirement(
@@ -613,7 +700,7 @@ RQ_HivePartitioning_HivePartitionWrites_UnsupportedTypes = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.1.6",
+    num="2.7.3.9",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket = Requirement(
@@ -629,7 +716,7 @@ RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.1.7",
+    num="2.7.3.10",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_NonAccessibleBucket = Requirement(
@@ -645,7 +732,7 @@ RQ_HivePartitioning_HivePartitionWrites_NonAccessibleBucket = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.1.8",
+    num="2.7.3.11",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_ParallelInserts = Requirement(
@@ -658,7 +745,7 @@ RQ_HivePartitioning_HivePartitionWrites_ParallelInserts = Requirement(
     description=("[ClickHouse] SHALL support parallel inserts into one file.\n" "\n"),
     link=None,
     level=4,
-    num="2.7.1.9",
+    num="2.7.3.12",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_WriteFail = Requirement(
@@ -674,7 +761,7 @@ RQ_HivePartitioning_HivePartitionWrites_WriteFail = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.1.10",
+    num="2.7.3.13",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionBy = Requirement(
@@ -690,7 +777,7 @@ RQ_HivePartitioning_HivePartitionWrites_PartitionBy = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.2.1",
+    num="2.7.4.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy = Requirement(
@@ -706,7 +793,7 @@ RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.2.2",
+    num="2.7.4.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionKey = Requirement(
@@ -723,7 +810,7 @@ RQ_HivePartitioning_HivePartitionWrites_PartitionKey = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.2.3",
+    num="2.7.4.3",
 )
 
 RQ_HivePartitioning_HivePartitionWritesSyntax_Generic = Requirement(
@@ -743,7 +830,7 @@ RQ_HivePartitioning_HivePartitionWritesSyntax_Generic = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.3.1",
+    num="2.7.5.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy = Requirement(
@@ -761,7 +848,7 @@ RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.4.1",
+    num="2.7.6.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument = Requirement(
@@ -777,7 +864,7 @@ RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument = Require
     ),
     link=None,
     level=4,
-    num="2.7.4.2",
+    num="2.7.6.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles = Requirement(
@@ -794,7 +881,7 @@ RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColum
     ),
     link=None,
     level=4,
-    num="2.7.5.1",
+    num="2.7.7.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument = Requirement(
@@ -810,7 +897,7 @@ RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColum
     ),
     link=None,
     level=4,
-    num="2.7.5.2",
+    num="2.7.7.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_Path = Requirement(
@@ -826,7 +913,7 @@ RQ_HivePartitioning_HivePartitionWrites_Path = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.6.1",
+    num="2.7.8.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_InvalidPath = Requirement(
@@ -841,7 +928,7 @@ RQ_HivePartitioning_HivePartitionWrites_InvalidPath = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.6.2",
+    num="2.7.8.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_Filename = Requirement(
@@ -857,7 +944,7 @@ RQ_HivePartitioning_HivePartitionWrites_Filename = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.7.1",
+    num="2.7.9.1",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_InvalidFilename = Requirement(
@@ -873,7 +960,7 @@ RQ_HivePartitioning_HivePartitionWrites_InvalidFilename = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.7.2",
+    num="2.7.9.2",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename = Requirement(
@@ -889,7 +976,7 @@ RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.7.3",
+    num="2.7.9.3",
 )
 
 RQ_HivePartitioning_HivePartitionWrites_S3EngineParameters = Requirement(
@@ -911,7 +998,7 @@ RQ_HivePartitioning_HivePartitionWrites_S3EngineParameters = Requirement(
     ),
     link=None,
     level=4,
-    num="2.7.8.1",
+    num="2.7.10.1",
 )
 
 SRS_045_Hive_Partitioning = Specification(
@@ -1006,137 +1093,164 @@ SRS_045_Hive_Partitioning = Specification(
         Heading(name="Hive Table Engine", level=3, num="2.6.3"),
         Heading(name="RQ.HivePartitioning.TableEngines.Hive", level=4, num="2.6.3.1"),
         Heading(name="Hive Partition Writes", level=2, num="2.7"),
-        Heading(name="Generic", level=3, num="2.7.1"),
+        Heading(name="DuckDb Supported Types", level=3, num="2.7.1"),
         Heading(
-            name="RQ.HivePartitioning.HivePartitionWrites.S3", level=4, num="2.7.1.1"
+            name="RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedTypes",
+            level=4,
+            num="2.7.1.1",
+        ),
+        Heading(name="DuckDb Supported Characters", level=3, num="2.7.2"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedCharacters",
+            level=4,
+            num="2.7.2.1",
+        ),
+        Heading(name="Generic", level=3, num="2.7.3"),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.S3", level=4, num="2.7.3.1"
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions",
             level=4,
-            num="2.7.1.2",
+            num="2.7.3.2",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.PartitionsParts",
+            level=4,
+            num="2.7.3.3",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.Expressions",
+            level=4,
+            num="2.7.3.4",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.FileExist",
             level=4,
-            num="2.7.1.3",
+            num="2.7.3.5",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.MissingColumn",
             level=4,
-            num="2.7.1.4",
+            num="2.7.3.6",
         ),
         Heading(
-            name="RQ.HivePartitioning.HivePartitionWrites.NullInColumn",
+            name="RQ.HivePartitioning.HivePartitionWrites.NullableDataType",
             level=4,
-            num="2.7.1.5",
+            num="2.7.3.7",
+        ),
+        Heading(
+            name="RQ.HivePartitioning.HivePartitionWrites.SupportedTypes",
+            level=4,
+            num="2.7.3.8",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes",
             level=4,
-            num="2.7.1.6",
+            num="2.7.3.9",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket",
             level=4,
-            num="2.7.1.7",
+            num="2.7.3.10",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket",
             level=4,
-            num="2.7.1.8",
+            num="2.7.3.11",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.ParallelInserts",
             level=4,
-            num="2.7.1.9",
+            num="2.7.3.12",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.WriteFail",
             level=4,
-            num="2.7.1.10",
+            num="2.7.3.13",
         ),
         Heading(
             name="Partition By Clause For S3 Engine With Hive Partition Writes",
             level=3,
-            num="2.7.2",
+            num="2.7.4",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.PartitionBy",
             level=4,
-            num="2.7.2.1",
+            num="2.7.4.1",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy",
             level=4,
-            num="2.7.2.2",
+            num="2.7.4.2",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.PartitionKey",
             level=4,
-            num="2.7.2.3",
+            num="2.7.4.3",
         ),
-        Heading(name="Hive Partition Writes Syntax", level=3, num="2.7.3"),
+        Heading(name="Hive Partition Writes Syntax", level=3, num="2.7.5"),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWritesSyntax.Generic",
             level=4,
-            num="2.7.3.1",
+            num="2.7.5.1",
         ),
-        Heading(name="Partition Strategy Parameter", level=3, num="2.7.4"),
+        Heading(name="Partition Strategy Parameter", level=3, num="2.7.6"),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy",
             level=4,
-            num="2.7.4.1",
+            num="2.7.6.1",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument",
             level=4,
-            num="2.7.4.2",
+            num="2.7.6.2",
         ),
         Heading(
             name="Hive Partition Strategy Write Partition Columns Into Files Parameter",
             level=3,
-            num="2.7.5",
+            num="2.7.7",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles",
             level=4,
-            num="2.7.5.1",
+            num="2.7.7.1",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument",
             level=4,
-            num="2.7.5.2",
+            num="2.7.7.2",
         ),
-        Heading(name="Path Parameter", level=3, num="2.7.6"),
+        Heading(name="Path Parameter", level=3, num="2.7.8"),
         Heading(
-            name="RQ.HivePartitioning.HivePartitionWrites.Path", level=4, num="2.7.6.1"
+            name="RQ.HivePartitioning.HivePartitionWrites.Path", level=4, num="2.7.8.1"
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.InvalidPath",
             level=4,
-            num="2.7.6.2",
+            num="2.7.8.2",
         ),
-        Heading(name="Filename Parameter", level=3, num="2.7.7"),
+        Heading(name="Filename Parameter", level=3, num="2.7.9"),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.Filename",
             level=4,
-            num="2.7.7.1",
+            num="2.7.9.1",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.InvalidFilename",
             level=4,
-            num="2.7.7.2",
+            num="2.7.9.2",
         ),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename",
             level=4,
-            num="2.7.7.3",
+            num="2.7.9.3",
         ),
-        Heading(name="S3 Engine Parameters", level=3, num="2.7.8"),
+        Heading(name="S3 Engine Parameters", level=3, num="2.7.10"),
         Heading(
             name="RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters",
             level=4,
-            num="2.7.8.1",
+            num="2.7.10.1",
         ),
     ),
     requirements=(
@@ -1169,11 +1283,15 @@ SRS_045_Hive_Partitioning = Specification(
         RQ_HivePartitioning_TableEngines_S3,
         RQ_HivePartitioning_TableEngines_HDFS,
         RQ_HivePartitioning_TableEngines_Hive,
+        RQ_HivePartitioning_HivePartitionWrites_DuckDB_SupportedTypes,
         RQ_HivePartitioning_HivePartitionWrites_S3,
         RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions,
+        RQ_HivePartitioning_HivePartitionWrites_PartitionsParts,
+        RQ_HivePartitioning_HivePartitionWrites_Expressions,
         RQ_HivePartitioning_HivePartitionWrites_FileExist,
         RQ_HivePartitioning_HivePartitionWrites_MissingColumn,
-        RQ_HivePartitioning_HivePartitionWrites_NullInColumn,
+        RQ_HivePartitioning_HivePartitionWrites_NullableDataType,
+        RQ_HivePartitioning_HivePartitionWrites_SupportedTypes,
         RQ_HivePartitioning_HivePartitionWrites_UnsupportedTypes,
         RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket,
         RQ_HivePartitioning_HivePartitionWrites_NonAccessibleBucket,
@@ -1241,39 +1359,45 @@ SRS_045_Hive_Partitioning = Specification(
         * 2.6.3 [Hive Table Engine](#hive-table-engine)
             * 2.6.3.1 [RQ.HivePartitioning.TableEngines.Hive](#rqhivepartitioningtableengineshive)
     * 2.7 [Hive Partition Writes](#hive-partition-writes)
-        * 2.7.1 [Generic](#generic)
-            * 2.7.1.1 [RQ.HivePartitioning.HivePartitionWrites.S3](#rqhivepartitioninghivepartitionwritess3)
-            * 2.7.1.2 [RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions](#rqhivepartitioninghivepartitionwritesusehivepartitions)
-            * 2.7.1.3 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
-            * 2.7.1.4 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
-            * 2.7.1.5 [RQ.HivePartitioning.HivePartitionWrites.NullInColumn](#rqhivepartitioninghivepartitionwritesnullincolumn)
-            * 2.7.1.6 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
-            * 2.7.1.7 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
-            * 2.7.1.8 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
-            * 2.7.1.9 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
-            * 2.7.1.10 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
-        * 2.7.2 [Partition By Clause For S3 Engine With Hive Partition Writes](#partition-by-clause-for-s3-engine-with-hive-partition-writes)
-            * 2.7.2.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionBy](#rqhivepartitioninghivepartitionwritespartitionby)
-            * 2.7.2.2 [RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy](#rqhivepartitioninghivepartitionwritesmissingpartitionby)
-            * 2.7.2.3 [RQ.HivePartitioning.HivePartitionWrites.PartitionKey](#rqhivepartitioninghivepartitionwritespartitionkey)
-        * 2.7.3 [Hive Partition Writes Syntax](#hive-partition-writes-syntax)
-            * 2.7.3.1 [RQ.HivePartitioning.HivePartitionWritesSyntax.Generic](#rqhivepartitioninghivepartitionwritessyntaxgeneric)
-        * 2.7.4 [Partition Strategy Parameter](#partition-strategy-parameter)
-            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy](#rqhivepartitioninghivepartitionwritespartitionstrategy)
-            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstrategywrongargument)
-        * 2.7.5 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
-            * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
-            * 2.7.5.2 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
-        * 2.7.6 [Path Parameter](#path-parameter)
-            * 2.7.6.1 [RQ.HivePartitioning.HivePartitionWrites.Path](#rqhivepartitioninghivepartitionwritespath)
-            * 2.7.6.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidPath](#rqhivepartitioninghivepartitionwritesinvalidpath)
-        * 2.7.7 [Filename Parameter](#filename-parameter)
-            * 2.7.7.1 [RQ.HivePartitioning.HivePartitionWrites.Filename](#rqhivepartitioninghivepartitionwritesfilename)
-            * 2.7.7.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidFilename](#rqhivepartitioninghivepartitionwritesinvalidfilename)
-            * 2.7.7.3 [RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename](#rqhivepartitioninghivepartitionwritesnotdefinedfilename)
-        * 2.7.8 [S3 Engine Parameters](#s3-engine-parameters)
-            * 2.7.8.1 [RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters](#rqhivepartitioninghivepartitionwritess3engineparameters)
-
+        * 2.7.1 [DuckDb Supported Types](#duckdb-supported-types)
+            * 2.7.1.1 [RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedTypes](#rqhivepartitioninghivepartitionwritesduckdbsupportedtypes)
+        * 2.7.2 [DuckDb Supported Characters](#duckdb-supported-characters)
+            * 2.7.2.1 [RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedCharacters](#rqhivepartitioninghivepartitionwritesduckdbsupportedcharacters)
+        * 2.7.3 [Generic](#generic)
+            * 2.7.3.1 [RQ.HivePartitioning.HivePartitionWrites.S3](#rqhivepartitioninghivepartitionwritess3)
+            * 2.7.3.2 [RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions](#rqhivepartitioninghivepartitionwritesusehivepartitions)
+            * 2.7.3.3 [RQ.HivePartitioning.HivePartitionWrites.PartitionsParts](#rqhivepartitioninghivepartitionwritespartitionsparts)
+            * 2.7.3.4 [RQ.HivePartitioning.HivePartitionWrites.Expressions](#rqhivepartitioninghivepartitionwritesexpressions)
+            * 2.7.3.5 [RQ.HivePartitioning.HivePartitionWrites.FileExist](#rqhivepartitioninghivepartitionwritesfileexist)
+            * 2.7.3.6 [RQ.HivePartitioning.HivePartitionWrites.MissingColumn](#rqhivepartitioninghivepartitionwritesmissingcolumn)
+            * 2.7.3.7 [RQ.HivePartitioning.HivePartitionWrites.NullableDataType](#rqhivepartitioninghivepartitionwritesnullabledatatype)
+            * 2.7.3.8 [RQ.HivePartitioning.HivePartitionWrites.SupportedTypes](#rqhivepartitioninghivepartitionwritessupportedtypes)
+            * 2.7.3.9 [RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes](#rqhivepartitioninghivepartitionwritesunsupportedtypes)
+            * 2.7.3.10 [RQ.HivePartitioning.HivePartitionWrites.ReadOnlyBucket](#rqhivepartitioninghivepartitionwritesreadonlybucket)
+            * 2.7.3.11 [RQ.HivePartitioning.HivePartitionWrites.NonAccessibleBucket](#rqhivepartitioninghivepartitionwritesnonaccessiblebucket)
+            * 2.7.3.12 [RQ.HivePartitioning.HivePartitionWrites.ParallelInserts](#rqhivepartitioninghivepartitionwritesparallelinserts)
+            * 2.7.3.13 [RQ.HivePartitioning.HivePartitionWrites.WriteFail](#rqhivepartitioninghivepartitionwriteswritefail)
+        * 2.7.4 [Partition By Clause For S3 Engine With Hive Partition Writes](#partition-by-clause-for-s3-engine-with-hive-partition-writes)
+            * 2.7.4.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionBy](#rqhivepartitioninghivepartitionwritespartitionby)
+            * 2.7.4.2 [RQ.HivePartitioning.HivePartitionWrites.MissingPartitionBy](#rqhivepartitioninghivepartitionwritesmissingpartitionby)
+            * 2.7.4.3 [RQ.HivePartitioning.HivePartitionWrites.PartitionKey](#rqhivepartitioninghivepartitionwritespartitionkey)
+        * 2.7.5 [Hive Partition Writes Syntax](#hive-partition-writes-syntax)
+            * 2.7.5.1 [RQ.HivePartitioning.HivePartitionWritesSyntax.Generic](#rqhivepartitioninghivepartitionwritessyntaxgeneric)
+        * 2.7.6 [Partition Strategy Parameter](#partition-strategy-parameter)
+            * 2.7.6.1 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategy](#rqhivepartitioninghivepartitionwritespartitionstrategy)
+            * 2.7.6.2 [RQ.HivePartitioning.HivePartitionWrites.PartitionStrategyWrongArgument](#rqhivepartitioninghivepartitionwritespartitionstrategywrongargument)
+        * 2.7.7 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
+            * 2.7.7.1 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFiles](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofiles)
+            * 2.7.7.2 [RQ.HivePartitioning.HivePartitionWrites.HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument](#rqhivepartitioninghivepartitionwriteshivepartitionstrategywritepartitioncolumnsintofileswrongargument)
+        * 2.7.8 [Path Parameter](#path-parameter)
+            * 2.7.8.1 [RQ.HivePartitioning.HivePartitionWrites.Path](#rqhivepartitioninghivepartitionwritespath)
+            * 2.7.8.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidPath](#rqhivepartitioninghivepartitionwritesinvalidpath)
+        * 2.7.9 [Filename Parameter](#filename-parameter)
+            * 2.7.9.1 [RQ.HivePartitioning.HivePartitionWrites.Filename](#rqhivepartitioninghivepartitionwritesfilename)
+            * 2.7.9.2 [RQ.HivePartitioning.HivePartitionWrites.InvalidFilename](#rqhivepartitioninghivepartitionwritesinvalidfilename)
+            * 2.7.9.3 [RQ.HivePartitioning.HivePartitionWrites.NotDefinedFilename](#rqhivepartitioninghivepartitionwritesnotdefinedfilename)
+        * 2.7.10 [S3 Engine Parameters](#s3-engine-parameters)
+            * 2.7.10.1 [RQ.HivePartitioning.HivePartitionWrites.S3EngineParameters](#rqhivepartitioninghivepartitionwritess3engineparameters)
 
 
 ## Introduction
@@ -1484,13 +1608,25 @@ ENGINE = Hive(...)
 
 ### Hive Partition Writes
 
+#### DuckDb Supported Types
+
+##### RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedTypes
+version: 1.0
+
+[DuckDB] SHALL support all DuckDB datatypes for hive partitioning partiton.
+
+#### DuckDb Supported Characters
+
+##### RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedCharacters
+
+[DuckDB] SHALL support all UTF-8 characters for hive partitioning.
+
 #### Generic
 
 ##### RQ.HivePartitioning.HivePartitionWrites.S3
 version: 1.0
 
 [ClickHouse] SHALL support hive-style partition writes by using S3 table engine.
-
 
 For example:
 ```SQL
@@ -1503,27 +1639,66 @@ INSERT INTO hive_writes VALUES
     (2022, 'Canada', 2);
 ```
 
-
 ##### RQ.HivePartitioning.HivePartitionWrites.UseHivePartitions
 version: 1.0
 
 [ClickHouse] SHALL ignore `use_hive_partitioning=0` if `partition_strategy=hive`.
+
+
+##### RQ.HivePartitioning.HivePartitionWrites.PartitionsParts
+version: 1.0
+
+[ClickHouse] SHALL support multiple partitions and parts for hive partitioning.
+
+##### RQ.HivePartitioning.HivePartitionWrites.Expressions
+version: 1.0
+
+[ClickHouse] SHALL return an error if `PARTITION BY` clause contains expression. 
 
 ##### RQ.HivePartitioning.HivePartitionWrites.FileExist
 version: 1.0
 
 [ClickHouse] SHALL properly add data to the file if file already exists. This operation SHALL not delete or overwrite existing data.
 
-
 ##### RQ.HivePartitioning.HivePartitionWrites.MissingColumn
 version: 1.0
 
 [ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause is missing.
 
-##### RQ.HivePartitioning.HivePartitionWrites.NullInColumn
+##### RQ.HivePartitioning.HivePartitionWrites.NullableDataType
 version: 1.0
 
-[ClickHouse] SHALL return an error when attempting to insert a `NULL` value into a column that is specified in the `PARTITION BY` clause.
+[ClickHouse] SHALL return an error if columns defined in the `PARTITION BY` clause is Nullable.
+
+##### RQ.HivePartitioning.HivePartitionWrites.SupportedTypes
+version: 1.0
+
+[ClickHouse] SHALL support the following types for hive partitioning writes.
+[ClickHouse] SHALL support all the values that meets the following conditions:
+
+* lenth of the value less then 1024 characters
+* it not contains the special characters, such as "{}\/"'*?"
+
+
+| Data Type               | Supported                |
+|-------------------------|--------------------------|
+| Int8                    | ✅ Yes                   |
+| Int16                   | ✅ Yes                   |
+| Int32                   | ✅ Yes                   |
+| Int64                   | ✅ Yes                   |
+| Int128                  | ✅ Yes                   |
+| Int256                  | ✅ Yes                   |
+| UInt8                   | ✅ Yes                   |
+| UInt16                  | ✅ Yes                   |
+| UInt32                  | ✅ Yes                   |
+| UInt64                  | ✅ Yes                   |
+| UInt128                 | ✅ Yes                   |
+| UInt256                 | ✅ Yes                   |
+| String                  | ✅ Yes                   |
+| FixedString(N)          | ✅ Yes                   |
+| Date                    | ✅ Yes                   |
+| DateTime                | ✅ Yes                   |
+| Bool                    | ✅ Yes                   |
 
 ##### RQ.HivePartitioning.HivePartitionWrites.UnsupportedTypes
 version: 1.0
