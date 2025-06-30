@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 
 from helpers.common import getuid
 
@@ -32,7 +33,7 @@ def cache(self, minio_root_user, minio_root_password):
             namespace=namespace,
             table_name=table_name,
             with_data=True,
-            number_of_rows=100,
+            number_of_rows=10000,
         )
 
     with Then(
@@ -64,13 +65,13 @@ def cache(self, minio_root_user, minio_root_password):
             note(
                 f"hot_execution_time: {hot_execution_time} cold_execution_time: {cold_execution_time}"
             )
-            assert hot_execution_time < cold_execution_time
+            assert hot_execution_time < cold_execution_time, error()
 
     with And("Check hits"):
         hits = check_hits(
             log_comment=log_comment, node=self.context.node, assertion=True
         )
-        assert hits > 0, "cache was not hit"
+        assert hits > 0, error("cache was not hit")
 
 
 @TestFeature
