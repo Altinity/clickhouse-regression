@@ -526,6 +526,8 @@ distributed_cache_bypass_connection_pool = r"""'{"default":"0"}'"""
 
 distributed_cache_connect_max_tries = r"""'{"default":"20"}'"""
 
+distributed_cache_credentials_refresh_period_seconds = r"""'{"default":"5"}'"""
+
 distributed_cache_data_packet_ack_window = r"""'{"default":"5"}'"""
 
 distributed_cache_discard_connection_if_unread_data = r"""'{"default":"1"}'"""
@@ -2524,7 +2526,7 @@ use_index_for_in_with_subqueries_max_values = r"""'{"default":"0"}'"""
 
 use_json_alias_for_old_object_type = r"""'{"default":"0"}'"""
 
-use_legacy_to_time = r"""'{"default":"0"}'"""
+use_legacy_to_time = r"""'{"default":"1"}'"""
 
 use_local_cache_for_remote_storage = r"""'{"default":"0"}'"""
 
