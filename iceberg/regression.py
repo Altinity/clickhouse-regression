@@ -61,6 +61,14 @@ xfails = {
     "/iceberg/iceberg engine/glue catalog/nested datatypes/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/81301")
     ],
+    "/iceberg/iceberg engine/glue catalog/feature/sanity/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/82601",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_clickhouse_version("<25.4")(test),
+        )
+    ],
 }
 
 ffails = {
