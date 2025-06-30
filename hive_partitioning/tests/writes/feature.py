@@ -6,6 +6,12 @@ from testflows.core import *
 def feature(self, uri, minio_root_user, minio_root_password, uri_readonly):
     """Run writes test."""
 
+    Feature(test=load("hive_partitioning.tests.writes.duckdb", "feature"))(
+        uri=uri,
+        uri_readonly=uri_readonly,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
     Feature(test=load("hive_partitioning.tests.writes.generic", "feature"))(
         uri=uri,
         uri_readonly=uri_readonly,
@@ -18,7 +24,7 @@ def feature(self, uri, minio_root_user, minio_root_password, uri_readonly):
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Feature(test=load("hive_partitioning.tests.writes.stratagy_parameter", "feature"))(
+    Feature(test=load("hive_partitioning.tests.writes.strategy_parameter", "feature"))(
         uri=uri,
         uri_readonly=uri_readonly,
         minio_root_user=minio_root_user,
