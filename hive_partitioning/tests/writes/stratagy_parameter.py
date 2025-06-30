@@ -6,18 +6,18 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionStratagyWrongArgument("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument("1.0"),
 )
-def partition_stratagy_wrong_argument(
+def partition_strategy_wrong_argument(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
 ):
-    """Check that ClickHouse returns an error if `partition_stratagy` parameter gets wrong argument."""
+    """Check that ClickHouse returns an error if `partition_strategy` parameter gets wrong argument."""
     if uri is None:
         uri = self.context.uri
 
-    table_name = "partition_stratagy_wrong_argument"
+    table_name = "partition_strategy_wrong_argument"
 
-    with Given("I create table with wrong partition stratagy"):
+    with Given("I create table with wrong partition strategy"):
         create_table(
             table_name=table_name,
             columns="d Int32, i Int32",
@@ -31,18 +31,18 @@ def partition_stratagy_wrong_argument(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionStratagy("1.0"),
+    RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy("1.0"),
 )
-def partition_stratagy_default(
+def partition_strategy_default(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
 ):
-    """Check that `partition_stratagy` parameter is set to `auto` by default."""
+    """Check that `partition_strategy` parameter is set to `auto` by default."""
     if uri is None:
         uri = self.context.uri
 
-    table_name = "partition_stratagy_default"
+    table_name = "partition_strategy_default"
 
-    with Given("I create table with default partition stratagy"):
+    with Given("I create table with default partition strategy"):
         create_table(
             table_name=table_name,
             columns="d Int32, i Int32",
@@ -66,11 +66,11 @@ def partition_stratagy_default(
 
 
 @TestFeature
-@Name("stratagy parameter")
+@Name("strategy parameter")
 def feature(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
 ):
-    """Run partition by writes test."""
+    """Run strategy parameter test."""
     if uri is None:
         uri = self.context.uri
     if minio_root_user is None:

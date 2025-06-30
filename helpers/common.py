@@ -2,6 +2,7 @@ import os
 import re
 import uuid
 import time
+import duckdb
 import platform
 import xml.etree.ElementTree as xmltree
 from collections import namedtuple
@@ -1349,3 +1350,23 @@ def allow_higher_cpu_wait_ratio(
                     )
                 except ValueError:
                     pass
+
+@TestStep(Given)
+def run_duckdb(self):
+    """Run DuckDB in a subprocess."""
+    with By("running DuckDB"):
+        connection = duckdb.connect()
+        yield connection
+
+    with Finally("closing the DuckDB connection"):
+        connection.close()
+
+@TestStep(When)
+def run_duckdb_query(self, connection=None, query=None):
+    """Run a query on the DuckDB connection."""
+    if connection is None:
+        connection = self.context.duckdb_connection
+    
+    with By(f"running the query {query}"):
+        return connection.execute(query).fetchall()
+        
