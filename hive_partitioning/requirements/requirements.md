@@ -293,19 +293,6 @@ ENGINE = Hive(...)
 
 ### Hive Partition Writes
 
-#### DuckDb Supported Types
-
-##### RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedTypes
-version: 1.0
-
-[DuckDB] SHALL support all DuckDB datatypes for hive partitioning partiton.
-
-#### DuckDb Supported Characters
-
-##### RQ.HivePartitioning.HivePartitionWrites.DuckDB.SupportedCharacters
-
-[DuckDB] SHALL support all UTF-8 characters for hive partitioning.
-
 #### Generic
 
 ##### RQ.HivePartitioning.HivePartitionWrites.S3
