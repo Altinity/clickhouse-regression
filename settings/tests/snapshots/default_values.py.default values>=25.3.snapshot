@@ -1914,6 +1914,8 @@ page_cache_inject_eviction = r"""'{"default":"0"}'"""
 
 parallel_distributed_insert_select = r"""'{"default":"0"}'"""
 
+parallel_hash_join_threshold = r"""'{"default":"100000"}'"""
+
 parallel_replica_offset = r"""'{"default":"0"}'"""
 
 parallel_replicas_allow_in_with_subquery = r"""'{"default":"1"}'"""
