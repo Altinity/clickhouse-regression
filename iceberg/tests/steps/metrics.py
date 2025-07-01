@@ -324,3 +324,24 @@ def get_s3_profile_events(self, log_comment, node=None, format="Vertical"):
         """
     )
     return result
+
+
+@TestStep(Then)
+def get_query_duration(self, log_comment, node=None, format="TabSeparated"):
+    """Get the query duration in milliseconds from system.query_log table."""
+    if node is None:
+        node = self.context.node
+
+    with By("wait for metrics to be collected"):
+        wait_for_metrics(log_comment, node)
+
+    result = node.query(
+        f"""
+            SELECT query_duration_ms 
+            FROM system.query_log 
+            WHERE log_comment = '{log_comment}' 
+            AND type = 'QueryFinish'
+            FORMAT {format}
+        """
+    )
+    return result
