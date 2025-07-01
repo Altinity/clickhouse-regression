@@ -268,13 +268,21 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
         NestedField(field_id=3, name="integer", field_type=LongType(), required=False),
     )
     sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
+    partition_spec = PartitionSpec(
+        PartitionField(
+            source_id=1,
+            field_id=1001,
+            transform=IdentityTransform(),
+            name="symbol_partition",
+        ),
+    )
     table = create_iceberg_table(
         catalog=catalog,
         namespace=namespace,
         table_name=table_name,
         schema=schema,
         location="s3://warehouse/data",
-        partition_spec=PartitionSpec(),
+        partition_spec=partition_spec,
         sort_order=sort_order,
     )
     return table
