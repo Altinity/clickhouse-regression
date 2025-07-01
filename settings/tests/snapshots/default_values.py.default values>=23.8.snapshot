@@ -1416,6 +1416,8 @@ preferred_block_size_bytes = r"""'{"default":"1000000"}'"""
 
 preferred_max_column_in_block_size_bytes = r"""'{"default":"0"}'"""
 
+preferred_optimize_projection_name = r"""'{"default":""}'"""
+
 prefetch_buffer_size = r"""'{"default":"1048576"}'"""
 
 priority = r"""'{"default":"0"}'"""
