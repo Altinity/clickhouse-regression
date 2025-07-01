@@ -47,7 +47,7 @@ def version_format(self):
         )
 
     with When("running the clickhouse command to get the version"):
-        result = node.command("clickhouse --version").output
+        result = node.command("clickhouse client --version").output
 
     with Then("the version is formatted correctly"):
         assert VERSION_REGEX_CLI.search(result), error(
