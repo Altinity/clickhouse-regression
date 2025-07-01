@@ -6,7 +6,7 @@ def read_data_with_s3_table_function(
     self,
     s3_access_key_id,
     s3_secret_access_key,
-    endpoint="http://minio:9000/warehouse/data/data/**/**.parquet",
+    endpoint="http://minio:9000/warehouse/data/**/**.parquet",
     columns="*",
     group_by=None,
     order_by=None,
