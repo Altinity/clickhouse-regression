@@ -177,6 +177,27 @@ def create_experimental_iceberg_database(
         raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
 
 
+@TestStep(Given)
+def create_datalakecatalog_database_with_aws_glue(
+    self, database_name, region="eu-central-1", name=None
+):
+    """Create a datalakecatalog database with AWS Glue catalog."""
+    try:
+        self.context.node.query(
+            f"""
+                SET allow_experimental_database_glue_catalog=1;
+                CREATE DATABASE {database_name}
+                ENGINE = DataLakeCatalog
+                SETTINGS catalog_type = 'glue', region = '{region}', aws_access_key_id = '{os.getenv('AWS_ACCESS_KEY_ID')}', aws_secret_access_key = '{os.getenv('AWS_SECRET_ACCESS_KEY')}'
+                """
+        )
+        yield database_name
+
+    finally:
+        with Finally("drop database"):
+            self.context.node.query(f"DROP DATABASE IF EXISTS {database_name}")
+
+
 @TestStep(Then)
 def read_data_from_clickhouse_iceberg_table(
     self,
