@@ -31,7 +31,7 @@ xfails = {
         ),
     ],
     "/version/altinity/version format/*": [
-        (Fail, "No --version option", check_clickhouse_version("<=23.4")),
+        (Fail, "No --version option", check_clickhouse_version("<=23.9")),
     ],
 }
 
