@@ -7,7 +7,11 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer, check_is_altinity_build
+from helpers.common import (
+    experimental_analyzer,
+    check_is_altinity_build,
+    check_clickhouse_version,
+)
 
 
 ffails = {
@@ -18,7 +22,18 @@ ffails = {
 }
 
 
-xfails = {}
+xfails = {
+    "/version/altinity/stacktrace/*": [
+        (
+            Fail,
+            "Stacktrace message is different on older versions",
+            check_clickhouse_version("<=23.4"),
+        ),
+    ],
+    "/version/altinity/version format/*": [
+        (Fail, "No --version option", check_clickhouse_version("<=23.4")),
+    ],
+}
 
 
 @TestFeature
