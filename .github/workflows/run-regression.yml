@@ -833,7 +833,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: memory
-      timeout_minutes: 1800
+      timeout_minutes: 120
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
