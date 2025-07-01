@@ -656,12 +656,34 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  iceberg:
+  iceberg_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: iceberg
+      part: 1
       timeout_minutes: 180
+      storage_path: /iceberg
+      regression_args: '--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache"'
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  iceberg_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: iceberg
+      part: 2
+      timeout_minutes: 180
+      storage_path: /iceberg 
+      regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
