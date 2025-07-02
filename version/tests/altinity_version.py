@@ -119,7 +119,9 @@ def error_message(self):
         for message in unexpected_messages:
             with Then(f"the log does not contain unexpected message '{message}'"):
                 match = grep_in_log(message)
-                assert not match, error()
+                assert not match, error(
+                    f"unexpected message '{message}' found in log '{match}'"
+                )
 
         expected_messages = [
             "(altinity build)",
@@ -127,7 +129,7 @@ def error_message(self):
         for message in expected_messages:
             with Then(f"the log contains the expected message '{message}'"):
                 match = grep_in_log(message)
-                assert match, error()
+                assert match, error(f"expected message '{message}' not found in log")
 
         with Then("the log contains a version message"):
             version_messages = grep_in_log("(version ")
