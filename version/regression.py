@@ -14,12 +14,7 @@ from helpers.common import (
 )
 
 
-ffails = {
-    "/version/altinity/issue link": (
-        Skip,
-        "Need to investigate 1 exit code of grep",
-    ),
-}
+ffails = {}
 
 
 xfails = {
