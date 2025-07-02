@@ -129,6 +129,12 @@ def check_if_not_antalya_build(test):
     return "antalya" not in binary_path
 
 
+def check_if_head(test):
+    """True if build is head build."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    return "head" in binary_path
+
+
 def check_with_any_sanitizer(test):
     """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
     sanitizers = ["tsan", "asan", "ubsan", "msan"]
@@ -223,6 +229,7 @@ def check_is_altinity_build(node):
     """
     res = node.command("grep -i -a altinity /usr/bin/clickhouse", no_checks=True)
     return res.exitcode == 0
+
 
 def getuid(with_test_name=False):
     if not with_test_name:
@@ -1349,6 +1356,7 @@ def allow_higher_cpu_wait_ratio(
                 except ValueError:
                     pass
 
+
 @TestStep(Given)
 def run_duckdb(self):
     """Run DuckDB in a subprocess."""
@@ -1359,12 +1367,12 @@ def run_duckdb(self):
     with Finally("closing the DuckDB connection"):
         connection.close()
 
+
 @TestStep(When)
 def run_duckdb_query(self, connection=None, query=None):
     """Run a query on the DuckDB connection."""
     if connection is None:
         connection = self.context.duckdb_connection
-    
+
     with By(f"running the query {query}"):
         return connection.execute(query).fetchall()
-        
