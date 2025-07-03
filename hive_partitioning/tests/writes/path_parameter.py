@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_InvalidPath("1.0"),
+    RQ_HivePartitioning_Writes_InvalidPath("1.0"),
 )
 def invalid_path(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -30,7 +30,7 @@ def invalid_path(
 
 @TestFeature
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_Path("1.0"),
+    RQ_HivePartitioning_Writes_Path("1.0"),
 )
 @Name("path")
 def feature(
