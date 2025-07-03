@@ -1075,7 +1075,7 @@ SRS_045_Hive_Partitioning = Specification(
         Heading(name='Partition Strategy Parameter', level=3, num='2.7.15'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionStrategy', level=4, num='2.7.15.1'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument', level=4, num='2.7.15.2'),
-        Heading(name='Partition Columns In DataFile Parameter', level=3, num='2.7.16'),
+        Heading(name='Partition Columns In Data File Parameter', level=3, num='2.7.16'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionColumnsInDataFile', level=4, num='2.7.16.1'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment', level=4, num='2.7.16.2'),
         Heading(name='Path Parameter', level=3, num='2.7.17'),
@@ -1225,7 +1225,7 @@ SRS_045_Hive_Partitioning = Specification(
         * 2.7.15 [Partition Strategy Parameter](#partition-strategy-parameter)
             * 2.7.15.1 [RQ.HivePartitioning.Writes.PartitionStrategy](#rqhivepartitioningwritespartitionstrategy)
             * 2.7.15.2 [RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument](#rqhivepartitioningwritespartitionstrategywrongargument)
-        * 2.7.16 [Partition Columns In DataFile Parameter](#partition-columns-in-datafile-parameter)
+        * 2.7.16 [Partition Columns In Data File Parameter](#partition-columns-in-data-file-parameter)
             * 2.7.16.1 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFile](#rqhivepartitioningwritespartitioncolumnsindatafile)
             * 2.7.16.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment](#rqhivepartitioningwritespartitioncolumnsindatafilewrongargiment)
         * 2.7.17 [Path Parameter](#path-parameter)
@@ -1237,7 +1237,6 @@ SRS_045_Hive_Partitioning = Specification(
             * 2.7.18.3 [RQ.HivePartitioning.Writes.NotDefinedFilename](#rqhivepartitioningwritesnotdefinedfilename)
         * 2.7.19 [S3 Engine Parameters](#s3-engine-parameters)
             * 2.7.19.1 [RQ.HivePartitioning.Writes.S3EngineParameters](#rqhivepartitioningwritess3engineparameters)
-
 
 
 ## Introduction
@@ -1615,7 +1614,7 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.
 
-#### Partition Columns In DataFile Parameter
+#### Partition Columns In Data File Parameter
 
 ##### RQ.HivePartitioning.Writes.PartitionColumnsInDataFile
 version: 1.0
