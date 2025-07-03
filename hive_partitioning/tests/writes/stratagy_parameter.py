@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionStrategyWrongArgument("1.0"),
+    RQ_HivePartitioning_Writes_PartitionStrategyWrongArgument("1.0"),
 )
 def partition_strategy_wrong_argument(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -31,7 +31,7 @@ def partition_strategy_wrong_argument(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionStrategy("1.0"),
+    RQ_HivePartitioning_Writes_PartitionStrategy("1.0"),
 )
 def partition_strategy_default(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -48,22 +48,16 @@ def partition_strategy_default(
             columns="d Int32, i Int32",
             partition_by="d",
             engine=f"S3(s3_conn, format = Parquet, filename='{table_name}/')",
-            settings=[("use_hive_partitioning", "1")],
         )
 
-    # with When("I insert data into table"):
-    #     insert_into_table_values(
-    #         table_name=table_name,
-    #         values="(1, 1)",
-    #         settings=[("use_hive_partitioning", "1")],
-    #     )
-
-    # with Then("I check data in table"):
-    #     check_select(
-    #         select=f"SELECT * FROM {table_name} ORDER BY d",
-    #         expected_result="1\n",
-    #     )
-
+    with When("I insert data into table"):
+        insert_into_table_values(
+            table_name=table_name,
+            values="(1, 1)",
+            settings=[("use_hive_partitioning", "1")],
+            exitcode=243,
+            message="DB::Exception: Failed to check existence",
+        )
 
 @TestFeature
 @Name("strategy parameter")

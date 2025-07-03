@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_MissingPartitionBy("1.0"),
+    RQ_HivePartitioning_Writes_MissingPartitionBy("1.0"),
 )
 def partition_by_missing(
     self,
@@ -36,7 +36,7 @@ def partition_by_missing(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionKey("1.0"),
+    RQ_HivePartitioning_Writes_PartitionKey("1.0"),
 )
 def partition_by_key(
     self,
@@ -78,7 +78,7 @@ def partition_by_key(
 
 @TestFeature
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_PartitionBy("1.0"),
+    RQ_HivePartitioning_Writes_PartitionBy("1.0"),
 )
 @Name("partition by")
 def feature(

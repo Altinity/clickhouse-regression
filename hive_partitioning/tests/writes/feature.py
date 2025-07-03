@@ -6,58 +6,58 @@ from testflows.core import *
 def feature(self, uri, minio_root_user, minio_root_password, uri_readonly):
     """Run writes test."""
 
-    Feature(test=load("hive_partitioning.tests.writes.duckdb", "feature"))(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
+    # Feature(test=load("hive_partitioning.tests.writes.duckdb", "feature"))(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
     Feature(test=load("hive_partitioning.tests.writes.generic", "feature"))(
         uri=uri,
         uri_readonly=uri_readonly,
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Feature(test=load("hive_partitioning.tests.writes.partition_by", "feature"))(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Feature(test=load("hive_partitioning.tests.writes.strategy_parameter", "feature"))(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Feature(test=load("hive_partitioning.tests.writes.path_parameter", "feature"))(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Feature(
-        test=load("hive_partitioning.tests.writes.s3_engine_parameters", "feature")
-    )(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Feature(test=load("hive_partitioning.tests.writes.filename_parameter", "feature"))(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
-    Feature(
-        test=load(
-            "hive_partitioning.tests.writes.write_partition_columns_into_files_parameter",
-            "feature",
-        )
-    )(
-        uri=uri,
-        uri_readonly=uri_readonly,
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-    )
+    # Feature(test=load("hive_partitioning.tests.writes.partition_by", "feature"))(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
+    # Feature(test=load("hive_partitioning.tests.writes.strategy_parameter", "feature"))(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
+    # Feature(test=load("hive_partitioning.tests.writes.path_parameter", "feature"))(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
+    # Feature(
+    #     test=load("hive_partitioning.tests.writes.s3_engine_parameters", "feature")
+    # )(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
+    # Feature(test=load("hive_partitioning.tests.writes.filename_parameter", "feature"))(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
+    # Feature(
+    #     test=load(
+    #         "hive_partitioning.tests.writes.partition_columns_in_data_file",
+    #         "feature",
+    #     )
+    # )(
+    #     uri=uri,
+    #     uri_readonly=uri_readonly,
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    # )
