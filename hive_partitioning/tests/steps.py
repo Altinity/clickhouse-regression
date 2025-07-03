@@ -216,7 +216,9 @@ supported_types_example_values = [
             "'2025-06-09 14:30:00.123'",
         ),
     ),
+    ("Time", ("'00:00:00'", "'23:59:59'", "'14:30:00'")),
     ("Time64(3)", ("'00:00:00'", "'23:59:59.999'", "'14:30:00.123'")),
+    ("Dynamic", ("'Hello, ClickHouse'", "'Hello, ClickHouse'", "'Hello, ClickHouse'")),
 ]
 
 unsupported_types_example_values = [
