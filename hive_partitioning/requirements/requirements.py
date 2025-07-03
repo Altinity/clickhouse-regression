@@ -1068,14 +1068,14 @@ SRS_045_Hive_Partitioning = Specification(
         Heading(name='RQ.HivePartitioning.Writes.ParallelInserts', level=4, num='2.7.12.1'),
         Heading(name='Failing Write', level=3, num='2.7.13'),
         Heading(name='RQ.HivePartitioning.Writes.WriteFail', level=4, num='2.7.13.1'),
-        Heading(name='Partition By Clause For S3 Engine With Hive Partition Writes', level=3, num='2.7.14'),
+        Heading(name='Partition By Clause', level=3, num='2.7.14'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionBy', level=4, num='2.7.14.1'),
         Heading(name='RQ.HivePartitioning.Writes.MissingPartitionBy', level=4, num='2.7.14.2'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionKey', level=4, num='2.7.14.3'),
         Heading(name='Partition Strategy Parameter', level=3, num='2.7.15'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionStrategy', level=4, num='2.7.15.1'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument', level=4, num='2.7.15.2'),
-        Heading(name='Hive Partition Strategy Write Partition Columns Into Files Parameter', level=3, num='2.7.16'),
+        Heading(name='Partition Columns In DataFile Parameter', level=3, num='2.7.16'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionColumnsInDataFile', level=4, num='2.7.16.1'),
         Heading(name='RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment', level=4, num='2.7.16.2'),
         Heading(name='Path Parameter', level=3, num='2.7.17'),
@@ -1218,14 +1218,14 @@ SRS_045_Hive_Partitioning = Specification(
             * 2.7.12.1 [RQ.HivePartitioning.Writes.ParallelInserts](#rqhivepartitioningwritesparallelinserts)
         * 2.7.13 [Failing Write](#failing-write)
             * 2.7.13.1 [RQ.HivePartitioning.Writes.WriteFail](#rqhivepartitioningwriteswritefail)
-        * 2.7.14 [Partition By Clause For S3 Engine With Hive Partition Writes](#partition-by-clause-for-s3-engine-with-hive-partition-writes)
+        * 2.7.14 [Partition By Clause](#partition-by-clause)
             * 2.7.14.1 [RQ.HivePartitioning.Writes.PartitionBy](#rqhivepartitioningwritespartitionby)
             * 2.7.14.2 [RQ.HivePartitioning.Writes.MissingPartitionBy](#rqhivepartitioningwritesmissingpartitionby)
             * 2.7.14.3 [RQ.HivePartitioning.Writes.PartitionKey](#rqhivepartitioningwritespartitionkey)
         * 2.7.15 [Partition Strategy Parameter](#partition-strategy-parameter)
             * 2.7.15.1 [RQ.HivePartitioning.Writes.PartitionStrategy](#rqhivepartitioningwritespartitionstrategy)
             * 2.7.15.2 [RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument](#rqhivepartitioningwritespartitionstrategywrongargument)
-        * 2.7.16 [Hive Partition Strategy Write Partition Columns Into Files Parameter](#hive-partition-strategy-write-partition-columns-into-files-parameter)
+        * 2.7.16 [Partition Columns In DataFile Parameter](#partition-columns-in-datafile-parameter)
             * 2.7.16.1 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFile](#rqhivepartitioningwritespartitioncolumnsindatafile)
             * 2.7.16.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment](#rqhivepartitioningwritespartitioncolumnsindatafilewrongargiment)
         * 2.7.17 [Path Parameter](#path-parameter)
@@ -1237,6 +1237,7 @@ SRS_045_Hive_Partitioning = Specification(
             * 2.7.18.3 [RQ.HivePartitioning.Writes.NotDefinedFilename](#rqhivepartitioningwritesnotdefinedfilename)
         * 2.7.19 [S3 Engine Parameters](#s3-engine-parameters)
             * 2.7.19.1 [RQ.HivePartitioning.Writes.S3EngineParameters](#rqhivepartitioningwritess3engineparameters)
+
 
 
 ## Introduction
@@ -1578,7 +1579,7 @@ version: 1.0
 
 [ClickHouse] SHALL fail the insert and SHALL not leave partial data if any object write fails.
 
-#### Partition By Clause For S3 Engine With Hive Partition Writes
+#### Partition By Clause
 
 ##### RQ.HivePartitioning.Writes.PartitionBy
 version: 1.0
@@ -1614,7 +1615,7 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_strategy` parameter neither set to 'auto' and 'hive'.
 
-#### Hive Partition Strategy Write Partition Columns Into Files Parameter
+#### Partition Columns In DataFile Parameter
 
 ##### RQ.HivePartitioning.Writes.PartitionColumnsInDataFile
 version: 1.0
