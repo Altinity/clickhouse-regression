@@ -389,6 +389,7 @@ version: 1.0
 | FixedString(N)          | ✅ Yes                   |
 | Date                    | ✅ Yes                   |
 | Date32                  | ✅ Yes                   |
+| Time                    | ✅ Yes                   |
 | Time64(N)               | ✅ Yes                   |
 | DateTime64(N)           | ✅ Yes                   |
 | DateTime                | ✅ Yes                   |
