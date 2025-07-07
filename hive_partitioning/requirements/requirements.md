@@ -15,10 +15,10 @@
         * 2.2.2 [RQ.HivePartitioning.VirtualColumns.ReadOnly  ](#rqhivepartitioningvirtualcolumnsreadonly-)
         * 2.2.3 [RQ.HivePartitioning.VirtualColumns.Appearance](#rqhivepartitioningvirtualcolumnsappearance)
         * 2.2.4 [RQ.HivePartitioning.VirtualColumns.Accessibility](#rqhivepartitioningvirtualcolumnsaccessibility)
-        * 2.2.5 [RQ.HivePartitioning.VirtualColumns.InvalidPath  ](#rqhivepartitioningvirtualcolumnsinvalidpath-)
-        * 2.2.6 [RQ.HivePartitioning.VirtualColumns.NameConflict  ](#rqhivepartitioningvirtualcolumnsnameconflict-)
-        * 2.2.7 [RQ.HivePartitioning.VirtualColumns.HiveDisabled  ](#rqhivepartitioningvirtualcolumnshivedisabled-)
-        * 2.2.8 [RQ.HivePartitioning.VirtualColumns.NonExistingKey](#rqhivepartitioningvirtualcolumnsnonexistingkey)
+            * 2.2.4.1 [RQ.HivePartitioning.VirtualColumns.InvalidPath  ](#rqhivepartitioningvirtualcolumnsinvalidpath-)
+        * 2.2.5 [RQ.HivePartitioning.VirtualColumns.NameConflict  ](#rqhivepartitioningvirtualcolumnsnameconflict-)
+        * 2.2.6 [RQ.HivePartitioning.VirtualColumns.HiveDisabled  ](#rqhivepartitioningvirtualcolumnshivedisabled-)
+        * 2.2.7 [RQ.HivePartitioning.VirtualColumns.NonExistingKey](#rqhivepartitioningvirtualcolumnsnonexistingkey)
     * 2.3 [Hive Partition Types Value](#hive-partition-types-value)
         * 2.3.1 [RQ.HivePartitioning.HivePartitionValue  ](#rqhivepartitioninghivepartitionvalue-)
         * 2.3.2 [RQ.HivePartitioning.HivePartitionValue.EmptyValue  ](#rqhivepartitioninghivepartitionvalueemptyvalue-)
@@ -46,51 +46,51 @@
     * 2.7 [Hive Partition Writes](#hive-partition-writes)
         * 2.7.1 [S3 Table Engine Writes](#s3-table-engine-writes)
             * 2.7.1.1 [RQ.HivePartitioning.Writes.S3  ](#rqhivepartitioningwritess3-)
-        * 2.7.2 [Partition Strategy Parameter](#partition-strategy-parameter)
-            * 2.7.2.1 [RQ.HivePartitioning.Writes.PartitionStrategy](#rqhivepartitioningwritespartitionstrategy)
-            * 2.7.2.2 [RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument](#rqhivepartitioningwritespartitionstrategywrongargument)
-        * 2.7.3 [Partition Columns In Data File Parameter](#partition-columns-in-data-file-parameter)
-            * 2.7.3.1 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFile](#rqhivepartitioningwritespartitioncolumnsindatafile)
-            * 2.7.3.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy](#rqhivepartitioningwritespartitioncolumnsindatafilewithouthivepartitionstratagy)
-            * 2.7.3.3 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment](#rqhivepartitioningwritespartitioncolumnsindatafilewrongargiment)
-        * 2.7.4 [Path Parameter](#path-parameter)
-            * 2.7.4.1 [RQ.HivePartitioning.Writes.Path](#rqhivepartitioningwritespath)
-            * 2.7.4.2 [RQ.HivePartitioning.Writes.InvalidPath](#rqhivepartitioningwritesinvalidpath)
-        * 2.7.5 [Filename Parameter](#filename-parameter)
-            * 2.7.5.1 [RQ.HivePartitioning.Writes.Filename](#rqhivepartitioningwritesfilename)
-            * 2.7.5.2 [RQ.HivePartitioning.Writes.Filename  ](#rqhivepartitioningwritesfilename-)
-            * 2.7.5.3 [RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy ](#rqhivepartitioningwritesfilenamewithouthivepartitionstratagy-)
-            * 2.7.5.4 [RQ.HivePartitioning.Writes.NotDefinedFilename ](#rqhivepartitioningwritesnotdefinedfilename-)
-        * 2.7.6 [S3 Engine Parameters](#s3-engine-parameters)
-            * 2.7.6.1 [RQ.HivePartitioning.Writes.S3EngineParameters  ](#rqhivepartitioningwritess3engineparameters-)
-            * 2.7.6.2 [RQ.HivePartitioning.Writes.UseHivePartitions  ](#rqhivepartitioningwritesusehivepartitions-)
-        * 2.7.7 [Writes By Partitions And Parts](#writes-by-partitions-and-parts)
-            * 2.7.7.1 [RQ.HivePartitioning.Writes.PartitionsParts  ](#rqhivepartitioningwritespartitionsparts-)
-        * 2.7.8 [Using Expressions In Partition By Clause](#using-expressions-in-partition-by-clause)
-            * 2.7.8.1 [RQ.HivePartitioning.Writes.Expressions](#rqhivepartitioningwritesexpressions)
-        * 2.7.9 [Inserting Into Existing File](#inserting-into-existing-file)
-            * 2.7.9.1 [RQ.HivePartitioning.Writes.FileExist  ](#rqhivepartitioningwritesfileexist-)
-        * 2.7.10 [Missing Partition By Column](#missing-partition-by-column)
-            * 2.7.10.1 [RQ.HivePartitioning.Writes.MissingColumn](#rqhivepartitioningwritesmissingcolumn)
-        * 2.7.11 [Using Default Value ](#using-default-value-)
-            * 2.7.11.1 [RQ.HivePartitioning.Writes.DefaultValue  ](#rqhivepartitioningwritesdefaultvalue-)
-        * 2.7.12 [Using Nullable Datatypes](#using-nullable-datatypes)
-            * 2.7.12.1 [RQ.HivePartitioning.Writes.NullableDataType](#rqhivepartitioningwritesnullabledatatype)
-        * 2.7.13 [Supported Data Types](#supported-data-types)
-            * 2.7.13.1 [RQ.HivePartitioning.Writes.SupportedDataTypes  ](#rqhivepartitioningwritessupporteddatatypes-)
-        * 2.7.14 [Unsupported Types](#unsupported-types)
-            * 2.7.14.1 [RQ.HivePartitioning.Writes.DataTypesUnsupported](#rqhivepartitioningwritesdatatypesunsupported)
-        * 2.7.15 [Using ReadOnly Bucket](#using-readonly-bucket)
-            * 2.7.15.1 [RQ.HivePartitioning.Writes.ReadOnlyBucket](#rqhivepartitioningwritesreadonlybucket)
-        * 2.7.16 [Non-Accessible Bucket](#non-accessible-bucket)
-            * 2.7.16.1 [RQ.HivePartitioning.Writes.NonAccessibleBucket](#rqhivepartitioningwritesnonaccessiblebucket)
-        * 2.7.17 [Parallel Inserts](#parallel-inserts)
-            * 2.7.17.1 [RQ.HivePartitioning.Writes.ParallelInserts](#rqhivepartitioningwritesparallelinserts)
-        * 2.7.18 [Failing Write](#failing-write)
-            * 2.7.18.1 [RQ.HivePartitioning.Writes.WriteFail  ](#rqhivepartitioningwriteswritefail-)
-        * 2.7.19 [Partition By Clause](#partition-by-clause)
-            * 2.7.19.1 [RQ.HivePartitioning.Writes.PartitionBy](#rqhivepartitioningwritespartitionby)
-            * 2.7.19.2 [RQ.HivePartitioning.Writes.PartitionKey](#rqhivepartitioningwritespartitionkey)
+            * 2.7.1.2 [Partition Strategy Parameter](#partition-strategy-parameter)
+                * 2.7.1.2.1 [RQ.HivePartitioning.Writes.PartitionStrategy](#rqhivepartitioningwritespartitionstrategy)
+                * 2.7.1.2.2 [RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument](#rqhivepartitioningwritespartitionstrategywrongargument)
+            * 2.7.1.3 [Partition Columns In Data File Parameter](#partition-columns-in-data-file-parameter)
+                * 2.7.1.3.1 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFile](#rqhivepartitioningwritespartitioncolumnsindatafile)
+                * 2.7.1.3.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy](#rqhivepartitioningwritespartitioncolumnsindatafilewithouthivepartitionstratagy)
+                * 2.7.1.3.3 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment](#rqhivepartitioningwritespartitioncolumnsindatafilewrongargiment)
+            * 2.7.1.4 [Path Parameter](#path-parameter)
+                * 2.7.1.4.1 [RQ.HivePartitioning.Writes.Path](#rqhivepartitioningwritespath)
+            * 2.7.1.5 [RQ.HivePartitioning.Writes.InvalidPath](#rqhivepartitioningwritesinvalidpath)
+            * 2.7.1.6 [Filename Parameter](#filename-parameter)
+                * 2.7.1.6.1 [RQ.HivePartitioning.Writes.Filename  ](#rqhivepartitioningwritesfilename-)
+                * 2.7.1.6.2 [RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy ](#rqhivepartitioningwritesfilenamewithouthivepartitionstratagy-)
+                * 2.7.1.6.3 [RQ.HivePartitioning.Writes.NotDefinedFilename ](#rqhivepartitioningwritesnotdefinedfilename-)
+            * 2.7.1.7 [S3 Engine Parameters](#s3-engine-parameters)
+                * 2.7.1.7.1 [RQ.HivePartitioning.Writes.S3EngineParameters  ](#rqhivepartitioningwritess3engineparameters-)
+            * 2.7.1.8 [RQ.HivePartitioning.Writes.UseHivePartitions  ](#rqhivepartitioningwritesusehivepartitions-)
+        * 2.7.2 [Writes By Partitions And Parts](#writes-by-partitions-and-parts)
+            * 2.7.2.1 [RQ.HivePartitioning.Writes.PartitionsParts  ](#rqhivepartitioningwritespartitionsparts-)
+        * 2.7.3 [Using Expressions In Partition By Clause](#using-expressions-in-partition-by-clause)
+            * 2.7.3.1 [RQ.HivePartitioning.Writes.Expressions](#rqhivepartitioningwritesexpressions)
+        * 2.7.4 [Inserting Into Existing File](#inserting-into-existing-file)
+            * 2.7.4.1 [RQ.HivePartitioning.Writes.FileExist  ](#rqhivepartitioningwritesfileexist-)
+        * 2.7.5 [Missing Partition By Column](#missing-partition-by-column)
+            * 2.7.5.1 [RQ.HivePartitioning.Writes.MissingColumn](#rqhivepartitioningwritesmissingcolumn)
+        * 2.7.6 [Using Default Value ](#using-default-value-)
+            * 2.7.6.1 [RQ.HivePartitioning.Writes.DefaultValue  ](#rqhivepartitioningwritesdefaultvalue-)
+        * 2.7.7 [Using Nullable Datatypes](#using-nullable-datatypes)
+            * 2.7.7.1 [RQ.HivePartitioning.Writes.NullableDataType](#rqhivepartitioningwritesnullabledatatype)
+        * 2.7.8 [Supported Data Types](#supported-data-types)
+            * 2.7.8.1 [RQ.HivePartitioning.Writes.SupportedDataTypes  ](#rqhivepartitioningwritessupporteddatatypes-)
+        * 2.7.9 [Unsupported Types](#unsupported-types)
+            * 2.7.9.1 [RQ.HivePartitioning.Writes.DataTypesUnsupported](#rqhivepartitioningwritesdatatypesunsupported)
+        * 2.7.10 [Using ReadOnly Bucket](#using-readonly-bucket)
+            * 2.7.10.1 [RQ.HivePartitioning.Writes.ReadOnlyBucket](#rqhivepartitioningwritesreadonlybucket)
+        * 2.7.11 [Non-Accessible Bucket](#non-accessible-bucket)
+            * 2.7.11.1 [RQ.HivePartitioning.Writes.NonAccessibleBucket](#rqhivepartitioningwritesnonaccessiblebucket)
+        * 2.7.12 [Parallel Inserts](#parallel-inserts)
+            * 2.7.12.1 [RQ.HivePartitioning.Writes.ParallelInserts](#rqhivepartitioningwritesparallelinserts)
+        * 2.7.13 [Failing Write](#failing-write)
+            * 2.7.13.1 [RQ.HivePartitioning.Writes.WriteFail  ](#rqhivepartitioningwriteswritefail-)
+        * 2.7.14 [Partition By Clause](#partition-by-clause)
+            * 2.7.14.1 [RQ.HivePartitioning.Writes.PartitionBy](#rqhivepartitioningwritespartitionby)
+            * 2.7.14.2 [RQ.HivePartitioning.Writes.PartitionKey](#rqhivepartitioningwritespartitionkey)
+
 
 
 ## Introduction
@@ -258,7 +258,7 @@ In this example, date is not a physical column in the file, but a virtual column
 [ClickHouse] SHALL allow filtering and selecting by this column as part of query execution.
 
 
-#### RQ.HivePartitioning.VirtualColumns.InvalidPath  
+##### RQ.HivePartitioning.VirtualColumns.InvalidPath  
 version: 1.0
 
 [ClickHouse] SHALL return an error  
@@ -618,9 +618,9 @@ Structure:
  - /year=2023/country=France/...
 ```
 
-#### Partition Strategy Parameter
+##### Partition Strategy Parameter
 
-##### RQ.HivePartitioning.Writes.PartitionStrategy
+###### RQ.HivePartitioning.Writes.PartitionStrategy
 version: 1.0
 
 [ClickHouse] SHALL support the `partition_strategy` parameter in the `S3` table engine definition. This parameter determines whether Hive-style partitioned writes are enabled.
@@ -637,14 +637,14 @@ If the `partition_strategy` parameter is not explicitly specified, it SHALL defa
 ENGINE = S3(s3_conn,..., partition_strategy='hive')
 ```
 
-##### RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument
+###### RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument
 version: 1.0
 
 [ClickHouse] SHALL return an error `DB::Exception: Unknown partitioning style ` if the `partition_strategy` parameter is set to a value other than `'auto'` or `'hive'`.
 
-#### Partition Columns In Data File Parameter
+##### Partition Columns In Data File Parameter
 
-##### RQ.HivePartitioning.Writes.PartitionColumnsInDataFile
+###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFile
 version: 1.0
 
 [ClickHouse] SHALL support the `partition_columns_in_data_file` parameter in the `S3` table engine definition if `partition_strategy='hive'`.
@@ -660,19 +660,19 @@ By default, `partition_columns_in_data_file` SHALL be set to `false`.
 ENGINE = S3(s3_conn,..., partition_columns_in_data_file=1)
 ```
 
-##### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy
+###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy
 version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_columns_in_data_file` is specified but `partition_strategy='auto'` or not defined.
 
-##### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment
+###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment
 version: 1.0
 
 [ClickHouse] SHALL return an error if the `partition_columns_in_data_file` parameter is assigned a value that cannot be interpreted as a Boolean.
 
-#### Path Parameter
+##### Path Parameter
 
-##### RQ.HivePartitioning.Writes.Path
+###### RQ.HivePartitioning.Writes.Path
 version: 1.0
 
 [ClickHouse] SHALL support the `path` parameter in the `S3` table engine definition to specify the full bucket path used as the root for Hive-style partitioned writes.
@@ -689,14 +689,9 @@ This includes cases where the `path`:
 - Is not a valid S3 URI.
 - Contains illegal characters.
 
-#### Filename Parameter
+##### Filename Parameter
 
-##### RQ.HivePartitioning.Writes.Filename
-version: 1.0
-
-[ClickHouse] SHALL support `filename` parameter that defines directory for hive partition writes.
-
-##### RQ.HivePartitioning.Writes.Filename  
+###### RQ.HivePartitioning.Writes.Filename  
 version: 1.0
 
 [ClickHouse] SHALL support the `filename` parameter in the `S3` table engine definition to specify a directory that SHALL be prepended before all Hive-style partition directories.
@@ -707,12 +702,12 @@ The full write path SHALL be constructed as:
 <path>/<filename>/<key1>=<value1>/<key2>=<value2>/...
 ```
 
-##### RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy 
+###### RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy 
 version: 1.0
 
 [ClickHouse] SHALL return an error if `filename` is specified but `partition_strategy='auto'` or not defined.
 
-##### RQ.HivePartitioning.Writes.NotDefinedFilename 
+###### RQ.HivePartitioning.Writes.NotDefinedFilename 
 version: 1.0
 
 [ClickHouse] SHALL write partitioned data directly into the root `path` if the `filename` parameter is not defined and `partition_strategy` is set to `'hive'`.
@@ -724,9 +719,9 @@ In this case, the write path SHALL be constructed as:
 <path>//<key1>=<value1>/<key2>=<value2>/...
 ```
 
-#### S3 Engine Parameters
+##### S3 Engine Parameters
 
-##### RQ.HivePartitioning.Writes.S3EngineParameters  
+###### RQ.HivePartitioning.Writes.S3EngineParameters  
 version: 1.0
 
 [ClickHouse] SHALL NOT alter the behavior of the following S3 engine parameters when `partition_strategy` is set to `'hive'`:
