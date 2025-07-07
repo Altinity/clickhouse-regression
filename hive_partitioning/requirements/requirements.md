@@ -51,14 +51,14 @@
                 * 2.7.1.2.2 [RQ.HivePartitioning.Writes.PartitionStrategyWrongArgument](#rqhivepartitioningwritespartitionstrategywrongargument)
             * 2.7.1.3 [Partition Columns In Data File Parameter](#partition-columns-in-data-file-parameter)
                 * 2.7.1.3.1 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFile](#rqhivepartitioningwritespartitioncolumnsindatafile)
-                * 2.7.1.3.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy](#rqhivepartitioningwritespartitioncolumnsindatafilewithouthivepartitionstratagy)
+                * 2.7.1.3.2 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStrategy](#rqhivepartitioningwritespartitioncolumnsindatafilewithouthivepartitionstrategy)
                 * 2.7.1.3.3 [RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment](#rqhivepartitioningwritespartitioncolumnsindatafilewrongargiment)
             * 2.7.1.4 [Path Parameter](#path-parameter)
                 * 2.7.1.4.1 [RQ.HivePartitioning.Writes.Path](#rqhivepartitioningwritespath)
             * 2.7.1.5 [RQ.HivePartitioning.Writes.InvalidPath](#rqhivepartitioningwritesinvalidpath)
             * 2.7.1.6 [Filename Parameter](#filename-parameter)
                 * 2.7.1.6.1 [RQ.HivePartitioning.Writes.Filename  ](#rqhivepartitioningwritesfilename-)
-                * 2.7.1.6.2 [RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy ](#rqhivepartitioningwritesfilenamewithouthivepartitionstratagy-)
+                * 2.7.1.6.2 [RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStrategy ](#rqhivepartitioningwritesfilenamewithouthivepartitionstrategy-)
                 * 2.7.1.6.3 [RQ.HivePartitioning.Writes.NotDefinedFilename ](#rqhivepartitioningwritesnotdefinedfilename-)
             * 2.7.1.7 [S3 Engine Parameters](#s3-engine-parameters)
                 * 2.7.1.7.1 [RQ.HivePartitioning.Writes.S3EngineParameters  ](#rqhivepartitioningwritess3engineparameters-)
@@ -158,7 +158,7 @@ In the example select SHALL read only the second file.
 #### RQ.HivePartitioning.Generic.Performance
 version: 1.0
 
-[ClickHouse] SHALL execute queries with `use_hive_partitioning = 1` faster than with `use_hive_partitioning = 0` when some files from storage are pruned using a `WHERE` clause on partition columns. This behavior is expected because Hive-style partitioning enables ClickHouse to skip irrelevant directories, reducing I/O and query execution time.
+[ClickHouse] SHALL execute queries with `use_hive_partitioning = 1` faster than with `use_hive_partitioning = 0` when some files from storage are pruned using a `WHERE` clause on partition columns. This behavior is expected because Hive-style partitioning enables [ClickHouse] to skip irrelevant directories, reducing I/O and query execution time.
 
 
 For example:
@@ -660,7 +660,7 @@ By default, `partition_columns_in_data_file` SHALL be set to `false`.
 ENGINE = S3(s3_conn,..., partition_columns_in_data_file=1)
 ```
 
-###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStratagy
+###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWithoutHivePartitionStrategy
 version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_columns_in_data_file` is specified but `partition_strategy='auto'` or not defined.
@@ -702,7 +702,7 @@ The full write path SHALL be constructed as:
 <path>/<filename>/<key1>=<value1>/<key2>=<value2>/...
 ```
 
-###### RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStratagy 
+###### RQ.HivePartitioning.Writes.FilenameWithoutHivePartitionStrategy 
 version: 1.0
 
 [ClickHouse] SHALL return an error if `filename` is specified but `partition_strategy='auto'` or not defined.
@@ -801,7 +801,7 @@ version: 1.0
 
 [ClickHouse] SHALL properly append data to an existing file when writing via the `S3` table engine with `partition_strategy = 'hive'`.
 
-If the target file already exists, [ClickHouse] SHALL Append the new data without deleting or overwriting existing content.
+If the target file already exists, [ClickHouse] SHALL append the new data without deleting or overwriting existing content.
 
 #### Missing Partition By Column
 
@@ -912,7 +912,7 @@ if the data type of any column defined in the `PARTITION BY` clause is not inclu
 version: 1.0
 
 [ClickHouse] SHALL return an error `DB::Exception: Failed to check existence of a key`
-if bucket difined in S3 engine clause is read-only.
+if bucket defined in S3 engine clause is read-only.
 
 #### Non-Accessible Bucket
 
@@ -920,7 +920,7 @@ if bucket difined in S3 engine clause is read-only.
 version: 1.0
 
 [ClickHouse] SHALL return an error `DB::Exception: Failed to check existence of a key`
- if bucket difined in S3 engine clause is not accessible.
+ if bucket defined in S3 engine clause is not accessible.
 
 #### Parallel Inserts
 
