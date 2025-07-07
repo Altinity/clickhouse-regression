@@ -313,7 +313,7 @@ SET use_hive_partitioning=0
 #### RQ.HivePartitioning.VirtualColumns.NonExistingKey
 version: 1.0
 
-[Clickhouse] SHALL return `Unknown identifier` error if a query refers to nonexisting partition key.
+[ClickHouse] SHALL return `Unknown identifier` error if a query refers to nonexisting partition key.
 
 For example:
 
