@@ -187,6 +187,13 @@ xfails = {
             check_clickhouse_version("<25.1"),
         )
     ],
+    ":/:/alter/:/columns/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/83388",
+            check_clickhouse_version(">=25.7"),
+        )
+    ],
 }
 
 ffails = {
