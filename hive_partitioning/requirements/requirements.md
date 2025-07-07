@@ -666,7 +666,7 @@ version: 1.0
 
 [ClickHouse] SHALL return an error if `partition_columns_in_data_file` is specified but `partition_strategy='auto'` or not defined.
 
-###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgiment
+###### RQ.HivePartitioning.Writes.PartitionColumnsInDataFileWrongArgument
 version: 1.0
 
 [ClickHouse] SHALL return an error if the `partition_columns_in_data_file` parameter is assigned a value that cannot be interpreted as a Boolean.
