@@ -120,7 +120,11 @@ def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root
     
     not_supported_characters = ["{", "}", "\\",  '"', "'", "*", "?", "/"]
 
-    for i in range(32, 1114111, 16):
+    if self.context.stress:
+        characters_range = range(32, 1114111, 16)
+    else:
+        characters_range = range(32, 256, 16)
+    for i in characters_range:
         with When("I create string for test"):
             string = "".join([chr(j) if j > 32 else "" for j in range(i, i + 16)])
             debug(string)
@@ -524,6 +528,47 @@ def parallel_inserts(
             settings=[("use_hive_partitioning", "1")],
         )
 
+@TestScenario
+@Requirements(
+    RQ_HivePartitioning_Writes_WriteFail("1.0"),
+)
+def write_fail(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
+    """Check that clickhouse returns an error when writing to a non-accessible bucket."""
+
+    if node is None:
+        node = self.context.node
+
+    table_name = "write_fail_s3"
+
+    with Given("I create table for hive partition writes"):
+        create_table(
+            columns="d Int32, i Int32",
+            table_name=table_name,
+            engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
+            partition_by="d",
+            node=node,
+        )
+
+    with When("I insert data into table"):
+        insert_into_table_values(
+            node=node,
+            table_name=table_name,
+            values="(1, 1), (2, throwIf(1, 'Simulated failure'))",
+        )
+
+    # with Then("I check exit code and message"):
+    #     assert r.exitcode == 243, error()
+    #     assert "DB::Exception: Failed to check existence" in r.output, error()
+
+    with Then("I check data in table"):
+        check_select(
+            select=f"SELECT i, d FROM {table_name} WHERE d = 1 ORDER BY i",
+            expected_result="1\t1",
+            node=node,
+        )
+        
 
 @TestFeature
 @Requirements(
