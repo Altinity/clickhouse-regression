@@ -1,7 +1,8 @@
 import re
 
 from testflows.core import *
-from testflows.asserts import error
+from testflows.asserts import error, values
+from testflows.snapshots import snapshot
 
 # from version.requirements import *
 
@@ -142,6 +143,35 @@ def error_message(self):
     finally:
         with Finally("the ClickHouse process is restarted"):
             node.restart()
+
+
+@TestScenario
+def embedded_logos(self):
+    """Check that the embedded logos are correct."""
+
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("checking logos that are embedded in the binary"):
+        altinity_logos = node.command(
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwI' /usr/bin/clickhouse"
+        ).output
+
+        clickhouse_logos = node.command(
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDkgOCI+PHN0eWx' /usr/bin/clickhouse", exitcode=1
+        ).output
+
+    with Then("Altinity logos should be present in the binary"):
+        values_after_grep = f"altinity: {altinity_logos.strip()} clickhouse: {clickhouse_logos.strip()}"
+        with values() as that:
+            assert that(
+                snapshot(
+                    values_after_grep,
+                    name="altinity_logos",
+                    id="embedded_logos",
+                    mode=snapshot.CHECK,
+                )
+            ), error()
 
 
 @TestFeature
