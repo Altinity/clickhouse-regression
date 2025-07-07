@@ -25,6 +25,9 @@ xfails = {
             check_clickhouse_version("<=23.4"),
         ),
     ],
+    "/version/altinity/embedded logos/*": [
+        (Fail, "fix not introduced before the given version", check_clickhouse_version("<25.3.3.20152")),
+    ],
 }
 
 
@@ -60,7 +63,10 @@ def regression(
         self.context.cluster = cluster
 
     node = cluster.node("clickhouse1")
-    is_altinity_build = check_is_altinity_build(node)
+
+    with And("check if this is an Altinity build"):
+        is_altinity_build = check_is_altinity_build(node)
+
     if not is_altinity_build:
         skip("This suite is for Altinity builds only")
 
