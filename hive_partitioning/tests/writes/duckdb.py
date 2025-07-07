@@ -81,8 +81,14 @@ def duckdb_supported_characters(
             SET s3_url_style='path';
         """
         )
-    for i in range(32, 1114111, 16):
-        string = "".join([chr(j) if j > 32 else "" for j in range(i, i + 16)])
+
+    if self.context.stress:
+        characters_range = range(32, 1114111, 16)
+    else:
+        characters_range = range(32, 256, 16)
+
+    for i in characters_range:
+        string = "".join([chr(j) for j in range(i, i + 16)])
         with Check(f"I check string with characters from {i} to {i+16}"):
             table_name = f"test_characters_{i}_{i+16}"
             with When("I create table for hive partition writes"):
