@@ -313,7 +313,7 @@ SET use_hive_partitioning=0
 #### RQ.HivePartitioning.VirtualColumns.NonExistingKey
 version: 1.0
 
-[Clickhouse] SHALL return `Unknown identifier` error if query refers to nonexisting partition key.
+[Clickhouse] SHALL return `Unknown identifier` error if a query refers to nonexisting partition key.
 
 For example:
 
@@ -331,7 +331,7 @@ CREATE TABLE events
 )
 ENGINE = S3('https://<bucket>/data/events', 'access_key', 'secret_key', 'Parquet');
 
-SELECT region from events
+SELECT region FROM events
 ```
 In this example, the virtual column region does not exist in the partitioned path or in the Parquet file schema.
 
@@ -612,6 +612,7 @@ INSERT INTO hive_writes VALUES
 ```
 
 In this example, [ClickHouse] SHALL write each row into a separate Hive-style partition path:
+
 ```
 Structure:
  - /year=2023/country=Germany/...
@@ -769,8 +770,8 @@ version: 1.0
 [ClickHouse] SHALL support writing data into multiple Hive-style partition paths when using the `S3` table engine with `partition_strategy = 'hive'`.
 
 This includes:
-- Writing rows to multiple partition paths within a single INSERT.
-- Writing to the same or different partitions across multiple `INSERT`
+- Writing rows to multiple partition paths within a single `INSERT`.
+- Writing to the same or different partitions across multiple `INSERT`s
 
 #### Using Expressions In Partition By Clause
 
