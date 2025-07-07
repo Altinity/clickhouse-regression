@@ -25,7 +25,6 @@ def s3_engine_parameters(
         "TabSeparatedWithNamesAndTypes",
         "TabSeparatedRawWithNames",
         "TabSeparatedRawWithNamesAndTypes",
-        # "Template",
         "CSV",
         "CSVWithNames",
         "CSVWithNamesAndTypes",
@@ -70,7 +69,6 @@ def s3_engine_parameters(
         "PrettySpaceNoEscapes",
         "PrettySpaceMonoBlock",
         "PrettySpaceNoEscapesMonoBlock",
-        # "Prometheus",
         "Protobuf",
         "ProtobufSingle",
         "ProtobufList",
@@ -120,7 +118,7 @@ def s3_engine_parameters(
 
 @TestFeature
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_S3EngineParameters("1.0"),
+    RQ_HivePartitioning_Writes_S3EngineParameters("1.0"),
 )
 @Name("s3 engine parameters")
 def feature(

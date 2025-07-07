@@ -52,7 +52,7 @@ def feature(self, uri, minio_root_user, minio_root_password, uri_readonly):
     )
     Feature(
         test=load(
-            "hive_partitioning.tests.writes.write_partition_columns_into_files_parameter",
+            "hive_partitioning.tests.writes.partition_columns_in_data_file",
             "feature",
         )
     )(

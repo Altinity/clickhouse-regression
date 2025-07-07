@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles(
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile(
         "1.0"
     ),
 )
@@ -66,7 +66,7 @@ def write_partition_columns_into_files(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFiles(
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile(
         "1.0"
     ),
 )
@@ -105,7 +105,7 @@ def write_partition_columns_into_files_default(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_HivePartitionStrategyWritePartitionColumnsIntoFilesWrongArgument(
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFileWrongArgiment(
         "1.0"
     ),
 )
