@@ -56,25 +56,35 @@ def version_format(self):
 
 
 @TestScenario
-def issue_link(self):
-    """Check that the issue link is correct and not pointing to upstream."""
+def issue_link_in_binary(self):
+    """Check that the issue link in the binary is correct and not pointing to upstream."""
 
     with Given("a ClickHouse instance"):
         node = self.context.cluster.node("clickhouse1")
 
     with When("checking links to github that are embedded in the binary"):
         result = node.command(
-            "grep --color=never -i -a clickhouse/issues /usr/bin/clickhouse"
-        ).output
+            "grep --color=never -i -a clickhouse/issues /usr/bin/clickhouse",
+            no_checks=True,
+        )
+
+    with Then("grep should find links to clickhouse/issues"):
+        assert result.output != "", error(
+            "no links to 'clickhouse/issues' found in the binary."
+        )
+        assert result.exitcode == 0, error()
 
     with Then("the issue link is not pointing to upstream"):
-        # Want to match the link to the issues page, but not links to individual issues
-        assert "github.com/ClickHouse/ClickHouse/issues" not in result.replace(
-            "issues/", "_"
-        ), error()
+        for line in result.output.splitlines():
+            # Want to match the link to the issues page, but not links to individual issues
+            individual_issue_link_mangled = line.replace("issues/", "_issues_/")
+            assert (
+                "github.com/ClickHouse/ClickHouse/issues"
+                not in individual_issue_link_mangled
+            ), error()
 
     with Then("the issue link is pointing to Altinity's issues page"):
-        assert "github.com/Altinity/ClickHouse/issues" in result, error()
+        assert "github.com/Altinity/ClickHouse/issues" in result.output, error()
 
 
 @TestScenario
@@ -109,7 +119,9 @@ def error_message(self):
         for message in unexpected_messages:
             with Then(f"the log does not contain unexpected message '{message}'"):
                 match = grep_in_log(message)
-                assert not match, error()
+                assert not match, error(
+                    f"unexpected message '{message}' found in log '{match}'"
+                )
 
         expected_messages = [
             "(altinity build)",
@@ -117,7 +129,7 @@ def error_message(self):
         for message in expected_messages:
             with Then(f"the log contains the expected message '{message}'"):
                 match = grep_in_log(message)
-                assert match, error()
+                assert match, error(f"expected message '{message}' not found in log")
 
         with Then("the log contains a version message"):
             version_messages = grep_in_log("(version ")

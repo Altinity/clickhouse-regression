@@ -6,9 +6,6 @@ from helpers.common import run_duckdb_query
 
 
 @TestScenario
-@Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_DuckDB_SupportedTypes("1.0"),
-)
 def duckdb_supported_types(
     self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
 ):
@@ -66,9 +63,6 @@ def duckdb_supported_types(
 
 
 @TestScenario
-@Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_DuckDB_SupportedCharacters("1.0"),
-)
 def duckdb_supported_characters(
     self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
 ):

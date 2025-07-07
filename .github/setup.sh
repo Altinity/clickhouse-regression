@@ -37,7 +37,7 @@ echo "::endgroup::"
 
 echo "::group::Install docker-compose"
 COMPOSE_VERSION="v2.23.1"
-COMPOSE_BIN_NAME="docker-compose-linux-x86_64"
+COMPOSE_BIN_NAME="docker-compose-linux-$(uname -m)"
 COMPOSE_URL="https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/${COMPOSE_BIN_NAME}"
 CACHE_PATH="/mnt/cache/docker-compose/${COMPOSE_VERSION}"
 TARGET_PATH="/usr/local/bin/docker-compose"

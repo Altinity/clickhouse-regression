@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_InvalidFilename("1.0"),
+    RQ_HivePartitioning_Writes_InvalidFilename("1.0"),
 )
 def invalid_filename(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -31,7 +31,7 @@ def invalid_filename(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_NotDefinedFilename("1.0"),
+    RQ_HivePartitioning_Writes_NotDefinedFilename("1.0"),
 )
 def not_defined_filename(
     self,
@@ -69,7 +69,7 @@ def not_defined_filename(
 
 @TestFeature
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_Filename("1.0"),
+    RQ_HivePartitioning_Writes_Filename("1.0"),
 )
 @Name("filename parameter")
 def feature(
