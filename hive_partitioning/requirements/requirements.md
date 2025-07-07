@@ -108,7 +108,7 @@ version: 1.0
 
 For example:
 
-```SQL
+```sql
 SET use_hive_partitioning=1
 ```
 
@@ -126,7 +126,7 @@ version: 1.0
 
 [ClickHouse] SHALL support setting `use_hive_partitioning` to toggle Hive-style partition recognition for file-based table engines and table functions. By default, in versions where it is disabled, users SHALL enable this setting to activate partition discovery.
 
-```SQL
+```sql
 set use_hive_partitioning=1
 ```
 
@@ -144,7 +144,7 @@ Structure:
  - /data/sales/date=2025-01-03/file3.parquet
 ```
 
-```SQL
+```sql
 SET use_hive_partitioning=1
 
 CREATE TABLE sales(...)
@@ -553,7 +553,7 @@ Partitioning columns SHALL be explicitly defined in the PARTITION BY clause.
 
 For example:
 
-```SQL
+```sql
 SET use_hive_partitioning = 1;
 
 CREATE TABLE hdfs_sales
@@ -573,7 +573,7 @@ version: 1.0
 [ClickHouse] SHALL support reading from the Hive table engine with Hive-style partitioning.
 Partitioning columns SHALL be defined in the Hive Metastore.
 
-```SQL
+```sql
 SET use_hive_partitioning = 1;
 
 CREATE TABLE hive_table
@@ -633,7 +633,7 @@ version: 1.0
 If the `partition_strategy` parameter is not explicitly specified, it SHALL default to `'auto'`.
 
 
-```SQL
+```sql
 ENGINE = S3(s3_conn,..., partition_strategy='hive')
 ```
 
@@ -656,7 +656,7 @@ This parameter controls whether columns used in the `PARTITION BY` clause are al
 
 By default, `partition_columns_in_data_file` SHALL be set to `false`.
 
-```SQL
+```sql
 ENGINE = S3(s3_conn,..., partition_columns_in_data_file=1)
 ```
 
