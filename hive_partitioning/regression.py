@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from helpers.common import experimental_analyzer
+from helpers.common import experimental_analyzer, run_duckdb
 from helpers.argparser import argparser_minio, CaptureClusterArgs, CaptureMinioArgs
 from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nodes
 from s3.tests.common import start_minio
@@ -28,6 +28,7 @@ def s3_table_engine(
     root_password,
     cluster_args,
     with_analyzer=False,
+    stress=False,
 ):
     """Setup and run S3 Table Engine tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -39,6 +40,10 @@ def s3_table_engine(
     self.context.access_key_id = root_user
     self.context.secret_access_key = root_password
     bucket_prefix = "data"
+
+    with Given("I have a DuckDB connection"):
+        self.context.duckdb_connection = run_duckdb()
+        debug(self.context.duckdb_connection)
 
     with Cluster(
         **cluster_args,

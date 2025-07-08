@@ -105,7 +105,7 @@ def write_partition_columns_into_files_default(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_PartitionColumnsInDataFileWrongArgiment(
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFileWrongArgument(
         "1.0"
     ),
 )
