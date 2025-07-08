@@ -394,11 +394,12 @@ def insert_into_table_values(
         node = self.context.node
 
     with When(f"I insert into table {table_name} values"):
-        node.query(
+        r = node.query(
             f"INSERT INTO {table_name} VALUES {values}",
             settings=settings,
             exitcode=exitcode,
             message=message,
+            no_checks=True,
         )
 
 
