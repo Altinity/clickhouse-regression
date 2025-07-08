@@ -6,7 +6,7 @@ from helpers.common import run_duckdb_query
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_SupportedTypes("1.0"),
+    RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
 def supported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse supports only supported types for hive partitioning."""
@@ -64,7 +64,7 @@ def supported_types(self, uri, uri_readonly, minio_root_user, minio_root_passwor
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_UnsupportedTypes("1.0"),
+    RQ_HivePartitioning_Writes_DataTypesUnsupported("1.0"),
 )
 def s3_unsupported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that clickhouse returns an error when column defined in `PARTITION BY` clause has unsupported type."""
@@ -110,7 +110,7 @@ def s3_unsupported_types(self, uri, uri_readonly, minio_root_user, minio_root_pa
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_SupportedTypes("1.0"),
+    RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
 def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse supports all the characters in the partition key except `{}\/"'*?`."""
@@ -159,7 +159,7 @@ def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_UnsupportedTypes("1.0"),
+    RQ_HivePartitioning_Writes_DataTypesUnsupported("1.0"),
 )
 def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse does not support the characters in the partition key `{}\/"'*?`."""
@@ -195,7 +195,7 @@ def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_SupportedTypes("1.0"),
+    RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
 def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse supports the partition key with 1024 length and returns an error if length is greater than 1024."""
@@ -316,7 +316,7 @@ def s3_partitions_parts(self, uri, uri_readonly, minio_root_user, minio_root_pas
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_UseHivePartitions("1.0"),
+    RQ_HivePartitioning_Writes_UseHivePartitions("1.0"),
 )
 def s3_use_hive_partitioning(
     self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
@@ -414,7 +414,7 @@ def null_in_column(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_HivePartitionWrites_ReadOnlyBucket("1.0"),
+    RQ_HivePartitioning_Writes_ReadOnlyBucket("1.0"),
 )
 def read_only_bucket(
     self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
@@ -542,9 +542,24 @@ def write_fail(
 
     table_name = "write_fail_s3"
 
+    with Given("I create source table"):
+        create_table(
+            columns="d Int32, i String",
+            table_name="source",
+            engine="Memory",
+            node=node,
+        )
+
+    with When("I insert data into table"):
+        insert_into_table_values(
+            node=node,
+            table_name="source",
+            values=f"(1, '123'), (2, '456'), (3, 'fail'), (4, '789')",
+        )
+
     with Given("I create table for hive partition writes"):
         create_table(
-            columns="d Int32, i Int32",
+            columns="d String, i Int32",
             table_name=table_name,
             engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
             partition_by="d",
@@ -555,7 +570,7 @@ def write_fail(
         insert_into_table_values(
             node=node,
             table_name=table_name,
-            values="(1, 1), (2, throwIf(1, 'Simulated failure'))",
+            values=f"{f"""('1', 1), """*2000} ('{'2'*500}', 1)",
         )
 
     # with Then("I check exit code and message"):
@@ -564,7 +579,7 @@ def write_fail(
 
     with Then("I check data in table"):
         check_select(
-            select=f"SELECT i, d FROM {table_name} WHERE d = 1 ORDER BY i",
+            select=f"SELECT i, d FROM {table_name} WHERE d = '1' ORDER BY i",
             expected_result="1\t1",
             node=node,
         )
