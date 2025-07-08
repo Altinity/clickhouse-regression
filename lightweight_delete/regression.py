@@ -54,6 +54,20 @@ xfails = {
     "concurrent alter and delete/:/concurrent delete drop partition/:": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/57750")
     ],
+    "/lightweight delete/alter after delete/SummingMergeTree/clear column after delete/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/83437",
+            check_clickhouse_version(">=25.7"),
+        )
+    ],
+    "/lightweight delete/alter after delete/SummingMergeTree/drop column after delete/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/82821",
+            check_clickhouse_version(">=25.7"),
+        )
+    ],
 }
 
 xflags = {}
