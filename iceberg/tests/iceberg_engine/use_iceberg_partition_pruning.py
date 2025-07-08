@@ -1,9 +1,7 @@
 import pyarrow as pa
 
-
 from testflows.core import *
 from testflows.asserts import error
-from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 from datetime import datetime, timedelta
 
 from pyiceberg.schema import Schema, NestedField
@@ -21,17 +19,19 @@ from pyiceberg.transforms import (
     TruncateTransform,
 )
 
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
+
+import iceberg.tests.steps.common as common
 import iceberg.tests.steps.metrics as metrics
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
-import iceberg.tests.steps.common as common
 
 
 @TestScenario
 def check_iceberg_partition_pruning_with_integer_type(
     self, minio_root_user, minio_root_password, node=None
 ):
-    """Check iceberg partition pruning with integer type."""
+    """Check that iceberg partition pruning works with integer type."""
     if node is None:
         node = self.context.node
 
@@ -60,7 +60,7 @@ def check_iceberg_partition_pruning_with_integer_type(
             ),
         )
 
-    with When("partition table by integer column"):
+    with When("partition table by integer column with identity transform"):
         partition_spec = PartitionSpec(
             PartitionField(
                 source_id=3,
@@ -81,14 +81,14 @@ def check_iceberg_partition_pruning_with_integer_type(
             sort_order=SortOrder(),
         )
 
-    with And("create Iceberg database in ClickHouse"):
+    with And("create DatalakeCatalog database"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
 
-    with And("insert random data into iceberg table"):
+    with And("insert data into iceberg table"):
         length = 20
         string_values = [str(i) for i in range(length)]
         boolean_values = [True if i % 2 == 0 else False for i in range(length)]
@@ -140,13 +140,13 @@ def check_iceberg_partition_pruning_with_integer_type(
             with And("check that output is correct"):
                 assert result.output.strip() == "\n".join(rows[i:]), error()
 
-            with And("check iceberg_partition_pruned_files from ProfileEvents"):
+            with And("check IcebergPartitionPrunedFiles from ProfileEvents"):
                 partition_pruned_files = metrics.get_IcebergPartitionPrunedFiles(
                     log_comment=log_comment_with_partition_pruning,
                 )
                 assert int(partition_pruned_files.output.strip()) == i, error()
 
-            with And("check that s3_read_requests_count is correct"):
+            with And("check that S3ReadRequestsCount is correct"):
                 # 2 requests for each row: one for metadata and one for data
                 # 3-5 requests for metadata files
                 s3_read_requests_count = metrics.get_S3ReadRequestsCount(
@@ -206,8 +206,8 @@ def check_iceberg_partition_pruning_with_integer_type(
 def check_partition_pruning_with_complex_where_clause(
     self, minio_root_user, minio_root_password
 ):
-    """Check that iceberg partition pruning works when selecting from iceberg
-    table with complex where clause that includes multiple columns.
+    """Check that Iceberg partition pruning works when selecting from an Iceberg
+    table with a complex WHERE clause that includes multiple columns.
     """
     table_name = f"table_{getuid()}"
     namespace = f"namespace_{getuid()}"
@@ -221,7 +221,9 @@ def check_partition_pruning_with_complex_where_clause(
         )
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with And("define table schema with three columns: string, boolean, integer"):
+    with And(
+        "define table schema with four columns: string, boolean, integer, datetime"
+    ):
         schema = Schema(
             NestedField(
                 field_id=1, name="string", field_type=StringType(), required=False
@@ -278,15 +280,15 @@ def check_partition_pruning_with_complex_where_clause(
             sort_order=SortOrder(),
         )
 
-    with And("create Iceberg database in ClickHouse"):
+    with And("create DatalakeCatalog database"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
 
-    with And("insert random data into iceberg table"):
-        length = 20
+    with And("insert data into iceberg table"):
+        length = 100
         string_values = [str(i) for i in range(length)]
         boolean_values = [True if i % 2 == 0 else False for i in range(length)]
         integer_values = [i for i in range(length)]
@@ -328,29 +330,32 @@ def check_partition_pruning_with_complex_where_clause(
             use_cache_for_count_from_files="0",
             log_comment=log_comment_with_partition_pruning,
         )
-        assert result.output.strip() == "10	true	10	2023-01-16 01:00:00.000000", error()
+        assert (
+            result.output.strip()
+            == "10	true	10	2023-01-16 01:00:00.000000\n20	true	20	2022-01-31 01:00:00.000000\n52	true	52	2019-01-07 01:00:00.000000\n62	true	62	2018-01-22 01:00:00.000000"
+        ), error()
 
     with And("check IcebergPartitionPrunedFiles from ProfileEvents"):
         partition_pruned_files = metrics.get_IcebergPartitionPrunedFiles(
             log_comment=log_comment_with_partition_pruning,
         )
-        assert int(partition_pruned_files.output.strip()) == 13, error()
+        assert int(partition_pruned_files.output.strip()) == 53, error()
 
     with And("check IcebergMinMaxIndexPrunedFiles from ProfileEvents"):
         min_max_pruned_files = metrics.get_IcebergMinMaxIndexPrunedFiles(
             log_comment=log_comment_with_partition_pruning,
         )
         if check_clickhouse_version(">=25.4")(self):
-            assert int(min_max_pruned_files.output.strip()) == 6, error()
+            assert int(min_max_pruned_files.output.strip()) == 43, error()
 
-    with And("check that s3_read_requests_count is correct"):
+    with And("check that S3ReadRequestsCount is correct"):
         s3_read_requests_count = metrics.get_S3ReadRequestsCount(
             log_comment=log_comment_with_partition_pruning,
         )
         if check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self):
-            assert 5 <= int(s3_read_requests_count.output.strip()) <= 7, error()
+            assert 10 <= int(s3_read_requests_count.output.strip()) <= 16, error()
         else:
-            assert 17 <= int(s3_read_requests_count.output.strip()) <= 19, error()
+            assert 95 <= int(s3_read_requests_count.output.strip()) <= 100, error()
 
     with And("read data from ClickHouse with partition pruning disabled"):
         log_comment_without_partition_pruning = f"without_partition_pruning_{getuid()}"
@@ -366,18 +371,22 @@ def check_partition_pruning_with_complex_where_clause(
             use_cache_for_count_from_files="0",
             log_comment=log_comment_without_partition_pruning,
         )
-        assert result.output.strip() == "10	true	10	2023-01-16 01:00:00.000000", error()
+        assert (
+            result.output.strip()
+            == "10	true	10	2023-01-16 01:00:00.000000\n20	true	20	2022-01-31 01:00:00.000000\n52	true	52	2019-01-07 01:00:00.000000\n62	true	62	2018-01-22 01:00:00.000000"
+        ), error()
 
-    with And("check iceberg_partition_pruned_files from ProfileEvents"):
+    with And("check IcebergPartitionPrunedFiles from ProfileEvents"):
         partition_pruned_files = metrics.get_IcebergPartitionPrunedFiles(
             log_comment=log_comment_without_partition_pruning,
         )
         assert int(partition_pruned_files.output.strip()) == 0, error()
-    with And("check that s3_read_requests_count is correct"):
+
+    with And("check that S3ReadRequestsCount is correct"):
         s3_read_requests_count = metrics.get_S3ReadRequestsCount(
             log_comment=log_comment_without_partition_pruning,
         )
-        assert 43 <= int(s3_read_requests_count.output.strip()) <= 45, error()
+        assert 200 <= int(s3_read_requests_count.output.strip()) <= 210, error()
 
 
 @TestFeature
