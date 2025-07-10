@@ -15,7 +15,7 @@ from pyiceberg.types import (
     NestedField,
     ListType,
 )
-from pyiceberg.partitioning import PartitionSpec, PartitionField
+from pyiceberg.partitioning import PartitionSpec
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
@@ -418,7 +418,7 @@ def recreate_table_and_database(self, minio_root_user, minio_root_password):
         assert "Bob\t123.45\t30" in result.output, error()
         assert "Charlie\t67.89\t40" in result.output, error()
 
-    with And(f"delete table {namespace}.{table_name} if already exists"):
+    with And(f"delete table {namespace}.{table_name}"):
         catalog_steps.drop_iceberg_table(
             catalog=catalog, namespace=namespace, table_name=table_name
         )
