@@ -351,6 +351,7 @@ def multiple_tables(self, minio_root_user, minio_root_password):
                     namespace=namespace,
                     table_name=table_name_1,
                     format="Values",
+                    order_by="tuple(*)",
                 )
                 assert (
                     result_1.output.strip() == "('Alice',195.23,20),('Bob',123.45,30)"
@@ -360,6 +361,7 @@ def multiple_tables(self, minio_root_user, minio_root_password):
                     namespace=namespace,
                     table_name=table_name_2,
                     format="Values",
+                    order_by="tuple(*)",
                 )
                 assert (
                     result_2.output.strip() == "('David',20,27),('Eve',30,35)"
