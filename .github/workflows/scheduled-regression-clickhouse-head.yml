@@ -16,12 +16,12 @@ jobs:
     secrets: inherit
 
   clickhouse-head-arm-with-analyzer-zookeeper:
-   uses: ./.github/workflows/run-regression.yml
-   with:
-     package: "docker://clickhouse/clickhouse-server:head-alpine"
-     extra_args: '--with-analyzer'
-     arch: arm64
-   secrets: inherit
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: "docker://clickhouse/clickhouse-server:head-alpine"
+      extra_args: '--with-analyzer'
+      arch: arm64
+    secrets: inherit
 
   clickhouse-head-x86-with-analyzer-keeper:
     uses: ./.github/workflows/run-regression.yml
