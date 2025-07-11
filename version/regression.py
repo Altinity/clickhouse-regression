@@ -33,7 +33,7 @@ xfails = {
         ),
     ],
     "/version/altinity/issue link in binary/*": [
-        (Fail, "known issue", check_clickhouse_version("<23.8")),
+        (Fail, "known issue", check_clickhouse_version("<25.3")),
     ],
 }
 
