@@ -15,10 +15,10 @@ jobs:
       arch: x86
     secrets: inherit
 
-#  clickhouse-23-3-arm-zookeeper:
-#    uses: ./.github/workflows/run-regression.yml
-#    with:
-#      package: docker://clickhouse/clickhouse-server:23.3.22.3-alpine
-#      version: '23.3.22.3'
-#      arch: arm64
-#    secrets: inherit
+  clickhouse-23-3-arm-zookeeper:
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: docker://clickhouse/clickhouse-server:23.3.22.3-alpine
+      version: '23.3.22.3'
+      arch: arm64
+    secrets: inherit
