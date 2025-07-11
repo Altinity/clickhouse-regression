@@ -26,7 +26,14 @@ xfails = {
         ),
     ],
     "/version/altinity/embedded logos/*": [
-        (Fail, "fix not introduced before the given version", check_clickhouse_version("<25.3.3.20152")),
+        (
+            Fail,
+            "fix not introduced before the given version",
+            check_clickhouse_version("<25.3.3.20152"),
+        ),
+    ],
+    "/version/altinity/issue link in binary/*": [
+        (Fail, "known issue", check_clickhouse_version("<23.8")),
     ],
 }
 
