@@ -142,7 +142,7 @@ def error_message(self):
 
     finally:
         with Finally("the ClickHouse process is restarted"):
-            node.restart()
+            node.restart(safe=False)
 
 
 @TestScenario
