@@ -56,7 +56,7 @@ xfails = {
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/81272",
-            check_clickhouse_version("<25.6"),
+            check_clickhouse_version("<25.7"),
         )
     ],
     "/iceberg/iceberg engine/glue catalog/nested datatypes/*": [
