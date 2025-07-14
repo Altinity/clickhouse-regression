@@ -424,9 +424,18 @@ def clean_minio_bucket(
             "--recursive",
         ]
 
+        env = {
+            "AWS_ACCESS_KEY_ID": s3_access_key_id,
+            "AWS_SECRET_ACCESS_KEY": s3_secret_access_key,
+        }
+
+        current_env = os.environ.copy()
+        current_env.update(env)
+
         try:
             result = subprocess.run(
                 cmd,
+                env=current_env,
                 check=True,
                 capture_output=True,
             )
