@@ -1242,6 +1242,8 @@ local_filesystem_read_prefetch = r"""'{"default":"0"}'"""
 
 lock_acquire_timeout = r"""'{"default":"120"}'"""
 
+lock_object_storage_task_distribution_ms = r"""'{"default":"0"}'"""
+
 log_comment = r"""'{"default":""}'"""
 
 log_formatted_queries = r"""'{"default":"0"}'"""
@@ -2406,7 +2408,7 @@ use_hive_partitioning = r"""'{"default":"1"}'"""
 
 use_iceberg_metadata_files_cache = r"""'{"default":"1"}'"""
 
-use_iceberg_partition_pruning = r"""'{"default":"0"}'"""
+use_iceberg_partition_pruning = r"""'{"default":"1"}'"""
 
 use_index_for_in_with_subqueries = r"""'{"default":"1"}'"""
 
