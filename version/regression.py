@@ -33,7 +33,18 @@ xfails = {
         ),
     ],
     "/version/altinity/issue link in binary/*": [
-        (Fail, "https://github.com/Altinity/ClickHouse/pull/899", check_clickhouse_version("<25.3")),
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/pull/899",
+            check_clickhouse_version("<25.3"),
+        ),
+    ],
+    "/version/altinity/error message/*": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/pull/899",
+            check_clickhouse_version("<25.3"),
+        ),
     ],
 }
 
