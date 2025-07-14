@@ -5,6 +5,8 @@ services:
     extends:
       file: ../../docker-compose/clickhouse-service.yml
       service: clickhouse
+    environment:
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
