@@ -1,9 +1,15 @@
-from datetime import date, timedelta
+import os
+import boto3
 import random
+import subprocess
+import pyarrow as pa
+import string
+import pyiceberg
 
 from testflows.core import *
+from decimal import Decimal
+from datetime import date, timedelta, time, datetime
 
-import pyiceberg
 from pyiceberg.catalog import load_catalog
 from pyiceberg.schema import Schema, NestedField
 from pyiceberg.types import (
@@ -29,13 +35,8 @@ from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 from pyiceberg.catalog.glue import GlueCatalog
 
-import pyarrow as pa
-import boto3
-import string
-from datetime import datetime, time
-from decimal import Decimal
-
 from helpers.common import getuid
+
 
 CATALOG_TYPE = "rest"
 
@@ -357,30 +358,85 @@ def create_iceberg_table_with_five_columns(
     return table
 
 
+@TestStep(Given)
+def list_objects_cli(
+    self,
+    bucket_name,
+    s3_endpoint,
+    s3_access_key_id,
+    s3_secret_access_key,
+    recursive=True,
+):
+    """Return a list of keys in *bucket_name*."""
+    cmd = ["aws", "--endpoint-url", s3_endpoint, "s3", "ls", f"s3://{bucket_name}"]
+
+    if recursive:
+        cmd.append("--recursive")
+
+    env = {
+        "AWS_ACCESS_KEY_ID": s3_access_key_id,
+        "AWS_SECRET_ACCESS_KEY": s3_secret_access_key,
+    }
+
+    current_env = os.environ.copy()
+    current_env.update(env)
+
+    try:
+        result = subprocess.run(
+            cmd, env=current_env, capture_output=True, text=True, check=True
+        )
+        stdout = result.stdout
+    except subprocess.CalledProcessError as e:
+        note(f"AWS CLI command failed: {e}")
+        note(f"Error output: {e.stderr}")
+        raise
+
+    keys = [line.split(maxsplit=3)[-1] for line in stdout.splitlines() if line.strip()]
+    return keys
+
+
 @TestStep(When)
 def clean_minio_bucket(
-    self, bucket_name, s3_endpoint, s3_access_key_id, s3_secret_access_key
+    self,
+    bucket_name,
+    s3_endpoint,
+    s3_access_key_id,
+    s3_secret_access_key,
 ):
-    """Delete all objects from the MinIO bucket."""
-    s3_client = boto3.client(
-        "s3",
-        endpoint_url=s3_endpoint,
-        aws_access_key_id=s3_access_key_id,
-        aws_secret_access_key=s3_secret_access_key,
-    )
+    """Remove every object in *bucket_name*."""
+    with Given("list objects"):
+        objects = list_objects_cli(
+            bucket_name=bucket_name,
+            s3_endpoint=s3_endpoint,
+            s3_access_key_id=s3_access_key_id,
+            s3_secret_access_key=s3_secret_access_key,
+        )
+        note(f"{len(objects)} object(s) found in {bucket_name}")
 
-    # List all objects in the bucket
-    objects = s3_client.list_objects_v2(Bucket=bucket_name)
+    if objects:
+        cmd = [
+            "aws",
+            "--endpoint-url",
+            s3_endpoint,
+            "s3",
+            "rm",
+            f"s3://{bucket_name}",
+            "--recursive",
+        ]
 
-    if "Contents" in objects:
-        delete_objects = {
-            "Objects": [{"Key": obj["Key"]} for obj in objects["Contents"]]
-        }
-        s3_client.delete_objects(Bucket=bucket_name, Delete=delete_objects)
-        note(f"Deleted {len(delete_objects['Objects'])} objects from {bucket_name}")
-
+        try:
+            result = subprocess.run(
+                cmd,
+                check=True,
+                capture_output=True,
+            )
+            note(f"Emptied {bucket_name}")
+        except subprocess.CalledProcessError as e:
+            note(f"AWS CLI command failed: {e}")
+            note(f"Error output: {e.stderr}")
+            raise
     else:
-        note(f"No objects found in {bucket_name}")
+        note(f"No objects to delete in {bucket_name}")
 
 
 @TestStep(Given)
