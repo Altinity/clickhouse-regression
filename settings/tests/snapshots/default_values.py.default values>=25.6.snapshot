@@ -854,6 +854,8 @@ formatdatetime_parsedatetime_m_is_month_name = r"""'{"default":"1"}'"""
 
 fsync_metadata = r"""'{"default":"1"}'"""
 
+function_date_trunc_return_type_behavior = r"""'{"default":"0"}'"""
+
 function_implementation = r"""'{"default":""}'"""
 
 function_json_value_return_type_allow_complex = r"""'{"default":"0"}'"""
