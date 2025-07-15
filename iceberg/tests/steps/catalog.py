@@ -1,5 +1,5 @@
 import os
-import boto3
+# import boto3
 import random
 import subprocess
 import pyarrow as pa
@@ -159,47 +159,47 @@ def create_catalog(self, **kwargs):
 #     yield catalog
 
 
-@TestStep(Given)
-def list_sizes(
-    self,
-    bucket_name: str,
-    prefix: str,
-    s3_endpoint: str,
-    s3_access_key_id: str,
-    s3_secret_access_key: str,
-):
-    """
-    Return (metadata_bytes, parquet_bytes, total_bytes) for everything
-    under `bucket_name/prefix`  on the given MinIO endpoint.
+# @TestStep(Given)
+# def list_sizes(
+#     self,
+#     bucket_name: str,
+#     prefix: str,
+#     s3_endpoint: str,
+#     s3_access_key_id: str,
+#     s3_secret_access_key: str,
+# ):
+#     """
+#     Return (metadata_bytes, parquet_bytes, total_bytes) for everything
+#     under `bucket_name/prefix`  on the given MinIO endpoint.
 
-    * “metadata” = any key that contains "/metadata/"
-    * “parquet”  = any key that ends with ".parquet"
-    * the rest is ignored for the two subtotals but still counted in total
-    """
-    s3 = boto3.client(
-        "s3",
-        endpoint_url=s3_endpoint,
-        aws_access_key_id=s3_access_key_id,
-        aws_secret_access_key=s3_secret_access_key,
-    )
+#     * “metadata” = any key that contains "/metadata/"
+#     * “parquet”  = any key that ends with ".parquet"
+#     * the rest is ignored for the two subtotals but still counted in total
+#     """
+#     s3 = boto3.client(
+#         "s3",
+#         endpoint_url=s3_endpoint,
+#         aws_access_key_id=s3_access_key_id,
+#         aws_secret_access_key=s3_secret_access_key,
+#     )
 
-    paginator = s3.get_paginator("list_objects_v2")
-    meta_bytes = parquet_bytes = total_bytes = 0
+#     paginator = s3.get_paginator("list_objects_v2")
+#     meta_bytes = parquet_bytes = total_bytes = 0
 
-    for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
-        for o in page.get("Contents", []):
-            size = o["Size"]
-            key = o["Key"]
-            total_bytes += size
-            if "/metadata/" in key:
-                meta_bytes += size
-            elif key.endswith(".parquet"):
-                parquet_bytes += size
+#     for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+#         for o in page.get("Contents", []):
+#             size = o["Size"]
+#             key = o["Key"]
+#             total_bytes += size
+#             if "/metadata/" in key:
+#                 meta_bytes += size
+#             elif key.endswith(".parquet"):
+#                 parquet_bytes += size
 
-    note(
-        f"metadata={meta_bytes:,} B  parquet={parquet_bytes:,} B  total={total_bytes:,} B"
-    )
-    return meta_bytes, parquet_bytes, total_bytes
+#     note(
+#         f"metadata={meta_bytes:,} B  parquet={parquet_bytes:,} B  total={total_bytes:,} B"
+#     )
+#     return meta_bytes, parquet_bytes, total_bytes
 
 
 @TestStep(Given)
