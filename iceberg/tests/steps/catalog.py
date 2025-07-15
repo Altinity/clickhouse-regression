@@ -33,7 +33,8 @@ from pyiceberg.types import (
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
-from pyiceberg.catalog.glue import GlueCatalog
+
+# from pyiceberg.catalog.glue import GlueCatalog
 
 from helpers.common import getuid
 
@@ -149,13 +150,13 @@ def create_catalog(self, **kwargs):
         raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
 
 
-@TestStep(Given)
-def create_aws_glue_catalog(self, warehouse, name=None):
-    if name is None:
-        name = f"glue_catalog_{getuid()}"
+# @TestStep(Given)
+# def create_aws_glue_catalog(self, warehouse, name=None):
+#     if name is None:
+#         name = f"glue_catalog_{getuid()}"
 
-    catalog = GlueCatalog(name=name, warehouse=warehouse)
-    yield catalog
+#     catalog = GlueCatalog(name=name, warehouse=warehouse)
+#     yield catalog
 
 
 @TestStep(Given)
