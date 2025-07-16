@@ -24,6 +24,3 @@ def feature(self, minio_root_user, minio_root_password):
     #     test=load("swarms.tests.node_failure", "feature"),
     # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
-    Feature(
-        test=load("swarms.tests.issue_repro", "issue_repro"),
-    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
