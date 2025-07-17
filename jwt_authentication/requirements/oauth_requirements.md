@@ -38,9 +38,9 @@ OAuth 2.0 defines several roles and token types used in the process of authorizi
 
 OAuth 2.0 typically issues two types of tokens:
 
-    **Access Token:** A short-lived token used by the client to access protected resources. In many implementations, the access token is a JWT that encodes user identity and scopes (permissions).
+    * **Access Token:** A short-lived token used by the client to access protected resources. In many implementations, the access token is a JWT that encodes user identity and scopes (permissions).
 
-    **Refresh Token:** An optional long-lived token used to obtain new access tokens without re-authenticating the user.
+    * **Refresh Token:** An optional long-lived token used to obtain new access tokens without re-authenticating the user.
 
 
 ## Overview of the Functionality
