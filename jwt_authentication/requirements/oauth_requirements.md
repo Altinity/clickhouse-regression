@@ -16,13 +16,13 @@
         * 6.1.1 [Authentication](#authentication)
             * 6.1.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication](#rqsrs-042oauthgrafanaazureauthentication)
         * 6.1.2 [User Role Mapping](#user-role-mapping)
-            * 6.1.2.1 [User has permission to view groups in Azure and ClickHouse has roles with the same names](#user-has-permission-to-view-groups-in-azure-and-clickhouse-has-roles-with-the-same-names)
+            * 6.1.2.1 [User Has Permission To View Groups in Azure and ClickHouse Has Roles With the Same Names](#user-has-permission-to-view-groups-in-azure-and-clickhouse-has-roles-with-the-same-names)
                 * 6.1.2.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingsamename)
-            * 6.1.2.2 [User can view groups in Azure but there are no matching roles in ClickHouse](#user-can-view-groups-in-azure-but-there-are-no-matching-roles-in-clickhouse)
+            * 6.1.2.2 [User Can View Groups in Azure but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-azure-but-there-are-no-matching-roles-in-clickhouse)
                 * 6.1.2.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnomatchingroles)
-            * 6.1.2.3 [User does NOT have permission to view their groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
+            * 6.1.2.3 [User Does Not Have Permission To View Their Groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
                 * 6.1.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
-            * 6.1.2.4 [In ClickHouse there is no default role specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 6.1.2.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
                 * 6.1.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
         * 6.1.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
             * 6.1.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
@@ -189,28 +189,28 @@ printf "CLIENT_ID=<Client ID (Application ID)>\nTENANT_ID=<Tenant ID>\nCLIENT_SE
 
 #### User Role Mapping
 
-##### User has permission to view groups in Azure and ClickHouse has roles with the same names
+##### User Has Permission To View Groups in Azure and ClickHouse Has Roles With the Same Names
 
 ###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName
 version: 1.0
 
 When a user has permission to view groups in Azure and [ClickHouse] has roles with the same names, [ClickHouse] SHALL map the user's Azure group membership to the corresponding [ClickHouse] roles.
 
-##### User can view groups in Azure but there are no matching roles in ClickHouse
+##### User Can View Groups in Azure but There Are No Matching Roles in ClickHouse
 
 ###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Azure but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
-##### User does NOT have permission to view their groups in Azure
+##### User Does Not Have Permission To View Their Groups in Azure
 
 ###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups
 version: 1.0
 
 When a user does not have permission to view their groups in Azure, [ClickHouse] SHALL assign a default role to the user
 
-##### In ClickHouse there is no default role specified
+##### In ClickHouse There Is No Default Role Specified
 
 ###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole
 version: 1.0
