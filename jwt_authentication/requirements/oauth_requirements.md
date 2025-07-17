@@ -4,8 +4,8 @@
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
+    * 1.1 [Structure of OAuth](#structure-of-oauth)
 * 2 [Definitions](#definitions)
-    * 2.1 [Structure of OAuth](#structure-of-oauth)
 * 3 [Overview of the Functionality](#overview-of-the-functionality)
     * 3.1 [Access Token Processors](#access-token-processors)
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
@@ -25,12 +25,6 @@ Through OAuth 2.0, ClickHouse can accept access tokens issued by an identity pro
 
 This approach supports a wide range of identity federation use cases and enables ClickHouse to function within modern enterprise authentication ecosystems.
 
-## Definitions
-
-- **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include Azure Active Directory, Google Identity, and Okta.
-- **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
-- **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
-
 ### Structure of OAuth
 
 OAuth 2.0 defines several roles and token types used in the process of authorizing access to protected resources:
@@ -47,6 +41,12 @@ OAuth 2.0 typically issues two types of tokens:
   * **Access Token:** A short-lived token used by the client to access protected resources. In many implementations, the access token is a JWT that encodes user identity and scopes (permissions).
 
   * **Refresh Token:** An optional long-lived token used to obtain new access tokens without re-authenticating the user.
+
+## Definitions
+
+- **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include Azure Active Directory, Google Identity, and Okta.
+- **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
+- **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
 
 
 ## Overview of the Functionality
