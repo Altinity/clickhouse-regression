@@ -328,7 +328,6 @@ version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
 
-
 ##### Expired Token Handling
 
 ###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling

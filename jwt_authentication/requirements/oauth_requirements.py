@@ -387,7 +387,6 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     description=(
         "[ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=5,
@@ -948,7 +947,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
-
 
 ##### Expired Token Handling
 
