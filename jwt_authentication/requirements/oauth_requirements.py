@@ -309,8 +309,8 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
         "\n"
     ),
     link=None,
-    level=4,
-    num="6.1.4.5",
+    level=5,
+    num="6.1.4.4.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body = Requirement(
@@ -326,7 +326,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=5,
-    num="6.1.4.5.1",
+    num="6.1.4.4.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_sub = Requirement(
@@ -342,7 +342,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=5,
-    num="6.1.4.5.2",
+    num="6.1.4.4.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_aud = Requirement(
@@ -358,7 +358,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=5,
-    num="6.1.4.5.3",
+    num="6.1.4.4.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_exp = Requirement(
@@ -374,8 +374,8 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
         "\n"
     ),
     link=None,
-    level=4,
-    num="6.1.4.6",
+    level=5,
+    num="6.1.4.4.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement(
@@ -396,7 +396,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement
     ),
     link=None,
     level=5,
-    num="6.1.4.7.1",
+    num="6.1.4.5.1",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -536,34 +536,34 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature",
-            level=4,
-            num="6.1.4.5",
+            level=5,
+            num="6.1.4.4.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body",
             level=5,
-            num="6.1.4.5.1",
+            num="6.1.4.4.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.sub",
             level=5,
-            num="6.1.4.5.2",
+            num="6.1.4.4.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.aud",
             level=5,
-            num="6.1.4.5.3",
+            num="6.1.4.4.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.exp",
-            level=4,
-            num="6.1.4.6",
+            level=5,
+            num="6.1.4.4.9",
         ),
-        Heading(name="Expired Token Handling", level=4, num="6.1.4.7"),
+        Heading(name="Expired Token Handling", level=4, num="6.1.4.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
             level=5,
-            num="6.1.4.7.1",
+            num="6.1.4.5.1",
         ),
     ),
     requirements=(
@@ -633,13 +633,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 6.1.4.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
                 * 6.1.4.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.alg](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
                 * 6.1.4.4.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.typ](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
-            * 6.1.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
-                * 6.1.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
-                * 6.1.4.5.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
-                * 6.1.4.5.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
-            * 6.1.4.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
-            * 6.1.4.7 [Expired Token Handling](#expired-token-handling)
-                * 6.1.4.7.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+                * 6.1.4.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
+                * 6.1.4.4.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
+                * 6.1.4.4.7 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
+                * 6.1.4.4.8 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
+                * 6.1.4.4.9 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
+            * 6.1.4.5 [Expired Token Handling](#expired-token-handling)
+                * 6.1.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -888,7 +888,7 @@ version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `typ` value that is not supported by [ClickHouse].
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a JWT token that has an invalid signature.
@@ -908,7 +908,7 @@ version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `aud` value that does not match the expected audience for the JWT token.
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.exp
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.exp
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
