@@ -89,18 +89,18 @@ This approach supports a wide range of identity federation use cases and enables
 
 OAuth 2.0 defines several roles and token types used in the process of authorizing access to protected resources:
 
-**Resource Owner:** The user or system that owns the data or resource.
+    **Resource Owner:** The user or system that owns the data or resource.
 
-**Client:** The application requesting access on behalf of the resource owner.
-Authorization Server: The server that authenticates the resource owner and issues access tokens to the client.
+    **Client:** The application requesting access on behalf of the resource owner.
+    **Authorization Server:** The server that authenticates the resource owner and issues access tokens to the client.
 
-**Resource Server:** The server (e.g., ClickHouse) that hosts the protected resources and verifies access tokens.
+    **Resource Server:** The server (e.g., ClickHouse) that hosts the protected resources and verifies access tokens.
 
 OAuth 2.0 typically issues two types of tokens:
 
-**Access Token:** A short-lived token used by the client to access protected resources. In many implementations, the access token is a JWT that encodes user identity and scopes (permissions).
+    **Access Token:** A short-lived token used by the client to access protected resources. In many implementations, the access token is a JWT that encodes user identity and scopes (permissions).
 
-**Refresh Token:** An optional long-lived token used to obtain new access tokens without re-authenticating the user.
+    **Refresh Token:** An optional long-lived token used to obtain new access tokens without re-authenticating the user.
 
 
 ## Overview of the Functionality
