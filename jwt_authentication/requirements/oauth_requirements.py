@@ -78,6 +78,54 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Disabled = Re
     num="6.1.1.4",
 )
 
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_SameName = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user has permission to view groups in Azure and ClickHouse has roles with the same names, [ClickHouse] SHALL map the user's Azure group membership to the corresponding ClickHouse roles.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="6.1.2.1.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoMatchingRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user has permission to view groups in Azure but there are no matching roles in ClickHouse, [ClickHouse] SHALL assign a default role to the user.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="6.1.2.2.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoPermissionToViewGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user does not have permission to view their groups in Azure, [ClickHouse] SHALL assign a default role to the user\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="6.1.2.3.1",
+)
+
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement(
     name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
     version="1.0",
@@ -86,7 +134,88 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].\n"
+        "[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].\n" "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.1.3.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The user SHALL not receive a valid JWT token if the provided credentials are incorrect. In this case, [ClickHouse] SHALL return an HTTP 401 Unauthorized response to [Grafana].\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.1.4.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_MissingSecret = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The user SHALL not receive a valid JWT token if the `CLIENT_SECRET` is missing from the HTTP request.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.1.4.2",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_EmptyString = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The user SHALL not receive a valid JWT token if the provided credentials are an empty string.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.1.4.3",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_Null = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The user SHALL not receive a valid JWT token if the provided credentials are null.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.1.4.4",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_NonAlphanumericCharacters = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "The user SHALL not receive a valid JWT token if the provided credentials contain non-alphanumeric characters such as emojis.\n"
+        "\n"
+        "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
@@ -95,7 +224,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement
     ),
     link=None,
     level=4,
-    num="6.1.2.1",
+    num="6.1.4.5",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -144,11 +273,68 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="6.1.1.4",
         ),
-        Heading(name="Expired Token Handling", level=3, num="6.1.2"),
+        Heading(name="User Role Mapping", level=3, num="6.1.2"),
+        Heading(
+            name="User has permission to view groups in Azure and ClickHouse has roles with the same names",
+            level=4,
+            num="6.1.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName",
+            level=5,
+            num="6.1.2.1.1",
+        ),
+        Heading(
+            name="User can view groups in Azure but there are no matching roles in ClickHouse",
+            level=4,
+            num="6.1.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles",
+            level=5,
+            num="6.1.2.2.1",
+        ),
+        Heading(
+            name="User does NOT have permission to view their groups in Azure",
+            level=4,
+            num="6.1.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups",
+            level=5,
+            num="6.1.2.3.1",
+        ),
+        Heading(name="Expired Token Handling", level=3, num="6.1.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
             level=4,
-            num="6.1.2.1",
+            num="6.1.3.1",
+        ),
+        Heading(name="Invalid Credentials When Requesting a JWT", level=3, num="6.1.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials",
+            level=4,
+            num="6.1.4.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret",
+            level=4,
+            num="6.1.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString",
+            level=4,
+            num="6.1.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null",
+            level=4,
+            num="6.1.4.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters",
+            level=4,
+            num="6.1.4.5",
         ),
     ),
     requirements=(
@@ -156,7 +342,15 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Enabled,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Disabled,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_SameName,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoMatchingRoles,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoPermissionToViewGroups,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_MissingSecret,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_EmptyString,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_Null,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_NonAlphanumericCharacters,
     ),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
@@ -179,8 +373,21 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             * 6.1.1.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentity)
             * 6.1.1.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentityenabled)
             * 6.1.1.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentitydisabled)
-        * 6.1.2 [Expired Token Handling](#expired-token-handling)
-            * 6.1.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+        * 6.1.2 [User Role Mapping](#user-role-mapping)
+            * 6.1.2.1 [User has permission to view groups in Azure and ClickHouse has roles with the same names](#user-has-permission-to-view-groups-in-azure-and-clickhouse-has-roles-with-the-same-names)
+                * 6.1.2.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingsamename)
+            * 6.1.2.2 [User can view groups in Azure but there are no matching roles in ClickHouse](#user-can-view-groups-in-azure-but-there-are-no-matching-roles-in-clickhouse)
+                * 6.1.2.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnomatchingroles)
+            * 6.1.2.3 [User does NOT have permission to view their groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
+                * 6.1.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
+        * 6.1.3 [Expired Token Handling](#expired-token-handling)
+            * 6.1.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+        * 6.1.4 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
+            * 6.1.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
+            * 6.1.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
+            * 6.1.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsemptystring)
+            * 6.1.4.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnull)
+            * 6.1.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnonalphanumericcharacters)
 
     
 ## Introduction
@@ -337,12 +544,64 @@ version: 1.0
 
 When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
 
+#### User Role Mapping
+
+##### User has permission to view groups in Azure and ClickHouse has roles with the same names
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName
+version: 1.0
+
+When a user has permission to view groups in Azure and ClickHouse has roles with the same names, [ClickHouse] SHALL map the user's Azure group membership to the corresponding ClickHouse roles.
+
+##### User can view groups in Azure but there are no matching roles in ClickHouse
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles
+version: 1.0
+
+When a user has permission to view groups in Azure but there are no matching roles in ClickHouse, [ClickHouse] SHALL assign a default role to the user.
+
+##### User does NOT have permission to view their groups in Azure
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups
+version: 1.0
+
+When a user does not have permission to view their groups in Azure, [ClickHouse] SHALL assign a default role to the user
+
 #### Expired Token Handling
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling
 version: 1.0
 
 [ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
+
+#### Invalid Credentials When Requesting a JWT
+
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials
+version: 1.0
+
+The user SHALL not receive a valid JWT token if the provided credentials are incorrect. In this case, [ClickHouse] SHALL return an HTTP 401 Unauthorized response to [Grafana].
+
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret
+version: 1.0
+
+The user SHALL not receive a valid JWT token if the `CLIENT_SECRET` is missing from the HTTP request.
+
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString
+version: 1.0
+
+The user SHALL not receive a valid JWT token if the provided credentials are an empty string.
+
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null
+version: 1.0
+
+The user SHALL not receive a valid JWT token if the provided credentials are null.
+
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters
+version: 1.0
+
+The user SHALL not receive a valid JWT token if the provided credentials contain non-alphanumeric characters such as emojis.
+
+
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
