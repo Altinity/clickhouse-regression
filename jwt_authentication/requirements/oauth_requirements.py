@@ -18,6 +18,12 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication = Requirement(
     description=(
         "[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
         "\n"
+        "The values SHALL be stored inside the `.env` file which can be generated as:\n"
+        "\n"
+        "```bash\n"
+        'printf "CLIENT_ID=<Client ID (Application ID)>\\nTENANT_ID=<Tenant ID>\\nCLIENT_SECRET=<Client Secret>\\n" > .env\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
@@ -306,6 +312,12 @@ To authenticate with OAuth, users must obtain an access token from the identity 
 version: 1.0
 
 [ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+
+The values SHALL be stored inside the `.env` file which can be generated as:
+
+```bash
+printf "CLIENT_ID=<Client ID (Application ID)>\nTENANT_ID=<Tenant ID>\nCLIENT_SECRET=<Client Secret>\n" > .env
+```
 
 #### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity
 version: 1.0
