@@ -8,19 +8,79 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_042_OAuth_Authentication = Requirement(
-    name="RQ.SRS-042.OAuth.Authentication",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "This requirement specifies that ClickHouse must support OAuth 2.0 authentication, allowing users to authenticate using access tokens issued by external identity providers.\n"
+        "[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[Grafana] SHALL support forwarding the same `JWT` token used to authenticate a user in [Grafana] to [ClickHouse] when making requests to the [ClickHouse] data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.2",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Enabled = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Enabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.3",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Disabled = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Disabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.4",
+)
+
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
@@ -28,8 +88,8 @@ RQ_SRS_042_OAuth_Authentication = Requirement(
         "\n"
     ),
     link=None,
-    level=2,
-    num="4.1",
+    level=3,
+    num="6.2.1",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -55,10 +115,42 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Overview of the Functionality", level=1, num="3"),
         Heading(name="Access Token Processors", level=2, num="3.1"),
         Heading(name="Authentication Modes with OAuth Tokens", level=2, num="3.2"),
-        Heading(name="Authentication with OAuth", level=1, num="4"),
-        Heading(name="RQ.SRS-042.OAuth.Authentication", level=2, num="4.1"),
+        Heading(name="Supported Identity Providers", level=1, num="4"),
+        Heading(name="Authentication with OAuth", level=1, num="5"),
+        Heading(name="Azure", level=1, num="6"),
+        Heading(name="Grafana Integration Support", level=2, num="6.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication", level=3, num="6.1.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity",
+            level=3,
+            num="6.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Enabled",
+            level=3,
+            num="6.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Disabled",
+            level=3,
+            num="6.1.4",
+        ),
+        Heading(name="Expired Token Handling", level=2, num="6.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
+            level=3,
+            num="6.2.1",
+        ),
     ),
-    requirements=(RQ_SRS_042_OAuth_Authentication,),
+    requirements=(
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Enabled,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ForwardOAuthIdentity_Disabled,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling,
+    ),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
 # Software Requirements Specification
@@ -71,8 +163,16 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
 * 3 [Overview of the Functionality](#overview-of-the-functionality)
     * 3.1 [Access Token Processors](#access-token-processors)
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
-* 4 [Authentication with OAuth](#authentication-with-oauth)
-    * 4.1 [RQ.SRS-042.OAuth.Authentication](#rqsrs-042oauthauthentication)
+* 4 [Supported Identity Providers](#supported-identity-providers)
+* 5 [Authentication with OAuth](#authentication-with-oauth)
+* 6 [Azure](#azure)
+    * 6.1 [Grafana Integration Support](#grafana-integration-support)
+        * 6.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication](#rqsrs-042oauthgrafanaazureauthentication)
+        * 6.1.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentity)
+        * 6.1.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentityenabled)
+        * 6.1.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationforwardoauthidentitydisabled)
+    * 6.2 [Expired Token Handling](#expired-token-handling)
+        * 6.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -136,6 +236,7 @@ Basic structure:
             <provider>azure</provider>
             <client_id>your-client-id</client_id>
             <tenant_id>your-tenant-id</tenant_id>
+            <cache_lifetime>3600</cache_lifetime>
         </azure_ad>
     </access_token_processors>
 </clickhouse>
@@ -144,6 +245,8 @@ Basic structure:
 Key Parameters:
 
 - **provider:** Specifies the identity provider (for example, `azure`).
+
+- **cache_lifetime:** maximum lifetime of cached token (in seconds). Optional, default: 3600
 
 - **client_id:** The registered application ID in Azure.
 
@@ -182,18 +285,49 @@ When a user is not defined locally, ClickHouse can use the `IdP` as a dynamic so
 ```
 
 
+## Supported Identity Providers
+
+[ClickHouse] SHALL support OAuth 2.0 authentication with various identity providers, including but not limited to:
+
+- Azure Active Directory
+- Google Identity
+
 ## Authentication with OAuth
 
 To authenticate with OAuth, users must obtain an access token from the identity provider and present it to [ClickHouse].
 
-### RQ.SRS-042.OAuth.Authentication
+## Azure
+
+[ClickHouse] SHALL support OAuth 2.0 authentication with Azure Active Directory (Azure AD) as an identity provider.
+
+### Grafana Integration Support
+
+#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication
 version: 1.0
 
-This requirement specifies that ClickHouse must support OAuth 2.0 authentication, allowing users to authenticate using access tokens issued by external identity providers.
+[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
+#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity
+version: 1.0
 
+[Grafana] SHALL support forwarding the same `JWT` token used to authenticate a user in [Grafana] to [ClickHouse] when making requests to the [ClickHouse] data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.
 
+#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Enabled
+version: 1.0
 
+When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.
+
+#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ForwardOAuthIdentity.Disabled
+version: 1.0
+
+When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
+
+### Expired Token Handling
+
+#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling
+version: 1.0
+
+[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
