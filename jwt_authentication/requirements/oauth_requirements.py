@@ -105,6 +105,22 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoDefaultRole = Re
     num="6.1.2.4.1",
 )
 
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoAccessTokenProcessors = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the user to authenticate and access resources. With that [ClickHouse] SHALL also not crash.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="6.1.2.5.1",
+)
+
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials = Requirement(
     name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials",
     version="1.0",
@@ -471,6 +487,16 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=5,
             num="6.1.2.4.1",
         ),
+        Heading(
+            name="Access Token Processors are Missing From ClickHouse Configuration ",
+            level=4,
+            num="6.1.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors",
+            level=5,
+            num="6.1.2.5.1",
+        ),
         Heading(name="Invalid Credentials When Requesting a JWT", level=3, num="6.1.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials",
@@ -572,6 +598,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoMatchingRoles,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoPermissionToViewGroups,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoDefaultRole,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoAccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_MissingSecret,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_EmptyString,
@@ -618,6 +645,8 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 6.1.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
             * 6.1.2.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
                 * 6.1.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
+            * 6.1.2.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+                * 6.1.2.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnoaccesstokenprocessors)
         * 6.1.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
             * 6.1.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
             * 6.1.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
@@ -821,6 +850,13 @@ The user configuration example,
     </my_user>
 </clickhouse>
 ```
+
+##### Access Token Processors are Missing From ClickHouse Configuration 
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors
+version: 1.0
+
+When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the user to authenticate and access resources. With that [ClickHouse] SHALL also not crash.
 
 #### Invalid Credentials When Requesting a JWT
 
