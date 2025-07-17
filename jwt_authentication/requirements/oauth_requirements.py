@@ -8,15 +8,16 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_042_JWT_ValidatorsConfiguration = Requirement(
-    name="RQ.SRS-042.JWT.ValidatorsConfiguration",
+RQ_SRS_042_OAuth_Authentication = Requirement(
+    name="RQ.SRS-042.OAuth.Authentication",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "Placeholder requirement\n"
+        "This requirement specifies that ClickHouse must support OAuth 2.0 authentication, allowing users to authenticate using access tokens issued by external identity providers.\n"
+        "\n"
         "\n"
         "\n"
         "\n"
@@ -28,7 +29,7 @@ RQ_SRS_042_JWT_ValidatorsConfiguration = Requirement(
     ),
     link=None,
     level=2,
-    num="3.1",
+    num="4.1",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -49,14 +50,15 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     children=None,
     headings=(
         Heading(name="Introduction", level=1, num="1"),
-        Heading(name="Structure of OAuth", level=2, num="1.1"),
-        Heading(name="Overview of the Functionality", level=1, num="2"),
-        Heading(name="Access Token Processors", level=2, num="2.1"),
-        Heading(name="Authentication Modes with OAuth Tokens", level=2, num="2.2"),
-        Heading(name="test requirement", level=1, num="3"),
-        Heading(name="RQ.SRS-042.JWT.ValidatorsConfiguration", level=2, num="3.1"),
+        Heading(name="Definitions", level=1, num="2"),
+        Heading(name="Structure of OAuth", level=2, num="2.1"),
+        Heading(name="Overview of the Functionality", level=1, num="3"),
+        Heading(name="Access Token Processors", level=2, num="3.1"),
+        Heading(name="Authentication Modes with OAuth Tokens", level=2, num="3.2"),
+        Heading(name="Authentication with OAuth", level=1, num="4"),
+        Heading(name="RQ.SRS-042.OAuth.Authentication", level=2, num="4.1"),
     ),
-    requirements=(RQ_SRS_042_JWT_ValidatorsConfiguration,),
+    requirements=(RQ_SRS_042_OAuth_Authentication,),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
 # Software Requirements Specification
@@ -64,12 +66,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
-    * 1.1 [Structure of OAuth](#structure-of-oauth)
-* 2 [Overview of the Functionality](#overview-of-the-functionality)
-    * 2.1 [Access Token Processors](#access-token-processors)
-    * 2.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
-* 3 [test requirement](#test-requirement)
-    * 3.1 [RQ.SRS-042.JWT.ValidatorsConfiguration](#rqsrs-042jwtvalidatorsconfiguration)
+* 2 [Definitions](#definitions)
+    * 2.1 [Structure of OAuth](#structure-of-oauth)
+* 3 [Overview of the Functionality](#overview-of-the-functionality)
+    * 3.1 [Access Token Processors](#access-token-processors)
+    * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
+* 4 [Authentication with OAuth](#authentication-with-oauth)
+    * 4.1 [RQ.SRS-042.OAuth.Authentication](#rqsrs-042oauthauthentication)
 
     
 ## Introduction
@@ -84,6 +87,11 @@ Through OAuth 2.0, ClickHouse can accept access tokens issued by an identity pro
 
 This approach supports a wide range of identity federation use cases and enables ClickHouse to function within modern enterprise authentication ecosystems.
 
+## Definitions
+
+- **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include Azure Active Directory, Google Identity, and Okta.
+- **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
+- **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
 
 ### Structure of OAuth
 
@@ -144,7 +152,7 @@ Key Parameters:
 ### Authentication Modes with OAuth Tokens
 
 1. **Locally Defined Users with JWT Authentication**
-Users defined in users.xml or SQL can authenticate using tokens if jwt is specified as their method:
+Users defined in `users.xml` or `SQL` can authenticate using tokens if `jwt` is specified as their method:
 
 ```xml
 <users>
@@ -160,9 +168,9 @@ Or via SQL:
 CREATE USER my_user IDENTIFIED WITH jwt;
 ```
 
-2. External Identity Provider as a User Directory
+2. **External Identity Provider as a User Directory**
 
-When a user is not defined locally, ClickHouse can use the IdP as a dynamic source of user info. This requires configuring the `<token>` section in `users_directories` and assigning roles:
+When a user is not defined locally, ClickHouse can use the `IdP` as a dynamic source of user info. This requires configuring the `<token>` section in `users_directories` and assigning roles:
 
 ```xml
 <token>
@@ -174,13 +182,15 @@ When a user is not defined locally, ClickHouse can use the IdP as a dynamic sour
 ```
 
 
-## test requirement
+## Authentication with OAuth
 
-### RQ.SRS-042.JWT.ValidatorsConfiguration
+To authenticate with OAuth, users must obtain an access token from the identity provider and present it to [ClickHouse].
+
+### RQ.SRS-042.OAuth.Authentication
 version: 1.0
 
+This requirement specifies that ClickHouse must support OAuth 2.0 authentication, allowing users to authenticate using access tokens issued by external identity providers.
 
-Placeholder requirement
 
 
 
