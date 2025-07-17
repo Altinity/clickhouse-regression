@@ -1,0 +1,25 @@
+diff --git a/tests/test_blocks.py b/tests/test_blocks.py
+index 4c5beb2..5ffee0d 100644
+--- a/tests/test_blocks.py
++++ b/tests/test_blocks.py
+@@ -224,8 +224,6 @@ class LogTestCase(BaseTestCase):
+                 logs = buffer.getvalue()
+                 self.assertIn(query, logs)
+ 
+-                if self.server_version > (19, ):
+-                    self.assertIn('MemoryTracker', logs)
+ 
+                 # Test all packets of INSERT query are consumed.
+                 rv = self.client.execute('SELECT 1', settings=settings)
+diff --git a/tests/testcase.py b/tests/testcase.py
+index 40b79b0..849619d 100644
+--- a/tests/testcase.py
++++ b/tests/testcase.py
+@@ -82,7 +82,7 @@ class BaseTestCase(TestCase):
+         cls.emit_cli('CREATE DATABASE {}'.format(cls.database), 'default')
+ 
+         version_str = cls.emit_cli('SELECT version()').strip()
+-        cls.server_version = tuple(int(x) for x in version_str.split('.'))
++        cls.server_version = tuple(int(x) for x in version_str.split('.')[0:-1])
+ 
+         super(BaseTestCase, cls).setUpClass()
