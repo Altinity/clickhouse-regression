@@ -1,0 +1,56 @@
+diff --git a/setup.py b/setup.py
+index 36abced..bbfbda3 100644
+--- a/setup.py
++++ b/setup.py
+@@ -121,7 +121,8 @@ setup(
+     install_requires=[
+         'pytz',
+         'tzlocal',
+-        'tzlocal<2.1; python_version=="3.5"'
++        'tzlocal<2.1; python_version=="3.5"',
++        'nose',
+     ],
+     ext_modules=extensions,
+     extras_require={
+@@ -133,5 +134,5 @@ setup(
+         'zstd': ['zstd', 'clickhouse-cityhash>=1.0.2.1'],
+         'numpy': ['numpy>=1.12.0', 'pandas>=0.24.0']
+     },
+-    test_suite='pytest'
++    test_suite='nose.collector'
+ )
+diff --git a/tests/test_opentelemetry.py b/tests/test_opentelemetry.py
+index 9c3067a..5732434 100644
+--- a/tests/test_opentelemetry.py
++++ b/tests/test_opentelemetry.py
+@@ -21,7 +21,14 @@ class OpenTelemetryTestCase(BaseTestCase):
+                 client.execute(query, settings=settings)
+                 value = buffer.getvalue()
+                 self.assertIn('OpenTelemetry', value)
+-                self.assertIn('1af7651916cd43dd8448eb211c80319c', value)
++
++                # ClickHouse 22.2+ use big-endian:
++                # https://github.com/ClickHouse/ClickHouse/pull/33723
++                if self.server_version >= (22, 2):
++                    tp = '8448eb211c80319c1af7651916cd43dd'
++                else:
++                    tp = '1af7651916cd43dd8448eb211c80319c'
++                self.assertIn(tp, value)
+ 
+     def test_no_tracestate(self):
+         traceparent = '00-1af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01'
+@@ -37,7 +44,13 @@ class OpenTelemetryTestCase(BaseTestCase):
+                 client.execute(query, settings=settings)
+                 value = buffer.getvalue()
+                 self.assertIn('OpenTelemetry', value)
+-                self.assertIn('1af7651916cd43dd8448eb211c80319c', value)
++                # ClickHouse 22.2+ use big-endian:
++                # https://github.com/ClickHouse/ClickHouse/pull/33723
++                if self.server_version >= (22, 2):
++                    tp = '8448eb211c80319c1af7651916cd43dd'
++                else:
++                    tp = '1af7651916cd43dd8448eb211c80319c'
++                self.assertIn(tp, value)
+ 
+     def test_bad_traceparent(self):
+         settings = {'opentelemetry_traceparent': 'bad'}
