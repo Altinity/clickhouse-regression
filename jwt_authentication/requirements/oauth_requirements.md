@@ -24,6 +24,8 @@
                 * 6.1.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
             * 6.1.2.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
                 * 6.1.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
+            * 6.1.2.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+                * 6.1.2.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnoaccesstokenprocessors)
         * 6.1.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
             * 6.1.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
             * 6.1.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
@@ -227,6 +229,13 @@ The user configuration example,
     </my_user>
 </clickhouse>
 ```
+
+##### Access Token Processors are Missing From ClickHouse Configuration 
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors
+version: 1.0
+
+When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the user to authenticate and access resources. With that [ClickHouse] SHALL also not crash.
 
 #### Invalid Credentials When Requesting a JWT
 
