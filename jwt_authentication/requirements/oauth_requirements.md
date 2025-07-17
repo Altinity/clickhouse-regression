@@ -22,18 +22,24 @@
                 * 6.1.2.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnomatchingroles)
             * 6.1.2.3 [User does NOT have permission to view their groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
                 * 6.1.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
+            * 6.1.2.4 [In ClickHouse there is no default role specified](#in-clickhouse-there-is-no-default-role-specified)
+                * 6.1.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
         * 6.1.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
             * 6.1.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
             * 6.1.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
             * 6.1.3.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsemptystring)
             * 6.1.3.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnull)
             * 6.1.3.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnonalphanumericcharacters)
-        * 6.1.4 [Accessing ClickHouse with Grafana](#accessing-clickhouse-with-grafana)
+        * 6.1.4 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
             * 6.1.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentity)
             * 6.1.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityenabled)
             * 6.1.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentitydisabled)
-            * 6.1.4.4 [Expired Token Handling](#expired-token-handling)
-                * 6.1.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+            * 6.1.4.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+                * 6.1.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequests)
+                * 6.1.4.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
+                * 6.1.4.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
+            * 6.1.4.5 [Expired Token Handling](#expired-token-handling)
+                * 6.1.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -118,11 +124,12 @@ Key Parameters:
 Users defined in `users.xml` or `SQL` can authenticate using tokens if `jwt` is specified as their method:
 
 ```xml
-<users>
-    <alice>
-        <jwt/>
-    </alice>
-</users>
+<clickhouse>
+    <my_user>
+        <jwt>
+        </jwt>
+    </my_user>
+</clickhouse>
 ```
 
 Or via SQL:
@@ -198,6 +205,26 @@ version: 1.0
 
 When a user does not have permission to view their groups in Azure, [ClickHouse] SHALL assign a default role to the user
 
+##### In ClickHouse there is no default role specified
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole
+version: 1.0
+
+When there is no default role specified in [ClickHouse] configuration or created via SQL,[ClickHouse] SHALL not allow the user to access any resources and there SHALL be no crashes on [ClickHouse] side.
+
+The user configuration example,
+
+```xml
+<clickhouse>
+    <!-- ... -->
+    <my_user>
+        <!-- ... -->
+        <jwt>
+        </jwt>
+    </my_user>
+</clickhouse>
+```
+
 #### Invalid Credentials When Requesting a JWT
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials
@@ -225,7 +252,7 @@ version: 1.0
 
 The user SHALL not receive a valid JWT token if the provided credentials contain non-alphanumeric characters such as emojis.
 
-#### Accessing ClickHouse with Grafana
+#### Accessing ClickHouse from Grafana
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity
 version: 1.0
@@ -241,6 +268,23 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 version: 1.0
 
 When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
+
+##### Incorrect Requests to ClickHouse
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests
+version: 1.0
+
+When [Grafana] makes requests to [ClickHouse] without a valid JWT token in the Authorization header, [ClickHouse] SHALL return an HTTP 401 Unauthorized response.
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header
+version: 1.0
+
+[ClickHouse] SHALL reject requests that do not include the Authorization header with a valid JWT token.
+
+###### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body
+version: 1.0
+
+[ClickHouse] SHALL reject requests that include incorrect or malformed body content.
 
 ##### Expired Token Handling
 
