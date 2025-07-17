@@ -168,13 +168,12 @@ To authenticate with OAuth, users must obtain an access token from the identity 
 
 ### Grafana Integration Support
 
-
 #### Authentication
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication
 version: 1.0
 
-[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
@@ -216,9 +215,7 @@ The user configuration example,
 
 ```xml
 <clickhouse>
-    <!-- ... -->
     <my_user>
-        <!-- ... -->
         <jwt>
         </jwt>
     </my_user>

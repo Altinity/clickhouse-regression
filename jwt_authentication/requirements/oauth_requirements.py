@@ -16,7 +16,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
+        "[Grafana] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
         "\n"
         "The values SHALL be stored inside the `.env` file which can be generated as:\n"
         "\n"
@@ -92,9 +92,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoDefaultRole = Re
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <!-- ... -->\n"
         "    <my_user>\n"
-        "        <!-- ... -->\n"
         "        <jwt>\n"
         "        </jwt>\n"
         "    </my_user>\n"
@@ -631,13 +629,12 @@ To authenticate with OAuth, users must obtain an access token from the identity 
 
 ### Grafana Integration Support
 
-
 #### Authentication
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication
 version: 1.0
 
-[ClickHouse] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect users to the Azure AD authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
@@ -679,9 +676,7 @@ The user configuration example,
 
 ```xml
 <clickhouse>
-    <!-- ... -->
     <my_user>
-        <!-- ... -->
         <jwt>
         </jwt>
     </my_user>
