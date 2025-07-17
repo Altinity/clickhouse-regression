@@ -8,6 +8,7 @@ Then execute command
 ```bash
 docker run --rm -v $(pwd)/PACKAGES:/clickhouse -e RELEASE=v0.3.2 registry.gitlab.com/altinity-public/container-images/test/clickhouse-jdbc-runner:v1.0
 ```
+
 Where `$(pwd)/PACKAGES` is the folder to the clickhouse*.deb packages and `RELEASE=v0.3.2` is the clickhouse-jdbc version you want to test.
 Test log you need is $(pwd)/PACKAGES/test.log
 

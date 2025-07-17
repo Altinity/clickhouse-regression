@@ -2,6 +2,8 @@
 set -xe
 
 # install clickhouse, make sure binaries for common and client in /clickhouse folder
+# dpkg -i clickhouse/clickhouse-common-static*.deb
+# dpkg -i clickhouse/clickhouse-client*.deb
 
 clickhouse server --daemon
 sleep 10
@@ -13,7 +15,7 @@ apt install git -y
 
 git clone --branch "${RELEASE}" --depth 1 --single-branch "https://github.com/xzkostyan/clickhouse-sqlalchemy.git"
 cd clickhouse-sqlalchemy
-git apply /sqlalchemy.patch
+# git apply /sqlalchemy.patch
 
 apt install python3-pip -y
 

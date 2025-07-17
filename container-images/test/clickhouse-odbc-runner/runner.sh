@@ -1,7 +1,10 @@
 #!/bin/bash
 set -xe
 
-# run clickhouse
+# install clickhouse, make sure binaries for common and client in /clickhouse folder
+# dpkg -i clickhouse/clickhouse-common-static*.deb
+# dpkg -i clickhouse/clickhouse-client*.deb
+
 clickhouse server --daemon
 sleep 10
 clickhouse-client -q "SELECT 1"
@@ -37,7 +40,7 @@ apt update -y
 git clone --recursive "https://github.com/ClickHouse/clickhouse-odbc"
 cd clickhouse-odbc
 git checkout "${RELEASE}"
-git apply /diff.patch
+# git apply /diff.patch
 
 apt install odbcinst -y
 apt-get install python3-pip -y

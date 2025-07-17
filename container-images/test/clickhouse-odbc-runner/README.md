@@ -2,22 +2,27 @@
 
 clickhouse-odbc: `https://github.com/ClickHouse/clickhouse-odbc`
 
-To run clickhouse-odbc tests manually you need `clickhouse-common.deb` and the `clickhouse-client.deb` in your machine.
+If you have docker image for test:
+    To run clickhouse-odbc tests specify clickhouse docker image that you want to test in Dockerfile.
+    
+If you don't have docker image for tests:
+    Create PACKAGE directory in clickhouse-odbc-runner directory, and add deb packages into it.
+    Add `dpkg -i clickhouse/clickhouse-common-static*.deb`
+        `dpkg -i clickhouse/clickhouse-client*.deb` into runner.sh
+        
+Also you need to specify driver version in this commands.
+You always need to specify `-v $(pwd)/PACKAGES:/clickhouse` since it saves logs into this directory.
 
-Then execute command
-```bash
-docker run --rm -v $(pwd)/PACKAGES:/clickhouse -e RELEASE=v1.2.1.20220905 registry.gitlab.com/altinity-public/container-images/test/clickhouse-odbc-runner:v1.0
-```
-Where `$(pwd)/PACKAGES` is the folder to the clickhouse*.deb packages and `RELEASE=v1.2.1.20220905` is the clickhouse-odbc version you want to test.
-Test log you need is $(pwd)/PACKAGES/test.log
-
-Make sure you have access to gitlab registry, if you don't then build the image manually with file in `https://gitlab.com/altinity-public/container-images/-/tree/main/test/clickhouse-odbc-runner` and change the previous command with
 ```bash
 docker build . -t clickhouse-odbc
 
 docker run --rm -v $(pwd)/PACKAGES:/clickhouse -e RELEASE=v1.2.1.20220905 clickhouse-odbc
 ```
+
 Where `clickhouse-odbc` is the name of created docker image.
+
+
+Test log you need is $(pwd)/PACKAGES/test.log
 
 Patches are needed to make tests work with clickhouse 22.3-lts.
 
