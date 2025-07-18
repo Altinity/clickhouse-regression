@@ -218,7 +218,6 @@ supported_types_example_values = [
     ),
     ("Time", ("'00:00:00'", "'23:59:59'", "'14:30:00'")),
     ("Time64(3)", ("'00:00:00'", "'23:59:59.999'", "'14:30:00.123'")),
-    ("Dynamic", ("'Hello, ClickHouse'", "'Hello, ClickHouse'", "'Hello, ClickHouse'")),
 ]
 
 unsupported_types_example_values = [
@@ -295,6 +294,7 @@ unsupported_types_example_values = [
             [[(0, 0), (10, 0), (10, 10), (0, 10), (0, 0)]],
         ),
     ),
+    ("Dynamic", ("'Hello, ClickHouse'", "'Hello, ClickHouse'", "'Hello, ClickHouse'")),
 ]
 
 
@@ -394,7 +394,7 @@ def insert_into_table_values(
         node = self.context.node
 
     with When(f"I insert into table {table_name} values"):
-        r = node.query(
+        return node.query(
             f"INSERT INTO {table_name} VALUES {values}",
             settings=settings,
             exitcode=exitcode,
@@ -405,7 +405,7 @@ def insert_into_table_values(
 
 @TestStep(When)
 def insert_into_table_select(
-    self, table_name, select_statement, settings=None, node=None
+    self, table_name, select_statement, settings=None, node=None, no_checks=False
 ):
     """Insert into table values from select statement."""
 
@@ -413,8 +413,8 @@ def insert_into_table_select(
         node = self.context.node
 
     with When(f"I insert into table {table_name} values"):
-        node.query(
-            f"INSERT INTO {table_name} SELECT {select_statement}", settings=settings
+        return node.query(
+            f"INSERT INTO {table_name} SELECT {select_statement}", settings=settings, no_checks=no_checks
         )
 
 

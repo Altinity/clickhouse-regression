@@ -6,7 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_InvalidFilename("1.0"),
+    RQ_HivePartitioning_Writes_Filename("1.0"),
 )
 def invalid_filename(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None

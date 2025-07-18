@@ -1393,6 +1393,8 @@ RQ_HivePartitioning_Writes_ParallelInserts = Requirement(
         '\n'
         'Multiple concurrent `INSERT` operations targeting the same file or partition path SHALL succeed without data loss or corruption.\n'
         '\n'
+        '[ClickHouse] SHALL support parallel inserts from different users.\n'
+        '\n'
     ),
     link=None,
     level=3,
@@ -2601,6 +2603,8 @@ version: 1.0
 [ClickHouse] SHALL support parallel inserts into the same Hive-style partition when writing with the `S3` table engine and `partition_strategy = 'hive'`.
 
 Multiple concurrent `INSERT` operations targeting the same file or partition path SHALL succeed without data loss or corruption.
+
+[ClickHouse] SHALL support parallel inserts from different users.
 
 ### Failing Write
 

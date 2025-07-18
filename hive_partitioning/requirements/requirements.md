@@ -944,6 +944,8 @@ version: 1.0
 
 Multiple concurrent `INSERT` operations targeting the same file or partition path SHALL succeed without data loss or corruption.
 
+[ClickHouse] SHALL support parallel inserts from different users.
+
 ### Failing Write
 
 #### RQ.HivePartitioning.Writes.WriteFail

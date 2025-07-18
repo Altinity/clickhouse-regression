@@ -8,7 +8,7 @@ from helpers.common import run_duckdb_query
 @Requirements(
     RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
-def supported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_supported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse supports only supported types for hive partitioning."""
 
     if node is None:
@@ -199,7 +199,7 @@ def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_
 )
 def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
     """Check that ClickHouse supports the partition key with 1024 length and returns an error if length is greater than 1024."""
-    
+
     if node is None:
         node = self.context.node
     
@@ -221,12 +221,12 @@ def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root
         )
     with Then("I check data in table"):
         check_select(
-            select=f"SELECT i FROM {table_name} WHERE d = {'a'*1023} ORDER BY i",
+            select=f"SELECT i FROM {table_name} WHERE d = '{'a'*500}' ORDER BY i",
             expected_result="1",
             node=node,
         )
     with When("I insert data into table with length greater than 1024"):
-        insert_into_table_values(
+        r = insert_into_table_values(
             node=node, 
             table_name=table_name, 
             values=f"('{'a'*1024}', 1)",
@@ -296,10 +296,11 @@ def s3_partitions_parts(self, uri, uri_readonly, minio_root_user, minio_root_pas
                         table_name=table_name,
                         select_statement=f"number AS d, {i} AS i from numbers({partition})",
                     )
+                    
             with Then("I check data in table"):
                 check_select(
                     select=f"SELECT count() FROM {table_name}",
-                    expected_result=f"{part}",
+                    expected_result=f"{partition * part}",
                     node=node,
                 )
                 check_select(
@@ -528,6 +529,65 @@ def parallel_inserts(
             settings=[("use_hive_partitioning", "1")],
         )
 
+
+@TestScenario
+@Requirements(
+    RQ_HivePartitioning_Writes_ParallelInserts("1.0"),
+)
+def parallel_inserts_different_users(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
+    """Check that clickhouse parallel inserts for hive partition writes."""
+
+    if node is None:
+        node = self.context.node
+
+    table_name = "parallel_inserts_different_users_s3"
+
+    with Given("I create table for hive partition writes"):
+        create_table(
+            columns="d Int32, i Int32",
+            table_name=table_name,
+            engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
+            partition_by="d",
+            node=node,
+        )
+
+    with When("I insert data into table in parallel"):
+        with Pool(5) as pool:
+            try:
+                for i in range(5):
+                    When(
+                        name=f"parallel insert {i} from default user",
+                        test=insert_into_table_values,
+                        parallel=True,
+                        executor=pool,
+                    )(
+                        table_name=table_name,
+                        values="(1, 1)",
+                        settings=[("use_hive_partitioning", "1"), ("user", "default")],
+                    )
+                    When(
+                        name=f"parallel insert {i} from second user",
+                        test=insert_into_table_values,
+                        parallel=True,
+                        executor=pool,
+                    )(
+                        table_name=table_name,
+                        values="(1, 1)",
+                        settings=[("use_hive_partitioning", "1"), ("user", "second_user")],
+                    )
+            finally:
+                join()
+
+    with Then("I check data in table"):
+        check_select(
+            select=f"SELECT i FROM {table_name} WHERE d = 1 ORDER BY i",
+            expected_result="1\n1\n1\n1\n1\n1\n1\n1\n1\n1",
+            node=node,
+            settings=[("use_hive_partitioning", "1")],
+        )
+
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_Writes_WriteFail("1.0"),
@@ -535,52 +595,52 @@ def parallel_inserts(
 def write_fail(
     self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
 ):
-    """Check that clickhouse returns an error when writing to a non-accessible bucket."""
+    """Check that clickhouse performs correctly if write fails."""
 
     if node is None:
         node = self.context.node
 
     table_name = "write_fail_s3"
 
-    with Given("I create source table"):
-        create_table(
-            columns="d Int32, i String",
-            table_name="source",
-            engine="Memory",
-            node=node,
-        )
-
-    with When("I insert data into table"):
-        insert_into_table_values(
-            node=node,
-            table_name="source",
-            values=f"(1, '123'), (2, '456'), (3, 'fail'), (4, '789')",
-        )
-
     with Given("I create table for hive partition writes"):
         create_table(
-            columns="d String, i Int32",
+            columns="d Int32, i Int32",
             table_name=table_name,
             engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
             partition_by="d",
             node=node,
         )
-
-    with When("I insert data into table"):
-        insert_into_table_values(
+    with And("I create source table"):
+        create_table(
+            columns="d Int32, i String",
+            table_name="source",
+            engine="Log()",
             node=node,
-            table_name=table_name,
-            values=f"{f"""('1', 1), """*2000} ('{'2'*500}', 1)",
+        )
+    with And("I insert data into source table"):
+        insert_into_table_select(
+            table_name="source",
+            select_statement="number AS d, number AS i FROM numbers(100000)",
+            node=node,
+        )
+        insert_into_table_values(
+            table_name="source",
+            values="(100000, 'wrong_value')",
+            node=node,
         )
 
-    # with Then("I check exit code and message"):
-    #     assert r.exitcode == 243, error()
-    #     assert "DB::Exception: Failed to check existence" in r.output, error()
+    with When("I insert data into table"):
+        insert_into_table_select(
+            node=node,
+            table_name=table_name,
+            select_statement=f"d, toInt32(i) as i FROM source",
+            no_checks=True,
+        )
 
     with Then("I check data in table"):
         check_select(
             select=f"SELECT i, d FROM {table_name} WHERE d = '1' ORDER BY i",
-            expected_result="1\t1",
+            expected_result="",
             node=node,
         )
         
