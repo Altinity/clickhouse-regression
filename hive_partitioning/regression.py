@@ -77,7 +77,7 @@ def s3_table_engine(
 
 @TestModule
 @Name("hive partitioning")
-@ArgumentParser(argparser_minio)
+@ArgumentParser(argparser_minio_hive)
 @Specifications(SRS_045_Hive_Partitioning)
 @XFails(xfails)
 @FFails(ffails)

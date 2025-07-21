@@ -378,6 +378,33 @@ def argparser_minio(parser):
         default="password",
     )
 
+def argparser_minio_hive(parser):
+    """Extended argument parser for suites with only minio."""
+    argparser(parser)
+
+    parser.add_argument(
+        "--minio-uri",
+        action="store",
+        help="set url for the minio connection",
+        type=Secret(name="minio_uri"),
+        default="http://minio1:9001",
+    )
+
+    parser.add_argument(
+        "--minio-root-user",
+        action="store",
+        help="minio root user name (access key id)",
+        type=Secret(name="minio_root_user"),
+        default="admin",
+    )
+
+    parser.add_argument(
+        "--minio-root-password",
+        action="store",
+        help="minio root user password (secret access key)",
+        type=Secret(name="minio_root_password"),
+        default="password",
+    )
 
 def CaptureMinioArgs(func):
     """
