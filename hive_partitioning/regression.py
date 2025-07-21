@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.common import experimental_analyzer, run_duckdb
-from helpers.argparser import argparser_minio, CaptureClusterArgs, CaptureMinioArgs
+from helpers.argparser import argparser_minio_hive, CaptureClusterArgs, CaptureMinioArgs
 from helpers.create_clusters import add_clusters_for_nodes, get_clusters_for_nodes
 from s3.tests.common import start_minio
 
