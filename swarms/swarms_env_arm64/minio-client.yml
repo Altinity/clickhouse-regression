@@ -4,7 +4,7 @@ services:
   mc:
     depends_on:
       - minio
-    image: minio/mc:RELEASE.2022-06-11T21-10-36Z
+    image: minio/minio:RELEASE.2024-12-13T22-19-12Z
     container_name: mc
     entrypoint: >
       /bin/sh -c "
@@ -15,7 +15,7 @@ services:
       tail -f /dev/null
       "
     healthcheck:
-      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse"]
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
