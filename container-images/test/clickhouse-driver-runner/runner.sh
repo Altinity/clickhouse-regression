@@ -19,7 +19,7 @@ cd clickhouse-driver
 # then
 # git apply /diff-0.2.3.patch
 # fi
-# git apply /clickhouse-driver.patch
+# git apply /clickhouse-driver-0-2-9.patch
 
 apt install python3-pip -y
 python3 testsrequire.py && python3 setup.py develop
