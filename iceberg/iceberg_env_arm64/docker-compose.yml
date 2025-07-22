@@ -34,14 +34,14 @@ services:
       - CATALOG_S3_ENDPOINT=http://minio:9000
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:0.0.0-3
+    image: altinity/ice-rest-catalog:latest
     restart: unless-stopped
     ports:
       - '5000:5000' # iceberg/http
     configs:
       - source: ice-rest-catalog-yaml
         target: /etc/ice/ice-rest-catalog.yaml
-    volumes:
+    tmpfs:
       # for access to /var/lib/ice-rest-catalog/db.sqlite
       - /var/lib/ice-rest-catalog 
     depends_on:
@@ -155,10 +155,14 @@ volumes:
 configs:
   ice-rest-catalog-yaml:
     content: |
-      uri: "jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500"
-      warehouse: s3://bucket1
-      s3.endpoint: http://minio:9000
-      s3.access-key-id: "admin"
-      s3.secret-access-key: "password"
-      ice.s3.region: us-east-1
+      uri: jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500
+      warehouse: s3://warehouse/
+      s3:
+        endpoint: http://minio:9000
+        pathStyleAccess: true
+        accessKeyID: admin
+        secretAccessKey: password
+        region: us-east-1
+      bearerTokens:
+        - value: foo
       
