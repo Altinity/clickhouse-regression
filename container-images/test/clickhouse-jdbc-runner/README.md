@@ -1,5 +1,29 @@
 # Running clickhouse-jdbc tests locally
 
+## New info:
+
+Clone clickhouse-jdbc repository:
+```bash
+git clone --recursive "https://github.com/ClickHouse/clickhouse-jdbc"
+```
+
+Go to `clickhouse-jdbc/clickhouse-client/src/test/java/com/clickhouse/client/ClickHouseServerForTest.java` and change 
+`clickhouse/clickhouse-server` to the image that you want to use for testing, for example:
+```
+altinityinfra/clickhouse-server:0-25.3.6.10318.altinitytest
+```
+
+Then run:
+```
+sudo ./run_without_docker_jdbc_only.sh > test.log
+``` 
+
+Upolad `test.log` to the bucket of lts release you are testing.
+
+
+
+## Old info:
+
 clickhouse-jdbc: `https://github.com/ClickHouse/clickhouse-jdbc`
 
 To run clickhouse-jdbc tests manually you need `clickhouse-common-static.deb` and the `clickhouse-client.deb` in your machine.
