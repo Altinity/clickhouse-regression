@@ -20,6 +20,6 @@ cd clickhouse-sqlalchemy
 apt install python3-pip -y
 
 pip install --upgrade pip
-pip install asynch
+pip install asynch==0.2.5
 python3 testsrequire.py && python3 setup.py develop
 pytest -v
