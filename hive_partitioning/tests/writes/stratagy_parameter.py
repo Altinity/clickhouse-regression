@@ -25,7 +25,7 @@ def partition_strategy_wrong_argument(
             engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'wrong')",
             settings=[("use_hive_partitioning", "1")],
             exitcode=36,
-            message="DB::Exception: Unknown partitioning style 'wrong'",
+            message="DB::Exception: Partition strategy wrong is not supported.",
         )
 
 

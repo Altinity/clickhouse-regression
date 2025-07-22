@@ -92,9 +92,8 @@ def duckdb_supported_characters(
         with Check(f"I check string with characters from {i} to {i+16}"):
             table_name = f"test_characters_{i}_{i+16}"
             with When("I create table for hive partition writes"):
-                debug(f"CREATE TABLE {table_name} (d String, i Int32)")
                 run_duckdb_query(query=f"CREATE TABLE {table_name} (d String, i Int32)")
-
+                print(string)
             with And("I insert data into table"):
                 if "'" in string:
                     string = string.replace("'", "")
@@ -107,17 +106,12 @@ def duckdb_supported_characters(
                     query=f"COPY {table_name} TO 's3://root/data/{table_name}/' (FORMAT 'parquet', PARTITION_BY ('d'))"
                 )
 
-            for attempt in retries(timeout=10, delay=1):
-                with attempt:
-                    with Then("I check data in table"):
-                        data = run_duckdb_query(
-                            query=f"SELECT i FROM read_parquet('s3://root/data/{table_name}/**') WHERE d = '{string}'"
-                        )
-                        assert data == [(1,)], error()
+            with Then("I check data in table"):
+                data = run_duckdb_query(
+                    query=f"SELECT i FROM read_parquet('s3://root/data/{table_name}/**') WHERE d = '{string}'"
+                )
+                assert data == [(1,)], error()
 
-    with Then("I check that file path"):
-        files = get_bucket_files_list(node=node)
-        debug(files)
 
 
 @TestFeature
