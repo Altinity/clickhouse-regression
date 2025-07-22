@@ -1,4 +1,4 @@
-FROM altinity/clickhouse-server:23.8.5.17.altinitytest
+FROM ubuntu:22.04
 
 COPY runner.sh runner.sh
 COPY diff.patch diff.patch
