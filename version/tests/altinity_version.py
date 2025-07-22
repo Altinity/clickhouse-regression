@@ -154,15 +154,19 @@ def embedded_logos(self):
 
     with When("checking logos that are embedded in the binary"):
         altinity_logos = node.command(
-            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwI' /usr/bin/clickhouse"
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwI' /usr/bin/clickhouse",
+            no_checks=True,
         ).output
 
         clickhouse_logos = node.command(
-            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDkgOCI+PHN0eWx' /usr/bin/clickhouse", exitcode=1
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDkgOCI+PHN0eWx' /usr/bin/clickhouse",
+            no_checks=True,
         ).output
 
     with Then("Altinity logos should be present in the binary"):
-        values_after_grep = f"altinity: {altinity_logos.strip()} clickhouse: {clickhouse_logos.strip()}"
+        values_after_grep = (
+            f"altinity: {altinity_logos.strip()} clickhouse: {clickhouse_logos.strip()}"
+        )
         with values() as that:
             assert that(
                 snapshot(
@@ -172,6 +176,9 @@ def embedded_logos(self):
                     mode=snapshot.CHECK,
                 )
             ), error()
+
+        assert altinity_logos.strip() != "", error()
+        assert clickhouse_logos.strip() == "", error()
 
 
 @TestFeature
