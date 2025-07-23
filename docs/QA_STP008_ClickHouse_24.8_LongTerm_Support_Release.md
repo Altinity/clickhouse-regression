@@ -126,6 +126,16 @@ The following team members SHALL be dedicated to the release:
 
 ## Known Issues
 
+* Analyzer issues https://github.com/ClickHouse/ClickHouse/labels/analyzer
+* https://github.com/ClickHouse/ClickHouse/issues/71456 issue with concurrent mutations. workaround: avoid concurrent mutations.
+* https://github.com/ClickHouse/ClickHouse/issues/71479 corner case with push down of arrayAll conditions into joins. Workaround: rewrite the query.
+* https://github.com/ClickHouse/ClickHouse/issues/71218 issue with array join and partition pruning. Workaround: rewrite query.
+* https://github.com/ClickHouse/ClickHouse/issues/64652 issue with memory accounting in cgroups env.
+* https://github.com/ClickHouse/ClickHouse/issues/65402 columns for parametrized views are not shown. Workaround: EXPLAIN (SELECT … FROM view(a=1,b=2) WHERE 0)
+* https://github.com/ClickHouse/ClickHouse/issues/71895 “Optimized trivial count” can give wrong results in certain corner cases. Workaround: optimize_use_implicit_projection=0, optimize_trivial_count_query=0
+* https://github.com/ClickHouse/ClickHouse/issues/71511 issue with memory tracking (fix https://github.com/ClickHouse/ClickHouse/pull/73081 )
+* https://github.com/ClickHouse/ClickHouse/issues/69730 Unexpected literal type in function when using toDecimal256. Workaround: disable analyzer, or upgrade to a newer version.
+
 ### Open Issues
 
 [GitHub is:issue is:open label:v24.3-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.3-affected+) as of January 13, 2024
@@ -227,7 +237,7 @@ The standard `stateful` suite that consists of running SQL scripts executed agai
 
 Results:
 
-**TBD**
+Results: not executed
 
 The standard `stress` suite that consists of running tests from the `stateless` suite in parallel to check for server hang-up and crashes.
 
