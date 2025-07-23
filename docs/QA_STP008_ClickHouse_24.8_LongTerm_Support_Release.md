@@ -17,7 +17,7 @@
 
 **Build Report:**
 
-* **TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/report.html
 
 **Summary:**
 
