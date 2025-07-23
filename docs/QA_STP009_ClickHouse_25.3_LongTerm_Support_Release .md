@@ -25,73 +25,79 @@ Started to execute test plan on December 16, 2025 and ended on January 13, 2025.
 
 ## Table of Contents
 
-* 1 [Revision History](#revision-history)
-* 2 [Introduction](#introduction)
-* 3 [Timeline](#timeline)
-* 4 [Human Resources And Assignments](#human-resources-and-assignments)
-* 5 [End User Recommendations](#end-user-recommendations)
-    * 5.1 [Release Notes](#release-notes)
-    * 5.2 [Notable Differences in Behavior](#notable-differences-in-behavior)
-    * 5.3 [Summary of Main Regressions](#summary-of-main-regressions)
-* 6 [Known Issues](#known-issues)
-    * 6.1 [Reported By Altinity](#reported-by-altinity)
-    * 6.2 [Open Issues](#open-issues)
-* 7 [New Features](#new-features)
-    * 7.1 [Altinity Stable Backports](#altinity-stable-backports)
-    * 7.2 [Changelog](#changelog)
-    * 7.3 [Summary](#summary)
-* 8 [Scope](#scope)
-    * 8.1 [Automated Regression Tests](#automated-regression-tests)
-        * 8.1.1 [Stateless](#stateless)
-        * 8.1.2 [Stateful](#stateful)
-        * 8.1.3 [Stress](#stress)
-        * 8.1.4 [Integration](#integration)
-        * 8.1.5 [Altinity TestFlows Integration](#altinity-testflows-integration)
-            * 8.1.5.1 [Key Value](#key-value)
-            * 8.1.5.2 [Engines](#engines)
-            * 8.1.5.3 [Selects](#selects)
-            * 8.1.5.4 [AES Encryption](#aes-encryption)
-            * 8.1.5.5 [Tiered-storage](#tiered-storage)
-            * 8.1.5.6 [S3](#s3)
-            * 8.1.5.7 [Kafka](#kafka)
-            * 8.1.5.8 [Kerberos](#kerberos)
-            * 8.1.5.9 [DateTime64 Extended Range](#datetime64-extended-range)
-            * 8.1.5.10 [Extended Precision Data Types](#extended-precision-data-types)
-            * 8.1.5.11 [LDAP](#ldap)
-            * 8.1.5.12 [RBAC](#rbac)
-            * 8.1.5.13 [Window Functions](#window-functions)
-            * 8.1.5.14 [SSL Server](#ssl-server)
-            * 8.1.5.15 [Disk Level Encryption](#disk-level-encryption)
-            * 8.1.5.16 [ClickHouse Keeper](#clickhouse-keeper)
-            * 8.1.5.17 [Data Types](#Data-types)
-            * 8.1.5.18 [Part Moves Between Shards](#part-moves-between-shards)
-            * 8.1.5.19 [Lightweight Delete](#lightweight-delete)
-            * 8.1.5.20 [Base58](#base58)
-            * 8.1.5.21 [Parquet](#parquet)
-            * 8.1.5.22 [Atomic Insert](#atomic-insert)
-            * 8.1.5.23 [Aggregate Functions](#aggregate-functions)
-            * 8.1.5.24 [DNS](#dns)
-        * 8.1.6 [Ontime Benchmark](#ontime-benchmark)
-    * 8.2 [Compatibility with Client Drivers](#compatibility-with-client-drivers)
-        * 8.2.1 [Python `clickhouse_driver`](#python-clickhouse_driver)
-        * 8.2.2 [ODBC `clickhouse-odbc`](#odbc-clickhouse-odbc)
-        * 8.2.3 [SQLAlchemy](#sqlalchemy)
-        * 8.2.4 [Java `clickhouse-jdbc`](#java-clickhouse-jdbc)
-    * 8.3 [Backup `clickhouse-backup`](#backup-clickhouse-backup)
-    * 8.4 [Compatibility With Operation on es](#compatibility-with-operation-on-es)
-        * 8.4.1 [Kubernetes `clickhouse-operator`](#kubernetes-clickhouse-operator)
-        * 8.4.2 [Altinity.Cloud](#altinitycloud)
-    * 8.5 [Production Cluster Operation](#production-cluster-operation)
-    * 8.6 [Upgrade and Downgrade](#upgrade-and-downgrade)
-        * 8.6.1 [Upgrade](#upgrade)
-        * 8.6.2 [Downgrade](#downgrade)
-    * 8.7 [Compatibility With BI Tools](#compatibility-with-bi-tools)
-        * 8.7.1 [Grafana](#grafana)
-        * 8.7.2 [Tableau](#tableau)
-        * 8.7.3 [Superset](#superset)
-    * 8.8 [Docker Image Vulnerability Scanning](#docker-image-vulnerability-scanning)
-        * 8.8.1 [Trivy](#trivy)
-        * 8.8.2 [Scout](#scout)
+* 1 [Introduction](#introduction)
+* 2 [Timeline](#timeline)
+* 3 [Human Resources And Assignments](#human-resources-and-assignments)
+* 4 [End User Recommendations](#end-user-recommendations)
+    * 4.1 [Release Notes](#release-notes)
+* 5 [Known Issues](#known-issues)
+    * 5.1 [Open Issues](#open-issues)
+    * 5.2 [Summary](#summary)
+* 6 [Scope](#scope)
+    * 6.1 [Automated Regression Tests](#automated-regression-tests)
+        * 6.1.1 [Stateless](#stateless)
+        * 6.1.2 [Stateful](#stateful)
+        * 6.1.3 [Stress](#stress)
+        * 6.1.4 [Integration](#integration)
+        * 6.1.5 [Altinity TestFlows Integration](#altinity-testflows-integration)
+            * 6.1.5.1 [AES Encryption](#aes-encryption)
+            * 6.1.5.2 [Aggregate Functions](#aggregate-functions)
+            * 6.1.5.3 [Alter](#alter)
+            * 6.1.5.4 [Atomic Insert](#atomic-insert)
+            * 6.1.5.5 [Attach](#attach)
+            * 6.1.5.6 [Base58](#base58)
+            * 6.1.5.7 [Ontime Benchmark](#ontime-benchmark)
+            * 6.1.5.8 [ClickHouse Keeper](#clickhouse-keeper)
+            * 6.1.5.9 [ClickHouse Keeper Failover](#clickhouse-keeper-failover)
+            * 6.1.5.10 [Data Types](#data-types)
+            * 6.1.5.11 [DateTime64 Extended Range](#datetime64-extended-range)
+            * 6.1.5.12 [Disk Level Encryption](#disk-level-encryption)
+            * 6.1.5.13 [DNS](#dns)
+            * 6.1.5.14 [Engines](#engines)
+            * 6.1.5.15 [Example](#example)
+            * 6.1.5.16 [Extended Precision Data Types](#extended-precision-data-types)
+            * 6.1.5.17 [Functions](#functions)
+            * 6.1.5.18 [Hive Partitioning](#hive-partitioning)
+            * 6.1.5.19 [Iceberg](#iceberg)
+            * 6.1.5.20 [JWT Authentication](#jwt-authentication)
+            * 6.1.5.21 [Kafka](#kafka)
+            * 6.1.5.22 [Kerberos](#kerberos)
+            * 6.1.5.23 [Key Value](#key-value)
+            * 6.1.5.24 [LDAP](#ldap)
+            * 6.1.5.25 [Lightweight Delete](#lightweight-delete)
+            * 6.1.5.26 [Memory](#memory)
+            * 6.1.5.27 [Parquet](#parquet)
+            * 6.1.5.28 [Part Moves Between Shards](#part-moves-between-shards)
+            * 6.1.5.29 [RBAC](#rbac)
+            * 6.1.5.30 [S3](#s3)
+            * 6.1.5.31 [Selects](#selects)
+            * 6.1.5.32 [Session Timezone](#session-timezone)
+            * 6.1.5.33 [Settings](#settings)
+            * 6.1.5.34 [SSL Server](#ssl-server)
+            * 6.1.5.35 [Swarms](#swarms)
+            * 6.1.5.36 [Tiered Storage](#tiered-storage)
+            * 6.1.5.37 [Version](#version)
+            * 6.1.5.38 [Window Functions](#window-functions)
+    * 6.2 [Compatibility with Client Drivers](#compatibility-with-client-drivers)
+        * 6.2.1 [Python `clickhouse_driver`](#python-clickhouse_driver)
+        * 6.2.2 [ODBC `clickhouse-odbc`](#odbc-clickhouse-odbc)
+        * 6.2.3 [SQLAlchemy](#sqlalchemy)
+        * 6.2.4 [Java `clickhouse-jdbc`](#java-clickhouse-jdbc)
+    * 6.3 [Backup `clickhouse-backup`](#backup-clickhouse-backup)
+    * 6.4 [Compatibility With Operation on Kubernetes](#compatibility-with-operation-on-kubernetes)
+        * 6.4.1 [Kubernetes `clickhouse-operator`](#kubernetes-clickhouse-operator)
+        * 6.4.2 [Altinity.Cloud](#altinitycloud)
+    * 6.5 [Production Cluster Operation](#production-cluster-operation)
+    * 6.6 [Upgrade and Downgrade](#upgrade-and-downgrade)
+        * 6.6.1 [Upgrade](#upgrade)
+        * 6.6.2 [Downgrade](#downgrade)
+    * 6.7 [Compatibility With BI Tools](#compatibility-with-bi-tools)
+        * 6.7.1 [Grafana](#grafana)
+        * 6.7.2 [Tableau](#tableau)
+        * 6.7.3 [Superset](#superset)
+    * 6.8 [Docker Image Vulnerability Scanning](#docker-image-vulnerability-scanning)
+        * 6.8.1 [Grype](#grype)
+
 
 ## Introduction
 
@@ -148,41 +154,44 @@ Build report: **TBD**
 | Stateful | [Pass](#stateful)                      |   |
 | Stress | [Pass](#stress)                        |  Not executed  |
 | Integration | [*Pass](#integration)                   |   |
-| Key Value | [Pass](#key-value)                     |   |
-| Engines  | [Pass](#engines)                       | Not executed  |
-| Parquet | [Pass](#parquet)                       |   |
-| Parquet (AWS) | [Pass](#parquet)                       |   |
-| Parquet (Minio)| [Pass](#parquet)                       |   |
-| Memory | [Pass](#memory)                       |   |
-| Tiered Storage (Local) | [Pass](#tiered-storage)                |   |
-| Tiered Storage (MinIO) | [Pass](#tiered-storage)                |   |
-| Tiered Storage (AWS) | [Pass](#tiered-storage)                |   |
-| Tiered Storage (GCS) | [Pass](#tiered-storage)                |   |
-| S3 (AWS) | [Pass](#s3)                           |  |
-| S3 (MinIO) | [Pass](#s3)                            |   |
-| S3 (GCS) | [Pass](#s3)                            |   |
-| Selects | [Pass](#selects)                       |   |
-[ Session Timezone | [Pass](#session-timezone)              |   |
 | AES Encryption | [Pass](#aes-encryption)                |   |
+| Aggregate Functions | [Pass](#aggregate-functions)           |   |
 | Alter | [Pass](#alter)                 |   |
 | Atomic Insert | [Pass](#atomic-insert)                 |   |
+| Attach | [Pass](#attach)                        |   |
 | Base58 | [Pass](#base58)                        |   |
+| Ontime Benchmark | [Pass](#ontime-benchmark)              |   |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
+| ClickHouse Keeper Failover | [Pass](#clickhouse-keeper-failover)   |   |
+| Data Types | [Pass](#data-types)                    |   |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
+| Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
 | DNS | [Pass](#dns)                           |   |
+| Engines  | [Pass](#engines)                       | Not executed  |
+| Example | [Pass](#example)                       |   |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
+| Functions | [Pass](#functions)                     |   |
+| Hive Partitioning | [Pass](#hive-partitioning)           |   |
+| Iceberg | [Pass](#iceberg)                       |   |
+| JWT Authentication | [Pass](#jwt-authentication)           |   |
 | Kafka | [Pass](#kafka)                         |   |
 | Kerberos | [Pass](#kerberos)                      |   |
-| DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
-| Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
+| Key Value | [Pass](#key-value)                     |   |
 | LDAP | [Pass](#ldap)                          |   |
-| RBAC | [Pass](#rbac)                          |   |
-| Window Functions | [Pass](#window-functions)             |   |
-| SSL Server | [Pass](#ssl-server)                    |   |
-| Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
-| ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
-| Data Types | [Pass](#data-types)                    |   |
-| Benchmark | [Pass](#benchmark)              
-| Part Moves Between Shards | [Pass](#part-moves-between-shards)     |   |
 | Lightweight Delete | [Pass](#lightweight-delete)            |    |
-| Aggregate Functions | [Pass](#aggregate-functions)           |   |
+| Memory | [Pass](#memory)                       |   |
+| Parquet | [Pass](#parquet)                       |   |
+| Part Moves Between Shards | [Pass](#part-moves-between-shards)     |   |
+| RBAC | [Pass](#rbac)                          |   |
+| S3 | [Pass](#s3)                           |  |
+| Selects | [Pass](#selects)                       |   |
+| Session Timezone | [Pass](#session-timezone)              |   |
+| Settings | [Pass](#settings)                      |   |
+| SSL Server | [Pass](#ssl-server)                    |   |
+| Swarms | [Pass](#swarms)                        |   |
+| Tiered Storage | [Pass](#tiered-storage)                |   |
+| Version | [Pass](#version)                       |   |
+| Window Functions | [Pass](#window-functions)             |   |
 | Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)            |   |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                           |    |
@@ -240,36 +249,6 @@ The standard `integration` suite of tests consists of various suites of automate
 
 #### Altinity TestFlows Integration
 
-##### Key Value
-
-Results:
-
-**TBD**
-
-Altinity Key Value function tests.
-
-##### Engines
-
-**TBD**
-
-Altinity Engines tests.
-
-##### Selects
-
-Results:
-
-**TBD**
-
-Altinity Selects tests.
-
-##### Session Timezone
-
-Results:
-
-**TBD**
-
-Altinity Session Timezone tests.
-
 ##### AES Encryption
 
 Results:
@@ -278,21 +257,156 @@ Results:
 
 Altinity AES Encryption tests.
 
-##### Tiered-storage
+##### Aggregate Functions
+
+Results:
+
+**TBD**
+  
+Altinity Aggregate Functions integration tests.
+
+##### Alter
 
 Results:
 
 **TBD**
 
-Altinity Tiered-Storage tests.
+Altinity Alter tests.
 
-##### S3
+##### Atomic Insert
 
 Results:
 
 **TBD**
 
-Altinity S3 integration tests.
+Altinity Atomic Insert integration tests.
+
+##### Attach
+
+Results:
+
+**TBD**
+
+Altinity Attach tests.
+
+##### Base58
+
+Results:
+
+**TBD**
+
+Altinity Base58 encode and decode functions integration tests.
+
+##### Ontime Benchmark
+
+Results:
+
+**TBD**
+
+Altinity OnTime Benchmark tests.
+
+##### ClickHouse Keeper
+
+Results:
+
+**TBD**
+
+Altinity ClickHouse Keeper integration tests.
+
+##### ClickHouse Keeper Failover
+
+Results:
+
+**TBD**
+
+Altinity ClickHouse Keeper Failover integration tests.
+
+##### Data Types
+
+Results:
+
+**TBD**
+
+Altinity data types integration tests.
+
+##### DateTime64 Extended Range
+
+Results:
+
+**TBD**
+
+Altinity DateTime64 extended range integration tests.
+
+##### Disk Level Encryption
+
+Results:
+
+**TBD**
+
+Altinity Disk Level Encryption integration tests.
+
+##### DNS
+
+Results:
+
+**TBD**
+
+Altinity DNS integration tests.
+
+##### Engines
+
+**TBD**
+
+Altinity Engines tests.
+
+##### Example
+
+Results:
+
+**TBD**
+
+Altinity Example tests.
+
+##### Extended Precision Data Types
+
+Results:
+
+**TBD**
+
+Altinity Extended Precision Data Types integration tests.
+
+##### Functions
+
+Results:
+
+**TBD**
+
+Altinity Functions tests.
+
+##### Hive Partitioning
+
+Results:
+
+**TBD**
+
+Altinity Hive Partitioning tests.
+
+##### Iceberg
+
+Results:
+
+**TBD**
+
+Altinity Iceberg tests.
+
+
+##### JWT Authentication
+
+Results:
+
+**TBD**
+
+Altinity JWT Authentication tests.
 
 ##### Kafka
 
@@ -310,21 +424,13 @@ Results:
 
 Altinity Kerberos integration tests.
 
-##### DateTime64 Extended Range
+##### Key Value
 
 Results:
 
 **TBD**
 
-Altinity DateTime64 extended range integration tests.
-
-##### Extended Precision Data Types
-
-Results:
-
-**TBD**
-
-Altinity Extended Precision Data Types integration tests.
+Altinity Key Value function tests.
 
 ##### LDAP
 
@@ -334,62 +440,6 @@ Results:
 
 Altinity LDAP integration tests.
 
-##### RBAC
-
-Results:
-
-**TBD**
-
-Altinity RBAC integration tests.
-
-##### Window Functions
-
-Results:
-
-**TBD**
-
-Altinity Window Functions integration tests.
-
-##### SSL Server
-
-Results:
-
-**TBD**
-
-Altinity basic SSL server integration tests.
-
-##### Disk Level Encryption
-
-Results:
-
-**TBD**
-
-Altinity Disk Level Encryption integration tests.
-
-##### ClickHouse Keeper
-
-Results:
-
-**TBD**
-
-Altinity ClickHouse Keeper integration tests.
-
-##### Data Types
-
-Results:
-
-**TBD**
-
-Altinity data types integration tests.
-
-##### Part Moves Between Shards
-
-Results:
-
-**TBD**
-
-Altinity Part Moves Between Shards integration tests.
-
 ##### Lightweight Delete
 
 Results:
@@ -398,13 +448,13 @@ Results:
 
 Altinity Lightweight Delete integration tests.
 
-##### Base58
+##### Memory
 
 Results:
 
 **TBD**
 
-Altinity Base58 encode and decode functions integration tests.
+Altinity Memory tests.
 
 ##### Parquet
 
@@ -414,38 +464,95 @@ Results:
 
 Altinity Parquet format integration tests.
 
-
-##### Atomic Insert
-
-Results:
-
-**TBD**
-
-Altinity Atomic Insert integration tests.
-
-##### Aggregate Functions
-
-Results:
-
-**TBD**
-  
-Altinity Aggregate Functions integration tests.
-
-##### DNS
+##### Part Moves Between Shards
 
 Results:
 
 **TBD**
 
-Altinity DNS integration tests.
+Altinity Part Moves Between Shards integration tests.
 
-#### Benchmark
+##### RBAC
 
 Results:
 
 **TBD**
 
-Altinity OnTime Benchmark tests.
+Altinity RBAC integration tests.
+
+##### S3
+
+Results:
+
+**TBD**
+
+Altinity S3 integration tests.
+
+##### Selects
+
+Results:
+
+**TBD**
+
+Altinity Selects tests.
+
+##### Session Timezone
+
+Results:
+
+**TBD**
+
+Altinity Session Timezone tests.
+
+##### Settings
+
+Results:
+
+**TBD**
+
+Altinity Settings tests.
+
+##### SSL Server
+
+Results:
+
+**TBD**
+
+Altinity basic SSL server integration tests.
+
+##### Swarms
+
+Results:
+
+**TBD**
+
+Altinity Swarms tests.
+
+##### Tiered Storage
+
+Results:
+
+**TBD**
+
+Altinity Tiered-Storage tests.
+
+##### Version
+
+Results:
+
+**TBD**
+
+Altinity Version tests.
+
+##### Window Functions
+
+Results:
+
+**TBD**
+
+Altinity Window Functions integration tests.
+
+
 
 ### Compatibility with Client Drivers
 
