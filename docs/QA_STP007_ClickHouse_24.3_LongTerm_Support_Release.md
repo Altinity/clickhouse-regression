@@ -126,7 +126,7 @@ The following team members SHALL be dedicated to the release:
 
 ### Release Notes
 
-https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altinity-stable-24.3.4/ **TBD**
+https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/
 
 ### Notable Differences in Behavior
 
@@ -171,7 +171,7 @@ https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.3/altini
 
 ### Summary
 
-Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.4.21.altinitystable/2023-12-26T23-40-44.341/report.html **TBD**
+Build report: https://altinity-test-reports.s3.amazonaws.com/builds/released/v24.3.5.47.altinitystable/report.html
 
 > [!NOTE]
 > **Pass\*** - tests passed with known fails
@@ -245,7 +245,8 @@ The following automated regression test suites SHALL be executed.
 
 Results:
 
-**TBD**
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/stateless/amd64/stateless_results.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/stateless/aarch64/stateless_results.html
 
 The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
 
@@ -253,7 +254,8 @@ The standard `stateless` suite that consists of running SQL, python and bash scr
 
 Results:
 
-**TBD**
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/stateful/amd64/stateful_results.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/stateful/aarch64/stateful_results.html
 
 The standard `stateful` suite that consists of running SQL scripts executed against a predefined database schema.
 
@@ -267,7 +269,12 @@ The standard `stress` suite that consists of running tests from the `stateless` 
 
 Results:
 
-**TBD**
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_1.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_2.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_3.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_4.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_5.html
+https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/integration/release/integration_results_6.html 
 
 The standard `integration` suite of tests consists of various suites of automated tests that use [PyTest Framework](https://pytest.org) .
 
@@ -277,7 +284,8 @@ The standard `integration` suite of tests consists of various suites of automate
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/key_value/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/key_value/
 
 Altinity Key Value function tests.
 
@@ -291,7 +299,9 @@ Altinity Engines tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/selects/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/selects/
+
 
 Altinity Selects tests.
 
@@ -299,7 +309,7 @@ Altinity Selects tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/session_timezone/
 
 Altinity Session Timezone tests.
 
@@ -307,7 +317,7 @@ Altinity Session Timezone tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/aes_encryption/
 
 Altinity AES Encryption tests.
 
@@ -315,7 +325,7 @@ Altinity AES Encryption tests.
 
 Results:
 
-**TBD**
+
 
 Altinity Tiered-Storage tests.
 
@@ -323,7 +333,7 @@ Altinity Tiered-Storage tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/tiered_storage/
 
 Altinity S3 integration tests.
 
@@ -331,7 +341,7 @@ Altinity S3 integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/kafka/
 
 Altinity Kafka integration tests.
 
@@ -339,7 +349,8 @@ Altinity Kafka integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/kerberos/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/kerberos/
 
 Altinity Kerberos integration tests.
 
@@ -347,7 +358,8 @@ Altinity Kerberos integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/datetime64_extended_range/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/datetime64_extended_range/
 
 Altinity DateTime64 extended range integration tests.
 
@@ -355,7 +367,8 @@ Altinity DateTime64 extended range integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/extended_precision_data_types/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/extended_precision_data_types/
 
 Altinity Extended Precision Data Types integration tests.
 
@@ -363,7 +376,8 @@ Altinity Extended Precision Data Types integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/ldap/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/ldap/
 
 Altinity LDAP integration tests.
 
@@ -371,7 +385,8 @@ Altinity LDAP integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/rbac/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/rbac/
 
 Altinity RBAC integration tests.
 
@@ -379,7 +394,8 @@ Altinity RBAC integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/window_functions/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/window_functions/
 
 Altinity Window Functions integration tests.
 
@@ -387,7 +403,8 @@ Altinity Window Functions integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/ssl_server/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/ssl_server/
 
 Altinity basic SSL server integration tests.
 
@@ -395,7 +412,8 @@ Altinity basic SSL server integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/disk_level_encryption/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/disk_level_encryption/
 
 Altinity Disk Level Encryption integration tests.
 
@@ -403,7 +421,8 @@ Altinity Disk Level Encryption integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/clickhouse_keeper/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/clickhouse_keeper/
 
 Altinity ClickHouse Keeper integration tests.
 
@@ -411,7 +430,8 @@ Altinity ClickHouse Keeper integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/data_types/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/data_types/
 
 Altinity data types integration tests.
 
@@ -419,7 +439,8 @@ Altinity data types integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/part_moves_between_shards/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/part_moves_between_shards/
 
 Altinity Part Moves Between Shards integration tests.
 
@@ -427,7 +448,8 @@ Altinity Part Moves Between Shards integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/lightweight_delete/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/lightweight_delete/
 
 Altinity Lightweight Delete integration tests.
 
@@ -435,7 +457,8 @@ Altinity Lightweight Delete integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/base_58/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/base_58/
 
 Altinity Base58 encode and decode functions integration tests.
 
@@ -443,7 +466,12 @@ Altinity Base58 encode and decode functions integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/parquet/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/parquet/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/parquetaws_s3/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/parquetaws_s3/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/parquetminio/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/parquetminio/
 
 Altinity Parquet format integration tests.
 
@@ -452,7 +480,8 @@ Altinity Parquet format integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/atomic_insert/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/atomic_insert/
 
 Altinity Atomic Insert integration tests.
 
@@ -460,7 +489,8 @@ Altinity Atomic Insert integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/aggregate_functions/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/aggregate_functions/
   
 Altinity Aggregate Functions integration tests.
 
@@ -468,7 +498,8 @@ Altinity Aggregate Functions integration tests.
 
 Results:
 
-**TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/dns/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/dns/
 
 Altinity DNS integration tests.
 
@@ -476,7 +507,12 @@ Altinity DNS integration tests.
 
 Results:
 
-***TBD**
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/ontime_benchmark/aws_s3/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/ontime_benchmark/aws_s3/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/ontime_benchmark/gcs/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/ontime_benchmark/gcs/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/x86_64/ontime_benchmark/minio/
+https://altinity-build-artifacts.s3.amazonaws.com/index.html#0/b6642564dbf296d6e55b907d7af6c8087470b672/regression/aarch64/ontime_benchmark/minio/
 
 Altinity OnTime Benchmark tests.
 
@@ -605,7 +641,8 @@ Compatibility with [Superset].
 
 Results:
 
-**TBD**
+https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/staging-docker-trivy-ubuntu-server-amd64/results.html
+https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/staging-docker-trivy-ubuntu-server-arm64/results.html
 
 Trivy Docker image vulnerability scanner.
 
@@ -613,7 +650,8 @@ Trivy Docker image vulnerability scanner.
 
 Results:
 
-**TBD**
+https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/staging-docker-scout-ubuntu-server-amd64/results.html
+https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.3.5.47.altinitystable/2024-07-22T16-58-24.034/staging-docker-scout-ubuntu-server-arm64/results.html
 
 Scout Docker image vulnerability scanner.
 
