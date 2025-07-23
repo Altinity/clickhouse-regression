@@ -21,7 +21,7 @@
 
 **Summary:**
 
-Started to execute test plan on December 16, 2024 and ended on Januart 13, 2025.
+Started to execute test plan on December 16, 2024 and ended on January 13, 2025.
 
 ## Table of Contents
 
