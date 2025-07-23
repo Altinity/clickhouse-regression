@@ -122,8 +122,6 @@ The following team members SHALL be dedicated to the release:
 
 * https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.8/
 
-### Summary of Main Regressions
-
 ## Known Issues
 
 * Analyzer issues https://github.com/ClickHouse/ClickHouse/labels/analyzer
@@ -138,11 +136,10 @@ The following team members SHALL be dedicated to the release:
 
 ### Open Issues
 
-[GitHub is:issue is:open label:v24.8-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.8-affected+) as of January 13, 2024
+[GitHub is:issue is:open label:v24.8-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av24.8-affected+) 
 
+* https://github.com/ClickHouse/ClickHouse/issues/81045 (SerializationString Crash after DROP/ADD the same column)
 * https://github.com/ClickHouse/ClickHouse/issues/69518 (Inconsistent handling of maps with LowCardinality(Nullable) between 24.3 and 24.8)
-* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers tests for JSON type fails)
-* https://github.com/mymarilyn/clickhouse-driver/issues/470 (Clickhouse drivers test for client with no cert validations fails)
 
 ### Summary
 
@@ -237,7 +234,11 @@ The standard `stateful` suite that consists of running SQL scripts executed agai
 
 Results:
 
-Results: not executed
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stress/asan/stress_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stateful/msan/stateful_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stress/tsan/stress_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stress/ubsan/stress_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stress/debug/stress_results.html
 
 The standard `stress` suite that consists of running tests from the `stateless` suite in parallel to check for server hang-up and crashes.
 
@@ -447,7 +448,11 @@ Altinity Base58 encode and decode functions integration tests.
 Results:
 
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetminio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquetaws_s3/report.html
 
 Altinity Parquet format integration tests.
 
@@ -609,11 +614,12 @@ Compatibility with [Superset].
 
 ### Docker Image Vulnerability Scanning
 
-#### Gripe
+#### Grype
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/staging-docker-grype-ubuntu-server-amd64/results.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/staging-docker-grype-ubuntu-server-arm64/results.html
 
 Gripe Docker image vulnerability scanner.
 
