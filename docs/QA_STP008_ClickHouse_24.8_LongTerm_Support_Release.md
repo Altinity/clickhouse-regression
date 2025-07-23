@@ -195,7 +195,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                       |   |
 | Superset | [Pass](#superset)                             |   |
-| Gripe | [Pass](#gripe)                         |   |
+| Grype | [Pass](#grype)                         |   |
 
 ## Scope
 

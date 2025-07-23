@@ -17,11 +17,11 @@
 
 **Build Report:**
 
-* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/report.html
+**TBD**
 
 **Summary:**
 
-Started to execute test plan on December 16, 2025 and ended on January 13, 2025.
+**TBD**
 
 ## Table of Contents
 
@@ -205,7 +205,7 @@ Build report: **TBD**
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                       |   |
 | Superset | [Pass](#superset)                             |   |
-| Gripe | [Pass](#gripe)                         |   |
+| Grype | [Pass](#grype)                         |   |
 
 ## Scope
 
