@@ -120,7 +120,7 @@ The following team members SHALL be dedicated to the release:
 
 ### Release Notes
 
-**TBD**
+* https://docs.altinity.com/releasenotes/altinity-stable-release-notes/24.8/
 
 ### Summary of Main Regressions
 
@@ -136,7 +136,7 @@ The following team members SHALL be dedicated to the release:
 
 ### Summary
 
-Build report: **TBD**
+Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/report.html
 
 > [!NOTE]
 > **Pass\*** - tests passed with known fails
@@ -209,7 +209,8 @@ The following automated regression test suites SHALL be executed.
 
 Results:
 
-**TBD**
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.14.10459.altinitystable/2025-03-27T02-26-35.852/stateless/amd64/stateless_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stateless/aarch64/stateless_results.html
 
 The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
 
@@ -217,7 +218,8 @@ The standard `stateless` suite that consists of running SQL, python and bash scr
 
 Results:
 
-**TBD**
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.14.10459.altinitystable/2025-03-27T02-26-35.852/stateful/amd64/stateful_results.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/stateful/aarch64/stateful_results.html
 
 The standard `stateful` suite that consists of running SQL scripts executed against a predefined database schema.
 
@@ -233,7 +235,11 @@ The standard `stress` suite that consists of running tests from the `stateless` 
 
 Results:
 
-**TBD**
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/integration/release/integration_results_1.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/integration/release/integration_results_2.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/integration/release/integration_results_3.html
+* https://s3.amazonaws.com/altinity-test-reports/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/integration/release/integration_results_4.html
+
 
 The standard `integration` suite of tests consists of various suites of automated tests that use [PyTest Framework](https://pytest.org) .
 
@@ -243,13 +249,15 @@ The standard `integration` suite of tests consists of various suites of automate
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/key_value/report.html
 
 Altinity Key Value function tests.
 
 ##### Engines
 
-Results: not executed
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/engines/report.html
 
 Altinity Engines tests.
 
@@ -257,7 +265,8 @@ Altinity Engines tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/selects/report.html
 
 Altinity Selects tests.
 
@@ -265,7 +274,8 @@ Altinity Selects tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/session_timezone/report.html
 
 Altinity Session Timezone tests.
 
@@ -273,7 +283,8 @@ Altinity Session Timezone tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aes_encryption/report.html
 
 Altinity AES Encryption tests.
 
@@ -281,7 +292,8 @@ Altinity AES Encryption tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/tiered_storage/report.html
 
 Altinity Tiered-Storage tests.
 
@@ -289,7 +301,8 @@ Altinity Tiered-Storage tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3/report.html
 
 Altinity S3 integration tests.
 
@@ -297,7 +310,8 @@ Altinity S3 integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kafka/report.html
 
 Altinity Kafka integration tests.
 
@@ -305,7 +319,8 @@ Altinity Kafka integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/kerberos/report.html
 
 Altinity Kerberos integration tests.
 
@@ -313,7 +328,8 @@ Altinity Kerberos integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/datetime64_extended_range/report.html
 
 Altinity DateTime64 extended range integration tests.
 
@@ -321,7 +337,8 @@ Altinity DateTime64 extended range integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/extended_precision_data_types/report.html
 
 Altinity Extended Precision Data Types integration tests.
 
@@ -329,7 +346,8 @@ Altinity Extended Precision Data Types integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ldap/report.html
 
 Altinity LDAP integration tests.
 
@@ -337,7 +355,8 @@ Altinity LDAP integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/rbac/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/rbac/report.html
 
 Altinity RBAC integration tests.
 
@@ -345,7 +364,8 @@ Altinity RBAC integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/window_functions/report.html
 
 Altinity Window Functions integration tests.
 
@@ -353,7 +373,8 @@ Altinity Window Functions integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ssl_server/report.html
 
 Altinity basic SSL server integration tests.
 
@@ -361,7 +382,8 @@ Altinity basic SSL server integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/disk_level_encryption/report.html
 
 Altinity Disk Level Encryption integration tests.
 
@@ -369,7 +391,8 @@ Altinity Disk Level Encryption integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/clickhouse_keeper/report.html
 
 Altinity ClickHouse Keeper integration tests.
 
@@ -377,7 +400,8 @@ Altinity ClickHouse Keeper integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/data_types/report.html
 
 Altinity data types integration tests.
 
@@ -385,7 +409,8 @@ Altinity data types integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/part_moves_between_shards/report.html
 
 Altinity Part Moves Between Shards integration tests.
 
@@ -393,7 +418,8 @@ Altinity Part Moves Between Shards integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/lightweight_delete/report.html
 
 Altinity Lightweight Delete integration tests.
 
@@ -401,7 +427,8 @@ Altinity Lightweight Delete integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/base_58/report.html
 
 Altinity Base58 encode and decode functions integration tests.
 
@@ -409,7 +436,8 @@ Altinity Base58 encode and decode functions integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/parquet/report.html
 
 Altinity Parquet format integration tests.
 
@@ -418,7 +446,8 @@ Altinity Parquet format integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/atomic_insert/report.html
 
 Altinity Atomic Insert integration tests.
 
@@ -426,7 +455,8 @@ Altinity Atomic Insert integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/aggregate_functions/report.html
   
 Altinity Aggregate Functions integration tests.
 
@@ -434,7 +464,8 @@ Altinity Aggregate Functions integration tests.
 
 Results:
 
-**TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/dns/report.html
 
 Altinity DNS integration tests.
 
@@ -442,7 +473,12 @@ Altinity DNS integration tests.
 
 Results:
 
-***TBD**
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/minio/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/aws_s3/report.html
+* https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/ontime_benchmark/gcs/report.html
 
 Altinity OnTime Benchmark tests.
 
