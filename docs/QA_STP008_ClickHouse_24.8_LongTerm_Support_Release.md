@@ -621,7 +621,7 @@ Results:
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/staging-docker-grype-ubuntu-server-amd64/results.html
 * https://altinity-test-reports.s3.amazonaws.com/builds/stable/v24.8.11.51285.altinitystable/2025-01-30T18-01-41.627/staging-docker-grype-ubuntu-server-arm64/results.html
 
-Gripe Docker image vulnerability scanner.
+[Grype](https://github.com/anchore/grype) Docker image vulnerability scanner.
 
 
 [Grafana]: https://grafana.com/
