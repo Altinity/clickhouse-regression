@@ -78,25 +78,30 @@
             * 6.1.5.36 [Tiered Storage](#tiered-storage)
             * 6.1.5.37 [Version](#version)
             * 6.1.5.38 [Window Functions](#window-functions)
-    * 6.2 [Compatibility with Client Drivers](#compatibility-with-client-drivers)
-        * 6.2.1 [Python `clickhouse_driver`](#python-clickhouse_driver)
-        * 6.2.2 [ODBC `clickhouse-odbc`](#odbc-clickhouse-odbc)
-        * 6.2.3 [SQLAlchemy](#sqlalchemy)
-        * 6.2.4 [Java `clickhouse-jdbc`](#java-clickhouse-jdbc)
-    * 6.3 [Backup `clickhouse-backup`](#backup-clickhouse-backup)
-    * 6.4 [Compatibility With Operation on Kubernetes](#compatibility-with-operation-on-kubernetes)
-        * 6.4.1 [Kubernetes `clickhouse-operator`](#kubernetes-clickhouse-operator)
-        * 6.4.2 [Altinity.Cloud](#altinitycloud)
-    * 6.5 [Production Cluster Operation](#production-cluster-operation)
-    * 6.6 [Upgrade and Downgrade](#upgrade-and-downgrade)
-        * 6.6.1 [Upgrade](#upgrade)
-        * 6.6.2 [Downgrade](#downgrade)
-    * 6.7 [Compatibility With BI Tools](#compatibility-with-bi-tools)
-        * 6.7.1 [Grafana](#grafana)
-        * 6.7.2 [Tableau](#tableau)
-        * 6.7.3 [Superset](#superset)
-    * 6.8 [Docker Image Vulnerability Scanning](#docker-image-vulnerability-scanning)
-        * 6.8.1 [Grype](#grype)
+    * 6.2 [Regression Tests with Sanitizers](#regression-tests-with-sanitizers)
+        * 6.2.1 [ASAN](#asan)
+        * 6.2.2 [MSAN](#msan)
+        * 6.2.3 [UBSAN](#ubsan)
+        * 6.2.4 [TSAN](#tsan)
+    * 6.3 [Compatibility with Client Drivers](#compatibility-with-client-drivers)
+        * 6.3.1 [Python `clickhouse_driver`](#python-clickhouse_driver)
+        * 6.3.2 [ODBC `clickhouse-odbc`](#odbc-clickhouse-odbc)
+        * 6.3.3 [SQLAlchemy](#sqlalchemy)
+        * 6.3.4 [Java `clickhouse-jdbc`](#java-clickhouse-jdbc)
+    * 6.4 [Backup `clickhouse-backup`](#backup-clickhouse-backup)
+    * 6.5 [Compatibility With Operation on Kubernetes](#compatibility-with-operation-on-kubernetes)
+        * 6.5.1 [Kubernetes `clickhouse-operator`](#kubernetes-clickhouse-operator)
+        * 6.5.2 [Altinity.Cloud](#altinitycloud)
+    * 6.6 [Production Cluster Operation](#production-cluster-operation)
+    * 6.7 [Upgrade and Downgrade](#upgrade-and-downgrade)
+        * 6.7.1 [Upgrade](#upgrade)
+        * 6.7.2 [Downgrade](#downgrade)
+    * 6.8 [Compatibility With BI Tools](#compatibility-with-bi-tools)
+        * 6.8.1 [Grafana](#grafana)
+        * 6.8.2 [Tableau](#tableau)
+        * 6.8.3 [Superset](#superset)
+    * 6.9 [Docker Image Vulnerability Scanning](#docker-image-vulnerability-scanning)
+        * 6.9.1 [Grype](#grype)
 
 
 ## Introduction
@@ -552,6 +557,23 @@ Results:
 
 Altinity Window Functions integration tests.
 
+### Regression Tests with Sanitizers
+
+#### ASAN
+Results:
+* **TBD**
+
+#### MSAN
+Results:
+* **TBD**
+
+#### UBSAN
+Results:
+* **TBD**
+
+#### TSAN
+Results:
+* **TBD**
 
 
 ### Compatibility with Client Drivers
