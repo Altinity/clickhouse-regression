@@ -592,7 +592,8 @@ The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) 
 
 #### Java `clickhouse-jdbc`
 
-clickhouse-jdbc version: 0.9.0
+clickhouse-jdbc version: 
+* 0.9.0
 
 Results: 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-jdbc/
@@ -614,9 +615,12 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
-Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-operator/
+clickhouse-operator version: 
+* 0.25.2
 
-clickhouse-operator version: 0.25.2
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-operator/
+
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
