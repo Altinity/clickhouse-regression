@@ -1,0 +1,44 @@
+diff --git a/tests/test_blocks.py b/tests/test_blocks.py
+index ff99267..d8e7850 100644
+--- a/tests/test_blocks.py
++++ b/tests/test_blocks.py
+@@ -102,7 +102,7 @@ class ProgressTestCase(BaseTestCase):
+ 
+         self.assertEqual(progress.progress_totals.rows, 1)
+         self.assertEqual(progress.progress_totals.bytes, 1)
+-        self.assertEqual(progress.progress_totals.total_rows, 0)
++        self.assertEqual(progress.progress_totals.total_rows, 1)
+ 
+     def test_select_with_progress_error(self):
+         with self.assertRaises(ServerException):
+diff --git a/tests/test_query_info.py b/tests/test_query_info.py
+index 0b74344..4c3720a 100644
+--- a/tests/test_query_info.py
++++ b/tests/test_query_info.py
+@@ -33,7 +33,7 @@ class QueryInfoTestCase(BaseTestCase):
+         self.assertIsNotNone(last_query.progress)
+         self.assertEqual(last_query.progress.rows, 42)
+         self.assertEqual(last_query.progress.bytes, 42)
+-        self.assertEqual(last_query.progress.total_rows, 0)
++        self.assertEqual(last_query.progress.total_rows, 42)
+         if self.server_version > (22, 8):
+             self.assertGreater(last_query.progress.elapsed_ns, 0)
+ 
+@@ -51,7 +51,7 @@ class QueryInfoTestCase(BaseTestCase):
+         self.assertIsNotNone(last_query.progress)
+         self.assertEqual(last_query.progress.rows, 42)
+         self.assertEqual(last_query.progress.bytes, 42)
+-        self.assertEqual(last_query.progress.total_rows, 0)
++        self.assertEqual(last_query.progress.total_rows, 42)
+         if self.server_version > (22, 8):
+             self.assertGreater(last_query.progress.elapsed_ns, 0)
+ 
+@@ -71,7 +71,7 @@ class QueryInfoTestCase(BaseTestCase):
+         self.assertIsNotNone(last_query.progress)
+         self.assertEqual(last_query.progress.rows, 42)
+         self.assertEqual(last_query.progress.bytes, 42)
+-        self.assertEqual(last_query.progress.total_rows, 0)
++        self.assertEqual(last_query.progress.total_rows, 42)
+         if self.server_version > (22, 8):
+             self.assertGreater(last_query.progress.elapsed_ns, 0)
+ 
