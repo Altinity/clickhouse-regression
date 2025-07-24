@@ -560,9 +560,11 @@ The following client drivers SHALL be tested for compatibility:
 
 #### Python `clickhouse_driver`
 
-clickhouse-driver version: **TBD**
+clickhouse-driver version: 
+* 0.2.9
 
-Results: **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-driver/
   
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
@@ -570,27 +572,33 @@ Compatibility with the [clickhouse-driver](https://github.com/mymarilyn/clickhou
 
 #### ODBC `clickhouse-odbc`
 
-clickhouse-odbc version: **TBD**
+clickhouse-odbc version: 
+* v1.3.0.20241018
 
-Results: **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
 #### SQLAlchemy
 
-clickhouse-sqlalchemy version: **TBD**
+clickhouse-sqlalchemy version: 
+* 0.3.2
 
-Results: **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
 #### Java `clickhouse-jdbc`
 
-clickhouse-jdbc version: **TBD**
+clickhouse-jdbc version: 0.9.0
 
-Results: **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-jdbc/
 
-Results (DBeaver): **TBD**
+Results (DBeaver): 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-jdbc/DBeaver/
 
 The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
@@ -644,9 +652,8 @@ Compatibility with the following BI tools.
 
 #### Grafana
 
-Results:
-
-**TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/grafana/
 
 Compatibility with [Grafana].
 
