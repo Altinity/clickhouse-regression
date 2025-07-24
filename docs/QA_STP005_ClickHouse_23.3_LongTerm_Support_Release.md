@@ -244,7 +244,7 @@ Reported By Altinity:
 | Disk Level Encryption | [Pass](#disk-level-encryption)  |   |
 | ClickHouse Keeper | [Pass](#clickhouse-keeper)  |   |
 | Map Type | [Pass](#map-type) |   |
-| Ontime Bechmark | [Pass](#ontime-benchmark)
+| Ontime Benchmark | [Pass](#ontime-benchmark)
 | Part Moves Between Shards | [Pass](#part-moves-between-shards) |   |
 | Lightweight Delete | [Pass](#lightweight-delete) |    |
 | Aggregate Functions | [Pass](#aggregate-functions) |  |

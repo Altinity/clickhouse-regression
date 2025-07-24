@@ -236,7 +236,7 @@ Build report: https://altinity-test-reports.s3.amazonaws.com/builds/stable/v23.8
 | Disk Level Encryption | [Pass](#disk-level-encryption)            |   |
 | ClickHouse Keeper | [Pass](#clickhouse-keeper)                |   |
 | Data Types | [Pass](#data-types)                         |   |
-| Ontime Bechmark | [Pass](#ontime-benchmark)                 
+| Ontime Benchmark | [Pass](#ontime-benchmark)                 
 | Part Moves Between Shards | [Pass](#part-moves-between-shards)        |   |
 | Lightweight Delete | [Pass](#lightweight-delete)               |    |
 | Aggregate Functions | [Pass](#aggregate-functions)              |   |
