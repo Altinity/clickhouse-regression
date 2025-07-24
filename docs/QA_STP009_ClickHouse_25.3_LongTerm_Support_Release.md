@@ -137,7 +137,7 @@ The following team members SHALL be dedicated to the release:
 
 ## Known Issues
 
-
+* https://s3.amazonaws.com/altinity-build-artifacts/0/3fc8dcca7502c7fe8eaca61221cb0ce3bf0cf708/stateless_tests__tsan__[6_6]/run.log - TSAN client crash
 
 ### Open Issues
 
