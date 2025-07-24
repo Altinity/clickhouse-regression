@@ -614,9 +614,9 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
-Results: **TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-operator/
 
-clickhouse-operator version: **TBD**
+clickhouse-operator version: 0.25.2
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
 
