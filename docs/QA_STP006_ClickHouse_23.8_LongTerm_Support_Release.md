@@ -122,7 +122,7 @@ The following team members SHALL be dedicated to the release:
 
 ### Release Notes
 
-https://docs.altinity.com/releasenotes/altinity-stable-release-notes/23.8/altinity-stable-23.8.8/
+https://docs.altinity.com/releasenotes/altinity-stable-release-notes/23.8/
 
 ### Notable Differences in Behavior
 
