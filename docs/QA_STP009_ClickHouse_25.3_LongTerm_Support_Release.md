@@ -116,17 +116,14 @@ The testing of 25.3.6 binaries SHALL be started on July 21, 2025 and be complete
 
 The following team members SHALL be dedicated to the release:
 
-**TBD**
-
-* Vitaliy Zakaznikov (manager, regression)
-* Davit Mnatobishvili (parquet, LDAP, benchmarks, alter, extended precision data types)
-* Alsu Giliazova (aggregate functions, selects, lightweight_delete)
-* Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
-* Andrey Antipov (clickhouse-operator, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy, Grafana)
+* Vitaliy Zakaznikov (manager)
+* Davit Mnatobishvili (regression)
+* Alsu Giliazova (regression)
+* Saba Momtselidze (clickhouse-operator)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
 * Eugene Klimov (Superset)
-* Tatiana Saltykova (production cluster, upgrade and downgrade)
+* Mikhail Filimonov (production clusters, support team feedback)
 
 ### Release Notes
 
@@ -655,9 +652,9 @@ Compatibility with Altinity.Cloud.
 
 ### Production Cluster Operation
 
-Results: 
+Results: OK
 
-Operation on a production clusters.
+Approved by Mikhail Filimonov. 
 
 ### Upgrade and Downgrade
 
