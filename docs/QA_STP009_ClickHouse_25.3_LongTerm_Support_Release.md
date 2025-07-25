@@ -5,11 +5,11 @@
 
 **Author:** vzakaznikov
 
-**Date:** **TBD**
+**Date:** July 25, 2025
 
 ## Execution Summary
 
-**Completed:** **TBD**
+**Completed:** July 25, 2025
 
 **Test Results:**
 
@@ -21,7 +21,7 @@
 
 **Summary:**
 
-**TBD**
+Approved for release.
 
 ## Table of Contents
 
@@ -110,25 +110,20 @@ This test plan covers testing of ClickHouse 25.3 LTS (long-term support) Altinit
 
 ## Timeline
 
-The testing of 24.8.8.17 binaries SHALL be started on December 16, 2024 and be completed
-by January 13, 2025.
+The testing of 25.3.6 binaries SHALL be started on July 21, 2025 and be completed by July 25, 2025.
 
 ## Human Resources And Assignments
 
 The following team members SHALL be dedicated to the release:
 
-**TBD**
-
-* Vitaliy Zakaznikov (manager, regression)
-* Davit Mnatobishvili (clickhouse-operator, clickhouse-jdbc-DBeaver, ODBC driver, Grafana, Superset, clickhouse-regression suites)
-* Alsu Giliazova (clickhouse-sqlalchemy, Python clickhouse-driver, JDBC driver, clickhouse-regression suites)
-* Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
+* Vitaliy Zakaznikov (manager)
+* Davit Mnatobishvili (regression)
+* Alsu Giliazova (regression)
+* Saba Momtselidze (clickhouse-operator)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
 * Eugene Klimov (Superset)
-* Tatiana Saltykova (production cluster, upgrade and downgrade)
-
-## End User Recommendations
+* Mikhail Filimonov (production clusters, support team feedback)
 
 ### Release Notes
 
@@ -644,8 +639,11 @@ The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
 ### Backup `clickhouse-backup`
 
-Results: **TBD**
-Results (ACM): **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-backup/
+
+Results (ACM):
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -664,19 +662,21 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 
 #### Altinity.Cloud
 
-Results: **TBD**
+Results: 
+https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/launch_with_25.3.6.10314.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
 ### Production Cluster Operation
 
-Results: 
+Results: OK
 
-Operation on a production clusters.
+Approved by Mikhail Filimonov. 
 
 ### Upgrade and Downgrade
 
-Results: **TBD**
+Results: 
+https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/upgrade_downgrade_from_24.8.14.10501.altinitystable_to_0-25.3.6.10314.altinitytest/
 
 The upgrade and downgrade.
 
@@ -709,11 +709,11 @@ Compatibility with [Tableau].
 
 #### Superset
 
-Results:
-
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/superset/
 
 Compatibility with [Superset].
+
+The tests were run against Superset version 4.1.1. Currently, there is an issue with establishing a connection to ClickHouse in Superset 5.0.0 (latest), due to the absence of the `clickhouse-connect` library in the default setup. This default setup follows the same test procedure we used previously with version 4.1.1.
 
 ### Docker Image Vulnerability Scanning
 
