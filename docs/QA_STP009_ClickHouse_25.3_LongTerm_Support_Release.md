@@ -120,10 +120,9 @@ The following team members SHALL be dedicated to the release:
 **TBD**
 
 * Vitaliy Zakaznikov (manager, regression)
-* Davit Mnatobishvili (parquet, LDAP, benchmarks, alter, extended precision data types)
-* Alsu Giliazova (aggregate functions, selects, lightweight_delete)
+* Davit Mnatobishvili (clickhouse-operator, clickhouse-jdbc-DBeaver, ODBC driver, Grafana, Superset, clickhouse-regression suites)
+* Alsu Giliazova (clickhouse-sqlalchemy, Python clickhouse-driver, JDBC driver, clickhouse-regression suites)
 * Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
-* Andrey Antipov (clickhouse-operator, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy, Grafana)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
 * Eugene Klimov (Superset)
@@ -561,19 +560,23 @@ Altinity Window Functions integration tests.
 
 #### ASAN
 Results:
-* **TBD**
+* https://github.com/Altinity/clickhouse-regression/actions/runs/16499024759
 
 #### MSAN
 Results:
-* **TBD**
+* https://github.com/Altinity/clickhouse-regression/actions/runs/16499055577
+
+Known issues:
+* https://github.com/clickhouse/clickhouse/issues/80862
+* https://github.com/clickhouse/clickhouse/issues/83380
 
 #### UBSAN
 Results:
-* **TBD**
+* https://github.com/Altinity/clickhouse-regression/actions/runs/16499084890
 
 #### TSAN
 Results:
-* **TBD**
+* https://github.com/Altinity/clickhouse-regression/actions/runs/16499084890
 
 
 ### Compatibility with Client Drivers
@@ -587,6 +590,19 @@ clickhouse-driver version:
 
 Results: 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-driver/
+
+Created Patched for version 0.2.9:
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-cert.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-json.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-progress.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-totals.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9.patch
+
+Opened issues:
+ * https://github.com/mymarilyn/clickhouse-driver/issues/489
+
+Opened PRs:
+ * https://github.com/mymarilyn/clickhouse-driver/pull/490
   
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
