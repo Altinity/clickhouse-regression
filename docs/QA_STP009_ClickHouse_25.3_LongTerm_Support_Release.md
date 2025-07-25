@@ -5,11 +5,11 @@
 
 **Author:** vzakaznikov
 
-**Date:** **TBD**
+**Date:** July 25, 2025
 
 ## Execution Summary
 
-**Completed:** **TBD**
+**Completed:** July 25, 2025
 
 **Test Results:**
 
@@ -21,7 +21,7 @@
 
 **Summary:**
 
-**TBD**
+Approved for release.
 
 ## Table of Contents
 
@@ -110,8 +110,7 @@ This test plan covers testing of ClickHouse 25.3 LTS (long-term support) Altinit
 
 ## Timeline
 
-The testing of 24.8.8.17 binaries SHALL be started on December 16, 2024 and be completed
-by January 13, 2025.
+The testing of 25.3.6 binaries SHALL be started on July 21, 2025 and be completed by July 25, 2025.
 
 ## Human Resources And Assignments
 
@@ -128,8 +127,6 @@ The following team members SHALL be dedicated to the release:
 * Dima Borovstov (Tableau)
 * Eugene Klimov (Superset)
 * Tatiana Saltykova (production cluster, upgrade and downgrade)
-
-## End User Recommendations
 
 ### Release Notes
 
