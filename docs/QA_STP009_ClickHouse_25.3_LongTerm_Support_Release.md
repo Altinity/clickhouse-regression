@@ -698,9 +698,7 @@ Compatibility with [Tableau].
 
 #### Superset
 
-Results:
-
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/superset/
 
 Compatibility with [Superset].
 
