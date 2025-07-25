@@ -696,6 +696,8 @@ Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#repo
 
 Compatibility with [Superset].
 
+The tests were run against Superset version 4.1.1. Currently, there is an issue with establishing a connection to ClickHouse in Superset 5.0.0 (latest), due to the clickhouse-connect library being missing in the default setup. This default setup follows the same test procedure we used previously with version 4.1.1.
+
 ### Docker Image Vulnerability Scanning
 
 #### Grype
