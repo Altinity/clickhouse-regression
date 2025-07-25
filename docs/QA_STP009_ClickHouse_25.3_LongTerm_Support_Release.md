@@ -628,8 +628,11 @@ The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
 ### Backup `clickhouse-backup`
 
-Results: **TBD**
-Results (ACM): **TBD**
+Results: 
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-backup/
+
+Results (ACM):
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -648,7 +651,8 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 
 #### Altinity.Cloud
 
-Results: **TBD**
+Results: 
+https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/launch_with_25.3.6.10314.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
@@ -660,7 +664,8 @@ Operation on a production clusters.
 
 ### Upgrade and Downgrade
 
-Results: **TBD**
+Results: 
+https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/upgrade_downgrade_from_24.8.14.10501.altinitystable_to_0-25.3.6.10314.altinitytest/
 
 The upgrade and downgrade.
 
