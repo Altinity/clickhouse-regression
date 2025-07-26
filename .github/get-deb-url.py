@@ -107,7 +107,11 @@ if __name__ == "__main__":
             url = get_build_url(
                 args.s3_base_url, args.pr_number, args.branch_name, args.commit_hash
             )
-        build_report = requests.get(url).json()
+        build_report = requests.get(url)
+        assert (
+            build_report.status_code == 200
+        ), f"Failed to get build report from {url}\n{build_report.status_code}\n{build_report.text}"
+        build_report = build_report.json()
     else:
         assert args.reports_path is not None, "reports path must be set"
         reports_path = args.reports_path
