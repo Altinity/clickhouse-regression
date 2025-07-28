@@ -14,7 +14,7 @@
     * 5.1 [Azure](#azure)
         * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
             * 5.1.1.1 [RQ.SRS-042.OAuth.Azure.AccessTokenProcessors](#rqsrs-042oauthazureaccesstokenprocessors)
-* 6 [Logging into ClickHouse from Grafana Using Azure ](#logging-into-clickhouse-from-grafana-using-azure-)
+* 6 [Logging into ClickHouse from Grafana](#logging-into-clickhouse-from-grafana)
     * 6.1 [Authentication](#authentication)
         * 6.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication](#rqsrs-042oauthgrafanaazureauthentication)
     * 6.2 [User Role Mapping](#user-role-mapping)
@@ -37,19 +37,18 @@
     * 6.4 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
         * 6.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentity)
         * 6.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityenabled)
-        * 6.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentitydisabled)
-        * 6.4.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-            * 6.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequests)
-            * 6.4.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
-            * 6.4.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
-            * 6.4.4.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
-            * 6.4.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
-            * 6.4.4.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
-            * 6.4.4.7 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
-            * 6.4.4.8 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
-            * 6.4.4.9 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
-        * 6.4.5 [Expired Token Handling](#expired-token-handling)
-            * 6.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+        * 6.4.3 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+            * 6.4.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequests)
+            * 6.4.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
+            * 6.4.3.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
+            * 6.4.3.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
+            * 6.4.3.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
+            * 6.4.3.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
+            * 6.4.3.7 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
+            * 6.4.3.8 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
+            * 6.4.3.9 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
+        * 6.4.4 [Expired Token Handling](#expired-token-handling)
+            * 6.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -181,7 +180,7 @@ Basic structure:
 </clickhouse>
 ```
 
-## Logging into ClickHouse from Grafana Using Azure 
+## Logging into ClickHouse from Grafana
 
 ### Authentication
 
@@ -283,10 +282,7 @@ version: 1.0
 
 When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to [ClickHouse]. The token SHALL be used by [ClickHouse] to validate the user's identity and permissions.
 
-#### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled
-version: 1.0
-
-When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
+![img.png](img.png)
 
 #### Incorrect Requests to ClickHouse
 
