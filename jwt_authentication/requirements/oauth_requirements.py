@@ -35,8 +35,8 @@ RQ_SRS_042_OAuth_Azure_AccessTokenProcessors = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="6.1.1",
+    level=4,
+    num="5.1.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication = Requirement(
@@ -58,7 +58,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication = Requirement(
     ),
     link=None,
     level=3,
-    num="7.1.1",
+    num="6.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_SameName = Requirement(
@@ -74,7 +74,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_SameName = Require
     ),
     link=None,
     level=4,
-    num="7.2.1.1",
+    num="6.2.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoMatchingRoles = Requirement(
@@ -90,7 +90,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoMatchingRoles = 
     ),
     link=None,
     level=4,
-    num="7.2.2.1",
+    num="6.2.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoPermissionToViewGroups = Requirement(
@@ -106,7 +106,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoPermissionToView
     ),
     link=None,
     level=4,
-    num="7.2.3.1",
+    num="6.2.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoDefaultRole = Requirement(
@@ -133,7 +133,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoDefaultRole = Re
     ),
     link=None,
     level=4,
-    num="7.2.4.1",
+    num="6.2.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoAccessTokenProcessors = Requirement(
@@ -149,7 +149,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoleMapping_NoAccessTokenProce
     ),
     link=None,
     level=4,
-    num="7.2.5.1",
+    num="6.2.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials = Requirement(
@@ -165,7 +165,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials = Requirement(
     ),
     link=None,
     level=3,
-    num="7.3.1",
+    num="6.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_MissingSecret = Requirement(
@@ -181,7 +181,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_MissingSecret =
     ),
     link=None,
     level=3,
-    num="7.3.2",
+    num="6.3.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_EmptyString = Requirement(
@@ -197,7 +197,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_EmptyString = R
     ),
     link=None,
     level=3,
-    num="7.3.3",
+    num="6.3.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_Null = Requirement(
@@ -213,7 +213,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_Null = Requirem
     ),
     link=None,
     level=3,
-    num="7.3.4",
+    num="6.3.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_NonAlphanumericCharacters = Requirement(
@@ -229,7 +229,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_InvalidCredentials_NonAlphanumeric
     ),
     link=None,
     level=3,
-    num="7.3.5",
+    num="6.3.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity = Requirement(
@@ -245,7 +245,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity = 
     ),
     link=None,
     level=3,
-    num="7.4.1",
+    num="6.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_Enabled = Requirement(
@@ -261,7 +261,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_En
     ),
     link=None,
     level=3,
-    num="7.4.2",
+    num="6.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_Disabled = Requirement(
@@ -277,7 +277,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_Di
     ),
     link=None,
     level=3,
-    num="7.4.3",
+    num="6.4.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests = Requirement(
@@ -293,7 +293,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.1",
+    num="6.4.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header = Requirement(
@@ -309,7 +309,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.2",
+    num="6.4.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Alg = Requirement(
@@ -325,7 +325,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.3",
+    num="6.4.4.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Typ = Requirement(
@@ -341,7 +341,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.4",
+    num="6.4.4.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Signature = Requirement(
@@ -357,7 +357,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.5",
+    num="6.4.4.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body = Requirement(
@@ -373,7 +373,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.6",
+    num="6.4.4.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Sub = Requirement(
@@ -389,7 +389,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.7",
+    num="6.4.4.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Aud = Requirement(
@@ -405,7 +405,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.8",
+    num="6.4.4.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Exp = Requirement(
@@ -421,7 +421,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ClickHouse_ForwardOAuthIdentity_In
     ),
     link=None,
     level=4,
-    num="7.4.4.9",
+    num="6.4.4.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement(
@@ -442,7 +442,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_ExpiredTokenHandling = Requirement
     ),
     link=None,
     level=4,
-    num="7.4.5.1",
+    num="6.4.5.1",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -470,162 +470,162 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Authentication Modes with OAuth Tokens", level=2, num="3.2"),
         Heading(name="Authentication with OAuth", level=1, num="4"),
         Heading(name="Supported Identity Providers", level=1, num="5"),
-        Heading(name="Azure", level=1, num="6"),
-        Heading(name="Access Token Processors For Azure", level=2, num="6.1"),
+        Heading(name="Azure", level=2, num="5.1"),
+        Heading(name="Access Token Processors For Azure", level=3, num="5.1.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.AccessTokenProcessors", level=3, num="6.1.1"
+            name="RQ.SRS-042.OAuth.Azure.AccessTokenProcessors", level=4, num="5.1.1.1"
         ),
         Heading(
-            name="Logging into ClickHouse from Grafana Using Azure ", level=1, num="7"
+            name="Logging into ClickHouse from Grafana Using Azure ", level=1, num="6"
         ),
-        Heading(name="Authentication", level=2, num="7.1"),
+        Heading(name="Authentication", level=2, num="6.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication", level=3, num="7.1.1"
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication", level=3, num="6.1.1"
         ),
-        Heading(name="User Role Mapping", level=2, num="7.2"),
+        Heading(name="User Role Mapping", level=2, num="6.2"),
         Heading(
             name="User Has Permission To View Groups in Azure and ClickHouse Has Roles With the Same Group Names",
             level=3,
-            num="7.2.1",
+            num="6.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName",
             level=4,
-            num="7.2.1.1",
+            num="6.2.1.1",
         ),
         Heading(
             name="User Can View Groups in Azure but There Are No Matching Roles in ClickHouse",
             level=3,
-            num="7.2.2",
+            num="6.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles",
             level=4,
-            num="7.2.2.1",
+            num="6.2.2.1",
         ),
         Heading(
             name="User Does Not Have Permission To View Their Groups in Azure",
             level=3,
-            num="7.2.3",
+            num="6.2.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups",
             level=4,
-            num="7.2.3.1",
+            num="6.2.3.1",
         ),
         Heading(
             name="In ClickHouse There Is No Default Role Specified",
             level=3,
-            num="7.2.4",
+            num="6.2.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole",
             level=4,
-            num="7.2.4.1",
+            num="6.2.4.1",
         ),
         Heading(
             name="Access Token Processors are Missing From ClickHouse Configuration ",
             level=3,
-            num="7.2.5",
+            num="6.2.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors",
             level=4,
-            num="7.2.5.1",
+            num="6.2.5.1",
         ),
-        Heading(name="Invalid Credentials When Requesting a JWT", level=2, num="7.3"),
+        Heading(name="Invalid Credentials When Requesting a JWT", level=2, num="6.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials",
             level=3,
-            num="7.3.1",
+            num="6.3.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret",
             level=3,
-            num="7.3.2",
+            num="6.3.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString",
             level=3,
-            num="7.3.3",
+            num="6.3.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null",
             level=3,
-            num="7.3.4",
+            num="6.3.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters",
             level=3,
-            num="7.3.5",
+            num="6.3.5",
         ),
-        Heading(name="Accessing ClickHouse from Grafana", level=2, num="7.4"),
+        Heading(name="Accessing ClickHouse from Grafana", level=2, num="6.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity",
             level=3,
-            num="7.4.1",
+            num="6.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled",
             level=3,
-            num="7.4.2",
+            num="6.4.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled",
             level=3,
-            num="7.4.3",
+            num="6.4.3",
         ),
-        Heading(name="Incorrect Requests to ClickHouse", level=3, num="7.4.4"),
+        Heading(name="Incorrect Requests to ClickHouse", level=3, num="6.4.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests",
             level=4,
-            num="7.4.4.1",
+            num="6.4.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header",
             level=4,
-            num="7.4.4.2",
+            num="6.4.4.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg",
             level=4,
-            num="7.4.4.3",
+            num="6.4.4.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ",
             level=4,
-            num="7.4.4.4",
+            num="6.4.4.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature",
             level=4,
-            num="7.4.4.5",
+            num="6.4.4.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body",
             level=4,
-            num="7.4.4.6",
+            num="6.4.4.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub",
             level=4,
-            num="7.4.4.7",
+            num="6.4.4.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud",
             level=4,
-            num="7.4.4.8",
+            num="6.4.4.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp",
             level=4,
-            num="7.4.4.9",
+            num="6.4.4.9",
         ),
-        Heading(name="Expired Token Handling", level=3, num="7.4.5"),
+        Heading(name="Expired Token Handling", level=3, num="6.4.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling",
             level=4,
-            num="7.4.5.1",
+            num="6.4.5.1",
         ),
     ),
     requirements=(
@@ -669,45 +669,45 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
 * 5 [Supported Identity Providers](#supported-identity-providers)
-* 6 [Azure](#azure)
-    * 6.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
-        * 6.1.1 [RQ.SRS-042.OAuth.Azure.AccessTokenProcessors](#rqsrs-042oauthazureaccesstokenprocessors)
-* 7 [Logging into ClickHouse from Grafana Using Azure ](#logging-into-clickhouse-from-grafana-using-azure-)
-    * 7.1 [Authentication](#authentication)
-        * 7.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication](#rqsrs-042oauthgrafanaazureauthentication)
-    * 7.2 [User Role Mapping](#user-role-mapping)
-        * 7.2.1 [User Has Permission To View Groups in Azure and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-azure-and-clickhouse-has-roles-with-the-same-group-names)
-            * 7.2.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingsamename)
-        * 7.2.2 [User Can View Groups in Azure but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-azure-but-there-are-no-matching-roles-in-clickhouse)
-            * 7.2.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnomatchingroles)
-        * 7.2.3 [User Does Not Have Permission To View Their Groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
-            * 7.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
-        * 7.2.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
-        * 7.2.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.2.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnoaccesstokenprocessors)
-    * 7.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
-        * 7.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
-        * 7.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
-        * 7.3.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsemptystring)
-        * 7.3.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnull)
-        * 7.3.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnonalphanumericcharacters)
-    * 7.4 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
-        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentity)
-        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityenabled)
-        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentitydisabled)
-        * 7.4.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-            * 7.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequests)
-            * 7.4.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
-            * 7.4.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
-            * 7.4.4.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
-            * 7.4.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
-            * 7.4.4.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
-            * 7.4.4.7 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
-            * 7.4.4.8 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
-            * 7.4.4.9 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
-        * 7.4.5 [Expired Token Handling](#expired-token-handling)
-            * 7.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
+    * 5.1 [Azure](#azure)
+        * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
+            * 5.1.1.1 [RQ.SRS-042.OAuth.Azure.AccessTokenProcessors](#rqsrs-042oauthazureaccesstokenprocessors)
+* 6 [Logging into ClickHouse from Grafana Using Azure ](#logging-into-clickhouse-from-grafana-using-azure-)
+    * 6.1 [Authentication](#authentication)
+        * 6.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication](#rqsrs-042oauthgrafanaazureauthentication)
+    * 6.2 [User Role Mapping](#user-role-mapping)
+        * 6.2.1 [User Has Permission To View Groups in Azure and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-azure-and-clickhouse-has-roles-with-the-same-group-names)
+            * 6.2.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingsamename)
+        * 6.2.2 [User Can View Groups in Azure but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-azure-but-there-are-no-matching-roles-in-clickhouse)
+            * 6.2.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnomatchingroles)
+        * 6.2.3 [User Does Not Have Permission To View Their Groups in Azure](#user-does-not-have-permission-to-view-their-groups-in-azure)
+            * 6.2.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnopermissiontoviewgroups)
+        * 6.2.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 6.2.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnodefaultrole)
+        * 6.2.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 6.2.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaazureauthenticationuserrolemappingnoaccesstokenprocessors)
+    * 6.3 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
+        * 6.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentials)
+        * 6.3.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsmissingsecret)
+        * 6.3.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.EmptyString](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsemptystring)
+        * 6.3.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.Null](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnull)
+        * 6.3.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.InvalidCredentials.NonAlphanumericCharacters](#rqsrs-042oauthgrafanaazureauthenticationinvalidcredentialsnonalphanumericcharacters)
+    * 6.4 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
+        * 6.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentity)
+        * 6.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityenabled)
+        * 6.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.Disabled](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentitydisabled)
+        * 6.4.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+            * 6.4.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequests)
+            * 6.4.4.2 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
+            * 6.4.4.3 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
+            * 6.4.4.4 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
+            * 6.4.4.5 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
+            * 6.4.4.6 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
+            * 6.4.4.7 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
+            * 6.4.4.8 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
+            * 6.4.4.9 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaazureauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
+        * 6.4.5 [Expired Token Handling](#expired-token-handling)
+            * 6.4.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaazureauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -758,8 +758,6 @@ OAuth-based authentication works by allowing users to authenticate using an acce
 All OAuth 2.0 access tokens must be validated through one of the configured `access_token_processors` in `config.xml`.
 
 ### Access Token Processors
-
-
 
 Key Parameters:
 
@@ -815,13 +813,13 @@ To authenticate with OAuth, users must obtain an access token from the identity 
 - Azure Active Directory
 - Google Identity
 
-## Azure
+### Azure
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with Azure Active Directory (Azure AD) as an identity provider.
 
-### Access Token Processors For Azure
+#### Access Token Processors For Azure
 
-#### RQ.SRS-042.OAuth.Azure.AccessTokenProcessors
+##### RQ.SRS-042.OAuth.Azure.AccessTokenProcessors
 version: 1.0
 
 An Access Token Processor defines how [ClickHouse] validates and interprets access tokens from a specific identity provider. This includes verifying the token’s issuer, audience, and cryptographic signature.
