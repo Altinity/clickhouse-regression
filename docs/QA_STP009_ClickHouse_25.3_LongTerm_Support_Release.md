@@ -701,9 +701,7 @@ Compatibility with [Grafana].
 
 #### Tableau
 
-Results:
-
-**TBD**
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.3.6-lts/tableau/
 
 Compatibility with [Tableau].
 
