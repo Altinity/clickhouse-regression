@@ -223,14 +223,6 @@ Results:
 
 The standard `stateless` suite that consists of running SQL, python and bash scripts that check various features of the server.
 
-#### Stateful
-
-Results:
-
-**TBD**
-
-The standard `stateful` suite that consists of running SQL scripts executed against a predefined database schema.
-
 #### Stress
 
 Results:
