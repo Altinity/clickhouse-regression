@@ -17,7 +17,7 @@
 
 **Build Report:**
 
-https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/ci_run_report.html
+* https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/ci_run_report.html
 
 **Summary:**
 
