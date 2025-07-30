@@ -194,6 +194,83 @@ xfails = {
             check_clickhouse_version(">=25.7"),
         )
     ],
+    "minio/part 1/table function/:/compression_method = :, cluster_name = :/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/credentials s3Cluster/cluster_name = cluster_3shards_2replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/credentials s3Cluster/cluster_name = cluster_3shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/credentials s3Cluster/cluster_name = cluster_2shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/data format/fmt = ORC, cluster_name = cluster_2shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/data format/fmt = ORC, cluster_name = cluster_3shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/data format/fmt = ORC, cluster_name = cluster_2shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/wildcard/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/syntax s3Cluster/cluster_name = cluster_3shards_2replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/syntax s3Cluster/cluster_name = cluster_3shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "minio/part 1/table function/syntax s3Cluster/cluster_name = cluster_2shards_1replicas_0": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/84713",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
 }
 
 ffails = {
