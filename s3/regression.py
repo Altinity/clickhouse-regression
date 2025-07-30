@@ -236,7 +236,7 @@ xfails = {
             check_clickhouse_version(">=25.8"),
         )
     ],
-    "minio/part 1/table function/data format/fmt = *, cluster_name = cluster_2shards_1replicas_0/*": [
+    "minio/part 1/table function/data format/fmt = *, cluster_name = cluster_3shards_2replicas_0/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/84713",
