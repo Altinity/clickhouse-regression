@@ -26,4 +26,3 @@ def check_dynamic_jwks(self):
         ip="localhost",
     )
     node.command(curl_auth)
-    pause()
