@@ -167,7 +167,7 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 ## Authentication with OAuth
 
-To authenticate with OAuth, users must obtain an access token from the identity provider and present it to [ClickHouse].
+To authenticate with OAuth, grafana user must obtain an access token from the identity provider and present it to [ClickHouse].
 
 ## Supported Identity Providers
 
@@ -216,7 +216,7 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Credentials
 version: 1.0
 
-[Grafana] SHALL redirect users to the Identity Provider authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect grafana user to the Identity Provider authorization endpoint to obtain an access token if the grafana user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
@@ -273,7 +273,7 @@ For example,
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles
 version: 1.0
 
-When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
@@ -282,7 +282,7 @@ When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
-When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with the same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
+When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
 #### User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse
 
@@ -303,16 +303,26 @@ When a user does not have permission to view their groups in Identity Provider, 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When there is no default role specified in [ClickHouse] configuration or created via SQL, [ClickHouse] SHALL not allow the user to access any resources and there SHALL be no crashes on [ClickHouse] side.
+When a grafana user is authenticated via OAuth and no roles are specified in the `<roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
 
-The user configuration example,
+The role configuration example,
 
 ```xml
 <clickhouse>
-    <my_user>
-        <jwt>
-        </jwt>
-    </my_user>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+            </roles>
+        </token>
+    </user_directories>
 </clickhouse>
 ```
 
