@@ -48,6 +48,17 @@
         * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodyexp)
     * 7.5 [Expired Token Handling](#expired-token-handling)
         * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
+    * 7.6 [Caching](#caching)
+        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching](#rqsrs-042oauthgrafanaauthenticationclickhousecaching)
+        * 7.6.2 [Disable Caching](#disable-caching)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionnocache)
+        * 7.6.3 [Cache Eviction](#cache-eviction)
+            * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
+                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictioncachelifetime)
+            * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
+                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionmaxcachesize)
+            * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
+                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionpolicy)
 
     
 ## Introduction
@@ -362,6 +373,67 @@ version: 1.0
 
 [ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
 
+### Caching
+
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching
+version: 1.0
+
+[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `access_token_processors` configuration.
+
+For example,
+
+```sql
+<clickhouse>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+            <cache_lifetime>60</cache_lifetime>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+                <token_test_role_1 />
+            </roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+In this case the cache will be valid for 60 seconds. After this period.
+
+#### Disable Caching
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache
+version: 1.0
+
+If the value of `cache_lifetime` is `0` in the `access_token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
+
+#### Cache Eviction
+
+##### Cache Lifetime
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime
+version: 1.0
+
+[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `access_token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
+
+##### Exceeding Max Cache Size
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize
+version: 1.0
+
+[ClickHouse] SHALL limit the maximum size of the cache for access tokens. If the cache exceeds this size, [ClickHouse] SHALL evict the oldest tokens to make room for new ones.
+
+##### Cache Eviction Policy
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy
+version: 1.0
+
+[ClickHouse] SHALL use a Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
