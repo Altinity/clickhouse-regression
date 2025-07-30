@@ -423,7 +423,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching = Requirement(
         "\n"
         "For example,\n"
         "\n"
-        "```sql\n"
+        "```xml\n"
         "<clickhouse>\n"
         "    <access_token_processors>\n"
         "        <azuure>\n"
@@ -1143,7 +1143,7 @@ version: 1.0
 
 For example,
 
-```sql
+```xml
 <clickhouse>
     <access_token_processors>
         <azuure>

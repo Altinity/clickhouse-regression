@@ -396,7 +396,7 @@ version: 1.0
 
 For example,
 
-```sql
+```xml
 <clickhouse>
     <access_token_processors>
         <azuure>
