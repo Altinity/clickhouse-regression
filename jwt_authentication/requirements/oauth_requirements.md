@@ -235,6 +235,10 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 
 ### User Directories
 
+An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`) 
+used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically 
+validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
+
 #### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories
 version: 1.0
 

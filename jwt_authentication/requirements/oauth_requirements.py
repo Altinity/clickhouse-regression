@@ -143,7 +143,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles = Requirement(
     description=(
         "When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
         "\n"
-        "PICTURE HERE!\n"
+        '<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />\n'
         "\n"
     ),
     link=None,
@@ -972,6 +972,10 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 
 ### User Directories
 
+An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`) 
+used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically 
+validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
+
 #### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories
 version: 1.0
 
@@ -1008,7 +1012,7 @@ version: 1.0
 
 When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
-PICTURE HERE!
+<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
 #### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
 
