@@ -28,27 +28,21 @@
         * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnodefaultrole)
     * 7.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
         * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnoaccesstokenprocessors)
-* 8 [Invalid Credentials When Requesting a JWT](#invalid-credentials-when-requesting-a-jwt)
-    * 8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials](#rqsrs-042oauthgrafanaauthenticationinvalidcredentials)
-    * 8.2 [RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.MissingSecret](#rqsrs-042oauthgrafanaauthenticationinvalidcredentialsmissingsecret)
-    * 8.3 [RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.EmptyString](#rqsrs-042oauthgrafanaauthenticationinvalidcredentialsemptystring)
-    * 8.4 [RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.Null](#rqsrs-042oauthgrafanaauthenticationinvalidcredentialsnull)
-    * 8.5 [RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.NonAlphanumericCharacters](#rqsrs-042oauthgrafanaauthenticationinvalidcredentialsnonalphanumericcharacters)
-* 9 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
-    * 9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentity)
-    * 9.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityenabled)
-    * 9.3 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 9.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequests)
-        * 9.3.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
-        * 9.3.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
-        * 9.3.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
-        * 9.3.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
-        * 9.3.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
-        * 9.3.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
-        * 9.3.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
-        * 9.3.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
-    * 9.4 [Expired Token Handling](#expired-token-handling)
-        * 9.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
+* 8 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
+    * 8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentity)
+    * 8.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityenabled)
+    * 8.3 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+        * 8.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequests)
+        * 8.3.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
+        * 8.3.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
+        * 8.3.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
+        * 8.3.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
+        * 8.3.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
+        * 8.3.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
+        * 8.3.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
+        * 8.3.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
+    * 8.4 [Expired Token Handling](#expired-token-handling)
+        * 8.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
 
     
 ## Introduction
@@ -242,33 +236,6 @@ The user configuration example,
 version: 1.0
 
 When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
-
-## Invalid Credentials When Requesting a JWT
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials
-version: 1.0
-
-The user SHALL not receive a valid JWT token if the provided credentials are incorrect. In this case, [ClickHouse] SHALL return an HTTP 401 Unauthorized response to [Grafana].
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.MissingSecret
-version: 1.0
-
-The user SHALL not receive a valid JWT token if the `CLIENT_SECRET` is missing from the HTTP request.
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.EmptyString
-version: 1.0
-
-The user SHALL not receive a valid JWT token if the provided credentials are an empty string.
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.Null
-version: 1.0
-
-The user SHALL not receive a valid JWT token if the provided credentials are null.
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.InvalidCredentials.NonAlphanumericCharacters
-version: 1.0
-
-The user SHALL not receive a valid JWT token if the provided credentials contain non-alphanumeric characters such as emojis.
 
 ## Accessing ClickHouse from Grafana
 
