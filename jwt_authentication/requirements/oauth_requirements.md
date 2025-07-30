@@ -271,7 +271,7 @@ version: 1.0
 
 When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
-PICTURE HERE!
+<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
 #### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
 
