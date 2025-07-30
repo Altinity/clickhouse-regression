@@ -8,8 +8,8 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_042_OAuth_AccessTokenProcessors = Requirement(
-    name="RQ.SRS-042.OAuth.AccessTokenProcessors",
+RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
+    name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
     version="1.0",
     priority=None,
     group=None,
@@ -37,6 +37,22 @@ RQ_SRS_042_OAuth_AccessTokenProcessors = Requirement(
     link=None,
     level=4,
     num="5.1.1.1",
+)
+
+RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
+    name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `access_token_processors` section of `config.xml`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.2.1",
 )
 
 RQ_SRS_042_OAuth_Credentials = Requirement(
@@ -69,22 +85,6 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity = Requir
     type=None,
     uid=None,
     description=(
-        "[Grafana] SHALL support forwarding the same `JWT` token used to authenticate a user in [Grafana] to [ClickHouse] when making requests to the [ClickHouse] data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="7.1",
-)
-
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Enabled = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
         "When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to [ClickHouse]. The token SHALL be used by [ClickHouse] to validate the user's identity and permissions.\n"
         "\n"
         '<img width="1023" height="266" alt="Screenshot from 2025-07-28 16-12-02" src="https://github.com/user-attachments/assets/6c9f38f1-ceaf-480a-8ca4-6599968cbb61" />\n'
@@ -92,11 +92,67 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Enabled 
     ),
     link=None,
     level=2,
-    num="7.2",
+    num="7.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_SameName = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.SameName",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is not defined locally, [ClickHouse] SHALL use the `IdP` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <access_token_processors>\n"
+        "        <azuure>\n"
+        "            <provider>azure</provider>\n"
+        "            <client_id>$CLIENT_ID</client_id>\n"
+        "            <tenant_id>$TENANT_ID</tenant_id>\n"
+        "        </azuure>\n"
+        "    </access_token_processors>\n"
+        "    <user_directories>\n"
+        "        <token>\n"
+        "            <processor>azuure</processor>\n"
+        "            <roles>\n"
+        "                <token_test_role_1 />\n"
+        "            </roles>\n"
+        "        </token>\n"
+        "    </user_directories>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.2.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
+        "\n"
+        "PICTURE HERE!\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.3.1.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
     version="1.0",
     priority=None,
     group=None,
@@ -108,11 +164,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_SameName = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.1.1",
+    num="7.3.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoMatchingRoles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoMatchingRoles",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
     version="1.0",
     priority=None,
     group=None,
@@ -124,11 +180,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoMatchingRoles = Requir
     ),
     link=None,
     level=4,
-    num="7.3.2.1",
+    num="7.3.3.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoPermissionToViewGroups = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoPermissionToViewGroups",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
     version="1.0",
     priority=None,
     group=None,
@@ -140,11 +196,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoPermissionToViewGroups
     ),
     link=None,
     level=4,
-    num="7.3.3.1",
+    num="7.3.4.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoDefaultRole = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoDefaultRole",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
     version="1.0",
     priority=None,
     group=None,
@@ -167,11 +223,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoDefaultRole = Requirem
     ),
     link=None,
     level=4,
-    num="7.3.4.1",
+    num="7.3.5.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoAccessTokenProcessors = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoAccessTokenProcessors",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
     version="1.0",
     priority=None,
     group=None,
@@ -183,11 +239,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoAccessTokenProcessors 
     ),
     link=None,
     level=4,
-    num="7.3.5.1",
+    num="7.3.6.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests",
     version="1.0",
     priority=None,
     group=None,
@@ -202,8 +258,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header",
     version="1.0",
     priority=None,
     group=None,
@@ -218,8 +274,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.2",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Alg = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Alg = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg",
     version="1.0",
     priority=None,
     group=None,
@@ -234,8 +290,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.3",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Typ = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Typ = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ",
     version="1.0",
     priority=None,
     group=None,
@@ -250,8 +306,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.4",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Signature = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Signature = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature",
     version="1.0",
     priority=None,
     group=None,
@@ -266,8 +322,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.5",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body",
     version="1.0",
     priority=None,
     group=None,
@@ -282,8 +338,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.6",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Sub = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Sub = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub",
     version="1.0",
     priority=None,
     group=None,
@@ -298,8 +354,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.7",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Aud = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Aud = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud",
     version="1.0",
     priority=None,
     group=None,
@@ -314,8 +370,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Incorrec
     num="7.4.8",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Exp = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp",
+RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Exp = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp",
     version="1.0",
     priority=None,
     group=None,
@@ -378,7 +434,19 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Supported Identity Providers", level=1, num="5"),
         Heading(name="Azure", level=2, num="5.1"),
         Heading(name="Access Token Processors For Azure", level=3, num="5.1.1"),
-        Heading(name="RQ.SRS-042.OAuth.AccessTokenProcessors", level=4, num="5.1.1.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
+            level=4,
+            num="5.1.1.1",
+        ),
+        Heading(
+            name="Number of Identity Providers That Can Be Used Concurrently",
+            level=2,
+            num="5.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.2.1"
+        ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
         Heading(name="RQ.SRS-042.OAuth.Credentials", level=3, num="6.1.1"),
@@ -388,105 +456,112 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=2,
             num="7.1",
         ),
+        Heading(name="User Directories", level=2, num="7.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled",
-            level=2,
-            num="7.2",
-        ),
-        Heading(name="User Role Mapping", level=2, num="7.3"),
-        Heading(
-            name="User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories",
             level=3,
-            num="7.3.1",
+            num="7.2.1",
         ),
+        Heading(name="User Roles", level=2, num="7.3"),
+        Heading(name="Query Execution Based on User Roles", level=3, num="7.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.SameName",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles",
             level=4,
             num="7.3.1.1",
         ),
         Heading(
-            name="User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse",
+            name="User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names",
             level=3,
             num="7.3.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoMatchingRoles",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
             level=4,
             num="7.3.2.1",
         ),
         Heading(
-            name="User Does Not Have Permission To View Their Groups in Identity Provider",
+            name="User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse",
             level=3,
             num="7.3.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoPermissionToViewGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
             level=4,
             num="7.3.3.1",
         ),
         Heading(
-            name="In ClickHouse There Is No Default Role Specified",
+            name="User Does Not Have Permission To View Their Groups in Identity Provider",
             level=3,
             num="7.3.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoDefaultRole",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
             level=4,
             num="7.3.4.1",
         ),
         Heading(
-            name="Access Token Processors are Missing From ClickHouse Configuration ",
+            name="In ClickHouse There Is No Default Role Specified",
             level=3,
             num="7.3.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoAccessTokenProcessors",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
             level=4,
             num="7.3.5.1",
         ),
+        Heading(
+            name="Access Token Processors are Missing From ClickHouse Configuration ",
+            level=3,
+            num="7.3.6",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
+            level=4,
+            num="7.3.6.1",
+        ),
         Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests",
             level=3,
             num="7.4.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header",
             level=3,
             num="7.4.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg",
             level=3,
             num="7.4.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ",
             level=3,
             num="7.4.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature",
             level=3,
             num="7.4.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body",
             level=3,
             num="7.4.6",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub",
             level=3,
             num="7.4.7",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud",
             level=3,
             num="7.4.8",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp",
             level=3,
             num="7.4.9",
         ),
@@ -498,24 +573,26 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
     ),
     requirements=(
-        RQ_SRS_042_OAuth_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
         RQ_SRS_042_OAuth_Credentials,
         RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_Enabled,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_SameName,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoMatchingRoles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoPermissionToViewGroups,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoDefaultRole,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoleMapping_NoAccessTokenProcessors,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Alg,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Typ,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Header_Signature,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Sub,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Aud,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity_IncorrectRequests_Body_Exp,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Alg,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Typ,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Signature,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Sub,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Aud,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Exp,
         RQ_SRS_042_OAuth_Grafana_Authentication_ExpiredTokenHandling,
     ),
     content=r"""
@@ -534,34 +611,39 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
 * 5 [Supported Identity Providers](#supported-identity-providers)
     * 5.1 [Azure](#azure)
         * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
-            * 5.1.1.1 [RQ.SRS-042.OAuth.AccessTokenProcessors](#rqsrs-042oauthaccesstokenprocessors)
+            * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
+    * 5.2 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.2.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
 * 7 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
     * 7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentity)
-    * 7.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityenabled)
-    * 7.3 [User Role Mapping](#user-role-mapping)
-        * 7.3.1 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
-            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolemappingsamename)
-        * 7.3.2 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnomatchingroles)
-        * 7.3.3 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnopermissiontoviewgroups)
-        * 7.3.4 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnodefaultrole)
-        * 7.3.5 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolemappingnoaccesstokenprocessors)
+    * 7.2 [User Directories](#user-directories)
+        * 7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectories)
+    * 7.3 [User Roles](#user-roles)
+        * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
+            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserroles)
+        * 7.3.2 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.3 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.4 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.5 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.6 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequests)
-        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheader)
-        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheaderalg)
-        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadertyp)
-        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsheadersignature)
-        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbody)
-        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodysub)
-        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyaud)
-        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentityincorrectrequestsbodyexp)
+        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequests)
+        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheader)
+        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheaderalg)
+        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheadertyp)
+        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheadersignature)
+        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbody)
+        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodysub)
+        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodyaud)
+        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodyexp)
     * 7.5 [Expired Token Handling](#expired-token-handling)
         * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
 
@@ -650,12 +732,24 @@ CREATE USER my_user IDENTIFIED WITH jwt;
 When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic source of user info. This requires configuring the `<token>` section in `users_directories` and assigning roles:
 
 ```xml
-<token>
-    <processor>azure_ad</processor>
-    <roles>
-        <read_only_role />
-    </roles>
-</token>
+<clickhouse>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+            <cache_lifetime>60</cache_lifetime>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+                <token_test_role_1 />
+            </roles>
+        </token>
+    </user_directories>
+</clickhouse>
 ```
 
 ## Authentication with OAuth
@@ -675,7 +769,7 @@ To authenticate with OAuth, users must obtain an access token from the identity 
 
 #### Access Token Processors For Azure
 
-##### RQ.SRS-042.OAuth.AccessTokenProcessors
+##### RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors
 version: 1.0
 
 An Access Token Processor defines how [ClickHouse] validates and interprets access tokens from a specific identity provider. This includes verifying the token’s issuer, audience, and cryptographic signature.
@@ -694,6 +788,13 @@ Basic structure:
     </access_token_processors>
 </clickhouse>
 ```
+
+### Number of Identity Providers That Can Be Used Concurrently
+
+#### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `access_token_processors` section of `config.xml`.
 
 ## Setting Up OAuth Authentication
 
@@ -715,41 +816,74 @@ printf "CLIENT_ID=<Client ID (Application ID)>\nTENANT_ID=<Tenant ID>\nCLIENT_SE
 ### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity
 version: 1.0
 
-[Grafana] SHALL support forwarding the same `JWT` token used to authenticate a user in [Grafana] to [ClickHouse] when making requests to the [ClickHouse] data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.
-
-### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.Enabled
-version: 1.0
-
 When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to [ClickHouse]. The token SHALL be used by [ClickHouse] to validate the user's identity and permissions.
 
 <img width="1023" height="266" alt="Screenshot from 2025-07-28 16-12-02" src="https://github.com/user-attachments/assets/6c9f38f1-ceaf-480a-8ca4-6599968cbb61" />
 
-### User Role Mapping
+### User Directories
+
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use the `IdP` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
+
+For example,
+
+```xml
+<clickhouse>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+                <token_test_role_1 />
+            </roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+### User Roles
+
+#### Query Execution Based on User Roles
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles
+version: 1.0
+
+When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+
+PICTURE HERE!
 
 #### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.SameName
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with the same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
 #### User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoMatchingRoles
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
 #### User Does Not Have Permission To View Their Groups in Identity Provider
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoPermissionToViewGroups
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
 
 When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
 
 #### In ClickHouse There Is No Default Role Specified
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoDefaultRole
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
 When there is no default role specified in [ClickHouse] configuration or created via SQL, [ClickHouse] SHALL not allow the user to access any resources and there SHALL be no crashes on [ClickHouse] side.
@@ -767,54 +901,54 @@ The user configuration example,
 
 #### Access Token Processors are Missing From ClickHouse Configuration 
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoleMapping.NoAccessTokenProcessors
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors
 version: 1.0
 
 When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
 
 ### Incorrect Requests to ClickHouse
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests
 version: 1.0
 
 When [Grafana] makes requests to [ClickHouse] without a valid JWT token in the Authorization header, [ClickHouse] SHALL return an HTTP 401 Unauthorized response.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header
 version: 1.0
 
 [ClickHouse] SHALL reject requests that do not include the Authorization header with a valid JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Alg
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `alg` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Typ
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `typ` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Header.Signature
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a JWT token that has an invalid signature.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include incorrect or malformed body content.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Sub
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `sub` value that does not match any user in [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Aud
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `aud` value that does not match the expected audience for the JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity.IncorrectRequests.Body.Exp
+#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
