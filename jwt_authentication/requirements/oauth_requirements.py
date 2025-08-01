@@ -63,7 +63,7 @@ RQ_SRS_042_OAuth_Credentials = Requirement(
     type=None,
     uid=None,
     description=(
-        "[Grafana] SHALL redirect users to the Identity Provider authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
+        "[Grafana] SHALL redirect grafana user to the Identity Provider authorization endpoint to obtain an access token if the grafana user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.\n"
         "\n"
         "The values SHALL be stored inside the `.env` file which can be generated as:\n"
         "\n"
@@ -141,9 +141,9 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
         "\n"
-        "PICTURE HERE!\n"
+        '<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />\n'
         "\n"
     ),
     link=None,
@@ -159,7 +159,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with the same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.\n"
+        "When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.\n"
         "\n"
     ),
     link=None,
@@ -207,16 +207,26 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
     type=None,
     uid=None,
     description=(
-        "When there is no default role specified in [ClickHouse] configuration or created via SQL, [ClickHouse] SHALL not allow the user to access any resources and there SHALL be no crashes on [ClickHouse] side.\n"
+        "When a grafana user is authenticated via OAuth and no roles are specified in the `<roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.\n"
         "\n"
-        "The user configuration example,\n"
+        "The role configuration example,\n"
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <my_user>\n"
-        "        <jwt>\n"
-        "        </jwt>\n"
-        "    </my_user>\n"
+        "    <access_token_processors>\n"
+        "        <azuure>\n"
+        "            <provider>azure</provider>\n"
+        "            <client_id>$CLIENT_ID</client_id>\n"
+        "            <tenant_id>$TENANT_ID</tenant_id>\n"
+        "        </azuure>\n"
+        "    </access_token_processors>\n"
+        "    <user_directories>\n"
+        "        <token>\n"
+        "            <processor>azuure</processor>\n"
+        "            <roles>\n"
+        "            </roles>\n"
+        "        </token>\n"
+        "    </user_directories>\n"
         "</clickhouse>\n"
         "```\n"
         "\n"
@@ -413,7 +423,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching = Requirement(
         "\n"
         "For example,\n"
         "\n"
-        "```sql\n"
+        "```xml\n"
         "<clickhouse>\n"
         "    <access_token_processors>\n"
         "        <azuure>\n"
@@ -904,7 +914,7 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 ## Authentication with OAuth
 
-To authenticate with OAuth, users must obtain an access token from the identity provider and present it to [ClickHouse].
+To authenticate with OAuth, grafana user must obtain an access token from the identity provider and present it to [ClickHouse].
 
 ## Supported Identity Providers
 
@@ -953,7 +963,7 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Credentials
 version: 1.0
 
-[Grafana] SHALL redirect users to the Identity Provider authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect grafana user to the Identity Provider authorization endpoint to obtain an access token if the grafana user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
@@ -971,6 +981,10 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 <img width="1023" height="266" alt="Screenshot from 2025-07-28 16-12-02" src="https://github.com/user-attachments/assets/6c9f38f1-ceaf-480a-8ca4-6599968cbb61" />
 
 ### User Directories
+
+An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`) 
+used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically 
+validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
 
 #### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories
 version: 1.0
@@ -1006,16 +1020,16 @@ For example,
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles
 version: 1.0
 
-When a user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
-PICTURE HERE!
+<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
 #### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
-When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with the same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
+When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
 #### User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse
 
@@ -1036,16 +1050,26 @@ When a user does not have permission to view their groups in Identity Provider, 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When there is no default role specified in [ClickHouse] configuration or created via SQL, [ClickHouse] SHALL not allow the user to access any resources and there SHALL be no crashes on [ClickHouse] side.
+When a grafana user is authenticated via OAuth and no roles are specified in the `<roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
 
-The user configuration example,
+The role configuration example,
 
 ```xml
 <clickhouse>
-    <my_user>
-        <jwt>
-        </jwt>
-    </my_user>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+            </roles>
+        </token>
+    </user_directories>
 </clickhouse>
 ```
 
@@ -1119,7 +1143,7 @@ version: 1.0
 
 For example,
 
-```sql
+```xml
 <clickhouse>
     <access_token_processors>
         <azuure>
