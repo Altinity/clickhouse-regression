@@ -35,6 +35,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                     snapshot(
                         select_file.output.strip(),
                         name=f"select_from_file_with_{snapshot_name}",
+                        mode=snapshot.CHECK,
                     )
                 ), error()
 
@@ -160,12 +161,15 @@ def million_extensions(self):
 )
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
-    if check_clickhouse_version(">23.9")(self):
-        order_by = "ALL"
-    else:
-        order_by = "tuple(*)"
+    snapshot_name = "above_25_8" if check_clickhouse_version(">=25.8")(self) else ""
+    order_by = "ALL" if check_clickhouse_version(">23.9")(self) else "tuple(*)"
+
     for example in self.examples:
-        select_with_glob(query=example[0], snapshot_name=example[1], order_by=order_by)
+        select_with_glob(
+            query=example[0],
+            snapshot_name=f"{example[1]}{snapshot_name}",
+            order_by=order_by,
+        )
 
 
 @TestFeature
