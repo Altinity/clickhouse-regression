@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.240813.1212956.
+# document by TestFlows v2.0.250110.1002922.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -84,7 +84,7 @@ RQ_SRS_042_JWT_UserCreation_RBAC = Requirement(
     description=(
         "  \n"
         "\n"
-        "[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.\n"
+        "[ClickHouse] SHALL support creating users with JWT authentication enabled through SQL statements.\n"
         "\n"
         "Example:\n"
         "```sql\n"
@@ -117,12 +117,7 @@ RQ_SRS_042_JWT_SubClaimValidation = Requirement(
         "\n"
         "```json\n"
         "{\n"
-        '  "sub": "my_user",\n'
-        '  "resource_access": {\n'
-        '    "account": {\n'
-        '      "roles": ["view-profile"]\n'
-        "    }\n"
-        "  }\n"
+        '  "sub": "my_user"\n'
         "}\n"
         "```\n"
         "\n"
@@ -347,8 +342,8 @@ RQ_SRS_042_JWT_StaticKey_NoneAlgorithm = Requirement(
     num="9.3.1",
 )
 
-RQ_SRS_042_JWT_StaticKey_Parameters_StaticKeyInBase64 = Requirement(
-    name="RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64",
+RQ_SRS_042_JWT_StaticKey_StaticKeyInBase64 = Requirement(
+    name="RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64",
     version="1.0",
     priority=None,
     group=None,
@@ -427,8 +422,8 @@ RQ_SRS_042_JWT_StaticJWKS = Requirement(
     num="10.1",
 )
 
-RQ_SRS_042_JWT_StaticJWKS_Parameters_PathToJWKSFile = Requirement(
-    name="RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile",
+RQ_SRS_042_JWT_StaticJWKS_PathToJWKSFile = Requirement(
+    name="RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile",
     version="1.0",
     priority=None,
     group=None,
@@ -445,8 +440,8 @@ RQ_SRS_042_JWT_StaticJWKS_Parameters_PathToJWKSFile = Requirement(
     num="10.3.1",
 )
 
-RQ_SRS_042_JWT_StaticJWKS_Parameters_OneContentSource = Requirement(
-    name="RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource",
+RQ_SRS_042_JWT_StaticJWKS_OneSourceOfJWKS = Requirement(
+    name="RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS",
     version="1.0",
     priority=None,
     group=None,
@@ -573,8 +568,8 @@ RQ_SRS_042_JWT_DynamicJWKS_URI = Requirement(
     num="11.2.1",
 )
 
-RQ_SRS_042_JWT_DynamicJWKS_Parameters_Refresh = Requirement(
-    name="RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh",
+RQ_SRS_042_JWT_DynamicJWKS_Refresh = Requirement(
+    name="RQ.SRS-042.JWT.DynamicJWKS.Refresh",
     version="1.0",
     priority=None,
     group=None,
@@ -759,12 +754,134 @@ RQ_SRS_042_JWT_Security_TokenRefreshOnReAuthentication = Requirement(
         "\n"
         "[ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.\n"
         "\n"
-        "\n"
-        "[ClickHouse]: https://clickhouse.com"
     ),
     link=None,
     level=3,
     num="12.4.1",
+)
+
+RQ_SRS_042_JWT_OAuthIntegration_Support = Requirement(
+    name="RQ.SRS-042.JWT.OAuthIntegration.Support",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support integration with OAuth providers for authentication using JWT tokens. The supported providers SHALL include but are not limited to:\n"
+        "\n"
+        "- Dex\n"
+        "- Keycloak\n"
+        "- Google\n"
+        "- Okta\n"
+        "- Auth0\n"
+        "- Microsoft Entra ID\n"
+        "- AWS Cognito\n"
+        "- GitHub\n"
+        "- GitLab\n"
+        "- Ping Identity\n"
+        "\n"
+        "\n"
+        "Only Dex is supported in the first version of JWT authentication in ClickHouse.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.5.1",
+)
+
+RQ_SRS_042_JWT_GrafanaIntegration_Support = Requirement(
+    name="RQ.SRS-042.JWT.GrafanaIntegration.Support",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[Grafana] SHALL support forwarding the same JWT token used to authenticate a user in [Grafana] to ClickHouse when making requests to the ClickHouse data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.6.1",
+)
+
+RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_Enabled = Requirement(
+    name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.6.2",
+)
+
+RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_Disabled = Requirement(
+    name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.6.3",
+)
+
+RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_ClickHouseIntegration = Requirement(
+    name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL validate JWT tokens forwarded by [Grafana]. The tokens MUST be validated using the JWT validators configured in the `jwt_validators` section of `config.xml` file.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.6.4",
+)
+
+RQ_SRS_042_JWT_GrafanaIntegration_TokenExpiration = Requirement(
+    name="RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].\n"
+        "\n"
+        "[ClickHouse]: https://clickhouse.com\n"
+        "[Grafana]: https://grafana.com\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="12.7.1",
 )
 
 SRS_042_JWT_Authentication_in_ClickHouse = Specification(
@@ -793,9 +910,7 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         Heading(name="Creation of a User with JWT Authentication", level=1, num="5"),
         Heading(name="RQ.SRS-042.JWT.UserCreation.Config", level=2, num="5.1"),
         Heading(name="RQ.SRS-042.JWT.UserCreation.RBAC", level=2, num="5.2"),
-        Heading(
-            name="Authentication of Users with JWT in ClickHouse", level=1, num="6"
-        ),
+        Heading(name="Authentication with JWT ", level=1, num="6"),
         Heading(name="Sub-Claim Validation", level=2, num="6.1"),
         Heading(name="RQ.SRS-042.JWT.SubClaimValidation", level=3, num="6.1.1"),
         Heading(name="Clickhouse Client", level=2, num="6.2"),
@@ -832,9 +947,7 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         Heading(name="RQ.SRS-042.JWT.StaticKey.NoneAlgorithm", level=3, num="9.3.1"),
         Heading(name="Specifying Static Key Using Base64 Encoding", level=2, num="9.4"),
         Heading(
-            name="RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64",
-            level=3,
-            num="9.4.1",
+            name="RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64", level=3, num="9.4.1"
         ),
         Heading(name="Using Public Key for Static Key Validation", level=2, num="9.5"),
         Heading(
@@ -849,20 +962,14 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         Heading(name="Specifying Static JWKS Inline", level=2, num="10.2"),
         Heading(name="RQ.SRS-042.JWT.StaticJWKS.Inline", level=3, num="10.2.1"),
         Heading(name="Specifying JWKS Using File Path", level=2, num="10.3"),
-        Heading(
-            name="RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile",
-            level=3,
-            num="10.3.1",
-        ),
+        Heading(name="RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile", level=3, num="10.3.1"),
         Heading(
             name="Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)",
             level=2,
             num="10.4",
         ),
         Heading(
-            name="RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource",
-            level=3,
-            num="10.4.1",
+            name="RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS", level=3, num="10.4.1"
         ),
         Heading(
             name="Supported Algorithms for Static JWKS Validation", level=2, num="10.5"
@@ -893,10 +1000,8 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         Heading(name="Specifying Dynamic JWKS URI", level=2, num="11.2"),
         Heading(name="RQ.SRS-042.JWT.DynamicJWKS.URI", level=3, num="11.2.1"),
         Heading(name="Specifying Dynamic JWKS Refresh Rate", level=2, num="11.3"),
-        Heading(
-            name="RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh", level=3, num="11.3.1"
-        ),
-        Heading(name="Optional Dynamic JWKS Timeouts", level=2, num="11.4"),
+        Heading(name="RQ.SRS-042.JWT.DynamicJWKS.Refresh", level=3, num="11.3.1"),
+        Heading(name="Optional Dynamic JWKS Timeout Parameters", level=2, num="11.4"),
         Heading(name="Specifying Optional Connection Timeout", level=3, num="11.4.1"),
         Heading(
             name="RQ.SRS-042.JWT.DynamicJWKS.ConnectionTimeout", level=4, num="11.4.1.1"
@@ -941,6 +1046,33 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
             level=3,
             num="12.4.1",
         ),
+        Heading(name="OAuth Identity Forwarding", level=2, num="12.5"),
+        Heading(name="RQ.SRS-042.JWT.OAuthIntegration.Support", level=3, num="12.5.1"),
+        Heading(name="Grafana Integration Support", level=2, num="12.6"),
+        Heading(
+            name="RQ.SRS-042.JWT.GrafanaIntegration.Support", level=3, num="12.6.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled",
+            level=3,
+            num="12.6.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled",
+            level=3,
+            num="12.6.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration",
+            level=3,
+            num="12.6.4",
+        ),
+        Heading(name="Expired Token Handling", level=2, num="12.7"),
+        Heading(
+            name="RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration",
+            level=3,
+            num="12.7.1",
+        ),
     ),
     requirements=(
         RQ_SRS_042_JWT_ValidatorsConfiguration,
@@ -954,18 +1086,18 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_JWT_StaticKey,
         RQ_SRS_042_JWT_StaticKey_SupportedAlgorithms,
         RQ_SRS_042_JWT_StaticKey_NoneAlgorithm,
-        RQ_SRS_042_JWT_StaticKey_Parameters_StaticKeyInBase64,
+        RQ_SRS_042_JWT_StaticKey_StaticKeyInBase64,
         RQ_SRS_042_JWT_StaticKey_Parameters_PublicKey,
         RQ_SRS_042_JWT_StaticKey_Parameters_PrivateKey,
         RQ_SRS_042_JWT_StaticJWKS,
-        RQ_SRS_042_JWT_StaticJWKS_Parameters_PathToJWKSFile,
-        RQ_SRS_042_JWT_StaticJWKS_Parameters_OneContentSource,
+        RQ_SRS_042_JWT_StaticJWKS_PathToJWKSFile,
+        RQ_SRS_042_JWT_StaticJWKS_OneSourceOfJWKS,
         RQ_SRS_042_JWT_StaticJWKS_SupportedAlgorithms,
         RQ_SRS_042_JWT_StaticJWKS_Parameters_PublicKey,
         RQ_SRS_042_JWT_StaticJWKS_Parameters_PrivateKey,
         RQ_SRS_042_JWT_DynamicJWKS,
         RQ_SRS_042_JWT_DynamicJWKS_URI,
-        RQ_SRS_042_JWT_DynamicJWKS_Parameters_Refresh,
+        RQ_SRS_042_JWT_DynamicJWKS_Refresh,
         RQ_SRS_042_JWT_DynamicJWKS_ConnectionTimeout,
         RQ_SRS_042_JWT_DynamicJWKS_ReceiveTimeout,
         RQ_SRS_042_JWT_DynamicJWKS_SendTimeout,
@@ -976,6 +1108,12 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_JWT_Security_Revocation,
         RQ_SRS_042_JWT_Security_TokenBlacklisting,
         RQ_SRS_042_JWT_Security_TokenRefreshOnReAuthentication,
+        RQ_SRS_042_JWT_OAuthIntegration_Support,
+        RQ_SRS_042_JWT_GrafanaIntegration_Support,
+        RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_Enabled,
+        RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_Disabled,
+        RQ_SRS_042_JWT_GrafanaIntegration_ForwardOAuthIdentity_ClickHouseIntegration,
+        RQ_SRS_042_JWT_GrafanaIntegration_TokenExpiration,
     ),
     content=r"""
 # SRS-042 JWT Authentication in ClickHouse
@@ -992,10 +1130,10 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
 * 5 [Creation of a User with JWT Authentication](#creation-of-a-user-with-jwt-authentication)
     * 5.1 [RQ.SRS-042.JWT.UserCreation.Config](#rqsrs-042jwtusercreationconfig)
     * 5.2 [RQ.SRS-042.JWT.UserCreation.RBAC](#rqsrs-042jwtusercreationrbac)
-* 6 [Authentication of Users with JWT in ClickHouse](#authentication-of-users-with-jwt-in-clickhouse)
+* 6 [Authentication with JWT ](#authentication-with-jwt-)
     * 6.1 [Sub-Claim Validation](#sub-claim-validation)
         * 6.1.1 [RQ.SRS-042.JWT.SubClaimValidation](#rqsrs-042jwtsubclaimvalidation)
-    * 6.2 [clickhouse-client](#clickhouse-client)
+    * 6.2 [Clickhouse Client](#clickhouse-client)
         * 6.2.1 [RQ.SRS-042.JWT.UserAuthentication.ClickhouseClient](#rqsrs-042jwtuserauthenticationclickhouseclient)
     * 6.3 [HTTP(S) Client](#https-client)
         * 6.3.1 [RQ.SRS-042.JWT.UserAuthentication.HTTPClient](#rqsrs-042jwtuserauthenticationhttpclient)
@@ -1012,7 +1150,7 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
     * 9.3 [Support for None Algorithm](#support-for-none-algorithm)
         * 9.3.1 [RQ.SRS-042.JWT.StaticKey.NoneAlgorithm](#rqsrs-042jwtstatickeynonealgorithm)
     * 9.4 [Specifying Static Key Using Base64 Encoding](#specifying-static-key-using-base64-encoding)
-        * 9.4.1 [RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64](#rqsrs-042jwtstatickeyparametersstatickeyinbase64)
+        * 9.4.1 [RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64](#rqsrs-042jwtstatickeystatickeyinbase64)
     * 9.5 [Using Public Key for Static Key Validation](#using-public-key-for-static-key-validation)
         * 9.5.1 [RQ.SRS-042.JWT.StaticKey.Parameters.PublicKey](#rqsrs-042jwtstatickeyparameterspublickey)
     * 9.6 [Using PrivateKey for Static Key Validation](#using-privatekey-for-static-key-validation)
@@ -1022,9 +1160,9 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
     * 10.2 [Specifying Static JWKS Inline](#specifying-static-jwks-inline)
         * 10.2.1 [RQ.SRS-042.JWT.StaticJWKS.Inline](#rqsrs-042jwtstaticjwksinline)
     * 10.3 [Specifying JWKS Using File Path](#specifying-jwks-using-file-path)
-        * 10.3.1 [RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile](#rqsrs-042jwtstaticjwksparameterspathtojwksfile)
+        * 10.3.1 [RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile](#rqsrs-042jwtstaticjwkspathtojwksfile)
     * 10.4 [Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)](#specifying-either-jwks-inline-or-using-file-path-mutually-exclusive)
-        * 10.4.1 [RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource](#rqsrs-042jwtstaticjwksparametersonecontentsource)
+        * 10.4.1 [RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS](#rqsrs-042jwtstaticjwksonesourceofjwks)
     * 10.5 [Supported Algorithms for Static JWKS Validation](#supported-algorithms-for-static-jwks-validation)
         * 10.5.1 [RQ.SRS-042.JWT.StaticJWKS.SupportedAlgorithms](#rqsrs-042jwtstaticjwkssupportedalgorithms)
     * 10.6 [Using Public Key for Static JWKS Validation](#using-public-key-for-static-jwks-validation)
@@ -1036,8 +1174,8 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
     * 11.2 [Specifying Dynamic JWKS URI](#specifying-dynamic-jwks-uri)
         * 11.2.1 [RQ.SRS-042.JWT.DynamicJWKS.URI](#rqsrs-042jwtdynamicjwksuri)
     * 11.3 [Specifying Dynamic JWKS Refresh Rate](#specifying-dynamic-jwks-refresh-rate)
-        * 11.3.1 [RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh](#rqsrs-042jwtdynamicjwksparametersrefresh)
-    * 11.4 [Optional Dynamic JWKS Timeouts](#optional-dynamic-jwks-timeouts)
+        * 11.3.1 [RQ.SRS-042.JWT.DynamicJWKS.Refresh](#rqsrs-042jwtdynamicjwksrefresh)
+    * 11.4 [Optional Dynamic JWKS Timeout Parameters](#optional-dynamic-jwks-timeout-parameters)
         * 11.4.1 [Specifying Optional Connection Timeout](#specifying-optional-connection-timeout)
             * 11.4.1.1 [RQ.SRS-042.JWT.DynamicJWKS.ConnectionTimeout](#rqsrs-042jwtdynamicjwksconnectiontimeout)
         * 11.4.2 [Specifying Optional Receive Timeout](#specifying-optional-receive-timeout)
@@ -1060,6 +1198,15 @@ SRS_042_JWT_Authentication_in_ClickHouse = Specification(
         * 12.3.1 [RQ.SRS-042.JWT.Security.TokenBlacklisting](#rqsrs-042jwtsecuritytokenblacklisting)
     * 12.4 [Token Refresh On Re-Authentication](#token-refresh-on-re-authentication)
         * 12.4.1 [RQ.SRS-042.JWT.Security.TokenRefreshOnReAuthentication](#rqsrs-042jwtsecuritytokenrefreshonreauthentication)
+    * 12.5 [OAuth Identity Forwarding](#oauth-identity-forwarding)
+        * 12.5.1 [RQ.SRS-042.JWT.OAuthIntegration.Support](#rqsrs-042jwtoauthintegrationsupport)
+    * 12.6 [Grafana Integration Support](#grafana-integration-support)
+        * 12.6.1 [RQ.SRS-042.JWT.GrafanaIntegration.Support](#rqsrs-042jwtgrafanaintegrationsupport)
+        * 12.6.2 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityenabled)
+        * 12.6.3 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled](#rqsrs-042jwtgrafanaintegrationforwardoauthidentitydisabled)
+        * 12.6.4 [RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration](#rqsrs-042jwtgrafanaintegrationforwardoauthidentityclickhouseintegration)
+    * 12.7 [Expired Token Handling](#expired-token-handling)
+        * 12.7.1 [RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration](#rqsrs-042jwtgrafanaintegrationtokenexpiration)
 
 
 ## Introduction
@@ -1100,10 +1247,7 @@ These validators are set up in the `jwt_validators` section of the `config.xml` 
 
 ClickHouse supports three main types of JWT validators:
 
-1. **Static Key Validator**:
-
-Uses a symmetric static secret key to verify JWT signatures.
-Supported algorithms: HMAC (HS256, HS384, HS512).  
+1. **Static Key Validator**:  
 Example:
 
 ```xml
@@ -1117,10 +1261,8 @@ Example:
 </clickhouse>
 ```
 
-2. **Static JWKS Validator**:
-
-Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.
-Supported algorithms: RSA, ECDSA, EdDSA.  
+2. **Static JWKS Validator**:  
+Uses a JSON Web Key Set (JWKS) containing public keys to verify JWTs signed with asymmetric algorithms.   
 Example:
 
 ```xml
@@ -1134,11 +1276,9 @@ Example:
 </clickhouse>
 ```
 
-3. **Dynamic JWKS Validator**:
-
+3. **Dynamic JWKS Validator**:  
 Retrieves public keys dynamically from the JWKS servers.
-Ideal for integration with identity providers where key rotation is managed externally.
-Supported algorithms: RSA, ECDSA, EdDSA.  
+Ideal for integration with identity providers where key rotation is managed externally.  
 Example:
 
 ```xml
@@ -1229,7 +1369,7 @@ Example:
 ### RQ.SRS-042.JWT.UserCreation.RBAC
 version: 1.0  
 
-[ClickHouse] SHALL support creating users with JWT authentication enabled using SQL statements.
+[ClickHouse] SHALL support creating users with JWT authentication enabled through SQL statements.
 
 Example:
 ```sql
@@ -1242,7 +1382,7 @@ Or with additional JWT payload checks:
 CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
-## Authentication of Users with JWT in ClickHouse
+## Authentication with JWT 
 
 To authenticate users with JWT in ClickHouse, the user must provide a valid JWT token. The token is validated against the configured JWT validators, and the user is granted access if the token is valid. Users can provide the JWT token via the console client or HTTP requests.
 
@@ -1257,12 +1397,7 @@ Payload example for user with name `my_user`:
 
 ```json
 {
-  "sub": "my_user",
-  "resource_access": {
-    "account": {
-      "roles": ["view-profile"]
-    }
-  }
+  "sub": "my_user"
 }
 ```
 
@@ -1420,7 +1555,7 @@ Example:
 
 ### Specifying Static Key Using Base64 Encoding
 
-#### RQ.SRS-042.JWT.StaticKey.Parameters.StaticKeyInBase64
+#### RQ.SRS-042.JWT.StaticKey.StaticKeyInBase64
 version: 1.0
 
 [ClickHouse] SHALL support the `static_key_in_base64` option to indicate if the static_key is base64-encoded. This option is optional and SHALL default to False.
@@ -1482,14 +1617,14 @@ The `static_jwks` field SHALL specify the JWKS content in the static JWKS valida
 ```
 ### Specifying JWKS Using File Path
 
-#### RQ.SRS-042.JWT.StaticJWKS.Parameters.PathToJWKSFile
+#### RQ.SRS-042.JWT.StaticJWKS.PathToJWKSFile
 version: 1.0  
 
 [ClickHouse] SHALL support the `static_jwks_file` option to specify the path to a file containing the JWKS content in the static JWKS validator configuration.
 
 ### Specifying Either JWKS Inline or Using File Path (Mutually Exclusive)
 
-#### RQ.SRS-042.JWT.StaticJWKS.Parameters.OneContentSource
+#### RQ.SRS-042.JWT.StaticJWKS.OneSourceOfJWKS
 version: 1.0
 
 [ClickHouse] SHALL allow to specify only one of the `static_jwks` or `static_jwks_file` in the static JWKS validator configuration.
@@ -1561,12 +1696,12 @@ version: 1.0
 
 ### Specifying Dynamic JWKS Refresh Rate
 
-#### RQ.SRS-042.JWT.DynamicJWKS.Parameters.Refresh
+#### RQ.SRS-042.JWT.DynamicJWKS.Refresh
 version: 1.0  
 
 [ClickHouse] SHALL support the `refresh_ms` parameter to specify the period for refreshing the JWKS in the dynamic JWKS validator configuration. This parameter is optional and SHALL default to 300000.
 
-### Optional Dynamic JWKS Timeouts
+### Optional Dynamic JWKS Timeout Parameters
 
 Timeouts in milliseconds on the socket used for communicating with the server:
 
@@ -1646,7 +1781,58 @@ version: 1.0
 
 [ClickHouse] SHALL ensure that users receive new tokens upon re-authentication, preventing session fixation attacks.
 
+### OAuth Identity Forwarding
+
+#### RQ.SRS-042.JWT.OAuthIntegration.Support
+version: 1.0
+
+[ClickHouse] SHALL support integration with OAuth providers for authentication using JWT tokens. The supported providers SHALL include but are not limited to:
+
+- Dex
+- Keycloak
+- Google
+- Okta
+- Auth0
+- Microsoft Entra ID
+- AWS Cognito
+- GitHub
+- GitLab
+- Ping Identity
+
+
+Only Dex is supported in the first version of JWT authentication in ClickHouse.
+
+
+### Grafana Integration Support
+
+#### RQ.SRS-042.JWT.GrafanaIntegration.Support
+version: 1.0  
+
+[Grafana] SHALL support forwarding the same JWT token used to authenticate a user in [Grafana] to ClickHouse when making requests to the ClickHouse data source. This behavior SHALL be configurable by enabling the `Forward OAuth Identity` option in the [Grafana] data source settings.
+
+#### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Enabled
+version: 1.0  
+
+When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to ClickHouse. The token SHALL be used by ClickHouse to validate the user's identity and permissions.
+
+#### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.Disabled
+version: 1.0  
+
+When the `Forward OAuth Identity` option is disabled in [Grafana], [Grafana] SHALL NOT forward the user's JWT token to ClickHouse.
+
+#### RQ.SRS-042.JWT.GrafanaIntegration.ForwardOAuthIdentity.ClickHouseIntegration
+version: 1.0  
+
+[ClickHouse] SHALL validate JWT tokens forwarded by [Grafana]. The tokens MUST be validated using the JWT validators configured in the `jwt_validators` section of `config.xml` file.
+
+### Expired Token Handling
+
+#### RQ.SRS-042.JWT.GrafanaIntegration.TokenExpiration
+version: 1.0  
+
+[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
 
 [ClickHouse]: https://clickhouse.com
+[Grafana]: https://grafana.com
 """,
 )
