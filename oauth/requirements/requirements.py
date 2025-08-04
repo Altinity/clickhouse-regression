@@ -110,8 +110,8 @@ RQ_SRS_042_OAuth_Credentials = Requirement(
     num="6.1.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity",
+RQ_SRS_042_OAuth_Grafana_Authentication_ForwardOAuthIdentity = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity",
     version="1.0",
     priority=None,
     group=None,
@@ -128,8 +128,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity = Requir
     num="7.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories",
     version="1.0",
     priority=None,
     group=None,
@@ -166,8 +166,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories = Requirement
     num="7.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_provider = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_provider = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider",
     version="1.0",
     priority=None,
     group=None,
@@ -182,8 +182,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     num="7.2.1.1.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_clientId = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_clientId = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId",
     version="1.0",
     priority=None,
     group=None,
@@ -198,8 +198,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     num="7.2.1.1.2",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_tenantId = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_tenantId = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId",
     version="1.0",
     priority=None,
     group=None,
@@ -214,8 +214,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     num="7.2.1.1.3",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
     version="1.0",
     priority=None,
     group=None,
@@ -230,8 +230,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     num="7.2.1.1.4",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
     version="1.0",
     priority=None,
     group=None,
@@ -246,8 +246,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     num="7.2.1.1.5",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_AccessTokenProcessors = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors",
     version="1.0",
     priority=None,
     group=None,
@@ -262,8 +262,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_provider = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.provider",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider",
     version="1.0",
     priority=None,
     group=None,
@@ -278,8 +278,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.2",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_clientId = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_clientId = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
     version="1.0",
     priority=None,
     group=None,
@@ -294,8 +294,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.3",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_tenantId = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_tenantId = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
     version="1.0",
     priority=None,
     group=None,
@@ -310,8 +310,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.4",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories",
     version="1.0",
     priority=None,
     group=None,
@@ -326,8 +326,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.5",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token",
     version="1.0",
     priority=None,
     group=None,
@@ -342,8 +342,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.6",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_processor = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
     version="1.0",
     priority=None,
     group=None,
@@ -358,8 +358,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.7",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_roles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
     version="1.0",
     priority=None,
     group=None,
@@ -374,8 +374,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     num="7.2.1.2.8",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles",
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
     version="1.0",
     priority=None,
     group=None,
@@ -493,8 +493,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requ
     num="7.3.6.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
     version="1.0",
     priority=None,
     group=None,
@@ -509,8 +509,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests = Requireme
     num="7.4.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
     version="1.0",
     priority=None,
     group=None,
@@ -525,8 +525,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header = Re
     num="7.4.2",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Alg = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
     version="1.0",
     priority=None,
     group=None,
@@ -541,8 +541,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Alg 
     num="7.4.3",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Typ = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
     version="1.0",
     priority=None,
     group=None,
@@ -557,8 +557,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Typ 
     num="7.4.4",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Signature = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
     version="1.0",
     priority=None,
     group=None,
@@ -573,8 +573,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Sign
     num="7.4.5",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
     version="1.0",
     priority=None,
     group=None,
@@ -589,8 +589,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body = Requ
     num="7.4.6",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Sub = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
     version="1.0",
     priority=None,
     group=None,
@@ -605,8 +605,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Sub = 
     num="7.4.7",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Aud = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
     version="1.0",
     priority=None,
     group=None,
@@ -621,8 +621,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Aud = 
     num="7.4.8",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Exp = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp",
+RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
     version="1.0",
     priority=None,
     group=None,
@@ -652,8 +652,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ExpiredTokenHandling = Requirement(
     num="7.5.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching",
+RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching",
     version="1.0",
     priority=None,
     group=None,
@@ -693,8 +693,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching = Requirement(
     num="7.6.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_NoCache = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache",
+RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_NoCache = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache",
     version="1.0",
     priority=None,
     group=None,
@@ -709,8 +709,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_NoCache = Requi
     num="7.6.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_CacheLifetime = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime",
+RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_CacheLifetime = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime",
     version="1.0",
     priority=None,
     group=None,
@@ -725,8 +725,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_CacheLifetime =
     num="7.6.3.1.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_MaxCacheSize = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize",
+RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_MaxCacheSize = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize",
     version="1.0",
     priority=None,
     group=None,
@@ -741,8 +741,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_MaxCacheSize = 
     num="7.6.3.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_Policy = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy",
+RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_Policy = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy",
     version="1.0",
     priority=None,
     group=None,
@@ -814,13 +814,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="RQ.SRS-042.OAuth.Credentials", level=3, num="6.1.1"),
         Heading(name="Accessing ClickHouse from Grafana", level=1, num="7"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity",
             level=2,
             num="7.1",
         ),
         Heading(name="User Directories", level=2, num="7.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories",
             level=3,
             num="7.2.1",
         ),
@@ -828,27 +828,27 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="Incorrect Configuration in User Directories", level=4, num="7.2.1.1"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider",
             level=5,
             num="7.2.1.1.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId",
             level=5,
             num="7.2.1.1.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId",
             level=5,
             num="7.2.1.1.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
             level=5,
             num="7.2.1.1.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
             level=5,
             num="7.2.1.1.5",
         ),
@@ -856,49 +856,49 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="Missing Configuration in User Directories", level=4, num="7.2.1.2"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors",
             level=5,
             num="7.2.1.2.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.provider",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider",
             level=5,
             num="7.2.1.2.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
             level=5,
             num="7.2.1.2.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
             level=5,
             num="7.2.1.2.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories",
             level=5,
             num="7.2.1.2.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token",
             level=5,
             num="7.2.1.2.6",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
             level=5,
             num="7.2.1.2.7",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
             level=5,
             num="7.2.1.2.8",
         ),
         Heading(name="User Roles", level=2, num="7.3"),
         Heading(name="Query Execution Based on User Roles", level=3, num="7.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
             level=4,
             num="7.3.1.1",
         ),
@@ -954,47 +954,47 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
             level=3,
             num="7.4.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
             level=3,
             num="7.4.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
             level=3,
             num="7.4.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
             level=3,
             num="7.4.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
             level=3,
             num="7.4.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
             level=3,
             num="7.4.6",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
             level=3,
             num="7.4.7",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
             level=3,
             num="7.4.8",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
             level=3,
             num="7.4.9",
         ),
@@ -1006,32 +1006,30 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(name="Caching", level=2, num="7.6"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching",
-            level=3,
-            num="7.6.1",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="7.6.1"
         ),
         Heading(name="Disable Caching", level=3, num="7.6.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache",
             level=4,
             num="7.6.2.1",
         ),
         Heading(name="Cache Eviction", level=3, num="7.6.3"),
         Heading(name="Cache Lifetime", level=4, num="7.6.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime",
             level=5,
             num="7.6.3.1.1",
         ),
         Heading(name="Exceeding Max Cache Size", level=4, num="7.6.3.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize",
             level=5,
             num="7.6.3.2.1",
         ),
         Heading(name="Cache Eviction Policy", level=4, num="7.6.3.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy",
             level=5,
             num="7.6.3.3.1",
         ),
@@ -1041,42 +1039,42 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak,
         RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
         RQ_SRS_042_OAuth_Credentials,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_provider,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_clientId,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_tenantId,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_AccessTokenProcessors,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_provider,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_clientId,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_TokenProcessors_tenantId,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_processor,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_ForwardOAuthIdentity,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_provider,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_clientId,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_tenantId,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_clientId,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_tenantId,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Alg,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Typ,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Header_Signature,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Sub,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Aud,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_IncorrectRequests_Body_Exp,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud,
+        RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp,
         RQ_SRS_042_OAuth_Grafana_Authentication_ExpiredTokenHandling,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_NoCache,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_CacheLifetime,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_MaxCacheSize,
-        RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_Policy,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Caching,
+        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_NoCache,
+        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_CacheLifetime,
+        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_MaxCacheSize,
+        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_Policy,
     ),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
@@ -1105,27 +1103,27 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
 * 7 [Accessing ClickHouse from Grafana](#accessing-clickhouse-from-grafana)
-    * 7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentity)
+    * 7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationforwardoauthidentity)
     * 7.2 [User Directories](#user-directories)
-        * 7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectories)
+        * 7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
             * 7.2.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
-                * 7.2.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationprovider)
-                * 7.2.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationclientid)
-                * 7.2.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationtenantid)
-                * 7.2.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
-                * 7.2.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 7.2.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
+                * 7.2.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
+                * 7.2.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
+                * 7.2.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
+                * 7.2.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
             * 7.2.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
-                * 7.2.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationaccesstokenprocessors)
-                * 7.2.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationtokenprocessorsprovider)
-                * 7.2.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationtokenprocessorsclientid)
-                * 7.2.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationtokenprocessorstenantid)
-                * 7.2.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectories)
-                * 7.2.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestoken)
-                * 7.2.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
-                * 7.2.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+                * 7.2.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
+                * 7.2.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
+                * 7.2.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
+                * 7.2.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
+                * 7.2.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
+                * 7.2.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
+                * 7.2.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+                * 7.2.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
-            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserroles)
+            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
         * 7.3.2 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
             * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
         * 7.3.3 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
@@ -1137,28 +1135,28 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 7.3.6 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
             * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequests)
-        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheader)
-        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheaderalg)
-        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheadertyp)
-        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsheadersignature)
-        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbody)
-        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodysub)
-        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodyaud)
-        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationclickhouseincorrectrequestsbodyexp)
+        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
+        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
+        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
+        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
+        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
+        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
+        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
+        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
+        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
     * 7.5 [Expired Token Handling](#expired-token-handling)
         * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
     * 7.6 [Caching](#caching)
-        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching](#rqsrs-042oauthgrafanaauthenticationclickhousecaching)
+        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
         * 7.6.2 [Disable Caching](#disable-caching)
-            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionnocache)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcacheevictionnocache)
         * 7.6.3 [Cache Eviction](#cache-eviction)
             * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
-                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictioncachelifetime)
+                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcacheevictioncachelifetime)
             * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionmaxcachesize)
+                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcacheevictionmaxcachesize)
             * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
-                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationclickhousecacheevictionpolicy)
+                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcacheevictionpolicy)
 
     
 ## Introduction
@@ -1354,7 +1352,7 @@ printf "CLIENT_ID=<Client ID (Application ID)>\nTENANT_ID=<Tenant ID>\nCLIENT_SE
 
 ## Accessing ClickHouse from Grafana
 
-### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity
+### RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity
 version: 1.0
 
 When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to [ClickHouse]. The token SHALL be used by [ClickHouse] to validate the user's identity and permissions.
@@ -1367,7 +1365,7 @@ An `external user directory` in [ClickHouse] is a remote identity source (such a
 used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically 
 validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories
+#### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories
 version: 1.0
 
 When a user is not defined locally, [ClickHouse] SHALL use the `IdP` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
@@ -1396,69 +1394,69 @@ For example,
 
 ##### Incorrect Configuration in User Directories
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 ##### Missing Configuration in User Directories
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.provider
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.clientId
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.tenantId
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
@@ -1467,7 +1465,7 @@ version: 1.0
 
 #### Query Execution Based on User Roles
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
 version: 1.0
 
 When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
@@ -1532,47 +1530,47 @@ When there are no access token processors defined in [ClickHouse] configuration,
 
 ### Incorrect Requests to ClickHouse
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests
 version: 1.0
 
 When [Grafana] makes requests to [ClickHouse] without a valid JWT token in the Authorization header, [ClickHouse] SHALL return an HTTP 401 Unauthorized response.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header
 version: 1.0
 
 [ClickHouse] SHALL reject requests that do not include the Authorization header with a valid JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Alg
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `alg` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Typ
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `typ` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Header.Signature
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a JWT token that has an invalid signature.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include incorrect or malformed body content.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Sub
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `sub` value that does not match any user in [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Aud
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `aud` value that does not match the expected audience for the JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.IncorrectRequests.Body.Exp
+#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
@@ -1586,7 +1584,7 @@ version: 1.0
 
 ### Caching
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching
+#### RQ.SRS-042.OAuth.Grafana.Authentication.Caching
 version: 1.0
 
 [ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.
@@ -1618,7 +1616,7 @@ In this case the cache will be valid for 60 seconds. After this period.
 
 #### Disable Caching
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache
+##### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache
 version: 1.0
 
 If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
@@ -1627,21 +1625,21 @@ If the value of `cache_lifetime` is `0` in the `token_processors` configuration,
 
 ##### Cache Lifetime
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime
+###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime
 version: 1.0
 
 [ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
 
 ##### Exceeding Max Cache Size
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.MaxCacheSize
+###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize
 version: 1.0
 
 [ClickHouse] SHALL limit the maximum size of the cache for access tokens. If the cache exceeds this size, [ClickHouse] SHALL evict the oldest tokens to make room for new ones.
 
 ##### Cache Eviction Policy
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.Policy
+###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy
 version: 1.0
 
 [ClickHouse] SHALL use a Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
