@@ -22,14 +22,14 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <access_token_processors>\n"
+        "    <token_processors>\n"
         "        <azure_ad>\n"
         "            <provider>azure</provider>\n"
         "            <client_id>your-client-id</client_id>\n"
         "            <tenant_id>your-tenant-id</tenant_id>\n"
         "            <cache_lifetime>3600</cache_lifetime>\n"
         "        </azure_ad>\n"
-        "    </access_token_processors>\n"
+        "    </token_processors>\n"
         "</clickhouse>\n"
         "```\n"
         "\n"
@@ -37,6 +37,39 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
     link=None,
     level=4,
     num="5.1.1.1",
+)
+
+RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors_Keycloak = Requirement(
+    name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.\n"
+        "\n"
+        "Example,\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <token_processors>\n"
+        "        <keycloak>\n"
+        "            <provider>OpenID</provider>\n"
+        "            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>\n"
+        "            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>\n"
+        "            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>\n"
+        "            <token_cache_lifetime>60</token_cache_lifetime>\n"
+        "        </keycloak>\n"
+        "    </token_processors>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="5.1.2.1",
 )
 
 RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
@@ -47,12 +80,12 @@ RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `access_token_processors` section of `config.xml`.\n"
+        "[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.\n"
         "\n"
     ),
     link=None,
     level=3,
-    num="5.2.1",
+    num="5.3.1",
 )
 
 RQ_SRS_042_OAuth_Credentials = Requirement(
@@ -109,13 +142,13 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories = Requirement
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <access_token_processors>\n"
+        "    <token_processors>\n"
         "        <azuure>\n"
         "            <provider>azure</provider>\n"
         "            <client_id>$CLIENT_ID</client_id>\n"
         "            <tenant_id>$TENANT_ID</tenant_id>\n"
         "        </azuure>\n"
-        "    </access_token_processors>\n"
+        "    </token_processors>\n"
         "    <user_directories>\n"
         "        <token>\n"
         "            <processor>azuure</processor>\n"
@@ -141,7 +174,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -157,7 +190,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -173,7 +206,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_IncorrectConf
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -221,7 +254,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `access_token_processors` section is not defined in the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -237,7 +270,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -253,7 +286,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -269,7 +302,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.\n"
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.\n"
         "\n"
     ),
     link=None,
@@ -421,13 +454,13 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <access_token_processors>\n"
+        "    <token_processors>\n"
         "        <azuure>\n"
         "            <provider>azure</provider>\n"
         "            <client_id>$CLIENT_ID</client_id>\n"
         "            <tenant_id>$TENANT_ID</tenant_id>\n"
         "        </azuure>\n"
-        "    </access_token_processors>\n"
+        "    </token_processors>\n"
         "    <user_directories>\n"
         "        <token>\n"
         "            <processor>azuure</processor>\n"
@@ -627,20 +660,20 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_Caching = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `access_token_processors` configuration.\n"
+        "[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.\n"
         "\n"
         "For example,\n"
         "\n"
         "```xml\n"
         "<clickhouse>\n"
-        "    <access_token_processors>\n"
+        "    <token_processors>\n"
         "        <azuure>\n"
         "            <provider>azure</provider>\n"
         "            <client_id>$CLIENT_ID</client_id>\n"
         "            <tenant_id>$TENANT_ID</tenant_id>\n"
         "            <cache_lifetime>60</cache_lifetime>\n"
         "        </azuure>\n"
-        "    </access_token_processors>\n"
+        "    </token_processors>\n"
         "    <user_directories>\n"
         "        <token>\n"
         "            <processor>azuure</processor>\n"
@@ -668,7 +701,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_NoCache = Requi
     type=None,
     uid=None,
     description=(
-        "If the value of `cache_lifetime` is `0` in the `access_token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.\n"
+        "If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.\n"
         "\n"
     ),
     link=None,
@@ -684,7 +717,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_CacheEviction_CacheLifetime =
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `access_token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.\n"
+        "[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.\n"
         "\n"
     ),
     link=None,
@@ -760,13 +793,20 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="5.1.1.1",
         ),
+        Heading(name="Access Token Processors For Keycloak", level=3, num="5.1.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak",
+            level=4,
+            num="5.1.2.1",
+        ),
+        Heading(name="Number of Identity Providers", level=2, num="5.2"),
         Heading(
             name="Number of Identity Providers That Can Be Used Concurrently",
             level=2,
-            num="5.2",
+            num="5.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.2.1"
+            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.3.1"
         ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
@@ -997,6 +1037,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     ),
     requirements=(
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors_Keycloak,
         RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
         RQ_SRS_042_OAuth_Credentials,
         RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_ForwardOAuthIdentity,
@@ -1053,8 +1094,11 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 5.1 [Azure](#azure)
         * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
             * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 5.2 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.2.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+        * 5.1.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.1.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak](#rqsrs-042oauthidentityprovidersaccesstokenprocessorskeycloak)
+    * 5.2 [Number of Identity Providers](#number-of-identity-providers)
+    * 5.3 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.3.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -1160,7 +1204,7 @@ OAuth-based authentication works by allowing users to authenticate using an acce
 
 **Externally Defined Users:** If a user is not defined locally, [ClickHouse] can still authenticate them by validating the token and retrieving user information from the Identity Provider. If valid, the user is granted access with predefined roles.
 
-All OAuth 2.0 access tokens must be validated through one of the configured `access_token_processors` in `config.xml`.
+All OAuth 2.0 access tokens must be validated through one of the configured `token_processors` in `config.xml`.
 
 ### Access Token Processors
 
@@ -1200,14 +1244,14 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 ```xml
 <clickhouse>
-    <access_token_processors>
+    <token_processors>
         <azuure>
             <provider>azure</provider>
             <client_id>$CLIENT_ID</client_id>
             <tenant_id>$TENANT_ID</tenant_id>
             <cache_lifetime>60</cache_lifetime>
         </azuure>
-    </access_token_processors>
+    </token_processors>
     <user_directories>
         <token>
             <processor>azuure</processor>
@@ -1245,23 +1289,49 @@ Basic structure:
 
 ```xml
 <clickhouse>
-    <access_token_processors>
+    <token_processors>
         <azure_ad>
             <provider>azure</provider>
             <client_id>your-client-id</client_id>
             <tenant_id>your-tenant-id</tenant_id>
             <cache_lifetime>3600</cache_lifetime>
         </azure_ad>
-    </access_token_processors>
+    </token_processors>
 </clickhouse>
 ```
+
+#### Access Token Processors For Keycloak
+
+##### RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak
+version: 1.0
+
+[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
+
+Example,
+
+```xml
+<clickhouse>
+    <token_processors>
+        <keycloak>
+            <provider>OpenID</provider>
+            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
+            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
+            <token_cache_lifetime>60</token_cache_lifetime>
+        </keycloak>
+    </token_processors>
+</clickhouse>
+```
+
+
+### Number of Identity Providers
 
 ### Number of Identity Providers That Can Be Used Concurrently
 
 #### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
 version: 1.0
 
-[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `access_token_processors` section of `config.xml`.
+[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
 
 ## Setting Up OAuth Authentication
 
@@ -1302,13 +1372,13 @@ For example,
 
 ```xml
 <clickhouse>
-    <access_token_processors>
+    <token_processors>
         <azuure>
             <provider>azure</provider>
             <client_id>$CLIENT_ID</client_id>
             <tenant_id>$TENANT_ID</tenant_id>
         </azuure>
-    </access_token_processors>
+    </token_processors>
     <user_directories>
         <token>
             <processor>azuure</processor>
@@ -1325,17 +1395,17 @@ For example,
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.accessTokenProcessors.token.processor
 version: 1.0
@@ -1352,22 +1422,22 @@ version: 1.0
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `access_token_processors` section is not defined in the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.provider
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.clientId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.tenantId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories
 version: 1.0
@@ -1432,13 +1502,13 @@ The role configuration example,
 
 ```xml
 <clickhouse>
-    <access_token_processors>
+    <token_processors>
         <azuure>
             <provider>azure</provider>
             <client_id>$CLIENT_ID</client_id>
             <tenant_id>$TENANT_ID</tenant_id>
         </azuure>
-    </access_token_processors>
+    </token_processors>
     <user_directories>
         <token>
             <processor>azuure</processor>
@@ -1515,20 +1585,20 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.Caching
 version: 1.0
 
-[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `access_token_processors` configuration.
+[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.
 
 For example,
 
 ```xml
 <clickhouse>
-    <access_token_processors>
+    <token_processors>
         <azuure>
             <provider>azure</provider>
             <client_id>$CLIENT_ID</client_id>
             <tenant_id>$TENANT_ID</tenant_id>
             <cache_lifetime>60</cache_lifetime>
         </azuure>
-    </access_token_processors>
+    </token_processors>
     <user_directories>
         <token>
             <processor>azuure</processor>
@@ -1547,7 +1617,7 @@ In this case the cache will be valid for 60 seconds. After this period.
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.NoCache
 version: 1.0
 
-If the value of `cache_lifetime` is `0` in the `access_token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
+If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
 
 #### Cache Eviction
 
@@ -1556,7 +1626,7 @@ If the value of `cache_lifetime` is `0` in the `access_token_processors` configu
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.CacheEviction.CacheLifetime
 version: 1.0
 
-[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `access_token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
+[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
 
 ##### Exceeding Max Cache Size
 
