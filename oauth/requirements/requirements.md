@@ -10,15 +10,16 @@
     * 3.1 [Access Token Processors](#access-token-processors)
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
-* 5 [Supported Identity Providers](#supported-identity-providers)
+* 5 [Identity Providers](#identity-providers)
     * 5.1 [Azure](#azure)
         * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
             * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-        * 5.1.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.1.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak](#rqsrs-042oauthidentityprovidersaccesstokenprocessorskeycloak)
-    * 5.2 [Number of Identity Providers](#number-of-identity-providers)
-    * 5.3 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.3.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.2 [Keycloak](#keycloak)
+        * 5.2.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak](#rqsrs-042oauthidentityprovidersaccesstokenprocessorskeycloak)
+    * 5.3 [Number of Identity Providers](#number-of-identity-providers)
+    * 5.4 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.4.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -187,7 +188,7 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 To authenticate with OAuth, grafana user must obtain an access token from the identity provider and present it to [ClickHouse].
 
-## Supported Identity Providers
+## Identity Providers
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with various identity providers, including but not limited to:
 
@@ -219,6 +220,8 @@ Basic structure:
     </token_processors>
 </clickhouse>
 ```
+
+### Keycloak
 
 #### Access Token Processors For Keycloak
 
