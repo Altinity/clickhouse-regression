@@ -69,7 +69,7 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors_Keycloak = Requirement(
     ),
     link=None,
     level=4,
-    num="5.1.2.1",
+    num="5.2.1.1",
 )
 
 RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
@@ -85,7 +85,7 @@ RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
     ),
     link=None,
     level=3,
-    num="5.3.1",
+    num="5.4.1",
 )
 
 RQ_SRS_042_OAuth_Credentials = Requirement(
@@ -785,7 +785,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Access Token Processors", level=2, num="3.1"),
         Heading(name="Authentication Modes with OAuth Tokens", level=2, num="3.2"),
         Heading(name="Authentication with OAuth", level=1, num="4"),
-        Heading(name="Supported Identity Providers", level=1, num="5"),
+        Heading(name="Identity Providers", level=1, num="5"),
         Heading(name="Azure", level=2, num="5.1"),
         Heading(name="Access Token Processors For Azure", level=3, num="5.1.1"),
         Heading(
@@ -793,20 +793,21 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="5.1.1.1",
         ),
-        Heading(name="Access Token Processors For Keycloak", level=3, num="5.1.2"),
+        Heading(name="Keycloak", level=2, num="5.2"),
+        Heading(name="Access Token Processors For Keycloak", level=3, num="5.2.1"),
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak",
             level=4,
-            num="5.1.2.1",
+            num="5.2.1.1",
         ),
-        Heading(name="Number of Identity Providers", level=2, num="5.2"),
+        Heading(name="Number of Identity Providers", level=2, num="5.3"),
         Heading(
             name="Number of Identity Providers That Can Be Used Concurrently",
             level=2,
-            num="5.3",
+            num="5.4",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.3.1"
+            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.4.1"
         ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
@@ -1090,15 +1091,16 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 3.1 [Access Token Processors](#access-token-processors)
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
-* 5 [Supported Identity Providers](#supported-identity-providers)
+* 5 [Identity Providers](#identity-providers)
     * 5.1 [Azure](#azure)
         * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
             * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-        * 5.1.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.1.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak](#rqsrs-042oauthidentityprovidersaccesstokenprocessorskeycloak)
-    * 5.2 [Number of Identity Providers](#number-of-identity-providers)
-    * 5.3 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.3.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.2 [Keycloak](#keycloak)
+        * 5.2.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors.Keycloak](#rqsrs-042oauthidentityprovidersaccesstokenprocessorskeycloak)
+    * 5.3 [Number of Identity Providers](#number-of-identity-providers)
+    * 5.4 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.4.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -1267,7 +1269,7 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 To authenticate with OAuth, grafana user must obtain an access token from the identity provider and present it to [ClickHouse].
 
-## Supported Identity Providers
+## Identity Providers
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with various identity providers, including but not limited to:
 
@@ -1299,6 +1301,8 @@ Basic structure:
     </token_processors>
 </clickhouse>
 ```
+
+### Keycloak
 
 #### Access Token Processors For Keycloak
 
