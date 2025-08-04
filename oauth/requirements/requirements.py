@@ -338,8 +338,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.2.1.3",
+    level=5,
+    num="7.2.1.2.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_processor = Requirement(
@@ -354,8 +354,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.2.1.4",
+    level=5,
+    num="7.2.1.2.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfiguration_UserDirectories_token_roles = Requirement(
@@ -370,8 +370,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserDirectories_MissingConfig
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.2.1.5",
+    level=5,
+    num="7.2.1.2.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_ClickHouse_UserRoles = Requirement(
@@ -882,18 +882,18 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token",
-            level=4,
-            num="7.2.1.3",
+            level=5,
+            num="7.2.1.2.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
-            level=4,
-            num="7.2.1.4",
+            level=5,
+            num="7.2.1.2.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
-            level=4,
-            num="7.2.1.5",
+            level=5,
+            num="7.2.1.2.8",
         ),
         Heading(name="User Roles", level=2, num="7.3"),
         Heading(name="Query Execution Based on User Roles", level=3, num="7.3.1"),
@@ -1120,9 +1120,9 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.2.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationtokenprocessorsclientid)
                 * 7.2.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationtokenprocessorstenantid)
                 * 7.2.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectories)
-            * 7.2.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestoken)
-            * 7.2.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
-            * 7.2.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+                * 7.2.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestoken)
+                * 7.2.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+                * 7.2.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserroles)
@@ -1448,17 +1448,17 @@ version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
