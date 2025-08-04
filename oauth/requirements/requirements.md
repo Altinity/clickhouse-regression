@@ -23,6 +23,21 @@
     * 7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaauthenticationclickhouseforwardoauthidentity)
     * 7.2 [User Directories](#user-directories)
         * 7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectories)
+            * 7.2.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
+                * 7.2.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationprovider)
+                * 7.2.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationclientid)
+                * 7.2.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationtenantid)
+                * 7.2.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.accessTokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationaccesstokenprocessorstokenprocessor)
+                * 7.2.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.accessTokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesincorrectconfigurationaccesstokenprocessorstokenroles)
+            * 7.2.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
+                * 7.2.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationaccesstokenprocessors)
+                * 7.2.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationaccesstokenprocessorsprovider)
+                * 7.2.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationaccesstokenprocessorsclientid)
+                * 7.2.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationaccesstokenprocessorstenantid)
+                * 7.2.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectories)
+            * 7.2.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestoken)
+            * 7.2.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+            * 7.2.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserRoles](#rqsrs-042oauthgrafanaauthenticationclickhouseuserroles)
@@ -265,6 +280,75 @@ For example,
     </user_directories>
 </clickhouse>
 ```
+
+##### Incorrect Configuration in User Directories
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.provider
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.clientId
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.tenantId
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.accessTokenProcessors.token.processor
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.IncorrectConfiguration.accessTokenProcessors.token.roles
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+##### Missing Configuration in User Directories
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `access_token_processors` section is not defined in the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.provider
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.clientId
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.AccessTokenProcessors.tenantId
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `access_token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.processor
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.ClickHouse.UserDirectories.MissingConfiguration.UserDirectories.token.roles
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 ### User Roles
 
