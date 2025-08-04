@@ -65,7 +65,6 @@ RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak = Requirement(
         "</clickhouse>\n"
         "```\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=4,
@@ -85,7 +84,7 @@ RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
     ),
     link=None,
     level=3,
-    num="5.4.1",
+    num="5.3.1",
 )
 
 RQ_SRS_042_OAuth_Credentials = Requirement(
@@ -382,7 +381,12 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles \n"
+        "assigned to the user in the `users_directories` section. Role mapping is based on the role name: \n"
+        "if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in \n"
+        "ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.\n"
+        "\n"
+        "The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
         "\n"
         '<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />\n'
         "\n"
@@ -848,14 +852,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="5.2.1.1",
         ),
-        Heading(name="Number of Identity Providers", level=2, num="5.3"),
         Heading(
             name="Number of Identity Providers That Can Be Used Concurrently",
             level=2,
-            num="5.4",
+            num="5.3",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.4.1"
+            name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.3.1"
         ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
@@ -1162,9 +1165,8 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 5.2 [Keycloak](#keycloak)
         * 5.2.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
             * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
-    * 5.3 [Number of Identity Providers](#number-of-identity-providers)
-    * 5.4 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.4.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.3 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.3.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -1394,9 +1396,6 @@ Example,
 </clickhouse>
 ```
 
-
-### Number of Identity Providers
-
 ### Number of Identity Providers That Can Be Used Concurrently
 
 #### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
@@ -1537,7 +1536,12 @@ version: 1.0
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
+if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in 
+ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
+
+The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
