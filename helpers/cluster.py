@@ -1316,7 +1316,6 @@ class ClickHouseKeeperNode(Node):
         if start_keeper:
             self.start_keeper(
                 timeout=timeout,
-                wait_healthy=wait_healthy,
                 user=user,
             )
 
