@@ -249,9 +249,6 @@ Example,
 </clickhouse>
 ```
 
-
-### Number of Identity Providers
-
 ### Number of Identity Providers That Can Be Used Concurrently
 
 #### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
