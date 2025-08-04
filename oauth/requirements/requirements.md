@@ -65,8 +65,11 @@
         * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
         * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
         * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
-    * 7.5 [Expired Token Handling](#expired-token-handling)
-        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling](#rqsrs-042oauthgrafanaauthenticationexpiredtokenhandling)
+    * 7.5 [Token Handling](#token-handling)
+        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
+        * 7.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
+        * 7.5.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
+        * 7.5.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
     * 7.6 [Caching](#caching)
         * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
         * 7.6.2 [Disable Caching](#disable-caching)
@@ -496,12 +499,27 @@ version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
 
-### Expired Token Handling
+### Token Handling
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ExpiredTokenHandling
+#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired
 version: 1.0
 
 [ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
+
+#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect
+version: 1.0
+
+[ClickHouse] SHALL reject JWT tokens that are malformed, have an invalid signature, or do not conform to the expected structure.
+
+#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric
+version: 1.0
+
+[ClickHouse] SHALL reject JWT tokens that contain non-alphanumeric characters in the header or payload sections, as these are not valid according to the JWT specification.
+
+#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString
+version: 1.0
+
+[ClickHouse] SHALL reject empty string values in the Authorization header or any other part of the request that expects a JWT token. An empty string is not a valid JWT and SHALL not be accepted.
 
 ### Caching
 
