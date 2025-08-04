@@ -174,7 +174,10 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
     min = Decimal256_min_max[0]
     max = Decimal256_min_max[1]
 
-    if check_clickhouse_version(">=23.2")(self):
+    if check_clickhouse_version(">=25.7")(self) and "cbrt" in func:
+        # https://github.com/ClickHouse/ClickHouse/pull/82445
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=25.7")
+    elif check_clickhouse_version(">=23.2")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if node is None:

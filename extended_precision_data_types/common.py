@@ -83,7 +83,13 @@ def execute_query(
         if "snapshot_id" in current().context:
             snapshot_id = current().context.snapshot_id
         else:
-            if check_clickhouse_version(">=25.3")(current()):
+            if (
+                check_clickhouse_version(">=25.7")(current())
+                and "cbrt" in current().name
+            ):
+                # https://github.com/ClickHouse/ClickHouse/pull/82445
+                snapshot_id = "tests.post25.7"
+            elif check_clickhouse_version(">=25.3")(current()):
                 # https://github.com/ClickHouse/ClickHouse/pull/76840
                 snapshot_id = "tests.post25.3"
             elif check_clickhouse_version(">=22.3")(current()):
@@ -102,6 +108,7 @@ def execute_query(
                         id=snapshot_id,
                         name=name,
                         encoder=str,
+                        mode=snapshot.CHECK,
                     )
                 ), error()
 
