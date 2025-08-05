@@ -53,18 +53,20 @@
             * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
         * 7.3.4 [No Groups in Identity Provider](#no-groups-in-identity-provider)
             * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-        * 7.3.5 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-        * 7.3.6 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.7 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.3.8 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
-            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.9 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.3.10 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+        * 7.3.5 [Subgroup Memberships](#subgroup-memberships)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+        * 7.3.6 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.3.7 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.8 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.9 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.10 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.11 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
         * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
         * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
@@ -453,6 +455,13 @@ version: 1.0
 
 When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
 [ClickHouse] SHALL assign only the default role if it is specified in the `<roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+
+#### Subgroup Memberships
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
+version: 1.0
+
+When a user belongs to subgroups in the IdP, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
 #### Dynamic Group Membership Updates
 
