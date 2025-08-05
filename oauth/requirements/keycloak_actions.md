@@ -1,5 +1,12 @@
 # Keycloak Actions
 
+<!-- TOC -->
+* [Keycloak Actions](#keycloak-actions)
+  * [Realm](#realmrepresentation)
+  * [Client](#clientrepresentation)
+  * [User](#userrepresentation)
+<!-- TOC -->
+
 ## RealmRepresentation
   
 | Name                                                                          | Type                                                                                                                                              | Format |
