@@ -2,6 +2,8 @@
 
 This document lists the possible parameters that can be configured for Keycloak realms, clients, and users. The tables below summarize the available fields and their types, based on the official Keycloak REST API documentation: [Keycloak REST API 22.0.5](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html).
 
+## [Table of Contents](#keycloak-actions)
+
 <!-- TOC -->
 * [Keycloak Actions](#keycloak-actions)
   * [Realm](#realmrepresentation)
