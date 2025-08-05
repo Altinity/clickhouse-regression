@@ -91,8 +91,6 @@ Keycloak supports full token lifecycle control through OpenID Connect endpoints 
 
 Token lifetimes can be configured using realm JSON configuration file:
 
-### Realm Settings → Tokens
-
 | Setting                      | Description                                 | Default |
 |-----------------------------|---------------------------------------------|---------|
 | Access Token Lifespan       | Time before access token expires            | 5 min   |
