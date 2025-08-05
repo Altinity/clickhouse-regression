@@ -338,6 +338,87 @@ This imports the full realm, including token settings, roles, users (if not skip
 | Clients          | ✅         | ✅       | ✅         | ✅         | ✅ (scopes/roles) |
 | Client Scopes    | ✅         | ✅       | ✅         | ✅         | ✅ (to clients)  |
 
+# Controlling client scopes and consent via realm JSON
+
+Keycloak supports configuring client scopes, consent settings, and protocol mappers using the realm JSON file. This configuration is typically used in:
+
+- Realm exports and imports (`kc.sh export`, `kc.sh import`)
+- Automated or containerized deployments (e.g., `KEYCLOAK_IMPORT=/path/to/realm.json`)
+
+## What can be configured
+
+| Setting                   | Description                                                       |
+|---------------------------|-------------------------------------------------------------------|
+| `defaultClientScopes`     | Assigns client scopes that are always included for a client      |
+| `consentRequired`         | When true, forces the user to grant consent before token issuance |
+| `clientScopes` with mappers | Defines what claims are added to tokens, such as groups, roles, etc. |
+
+## Group claim and client scopes
+
+To include a user's group membership in tokens, you must:
+
+1. Define a client scope that includes a protocol mapper for group membership.
+2. Assign that client scope to a client.
+3. Optionally require user consent.
+
+```json
+{
+  "realm": "myrealm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "my-client",
+      "protocol": "openid-connect",
+      "consentRequired": true,
+      "publicClient": false,
+      "standardFlowEnabled": true,
+      "defaultClientScopes": ["profile", "email", "groups"]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "groups",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "group-membership",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "full.path": "true"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Resulting token structure
+
+If the client is issued an ID or access token with the `groups` scope, it will include:
+
+```json
+{
+  "sub": "user-id",
+  "preferred_username": "johndoe",
+  "groups": [
+    "/engineering",
+    "/admin"
+  ]
+}
+```
+
+**Notes**:
+
+- User consent records cannot be preconfigured in JSON. If `consentRequired` is true, users must approve access at login time.
+- This configuration can be automated as part of infrastructure provisioning, CI/CD, or local testing environments.
+
 # Objects
 
 ## [Realm](#keycloak-actions)
