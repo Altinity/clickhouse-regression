@@ -53,11 +53,11 @@
             * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
         * 7.3.4 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
             * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-        * 7.3.5 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
+        * 7.3.5 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
             * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.6 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
+        * 7.3.6 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
             * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.3.7 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
+        * 7.3.7 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
             * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
         * 7.3.8 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
             * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
@@ -452,21 +452,21 @@ version: 1.0
 [ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.
 Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
 
-#### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
+#### IdP Group Names Match Roles in ClickHouse
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
-#### User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse
+#### No Matching Roles in ClickHouse
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
-#### User Does Not Have Permission To View Their Groups in Identity Provider
+#### User Cannot View Groups in IdP
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
