@@ -34,6 +34,209 @@ This document describes possible actions and attributes for Keycloak realms, cli
     * [Group](#group)
 <!-- TOC -->
 
+# Application-relevant Keycloak actions affecting tokens
+
+This section summarizes Keycloak actions that can affect the behavior of an application that:
+
+- Accepts and validates Keycloak-issued tokens (JWT access tokens)
+- Extracts user identification (`sub`, `preferred_username`, `email`)
+- Reads user group memberships (`groups` claim)
+- Maps user identity and groups to internal user roles or permissions
+
+## Key attributes extracted from tokens
+
+The following attributes are commonly used by relying applications:
+
+- `sub`: unique user ID (immutable)
+- `preferred_username`: human-readable identifier
+- `email`: user email address
+- `groups`: list of group paths (if exposed by mapper)
+- `realm_access.roles`: list of realm-level roles (if mapped)
+- `resource_access`: client-specific roles (if mapped)
+
+## Conditions for token validity
+
+A token issued by Keycloak will be considered **invalid** if any of the following conditions occur:
+
+- The token has **expired** (based on `exp` claim)
+- The **realm is deleted**
+- The **client is deleted**
+- The **user is deleted or disabled**
+- The user **logs out** (explicit session termination)
+- The realm or user-level **notBefore** value is updated
+- The realm’s **signing keys are rotated or revoked**
+- The client configuration no longer includes required **scopes or mappers**
+
+## Actions affecting token validity
+
+| Action                       | Effect                                                                 |
+|-----------------------------|------------------------------------------------------------------------|
+| Delete realm                | All tokens issued in that realm become invalid                         |
+| Delete client               | Tokens issued for the client are no longer accepted                    |
+| Logout user                 | Invalidates user session and access tokens                             |
+| Disable user                | Prevents future logins, invalidates refresh tokens                     |
+| Delete user                 | Breaks identity references, tokens become invalid                      |
+| Update `notBefore` for realm or user | All tokens issued before the new time become invalid        |
+| Rotate realm keys           | If old keys are removed, existing tokens may fail signature validation |
+| Token expiration            | Token becomes invalid after `exp` time (defined by realm/client config)|
+| Revoke offline session      | Prevents refresh token reuse                                           |
+
+## Actions affecting user identification claims
+
+| Action                       | Affected attributes in token                            |
+|-----------------------------|----------------------------------------------------------|
+| Change username             | Updates `preferred_username` in new tokens              |
+| Change email or attributes  | Affects `email`, `name`, `given_name`, etc.             |
+| Modify protocol mappers     | Changes what is included in the token                   |
+| Remove claim mappers        | Attributes may disappear from token                     |
+| Remove client scopes        | Claims linked to those scopes will no longer be issued  |
+
+## Actions affecting group membership and visibility
+
+| Action                             | Effect on `groups` claim                                      |
+|-----------------------------------|----------------------------------------------------------------|
+| Add/remove user from group        | Modifies group membership in future tokens                     |
+| Rename group                      | Updates group path in tokens if full path is used             |
+| Delete group                      | Removes group from user's token claim                         |
+| Add/remove group-mapper protocol  | Controls whether groups are included in tokens                |
+| Remove scope containing group mapper | Tokens will not include groups unless scope is present     |
+| Require consent for group scope   | If consent is revoked, group info will be omitted             |
+
+## Summary of high-impact token-related actions
+
+| Category            | Example actions                                                             |
+|---------------------|------------------------------------------------------------------------------|
+| Token invalidation  | Realm deletion, logout, notBefore update, key rotation, expiration          |
+| Identity changes    | Username, email, or protocol mapper updates                                 |
+| Group visibility    | Group membership changes, mapper/scope removal, consent withdrawal          |
+
+# JWT token claims issued by Keycloak
+
+This section lists possible claims (attributes) that may appear in tokens issued by Keycloak — including access tokens, ID tokens, and userinfo responses.
+These claims follow the [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html) specification, with additional Keycloak-specific fields.
+
+The actual set of claims in a token depends on:
+
+- Token type (Access Token vs ID Token)
+- Client scopes assigned to the client
+- Protocol mappers configured in the realm
+- Consent and user profile settings
+
+Notes:
+
+- **ID tokens** are typically used by frontends for authentication and user profile info.
+- **Access tokens** are used to authorize access to APIs or resources.
+- **Userinfo endpoint** can return claims dynamically (based on scopes and consent).
+
+Reference:
+
+- [OpenID Connect Core 1.0 – Standard Claims](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
+- [Keycloak Protocol Mappers Documentation](https://www.keycloak.org/docs/latest/server_admin/#protocol-mappers)
+
+## Standard OIDC claims
+
+These are defined by the OIDC specification:
+
+| Claim              | Description                                         | Token Type       |
+|--------------------|-----------------------------------------------------|------------------|
+| `iss`              | Issuer (realm base URL)                             | Access, ID       |
+| `aud`              | Audience (usually the client ID)                    | Access, ID       |
+| `exp`              | Expiration time (UNIX timestamp)                    | Access, ID       |
+| `iat`              | Issued-at time                                      | Access, ID       |
+| `nbf`              | Not-before time                                     | Access, ID       |
+| `jti`              | JWT ID — unique token ID                            | Access, ID       |
+| `sub`              | Subject — unique user ID                            | Access, ID       |
+| `typ`              | Token type (e.g., "Bearer")                         | Access           |
+| `azp`              | Authorized party — usually the client ID            | Access, ID       |
+| `auth_time`        | Time of user authentication                         | ID               |
+| `nonce`            | Nonce to prevent replay attacks                     | ID               |
+| `acr`              | Authentication context class reference              | ID               |
+| `session_state`    | Keycloak session ID                                 | Access, ID       |
+
+See: [OIDC Core Claims Section 5.1](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
+
+## User identity claims (optional)
+
+These may appear in ID tokens, access tokens (if mappers enabled), or userinfo endpoint responses.
+
+| Claim               | Description                        |
+|---------------------|------------------------------------|
+| `preferred_username`| User’s login name                  |
+| `email`             | Email address                      |
+| `email_verified`    | Boolean — if email is verified     |
+| `name`              | Full name                          |
+| `given_name`        | First name                         |
+| `family_name`       | Last name                          |
+| `locale`            | Locale (e.g., "en")                |
+| `zoneinfo`          | Timezone of user                   |
+| `phone_number`      | Phone number (if mapped)           |
+
+## Roles and access claims
+
+Keycloak adds the following to support role-based access control:
+
+| Claim                 | Description                                      |
+|-----------------------|--------------------------------------------------|
+| `realm_access.roles`  | Realm-level roles assigned to user               |
+| `resource_access`     | Client-level roles mapped per client             |
+| Example:              | `"resource_access": { "app": { "roles": [...] } }`|
+
+These claims only appear if roles are enabled and mapped for the client or client scope.
+
+## Group claims (optional)
+
+| Claim     | Description                                               |
+|-----------|-----------------------------------------------------------|
+| `groups`  | List of group paths for user (e.g., ["/dev", "/admin"])   |
+
+- Only present if group membership is mapped via a protocol mapper.
+- May require `consentRequired = true` to appear in tokens.
+
+## Keycloak-specific claims
+
+| Claim            | Description                                      |
+|------------------|--------------------------------------------------|
+| `session_state`  | Unique session ID assigned by Keycloak           |
+| `sid`            | Session ID (OIDC `sid` claim)                    |
+| `trusted-certs`  | Present if mutual TLS is configured              |
+
+## Custom claims (via mappers)
+
+You can define custom mappers to include arbitrary data:
+
+| Claim               | Description                              |
+|---------------------|------------------------------------------|
+| `department`        | Mapped user attribute                    |
+| `is_admin`          | Derived flag from role/group membership  |
+| `any_custom_claim`  | Anything defined via protocol mapper     |
+
+## Example: simplified access token
+
+```json
+{
+  "exp": 1691257190,
+  "iat": 1691256890,
+  "jti": "uuid",
+  "iss": "https://auth.example.com/realms/myrealm",
+  "aud": "my-client",
+  "sub": "f14d1234-56ab-4cde-8912-9a99d3ee4b33",
+  "typ": "Bearer",
+  "azp": "my-client",
+  "session_state": "b7a7...ef2",
+  "preferred_username": "johndoe",
+  "email": "john@example.com",
+  "groups": ["/engineering", "/qa"],
+  "realm_access": {
+    "roles": ["offline_access", "user"]
+  },
+  "resource_access": {
+    "my-client": {
+      "roles": ["reader", "editor"]
+    }
+  }
+}
+```
+
 # Obtaining a Token for a User
 
 To authenticate a user and retrieve an access token using the [OpenID Connect Token Endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-4.3):
