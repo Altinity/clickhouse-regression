@@ -864,8 +864,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="7.6.4.1.1",
+    level=4,
+    num="7.7.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
@@ -880,8 +880,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirem
         "\n"
     ),
     link=None,
-    level=5,
-    num="7.6.4.1.2",
+    level=4,
+    num="7.7.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
@@ -896,8 +896,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
         "\n"
     ),
     link=None,
-    level=5,
-    num="7.6.4.2.1",
+    level=4,
+    num="7.7.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken = Requirement(
@@ -916,8 +916,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken =
         "\n"
     ),
     link=None,
-    level=5,
-    num="7.6.4.2.2",
+    level=4,
+    num="7.7.2.2",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -1215,30 +1215,30 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(
             name="Actions Performed in ClickHouse After Token Validation",
-            level=3,
-            num="7.6.4",
+            level=2,
+            num="7.7",
         ),
-        Heading(name="Authentication and Login", level=4, num="7.6.4.1"),
+        Heading(name="Authentication and Login", level=3, num="7.7.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
-            level=5,
-            num="7.6.4.1.1",
+            level=4,
+            num="7.7.1.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
-            level=5,
-            num="7.6.4.1.2",
+            level=4,
+            num="7.7.1.2",
         ),
-        Heading(name="Session Management", level=4, num="7.6.4.2"),
+        Heading(name="Session Management", level=3, num="7.7.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
-            level=5,
-            num="7.6.4.2.1",
+            level=4,
+            num="7.7.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken",
-            level=5,
-            num="7.6.4.2.2",
+            level=4,
+            num="7.7.2.2",
         ),
     ),
     requirements=(
@@ -1378,13 +1378,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
             * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
                 * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
-        * 7.6.4 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
-            * 7.6.4.1 [Authentication and Login](#authentication-and-login)
-                * 7.6.4.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
-                * 7.6.4.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
-            * 7.6.4.2 [Session Management](#session-management)
-                * 7.6.4.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
-                * 7.6.4.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
+    * 7.7 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
+        * 7.7.1 [Authentication and Login](#authentication-and-login)
+            * 7.7.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+            * 7.7.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+        * 7.7.2 [Session Management](#session-management)
+            * 7.7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+            * 7.7.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -1904,11 +1904,11 @@ version: 1.0
 
 [ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
 
-#### Actions Performed in ClickHouse After Token Validation
+### Actions Performed in ClickHouse After Token Validation
 
-##### Authentication and Login
+#### Authentication and Login
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication
 version: 1.0
 
 [ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via `HTTP` or `TCP` connection.
@@ -1922,19 +1922,19 @@ curl 'http://localhost:8080/?' \
  --data-raw 'SELECT current_user()'
 ```
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client
 version: 1.0
 
 [ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via the `clickhouse client --jwt <token>` command.
 
-##### Session Management
+#### Session Management
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement
 version: 1.0
 
 [ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken
 version: 1.0
 
 [ClickHouse] SHALL support refreshing user sessions using a refresh token if the identity provider supports it. If a refresh token is provided, [ClickHouse] SHALL use it to obtain a new access token without requiring the user to log in again.
