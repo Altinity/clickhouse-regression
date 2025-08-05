@@ -472,7 +472,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is authenticated via OAuth and the Identity Provider does not return any groups for the user, \n"
+        "When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, \n"
         "[ClickHouse] SHALL assign only the default role if it is specified in the `<roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.\n"
         "\n"
     ),
@@ -1830,7 +1830,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
+When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
 [ClickHouse] SHALL assign only the default role if it is specified in the `<roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
 #### Dynamic Group Membership Updates
