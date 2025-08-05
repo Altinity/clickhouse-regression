@@ -179,7 +179,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 }
 ```
 
-# ⚙Automating Token Expiration and Other Non-REST Configurable Settings
+# Automating Token Expiration and Other Non-REST Configurable Settings
 
 While Keycloak exposes many administrative operations via its REST API, **some settings (such as token expiration)** cannot be modified through the Admin REST API. These include:
 
