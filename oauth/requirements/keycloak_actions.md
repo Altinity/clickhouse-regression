@@ -34,7 +34,7 @@ This document lists the possible parameters that can be configured for Keycloak 
     * [Group](#group)
 <!-- TOC -->
 
-# 🔐 Obtaining a Token for a User
+# Obtaining a Token for a User
 
 To authenticate a user and retrieve an access token using the [OpenID Connect Token Endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-4.3):
 
@@ -146,7 +146,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 
 > 🔐 This revokes both the refresh and access tokens associated with the session.
 
-## 🔍 Token Introspection (Validity Check)
+## Token Introspection (Validity Check)
 
 Use this to validate whether a token is active.
 
@@ -177,7 +177,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 }
 ```
 
-# ⚙️ Automating Token Expiration and Other Non-REST Configurable Settings
+# ⚙Automating Token Expiration and Other Non-REST Configurable Settings
 
 While Keycloak exposes many administrative operations via its REST API, **some settings (such as token expiration)** cannot be modified through the Admin REST API. These include:
 
