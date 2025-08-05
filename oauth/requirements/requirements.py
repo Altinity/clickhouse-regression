@@ -24,6 +24,22 @@ RQ_SRS_042_OAuth_IdentityProviders_Concurrent = Requirement(
     num="5.1.1",
 )
 
+RQ_SRS_042_OAuth_IdentityProviders_Change = Requirement(
+    name="RQ.SRS-042.OAuth.IdentityProviders.Change",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL allow changing the identity provider by updating the `token_processors` section in the `config.xml` file. After changing the identity provider, [ClickHouse] SHALL require a restart to apply the new configuration.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.2.1",
+)
+
 RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
     name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
     version="1.0",
@@ -52,7 +68,7 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
     ),
     link=None,
     level=4,
-    num="5.2.1.1",
+    num="5.3.1.1",
 )
 
 RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak = Requirement(
@@ -84,7 +100,7 @@ RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak = Requirement(
     ),
     link=None,
     level=4,
-    num="5.3.1.1",
+    num="5.4.1.1",
 )
 
 RQ_SRS_042_OAuth_Credentials = Requirement(
@@ -243,6 +259,24 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     link=None,
     level=5,
     num="7.2.1.1.5",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same. \n"
+        "\n"
+        "For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.2.1.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors = Requirement(
@@ -745,8 +779,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
     num="7.6.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_NoCache = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache",
+RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
     version="1.0",
     priority=None,
     group=None,
@@ -761,8 +795,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_NoCache = Requirement(
     num="7.6.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_CacheLifetime = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime",
+RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
     version="1.0",
     priority=None,
     group=None,
@@ -777,8 +811,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_CacheLifetime = Requiremen
     num="7.6.3.1.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_MaxCacheSize = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize",
+RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
     version="1.0",
     priority=None,
     group=None,
@@ -793,15 +827,88 @@ RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_MaxCacheSize = Requirement
     num="7.6.3.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_Policy = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy",
+RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL use a Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.\n"
+        "[ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.6.3.3.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via `HTTP` or `TCP` connection.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```bash\n"
+        "curl 'http://localhost:8080/?' \\\n"
+        " -H 'Authorization: Bearer <TOKEN>' \\\n"
+        " -H 'Content type: text/plain;charset=UTF-8' \\\n"
+        " --data-raw 'SELECT current_user()'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.6.4.1.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via the `clickhouse client --jwt <token>` command.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.6.4.1.2",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="7.6.4.2.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support refreshing user sessions using a refresh token if the identity provider supports it. If a refresh token is provided, [ClickHouse] SHALL use it to obtain a new access token without requiring the user to log in again.\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
@@ -810,7 +917,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_Policy = Requirement(
     ),
     link=None,
     level=5,
-    num="7.6.3.3.1",
+    num="7.6.4.2.2",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -846,19 +953,21 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.Concurrent", level=3, num="5.1.1"
         ),
-        Heading(name="Azure", level=2, num="5.2"),
-        Heading(name="Access Token Processors For Azure", level=3, num="5.2.1"),
+        Heading(name="Changing Identity Providers", level=2, num="5.2"),
+        Heading(name="RQ.SRS-042.OAuth.IdentityProviders.Change", level=3, num="5.2.1"),
+        Heading(name="Azure", level=2, num="5.3"),
+        Heading(name="Access Token Processors For Azure", level=3, num="5.3.1"),
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
             level=4,
-            num="5.2.1.1",
+            num="5.3.1.1",
         ),
-        Heading(name="Keycloak", level=2, num="5.3"),
-        Heading(name="Access Token Processors For Keycloak", level=3, num="5.3.1"),
+        Heading(name="Keycloak", level=2, num="5.4"),
+        Heading(name="Access Token Processors For Keycloak", level=3, num="5.4.1"),
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak",
             level=4,
-            num="5.3.1.1",
+            num="5.4.1.1",
         ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
@@ -902,6 +1011,11 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
             level=5,
             num="7.2.1.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries",
+            level=5,
+            num="7.2.1.1.6",
         ),
         Heading(
             name="Missing Configuration in User Directories", level=4, num="7.2.1.2"
@@ -1076,32 +1190,60 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(name="Disable Caching", level=3, num="7.6.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
             level=4,
             num="7.6.2.1",
         ),
         Heading(name="Cache Eviction", level=3, num="7.6.3"),
         Heading(name="Cache Lifetime", level=4, num="7.6.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
             level=5,
             num="7.6.3.1.1",
         ),
         Heading(name="Exceeding Max Cache Size", level=4, num="7.6.3.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
             level=5,
             num="7.6.3.2.1",
         ),
         Heading(name="Cache Eviction Policy", level=4, num="7.6.3.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
             level=5,
             num="7.6.3.3.1",
+        ),
+        Heading(
+            name="Actions Performed in ClickHouse After Token Validation",
+            level=3,
+            num="7.6.4",
+        ),
+        Heading(name="Authentication and Login", level=4, num="7.6.4.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
+            level=5,
+            num="7.6.4.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
+            level=5,
+            num="7.6.4.1.2",
+        ),
+        Heading(name="Session Management", level=4, num="7.6.4.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
+            level=5,
+            num="7.6.4.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken",
+            level=5,
+            num="7.6.4.2.2",
         ),
     ),
     requirements=(
         RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
+        RQ_SRS_042_OAuth_IdentityProviders_Change,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
         RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak,
         RQ_SRS_042_OAuth_Credentials,
@@ -1112,6 +1254,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_tenantId,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_clientId,
@@ -1140,10 +1283,14 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric,
         RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString,
         RQ_SRS_042_OAuth_Grafana_Authentication_Caching,
-        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_NoCache,
-        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_CacheLifetime,
-        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_MaxCacheSize,
-        RQ_SRS_042_OAuth_Grafana_Authentication_CacheEviction_Policy,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement,
+        RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken,
     ),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
@@ -1161,12 +1308,14 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
 * 5 [Identity Providers](#identity-providers)
     * 5.1 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
         * 5.1.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
-    * 5.2 [Azure](#azure)
-        * 5.2.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
-            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 5.3 [Keycloak](#keycloak)
-        * 5.3.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.3.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
+    * 5.2 [Changing Identity Providers](#changing-identity-providers)
+        * 5.2.1 [RQ.SRS-042.OAuth.IdentityProviders.Change](#rqsrs-042oauthidentityproviderschange)
+    * 5.3 [Azure](#azure)
+        * 5.3.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
+            * 5.3.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
+    * 5.4 [Keycloak](#keycloak)
+        * 5.4.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.4.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -1180,6 +1329,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.2.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
                 * 7.2.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
                 * 7.2.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 7.2.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
             * 7.2.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
                 * 7.2.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
                 * 7.2.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
@@ -1220,14 +1370,21 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 7.6 [Caching](#caching)
         * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
         * 7.6.2 [Disable Caching](#disable-caching)
-            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcacheevictionnocache)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
         * 7.6.3 [Cache Eviction](#cache-eviction)
             * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
-                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcacheevictioncachelifetime)
+                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
             * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcacheevictionmaxcachesize)
+                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
             * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
-                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcacheevictionpolicy)
+                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+        * 7.6.4 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
+            * 7.6.4.1 [Authentication and Login](#authentication-and-login)
+                * 7.6.4.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+                * 7.6.4.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+            * 7.6.4.2 [Session Management](#session-management)
+                * 7.6.4.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+                * 7.6.4.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -1352,6 +1509,13 @@ To authenticate with OAuth, grafana user must obtain an access token from the id
 version: 1.0
 
 [ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
+
+### Changing Identity Providers
+
+#### RQ.SRS-042.OAuth.IdentityProviders.Change
+version: 1.0
+
+[ClickHouse] SHALL allow changing the identity provider by updating the `token_processors` section in the `config.xml` file. After changing the identity provider, [ClickHouse] SHALL require a restart to apply the new configuration.
 
 ### Azure
 
@@ -1487,6 +1651,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same. 
+
+For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.
 
 ##### Missing Configuration in User Directories
 
@@ -1705,7 +1876,7 @@ In this case the cache will be valid for 60 seconds. After this period.
 
 #### Disable Caching
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache
 version: 1.0
 
 If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
@@ -1714,24 +1885,59 @@ If the value of `cache_lifetime` is `0` in the `token_processors` configuration,
 
 ##### Cache Lifetime
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime
 version: 1.0
 
 [ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
 
 ##### Exceeding Max Cache Size
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize
 version: 1.0
 
 [ClickHouse] SHALL limit the maximum size of the cache for access tokens. If the cache exceeds this size, [ClickHouse] SHALL evict the oldest tokens to make room for new ones.
 
 ##### Cache Eviction Policy
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy
 version: 1.0
 
-[ClickHouse] SHALL use a Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
+[ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
+
+#### Actions Performed in ClickHouse After Token Validation
+
+##### Authentication and Login
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication
+version: 1.0
+
+[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via `HTTP` or `TCP` connection.
+
+For example,
+
+```bash
+curl 'http://localhost:8080/?' \
+ -H 'Authorization: Bearer <TOKEN>' \
+ -H 'Content type: text/plain;charset=UTF-8' \
+ --data-raw 'SELECT current_user()'
+```
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client
+version: 1.0
+
+[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via the `clickhouse client --jwt <token>` command.
+
+##### Session Management
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement
+version: 1.0
+
+[ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.
+
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken
+version: 1.0
+
+[ClickHouse] SHALL support refreshing user sessions using a refresh token if the identity provider supports it. If a refresh token is provided, [ClickHouse] SHALL use it to obtain a new access token without requiring the user to log in again.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
