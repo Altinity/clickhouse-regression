@@ -203,7 +203,7 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **useTemplateMappers**  <br>_optional_                    | Boolean                                                                                                                           |        |
 | **defaultClientScopes**  <br>_optional_                   | List of string                                                                                                                    |        |
 | **optionalClientScopes**  <br>_optional_                  | List of string                                                                                                                    |        |
-| **authorizationSettings**  <br>_optional_                 | ResourceServerRepresentation                                                                                                      |        |
+| **authorizationSettings**  <br>_optional_                 | [ResourceServerRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ResourceServerRepresentation)         |        |
 | **access**  <br>_optional_                                | Map of boolean                                                                                                                    |        |
 | **origin**  <br>_optional_                                | String                                                                                                                            |        |
 
@@ -237,7 +237,7 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **socialLinks**  <br>_optional_                | List of [SocialLinkRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#SocialLinkRepresentation)               |        |
 | **groups**  <br>_optional_                     | List of string                                                                                                                          |        |
 | **access**  <br>_optional_                     | Map of boolean                                                                                                                          |        |
-| **userProfileMetadata**  <br>_optional_        | UserProfileMetadata                                                                                                                     |        |
+| **userProfileMetadata**  <br>_optional_        | [UserProfileMetadata](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#UserProfileMetadata)                                 |        |
 
 
 ## Group
