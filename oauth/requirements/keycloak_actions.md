@@ -238,6 +238,18 @@ This imports the full realm, including token settings, roles, users (if not skip
 
 # Supported Actions
 
+**Summary Table of Core Capabilities**
+
+| Category         | Can Create | Can Read | Can Update | Can Delete | Can Assign |
+|------------------|------------|----------|------------|------------|------------|
+| Users            | ✅         | ✅       | ✅         | ✅         | ✅ (roles/groups) |
+| Groups           | ✅         | ✅       | ✅         | ✅         | ✅ (to users)     |
+| Realms           | ✅         | ✅       | ✅         | ✅         | ❌             |
+| Roles (Realm)    | ✅         | ✅       | ✅         | ✅         | ✅ (to users/groups) |
+| Roles (Client)   | ✅         | ✅       | ✅         | ✅         | ✅             |
+| Clients          | ✅         | ✅       | ✅         | ✅         | ✅ (scopes/roles) |
+| Client Scopes    | ✅         | ✅       | ✅         | ✅         | ✅ (to clients)  |
+
 ## User Management
 
 | Action | Endpoint | Description |
@@ -327,18 +339,6 @@ This imports the full realm, including token settings, roles, users (if not skip
 | ✅ Update client scope | `PUT /{realm}/client-scopes/{id}` | |
 | ✅ Delete client scope | `DELETE /{realm}/client-scopes/{id}` | |
 | ✅ Assign client scope to client | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` | |
-
-## ✅ Summary Table of Core Capabilities
-
-| Category         | Can Create | Can Read | Can Update | Can Delete | Can Assign |
-|------------------|------------|----------|------------|------------|------------|
-| Users            | ✅         | ✅       | ✅         | ✅         | ✅ (roles/groups) |
-| Groups           | ✅         | ✅       | ✅         | ✅         | ✅ (to users)     |
-| Realms           | ✅         | ✅       | ✅         | ✅         | ❌             |
-| Roles (Realm)    | ✅         | ✅       | ✅         | ✅         | ✅ (to users/groups) |
-| Roles (Client)   | ✅         | ✅       | ✅         | ✅         | ✅             |
-| Clients          | ✅         | ✅       | ✅         | ✅         | ✅ (scopes/roles) |
-| Client Scopes    | ✅         | ✅       | ✅         | ✅         | ✅ (to clients)  |
 
 # Controlling client scopes and consent via realm JSON
 
