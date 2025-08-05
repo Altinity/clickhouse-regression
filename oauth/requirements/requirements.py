@@ -430,6 +430,57 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
     num="7.3.1.1",
 )
 
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user belongs to multiple groups in the IdP, [ClickHouse] SHALL combine all roles that match these group names.\n"
+        "The user SHALL inherit the union of all permissions from these roles.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.3.2.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When multiple groups in the IdP contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
+        "The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.3.3.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.\n"
+        "Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.3.4.1",
+)
+
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
     name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
     version="1.0",
@@ -443,7 +494,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.2.1",
+    num="7.3.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
@@ -459,7 +510,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.3.1",
+    num="7.3.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
@@ -475,7 +526,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Req
     ),
     link=None,
     level=4,
-    num="7.3.4.1",
+    num="7.3.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
@@ -512,7 +563,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.5.1",
+    num="7.3.8.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requirement(
@@ -528,7 +579,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requ
     ),
     link=None,
     level=4,
-    num="7.3.6.1",
+    num="7.3.9.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
@@ -1067,55 +1118,73 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.3.1.1",
         ),
+        Heading(name="User in Multiple Groups", level=3, num="7.3.2"),
         Heading(
-            name="User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names",
-            level=3,
-            num="7.3.2",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
             level=4,
             num="7.3.2.1",
         ),
+        Heading(name="Overlapping Users Across Groups", level=3, num="7.3.3"),
         Heading(
-            name="User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse",
-            level=3,
-            num="7.3.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
             level=4,
             num="7.3.3.1",
         ),
+        Heading(name="Dynamic Group Membership Updates", level=3, num="7.3.4"),
         Heading(
-            name="User Does Not Have Permission To View Their Groups in Identity Provider",
-            level=3,
-            num="7.3.4",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
             level=4,
             num="7.3.4.1",
         ),
         Heading(
-            name="In ClickHouse There Is No Default Role Specified",
+            name="User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names",
             level=3,
             num="7.3.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
             level=4,
             num="7.3.5.1",
         ),
         Heading(
-            name="Access Token Processors are Missing From ClickHouse Configuration ",
+            name="User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse",
             level=3,
             num="7.3.6",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
             level=4,
             num="7.3.6.1",
+        ),
+        Heading(
+            name="User Does Not Have Permission To View Their Groups in Identity Provider",
+            level=3,
+            num="7.3.7",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
+            level=4,
+            num="7.3.7.1",
+        ),
+        Heading(
+            name="In ClickHouse There Is No Default Role Specified",
+            level=3,
+            num="7.3.8",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
+            level=4,
+            num="7.3.8.1",
+        ),
+        Heading(
+            name="Access Token Processors are Missing From ClickHouse Configuration ",
+            level=3,
+            num="7.3.9",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
+            level=4,
+            num="7.3.9.1",
         ),
         Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.4"),
         Heading(
@@ -1264,6 +1333,9 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers,
+        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups,
@@ -1342,16 +1414,22 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-        * 7.3.2 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.3 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.3.4 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.5 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.3.6 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+        * 7.3.2 [User in Multiple Groups](#user-in-multiple-groups)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+        * 7.3.3 [Overlapping Users Across Groups](#overlapping-users-across-groups)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+        * 7.3.4 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.3.5 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.6 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.7 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.8 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.9 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
         * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
         * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
@@ -1716,6 +1794,30 @@ ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the
 The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
+
+#### User in Multiple Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
+version: 1.0
+
+When a user belongs to multiple groups in the IdP, [ClickHouse] SHALL combine all roles that match these group names.
+The user SHALL inherit the union of all permissions from these roles.
+
+#### Overlapping Users Across Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
+version: 1.0
+
+When multiple groups in the IdP contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
+
+#### Dynamic Group Membership Updates
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
+version: 1.0
+
+[ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.
+Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
 
 #### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
 
