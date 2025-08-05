@@ -6,12 +6,12 @@ This document describes possible actions and attributes for Keycloak realms, cli
 
 <!-- TOC -->
 * [Application-relevant Keycloak actions affecting tokens](#application-relevant-keycloak-actions-affecting-tokens)
+  * [Categories of actions](#categories-of-actions)
   * [Key attributes extracted from tokens](#key-attributes-extracted-from-tokens)
   * [Conditions for token validity](#conditions-for-token-validity)
   * [Actions affecting token validity](#actions-affecting-token-validity)
   * [Actions affecting user identification claims](#actions-affecting-user-identification-claims)
   * [Actions affecting group membership and visibility](#actions-affecting-group-membership-and-visibility)
-  * [Summary of high-impact token-related actions](#summary-of-high-impact-token-related-actions)
 * [JWT token claims issued by Keycloak](#jwt-token-claims-issued-by-keycloak)
   * [Standard OIDC claims](#standard-oidc-claims)
   * [User identity claims (optional)](#user-identity-claims-optional)
