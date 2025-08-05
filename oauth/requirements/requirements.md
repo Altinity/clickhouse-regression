@@ -11,14 +11,14 @@
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
 * 5 [Identity Providers](#identity-providers)
-    * 5.1 [Azure](#azure)
-        * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
-            * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 5.2 [Keycloak](#keycloak)
-        * 5.2.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
-    * 5.3 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.3.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.1 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.1.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.2 [Azure](#azure)
+        * 5.2.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
+            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
+    * 5.3 [Keycloak](#keycloak)
+        * 5.3.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.3.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -196,6 +196,14 @@ To authenticate with OAuth, grafana user must obtain an access token from the id
 
 - Azure Active Directory
 - Google Identity
+- Keycloak
+
+### Number of Identity Providers That Can Be Used Concurrently
+
+#### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
 
 ### Azure
 
@@ -247,13 +255,6 @@ Example,
     </token_processors>
 </clickhouse>
 ```
-
-### Number of Identity Providers That Can Be Used Concurrently
-
-#### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
-version: 1.0
-
-[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
 
 ## Setting Up OAuth Authentication
 
