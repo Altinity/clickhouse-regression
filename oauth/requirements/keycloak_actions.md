@@ -42,13 +42,13 @@ To authenticate a user and retrieve an access token using the [OpenID Connect To
 POST /realms/{realm}/protocol/openid-connect/token
 ```
 
-| Parameter      | Description                                  |
-|----------------|----------------------------------------------|
-| `grant_type`   | Must be `password`                           |
-| `client_id`    | Client ID registered in Keycloak             |
-| `client_secret`| Required if client is confidential           |
-| `username`     | Username of the user                         |
-| `password`     | Password of the user                         |
+| Parameter       | Description                        |
+|-----------------|------------------------------------|
+| `grant_type`    | Must be `password`                 |
+| `client_id`     | Client ID registered in Keycloak   |
+| `client_secret` | Required if client is confidential |
+| `username`      | Username of the user               |
+| `password`      | Password of the user               |
 
 ```bash
 curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token' \
@@ -77,24 +77,24 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 
 Keycloak supports full token lifecycle control through OpenID Connect endpoints and realm/client settings.
 
-| Action         | Method | Endpoint |
-|----------------|--------|----------|
-| Get Token      | POST   | `/protocol/openid-connect/token` |
-| Refresh Token  | POST   | `/protocol/openid-connect/token` |
-| Revoke Token   | POST   | `/protocol/openid-connect/logout` |
-| Introspect     | POST   | `/protocol/openid-connect/token/introspect` |
-| Configure Expiry | JSON  | `Realm JSON config update and re-import` |
+| Action           | Method | Endpoint                                    |
+|------------------|--------|---------------------------------------------|
+| Get Token        | POST   | `/protocol/openid-connect/token`            |
+| Refresh Token    | POST   | `/protocol/openid-connect/token`            |
+| Revoke Token     | POST   | `/protocol/openid-connect/logout`           |
+| Introspect       | POST   | `/protocol/openid-connect/token/introspect` |
+| Configure Expiry | JSON   | `Realm JSON config update and re-import`    |
 
 ## Token Expiration Settings
 
 Token lifetimes can be configured using realm JSON configuration file:
 
-| Setting                      | Description                                 | Default |
-|-----------------------------|---------------------------------------------|---------|
-| Access Token Lifespan       | Time before access token expires            | 5 min   |
-| Refresh Token Lifespan      | Absolute time refresh token remains valid   | 30 min  |
-| SSO Session Idle Timeout    | Idle timeout before re-authentication       | 30 min  |
-| SSO Session Max Lifespan    | Max total session duration                  | 10 hr   |
+| Setting                  | Description                               | Default |
+|--------------------------|-------------------------------------------|---------|
+| Access Token Lifespan    | Time before access token expires          | 5 min   |
+| Refresh Token Lifespan   | Absolute time refresh token remains valid | 30 min  |
+| SSO Session Idle Timeout | Idle timeout before re-authentication     | 30 min  |
+| SSO Session Max Lifespan | Max total session duration                | 10 hr   |
 
 ## Token Renewal (Using Refresh Token)
 
@@ -128,11 +128,11 @@ To revoke a token and logout the user:
 POST /realms/{realm}/protocol/openid-connect/logout
 ```
 
-| Name           | Description               |
-|----------------|---------------------------|
-| client_id      | Client ID                 |
-| client_secret  | (If confidential client)  |
-| refresh_token  | The refresh token to revoke |
+| Name          | Description                 |
+|---------------|-----------------------------|
+| client_id     | Client ID                   |
+| client_secret | (If confidential client)    |
+| refresh_token | The refresh token to revoke |
 
 ```bash
 curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/logout' \
@@ -236,105 +236,100 @@ This imports the full realm, including token settings, roles, users (if not skip
 
 **Summary Table of Core Capabilities**
 
-| Category         | Can Create | Can Read | Can Update | Can Delete | Can Assign |
-|------------------|------------|----------|------------|------------|------------|
-| Users            | ✅         | ✅       | ✅         | ✅         | ✅ (roles/groups) |
-| Groups           | ✅         | ✅       | ✅         | ✅         | ✅ (to users)     |
-| Realms           | ✅         | ✅       | ✅         | ✅         | ❌             |
-| Roles (Realm)    | ✅         | ✅       | ✅         | ✅         | ✅ (to users/groups) |
-| Roles (Client)   | ✅         | ✅       | ✅         | ✅         | ✅             |
-| Clients          | ✅         | ✅       | ✅         | ✅         | ✅ (scopes/roles) |
-| Client Scopes    | ✅         | ✅       | ✅         | ✅         | ✅ (to clients)  |
+| Category       | Can Create | Can Read | Can Update | Can Delete | Can Assign          |
+|----------------|------------|----------|------------|------------|---------------------|
+| Users          | ✅          | ✅        | ✅          | ✅          | ✅ (roles/groups)    |
+| Groups         | ✅          | ✅        | ✅          | ✅          | ✅ (to users)        |
+| Realms         | ✅          | ✅        | ✅          | ✅          | ❌                   |
+| Roles (Realm)  | ✅          | ✅        | ✅          | ✅          | ✅ (to users/groups) |
+| Roles (Client) | ✅          | ✅        | ✅          | ✅          | ✅                   |
+| Clients        | ✅          | ✅        | ✅          | ✅          | ✅ (scopes/roles)    |
+| Client Scopes  | ✅          | ✅        | ✅          | ✅          | ✅ (to clients)      |
 
 ## User Management
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create user | `POST /{realm}/users` | Create a new user in a realm |
-| ✅ Get user by ID | `GET /{realm}/users/{id}` | Fetch user details |
-| ✅ Update user | `PUT /{realm}/users/{id}` | Update user attributes |
-| ✅ Delete user | `DELETE /{realm}/users/{id}` | Remove a user from the realm |
-| ✅ Search users | `GET /{realm}/users` | List users with filters (username, email, etc.) |
-| ✅ Reset password | `PUT /{realm}/users/{id}/reset-password` | Set or reset credentials |
-| ✅ Send verification email | `PUT /{realm}/users/{id}/send-verify-email` | Trigger email verification |
-| ✅ Send password reset email | `PUT /{realm}/users/{id}/execute-actions-email` | Send user required actions |
-| ✅ Get user sessions | `GET /{realm}/users/{id}/sessions` | List active sessions |
-| ✅ Logout user | `POST /{realm}/users/{id}/logout` | Logout user and invalidate sessions |
-| ✅ Get user consents | `GET /{realm}/users/{id}/consents` | List client consents |
-| ✅ Revoke user consent | `DELETE /{realm}/users/{id}/consents/{client}` | Remove a client's consent |
-| ✅ Get user federated identities | `GET /{realm}/users/{id}/federated-identity` | List social logins (e.g. Google, GitHub) |
-| ✅ Add federated identity | `POST /{realm}/users/{id}/federated-identity/{provider}` | Link social identity |
-| ✅ Remove federated identity | `DELETE /{realm}/users/{id}/federated-identity/{provider}` | Unlink social identity |
+| Action                          | Endpoint                                                   | Description                                     |
+|---------------------------------|------------------------------------------------------------|-------------------------------------------------|
+| ✅ Create user                   | `POST /{realm}/users`                                      | Create a new user in a realm                    |
+| ✅ Get user by ID                | `GET /{realm}/users/{id}`                                  | Fetch user details                              |
+| ✅ Update user                   | `PUT /{realm}/users/{id}`                                  | Update user attributes                          |
+| ✅ Delete user                   | `DELETE /{realm}/users/{id}`                               | Remove a user from the realm                    |
+| ✅ Search users                  | `GET /{realm}/users`                                       | List users with filters (username, email, etc.) |
+| ✅ Send verification email       | `PUT /{realm}/users/{id}/send-verify-email`                | Trigger email verification                      |
+| ✅ Get user sessions             | `GET /{realm}/users/{id}/sessions`                         | List active sessions                            |
+| ✅ Logout user                   | `POST /{realm}/users/{id}/logout`                          | Logout user and invalidate sessions             |
+| ✅ Get user consents             | `GET /{realm}/users/{id}/consents`                         | List client consents                            |
+| ✅ Revoke user consent           | `DELETE /{realm}/users/{id}/consents/{client}`             | Remove a client's consent                       |
 
 ## Realm Management
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create realm | `POST /admin/realms` | Create a new realm |
-| ✅ Get realm | `GET /admin/realms/{realm}` | Retrieve realm configuration |
-| ✅ Update realm | `PUT /admin/realms/{realm}` | Update realm settings |
-| ✅ Delete realm | `DELETE /admin/realms/{realm}` | Delete the realm |
-| ✅ Get all realms | `GET /admin/realms` | List all realms |
+| Action           | Endpoint                       | Description                  |
+|------------------|--------------------------------|------------------------------|
+| ✅ Create realm   | `POST /admin/realms`           | Create a new realm           |
+| ✅ Get realm      | `GET /admin/realms/{realm}`    | Retrieve realm configuration |
+| ✅ Update realm   | `PUT /admin/realms/{realm}`    | Update realm settings        |
+| ✅ Delete realm   | `DELETE /admin/realms/{realm}` | Delete the realm             |
+| ✅ Get all realms | `GET /admin/realms`            | List all realms              |
 
 ## Group Management
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create group | `POST /{realm}/groups` | Add a new group |
-| ✅ Get group | `GET /{realm}/groups/{id}` | View group details |
-| ✅ Update group | `PUT /{realm}/groups/{id}` | Rename or update group attributes |
-| ✅ Delete group | `DELETE /{realm}/groups/{id}` | Remove a group |
-| ✅ Add subgroup | `POST /{realm}/groups/{id}/children` | Add a child group |
-| ✅ List all groups | `GET /{realm}/groups` | List all top-level groups |
-| ✅ Get user groups | `GET /{realm}/users/{id}/groups` | List groups a user belongs to |
-| ✅ Add user to group | `PUT /{realm}/users/{id}/groups/{group-id}` | Add user to a group |
-| ✅ Remove user from group | `DELETE /{realm}/users/{id}/groups/{group-id}` | Remove user from a group |
+| Action                   | Endpoint                                       | Description                       |
+|--------------------------|------------------------------------------------|-----------------------------------|
+| ✅ Create group           | `POST /{realm}/groups`                         | Add a new group                   |
+| ✅ Get group              | `GET /{realm}/groups/{id}`                     | View group details                |
+| ✅ Update group           | `PUT /{realm}/groups/{id}`                     | Rename or update group attributes |
+| ✅ Delete group           | `DELETE /{realm}/groups/{id}`                  | Remove a group                    |
+| ✅ Add subgroup           | `POST /{realm}/groups/{id}/children`           | Add a child group                 |
+| ✅ List all groups        | `GET /{realm}/groups`                          | List all top-level groups         |
+| ✅ Get user groups        | `GET /{realm}/users/{id}/groups`               | List groups a user belongs to     |
+| ✅ Add user to group      | `PUT /{realm}/users/{id}/groups/{group-id}`    | Add user to a group               |
+| ✅ Remove user from group | `DELETE /{realm}/users/{id}/groups/{group-id}` | Remove user from a group          |
 
 ## Role Management
 
 ### Realm Roles
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create realm role | `POST /{realm}/roles` | Add new realm-level role |
-| ✅ List all realm roles | `GET /{realm}/roles` | List realm-level roles |
-| ✅ Get role by name | `GET /{realm}/roles/{role-name}` | Retrieve role details |
-| ✅ Update realm role | `PUT /{realm}/roles/{role-name}` | Modify role attributes |
-| ✅ Delete realm role | `DELETE /{realm}/roles/{role-name}` | Delete a role |
-| ✅ Assign role to user | `POST /{realm}/users/{id}/role-mappings/realm` | Add realm role to user |
-| ✅ Remove role from user | `DELETE /{realm}/users/{id}/role-mappings/realm` | Remove role from user |
-| ✅ List user’s realm roles | `GET /{realm}/users/{id}/role-mappings/realm` | |
+| Action                    | Endpoint                                         | Description              |
+|---------------------------|--------------------------------------------------|--------------------------|
+| ✅ Create realm role       | `POST /{realm}/roles`                            | Add new realm-level role |
+| ✅ List all realm roles    | `GET /{realm}/roles`                             | List realm-level roles   |
+| ✅ Get role by name        | `GET /{realm}/roles/{role-name}`                 | Retrieve role details    |
+| ✅ Update realm role       | `PUT /{realm}/roles/{role-name}`                 | Modify role attributes   |
+| ✅ Delete realm role       | `DELETE /{realm}/roles/{role-name}`              | Delete a role            |
+| ✅ Assign role to user     | `POST /{realm}/users/{id}/role-mappings/realm`   | Add realm role to user   |
+| ✅ Remove role from user   | `DELETE /{realm}/users/{id}/role-mappings/realm` | Remove role from user    |
+| ✅ List user’s realm roles | `GET /{realm}/users/{id}/role-mappings/realm`    |                          |
 
 ### Client Roles
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create client role | `POST /{realm}/clients/{id}/roles` | Add a role scoped to a client |
-| ✅ Assign client role to user | `POST /{realm}/users/{id}/role-mappings/clients/{client-id}` | |
-| ✅ Remove client role from user | `DELETE /{realm}/users/{id}/role-mappings/clients/{client-id}` | |
+| Action                         | Endpoint                                                       | Description                   |
+|--------------------------------|----------------------------------------------------------------|-------------------------------|
+| ✅ Create client role           | `POST /{realm}/clients/{id}/roles`                             | Add a role scoped to a client |
+| ✅ Assign client role to user   | `POST /{realm}/users/{id}/role-mappings/clients/{client-id}`   |                               |
+| ✅ Remove client role from user | `DELETE /{realm}/users/{id}/role-mappings/clients/{client-id}` |                               |
 
 ## Client Management
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create client | `POST /{realm}/clients` | Register a new client (application) |
-| ✅ Get client by ID | `GET /{realm}/clients/{id}` | |
-| ✅ Update client | `PUT /{realm}/clients/{id}` | |
-| ✅ Delete client | `DELETE /{realm}/clients/{id}` | |
-| ✅ Get client secret | `GET /{realm}/clients/{id}/client-secret` | |
-| ✅ Regenerate client secret | `POST /{realm}/clients/{id}/client-secret` | |
-| ✅ Get client scopes | `GET /{realm}/clients/{id}/default-client-scopes` | |
-| ✅ Assign client scopes | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` | |
+| Action                     | Endpoint                                                     | Description                         |
+|----------------------------|--------------------------------------------------------------|-------------------------------------|
+| ✅ Create client            | `POST /{realm}/clients`                                      | Register a new client (application) |
+| ✅ Get client by ID         | `GET /{realm}/clients/{id}`                                  |                                     |
+| ✅ Update client            | `PUT /{realm}/clients/{id}`                                  |                                     |
+| ✅ Delete client            | `DELETE /{realm}/clients/{id}`                               |                                     |
+| ✅ Get client secret        | `GET /{realm}/clients/{id}/client-secret`                    |                                     |
+| ✅ Regenerate client secret | `POST /{realm}/clients/{id}/client-secret`                   |                                     |
+| ✅ Get client scopes        | `GET /{realm}/clients/{id}/default-client-scopes`            |                                     |
+| ✅ Assign client scopes     | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` |                                     |
 
 ## Client Scope Management
 
-| Action | Endpoint | Description |
-|--------|----------|-------------|
-| ✅ Create client scope | `POST /{realm}/client-scopes` | |
-| ✅ Get client scope by ID | `GET /{realm}/client-scopes/{id}` | |
-| ✅ Update client scope | `PUT /{realm}/client-scopes/{id}` | |
-| ✅ Delete client scope | `DELETE /{realm}/client-scopes/{id}` | |
-| ✅ Assign client scope to client | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` | |
+| Action                          | Endpoint                                                     | Description |
+|---------------------------------|--------------------------------------------------------------|-------------|
+| ✅ Create client scope           | `POST /{realm}/client-scopes`                                |             |
+| ✅ Get client scope by ID        | `GET /{realm}/client-scopes/{id}`                            |             |
+| ✅ Update client scope           | `PUT /{realm}/client-scopes/{id}`                            |             |
+| ✅ Delete client scope           | `DELETE /{realm}/client-scopes/{id}`                         |             |
+| ✅ Assign client scope to client | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` |             |
 
 # Controlling client scopes and consent via realm JSON
 
@@ -345,10 +340,10 @@ Keycloak supports configuring client scopes, consent settings, and protocol mapp
 
 ## What can be configured
 
-| Setting                   | Description                                                       |
-|---------------------------|-------------------------------------------------------------------|
-| `defaultClientScopes`     | Assigns client scopes that are always included for a client      |
-| `consentRequired`         | When true, forces the user to grant consent before token issuance |
+| Setting                     | Description                                                          |
+|-----------------------------|----------------------------------------------------------------------|
+| `defaultClientScopes`       | Assigns client scopes that are always included for a client          |
+| `consentRequired`           | When true, forces the user to grant consent before token issuance    |
 | `clientScopes` with mappers | Defines what claims are added to tokens, such as groups, roles, etc. |
 
 ## Group claim and client scopes
@@ -514,7 +509,6 @@ If the client is issued an ID or access token with the `groups` scope, it will i
 | **clientProfiles**  <br>_optional_                                            | List                                                                                                                                              |        |
 | **clientPolicies**  <br>_optional_                                            | List                                                                                                                                              |        |
 | **users**  <br>_optional_                                                     | List of [User](#User)                                                                                                                             |        |
-| **federatedUsers**  <br>_optional_                                            | List of [User](#User)                                                                                                                             |        |
 | **scopeMappings**  <br>_optional_                                             | List of [ScopeMappingRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ScopeMappingRepresentation)                     |        |
 | **clientScopeMappings**  <br>_optional_                                       | Map of array                                                                                                                                      |        |
 | **clients**  <br>_optional_                                                   | List of [Client](#Client)                                                                                                                         |        |
@@ -523,8 +517,6 @@ If the client is issued an ID or access token with the `groups` scope, it will i
 | **defaultOptionalClientScopes**  <br>_optional_                               | List of string                                                                                                                                    |        |
 | **browserSecurityHeaders**  <br>_optional_                                    | Map of string                                                                                                                                     |        |
 | **smtpServer**  <br>_optional_                                                | Map of string                                                                                                                                     |        |
-| **userFederationProviders**  <br>_optional_                                   | List of [UserFederationProviderRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#UserFederationProviderRepresentation) |        |
-| **userFederationMappers**  <br>_optional_                                     | List of [UserFederationMapperRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#UserFederationProviderRepresentation)   |        |
 | **loginTheme**  <br>_optional_                                                | String                                                                                                                                            |        |
 | **accountTheme**  <br>_optional_                                              | String                                                                                                                                            |        |
 | **adminTheme**  <br>_optional_                                                | String                                                                                                                                            |        |
