@@ -58,6 +58,14 @@ This section summarizes Keycloak actions that can affect the behavior of an appl
 - Reads user group memberships (`groups` claim)
 - Maps user identity and groups to internal user roles or permissions
 
+## Categories of actions
+
+| Category            | Example actions                                                             |
+|---------------------|------------------------------------------------------------------------------|
+| Token invalidation  | Realm deletion, logout, notBefore update, key rotation, expiration          |
+| Identity changes    | Username, email, or protocol mapper updates                                 |
+| Group visibility    | Group membership changes, mapper/scope removal, consent withdrawal          |
+
 ## Key attributes extracted from tokens
 
 The following attributes are commonly used by relying applications:
@@ -116,14 +124,6 @@ A token issued by Keycloak will be considered **invalid** if any of the followin
 | Add/remove group-mapper protocol  | Controls whether groups are included in tokens                |
 | Remove scope containing group mapper | Tokens will not include groups unless scope is present     |
 | Require consent for group scope   | If consent is revoked, group info will be omitted             |
-
-## Summary of high-impact token-related actions
-
-| Category            | Example actions                                                             |
-|---------------------|------------------------------------------------------------------------------|
-| Token invalidation  | Realm deletion, logout, notBefore update, key rotation, expiration          |
-| Identity changes    | Username, email, or protocol mapper updates                                 |
-| Group visibility    | Group membership changes, mapper/scope removal, consent withdrawal          |
 
 # JWT token claims issued by Keycloak
 
