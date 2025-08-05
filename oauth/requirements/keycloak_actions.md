@@ -6,12 +6,13 @@ This document lists the possible parameters that can be configured for Keycloak 
 
 <!-- TOC -->
 * [Keycloak Actions](#keycloak-actions)
-  * [Realm](#realmrepresentation)
-  * [Client](#clientrepresentation)
-  * [User](#userrepresentation)
+  * [Realm](#realm)
+  * [Client](#client)
+  * [User](#user)
+  * [Group](#group)
 <!-- TOC -->
 
-## [RealmRepresentation](#keycloak-actions)
+## [Realm](#keycloak-actions)
   
 | Name                                                                          | Type                                                                                                                                              | Format |
 |-------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|--------|
@@ -69,7 +70,7 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **certificate**  <br>_optional_                                               | String                                                                                                                                            |        |
 | **codeSecret**  <br>_optional_                                                | String                                                                                                                                            |        |
 | **roles**  <br>_optional_                                                     | RolesRepresentation                                                                                                                               |        |
-| **groups**  <br>_optional_                                                    | List of [GroupRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#GroupRepresentation)                                   |        |
+| **groups**  <br>_optional_                                                    | List of [Group](#Group)                                                                                                                           |        |
 | **defaultRoles**  <br>_optional_                                              | List of string                                                                                                                                    |        |
 | **defaultRole**  <br>_optional_                                               | RoleRepresentation                                                                                                                                |        |
 | **defaultGroups**  <br>_optional_                                             | List of string                                                                                                                                    |        |
@@ -105,11 +106,11 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **webAuthnPolicyPasswordlessAcceptableAaguids**  <br>_optional_               | List of string                                                                                                                                    |        |
 | **clientProfiles**  <br>_optional_                                            | List                                                                                                                                              |        |
 | **clientPolicies**  <br>_optional_                                            | List                                                                                                                                              |        |
-| **users**  <br>_optional_                                                     | List of [UserRepresentation](#UserRepresentation)                                                                                                 |        |
-| **federatedUsers**  <br>_optional_                                            | List of [UserRepresentation](#UserRepresentation)                                                                                                 |        |
+| **users**  <br>_optional_                                                     | List of [User](#User)                                                                                                                             |        |
+| **federatedUsers**  <br>_optional_                                            | List of [User](#User)                                                                                                                             |        |
 | **scopeMappings**  <br>_optional_                                             | List of [ScopeMappingRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ScopeMappingRepresentation)                     |        |
 | **clientScopeMappings**  <br>_optional_                                       | Map of array                                                                                                                                      |        |
-| **clients**  <br>_optional_                                                   | List of [ClientRepresentation](#ClientRepresentation)                                                                                             |        |
+| **clients**  <br>_optional_                                                   | List of [Client](#Client)                                                                                                                         |        |
 | **clientScopes**  <br>_optional_                                              | List of [ClientScopeRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ClientScopeRepresentation)                       |        |
 | **defaultDefaultClientScopes**  <br>_optional_                                | List of string                                                                                                                                    |        |
 | **defaultOptionalClientScopes**  <br>_optional_                               | List of string                                                                                                                                    |        |
@@ -151,13 +152,13 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **socialProviders**  <br>_optional_                                           | Map of string                                                                                                                                     |        |
 | **applicationScopeMappings**  <br>_optional_                                  | Map of array                                                                                                                                      |        |
 | **applications**  <br>_optional_                                              | List of [ApplicationRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ApplicationRepresentation)                       |        |
-| **oauthClients**  <br>_optional_                                              | List of [OAuthClientRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#OAuthClientRepresentation)                       |        |
+| **oauthClients**  <br>_optional_                                              | List of [OAuthClient](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#OAuthClient)                                                   |        |
 | **clientTemplates**  <br>_optional_                                           | List of [ClientTemplateRepresentation](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#ClientTemplateRepresentation)                 |        |
 | **oAuth2DeviceCodeLifespan**  <br>_optional_                                  | Integer                                                                                                                                           | int32  |
 | **oAuth2DevicePollingInterval**  <br>_optional_                               | Integer                                                                                                                                           | int32  |
 
 
-## [ClientRepresentation](#keycloak-actions)
+## [Client](#keycloak-actions)
   
 | Name                                                      | Type                                                                                                                              | Format |
 |-----------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|--------|
@@ -206,7 +207,7 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **access**  <br>_optional_                                | Map of boolean                                                                                                                    |        |
 | **origin**  <br>_optional_                                | String                                                                                                                            |        |
 
-## [UserRepresentation](#keycloak-actions)
+## [User](#keycloak-actions)
   
 | Name                                           | Type                                                                                                                                    | Format |
 |------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------|
@@ -237,3 +238,18 @@ This document lists the possible parameters that can be configured for Keycloak 
 | **groups**  <br>_optional_                     | List of string                                                                                                                          |        |
 | **access**  <br>_optional_                     | Map of boolean                                                                                                                          |        |
 | **userProfileMetadata**  <br>_optional_        | UserProfileMetadata                                                                                                                     |        |
+
+
+## Group
+
+  
+| Name                            | Type                    | Format |
+|---------------------------------|-------------------------|--------|
+| **id**  <br>_optional_          | String                  |        |
+| **name**  <br>_optional_        | String                  |        |
+| **path**  <br>_optional_        | String                  |        |
+| **attributes**  <br>_optional_  | Map of array            |        |
+| **realmRoles**  <br>_optional_  | List of string          |        |
+| **clientRoles**  <br>_optional_ | Map of array            |        |
+| **subGroups**  <br>_optional_   | List of [Group](#Group) |        |
+| **access**  <br>_optional_      | Map of boolean          |        |
