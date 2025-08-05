@@ -32,13 +32,9 @@ This document lists the possible parameters that can be configured for Keycloak 
 
 To authenticate a user and retrieve an access token using the [OpenID Connect Token Endpoint](https://datatracker.ietf.org/doc/html/rfc6749#section-4.3):
 
-### 🔸 Endpoint
-
 ```
 POST /realms/{realm}/protocol/openid-connect/token
 ```
-
-### 🔸 Required Parameters (x-www-form-urlencoded)
 
 | Parameter      | Description                                  |
 |----------------|----------------------------------------------|
@@ -47,8 +43,6 @@ POST /realms/{realm}/protocol/openid-connect/token
 | `client_secret`| Required if client is confidential           |
 | `username`     | Username of the user                         |
 | `password`     | Password of the user                         |
-
-### 🔸 Example `curl` Request
 
 ```bash
 curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token' \
@@ -59,8 +53,6 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
   -d 'username=john' \
   -d 'password=secret'
 ```
-
-### 🔸 Successful Response
 
 ```json
 {
@@ -75,10 +67,170 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 
 > ⚠️ The client must have **Direct Access Grants Enabled** in the Keycloak Admin Console.
 
+# Token Lifecycle Management
+
+Keycloak supports full token lifecycle control through OpenID Connect endpoints and realm/client settings.
+
+| Action         | Method | Endpoint |
+|----------------|--------|----------|
+| Get Token      | POST   | `/protocol/openid-connect/token` |
+| Refresh Token  | POST   | `/protocol/openid-connect/token` |
+| Revoke Token   | POST   | `/protocol/openid-connect/logout` |
+| Introspect     | POST   | `/protocol/openid-connect/token/introspect` |
+| Configure Expiry | JSON  | `Realm JSON config update and re-import` |
+
+## Token Expiration Settings
+
+Token lifetimes can be configured using realm JSON configuration file:
+
+### Realm Settings → Tokens
+
+| Setting                      | Description                                 | Default |
+|-----------------------------|---------------------------------------------|---------|
+| Access Token Lifespan       | Time before access token expires            | 5 min   |
+| Refresh Token Lifespan      | Absolute time refresh token remains valid   | 30 min  |
+| SSO Session Idle Timeout    | Idle timeout before re-authentication       | 30 min  |
+| SSO Session Max Lifespan    | Max total session duration                  | 10 hr   |
+
+## Token Renewal (Using Refresh Token)
+
+You can renew the access token before it expires using the refresh token.
+
+```
+POST /realms/{realm}/protocol/openid-connect/token
+```
+
+| Name           | Description               |
+|----------------|---------------------------|
+| grant_type     | `refresh_token`           |
+| client_id      | Client ID                 |
+| client_secret  | (If confidential client)  |
+| refresh_token  | The valid refresh token   |
+
+```bash
+curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=refresh_token' \
+  -d 'client_id=my-client' \
+  -d 'client_secret=xxxxxx' \
+  -d 'refresh_token=eyJ...'
+```
+
+## Token Revocation (Logout & Revoke)
+
+To revoke a token and logout the user:
+
+```
+POST /realms/{realm}/protocol/openid-connect/logout
+```
+
+| Name           | Description               |
+|----------------|---------------------------|
+| client_id      | Client ID                 |
+| client_secret  | (If confidential client)  |
+| refresh_token  | The refresh token to revoke |
+
+```bash
+curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/logout' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id=my-client' \
+  -d 'client_secret=xxxxxx' \
+  -d 'refresh_token=eyJ...'
+```
+
+> 🔐 This revokes both the refresh and access tokens associated with the session.
+
+## 🔍 Token Introspection (Validity Check)
+
+Use this to validate whether a token is active.
+
+```
+POST /realms/{realm}/protocol/openid-connect/token/introspect
+```
+
+| Name           | Description               |
+|----------------|---------------------------|
+| client_id      | Client ID                 |
+| client_secret  | Required                  |
+| token          | Access or refresh token   |
+
+```bash
+curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token/introspect' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id=my-client' \
+  -d 'client_secret=xxxxxx' \
+  -d 'token=eyJ...'
+```
+
+```json
+{
+  "active": true,
+  "exp": 1699029999,
+  "scope": "openid email profile",
+  "username": "john"
+}
+```
+
+# ⚙️ Automating Token Expiration and Other Non-REST Configurable Settings
+
+While Keycloak exposes many administrative operations via its REST API, **some settings (such as token expiration)** cannot be modified through the Admin REST API. These include:
+
+- Access token lifespan
+- Refresh token lifespan
+- Session idle timeout
+- Session max lifespan
+- Action token lifespans (e.g. email verification, password reset)
+
+## Not Configurable via REST
+
+Although `RealmRepresentation` and `ClientRepresentation` objects may contain fields such as `accessTokenLifespan`, updating them via `PUT /admin/realms/{realm}` **does not change those values**.
+
+---
+
+## Workaround: Automate Using Realm JSON Import
+
+You can automate token expiration and other settings by exporting the realm to a JSON file, modifying it, and re-importing it.
+
+**Step 1: Export Realm**
+
+From the server root:
+
+```bash
+bin/kc.sh export --realm=myrealm --file=realm-export.json --users=skip
+```
+
+This will generate a JSON file representing your realm, including token settings.
+
+**Step 2: Edit the File**
+
+Open `realm-export.json` and locate fields like:
+
+```json
+{
+  "realm": "myrealm",
+  "accessTokenLifespan": 600,
+  "refreshTokenMaxReuse": 0,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  ...
+}
+```
+
+Edit the values as needed.
+
+**Step 3: Re-import Realm**
+
+If you're setting up a new server or bootstrapping a test environment:
+
+```bash
+bin/kc.sh import --file=realm-export.json
+```
+
+This imports the full realm, including token settings, roles, users (if not skipped), and more.
 
 # Supported Actions
 
-## 🧑‍💼 User Management
+## User Management
 
 | Action | Endpoint | Description |
 |--------|----------|-------------|
@@ -98,7 +250,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | ✅ Add federated identity | `POST /{realm}/users/{id}/federated-identity/{provider}` | Link social identity |
 | ✅ Remove federated identity | `DELETE /{realm}/users/{id}/federated-identity/{provider}` | Unlink social identity |
 
-## 🌍 Realm Management
+## Realm Management
 
 | Action | Endpoint | Description |
 |--------|----------|-------------|
@@ -108,7 +260,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | ✅ Delete realm | `DELETE /admin/realms/{realm}` | Delete the realm |
 | ✅ Get all realms | `GET /admin/realms` | List all realms |
 
-## 👥 Group Management
+## Group Management
 
 | Action | Endpoint | Description |
 |--------|----------|-------------|
@@ -122,7 +274,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | ✅ Add user to group | `PUT /{realm}/users/{id}/groups/{group-id}` | Add user to a group |
 | ✅ Remove user from group | `DELETE /{realm}/users/{id}/groups/{group-id}` | Remove user from a group |
 
-## 🧩 Role Management
+## Role Management
 
 ### Realm Roles
 
@@ -145,7 +297,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | ✅ Assign client role to user | `POST /{realm}/users/{id}/role-mappings/clients/{client-id}` | |
 | ✅ Remove client role from user | `DELETE /{realm}/users/{id}/role-mappings/clients/{client-id}` | |
 
-## 🏢 Client Management
+## Client Management
 
 | Action | Endpoint | Description |
 |--------|----------|-------------|
@@ -158,7 +310,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | ✅ Get client scopes | `GET /{realm}/clients/{id}/default-client-scopes` | |
 | ✅ Assign client scopes | `PUT /{realm}/clients/{id}/default-client-scopes/{scope-id}` | |
 
-## 🧰 Client Scope Management
+## Client Scope Management
 
 | Action | Endpoint | Description |
 |--------|----------|-------------|
@@ -180,6 +332,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | Clients          | ✅         | ✅       | ✅         | ✅         | ✅ (scopes/roles) |
 | Client Scopes    | ✅         | ✅       | ✅         | ✅         | ✅ (to clients)  |
 
+# Objects
 
 ## [Realm](#keycloak-actions)
   
@@ -327,7 +480,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | **oAuth2DevicePollingInterval**  <br>_optional_                               | Integer                                                                                                                                           | int32  |
 
 
-## [Client](#keycloak-actions)
+### [Client](#keycloak-actions)
   
 | Name                                                      | Type                                                                                                                              | Format |
 |-----------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|--------|
@@ -376,7 +529,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | **access**  <br>_optional_                                | Map of boolean                                                                                                                    |        |
 | **origin**  <br>_optional_                                | String                                                                                                                            |        |
 
-## [User](#keycloak-actions)
+### [User](#keycloak-actions)
   
 | Name                                           | Type                                                                                                                                    | Format |
 |------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------|
@@ -409,7 +562,7 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 | **userProfileMetadata**  <br>_optional_        | [UserProfileMetadata](https://www.keycloak.org/docs-api/22.0.5/rest-api/index.html#UserProfileMetadata)                                 |        |
 
 
-## Group
+### Group
 
   
 | Name                            | Type                    | Format |
