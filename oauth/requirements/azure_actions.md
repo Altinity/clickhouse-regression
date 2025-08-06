@@ -20,7 +20,7 @@ This document describes possible actions and attributes for Azure Active Directo
     * [Azure AD–Specific & Optional](#azure-adspecific--optional)
 * [Obtaining a Token for a User or Application](#obtaining-a-token-for-a-user-or-application)
 * [Token Lifecycle Management](#token-lifecycle-management)
-  * [Token Lifecycle Management Enhancements](#token-lifecycle-management-enhancements)
+  * [Refresh Token Management](#refresh-token-management)
   * [Logout and Token Revocation](#logout-and-token-revocation)
   * [Token Introspection](#token-introspection)
 * [Automating Token and Policy Configuration](#automating-token-and-policy-configuration)
@@ -210,7 +210,7 @@ Azure AD supports token lifetimes via conditional access and policies:
 | Session revocation   | `POST /oauth2/v2.0/logout`                 |
 | Revoke user sessions | `POST /users/{id}/revokeSignInSessions`    |
 
-## Token Lifecycle Management Enhancements
+## Refresh Token Management
 
 Azure AD supports token refresh, revocation, and introspection mechanisms that are not currently detailed:
 
