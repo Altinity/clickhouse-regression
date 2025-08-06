@@ -31,6 +31,9 @@ This document describes possible actions and attributes for Azure Active Directo
 * [Service Principal Management (`/servicePrincipals`)](#service-principal-management-serviceprincipals)
 * [Directory Role Management (`/directoryRoles`)](#directory-role-management-directoryroles)
 * [Controlling Consent and Scopes via Application Manifest JSON](#controlling-consent-and-scopes-via-application-manifest-json)
+* [Register a Client Application](#register-a-client-application)
+  * [Create Service Principal for the Application](#create-service-principal-for-the-application)
+  * [Add a Client Secret (Confidential Client)](#add-a-client-secret-confidential-client)
 <!-- TOC -->
 
 # Application-relevant Azure AD actions affecting tokens
@@ -348,4 +351,45 @@ Azure AD applications use a JSON manifest to define required resource access, oa
 }
 ```
 
-This manifest can be managed via Graph or Azure portal and ensures tokens include correct scopes, roles, and group claims.
+# Register a Client Application
+
+Create an application (client) in Azure AD:
+
+```bash
+curl -X POST https://graph.microsoft.com/v1.0/applications \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {access_token}" \
+  -d '{
+    "displayName": "Grafana",
+    "signInAudience": "AzureADMyOrg",
+    "web": {
+      "redirectUris": [
+        "http://localhost:3000/login/generic_oauth"
+      ]
+    }
+  }'
+```
+
+## Create Service Principal for the Application
+
+To allow sign-ins and token issuance, create a service principal for the registered app:
+
+```bash
+curl -X POST https://graph.microsoft.com/v1.0/servicePrincipals \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {access_token}" \
+  -d '{"appId": "{appId_from_previous_step}"}'
+```
+
+## Add a Client Secret (Confidential Client)
+
+```bash
+curl -X POST https://graph.microsoft.com/v1.0/applications/{application-id}/addPassword \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {access_token}" \
+  -d '{
+    "passwordCredential": {
+      "displayName": "GrafanaSecret"
+    }
+  }'
+```
