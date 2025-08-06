@@ -25,11 +25,11 @@ This document describes possible actions and attributes for Azure Active Directo
   * [Token Introspection](#token-introspection)
 * [Automating Token and Policy Configuration](#automating-token-and-policy-configuration)
 * [Supported Actions](#supported-actions)
-* [User Management (`/users`)](#user-management-users)
-* [Group Management (`/groups`)](#group-management-groups)
-* [Application Management (`/applications`)](#application-management-applications)
-* [Service Principal Management (`/servicePrincipals`)](#service-principal-management-serviceprincipals)
-* [Directory Role Management (`/directoryRoles`)](#directory-role-management-directoryroles)
+* [User Management](#user-management)
+* [Group Management](#group-management)
+* [Application Management](#application-management)
+* [Service Principal Management](#service-principal-management)
+* [Directory Role Management](#directory-role-management)
 * [Controlling Consent and Scopes via Application Manifest JSON](#controlling-consent-and-scopes-via-application-manifest-json)
 * [Register a Client Application](#register-a-client-application)
   * [Create Service Principal for the Application](#create-service-principal-for-the-application)
@@ -267,7 +267,7 @@ Azure AD token and policy settings are primarily managed via:
 | Service Principals | ✅          | ✅        | ✅          | ✅          | ✅ (appRoles)          |
 | Directory Roles    | ✅          | ✅        | ✅          | ✅          | ✅ (to users/groups)   |
 
-# User Management (`/users`)
+# User Management
 
 | Action                  | Endpoint                                                                    | Description                |
 |-------------------------|-----------------------------------------------------------------------------|----------------------------|
@@ -279,7 +279,7 @@ Azure AD token and policy settings are primarily managed via:
 | Revoke sign-in sessions | `POST /users/{id}/revokeSignInSessions`                                     | Invalidate user sessions   |
 | Reset user password     | `POST /users/{id}/authentication/passwordMethods/{method-id}/resetPassword` | Reset credential method    |
 
-# Group Management (`/groups`)
+# Group Management
 
 | Action                  | Endpoint                                       | Description                 |
 |-------------------------|------------------------------------------------|-----------------------------|
@@ -292,7 +292,7 @@ Azure AD token and policy settings are primarily managed via:
 | Remove member           | `DELETE /groups/{id}/members/{member-id}/$ref` | Remove from group           |
 | List transitive members | `GET /groups/{id}/transitiveMembers`           | Recursive membership        |
 
-# Application Management (`/applications`)
+# Application Management
 
 | Action                     | Endpoint                                                      | Description                             |
 |----------------------------|---------------------------------------------------------------|-----------------------------------------|
@@ -304,7 +304,7 @@ Azure AD token and policy settings are primarily managed via:
 | Add app role assignment    | `POST /applications/{id}/appRoleAssignedTo`                   | Assign app role to service principal    |
 | Remove app role assignment | `DELETE /applications/{id}/appRoleAssignedTo/{assignment-id}` | Remove assignment                       |
 
-# Service Principal Management (`/servicePrincipals`)
+# Service Principal Management
 
 | Action                        | Endpoint                                   | Description                               |
 |-------------------------------|--------------------------------------------|-------------------------------------------|
@@ -313,7 +313,7 @@ Azure AD token and policy settings are primarily managed via:
 | Update SP                     | `PATCH /servicePrincipals/{id}`            | Modify SP settings                        |
 | Delete SP                     | `DELETE /servicePrincipals/{id}`           | Remove SP                                 |
 
-# Directory Role Management (`/directoryRoles`)
+# Directory Role Management
 
 | Action                     | Endpoint                                             | Description                       |
 |----------------------------|------------------------------------------------------|-----------------------------------|
