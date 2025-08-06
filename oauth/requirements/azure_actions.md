@@ -188,7 +188,7 @@ POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
 | `password`      | User password (for ROPC flow)                                |
 | `scope`         | Space-separated scopes or resource URIs                      |
 
-```bash request
+```bash
 curl -X POST 'https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'grant_type=password' \
@@ -214,40 +214,36 @@ Azure AD supports token lifetimes via conditional access and policies:
 
 Azure AD supports token refresh, revocation, and introspection mechanisms that are not currently detailed:
 
-- **Refresh Access Token**
+Use the refresh token to get a new access token:
 
-  Use the refresh token to get a new access token:
-
-  ```http request
-  POST https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token
-  Content-Type: application/x-www-form-urlencoded
-
-  client_id={client-id}
-  &client_secret={client-secret}
-  &grant_type=refresh_token
-  &refresh_token={refresh_token}
-  &scope=https%3A%2F%2Fgraph.microsoft.com%2F.default
+```bash
+curl -X POST 'https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id={client-id}' \
+  -d 'client_secret={client-secret}' \
+  -d 'grant_type=refresh_token' \
+  -d 'refresh_token={refresh_token}' \
+  -d 'scope=https%3A%2F%2Fgraph.microsoft.com%2F.default'
+```
 
 ## Logout and Token Revocation
 
 Revoke a user's session and sign them out:
 
-```http request
-GET https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/logout
+```bash
+curl -X GET https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/logout
 ```
 
 ## Token Introspection
 
 For certain APIs and permissions, Azure AD provides a token introspection endpoint:
 
-```http request
-POST https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token/introspect
-Content-Type: application/x-www-form-urlencoded
-
-client_id={client-id}
-&client_secret={client-secret}
-&token={access_or_refresh_token}
-
+```bash
+curl -X POST 'https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token/introspect' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id={client-id}' \
+  -d 'client_secret={client-secret}' \
+  -d 'token={access_or_refresh_token}'
 ```
 
 # Automating Token and Policy Configuration
@@ -257,12 +253,6 @@ Azure AD token and policy settings are primarily managed via:
 - Azure portal or PowerShell/Azure CLI
 - Microsoft Graph API (limited for conditional access)
 - ARM templates or Bicep for infrastructure as code
-
-Example: Azure CLI to set access token lifetime policy:
-
-```bash
-az ad policy token-lifetime update --id <policy-id> --access-token-life-time 01:00:00
-```
 
 # Supported Actions
 
