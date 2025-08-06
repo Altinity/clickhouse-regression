@@ -1,6 +1,6 @@
 # Azure AD Actions
 
-This document describes possible actions and attributes for Azure Active Directory (Azure AD) users, groups, and applications, based on the Microsoft Graph REST API documentation.
+This document describes possible actions and attributes for Azure Active Directory (Azure AD) users, groups, and applications, based on the [Microsoft Graph REST API documentation](https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0&preserve-view=true).
 
 <!-- TOC -->
 * [Application-relevant Azure AD actions affecting tokens](#application-relevant-azure-ad-actions-affecting-tokens)
