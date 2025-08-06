@@ -200,12 +200,12 @@ curl -X POST 'https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token' \
 
 Azure AD supports token lifetimes via conditional access and policies:
 
-| Action               | Method/Config                                                 |
-|----------------------|---------------------------------------------------------------|
-| Refresh token expiry | Configured in Azure AD for user flows                         |
-| Access token expiry  | Generally 1 hour for v2.0 endpoint                            |
-| Session revocation   | `POST /oauth2/v2.0/logout`                                    |
-| Revoke user sessions | `POST /users/{id}/revokeSignInSessions` fileciteturn0file2 |
+| Action               | Method/Config                              |
+|----------------------|--------------------------------------------|
+| Refresh token expiry | Configured in Azure AD for user flows      |
+| Access token expiry  | Generally 1 hour for v2.0 endpoint         |
+| Session revocation   | `POST /oauth2/v2.0/logout`                 |
+| Revoke user sessions | `POST /users/{id}/revokeSignInSessions`    |
 
 
 # Automating Token and Policy Configuration
