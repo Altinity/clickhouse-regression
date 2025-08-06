@@ -10,7 +10,14 @@ This document describes possible actions and attributes for Azure Active Directo
   * [Actions affecting token validity](#actions-affecting-token-validity)
   * [Actions affecting user identification claims](#actions-affecting-user-identification-claims)
   * [Actions affecting group membership and visibility](#actions-affecting-group-membership-and-visibility)
-* [JWT token claims issued by Azure AD](#jwt-token-claims-issued-by-azure-ad)
+  * [JWT Token Claims](#jwt-token-claims)
+    * [Core Claims](#core-claims)
+    * [Authentication Context](#authentication-context)
+    * [Subject & Identity](#subject--identity)
+    * [Application & Permissions](#application--permissions)
+    * [Group Claims](#group-claims)
+    * [Token Integrity](#token-integrity)
+    * [Azure AD–Specific & Optional](#azure-adspecific--optional)
 * [Obtaining a Token for a User or Application](#obtaining-a-token-for-a-user-or-application)
 * [Token Lifecycle Management](#token-lifecycle-management)
 * [Automating Token and Policy Configuration](#automating-token-and-policy-configuration)
@@ -85,28 +92,80 @@ A token issued by Azure AD will be considered **invalid** if any of the followin
 | Delete group                   | Removes group reference from tokens                                             |
 | Update group owners or roles   | May affect role-based access if group is used in role assignment                |
 
-# JWT token claims issued by Azure AD
+## JWT Token Claims
 
-This section lists common claims in tokens issued by Azure AD:
+Azure AD issues JSON Web Tokens (JWT) containing a variety of claims. Below is a table of standard, optional, and Azure AD–specific claims you may encounter in ID and access tokens.
 
-| Claim         | Description                                                   |
-|---------------|---------------------------------------------------------------|
-| `iss`         | Issuer – Azure AD v2.0 endpoint                               |
-| `aud`         | Audience – application (client) ID                             |
-| `exp`         | Expiration time                                               |
-| `iat`         | Issued-at time                                                |
-| `nbf`         | Not-before time                                               |
-| `ip`          | Client IP address                                             |
-| `sub`         | Subject – unique token subject (GUID)                         |
-| `oid`         | Object ID – Azure AD user or service principal ID             |
-| `upn`         | User principal name                                           |
-| `email`       | User email address                                            |
-| `name`        | Display name                                                  |
-| `tid`         | Tenant ID                                                     |
-| `scp`         | Delegated permission scopes                                   |
-| `roles`       | Application roles (appRoleAssignments)                        |
-| `wids`        | Directory role IDs (if assigned)                              |
-| `groups`      | Group IDs (if groupMembershipClaims configured)               |
+### Core Claims
+
+| Claim     | Type    | Description                                                              |
+|-----------|---------|--------------------------------------------------------------------------|
+| `aud`     | String  | Audience – intended recipient (your application’s client ID)             |
+| `iss`     | URI     | Issuer – token-issuing authority (Azure AD endpoint)                     |
+| `iat`     | Numeric | Issued At – time when token was issued                                   |
+| `nbf`     | Numeric | Not Before – time before which token is not valid                        |
+| `exp`     | Numeric | Expiration – time when token expires                                     |
+| `jti`     | String  | JWT ID – unique identifier for the token                                 |
+
+### Authentication Context
+
+| Claim        | Type    | Description                                                        |
+|--------------|---------|--------------------------------------------------------------------|
+| `auth_time`  | Numeric | Time of user authentication                                        |
+| `amr`        | Array   | Authentication Methods References (e\.g\., \[`"pwd"`\], \[`"mfa"`\])|
+| `acr`        | String  | Authentication Context Class Reference                             |
+| `nonce`      | String  | Cryptographic nonce for replay protection                          |
+| `sid`        | String  | Session ID – used for single sign\-out                             |
+
+### Subject & Identity
+
+| Claim         | Type    | Description                                                        |
+|---------------|---------|--------------------------------------------------------------------|
+| `sub`         | String  | Subject – unique identifier for the token subject                  |
+| `oid`         | GUID    | Object ID – unique identifier for user or service principal        |
+| `tid`         | GUID    | Tenant ID – Azure AD directory identifier                          |
+| `home_oid`    | GUID    | Home Object ID – original object ID if guest user                  |
+| `upn`         | String  | User Principal Name – usually \[user@domain\.com\]\(mailto\:user@domain\.com\) |
+| `unique_name` | String  | Preferred username                                                 |
+| `email`       | String  | User’s email address                                               |
+| `name`        | String  | Display name                                                       |
+| `given_name`  | String  | Given name                                                         |
+| `family_name` | String  | Surname                                                            |
+| `idp`         | String  | Identity Provider – origin of identity \(e\.g\., AzureAD\)         |
+
+### Application & Permissions
+
+| Claim      | Type    | Description                                                        |
+|------------|---------|--------------------------------------------------------------------|
+| `appid`    | GUID    | Application ID – client ID of calling app \(v1\.0 tokens\)         |
+| `azp`      | String  | Authorized Party – party to which token was issued                 |
+| `appidacr` | String  | App Authentication Context Class Reference                         |
+| `scp`      | String  | Delegated Permission Scopes \(space\-separated\)                   |
+| `roles`    | Array   | Application Roles – roles assigned via appRoleAssignments          |
+| `wids`     | Array   | Directory Role IDs – GUIDs of directory roles assigned             |
+
+### Group Claims
+
+| Claim    | Type  | Description                                                        |
+|----------|-------|--------------------------------------------------------------------|
+| `groups` | Array | Group IDs – if `groupMembershipClaims` enabled in app manifest     |
+
+### Token Integrity
+
+| Claim    | Type   | Description                                                        |
+|----------|--------|--------------------------------------------------------------------|
+| `at_hash`| String | Access Token Hash – for verifying integrity in ID tokens           |
+| `c_hash` | String | Code Hash – for verifying integrity in ID tokens                   |
+
+### Azure AD–Specific & Optional
+
+| Claim        | Type   | Description                                                        |
+|--------------|--------|--------------------------------------------------------------------|
+| `aio`        | String | Internal token indicator \(family/session hints\)                  |
+| `uti`        | String | User Token Identifier – telemetry trace ID                         |
+| `xms_mirid`  | String | Instance metadata \(in multi\-tenant applications\)                |
+| `rh`         | String | Refresh Token hash \(in refresh token responses\)                  |
+| `dir`        | String | Directory issuer reference                                         |
 
 # Obtaining a Token for a User or Application
 
@@ -116,15 +175,15 @@ To acquire tokens from Azure AD using OAuth 2.0 or OpenID Connect:
 POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
 ```
 
-| Parameter            | Description                                               |
-|----------------------|-----------------------------------------------------------|
-| `grant_type`         | `authorization_code`, `password`, `client_credentials`, etc. |
-| `client_id`          | Application (client) ID                                   |
-| `client_secret`      | Client secret (if confidential client)                    |
-| `code`               | Authorization code (for auth code flow)                   |
-| `username`           | User UPN (for ROPC flow)                                  |
-| `password`           | User password (for ROPC flow)                             |
-| `scope`              | Space-separated scopes or resource URIs                   |
+| Parameter       | Description                                                  |
+|-----------------|--------------------------------------------------------------|
+| `grant_type`    | `authorization_code`, `password`, `client_credentials`, etc. |
+| `client_id`     | Application (client) ID                                      |
+| `client_secret` | Client secret (if confidential client)                       |
+| `code`          | Authorization code (for auth code flow)                      |
+| `username`      | User UPN (for ROPC flow)                                     |
+| `password`      | User password (for ROPC flow)                                |
+| `scope`         | Space-separated scopes or resource URIs                      |
 
 ```bash
 curl -X POST 'https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token' \
@@ -141,12 +200,13 @@ curl -X POST 'https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token' \
 
 Azure AD supports token lifetimes via conditional access and policies:
 
-| Action                  | Method/Config                                              |
-|-------------------------|------------------------------------------------------------|
-| Refresh token expiry    | Configured in Azure AD for user flows                      |
-| Access token expiry     | Generally 1 hour for v2.0 endpoint                         |
-| Session revocation      | `POST /oauth2/v2.0/logout`                                 |
-| Revoke user sessions    | `POST /users/{id}/revokeSignInSessions` fileciteturn0file2 |
+| Action               | Method/Config                                                 |
+|----------------------|---------------------------------------------------------------|
+| Refresh token expiry | Configured in Azure AD for user flows                         |
+| Access token expiry  | Generally 1 hour for v2.0 endpoint                            |
+| Session revocation   | `POST /oauth2/v2.0/logout`                                    |
+| Revoke user sessions | `POST /users/{id}/revokeSignInSessions` fileciteturn0file2 |
+
 
 # Automating Token and Policy Configuration
 
