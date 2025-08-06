@@ -231,7 +231,7 @@ curl -X POST 'https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token' \
 Revoke a user's session and sign them out:
 
 ```bash
-curl -X GET https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/logout
+curl -X GET 'https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/logout'
 ```
 
 ## Token Introspection
