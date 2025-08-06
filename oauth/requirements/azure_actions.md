@@ -256,50 +256,50 @@ Azure AD token and policy settings are primarily managed via:
 
 # Supported Actions
 
-| Category       | Can Create | Can Read | Can Update | Can Delete | Can Assign          |
-|----------------|------------|----------|------------|------------|---------------------|
-| Users          | ✅          | ✅        | ✅          | ✅          | ✅ (roles/groups)    |
-| Groups         | ✅          | ✅        | ✅          | ✅          | ✅ (members)         |
-| Applications   | ✅          | ✅        | ✅          | ✅          | ✅ (roles/permissions) |
-| Service Principals | ✅      | ✅        | ✅          | ✅          | ✅ (appRoles)        |
-| Directory Roles| ✅          | ✅        | ✅          | ✅          | ✅ (to users/groups)|
+| Category           | Can Create | Can Read | Can Update | Can Delete | Can Assign            |
+|--------------------|------------|----------|------------|------------|-----------------------|
+| Users              | ✅          | ✅        | ✅          | ✅          | ✅ (roles/groups)      |
+| Groups             | ✅          | ✅        | ✅          | ✅          | ✅ (members)           |
+| Applications       | ✅          | ✅        | ✅          | ✅          | ✅ (roles/permissions) |
+| Service Principals | ✅          | ✅        | ✅          | ✅          | ✅ (appRoles)          |
+| Directory Roles    | ✅          | ✅        | ✅          | ✅          | ✅ (to users/groups)   |
 
 # User Management (`/users`)
 
-| Action                        | Endpoint                                    | Description                                |
-|-------------------------------|---------------------------------------------|--------------------------------------------|
-| Create user                   | `POST /users`                               | Create a new Azure AD user                 |
-| Get user by ID                | `GET /users/{id}`                           | Retrieve user object                       |
-| Update user                   | `PATCH /users/{id}`                         | Update user attributes                     |
-| Delete user                   | `DELETE /users/{id}`                        | Remove a user                              |
-| List users                    | `GET /users`                                | List all users                             |
-| Revoke sign-in sessions       | `POST /users/{id}/revokeSignInSessions`     | Invalidate user sessions                   |
-| Reset user password           | `POST /users/{id}/authentication/passwordMethods/{method-id}/resetPassword` | Reset credential method             |
+| Action                  | Endpoint                                                                    | Description                |
+|-------------------------|-----------------------------------------------------------------------------|----------------------------|
+| Create user             | `POST /users`                                                               | Create a new Azure AD user |
+| Get user by ID          | `GET /users/{id}`                                                           | Retrieve user object       |
+| Update user             | `PATCH /users/{id}`                                                         | Update user attributes     |
+| Delete user             | `DELETE /users/{id}`                                                        | Remove a user              |
+| List users              | `GET /users`                                                                | List all users             |
+| Revoke sign-in sessions | `POST /users/{id}/revokeSignInSessions`                                     | Invalidate user sessions   |
+| Reset user password     | `POST /users/{id}/authentication/passwordMethods/{method-id}/resetPassword` | Reset credential method    |
 
 # Group Management (`/groups`)
 
-| Action                     | Endpoint                                        | Description                           |
-|----------------------------|-------------------------------------------------|---------------------------------------|
-| Create group               | `POST /groups`                                  | Add a new group                       |
-| Get group by ID            | `GET /groups/{id}`                              | View group details                    |
-| Update group               | `PATCH /groups/{id}`                            | Modify group properties               |
-| Delete group               | `DELETE /groups/{id}`                           | Remove a group                        |
-| List members               | `GET /groups/{id}/members`                      | List group members                    |
-| Add member                 | `POST /groups/{id}/members/$ref`                | Add user or object to group           |
-| Remove member              | `DELETE /groups/{id}/members/{member-id}/$ref`  | Remove from group                     |
-| List transitive members    | `GET /groups/{id}/transitiveMembers`            | Recursive membership                   |
+| Action                  | Endpoint                                       | Description                 |
+|-------------------------|------------------------------------------------|-----------------------------|
+| Create group            | `POST /groups`                                 | Add a new group             |
+| Get group by ID         | `GET /groups/{id}`                             | View group details          |
+| Update group            | `PATCH /groups/{id}`                           | Modify group properties     |
+| Delete group            | `DELETE /groups/{id}`                          | Remove a group              |
+| List members            | `GET /groups/{id}/members`                     | List group members          |
+| Add member              | `POST /groups/{id}/members/$ref`               | Add user or object to group |
+| Remove member           | `DELETE /groups/{id}/members/{member-id}/$ref` | Remove from group           |
+| List transitive members | `GET /groups/{id}/transitiveMembers`           | Recursive membership        |
 
 # Application Management (`/applications`)
 
-| Action                       | Endpoint                                    | Description                              |
-|------------------------------|---------------------------------------------|------------------------------------------|
-| Create application           | `POST /applications`                        | Register a new application (App Role)    |
-| Get application by ID        | `GET /applications/{id}`                    | View application registration            |
-| Update application           | `PATCH /applications/{id}`                  | Modify app manifest                      |
-| Delete application           | `DELETE /applications/{id}`                 | Remove application                       |
-| List app role assignments    | `GET /applications/{id}/appRoleAssignedTo`  | See which principals are assigned roles  |
-| Add app role assignment      | `POST /applications/{id}/appRoleAssignedTo` | Assign app role to service principal     |
-| Remove app role assignment   | `DELETE /applications/{id}/appRoleAssignedTo/{assignment-id}` | Remove assignment          |
+| Action                     | Endpoint                                                      | Description                             |
+|----------------------------|---------------------------------------------------------------|-----------------------------------------|
+| Create application         | `POST /applications`                                          | Register a new application (App Role)   |
+| Get application by ID      | `GET /applications/{id}`                                      | View application registration           |
+| Update application         | `PATCH /applications/{id}`                                    | Modify app manifest                     |
+| Delete application         | `DELETE /applications/{id}`                                   | Remove application                      |
+| List app role assignments  | `GET /applications/{id}/appRoleAssignedTo`                    | See which principals are assigned roles |
+| Add app role assignment    | `POST /applications/{id}/appRoleAssignedTo`                   | Assign app role to service principal    |
+| Remove app role assignment | `DELETE /applications/{id}/appRoleAssignedTo/{assignment-id}` | Remove assignment                       |
 
 # Service Principal Management (`/servicePrincipals`)
 
@@ -312,12 +312,12 @@ Azure AD token and policy settings are primarily managed via:
 
 # Directory Role Management (`/directoryRoles`)
 
-| Action                           | Endpoint                                             | Description                           |
-|----------------------------------|------------------------------------------------------|---------------------------------------|
-| List directory roles              | `GET /directoryRoles`                                | Retrieve all roles                   |
-| Activate role                     | `POST /directoryRoles/activate`                      | Activate a role for assignment       |
-| Assign role to principal          | `POST /directoryRoles/{role-id}/members/$ref`        | Assign to user/ group/ service sp    |
-| Remove role from principal        | `DELETE /directoryRoles/{role-id}/members/{id}/$ref` | Remove assignment                    |
+| Action                     | Endpoint                                             | Description                       |
+|----------------------------|------------------------------------------------------|-----------------------------------|
+| List directory roles       | `GET /directoryRoles`                                | Retrieve all roles                |
+| Activate role              | `POST /directoryRoles/activate`                      | Activate a role for assignment    |
+| Assign role to principal   | `POST /directoryRoles/{role-id}/members/$ref`        | Assign to user/ group/ service sp |
+| Remove role from principal | `DELETE /directoryRoles/{role-id}/members/{id}/$ref` | Remove assignment                 |
 
 # Controlling Consent and Scopes via Application Manifest JSON
 
