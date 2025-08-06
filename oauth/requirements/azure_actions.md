@@ -22,9 +22,9 @@ This document describes possible actions and attributes for Azure Active Directo
 * [Token Lifecycle Management](#token-lifecycle-management)
 * [Automating Token and Policy Configuration](#automating-token-and-policy-configuration)
 * [Supported Actions](#supported-actions)
-* [User Management (`/users`) fileciteturn0file2](#user-management-users-fileciteturn0file2)
-* [Group Management (`/groups`) fileciteturn0file1](#group-management-groups-fileciteturn0file1)
-* [Application Management (`/applications`) fileciteturn0file0](#application-management-applications-fileciteturn0file0)
+* [User Management (`/users`)](#user-management-users)
+* [Group Management (`/groups`)](#group-management-groups)
+* [Application Management (`/applications`)](#application-management-applications)
 * [Service Principal Management (`/servicePrincipals`)](#service-principal-management-serviceprincipals)
 * [Directory Role Management (`/directoryRoles`)](#directory-role-management-directoryroles)
 * [Controlling Consent and Scopes via Application Manifest JSON](#controlling-consent-and-scopes-via-application-manifest-json)
@@ -36,12 +36,12 @@ This section summarizes Azure AD actions that can affect how applications receiv
 
 ## Categories of actions
 
-| Category               | Example actions                                                                          |
-|------------------------|------------------------------------------------------------------------------------------|
-| Token issuance         | Consent grant, scope modification, application registration changes                      |
-| Identity changes       | User disable/enable, password reset                                                      |
-| Group and role changes | Add/remove user to group or app-role assignment, role definition updates                |
-| Application config     | Redirect URI changes, certificate and secret rotation                                    |
+| Category               | Example actions                                                          |
+|------------------------|--------------------------------------------------------------------------|
+| Token issuance         | Consent grant, scope modification, application registration changes      |
+| Identity changes       | User disable/enable, password reset                                      |
+| Group and role changes | Add/remove user to group or app-role assignment, role definition updates |
+| Application config     | Redirect URI changes, certificate and secret rotation                    |
 
 ## Key attributes extracted from tokens
 
@@ -66,31 +66,31 @@ A token issued by Azure AD will be considered **invalid** if any of the followin
 
 ## Actions affecting token validity
 
-| Action                        | Effect                                                                                 |
-|------------------------------|----------------------------------------------------------------------------------------|
-| Disable user                 | Prevents new token issuance for user                                                  |
-| Delete user                  | Removes user identity, invalidating refresh tokens                                     |
-| Disable service principal    | Blocks token issuance for application                                                 |
-| Remove admin consent         | Requires user or admin to re-consent                                                     |
-| Rotate client secret/cert    | Breaks tokens signed with old key/cert if key rollover policy not configured            |
-| Expire refresh token         | Tokens cannot be refreshed beyond expiry                                               |
+| Action                    | Effect                                                                       |
+|---------------------------|------------------------------------------------------------------------------|
+| Disable user              | Prevents new token issuance for user                                         |
+| Delete user               | Removes user identity, invalidating refresh tokens                           |
+| Disable service principal | Blocks token issuance for application                                        |
+| Remove admin consent      | Requires user or admin to re-consent                                         |
+| Rotate client secret/cert | Breaks tokens signed with old key/cert if key rollover policy not configured |
+| Expire refresh token      | Tokens cannot be refreshed beyond expiry                                     |
 
 ## Actions affecting user identification claims
 
-| Action                    | Affected claims in new tokens                                                |
-|---------------------------|-------------------------------------------------------------------------------|
-| Update user attributes    | `upn`, `email`, `name` in ID and access tokens                                |
-| Enable/disable MFA        | Conditional access policies may affect `amr` claim                            |
-| Add user to directory role| `roles` claim may include new role assignments                                |
+| Action                     | Affected claims in new tokens                      |
+|----------------------------|----------------------------------------------------|
+| Update user attributes     | `upn`, `email`, `name` in ID and access tokens     |
+| Enable/disable MFA         | Conditional access policies may affect `amr` claim |
+| Add user to directory role | `roles` claim may include new role assignments     |
 
 ## Actions affecting group membership and visibility
 
-| Action                         | Effect on `groups` claim or group-based access                                 |
-|--------------------------------|--------------------------------------------------------------------------------|
-| Add/remove user to group       | Modifies group IDs returned in tokens if group claims are configured            |
-| Configure `groupMembershipClaims` | Controls whether group IDs or names appear in token                          |
-| Delete group                   | Removes group reference from tokens                                             |
-| Update group owners or roles   | May affect role-based access if group is used in role assignment                |
+| Action                            | Effect on `groups` claim or group-based access                       |
+|-----------------------------------|----------------------------------------------------------------------|
+| Add/remove user to group          | Modifies group IDs returned in tokens if group claims are configured |
+| Configure `groupMembershipClaims` | Controls whether group IDs or names appear in token                  |
+| Delete group                      | Removes group reference from tokens                                  |
+| Update group owners or roles      | May affect role-based access if group is used in role assignment     |
 
 ## JWT Token Claims
 
@@ -109,29 +109,29 @@ Azure AD issues JSON Web Tokens (JWT) containing a variety of claims. Below is a
 
 ### Authentication Context
 
-| Claim        | Type    | Description                                                        |
-|--------------|---------|--------------------------------------------------------------------|
-| `auth_time`  | Numeric | Time of user authentication                                        |
-| `amr`        | Array   | Authentication Methods References (e\.g\., \[`"pwd"`\], \[`"mfa"`\])|
-| `acr`        | String  | Authentication Context Class Reference                             |
-| `nonce`      | String  | Cryptographic nonce for replay protection                          |
-| `sid`        | String  | Session ID – used for single sign\-out                             |
+| Claim       | Type    | Description                                                          |
+|-------------|---------|----------------------------------------------------------------------|
+| `auth_time` | Numeric | Time of user authentication                                          |
+| `amr`       | Array   | Authentication Methods References (e\.g\., \[`"pwd"`\], \[`"mfa"`\]) |
+| `acr`       | String  | Authentication Context Class Reference                               |
+| `nonce`     | String  | Cryptographic nonce for replay protection                            |
+| `sid`       | String  | Session ID – used for single sign\-out                               |
 
 ### Subject & Identity
 
-| Claim         | Type    | Description                                                        |
-|---------------|---------|--------------------------------------------------------------------|
-| `sub`         | String  | Subject – unique identifier for the token subject                  |
-| `oid`         | GUID    | Object ID – unique identifier for user or service principal        |
-| `tid`         | GUID    | Tenant ID – Azure AD directory identifier                          |
-| `home_oid`    | GUID    | Home Object ID – original object ID if guest user                  |
-| `upn`         | String  | User Principal Name – usually \[user@domain\.com\]\(mailto\:user@domain\.com\) |
-| `unique_name` | String  | Preferred username                                                 |
-| `email`       | String  | User’s email address                                               |
-| `name`        | String  | Display name                                                       |
-| `given_name`  | String  | Given name                                                         |
-| `family_name` | String  | Surname                                                            |
-| `idp`         | String  | Identity Provider – origin of identity \(e\.g\., AzureAD\)         |
+| Claim         | Type   | Description                                                                    |
+|---------------|--------|--------------------------------------------------------------------------------|
+| `sub`         | String | Subject – unique identifier for the token subject                              |
+| `oid`         | GUID   | Object ID – unique identifier for user or service principal                    |
+| `tid`         | GUID   | Tenant ID – Azure AD directory identifier                                      |
+| `home_oid`    | GUID   | Home Object ID – original object ID if guest user                              |
+| `upn`         | String | User Principal Name – usually \[user@domain\.com\]\(mailto\:user@domain\.com\) |
+| `unique_name` | String | Preferred username                                                             |
+| `email`       | String | User’s email address                                                           |
+| `name`        | String | Display name                                                                   |
+| `given_name`  | String | Given name                                                                     |
+| `family_name` | String | Surname                                                                        |
+| `idp`         | String | Identity Provider – origin of identity \(e\.g\., AzureAD\)                     |
 
 ### Application & Permissions
 
@@ -152,10 +152,10 @@ Azure AD issues JSON Web Tokens (JWT) containing a variety of claims. Below is a
 
 ### Token Integrity
 
-| Claim    | Type   | Description                                                        |
-|----------|--------|--------------------------------------------------------------------|
-| `at_hash`| String | Access Token Hash – for verifying integrity in ID tokens           |
-| `c_hash` | String | Code Hash – for verifying integrity in ID tokens                   |
+| Claim     | Type   | Description                                              |
+|-----------|--------|----------------------------------------------------------|
+| `at_hash` | String | Access Token Hash – for verifying integrity in ID tokens |
+| `c_hash`  | String | Code Hash – for verifying integrity in ID tokens         |
 
 ### Azure AD–Specific & Optional
 
@@ -232,7 +232,7 @@ az ad policy token-lifetime update --id <policy-id> --access-token-life-time 01:
 | Service Principals | ✅      | ✅        | ✅          | ✅          | ✅ (appRoles)        |
 | Directory Roles| ✅          | ✅        | ✅          | ✅          | ✅ (to users/groups)|
 
-# User Management (`/users`) fileciteturn0file2
+# User Management (`/users`)
 
 | Action                        | Endpoint                                    | Description                                |
 |-------------------------------|---------------------------------------------|--------------------------------------------|
@@ -244,7 +244,7 @@ az ad policy token-lifetime update --id <policy-id> --access-token-life-time 01:
 | Revoke sign-in sessions       | `POST /users/{id}/revokeSignInSessions`     | Invalidate user sessions                   |
 | Reset user password           | `POST /users/{id}/authentication/passwordMethods/{method-id}/resetPassword` | Reset credential method             |
 
-# Group Management (`/groups`) fileciteturn0file1
+# Group Management (`/groups`)
 
 | Action                     | Endpoint                                        | Description                           |
 |----------------------------|-------------------------------------------------|---------------------------------------|
@@ -257,7 +257,7 @@ az ad policy token-lifetime update --id <policy-id> --access-token-life-time 01:
 | Remove member              | `DELETE /groups/{id}/members/{member-id}/$ref`  | Remove from group                     |
 | List transitive members    | `GET /groups/{id}/transitiveMembers`            | Recursive membership                   |
 
-# Application Management (`/applications`) fileciteturn0file0
+# Application Management (`/applications`)
 
 | Action                       | Endpoint                                    | Description                              |
 |------------------------------|---------------------------------------------|------------------------------------------|
