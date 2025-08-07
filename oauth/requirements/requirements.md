@@ -11,15 +11,16 @@
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
 * 5 [Identity Providers](#identity-providers)
-    * 5.1 [Azure](#azure)
-        * 5.1.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
-            * 5.1.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 5.2 [Keycloak](#keycloak)
-        * 5.2.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.2.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
-    * 5.3 [Number of Identity Providers](#number-of-identity-providers)
-    * 5.4 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
-        * 5.4.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.1 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
+        * 5.1.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
+    * 5.2 [Changing Identity Providers](#changing-identity-providers)
+        * 5.2.1 [RQ.SRS-042.OAuth.IdentityProviders.Change](#rqsrs-042oauthidentityproviderschange)
+    * 5.3 [Azure](#azure)
+        * 5.3.1 [Access Token Processors For Azure](#access-token-processors-for-azure)
+            * 5.3.1.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
+    * 5.4 [Keycloak](#keycloak)
+        * 5.4.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+            * 5.4.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -33,6 +34,7 @@
                 * 7.2.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
                 * 7.2.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
                 * 7.2.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 7.2.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
             * 7.2.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
                 * 7.2.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
                 * 7.2.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
@@ -45,16 +47,26 @@
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-        * 7.3.2 [User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names](#user-has-permission-to-view-groups-in-identity-provider-and-clickhouse-has-roles-with-the-same-group-names)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.3 [User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse](#user-can-view-groups-in-identity-provider-but-there-are-no-matching-roles-in-clickhouse)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.3.4 [User Does Not Have Permission To View Their Groups in Identity Provider](#user-does-not-have-permission-to-view-their-groups-in-identity-provider)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.5 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.3.6 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+        * 7.3.2 [User in Multiple Groups](#user-in-multiple-groups)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+        * 7.3.3 [Overlapping Users Across Groups](#overlapping-users-across-groups)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+        * 7.3.4 [No Groups in Identity Provider](#no-groups-in-identity-provider)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+        * 7.3.5 [Subgroup Memberships](#subgroup-memberships)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+        * 7.3.6 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.3.7 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.8 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.9 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.10 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.11 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
         * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
         * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
@@ -73,14 +85,21 @@
     * 7.6 [Caching](#caching)
         * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
         * 7.6.2 [Disable Caching](#disable-caching)
-            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcacheevictionnocache)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
         * 7.6.3 [Cache Eviction](#cache-eviction)
             * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
-                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcacheevictioncachelifetime)
+                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
             * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcacheevictionmaxcachesize)
+                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
             * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
-                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcacheevictionpolicy)
+                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+    * 7.7 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
+        * 7.7.1 [Authentication and Login](#authentication-and-login)
+            * 7.7.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+            * 7.7.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+        * 7.7.2 [Session Management](#session-management)
+            * 7.7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+            * 7.7.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -197,6 +216,21 @@ To authenticate with OAuth, grafana user must obtain an access token from the id
 
 - Azure Active Directory
 - Google Identity
+- Keycloak
+
+### Number of Identity Providers That Can Be Used Concurrently
+
+#### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
+
+### Changing Identity Providers
+
+#### RQ.SRS-042.OAuth.IdentityProviders.Change
+version: 1.0
+
+[ClickHouse] SHALL allow changing the identity provider by updating the `token_processors` section in the `config.xml` file. After changing the identity provider, [ClickHouse] SHALL require a restart to apply the new configuration.
 
 ### Azure
 
@@ -249,16 +283,6 @@ Example,
 </clickhouse>
 ```
 
-
-### Number of Identity Providers
-
-### Number of Identity Providers That Can Be Used Concurrently
-
-#### RQ.SRS-042.OAuth.IdentityProviders.Concurrent
-version: 1.0
-
-[ClickHouse] SHALL support the use of only one identity provider at a time for OAuth 2.0 authentication. This means that all access tokens must be issued by the same identity provider configured in the `token_processors` section of `config.xml`.
-
 ## Setting Up OAuth Authentication
 
 ### Credentials
@@ -271,7 +295,7 @@ version: 1.0
 The values SHALL be stored inside the `.env` file which can be generated as:
 
 ```bash
-printf "CLIENT_ID=<Client ID (Application ID)>\nTENANT_ID=<Tenant ID>\nCLIENT_SECRET=<Client Secret>\n" > .env
+printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>ClientnCLIENT_SECRET=<Client Secret>Clientn" > .env
 ```
 
 ## Accessing ClickHouse from Grafana
@@ -343,6 +367,13 @@ version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries
+version: 1.0
+
+[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same. 
+
+For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.
+
 ##### Missing Configuration in User Directories
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors
@@ -392,25 +423,69 @@ version: 1.0
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL execute queries based on the roles assigned to the user in the `users_directories` section. The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
+if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in 
+ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
+
+The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
-#### User Has Permission To View Groups in Identity Provider and ClickHouse Has Roles With the Same Group Names
+#### User in Multiple Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
+version: 1.0
+
+When a user belongs to multiple groups in the IdP, [ClickHouse] SHALL combine all roles that match these group names.
+The user SHALL inherit the union of all permissions from these roles.
+
+#### Overlapping Users Across Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
+version: 1.0
+
+When multiple groups in the IdP contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
+
+#### No Groups in Identity Provider
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
+version: 1.0
+
+When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
+[ClickHouse] SHALL assign only the default role if it is specified in the `<roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+
+#### Subgroup Memberships
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
+version: 1.0
+
+When a user belongs to subgroups in the IdP, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
+
+#### Dynamic Group Membership Updates
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
+version: 1.0
+
+[ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.
+Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
+
+#### IdP Group Names Match Roles in ClickHouse
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
-#### User Can View Groups in Identity Provider but There Are No Matching Roles in ClickHouse
+#### No Matching Roles in ClickHouse
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
-#### User Does Not Have Permission To View Their Groups in Identity Provider
+#### User Cannot View Groups in IdP
 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
@@ -555,7 +630,7 @@ In this case the cache will be valid for 60 seconds. After this period.
 
 #### Disable Caching
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.NoCache
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache
 version: 1.0
 
 If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
@@ -564,24 +639,59 @@ If the value of `cache_lifetime` is `0` in the `token_processors` configuration,
 
 ##### Cache Lifetime
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.CacheLifetime
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime
 version: 1.0
 
 [ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
 
 ##### Exceeding Max Cache Size
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.MaxCacheSize
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize
 version: 1.0
 
 [ClickHouse] SHALL limit the maximum size of the cache for access tokens. If the cache exceeds this size, [ClickHouse] SHALL evict the oldest tokens to make room for new ones.
 
 ##### Cache Eviction Policy
 
-###### RQ.SRS-042.OAuth.Grafana.Authentication.CacheEviction.Policy
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy
 version: 1.0
 
-[ClickHouse] SHALL use a Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
+[ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
+
+### Actions Performed in ClickHouse After Token Validation
+
+#### Authentication and Login
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication
+version: 1.0
+
+[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via `HTTP` or `TCP` connection.
+
+For example,
+
+```bash
+curl 'http://localhost:8080/?' Client
+ -H 'Authorization: Bearer <TOKEN>' Client
+ -H 'Content type: text/plain;charset=UTF-8' Client
+ --data-raw 'SELECT current_user()'
+```
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client
+version: 1.0
+
+[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via the `clickhouse client --jwt <token>` command.
+
+#### Session Management
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement
+version: 1.0
+
+[ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken
+version: 1.0
+
+[ClickHouse] SHALL support refreshing user sessions using a refresh token if the identity provider supports it. If a refresh token is provided, [ClickHouse] SHALL use it to obtain a new access token without requiring the user to log in again.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
