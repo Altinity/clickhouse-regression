@@ -65,23 +65,27 @@ def get_cached_build_url(workflow_config_file, s3_base_url):
         workflow_config = json.load(f)
 
     if ARCH == "x86_64":
-        build_name = "Build (amd_release)"
+        build_arch = "amd"
     elif ARCH == "aarch64":
-        build_name = "Build (arm_release)"
+        build_arch = "arm"
     else:
         raise Exception("Only x86_64 and ARM are supported.")
 
-    cache_details = workflow_config["cache_artifacts"].get(build_name)
-    if cache_details is None or cache_details["type"] != "success":
-        return None
+    for build_type in ["release", "binary"]:
+        cache_details = workflow_config["cache_artifacts"].get(
+            f"Build ({build_arch}_{build_type})"
+        )
+        if cache_details is None or cache_details["type"] != "success":
+            continue
 
-    return get_build_url(
-        s3_base_url,
-        cache_details["pr_number"],
-        cache_details["branch"],
-        cache_details["sha"],
-    )
+        return get_build_url(
+            s3_base_url,
+            cache_details["pr_number"],
+            cache_details["branch"],
+            cache_details["sha"],
+        )
 
+    return None
 
 if __name__ == "__main__":
     args = argparser().parse_args()
