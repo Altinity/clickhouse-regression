@@ -355,10 +355,41 @@ RQ_SRS_042_OAuth_Azure_Actions_AdminConsentRemoved = Requirement(
         "If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.\n"
         "\n"
         "```bash\n"
+        'curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \\\n'
+        '    -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
     num="7.3.3.2",
+)
+
+RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the client secret for the application is rotated in Azure AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.\n"
+        "\n"
+        "```bash\n"
+        'curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassword" \\\n'
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "passwordCredential": {\n'
+        '      "displayName": "New-Secret"\n'
+        "    }\n"
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.3.3.3",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked = Requirement(
@@ -1364,8 +1395,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken =
     num="7.6.5.2",
 )
 
-This_action_is_typically_performed_in_the_Azure_Portal_ = Specification(
-    name="This action is typically performed in the Azure Portal.",
+SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
+    name="SRS-042 OAuth Authentication in ClickHouse",
     description=None,
     author=None,
     date=None,
@@ -1802,6 +1833,7 @@ This_action_is_typically_performed_in_the_Azure_Portal_ = Specification(
         RQ_SRS_042_OAuth_Azure_Actions_GroupDeleted,
         RQ_SRS_042_OAuth_Azure_Actions_ApplicationDisabled,
         RQ_SRS_042_OAuth_Azure_Actions_AdminConsentRemoved,
+        RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated,
         RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked,
         RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired,
         RQ_SRS_042_OAuth_Grafana_Authentication_ForwardOAuthIdentity,
@@ -2330,8 +2362,6 @@ version: 1.0
 If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
 
 ```bash
-# This action is typically performed in the Azure Portal.
-# It can be automated by removing the specific application role assignment.
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \
     -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
