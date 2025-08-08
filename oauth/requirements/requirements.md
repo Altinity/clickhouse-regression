@@ -366,20 +366,52 @@ version: 1.0
 
 When a user is disabled in Azure AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
 
+```bash
+curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountEnabled": false
+  }'
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDeleted
 version: 1.0
 
 When a user is permanently deleted from Azure AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
+
+```bash
+curl -s -X DELETE "https://graph.microsoft.com/v1.0/users/{user-id}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated
 version: 1.0
 
 When a user's attributes (such as `UPN`, `email`, or `name`) are updated in Azure AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
 
+```bash
+curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "displayName": "New Name"
+  }'
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset
 version: 1.0
 
 When a user's password is reset in Azure AD, [ClickHouse] SHALL continue to validate access tokens without interruption, as password changes do not invalidate existing tokens.
+
+```bash
+curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication/passwordMethods/{method-id}/resetPassword" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "newPassword": "new-password"
+  }'
+```
 
 #### Group and Role Membership
 
@@ -388,15 +420,34 @@ version: 1.0
 
 When a user is added to a group in Azure AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
 
+```bash
+curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "@odata.id": "https://graph.microsoft.com/v1.0/directoryObjects/{user-id}"
+  }'
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup
 version: 1.0
 
 When a user is removed from a group in Azure AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
 
+```bash
+curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{user-id}/$ref" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted
 version: 1.0
 
 When a group that is mapped to a [ClickHouse] role is deleted in Azure AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
+
+```bash
+curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
 
 #### Application and Consent
 
@@ -405,15 +456,42 @@ version: 1.0
 
 When the client application (service principal) used for OAuth integration is disabled in Azure AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.
 
+```bash
+curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountEnabled": false
+  }'
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved
 version: 1.0
 
 If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
 
+```bash
+# This action is typically performed in the Azure Portal.
+# It can be automated by removing the specific application role assignment.
+curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \
+    -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated
 version: 1.0
 
 When the client secret for the application is rotated in Azure AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.
+
+```bash
+curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassword" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "passwordCredential": {
+      "displayName": "New-Secret"
+    }
+  }'
+```
 
 #### Token and Session Management
 
@@ -422,10 +500,29 @@ version: 1.0
 
 When a user's sign-in sessions are revoked in Azure AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
 
+```bash
+curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSessions" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d ''
+```
+
 ##### RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired
 version: 1.0
 
 When a refresh token expires as per the policy in Azure AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
+
+```bash
+curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d 'client_id={client-id}' \
+  -d 'client_secret={client-secret}' \
+  -d 'grant_type=refresh_token' \
+  -d 'refresh_token={expired-refresh-token}'
+```
+
+> [!NOTE]
+> This is a policy-based action in Azure AD. A new access token request with an expired refresh token will fail.
 
 ### RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity
 version: 1.0
