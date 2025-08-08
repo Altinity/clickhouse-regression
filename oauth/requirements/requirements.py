@@ -142,8 +142,8 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
     num="7.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_UserGroups = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups",
     version="1.0",
     priority=None,
     group=None,
@@ -171,8 +171,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_UserGroups = Requirement
     num="7.3.1.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles",
     version="1.0",
     priority=None,
     group=None,
@@ -195,8 +195,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
     num="7.3.2.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering",
     version="1.0",
     priority=None,
     group=None,
@@ -237,8 +237,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
     num="7.3.3.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_MultipleGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups",
     version="1.0",
     priority=None,
     group=None,
@@ -254,8 +254,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
     num="7.3.4.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_OverlappingUsers = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers",
     version="1.0",
     priority=None,
     group=None,
@@ -271,8 +271,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement
     num="7.3.5.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups",
     version="1.0",
     priority=None,
     group=None,
@@ -288,8 +288,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
     num="7.3.6.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SubgroupMemberships = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships",
     version="1.0",
     priority=None,
     group=None,
@@ -304,8 +304,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirem
     num="7.3.7.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles",
     version="1.0",
     priority=None,
     group=None,
@@ -321,8 +321,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Re
     num="7.3.8.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SameName = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName",
     version="1.0",
     priority=None,
     group=None,
@@ -337,8 +337,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
     num="7.3.9.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles",
     version="1.0",
     priority=None,
     group=None,
@@ -353,8 +353,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
     num="7.3.10.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups",
     version="1.0",
     priority=None,
     group=None,
@@ -369,8 +369,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Req
     num="7.3.11.1",
 )
 
-RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
-    name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
+RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoDefaultRole = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole",
     version="1.0",
     priority=None,
     group=None,
@@ -1035,6 +1035,267 @@ RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors = Requirement(
     num="8.2.1",
 )
 
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support user groups defined in Keycloak for role-based access control. In order to create a user group in Keycloak, you must obtain an access token with the necessary permissions to create groups.\n"
+        "\n"
+        "```bash\n"
+        "curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/groups' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "name": "clickhouse-admin",\n'
+        '    "attributes": {\n'
+        '      "description": ["Users with administrative access to ClickHouse"]\n'
+        "    }\n"
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.1.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles \n"
+        "assigned to the user in the `users_directories` section. Role mapping is based on the role name: \n"
+        "if a user has a group or permission in Keycloak (or another IdP) and there is a role with the same name in\n"
+        "ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.\n"
+        "\n"
+        "The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.2.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_GroupFiltering = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <user_directories>\n"
+        "        <token>\n"
+        "            <processor>keycloak_processor</processor>\n"
+        "            <common_roles>\n"
+        "                <token_test_role_1 />\n"
+        "            </common_roles>\n"
+        "            <roles_filter>\n"
+        "                \\bclickhouse-[a-zA-Z0-9]+\\b\n"
+        "            </roles_filter>\n"
+        "        </token>\n"
+        "    </user_directories>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+        "The regex pattern `\\bclickhouse-[a-zA-Z0-9]+\\b` filters Keycloak group names to only match those that:\n"
+        "\n"
+        '* Begin with exactly "clickhouse-"\n'
+        "* Are followed by one or more alphanumeric characters\n"
+        "* Are complete words (not parts of larger words)\n"
+        "\n"
+        'This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.\n'
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.3.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_MultipleGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user belongs to multiple groups in the `Keycloak`, [ClickHouse] SHALL combine all roles that match these group names.\n"
+        "The user SHALL inherit the union of all permissions from these roles.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.4.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_OverlappingUsers = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When multiple groups in the `Keycloak` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
+        "The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.5.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a grafana user is authenticated via OAuth and Keycloak does not return any groups for the user,\n"
+        "[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.6.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SubgroupMemberships = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user belongs to subgroups in the `Keycloak`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.7.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reflect changes in a user's group memberships from the `Keycloak` dynamically during the next token validation or cache refresh.\n"
+        "Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.8.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SameName = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.9.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingRoles = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.10.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.11.1",
+)
+
+RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoDefaultRole = Requirement(
+    name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.\n"
+        "\n"
+        "The role configuration example,\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <token_processors>\n"
+        "        <keycloak_processor>\n"
+        "            <provider>OpenID</provider>\n"
+        "            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>\n"
+        "            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>\n"
+        "            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>\n"
+        "        </keycloak_processor>\n"
+        "    </token_processors>\n"
+        "    <user_directories>\n"
+        "        <token>\n"
+        "            <processor>keycloak_processor</processor>\n"
+        "            <common_roles>\n"
+        "            </common_roles>\n"
+        "        </token>\n"
+        "    </user_directories>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.12.1",
+)
+
 RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled = Requirement(
     name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
     version="1.0",
@@ -1057,7 +1318,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.1.1",
+    num="8.4.1.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted = Requirement(
@@ -1078,7 +1339,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.1.2",
+    num="8.4.1.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated = Requirement(
@@ -1104,7 +1365,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.1.3",
+    num="8.4.1.3",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup = Requirement(
@@ -1125,7 +1386,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.2.1",
+    num="8.4.2.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup = Requirement(
@@ -1146,7 +1407,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.2.2",
+    num="8.4.2.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted = Requirement(
@@ -1167,7 +1428,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.2.3",
+    num="8.4.2.3",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled = Requirement(
@@ -1192,7 +1453,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.3.1",
+    num="8.4.3.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked = Requirement(
@@ -1213,7 +1474,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.3.2",
+    num="8.4.3.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked = Requirement(
@@ -1234,7 +1495,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.4.1",
+    num="8.4.4.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked = Requirement(
@@ -1258,7 +1519,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.4.2",
+    num="8.4.4.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated = Requirement(
@@ -1279,7 +1540,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.4.3",
+    num="8.4.4.3",
 )
 
 RQ_SRS_042_OAuth_StaticKey_AccessTokenProcessors = Requirement(
@@ -1858,17 +2119,17 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="User Groups in Azure", level=2, num="7.3"),
         Heading(name="Setting up User Groups in Azure", level=3, num="7.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups",
             level=4,
             num="7.3.1.1",
         ),
         Heading(
-            name="Query Execution Based on User Roles in ClickHouse",
+            name="Query Execution Based on User Roles in ClickHouse with Azure",
             level=3,
             num="7.3.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles",
             level=4,
             num="7.3.2.1",
         ),
@@ -1876,13 +2137,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="Filtering Azure Groups for Role Assignment", level=3, num="7.3.3"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering",
             level=4,
             num="7.3.3.1",
         ),
-        Heading(name="User in Multiple Groups", level=3, num="7.3.4"),
+        Heading(name="User in Multiple Azure Groups", level=3, num="7.3.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups",
             level=4,
             num="7.3.4.1",
         ),
@@ -1892,25 +2153,29 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             num="7.3.5",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers",
             level=4,
             num="7.3.5.1",
         ),
         Heading(name="No Azure Groups Returned for User", level=3, num="7.3.6"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups",
             level=4,
             num="7.3.6.1",
         ),
         Heading(name="Azure Subgroup Memberships Not Considered", level=3, num="7.3.7"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships",
             level=4,
             num="7.3.7.1",
         ),
-        Heading(name="Dynamic Group Membership Updates", level=3, num="7.3.8"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
+            name="Dynamic Group Membership Updates For Azure Users",
+            level=3,
+            num="7.3.8",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles",
             level=4,
             num="7.3.8.1",
         ),
@@ -1918,29 +2183,33 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="Azure Group Names Match Roles in ClickHouse", level=3, num="7.3.9"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName",
             level=4,
             num="7.3.9.1",
         ),
-        Heading(name="No Matching Roles in ClickHouse", level=3, num="7.3.10"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
+            name="No Matching Roles in ClickHouse for Azure Groups",
+            level=3,
+            num="7.3.10",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles",
             level=4,
             num="7.3.10.1",
         ),
         Heading(name="User Cannot View Groups in Azure", level=3, num="7.3.11"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups",
             level=4,
             num="7.3.11.1",
         ),
         Heading(
-            name="In ClickHouse There Is No Default Role Specified",
+            name="In ClickHouse There Is No Default Role Specified for Azure Users",
             level=3,
             num="7.3.12",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
+            name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole",
             level=4,
             num="7.3.12.1",
         ),
@@ -2102,63 +2371,160 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors", level=3, num="8.2.1"
         ),
-        Heading(name="Keycloak Identity Management Actions", level=2, num="8.3"),
-        Heading(name="Keycloak User State Changes", level=3, num="8.3.1"),
+        Heading(name="User Groups in Keycloak", level=2, num="8.3"),
+        Heading(name="Setting up User Groups in Keycloak", level=3, num="8.3.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups",
             level=4,
             num="8.3.1.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted", level=4, num="8.3.1.2"
+            name="Query Execution Based on User Roles in ClickHouse with Keycloak",
+            level=3,
+            num="8.3.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated",
-            level=4,
-            num="8.3.1.3",
-        ),
-        Heading(name="Keycloak Group and Role Membership", level=3, num="8.3.2"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup",
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles",
             level=4,
             num="8.3.2.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup",
-            level=4,
-            num="8.3.2.2",
+            name="Filtering Keycloak Groups for Role Assignment", level=3, num="8.3.3"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted",
-            level=4,
-            num="8.3.2.3",
-        ),
-        Heading(name="Keycloak Application and Consent", level=3, num="8.3.3"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled",
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering",
             level=4,
             num="8.3.3.1",
         ),
+        Heading(name="User in Multiple Keycloak Groups", level=3, num="8.3.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked",
-            level=4,
-            num="8.3.3.2",
-        ),
-        Heading(name="Keycloak Token and Session Management", level=3, num="8.3.4"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked",
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups",
             level=4,
             num="8.3.4.1",
         ),
         Heading(
+            name="No Duplicate Role Assignments for Overlapping Keycloak Groups",
+            level=3,
+            num="8.3.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers",
+            level=4,
+            num="8.3.5.1",
+        ),
+        Heading(name="No Keycloak Groups Returned for User", level=3, num="8.3.6"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups",
+            level=4,
+            num="8.3.6.1",
+        ),
+        Heading(
+            name="Keycloak Subgroup Memberships Not Considered", level=3, num="8.3.7"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships",
+            level=4,
+            num="8.3.7.1",
+        ),
+        Heading(
+            name="Dynamic Group Membership Updates For Keycloak", level=3, num="8.3.8"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles",
+            level=4,
+            num="8.3.8.1",
+        ),
+        Heading(
+            name="Keycloak Group Names Match Roles in ClickHouse", level=3, num="8.3.9"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName",
+            level=4,
+            num="8.3.9.1",
+        ),
+        Heading(
+            name="No Matching Roles in ClickHouse for Keycloak Groups",
+            level=3,
+            num="8.3.10",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles",
+            level=4,
+            num="8.3.10.1",
+        ),
+        Heading(name="User Cannot View Groups in Keycloak", level=3, num="8.3.11"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups",
+            level=4,
+            num="8.3.11.1",
+        ),
+        Heading(
+            name="In ClickHouse There Is No Default Role Specified for Keycloak Users",
+            level=3,
+            num="8.3.12",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole",
+            level=4,
+            num="8.3.12.1",
+        ),
+        Heading(name="Keycloak Identity Management Actions", level=2, num="8.4"),
+        Heading(name="Keycloak User State Changes", level=3, num="8.4.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
+            level=4,
+            num="8.4.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted", level=4, num="8.4.1.2"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated",
+            level=4,
+            num="8.4.1.3",
+        ),
+        Heading(name="Keycloak Group and Role Membership", level=3, num="8.4.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup",
+            level=4,
+            num="8.4.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup",
+            level=4,
+            num="8.4.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted",
+            level=4,
+            num="8.4.2.3",
+        ),
+        Heading(name="Keycloak Application and Consent", level=3, num="8.4.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled",
+            level=4,
+            num="8.4.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked",
+            level=4,
+            num="8.4.3.2",
+        ),
+        Heading(name="Keycloak Token and Session Management", level=3, num="8.4.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked",
+            level=4,
+            num="8.4.4.1",
+        ),
+        Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked",
             level=4,
-            num="8.3.4.2",
+            num="8.4.4.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated",
             level=4,
-            num="8.3.4.3",
+            num="8.4.4.3",
         ),
         Heading(name="Static Key", level=1, num="9"),
         Heading(name="Access Token Processors For Static Key", level=2, num="9.1"),
@@ -2310,18 +2676,18 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Credentials,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_UserGroups,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups,
-        RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_MultipleGroups,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_OverlappingUsers,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoGroups,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SubgroupMemberships,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingClickHouseRoles,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SameName,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingRoles,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoPermissionToViewGroups,
+        RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoDefaultRole,
         RQ_SRS_042_OAuth_Azure_Actions_UserDisabled,
         RQ_SRS_042_OAuth_Azure_Actions_UserDeleted,
         RQ_SRS_042_OAuth_Azure_Actions_UserAttributesUpdated,
@@ -2352,6 +2718,18 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
         RQ_SRS_042_OAuth_Keycloak_GetAccessToken,
         RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_GroupFiltering,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_MultipleGroups,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_OverlappingUsers,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoGroups,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SubgroupMemberships,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SameName,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingRoles,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups,
+        RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoDefaultRole,
         RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled,
         RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted,
         RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated,
@@ -2420,29 +2798,29 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
     * 7.3 [User Groups in Azure](#user-groups-in-azure)
         * 7.3.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
-            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
-        * 7.3.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
+            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaazureauthenticationuserdirectoriesusergroups)
+        * 7.3.2 [Query Execution Based on User Roles in ClickHouse with Azure](#query-execution-based-on-user-roles-in-clickhouse-with-azure)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles](#rqsrs-042oauthgrafanaazureauthenticationuserroles)
         * 7.3.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
-        * 7.3.4 [User in Multiple Groups](#user-in-multiple-groups)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaazureauthenticationuserrolesgroupfiltering)
+        * 7.3.4 [User in Multiple Azure Groups](#user-in-multiple-azure-groups)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesmultiplegroups)
         * 7.3.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaazureauthenticationuserrolesoverlappingusers)
         * 7.3.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnogroups)
         * 7.3.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
-            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
-        * 7.3.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaazureauthenticationuserrolessubgroupmemberships)
+        * 7.3.8 [Dynamic Group Membership Updates For Azure Users](#dynamic-group-membership-updates-for-azure-users)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingclickhouseroles)
         * 7.3.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
-            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.10 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolessamename)
+        * 7.3.10 [No Matching Roles in ClickHouse for Azure Groups](#no-matching-roles-in-clickhouse-for-azure-groups)
+            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingroles)
         * 7.3.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
-            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.12 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.12 [In ClickHouse There Is No Default Role Specified for Azure Users](#in-clickhouse-there-is-no-default-role-specified-for-azure-users)
+            * 7.3.12.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnodefaultrole)
     * 7.4 [Azure Identity Management Actions](#azure-identity-management-actions)
         * 7.4.1 [Azure User State Changes](#azure-user-state-changes)
             * 7.4.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
@@ -2485,22 +2863,47 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
     * 8.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
         * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors](#rqsrs-042oauthkeycloakaccesstokenprocessors)
-    * 8.3 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
-        * 8.3.1 [Keycloak User State Changes](#keycloak-user-state-changes)
-            * 8.3.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
-            * 8.3.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
-            * 8.3.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
-        * 8.3.2 [Keycloak Group and Role Membership](#keycloak-group-and-role-membership)
-            * 8.3.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
-            * 8.3.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
-            * 8.3.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
-        * 8.3.3 [Keycloak Application and Consent](#keycloak-application-and-consent)
-            * 8.3.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
-            * 8.3.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
-        * 8.3.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
-            * 8.3.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
-            * 8.3.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
-            * 8.3.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
+    * 8.3 [User Groups in Keycloak](#user-groups-in-keycloak)
+        * 8.3.1 [Setting up User Groups in Keycloak](#setting-up-user-groups-in-keycloak)
+            * 8.3.1.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserdirectoriesusergroups)
+        * 8.3.2 [Query Execution Based on User Roles in ClickHouse with Keycloak](#query-execution-based-on-user-roles-in-clickhouse-with-keycloak)
+            * 8.3.2.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserroles)
+        * 8.3.3 [Filtering Keycloak Groups for Role Assignment](#filtering-keycloak-groups-for-role-assignment)
+            * 8.3.3.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesgroupfiltering)
+        * 8.3.4 [User in Multiple Keycloak Groups](#user-in-multiple-keycloak-groups)
+            * 8.3.4.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesmultiplegroups)
+        * 8.3.5 [No Duplicate Role Assignments for Overlapping Keycloak Groups](#no-duplicate-role-assignments-for-overlapping-keycloak-groups)
+            * 8.3.5.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesoverlappingusers)
+        * 8.3.6 [No Keycloak Groups Returned for User](#no-keycloak-groups-returned-for-user)
+            * 8.3.6.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnogroups)
+        * 8.3.7 [Keycloak Subgroup Memberships Not Considered](#keycloak-subgroup-memberships-not-considered)
+            * 8.3.7.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessubgroupmemberships)
+        * 8.3.8 [Dynamic Group Membership Updates For Keycloak](#dynamic-group-membership-updates-for-keycloak)
+            * 8.3.8.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingclickhouseroles)
+        * 8.3.9 [Keycloak Group Names Match Roles in ClickHouse](#keycloak-group-names-match-roles-in-clickhouse)
+            * 8.3.9.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessamename)
+        * 8.3.10 [No Matching Roles in ClickHouse for Keycloak Groups](#no-matching-roles-in-clickhouse-for-keycloak-groups)
+            * 8.3.10.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingroles)
+        * 8.3.11 [User Cannot View Groups in Keycloak](#user-cannot-view-groups-in-keycloak)
+            * 8.3.11.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnopermissiontoviewgroups)
+        * 8.3.12 [In ClickHouse There Is No Default Role Specified for Keycloak Users](#in-clickhouse-there-is-no-default-role-specified-for-keycloak-users)
+            * 8.3.12.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnodefaultrole)
+    * 8.4 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
+        * 8.4.1 [Keycloak User State Changes](#keycloak-user-state-changes)
+            * 8.4.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
+            * 8.4.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
+            * 8.4.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
+        * 8.4.2 [Keycloak Group and Role Membership](#keycloak-group-and-role-membership)
+            * 8.4.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
+            * 8.4.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
+            * 8.4.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
+        * 8.4.3 [Keycloak Application and Consent](#keycloak-application-and-consent)
+            * 8.4.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
+            * 8.4.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
+        * 8.4.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
+            * 8.4.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
+            * 8.4.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
+            * 8.4.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
 * 9 [Static Key](#static-key)
     * 9.1 [Access Token Processors For Static Key](#access-token-processors-for-static-key)
         * 9.1.1 [RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors](#rqsrs-042oauthstatickeyaccesstokenprocessors)
@@ -2767,7 +3170,7 @@ Basic structure:
 
 #### Setting up User Groups in Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups
 version: 1.0
 
 [ClickHouse] SHALL support user groups defined in Azure Active Directory (Azure AD) for role-based access control. In order to create a user group in Azure AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
@@ -2785,9 +3188,9 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
   }'
 ```
 
-#### Query Execution Based on User Roles in ClickHouse
+#### Query Execution Based on User Roles in ClickHouse with Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles
 version: 1.0
 
 When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
@@ -2802,7 +3205,7 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 
 #### Filtering Azure Groups for Role Assignment
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
 When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
@@ -2833,9 +3236,9 @@ The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Azure AD group names to 
 
 This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
 
-#### User in Multiple Groups
+#### User in Multiple Azure Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups
 version: 1.0
 
 When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
@@ -2843,7 +3246,7 @@ The user SHALL inherit the union of all permissions from these roles.
 
 #### No Duplicate Role Assignments for Overlapping Azure Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers
 version: 1.0
 
 When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
@@ -2851,7 +3254,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 
 #### No Azure Groups Returned for User
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups
 version: 1.0
 
 When a grafana user is authenticated via OAuth and Azure does not return any groups for the user,
@@ -2859,14 +3262,14 @@ When a grafana user is authenticated via OAuth and Azure does not return any gro
 
 #### Azure Subgroup Memberships Not Considered
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
 
 When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
-#### Dynamic Group Membership Updates
+#### Dynamic Group Membership Updates For Azure Users
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles
 version: 1.0
 
 [ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.
@@ -2874,28 +3277,28 @@ Permissions SHALL update automatically without requiring ClickHouse restart or m
 
 #### Azure Group Names Match Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
-#### No Matching Roles in ClickHouse
+#### No Matching Roles in ClickHouse for Azure Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
 #### User Cannot View Groups in Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
 
 When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
 
-#### In ClickHouse There Is No Default Role Specified
+#### In ClickHouse There Is No Default Role Specified for Azure Users
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
+##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
 When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
@@ -3249,6 +3652,161 @@ Basic structure:
             <token_cache_lifetime>60</token_cache_lifetime>
         </keycloak>
     </token_processors>
+</clickhouse>
+```
+
+### User Groups in Keycloak
+
+#### Setting up User Groups in Keycloak
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups
+version: 1.0
+
+[ClickHouse] SHALL support user groups defined in Keycloak for role-based access control. In order to create a user group in Keycloak, you must obtain an access token with the necessary permissions to create groups.
+
+```bash
+curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/groups' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "clickhouse-admin",
+    "attributes": {
+      "description": ["Users with administrative access to ClickHouse"]
+    }
+  }'
+```
+
+#### Query Execution Based on User Roles in ClickHouse with Keycloak
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles
+version: 1.0
+
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
+if a user has a group or permission in Keycloak (or another IdP) and there is a role with the same name in
+ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
+
+The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+
+#### Filtering Keycloak Groups for Role Assignment
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering
+version: 1.0
+
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+
+For example,
+
+```xml
+<clickhouse>
+    <user_directories>
+        <token>
+            <processor>keycloak_processor</processor>
+            <common_roles>
+                <token_test_role_1 />
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Keycloak group names to only match those that:
+
+* Begin with exactly "clickhouse-"
+* Are followed by one or more alphanumeric characters
+* Are complete words (not parts of larger words)
+
+This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
+
+#### User in Multiple Keycloak Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups
+version: 1.0
+
+When a user belongs to multiple groups in the `Keycloak`, [ClickHouse] SHALL combine all roles that match these group names.
+The user SHALL inherit the union of all permissions from these roles.
+
+#### No Duplicate Role Assignments for Overlapping Keycloak Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers
+version: 1.0
+
+When multiple groups in the `Keycloak` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
+
+#### No Keycloak Groups Returned for User
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups
+version: 1.0
+
+When a grafana user is authenticated via OAuth and Keycloak does not return any groups for the user,
+[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+
+#### Keycloak Subgroup Memberships Not Considered
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships
+version: 1.0
+
+When a user belongs to subgroups in the `Keycloak`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
+
+#### Dynamic Group Membership Updates For Keycloak
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles
+version: 1.0
+
+[ClickHouse] SHALL reflect changes in a user's group memberships from the `Keycloak` dynamically during the next token validation or cache refresh.
+Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
+
+#### Keycloak Group Names Match Roles in ClickHouse
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName
+version: 1.0
+
+When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
+
+#### No Matching Roles in ClickHouse for Keycloak Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles
+version: 1.0
+
+When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
+
+#### User Cannot View Groups in Keycloak
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups
+version: 1.0
+
+When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
+
+#### In ClickHouse There Is No Default Role Specified for Keycloak Users
+
+##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole
+version: 1.0
+
+When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
+
+The role configuration example,
+
+```xml
+<clickhouse>
+    <token_processors>
+        <keycloak_processor>
+            <provider>OpenID</provider>
+            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
+            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
+        </keycloak_processor>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>keycloak_processor</processor>
+            <common_roles>
+            </common_roles>
+        </token>
+    </user_directories>
 </clickhouse>
 ```
 
