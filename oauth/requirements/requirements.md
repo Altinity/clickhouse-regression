@@ -48,9 +48,9 @@
         * 7.4.2 [User Groups in Azure](#user-groups-in-azure)
             * 7.4.2.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
                 * 7.4.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
-            * 7.4.2.2 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
+            * 7.4.2.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
                 * 7.4.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-            * 7.4.2.3 [Group Filtering](#group-filtering)
+            * 7.4.2.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
                 * 7.4.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
             * 7.4.2.4 [User in Multiple Groups](#user-in-multiple-groups)
                 * 7.4.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
@@ -480,7 +480,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
   }'
 ```
 
-##### Query Execution Based on User Roles
+##### Query Execution Based on User Roles in ClickHouse
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
 version: 1.0
@@ -495,7 +495,7 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
 
-##### Group Filtering
+##### Filtering Azure Groups for Role Assignment
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
 version: 1.0
@@ -519,6 +519,14 @@ For example,
     </user_directories>
 </clickhouse>
 ```
+
+The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Azure AD group names to only match those that:
+
+* Begin with exactly "clickhouse-"
+* Are followed by one or more alphanumeric characters
+* Are complete words (not parts of larger words)
+
+This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
 
 ##### User in Multiple Groups
 
