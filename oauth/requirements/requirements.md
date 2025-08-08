@@ -146,6 +146,8 @@
 * 11 [Remote JWKS](#remote-jwks)
     * 11.1 [Access Token Processors For Remote JWKS](#access-token-processors-for-remote-jwks)
         * 11.1.1 [RQ.SRS-042.OAuth.RemoteJWKS.AccessTokenProcessors](#rqsrs-042oauthremotejwksaccesstokenprocessors)
+    * 11.2 [Setting up Remote JWKS](#setting-up-remote-jwks)
+        * 11.2.1 [RQ.SRS-042.OAuth.RemoteJWKS.Setup](#rqsrs-042oauthremotejwkssetup)
 * 12 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
     * 12.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
         * 12.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
@@ -1286,6 +1288,80 @@ version: 1.0
     </token_processors>
 </clickhouse>
 ```
+
+### Setting up Remote JWKS
+
+#### RQ.SRS-042.OAuth.RemoteJWKS.Setup
+version: 1.0
+
+[ClickHouse] SHALL support custom JWKS setup for services that need to issue their own JWT tokens without using a full Identity Provider.
+
+**Step A — Generate a signing key (RSA is the common choice):**
+
+```bash
+# RSA 2048 private key (PEM)
+openssl genrsa -out jwt-private.pem 2048
+
+# Public key from the private key
+openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
+```
+
+**Step B — Produce a JWKS from the public key:**
+
+A JWKS is a JSON document that includes your public key parameters. For RSA it looks like:
+
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "kid": "my-key-id-1",
+      "use": "sig",
+      "alg": "RS256",
+      "n": "<base64url-modulus>",
+      "e": "AQAB"
+    }
+  ]
+}
+```
+
+**Step C — Host the JWKS at a URL:**
+
+Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny Flask/FastAPI app). Example path:
+
+```
+https://auth.example.com/.well-known/jwks.json
+```
+
+**Step D — Configure ClickHouse to use it:**
+
+```xml
+<clickhouse>
+  <token_processors>
+    <my_service>
+      <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
+      <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+      <!-- Optional: claims / verifier_leeway -->
+    </my_service>
+  </token_processors>
+</clickhouse>
+```
+
+**Step E — Sign tokens with the private key:**
+
+Your token issuer must:
+
+* Sign with the matching private key (e.g., RS256)
+* Include the same `kid` in the JWT header as in your JWKS entry
+* (Optional) Include any claims you plan to enforce via ClickHouse's claims check
+
+**Important Notes:**
+
+* `kid` must match the `kid` you'll put in the JWT header when you sign tokens
+* `n` and `e` are the RSA public key params, base64url-encoded
+* You can generate that JSON with a tiny script using cryptography/pyjwt, or any JWK tool
+* The specifics aren't ClickHouse-specific; ClickHouse only needs the public JWKS
+* `jwks_uri`, `jwks_refresh_timeout`, `claims`, and `verifier_leeway` are exactly the supported params
 
 ## ClickHouse Actions After Token Validation
 
