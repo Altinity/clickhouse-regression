@@ -120,7 +120,6 @@
             * 7.6.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
         * 7.6.5 [Session Management](#session-management)
             * 7.6.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
-            * 7.6.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -964,11 +963,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.
-
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken
-version: 1.0
-
-[ClickHouse] SHALL support refreshing user sessions using a refresh token if the identity provider supports it. If a refresh token is provided, [ClickHouse] SHALL use it to obtain a new access token without requiring the user to log in again.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
