@@ -666,8 +666,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.1",
+    level=4,
+    num="7.4.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
@@ -682,8 +682,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.2",
+    level=4,
+    num="7.4.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requirement(
@@ -698,8 +698,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requireme
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.3",
+    level=4,
+    num="7.4.1.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requirement(
@@ -714,8 +714,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requireme
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.4",
+    level=4,
+    num="7.4.1.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Requirement(
@@ -730,8 +730,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Req
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.5",
+    level=4,
+    num="7.4.1.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
@@ -746,8 +746,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.6",
+    level=4,
+    num="7.4.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement(
@@ -762,8 +762,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.7",
+    level=4,
+    num="7.4.1.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement(
@@ -778,8 +778,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.8",
+    level=4,
+    num="7.4.1.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement(
@@ -794,8 +794,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.4.9",
+    level=4,
+    num="7.4.1.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
@@ -809,8 +809,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
         "[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].\n" "\n"
     ),
     link=None,
-    level=3,
-    num="7.5.1",
+    level=4,
+    num="7.4.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
@@ -825,8 +825,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.5.2",
+    level=4,
+    num="7.4.2.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirement(
@@ -841,8 +841,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirem
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.5.3",
+    level=4,
+    num="7.4.2.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
@@ -857,8 +857,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.5.4",
+    level=4,
+    num="7.4.2.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
@@ -898,8 +898,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="7.6.1",
+    level=4,
+    num="7.4.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirement(
@@ -914,8 +914,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirem
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.6.2.1",
+    level=5,
+    num="7.4.3.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Requirement(
@@ -931,7 +931,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Re
     ),
     link=None,
     level=5,
-    num="7.6.3.1.1",
+    num="7.4.3.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Requirement(
@@ -947,7 +947,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Req
     ),
     link=None,
     level=5,
-    num="7.6.3.2.1",
+    num="7.4.3.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requirement(
@@ -963,7 +963,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requireme
     ),
     link=None,
     level=5,
-    num="7.6.3.3.1",
+    num="7.4.3.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
@@ -988,7 +988,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
     ),
     link=None,
     level=4,
-    num="7.7.1.1",
+    num="7.4.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
@@ -1004,7 +1004,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirem
     ),
     link=None,
     level=4,
-    num="7.7.1.2",
+    num="7.4.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
@@ -1020,7 +1020,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
     ),
     link=None,
     level=4,
-    num="7.7.2.1",
+    num="7.4.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken = Requirement(
@@ -1040,7 +1040,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken =
     ),
     link=None,
     level=4,
-    num="7.7.2.2",
+    num="7.4.5.2",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -1265,128 +1265,125 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.3.3.1",
         ),
-        Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.4"),
+        Heading(name="ClickHouse Actions After Token Validation", level=2, num="7.4"),
+        Heading(name="Incorrect Requests to ClickHouse", level=3, num="7.4.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
-            level=3,
-            num="7.4.1",
+            level=4,
+            num="7.4.1.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
-            level=3,
-            num="7.4.2",
+            level=4,
+            num="7.4.1.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
-            level=3,
-            num="7.4.3",
+            level=4,
+            num="7.4.1.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
-            level=3,
-            num="7.4.4",
+            level=4,
+            num="7.4.1.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
-            level=3,
-            num="7.4.5",
+            level=4,
+            num="7.4.1.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
-            level=3,
-            num="7.4.6",
+            level=4,
+            num="7.4.1.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
-            level=3,
-            num="7.4.7",
+            level=4,
+            num="7.4.1.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
-            level=3,
-            num="7.4.8",
+            level=4,
+            num="7.4.1.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
-            level=3,
-            num="7.4.9",
+            level=4,
+            num="7.4.1.9",
         ),
-        Heading(name="Token Handling", level=2, num="7.5"),
+        Heading(name="Token Handling", level=3, num="7.4.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired",
-            level=3,
-            num="7.5.1",
+            level=4,
+            num="7.4.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect",
-            level=3,
-            num="7.5.2",
+            level=4,
+            num="7.4.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric",
-            level=3,
-            num="7.5.3",
+            level=4,
+            num="7.4.2.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString",
-            level=3,
-            num="7.5.4",
+            level=4,
+            num="7.4.2.4",
         ),
-        Heading(name="Caching", level=2, num="7.6"),
+        Heading(name="Caching", level=3, num="7.4.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="7.6.1"
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching",
+            level=4,
+            num="7.4.3.1",
         ),
-        Heading(name="Disable Caching", level=3, num="7.6.2"),
+        Heading(name="Disable Caching", level=4, num="7.4.3.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
-            level=4,
-            num="7.6.2.1",
+            level=5,
+            num="7.4.3.2.1",
         ),
-        Heading(name="Cache Eviction", level=3, num="7.6.3"),
-        Heading(name="Cache Lifetime", level=4, num="7.6.3.1"),
+        Heading(name="Cache Lifetime", level=4, num="7.4.3.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
             level=5,
-            num="7.6.3.1.1",
+            num="7.4.3.3.1",
         ),
-        Heading(name="Exceeding Max Cache Size", level=4, num="7.6.3.2"),
+        Heading(name="Exceeding Max Cache Size", level=4, num="7.4.3.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
             level=5,
-            num="7.6.3.2.1",
+            num="7.4.3.4.1",
         ),
-        Heading(name="Cache Eviction Policy", level=4, num="7.6.3.3"),
+        Heading(name="Cache Eviction Policy", level=4, num="7.4.3.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
             level=5,
-            num="7.6.3.3.1",
+            num="7.4.3.5.1",
         ),
-        Heading(
-            name="Actions Performed in ClickHouse After Token Validation",
-            level=2,
-            num="7.7",
-        ),
-        Heading(name="Authentication and Login", level=3, num="7.7.1"),
+        Heading(name="Authentication and Login", level=3, num="7.4.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
             level=4,
-            num="7.7.1.1",
+            num="7.4.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
             level=4,
-            num="7.7.1.2",
+            num="7.4.4.2",
         ),
-        Heading(name="Session Management", level=3, num="7.7.2"),
+        Heading(name="Session Management", level=3, num="7.4.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
             level=4,
-            num="7.7.2.1",
+            num="7.4.5.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken",
             level=4,
-            num="7.7.2.2",
+            num="7.4.5.2",
         ),
     ),
     requirements=(
@@ -1517,39 +1514,38 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.3.2.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
         * 7.3.3 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
             * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
-    * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
-        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
-        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
-        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
-        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
-        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
-        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
-        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
-        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
-    * 7.5 [Token Handling](#token-handling)
-        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
-        * 7.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
-        * 7.5.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
-        * 7.5.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
-    * 7.6 [Caching](#caching)
-        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
-        * 7.6.2 [Disable Caching](#disable-caching)
-            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
-        * 7.6.3 [Cache Eviction](#cache-eviction)
-            * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
-                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
-            * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
-            * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
-                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
-    * 7.7 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
-        * 7.7.1 [Authentication and Login](#authentication-and-login)
-            * 7.7.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
-            * 7.7.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
-        * 7.7.2 [Session Management](#session-management)
-            * 7.7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
-            * 7.7.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
+    * 7.4 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
+        * 7.4.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+            * 7.4.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
+            * 7.4.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
+            * 7.4.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
+            * 7.4.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
+            * 7.4.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
+            * 7.4.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
+            * 7.4.1.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
+            * 7.4.1.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
+            * 7.4.1.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
+        * 7.4.2 [Token Handling](#token-handling)
+            * 7.4.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
+            * 7.4.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
+            * 7.4.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
+            * 7.4.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
+        * 7.4.3 [Caching](#caching)
+            * 7.4.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
+            * 7.4.3.2 [Disable Caching](#disable-caching)
+                * 7.4.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
+            * 7.4.3.3 [Cache Lifetime](#cache-lifetime)
+                * 7.4.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
+            * 7.4.3.4 [Exceeding Max Cache Size](#exceeding-max-cache-size)
+                * 7.4.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
+            * 7.4.3.5 [Cache Eviction Policy](#cache-eviction-policy)
+                * 7.4.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+        * 7.4.4 [Authentication and Login](#authentication-and-login)
+            * 7.4.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+            * 7.4.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+        * 7.4.5 [Session Management](#session-management)
+            * 7.4.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+            * 7.4.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -2019,78 +2015,80 @@ version: 1.0
 
 When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
 
-### Incorrect Requests to ClickHouse
+### ClickHouse Actions After Token Validation
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests
+#### Incorrect Requests to ClickHouse
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests
 version: 1.0
 
 When [Grafana] makes requests to [ClickHouse] without a valid JWT token in the Authorization header, [ClickHouse] SHALL return an HTTP 401 Unauthorized response.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header
 version: 1.0
 
 [ClickHouse] SHALL reject requests that do not include the Authorization header with a valid JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `alg` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `typ` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a JWT token that has an invalid signature.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include incorrect or malformed body content.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `sub` value that does not match any user in [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `aud` value that does not match the expected audience for the JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp
+##### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
 
-### Token Handling
+#### Token Handling
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired
+##### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired
 version: 1.0
 
 [ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect
+##### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect
 version: 1.0
 
 [ClickHouse] SHALL reject JWT tokens that are malformed, have an invalid signature, or do not conform to the expected structure.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric
+##### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric
 version: 1.0
 
 [ClickHouse] SHALL reject JWT tokens that contain non-alphanumeric characters in the header or payload sections, as these are not valid according to the JWT specification.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString
+##### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString
 version: 1.0
 
 [ClickHouse] SHALL reject empty string values in the Authorization header or any other part of the request that expects a JWT token. An empty string is not a valid JWT and SHALL not be accepted.
 
-### Caching
+#### Caching
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.Caching
+##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching
 version: 1.0
 
 [ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.
@@ -2120,14 +2118,12 @@ For example,
 
 In this case the cache will be valid for 60 seconds. After this period.
 
-#### Disable Caching
+##### Disable Caching
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache
+###### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache
 version: 1.0
 
 If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
-
-#### Cache Eviction
 
 ##### Cache Lifetime
 
@@ -2149,8 +2145,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
-
-### Actions Performed in ClickHouse After Token Validation
 
 #### Authentication and Login
 
