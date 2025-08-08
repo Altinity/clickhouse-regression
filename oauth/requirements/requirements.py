@@ -1702,9 +1702,71 @@ RQ_SRS_042_OAuth_RemoteJWKS_Setup = Requirement(
     description=(
         "[ClickHouse] SHALL support custom JWKS setup for services that need to issue their own JWT tokens without using a full Identity Provider.\n"
         "\n"
-        "**Step A — Generate a signing key (RSA is the common choice):**\n"
+        "**Generate RSA Key Pair for JWT Signing:**\n"
         "\n"
         "```bash\n"
+        "openssl genrsa -out jwt-private.pem 2048\n"
+        "\n"
+        "openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem\n"
+        "```\n"
+        "\n"
+        "**Create JSON Web Key Set (JWKS) from Public Key:**\n"
+        "\n"
+        "A JWKS is a JSON document that includes your public key parameters. For RSA it looks like:\n"
+        "\n"
+        "```json\n"
+        "{\n"
+        '  "keys": [\n'
+        "    {\n"
+        '      "kty": "RSA",\n'
+        '      "kid": "my-key-id-1",\n'
+        '      "use": "sig",\n'
+        '      "alg": "RS256",\n'
+        '      "n": "<base64url-modulus>",\n'
+        '      "e": "AQAB"\n'
+        "    }\n"
+        "  ]\n"
+        "}\n"
+        "```\n"
+        "\n"
+        "**Deploy JWKS to HTTPS Web Server:**\n"
+        "\n"
+        "Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny Flask/FastAPI app). Example path:\n"
+        "\n"
+        "```\n"
+        "https://auth.example.com/.well-known/jwks.json\n"
+        "```\n"
+        "\n"
+        "**Configure ClickHouse Token Processor:**\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "  <token_processors>\n"
+        "    <my_service>\n"
+        "      <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>\n"
+        "      <jwks_refresh_timeout>300000</jwks_refresh_timeout>\n"
+        "      <!-- Optional: claims / verifier_leeway -->\n"
+        "    </my_service>\n"
+        "  </token_processors>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+        "**Sign JWT Tokens with Private Key:**\n"
+        "\n"
+        "Your token issuer must:\n"
+        "\n"
+        "* Sign with the matching private key (e.g., RS256)\n"
+        "* Include the same `kid` in the JWT header as in your JWKS entry\n"
+        "* (Optional) Include any claims you plan to enforce via ClickHouse's claims check\n"
+        "\n"
+        "**Important Notes:**\n"
+        "\n"
+        "* `kid` must match the `kid` you'll put in the JWT header when you sign tokens\n"
+        "* `n` and `e` are the RSA public key params, base64url-encoded\n"
+        "* You can generate that JSON with a tiny script using cryptography/pyjwt, or any JWK tool\n"
+        "* The specifics aren't ClickHouse-specific; ClickHouse only needs the public JWKS\n"
+        "* `jwks_uri`, `jwks_refresh_timeout`, `claims`, and `verifier_leeway` are exactly the supported params\n"
+        "\n"
     ),
     link=None,
     level=3,
@@ -1724,7 +1786,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
     ),
     link=None,
     level=3,
-    num="1.1.1",
+    num="12.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
@@ -1740,7 +1802,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="1.1.2",
+    num="12.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requirement(
@@ -1756,7 +1818,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requireme
     ),
     link=None,
     level=3,
-    num="1.1.3",
+    num="12.1.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requirement(
@@ -1772,7 +1834,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requireme
     ),
     link=None,
     level=3,
-    num="1.1.4",
+    num="12.1.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Requirement(
@@ -1788,7 +1850,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Req
     ),
     link=None,
     level=3,
-    num="1.1.5",
+    num="12.1.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
@@ -1804,7 +1866,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
     ),
     link=None,
     level=3,
-    num="1.1.6",
+    num="12.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement(
@@ -1820,7 +1882,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement
     ),
     link=None,
     level=3,
-    num="1.1.7",
+    num="12.1.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement(
@@ -1836,7 +1898,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement
     ),
     link=None,
     level=3,
-    num="1.1.8",
+    num="12.1.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement(
@@ -1852,7 +1914,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement
     ),
     link=None,
     level=3,
-    num="1.1.9",
+    num="12.1.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
@@ -1867,7 +1929,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
     ),
     link=None,
     level=3,
-    num="1.2.1",
+    num="12.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
@@ -1883,7 +1945,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
     ),
     link=None,
     level=3,
-    num="1.2.2",
+    num="12.2.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirement(
@@ -1899,7 +1961,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirem
     ),
     link=None,
     level=3,
-    num="1.2.3",
+    num="12.2.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
@@ -1915,7 +1977,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
     ),
     link=None,
     level=3,
-    num="1.2.4",
+    num="12.2.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
@@ -1956,7 +2018,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
     ),
     link=None,
     level=3,
-    num="1.3.1",
+    num="12.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirement(
@@ -1972,7 +2034,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirem
     ),
     link=None,
     level=4,
-    num="1.3.2.1",
+    num="12.3.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Requirement(
@@ -1988,7 +2050,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Re
     ),
     link=None,
     level=4,
-    num="1.3.3.1",
+    num="12.3.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Requirement(
@@ -2004,7 +2066,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Req
     ),
     link=None,
     level=4,
-    num="1.3.4.1",
+    num="12.3.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requirement(
@@ -2020,7 +2082,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requireme
     ),
     link=None,
     level=4,
-    num="1.3.5.1",
+    num="12.3.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
@@ -2045,7 +2107,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
     ),
     link=None,
     level=3,
-    num="1.4.1",
+    num="12.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
@@ -2061,7 +2123,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirem
     ),
     link=None,
     level=3,
-    num="1.4.2",
+    num="12.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
@@ -2079,11 +2141,11 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
     ),
     link=None,
     level=3,
-    num="1.5.1",
+    num="12.5.1",
 )
 
-RSA_2048_private_key_PEM_ = Specification(
-    name="RSA 2048 private key (PEM)",
+SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
+    name="SRS-042 OAuth Authentication in ClickHouse",
     description=None,
     author=None,
     date=None,
@@ -2574,119 +2636,120 @@ RSA_2048_private_key_PEM_ = Specification(
         ),
         Heading(name="Setting up Remote JWKS", level=2, num="11.2"),
         Heading(name="RQ.SRS-042.OAuth.RemoteJWKS.Setup", level=3, num="11.2.1"),
-        Heading(name="Public key from the private key", level=0, num=""),
-        Heading(name="ClickHouse Actions After Token Validation", level=1, num="1"),
-        Heading(name="Incorrect Requests to ClickHouse", level=2, num="1.1"),
+        Heading(name="ClickHouse Actions After Token Validation", level=1, num="12"),
+        Heading(name="Incorrect Requests to ClickHouse", level=2, num="12.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
             level=3,
-            num="1.1.1",
+            num="12.1.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
             level=3,
-            num="1.1.2",
+            num="12.1.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
             level=3,
-            num="1.1.3",
+            num="12.1.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
             level=3,
-            num="1.1.4",
+            num="12.1.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
             level=3,
-            num="1.1.5",
+            num="12.1.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
             level=3,
-            num="1.1.6",
+            num="12.1.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
             level=3,
-            num="1.1.7",
+            num="12.1.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
             level=3,
-            num="1.1.8",
+            num="12.1.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
             level=3,
-            num="1.1.9",
+            num="12.1.9",
         ),
-        Heading(name="Token Handling", level=2, num="1.2"),
+        Heading(name="Token Handling", level=2, num="12.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired",
             level=3,
-            num="1.2.1",
+            num="12.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect",
             level=3,
-            num="1.2.2",
+            num="12.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric",
             level=3,
-            num="1.2.3",
+            num="12.2.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString",
             level=3,
-            num="1.2.4",
+            num="12.2.4",
         ),
-        Heading(name="Caching", level=2, num="1.3"),
+        Heading(name="Caching", level=2, num="12.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="1.3.1"
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching",
+            level=3,
+            num="12.3.1",
         ),
-        Heading(name="Disable Caching", level=3, num="1.3.2"),
+        Heading(name="Disable Caching", level=3, num="12.3.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
             level=4,
-            num="1.3.2.1",
+            num="12.3.2.1",
         ),
-        Heading(name="Cache Lifetime", level=3, num="1.3.3"),
+        Heading(name="Cache Lifetime", level=3, num="12.3.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
             level=4,
-            num="1.3.3.1",
+            num="12.3.3.1",
         ),
-        Heading(name="Exceeding Max Cache Size", level=3, num="1.3.4"),
+        Heading(name="Exceeding Max Cache Size", level=3, num="12.3.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
             level=4,
-            num="1.3.4.1",
+            num="12.3.4.1",
         ),
-        Heading(name="Cache Eviction Policy", level=3, num="1.3.5"),
+        Heading(name="Cache Eviction Policy", level=3, num="12.3.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
             level=4,
-            num="1.3.5.1",
+            num="12.3.5.1",
         ),
-        Heading(name="Authentication and Login", level=2, num="1.4"),
+        Heading(name="Authentication and Login", level=2, num="12.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
             level=3,
-            num="1.4.1",
+            num="12.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
             level=3,
-            num="1.4.2",
+            num="12.4.2",
         ),
-        Heading(name="Session Management", level=2, num="1.5"),
+        Heading(name="Session Management", level=2, num="12.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
             level=3,
-            num="1.5.1",
+            num="12.5.1",
         ),
     ),
     requirements=(
@@ -4088,17 +4151,15 @@ version: 1.0
 
 [ClickHouse] SHALL support custom JWKS setup for services that need to issue their own JWT tokens without using a full Identity Provider.
 
-**Step A — Generate a signing key (RSA is the common choice):**
+**Generate RSA Key Pair for JWT Signing:**
 
 ```bash
-# RSA 2048 private key (PEM)
 openssl genrsa -out jwt-private.pem 2048
 
-# Public key from the private key
 openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
 ```
 
-**Step B — Produce a JWKS from the public key:**
+**Create JSON Web Key Set (JWKS) from Public Key:**
 
 A JWKS is a JSON document that includes your public key parameters. For RSA it looks like:
 
@@ -4117,7 +4178,7 @@ A JWKS is a JSON document that includes your public key parameters. For RSA it l
 }
 ```
 
-**Step C — Host the JWKS at a URL:**
+**Deploy JWKS to HTTPS Web Server:**
 
 Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny Flask/FastAPI app). Example path:
 
@@ -4125,7 +4186,7 @@ Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny 
 https://auth.example.com/.well-known/jwks.json
 ```
 
-**Step D — Configure ClickHouse to use it:**
+**Configure ClickHouse Token Processor:**
 
 ```xml
 <clickhouse>
@@ -4139,7 +4200,7 @@ https://auth.example.com/.well-known/jwks.json
 </clickhouse>
 ```
 
-**Step E — Sign tokens with the private key:**
+**Sign JWT Tokens with Private Key:**
 
 Your token issuer must:
 
