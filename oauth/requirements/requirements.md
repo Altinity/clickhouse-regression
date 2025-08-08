@@ -47,26 +47,28 @@
     * 7.3 [User Roles](#user-roles)
         * 7.3.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-        * 7.3.2 [User in Multiple Groups](#user-in-multiple-groups)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
-        * 7.3.3 [Overlapping Users Across Groups](#overlapping-users-across-groups)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
-        * 7.3.4 [No Groups in Identity Provider](#no-groups-in-identity-provider)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-        * 7.3.5 [Subgroup Memberships](#subgroup-memberships)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
-        * 7.3.6 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-        * 7.3.7 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
-            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.3.8 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.3.9 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
-            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.10 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.3.11 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+        * 7.3.2 [Group Filtering](#group-filtering)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
+        * 7.3.3 [User in Multiple Groups](#user-in-multiple-groups)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+        * 7.3.4 [Overlapping Users Across Groups](#overlapping-users-across-groups)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+        * 7.3.5 [No Groups in Identity Provider](#no-groups-in-identity-provider)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+        * 7.3.6 [Subgroup Memberships](#subgroup-memberships)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+        * 7.3.7 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.3.8 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.9 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.10 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
+            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.11 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.12 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
     * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
         * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
         * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
@@ -177,8 +179,16 @@ Users defined in `users.xml` or `SQL` can authenticate using tokens if `jwt` is 
 
 Or via SQL:
 
+Without additional JWT payload checks
+
 ```sql
 CREATE USER my_user IDENTIFIED WITH jwt;
+```
+
+And with additional JWT payload checks
+
+```sql
+CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
 ```
 
 2. **External Identity Provider as a User Directory**
@@ -198,9 +208,12 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
     <user_directories>
         <token>
             <processor>azuure</processor>
-            <roles>
+            <common_roles>
                 <token_test_role_1 />
-            </roles>
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
         </token>
     </user_directories>
 </clickhouse>
@@ -332,9 +345,12 @@ For example,
     <user_directories>
         <token>
             <processor>azuure</processor>
-            <roles>
+            <common_roles>
                 <token_test_role_1 />
-            </roles>
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
         </token>
     </user_directories>
 </clickhouse>
@@ -428,9 +444,35 @@ assigned to the user in the `users_directories` section. Role mapping is based o
 if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in 
 ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
 
-The roles defined in the `<roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
+
+
+#### Group Filtering
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
+version: 1.0
+
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the Identity Provider (IdP) based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+
+For example,
+
+```xml
+<clickhouse>
+    <user_directories>
+        <token>
+            <processor>processor_name</processor>
+            <common_roles>
+                <token_test_role_1 />
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
+        </token>
+    </user_directories>
+</clickhouse>
+```
 
 #### User in Multiple Groups
 
@@ -454,7 +496,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 version: 1.0
 
 When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
-[ClickHouse] SHALL assign only the default role if it is specified in the `<roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
 #### Subgroup Memberships
 
@@ -497,7 +539,7 @@ When a user does not have permission to view their groups in Identity Provider, 
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When a grafana user is authenticated via OAuth and no roles are specified in the `<roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
+When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
 
 The role configuration example,
 
@@ -513,8 +555,8 @@ The role configuration example,
     <user_directories>
         <token>
             <processor>azuure</processor>
-            <roles>
-            </roles>
+            <common_roles>
+            </common_roles>
         </token>
     </user_directories>
 </clickhouse>
@@ -618,9 +660,9 @@ For example,
     <user_directories>
         <token>
             <processor>azuure</processor>
-            <roles>
+            <common_roles>
                 <token_test_role_1 />
-            </roles>
+            </common_roles>
         </token>
     </user_directories>
 </clickhouse>
