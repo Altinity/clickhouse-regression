@@ -579,7 +579,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, \n"
+        "When a grafana user is authenticated via OAuth and Azure does not return any groups for the user, \n"
         "[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.\n"
         "\n"
     ),
@@ -1103,8 +1103,6 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken =
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
-        "\n"
-        "\n"
     ),
     link=None,
     level=4,
@@ -1283,19 +1281,25 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=5,
             num="7.4.2.4.1",
         ),
-        Heading(name="Overlapping Users Across Groups", level=4, num="7.4.2.5"),
+        Heading(
+            name="No Duplicate Role Assignments for Overlapping Azure Groups",
+            level=4,
+            num="7.4.2.5",
+        ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
             level=5,
             num="7.4.2.5.1",
         ),
-        Heading(name="No Groups in Identity Provider", level=4, num="7.4.2.6"),
+        Heading(name="No Azure Groups Returned for User", level=4, num="7.4.2.6"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
             level=5,
             num="7.4.2.6.1",
         ),
-        Heading(name="Subgroup Memberships", level=4, num="7.4.2.7"),
+        Heading(
+            name="Azure Subgroup Memberships Not Considered", level=4, num="7.4.2.7"
+        ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
             level=5,
@@ -1584,11 +1588,11 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.4.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
             * 7.4.2.4 [User in Multiple Groups](#user-in-multiple-groups)
                 * 7.4.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
-            * 7.4.2.5 [Overlapping Users Across Groups](#overlapping-users-across-groups)
+            * 7.4.2.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
                 * 7.4.2.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
-            * 7.4.2.6 [No Groups in Identity Provider](#no-groups-in-identity-provider)
+            * 7.4.2.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
                 * 7.4.2.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-            * 7.4.2.7 [Subgroup Memberships](#subgroup-memberships)
+            * 7.4.2.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
                 * 7.4.2.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
             * 7.4.2.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
                 * 7.4.2.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
@@ -2066,7 +2070,7 @@ version: 1.0
 When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-##### Overlapping Users Across Groups
+##### No Duplicate Role Assignments for Overlapping Azure Groups
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
 version: 1.0
@@ -2074,15 +2078,15 @@ version: 1.0
 When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
 The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
 
-##### No Groups in Identity Provider
+##### No Azure Groups Returned for User
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
+When a grafana user is authenticated via OAuth and Azure does not return any groups for the user, 
 [ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
-##### Subgroup Memberships
+##### Azure Subgroup Memberships Not Considered
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
