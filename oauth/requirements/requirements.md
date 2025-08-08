@@ -471,8 +471,6 @@ version: 1.0
 If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
 
 ```bash
-# This action is typically performed in the Azure Portal.
-# It can be automated by removing the specific application role assignment.
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \
     -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
