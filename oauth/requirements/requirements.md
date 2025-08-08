@@ -25,120 +25,134 @@
         * 7.1.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.2 [Access Token Processors For Azure](#access-token-processors-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 7.3 [Azure Identity Management Actions](#azure-identity-management-actions)
-        * 7.3.1 [Azure User State Changes](#azure-user-state-changes)
-            * 7.3.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
-            * 7.3.1.2 [RQ.SRS-042.OAuth.Azure.Actions.UserDeleted](#rqsrs-042oauthazureactionsuserdeleted)
-            * 7.3.1.3 [RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated](#rqsrs-042oauthazureactionsuserattributesupdated)
-            * 7.3.1.4 [RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset](#rqsrs-042oauthazureactionsuserpasswordreset)
-        * 7.3.2 [Azure Group and Role Membership](#azure-group-and-role-membership)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup](#rqsrs-042oauthazureactionsuseraddedtogroup)
-            * 7.3.2.2 [RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup](#rqsrs-042oauthazureactionsuserremovedfromgroup)
-            * 7.3.2.3 [RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted](#rqsrs-042oauthazureactionsgroupdeleted)
-        * 7.3.3 [Azure Application and Consent](#azure-application-and-consent)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled](#rqsrs-042oauthazureactionsapplicationdisabled)
-            * 7.3.3.2 [RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved](#rqsrs-042oauthazureactionsadminconsentremoved)
-            * 7.3.3.3 [RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated](#rqsrs-042oauthazureactionsclientsecretrotated)
-        * 7.3.4 [Azure Token and Session Management](#azure-token-and-session-management)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked](#rqsrs-042oauthazureactionsusersessionrevoked)
-            * 7.3.4.2 [RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired](#rqsrs-042oauthazureactionsrefreshtokenexpired)
+    * 7.3 [User Groups in Azure](#user-groups-in-azure)
+        * 7.3.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
+            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
+        * 7.3.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
+            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
+        * 7.3.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
+        * 7.3.4 [User in Multiple Groups](#user-in-multiple-groups)
+            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+        * 7.3.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
+            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+        * 7.3.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
+            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+        * 7.3.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
+            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+        * 7.3.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.3.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
+            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+        * 7.3.10 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+        * 7.3.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
+            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.3.12 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+            * 7.3.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+    * 7.4 [Azure Identity Management Actions](#azure-identity-management-actions)
+        * 7.4.1 [Azure User State Changes](#azure-user-state-changes)
+            * 7.4.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
+            * 7.4.1.2 [RQ.SRS-042.OAuth.Azure.Actions.UserDeleted](#rqsrs-042oauthazureactionsuserdeleted)
+            * 7.4.1.3 [RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated](#rqsrs-042oauthazureactionsuserattributesupdated)
+            * 7.4.1.4 [RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset](#rqsrs-042oauthazureactionsuserpasswordreset)
+        * 7.4.2 [Azure Group and Role Membership](#azure-group-and-role-membership)
+            * 7.4.2.1 [RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup](#rqsrs-042oauthazureactionsuseraddedtogroup)
+            * 7.4.2.2 [RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup](#rqsrs-042oauthazureactionsuserremovedfromgroup)
+            * 7.4.2.3 [RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted](#rqsrs-042oauthazureactionsgroupdeleted)
+        * 7.4.3 [Azure Application and Consent](#azure-application-and-consent)
+            * 7.4.3.1 [RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled](#rqsrs-042oauthazureactionsapplicationdisabled)
+            * 7.4.3.2 [RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved](#rqsrs-042oauthazureactionsadminconsentremoved)
+            * 7.4.3.3 [RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated](#rqsrs-042oauthazureactionsclientsecretrotated)
+        * 7.4.4 [Azure Token and Session Management](#azure-token-and-session-management)
+            * 7.4.4.1 [RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked](#rqsrs-042oauthazureactionsusersessionrevoked)
+            * 7.4.4.2 [RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired](#rqsrs-042oauthazureactionsrefreshtokenexpired)
+        * 7.4.5 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
+            * 7.4.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
 * 8 [Keycloak](#keycloak)
     * 8.1 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
         * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
     * 8.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
         * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors](#rqsrs-042oauthkeycloakaccesstokenprocessors)
     * 8.3 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
-        * 8.3.1 [User State Changes](#user-state-changes)
+        * 8.3.1 [Keycloak User State Changes](#keycloak-user-state-changes)
             * 8.3.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
             * 8.3.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
             * 8.3.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
-        * 8.3.2 [Group and Role Membership](#group-and-role-membership)
+        * 8.3.2 [Keycloak Group and Role Membership](#keycloak-group-and-role-membership)
             * 8.3.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
             * 8.3.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
             * 8.3.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
-        * 8.3.3 [Application and Consent](#application-and-consent)
+        * 8.3.3 [Keycloak Application and Consent](#keycloak-application-and-consent)
             * 8.3.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
             * 8.3.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
-        * 8.3.4 [Token and Session Management](#token-and-session-management)
+        * 8.3.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
             * 8.3.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
             * 8.3.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
             * 8.3.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
-    * 8.4 [User Directories](#user-directories)
-        * 8.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
-            * 8.4.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
-                * 8.4.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
-                * 8.4.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
-                * 8.4.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
-                * 8.4.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
-                * 8.4.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
-                * 8.4.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
-            * 8.4.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
-                * 8.4.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
-                * 8.4.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
-                * 8.4.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
-                * 8.4.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
-                * 8.4.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
-                * 8.4.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
-                * 8.4.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
-                * 8.4.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
-        * 8.4.2 [User Groups in Azure](#user-groups-in-azure)
-            * 8.4.2.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
-                * 8.4.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
-            * 8.4.2.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
-                * 8.4.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-            * 8.4.2.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
-                * 8.4.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
-            * 8.4.2.4 [User in Multiple Groups](#user-in-multiple-groups)
-                * 8.4.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
-            * 8.4.2.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
-                * 8.4.2.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
-            * 8.4.2.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
-                * 8.4.2.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-            * 8.4.2.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
-                * 8.4.2.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
-            * 8.4.2.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-                * 8.4.2.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-            * 8.4.2.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
-                * 8.4.2.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-            * 8.4.2.10 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-                * 8.4.2.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-            * 8.4.2.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
-                * 8.4.2.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-            * 8.4.2.12 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-                * 8.4.2.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 8.4.3 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
-            * 8.4.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
-* 9 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
-    * 9.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 9.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
-        * 9.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
-        * 9.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
-        * 9.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
-        * 9.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
-        * 9.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
-        * 9.1.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
-        * 9.1.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
-        * 9.1.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
-    * 9.2 [Token Handling](#token-handling)
-        * 9.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
-        * 9.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
-        * 9.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
-        * 9.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
-    * 9.3 [Caching](#caching)
-        * 9.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
-        * 9.3.2 [Disable Caching](#disable-caching)
-            * 9.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
-        * 9.3.3 [Cache Lifetime](#cache-lifetime)
-            * 9.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
-        * 9.3.4 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-            * 9.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
-        * 9.3.5 [Cache Eviction Policy](#cache-eviction-policy)
-            * 9.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
-    * 9.4 [Authentication and Login](#authentication-and-login)
-        * 9.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
-        * 9.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
-    * 9.5 [Session Management](#session-management)
-        * 9.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+* 9 [Static Key](#static-key)
+    * 9.1 [Access Token Processors For Static Key](#access-token-processors-for-static-key)
+        * 9.1.1 [RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors](#rqsrs-042oauthstatickeyaccesstokenprocessors)
+    * 9.2 [Static Key as an External User Directory](#static-key-as-an-external-user-directory)
+        * 9.2.1 [RQ.SRS-042.OAuth.StaticKey.UserDirectory](#rqsrs-042oauthstatickeyuserdirectory)
+* 10 [Static JWKS](#static-jwks)
+    * 10.1 [Access Token Processors For Static JWKS](#access-token-processors-for-static-jwks)
+        * 10.1.1 [RQ.SRS-042.OAuth.StaticJWKS.AccessTokenProcessors](#rqsrs-042oauthstaticjwksaccesstokenprocessors)
+    * 10.2 [Static JWKS as an External User Directory](#static-jwks-as-an-external-user-directory)
+        * 10.2.1 [RQ.SRS-042.OAuth.StaticJWKS.UserDirectory](#rqsrs-042oauthstaticjwksuserdirectory)
+* 11 [Remote JWKS](#remote-jwks)
+    * 11.1 [Access Token Processors For Remote JWKS](#access-token-processors-for-remote-jwks)
+        * 11.1.1 [RQ.SRS-042.OAuth.RemoteJWKS.AccessTokenProcessors](#rqsrs-042oauthremotejwksaccesstokenprocessors)
+    * 11.2 [Remote JWKS as an External User Directory](#remote-jwks-as-an-external-user-directory)
+        * 11.2.1 [RQ.SRS-042.OAuth.RemoteJWKS.UserDirectory](#rqsrs-042oauthremotejwksuserdirectory)
+        * 11.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
+            * 11.2.2.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
+                * 11.2.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
+                * 11.2.2.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
+                * 11.2.2.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
+                * 11.2.2.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
+                * 11.2.2.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 11.2.2.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
+            * 11.2.2.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
+                * 11.2.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
+                * 11.2.2.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
+                * 11.2.2.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
+                * 11.2.2.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
+                * 11.2.2.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
+                * 11.2.2.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
+                * 11.2.2.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+                * 11.2.2.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+* 12 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
+    * 12.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+        * 12.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
+        * 12.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
+        * 12.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
+        * 12.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
+        * 12.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
+        * 12.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
+        * 12.1.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
+        * 12.1.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
+        * 12.1.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
+    * 12.2 [Token Handling](#token-handling)
+        * 12.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
+        * 12.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
+        * 12.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
+        * 12.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
+    * 12.3 [Caching](#caching)
+        * 12.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
+        * 12.3.2 [Disable Caching](#disable-caching)
+            * 12.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
+        * 12.3.3 [Cache Lifetime](#cache-lifetime)
+            * 12.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
+        * 12.3.4 [Exceeding Max Cache Size](#exceeding-max-cache-size)
+            * 12.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
+        * 12.3.5 [Cache Eviction Policy](#cache-eviction-policy)
+            * 12.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+    * 12.4 [Authentication and Login](#authentication-and-login)
+        * 12.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+        * 12.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+    * 12.5 [Session Management](#session-management)
+        * 12.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
 
     
 ## Introduction
@@ -357,6 +371,164 @@ Basic structure:
 </clickhouse>
 ```
 
+### User Groups in Azure
+
+#### Setting up User Groups in Azure
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups
+version: 1.0
+
+[ClickHouse] SHALL support user groups defined in Azure Active Directory (Azure AD) for role-based access control. In order to create a user group in Azure AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
+
+```bash
+curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "displayName": "My App Users",
+    "mailEnabled": false,
+    "mailNickname": "myAppUsersNickname",
+    "securityEnabled": true,
+    "description": "Users allowed to access My App"
+  }'
+```
+
+#### Query Execution Based on User Roles in ClickHouse
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
+version: 1.0
+
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
+if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in
+ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
+
+The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
+
+<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
+
+
+#### Filtering Azure Groups for Role Assignment
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
+version: 1.0
+
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+
+For example,
+
+```xml
+<clickhouse>
+    <user_directories>
+        <token>
+            <processor>processor_name</processor>
+            <common_roles>
+                <token_test_role_1 />
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Azure AD group names to only match those that:
+
+* Begin with exactly "clickhouse-"
+* Are followed by one or more alphanumeric characters
+* Are complete words (not parts of larger words)
+
+This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
+
+#### User in Multiple Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
+version: 1.0
+
+When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
+The user SHALL inherit the union of all permissions from these roles.
+
+#### No Duplicate Role Assignments for Overlapping Azure Groups
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
+version: 1.0
+
+When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
+
+#### No Azure Groups Returned for User
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
+version: 1.0
+
+When a grafana user is authenticated via OAuth and Azure does not return any groups for the user,
+[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+
+#### Azure Subgroup Memberships Not Considered
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
+version: 1.0
+
+When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
+
+#### Dynamic Group Membership Updates
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
+version: 1.0
+
+[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.
+Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
+
+#### Azure Group Names Match Roles in ClickHouse
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
+version: 1.0
+
+When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
+
+#### No Matching Roles in ClickHouse
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
+version: 1.0
+
+When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
+
+#### User Cannot View Groups in Azure
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
+version: 1.0
+
+When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
+
+#### In ClickHouse There Is No Default Role Specified
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
+version: 1.0
+
+When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
+
+The role configuration example,
+
+```xml
+<clickhouse>
+    <token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>$CLIENT_ID</client_id>
+            <tenant_id>$TENANT_ID</tenant_id>
+        </azuure>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <common_roles>
+            </common_roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
 ### Azure Identity Management Actions
 
 This section outlines how [ClickHouse] SHALL respond to various actions performed in Azure Active Directory that affect user identity, group membership, and token validity.
@@ -521,6 +693,14 @@ curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token
   -d 'refresh_token={expired-refresh-token}'
 ```
 
+#### Access Token Processors are Missing From ClickHouse Configuration
+
+##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors
+version: 1.0
+
+When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
+
+
 ## Keycloak
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
@@ -571,7 +751,7 @@ Basic structure:
 
 This section outlines how [ClickHouse] SHALL respond to various actions performed in Keycloak that affect user identity, group membership, and token validity.
 
-#### User State Changes
+#### Keycloak User State Changes
 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled
 version: 1.0
@@ -612,7 +792,7 @@ curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' 
   }'
 ```
 
-#### Group and Role Membership
+#### Keycloak Group and Role Membership
 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup
 version: 1.0
@@ -644,7 +824,7 @@ curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/groups/{group-
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
 
-#### Application and Consent
+#### Keycloak Application and Consent
 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled
 version: 1.0
@@ -670,7 +850,7 @@ curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
 
-#### Token and Session Management
+#### Keycloak Token and Session Management
 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked
 version: 1.0
@@ -705,7 +885,141 @@ curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/push-revocation'
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
 
-### User Directories
+## Static Key
+
+### Access Token Processors For Static Key
+
+#### RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors
+version: 1.0
+
+[ClickHouse] SHALL support validating JWTs using a static key. The configuration requires specifying the algorithm and the key.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <my_static_key_validator>
+          <algo>HS256</algo>
+          <static_key>my_static_secret</static_key>
+        </my_static_key_validator>
+    </token_processors>
+</clickhouse>
+```
+
+### Static Key as an External User Directory
+
+#### RQ.SRS-042.OAuth.StaticKey.UserDirectory
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with a static key as a dynamic source of user information. This requires configuring the `<token>` section in `user_directories`.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <my_static_key_validator>
+          <algo>HS256</algo>
+          <static_key>my_static_secret</static_key>
+        </my_static_key_validator>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>my_static_key_validator</processor>
+            <common_roles>
+                <my_role />
+            </common_roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+## Static JWKS
+
+### Access Token Processors For Static JWKS
+
+#### RQ.SRS-042.OAuth.StaticJWKS.AccessTokenProcessors
+version: 1.0
+
+[ClickHouse] SHALL support validating JWTs using a static JSON Web Key Set (JWKS). The configuration can be provided directly or from a file.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <my_static_jwks_validator>
+          <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
+        </my_static_jwks_validator>
+    </token_processors>
+</clickhouse>
+```
+
+### Static JWKS as an External User Directory
+
+#### RQ.SRS-042.OAuth.StaticJWKS.UserDirectory
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with a static JWKS as a dynamic source of user information. This requires configuring the `<token>` section in `user_directories`.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <my_static_jwks_validator>
+          <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
+        </my_static_jwks_validator>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>my_static_jwks_validator</processor>
+            <common_roles>
+                <my_role />
+            </common_roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+## Remote JWKS
+
+### Access Token Processors For Remote JWKS
+
+#### RQ.SRS-042.OAuth.RemoteJWKS.AccessTokenProcessors
+version: 1.0
+
+[ClickHouse] SHALL support validating JWTs using a remote JSON Web Key Set (JWKS) fetched from a URI.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <basic_auth_server>
+          <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
+          <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+        </basic_auth_server>
+    </token_processors>
+</clickhouse>
+```
+
+### Remote JWKS as an External User Directory
+
+#### RQ.SRS-042.OAuth.RemoteJWKS.UserDirectory
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with a remote JWKS as a dynamic source of user information. This requires configuring the `<token>` section in `user_directories`.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <basic_auth_server>
+          <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
+          <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+        </basic_auth_server>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>basic_auth_server</processor>
+            <common_roles>
+                <my_role />
+            </common_roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
 
 An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`) 
 used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically 
@@ -816,171 +1130,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
-
-#### User Groups in Azure
-
-##### Setting up User Groups in Azure
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups
-version: 1.0
-
-[ClickHouse] SHALL support user groups defined in Azure Active Directory (Azure AD) for role-based access control. In order to create a user group in Azure AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
-
-```bash
-curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "displayName": "My App Users",
-    "mailEnabled": false,
-    "mailNickname": "myAppUsersNickname",
-    "securityEnabled": true,
-    "description": "Users allowed to access My App"
-  }'
-```
-
-##### Query Execution Based on User Roles in ClickHouse
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
-version: 1.0
-
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
-assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
-if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in 
-ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
-
-The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
-
-<img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
-
-
-##### Filtering Azure Groups for Role Assignment
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
-version: 1.0
-
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
-
-For example,
-
-```xml
-<clickhouse>
-    <user_directories>
-        <token>
-            <processor>processor_name</processor>
-            <common_roles>
-                <token_test_role_1 />
-            </common_roles>
-            <roles_filter>
-                \bclickhouse-[a-zA-Z0-9]+\b
-            </roles_filter>
-        </token>
-    </user_directories>
-</clickhouse>
-```
-
-The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Azure AD group names to only match those that:
-
-* Begin with exactly "clickhouse-"
-* Are followed by one or more alphanumeric characters
-* Are complete words (not parts of larger words)
-
-This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
-
-##### User in Multiple Groups
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
-version: 1.0
-
-When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
-The user SHALL inherit the union of all permissions from these roles.
-
-##### No Duplicate Role Assignments for Overlapping Azure Groups
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
-version: 1.0
-
-When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
-The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
-
-##### No Azure Groups Returned for User
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
-version: 1.0
-
-When a grafana user is authenticated via OAuth and Azure does not return any groups for the user, 
-[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
-
-##### Azure Subgroup Memberships Not Considered
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
-version: 1.0
-
-When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
-
-##### Dynamic Group Membership Updates
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
-version: 1.0
-
-[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.
-Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
-
-##### Azure Group Names Match Roles in ClickHouse
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
-version: 1.0
-
-When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
-
-##### No Matching Roles in ClickHouse
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
-version: 1.0
-
-When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
-
-##### User Cannot View Groups in Azure
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
-version: 1.0
-
-When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
-
-##### In ClickHouse There Is No Default Role Specified
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
-version: 1.0
-
-When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
-
-The role configuration example,
-
-```xml
-<clickhouse>
-    <token_processors>
-        <azuure>
-            <provider>azure</provider>
-            <client_id>$CLIENT_ID</client_id>
-            <tenant_id>$TENANT_ID</tenant_id>
-        </azuure>
-    </token_processors>
-    <user_directories>
-        <token>
-            <processor>azuure</processor>
-            <common_roles>
-            </common_roles>
-        </token>
-    </user_directories>
-</clickhouse>
-```
-
-#### Access Token Processors are Missing From ClickHouse Configuration
-
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors
-version: 1.0
-
-When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
 
 ## ClickHouse Actions After Token Validation
 
