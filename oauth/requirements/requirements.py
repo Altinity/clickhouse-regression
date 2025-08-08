@@ -58,38 +58,6 @@ RQ_SRS_042_OAuth_IdentityProviders_Change = Requirement(
     num="5.2.1",
 )
 
-RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak = Requirement(
-    name="RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.\n"
-        "\n"
-        "Example,\n"
-        "\n"
-        "```xml\n"
-        "<clickhouse>\n"
-        "    <token_processors>\n"
-        "        <keycloak>\n"
-        "            <provider>OpenID</provider>\n"
-        "            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>\n"
-        "            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>\n"
-        "            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>\n"
-        "            <token_cache_lifetime>60</token_cache_lifetime>\n"
-        "        </keycloak>\n"
-        "    </token_processors>\n"
-        "</clickhouse>\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="5.3.1.1",
-)
-
 RQ_SRS_042_OAuth_Credentials = Requirement(
     name="RQ.SRS-042.OAuth.Credentials",
     version="1.0",
@@ -452,13 +420,317 @@ RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired = Requirement(
         "  -d 'refresh_token={expired-refresh-token}'\n"
         "```\n"
         "\n"
-        "> [!NOTE]\n"
-        "> This is a policy-based action in Azure AD. A new access token request with an expired refresh token will fail.\n"
-        "\n"
     ),
     link=None,
     level=4,
     num="7.3.4.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_GetAccessToken = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "To obtain an access token from Keycloak, you need to have a configured realm, client, and user.\n"
+        "\n"
+        "You can obtain an access token using the following command:\n"
+        "\n"
+        "```bash\n"
+        "curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token' \\\n"
+        "  -H 'Content-Type: application/x-www-form-urlencoded' \\\n"
+        "  -d 'grant_type=password' \\\n"
+        "  -d 'client_id=my-client' \\\n"
+        "  -d 'client_secret=xxxxxxx' \\\n"
+        "  -d 'username=john' \\\n"
+        "  -d 'password=secret'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.1.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "An Access Token Processor for Keycloak defines how [ClickHouse] validates and interprets access tokens. This includes specifying the OpenID provider details.\n"
+        "\n"
+        "Basic structure:\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <token_processors>\n"
+        "        <keycloak>\n"
+        "            <provider>OpenID</provider>\n"
+        "            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>\n"
+        "            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>\n"
+        "            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>\n"
+        "            <token_cache_lifetime>60</token_cache_lifetime>\n"
+        "        </keycloak>\n"
+        "    </token_processors>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.2.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is disabled in Keycloak, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.\n"
+        "\n"
+        "```bash\n"
+        "curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "enabled": false\n'
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.1.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is permanently deleted from Keycloak, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.\n"
+        "\n"
+        "```bash\n"
+        "curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.1.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user's attributes (such as `username`, `email`, or `firstName`) are updated in Keycloak, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.\n"
+        "\n"
+        "```bash\n"
+        "curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "username": "new-username",\n'
+        '    "email": "new-email@example.com"\n'
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.1.3",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is added to a group in Keycloak, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].\n"
+        "\n"
+        "```bash\n"
+        "curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.2.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user is removed from a group in Keycloak, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.\n"
+        "\n"
+        "```bash\n"
+        "curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.2.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a group that is mapped to a [ClickHouse] role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.\n"
+        "\n"
+        "```bash\n"
+        "curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/groups/{group-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.2.3",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the client application used for OAuth integration is disabled in Keycloak, [ClickHouse] SHALL reject all incoming access tokens issued for that client.\n"
+        "\n"
+        "```bash\n"
+        "curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/clients/{client-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "enabled": false\n'
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.3.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "If a user's consent for the application is revoked in Keycloak, [ClickHouse] SHALL reject authentication attempts until consent is granted again.\n"
+        "\n"
+        "```bash\n"
+        "curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/consents/{client-id}' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.3.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a user's sign-in sessions are revoked in Keycloak, [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.\n"
+        "\n"
+        "```bash\n"
+        "curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/logout' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.4.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a refresh token is revoked via the logout endpoint, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.\n"
+        "\n"
+        "```bash\n"
+        "curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/logout' \\\n"
+        "  -H 'Content-Type: application/x-www-form-urlencoded' \\\n"
+        "  -d 'client_id=my-client' \\\n"
+        "  -d 'client_secret=xxxxxx' \\\n"
+        "  -d 'refresh_token=eyJ...'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.4.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When a `not-before` policy is pushed for a realm or user in Keycloak, all tokens issued before this time SHALL be invalidated, and [ClickHouse] SHALL reject them.\n"
+        "\n"
+        "```bash\n"
+        "curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/push-revocation' \\\n"
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}"\n'
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.3.4.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
@@ -499,7 +771,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
     ),
     link=None,
     level=3,
-    num="7.4.1",
+    num="8.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_provider = Requirement(
@@ -515,7 +787,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_p
     ),
     link=None,
     level=5,
-    num="7.4.1.1.1",
+    num="8.4.1.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_clientId = Requirement(
@@ -531,7 +803,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_c
     ),
     link=None,
     level=5,
-    num="7.4.1.1.2",
+    num="8.4.1.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_tenantId = Requirement(
@@ -547,7 +819,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_t
     ),
     link=None,
     level=5,
-    num="7.4.1.1.3",
+    num="8.4.1.1.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor = Requirement(
@@ -563,7 +835,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.4.1.1.4",
+    num="8.4.1.1.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles = Requirement(
@@ -579,7 +851,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.4.1.1.5",
+    num="8.4.1.1.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries = Requirement(
@@ -597,7 +869,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.4.1.1.6",
+    num="8.4.1.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors = Requirement(
@@ -613,7 +885,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Acc
     ),
     link=None,
     level=5,
-    num="7.4.1.2.1",
+    num="8.4.1.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider = Requirement(
@@ -629,7 +901,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.4.1.2.2",
+    num="8.4.1.2.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_clientId = Requirement(
@@ -645,7 +917,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.4.1.2.3",
+    num="8.4.1.2.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_tenantId = Requirement(
@@ -661,7 +933,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.4.1.2.4",
+    num="8.4.1.2.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories = Requirement(
@@ -677,7 +949,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.4.1.2.5",
+    num="8.4.1.2.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token = Requirement(
@@ -693,7 +965,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.4.1.2.6",
+    num="8.4.1.2.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor = Requirement(
@@ -709,7 +981,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.4.1.2.7",
+    num="8.4.1.2.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles = Requirement(
@@ -725,7 +997,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.4.1.2.8",
+    num="8.4.1.2.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_UserGroups = Requirement(
@@ -754,7 +1026,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_UserGroups = Requirement
     ),
     link=None,
     level=5,
-    num="7.4.2.1.1",
+    num="8.4.2.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
@@ -778,7 +1050,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.2.1",
+    num="8.4.2.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
@@ -820,7 +1092,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.3.1",
+    num="8.4.2.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
@@ -837,7 +1109,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.4.1",
+    num="8.4.2.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement(
@@ -854,7 +1126,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement
     ),
     link=None,
     level=5,
-    num="7.4.2.5.1",
+    num="8.4.2.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
@@ -871,7 +1143,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.6.1",
+    num="8.4.2.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirement(
@@ -887,7 +1159,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirem
     ),
     link=None,
     level=5,
-    num="7.4.2.7.1",
+    num="8.4.2.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
@@ -904,7 +1176,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Re
     ),
     link=None,
     level=5,
-    num="7.4.2.8.1",
+    num="8.4.2.8.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
@@ -920,7 +1192,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.9.1",
+    num="8.4.2.9.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
@@ -936,7 +1208,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.10.1",
+    num="8.4.2.10.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
@@ -952,7 +1224,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Req
     ),
     link=None,
     level=5,
-    num="7.4.2.11.1",
+    num="8.4.2.11.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
@@ -989,7 +1261,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
     ),
     link=None,
     level=5,
-    num="7.4.2.12.1",
+    num="8.4.2.12.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requirement(
@@ -1005,7 +1277,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requ
     ),
     link=None,
     level=4,
-    num="7.4.3.1",
+    num="8.4.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
@@ -1021,7 +1293,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
     ),
     link=None,
     level=3,
-    num="8.1.1",
+    num="9.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
@@ -1037,7 +1309,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="8.1.2",
+    num="9.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requirement(
@@ -1053,7 +1325,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requireme
     ),
     link=None,
     level=3,
-    num="8.1.3",
+    num="9.1.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requirement(
@@ -1069,7 +1341,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requireme
     ),
     link=None,
     level=3,
-    num="8.1.4",
+    num="9.1.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Requirement(
@@ -1085,7 +1357,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Req
     ),
     link=None,
     level=3,
-    num="8.1.5",
+    num="9.1.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
@@ -1101,7 +1373,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
     ),
     link=None,
     level=3,
-    num="8.1.6",
+    num="9.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement(
@@ -1117,7 +1389,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement
     ),
     link=None,
     level=3,
-    num="8.1.7",
+    num="9.1.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement(
@@ -1133,7 +1405,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement
     ),
     link=None,
     level=3,
-    num="8.1.8",
+    num="9.1.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement(
@@ -1149,7 +1421,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement
     ),
     link=None,
     level=3,
-    num="8.1.9",
+    num="9.1.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
@@ -1164,7 +1436,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
     ),
     link=None,
     level=3,
-    num="8.2.1",
+    num="9.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
@@ -1180,7 +1452,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
     ),
     link=None,
     level=3,
-    num="8.2.2",
+    num="9.2.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirement(
@@ -1196,7 +1468,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirem
     ),
     link=None,
     level=3,
-    num="8.2.3",
+    num="9.2.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
@@ -1212,7 +1484,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
     ),
     link=None,
     level=3,
-    num="8.2.4",
+    num="9.2.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
@@ -1253,7 +1525,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
     ),
     link=None,
     level=3,
-    num="8.3.1",
+    num="9.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirement(
@@ -1269,7 +1541,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirem
     ),
     link=None,
     level=4,
-    num="8.3.2.1",
+    num="9.3.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Requirement(
@@ -1285,7 +1557,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Re
     ),
     link=None,
     level=4,
-    num="8.3.3.1",
+    num="9.3.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Requirement(
@@ -1301,7 +1573,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Req
     ),
     link=None,
     level=4,
-    num="8.3.4.1",
+    num="9.3.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requirement(
@@ -1317,7 +1589,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requireme
     ),
     link=None,
     level=4,
-    num="8.3.5.1",
+    num="9.3.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
@@ -1342,7 +1614,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
     ),
     link=None,
     level=3,
-    num="8.4.1",
+    num="9.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
@@ -1358,7 +1630,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirem
     ),
     link=None,
     level=3,
-    num="8.4.2",
+    num="9.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
@@ -1376,7 +1648,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
     ),
     link=None,
     level=3,
-    num="8.5.1",
+    num="9.5.1",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -1420,13 +1692,6 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         ),
         Heading(name="Changing Identity Providers", level=2, num="5.2"),
         Heading(name="RQ.SRS-042.OAuth.IdentityProviders.Change", level=3, num="5.2.1"),
-        Heading(name="Keycloak", level=2, num="5.3"),
-        Heading(name="Access Token Processors For Keycloak", level=3, num="5.3.1"),
-        Heading(
-            name="RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak",
-            level=4,
-            num="5.3.1.1",
-        ),
         Heading(name="Setting Up OAuth Authentication", level=1, num="6"),
         Heading(name="Credentials", level=2, num="6.1"),
         Heading(name="RQ.SRS-042.OAuth.Credentials", level=3, num="6.1.1"),
@@ -1440,7 +1705,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             num="7.2.1",
         ),
         Heading(name="Azure Identity Management Actions", level=2, num="7.3"),
-        Heading(name="User State Changes", level=3, num="7.3.1"),
+        Heading(name="Azure User State Changes", level=3, num="7.3.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserDisabled", level=4, num="7.3.1.1"
         ),
@@ -1457,7 +1722,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.3.1.4",
         ),
-        Heading(name="Group and Role Membership", level=3, num="7.3.2"),
+        Heading(name="Azure Group and Role Membership", level=3, num="7.3.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup",
             level=4,
@@ -1471,7 +1736,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted", level=4, num="7.3.2.3"
         ),
-        Heading(name="Application and Consent", level=3, num="7.3.3"),
+        Heading(name="Azure Application and Consent", level=3, num="7.3.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled",
             level=4,
@@ -1487,7 +1752,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.3.3.3",
         ),
-        Heading(name="Token and Session Management", level=3, num="7.3.4"),
+        Heading(name="Azure Token and Session Management", level=3, num="7.3.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked",
             level=4,
@@ -1498,308 +1763,372 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.3.4.2",
         ),
-        Heading(name="User Directories", level=2, num="7.4"),
+        Heading(name="Keycloak", level=1, num="8"),
+        Heading(name="Getting Access Token from Keycloak", level=2, num="8.1"),
+        Heading(name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken", level=3, num="8.1.1"),
+        Heading(name="Access Token Processors For Keycloak", level=2, num="8.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories",
-            level=3,
-            num="7.4.1",
+            name="RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors", level=3, num="8.2.1"
         ),
+        Heading(name="Keycloak Identity Management Actions", level=2, num="8.3"),
+        Heading(name="User State Changes", level=3, num="8.3.1"),
         Heading(
-            name="Incorrect Configuration in User Directories", level=4, num="7.4.1.1"
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider",
-            level=5,
-            num="7.4.1.1.1",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId",
-            level=5,
-            num="7.4.1.1.2",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId",
-            level=5,
-            num="7.4.1.1.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
-            level=5,
-            num="7.4.1.1.4",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
-            level=5,
-            num="7.4.1.1.5",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries",
-            level=5,
-            num="7.4.1.1.6",
-        ),
-        Heading(
-            name="Missing Configuration in User Directories", level=4, num="7.4.1.2"
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors",
-            level=5,
-            num="7.4.1.2.1",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider",
-            level=5,
-            num="7.4.1.2.2",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
-            level=5,
-            num="7.4.1.2.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
-            level=5,
-            num="7.4.1.2.4",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories",
-            level=5,
-            num="7.4.1.2.5",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token",
-            level=5,
-            num="7.4.1.2.6",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
-            level=5,
-            num="7.4.1.2.7",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
-            level=5,
-            num="7.4.1.2.8",
-        ),
-        Heading(name="User Groups in Azure", level=3, num="7.4.2"),
-        Heading(name="Setting up User Groups in Azure", level=4, num="7.4.2.1"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups",
-            level=5,
-            num="7.4.2.1.1",
-        ),
-        Heading(
-            name="Query Execution Based on User Roles in ClickHouse",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
             level=4,
-            num="7.4.2.2",
+            num="8.3.1.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
-            level=5,
-            num="7.4.2.2.1",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted", level=4, num="8.3.1.2"
         ),
         Heading(
-            name="Filtering Azure Groups for Role Assignment", level=4, num="7.4.2.3"
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering",
-            level=5,
-            num="7.4.2.3.1",
-        ),
-        Heading(name="User in Multiple Groups", level=4, num="7.4.2.4"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
-            level=5,
-            num="7.4.2.4.1",
-        ),
-        Heading(
-            name="No Duplicate Role Assignments for Overlapping Azure Groups",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated",
             level=4,
-            num="7.4.2.5",
+            num="8.3.1.3",
         ),
+        Heading(name="Group and Role Membership", level=3, num="8.3.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
-            level=5,
-            num="7.4.2.5.1",
-        ),
-        Heading(name="No Azure Groups Returned for User", level=4, num="7.4.2.6"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
-            level=5,
-            num="7.4.2.6.1",
-        ),
-        Heading(
-            name="Azure Subgroup Memberships Not Considered", level=4, num="7.4.2.7"
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
-            level=5,
-            num="7.4.2.7.1",
-        ),
-        Heading(name="Dynamic Group Membership Updates", level=4, num="7.4.2.8"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
-            level=5,
-            num="7.4.2.8.1",
-        ),
-        Heading(
-            name="Azure Group Names Match Roles in ClickHouse", level=4, num="7.4.2.9"
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
-            level=5,
-            num="7.4.2.9.1",
-        ),
-        Heading(name="No Matching Roles in ClickHouse", level=4, num="7.4.2.10"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
-            level=5,
-            num="7.4.2.10.1",
-        ),
-        Heading(name="User Cannot View Groups in Azure", level=4, num="7.4.2.11"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
-            level=5,
-            num="7.4.2.11.1",
-        ),
-        Heading(
-            name="In ClickHouse There Is No Default Role Specified",
-            level=4,
-            num="7.4.2.12",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
-            level=5,
-            num="7.4.2.12.1",
-        ),
-        Heading(
-            name="Access Token Processors are Missing From ClickHouse Configuration",
-            level=3,
-            num="7.4.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
-            level=4,
-            num="7.4.3.1",
-        ),
-        Heading(name="ClickHouse Actions After Token Validation", level=1, num="8"),
-        Heading(name="Incorrect Requests to ClickHouse", level=2, num="8.1"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
-            level=3,
-            num="8.1.1",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
-            level=3,
-            num="8.1.2",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
-            level=3,
-            num="8.1.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
-            level=3,
-            num="8.1.4",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
-            level=3,
-            num="8.1.5",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
-            level=3,
-            num="8.1.6",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
-            level=3,
-            num="8.1.7",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
-            level=3,
-            num="8.1.8",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
-            level=3,
-            num="8.1.9",
-        ),
-        Heading(name="Token Handling", level=2, num="8.2"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired",
-            level=3,
-            num="8.2.1",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect",
-            level=3,
-            num="8.2.2",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric",
-            level=3,
-            num="8.2.3",
-        ),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString",
-            level=3,
-            num="8.2.4",
-        ),
-        Heading(name="Caching", level=2, num="8.3"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="8.3.1"
-        ),
-        Heading(name="Disable Caching", level=3, num="8.3.2"),
-        Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup",
             level=4,
             num="8.3.2.1",
         ),
-        Heading(name="Cache Lifetime", level=3, num="8.3.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup",
+            level=4,
+            num="8.3.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted",
+            level=4,
+            num="8.3.2.3",
+        ),
+        Heading(name="Application and Consent", level=3, num="8.3.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled",
             level=4,
             num="8.3.3.1",
         ),
-        Heading(name="Exceeding Max Cache Size", level=3, num="8.3.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked",
+            level=4,
+            num="8.3.3.2",
+        ),
+        Heading(name="Token and Session Management", level=3, num="8.3.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked",
             level=4,
             num="8.3.4.1",
         ),
-        Heading(name="Cache Eviction Policy", level=3, num="8.3.5"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked",
             level=4,
-            num="8.3.5.1",
+            num="8.3.4.2",
         ),
-        Heading(name="Authentication and Login", level=2, num="8.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated",
+            level=4,
+            num="8.3.4.3",
+        ),
+        Heading(name="User Directories", level=2, num="8.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories",
             level=3,
             num="8.4.1",
         ),
         Heading(
+            name="Incorrect Configuration in User Directories", level=4, num="8.4.1.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider",
+            level=5,
+            num="8.4.1.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId",
+            level=5,
+            num="8.4.1.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId",
+            level=5,
+            num="8.4.1.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
+            level=5,
+            num="8.4.1.1.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
+            level=5,
+            num="8.4.1.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries",
+            level=5,
+            num="8.4.1.1.6",
+        ),
+        Heading(
+            name="Missing Configuration in User Directories", level=4, num="8.4.1.2"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors",
+            level=5,
+            num="8.4.1.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider",
+            level=5,
+            num="8.4.1.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
+            level=5,
+            num="8.4.1.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
+            level=5,
+            num="8.4.1.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories",
+            level=5,
+            num="8.4.1.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token",
+            level=5,
+            num="8.4.1.2.6",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
+            level=5,
+            num="8.4.1.2.7",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
+            level=5,
+            num="8.4.1.2.8",
+        ),
+        Heading(name="User Groups in Azure", level=3, num="8.4.2"),
+        Heading(name="Setting up User Groups in Azure", level=4, num="8.4.2.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups",
+            level=5,
+            num="8.4.2.1.1",
+        ),
+        Heading(
+            name="Query Execution Based on User Roles in ClickHouse",
+            level=4,
+            num="8.4.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
+            level=5,
+            num="8.4.2.2.1",
+        ),
+        Heading(
+            name="Filtering Azure Groups for Role Assignment", level=4, num="8.4.2.3"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering",
+            level=5,
+            num="8.4.2.3.1",
+        ),
+        Heading(name="User in Multiple Groups", level=4, num="8.4.2.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
+            level=5,
+            num="8.4.2.4.1",
+        ),
+        Heading(
+            name="No Duplicate Role Assignments for Overlapping Azure Groups",
+            level=4,
+            num="8.4.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
+            level=5,
+            num="8.4.2.5.1",
+        ),
+        Heading(name="No Azure Groups Returned for User", level=4, num="8.4.2.6"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
+            level=5,
+            num="8.4.2.6.1",
+        ),
+        Heading(
+            name="Azure Subgroup Memberships Not Considered", level=4, num="8.4.2.7"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
+            level=5,
+            num="8.4.2.7.1",
+        ),
+        Heading(name="Dynamic Group Membership Updates", level=4, num="8.4.2.8"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
+            level=5,
+            num="8.4.2.8.1",
+        ),
+        Heading(
+            name="Azure Group Names Match Roles in ClickHouse", level=4, num="8.4.2.9"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
+            level=5,
+            num="8.4.2.9.1",
+        ),
+        Heading(name="No Matching Roles in ClickHouse", level=4, num="8.4.2.10"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
+            level=5,
+            num="8.4.2.10.1",
+        ),
+        Heading(name="User Cannot View Groups in Azure", level=4, num="8.4.2.11"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
+            level=5,
+            num="8.4.2.11.1",
+        ),
+        Heading(
+            name="In ClickHouse There Is No Default Role Specified",
+            level=4,
+            num="8.4.2.12",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
+            level=5,
+            num="8.4.2.12.1",
+        ),
+        Heading(
+            name="Access Token Processors are Missing From ClickHouse Configuration",
+            level=3,
+            num="8.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
+            level=4,
+            num="8.4.3.1",
+        ),
+        Heading(name="ClickHouse Actions After Token Validation", level=1, num="9"),
+        Heading(name="Incorrect Requests to ClickHouse", level=2, num="9.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
+            level=3,
+            num="9.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
+            level=3,
+            num="9.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
+            level=3,
+            num="9.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
+            level=3,
+            num="9.1.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
+            level=3,
+            num="9.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
+            level=3,
+            num="9.1.6",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
+            level=3,
+            num="9.1.7",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
+            level=3,
+            num="9.1.8",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
+            level=3,
+            num="9.1.9",
+        ),
+        Heading(name="Token Handling", level=2, num="9.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired",
+            level=3,
+            num="9.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect",
+            level=3,
+            num="9.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric",
+            level=3,
+            num="9.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString",
+            level=3,
+            num="9.2.4",
+        ),
+        Heading(name="Caching", level=2, num="9.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="9.3.1"
+        ),
+        Heading(name="Disable Caching", level=3, num="9.3.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
+            level=4,
+            num="9.3.2.1",
+        ),
+        Heading(name="Cache Lifetime", level=3, num="9.3.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
+            level=4,
+            num="9.3.3.1",
+        ),
+        Heading(name="Exceeding Max Cache Size", level=3, num="9.3.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
+            level=4,
+            num="9.3.4.1",
+        ),
+        Heading(name="Cache Eviction Policy", level=3, num="9.3.5"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
+            level=4,
+            num="9.3.5.1",
+        ),
+        Heading(name="Authentication and Login", level=2, num="9.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
+            level=3,
+            num="9.4.1",
+        ),
+        Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
             level=3,
-            num="8.4.2",
+            num="9.4.2",
         ),
-        Heading(name="Session Management", level=2, num="8.5"),
+        Heading(name="Session Management", level=2, num="9.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
             level=3,
-            num="8.5.1",
+            num="9.5.1",
         ),
     ),
     requirements=(
         RQ_SRS_042_OAuth_Grafana_Authentication_ForwardOAuthIdentity,
         RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
         RQ_SRS_042_OAuth_IdentityProviders_Change,
-        RQ_SRS_042_OAuth_IdentityProviders_TokenProcessors_Keycloak,
         RQ_SRS_042_OAuth_Credentials,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
@@ -1815,6 +2144,19 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated,
         RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked,
         RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired,
+        RQ_SRS_042_OAuth_Keycloak_GetAccessToken,
+        RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup,
+        RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted,
+        RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled,
+        RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked,
+        RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked,
+        RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked,
+        RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_provider,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_clientId,
@@ -1885,9 +2227,6 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 5.1.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
     * 5.2 [Changing Identity Providers](#changing-identity-providers)
         * 5.2.1 [RQ.SRS-042.OAuth.IdentityProviders.Change](#rqsrs-042oauthidentityproviderschange)
-    * 5.3 [Keycloak](#keycloak)
-        * 5.3.1 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-            * 5.3.1.1 [RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak](#rqsrs-042oauthidentityproviderstokenprocessorskeycloak)
 * 6 [Setting Up OAuth Authentication](#setting-up-oauth-authentication)
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
@@ -1897,98 +2236,119 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 7.2 [Access Token Processors For Azure](#access-token-processors-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
     * 7.3 [Azure Identity Management Actions](#azure-identity-management-actions)
-        * 7.3.1 [User State Changes](#user-state-changes)
+        * 7.3.1 [Azure User State Changes](#azure-user-state-changes)
             * 7.3.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
             * 7.3.1.2 [RQ.SRS-042.OAuth.Azure.Actions.UserDeleted](#rqsrs-042oauthazureactionsuserdeleted)
             * 7.3.1.3 [RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated](#rqsrs-042oauthazureactionsuserattributesupdated)
             * 7.3.1.4 [RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset](#rqsrs-042oauthazureactionsuserpasswordreset)
-        * 7.3.2 [Group and Role Membership](#group-and-role-membership)
+        * 7.3.2 [Azure Group and Role Membership](#azure-group-and-role-membership)
             * 7.3.2.1 [RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup](#rqsrs-042oauthazureactionsuseraddedtogroup)
             * 7.3.2.2 [RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup](#rqsrs-042oauthazureactionsuserremovedfromgroup)
             * 7.3.2.3 [RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted](#rqsrs-042oauthazureactionsgroupdeleted)
-        * 7.3.3 [Application and Consent](#application-and-consent)
+        * 7.3.3 [Azure Application and Consent](#azure-application-and-consent)
             * 7.3.3.1 [RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled](#rqsrs-042oauthazureactionsapplicationdisabled)
             * 7.3.3.2 [RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved](#rqsrs-042oauthazureactionsadminconsentremoved)
             * 7.3.3.3 [RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated](#rqsrs-042oauthazureactionsclientsecretrotated)
-        * 7.3.4 [Token and Session Management](#token-and-session-management)
+        * 7.3.4 [Azure Token and Session Management](#azure-token-and-session-management)
             * 7.3.4.1 [RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked](#rqsrs-042oauthazureactionsusersessionrevoked)
             * 7.3.4.2 [RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired](#rqsrs-042oauthazureactionsrefreshtokenexpired)
-    * 7.4 [User Directories](#user-directories)
-        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
-            * 7.4.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
-                * 7.4.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
-                * 7.4.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
-                * 7.4.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
-                * 7.4.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
-                * 7.4.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
-                * 7.4.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
-            * 7.4.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
-                * 7.4.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
-                * 7.4.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
-                * 7.4.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
-                * 7.4.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
-                * 7.4.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
-                * 7.4.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
-                * 7.4.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
-                * 7.4.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
-        * 7.4.2 [User Groups in Azure](#user-groups-in-azure)
-            * 7.4.2.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
-                * 7.4.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
-            * 7.4.2.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
-                * 7.4.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-            * 7.4.2.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
-                * 7.4.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
-            * 7.4.2.4 [User in Multiple Groups](#user-in-multiple-groups)
-                * 7.4.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
-            * 7.4.2.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
-                * 7.4.2.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
-            * 7.4.2.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
-                * 7.4.2.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-            * 7.4.2.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
-                * 7.4.2.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
-            * 7.4.2.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-                * 7.4.2.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-            * 7.4.2.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
-                * 7.4.2.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-            * 7.4.2.10 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-                * 7.4.2.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-            * 7.4.2.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
-                * 7.4.2.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-            * 7.4.2.12 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-                * 7.4.2.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.4.3 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
-            * 7.4.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
-* 8 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
-    * 8.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 8.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
-        * 8.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
-        * 8.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
-        * 8.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
-        * 8.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
-        * 8.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
-        * 8.1.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
-        * 8.1.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
-        * 8.1.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
-    * 8.2 [Token Handling](#token-handling)
-        * 8.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
-        * 8.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
-        * 8.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
-        * 8.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
-    * 8.3 [Caching](#caching)
-        * 8.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
-        * 8.3.2 [Disable Caching](#disable-caching)
-            * 8.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
-        * 8.3.3 [Cache Lifetime](#cache-lifetime)
-            * 8.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
-        * 8.3.4 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-            * 8.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
-        * 8.3.5 [Cache Eviction Policy](#cache-eviction-policy)
-            * 8.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
-    * 8.4 [Authentication and Login](#authentication-and-login)
-        * 8.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
-        * 8.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
-    * 8.5 [Session Management](#session-management)
-        * 8.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+* 8 [Keycloak](#keycloak)
+    * 8.1 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
+        * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
+    * 8.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+        * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors](#rqsrs-042oauthkeycloakaccesstokenprocessors)
+    * 8.3 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
+        * 8.3.1 [User State Changes](#user-state-changes)
+            * 8.3.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
+            * 8.3.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
+            * 8.3.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
+        * 8.3.2 [Group and Role Membership](#group-and-role-membership)
+            * 8.3.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
+            * 8.3.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
+            * 8.3.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
+        * 8.3.3 [Application and Consent](#application-and-consent)
+            * 8.3.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
+            * 8.3.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
+        * 8.3.4 [Token and Session Management](#token-and-session-management)
+            * 8.3.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
+            * 8.3.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
+            * 8.3.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
+    * 8.4 [User Directories](#user-directories)
+        * 8.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
+            * 8.4.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
+                * 8.4.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
+                * 8.4.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
+                * 8.4.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
+                * 8.4.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
+                * 8.4.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 8.4.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
+            * 8.4.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
+                * 8.4.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
+                * 8.4.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
+                * 8.4.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
+                * 8.4.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
+                * 8.4.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
+                * 8.4.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
+                * 8.4.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+                * 8.4.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+        * 8.4.2 [User Groups in Azure](#user-groups-in-azure)
+            * 8.4.2.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
+                * 8.4.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesusergroups)
+            * 8.4.2.2 [Query Execution Based on User Roles in ClickHouse](#query-execution-based-on-user-roles-in-clickhouse)
+                * 8.4.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
+            * 8.4.2.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
+                * 8.4.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
+            * 8.4.2.4 [User in Multiple Groups](#user-in-multiple-groups)
+                * 8.4.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+            * 8.4.2.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
+                * 8.4.2.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+            * 8.4.2.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
+                * 8.4.2.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+            * 8.4.2.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
+                * 8.4.2.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+            * 8.4.2.8 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+                * 8.4.2.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+            * 8.4.2.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
+                * 8.4.2.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+            * 8.4.2.10 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+                * 8.4.2.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+            * 8.4.2.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
+                * 8.4.2.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+            * 8.4.2.12 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+                * 8.4.2.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 8.4.3 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
+            * 8.4.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+* 9 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
+    * 9.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+        * 9.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
+        * 9.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
+        * 9.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
+        * 9.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
+        * 9.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
+        * 9.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
+        * 9.1.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
+        * 9.1.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
+        * 9.1.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
+    * 9.2 [Token Handling](#token-handling)
+        * 9.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
+        * 9.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
+        * 9.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
+        * 9.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
+    * 9.3 [Caching](#caching)
+        * 9.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
+        * 9.3.2 [Disable Caching](#disable-caching)
+            * 9.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
+        * 9.3.3 [Cache Lifetime](#cache-lifetime)
+            * 9.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
+        * 9.3.4 [Exceeding Max Cache Size](#exceeding-max-cache-size)
+            * 9.3.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
+        * 9.3.5 [Cache Eviction Policy](#cache-eviction-policy)
+            * 9.3.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+    * 9.4 [Authentication and Login](#authentication-and-login)
+        * 9.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+        * 9.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+    * 9.5 [Session Management](#session-management)
+        * 9.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
 
     
 ## Introduction
@@ -2144,31 +2504,6 @@ version: 1.0
 
 [ClickHouse] SHALL allow changing the identity provider by updating the `token_processors` section in the `config.xml` file. After changing the identity provider, [ClickHouse] SHALL require a restart to apply the new configuration.
 
-### Keycloak
-
-#### Access Token Processors For Keycloak
-
-##### RQ.SRS-042.OAuth.IdentityProviders.TokenProcessors.Keycloak
-version: 1.0
-
-[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
-
-Example,
-
-```xml
-<clickhouse>
-    <token_processors>
-        <keycloak>
-            <provider>OpenID</provider>
-            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
-            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
-            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
-            <token_cache_lifetime>60</token_cache_lifetime>
-        </keycloak>
-    </token_processors>
-</clickhouse>
-```
-
 ## Setting Up OAuth Authentication
 
 ### Credentials
@@ -2236,7 +2571,7 @@ Basic structure:
 
 This section outlines how [ClickHouse] SHALL respond to various actions performed in Azure Active Directory that affect user identity, group membership, and token validity.
 
-#### User State Changes
+#### Azure User State Changes
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDisabled
 version: 1.0
@@ -2290,7 +2625,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication
   }'
 ```
 
-#### Group and Role Membership
+#### Azure Group and Role Membership
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup
 version: 1.0
@@ -2326,7 +2661,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
 ```
 
-#### Application and Consent
+#### Azure Application and Consent
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled
 version: 1.0
@@ -2368,7 +2703,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassw
   }'
 ```
 
-#### Token and Session Management
+#### Azure Token and Session Management
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked
 version: 1.0
@@ -2396,8 +2731,189 @@ curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token
   -d 'refresh_token={expired-refresh-token}'
 ```
 
-> [!NOTE]
-> This is a policy-based action in Azure AD. A new access token request with an expired refresh token will fail.
+## Keycloak
+
+[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
+
+### Getting Access Token from Keycloak
+
+#### RQ.SRS-042.OAuth.Keycloak.GetAccessToken
+version: 1.0
+
+To obtain an access token from Keycloak, you need to have a configured realm, client, and user.
+
+You can obtain an access token using the following command:
+
+```bash
+curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=password' \
+  -d 'client_id=my-client' \
+  -d 'client_secret=xxxxxxx' \
+  -d 'username=john' \
+  -d 'password=secret'
+```
+
+### Access Token Processors For Keycloak
+
+#### RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors
+version: 1.0
+
+An Access Token Processor for Keycloak defines how [ClickHouse] validates and interprets access tokens. This includes specifying the OpenID provider details.
+
+Basic structure:
+
+```xml
+<clickhouse>
+    <token_processors>
+        <keycloak>
+            <provider>OpenID</provider>
+            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
+            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
+            <token_cache_lifetime>60</token_cache_lifetime>
+        </keycloak>
+    </token_processors>
+</clickhouse>
+```
+
+### Keycloak Identity Management Actions
+
+This section outlines how [ClickHouse] SHALL respond to various actions performed in Keycloak that affect user identity, group membership, and token validity.
+
+#### User State Changes
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled
+version: 1.0
+
+When a user is disabled in Keycloak, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
+
+```bash
+curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "enabled": false
+  }'
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted
+version: 1.0
+
+When a user is permanently deleted from Keycloak, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
+
+```bash
+curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated
+version: 1.0
+
+When a user's attributes (such as `username`, `email`, or `firstName`) are updated in Keycloak, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
+
+```bash
+curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "new-username",
+    "email": "new-email@example.com"
+  }'
+```
+
+#### Group and Role Membership
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup
+version: 1.0
+
+When a user is added to a group in Keycloak, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
+
+```bash
+curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup
+version: 1.0
+
+When a user is removed from a group in Keycloak, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
+
+```bash
+curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted
+version: 1.0
+
+When a group that is mapped to a [ClickHouse] role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
+
+```bash
+curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/groups/{group-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+#### Application and Consent
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled
+version: 1.0
+
+When the client application used for OAuth integration is disabled in Keycloak, [ClickHouse] SHALL reject all incoming access tokens issued for that client.
+
+```bash
+curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/clients/{client-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "enabled": false
+  }'
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked
+version: 1.0
+
+If a user's consent for the application is revoked in Keycloak, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
+
+```bash
+curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/consents/{client-id}' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+#### Token and Session Management
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked
+version: 1.0
+
+When a user's sign-in sessions are revoked in Keycloak, [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
+
+```bash
+curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/logout' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked
+version: 1.0
+
+When a refresh token is revoked via the logout endpoint, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
+
+```bash
+curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/logout' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id=my-client' \
+  -d 'client_secret=xxxxxx' \
+  -d 'refresh_token=eyJ...'
+```
+
+##### RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated
+version: 1.0
+
+When a `not-before` policy is pushed for a realm or user in Keycloak, all tokens issued before this time SHALL be invalidated, and [ClickHouse] SHALL reject them.
+
+```bash
+curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/push-revocation' \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}"
+```
 
 ### User Directories
 
