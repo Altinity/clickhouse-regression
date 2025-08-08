@@ -152,7 +152,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is not defined locally, [ClickHouse] SHALL use the `IdP` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.\n"
+        "When a user is not defined locally, [ClickHouse] SHALL use the `Azure` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -431,8 +431,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.1.1",
+    level=5,
+    num="7.3.2.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
@@ -443,7 +443,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the Identity Provider (IdP) based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.\n"
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -465,8 +465,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_GroupFiltering = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.2.1",
+    level=5,
+    num="7.3.2.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
@@ -477,13 +477,13 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_MultipleGroups = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user belongs to multiple groups in the IdP, [ClickHouse] SHALL combine all roles that match these group names.\n"
+        "When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.\n"
         "The user SHALL inherit the union of all permissions from these roles.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.3.1",
+    level=5,
+    num="7.3.2.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement(
@@ -494,13 +494,13 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_OverlappingUsers = Requirement
     type=None,
     uid=None,
     description=(
-        "When multiple groups in the IdP contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
+        "When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
         "The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.4.1",
+    level=5,
+    num="7.3.2.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
@@ -516,8 +516,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoGroups = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.5.1",
+    level=5,
+    num="7.3.2.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirement(
@@ -528,12 +528,12 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SubgroupMemberships = Requirem
     type=None,
     uid=None,
     description=(
-        "When a user belongs to subgroups in the IdP, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.\n"
+        "When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.6.1",
+    level=5,
+    num="7.3.2.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
@@ -544,13 +544,13 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingClickHouseRoles = Re
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.\n"
+        "[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.\n"
         "Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.7.1",
+    level=5,
+    num="7.3.2.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
@@ -565,8 +565,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_SameName = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.8.1",
+    level=5,
+    num="7.3.2.8.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
@@ -581,8 +581,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoMatchingRoles = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.9.1",
+    level=5,
+    num="7.3.2.9.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
@@ -597,8 +597,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoPermissionToViewGroups = Req
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.10.1",
+    level=5,
+    num="7.3.2.10.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
@@ -634,8 +634,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoDefaultRole = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.4.11.1",
+    level=5,
+    num="7.3.2.11.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requirement(
@@ -651,7 +651,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requ
     ),
     link=None,
     level=4,
-    num="7.4.12.1",
+    num="7.3.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
@@ -667,7 +667,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests = Requirement(
     ),
     link=None,
     level=3,
-    num="7.5.1",
+    num="7.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
@@ -683,7 +683,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header = Requirement(
     ),
     link=None,
     level=3,
-    num="7.5.2",
+    num="7.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requirement(
@@ -699,7 +699,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Alg = Requireme
     ),
     link=None,
     level=3,
-    num="7.5.3",
+    num="7.4.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requirement(
@@ -715,7 +715,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Typ = Requireme
     ),
     link=None,
     level=3,
-    num="7.5.4",
+    num="7.4.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Requirement(
@@ -731,7 +731,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Header_Signature = Req
     ),
     link=None,
     level=3,
-    num="7.5.5",
+    num="7.4.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
@@ -747,7 +747,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body = Requirement(
     ),
     link=None,
     level=3,
-    num="7.5.6",
+    num="7.4.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement(
@@ -763,7 +763,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Sub = Requirement
     ),
     link=None,
     level=3,
-    num="7.5.7",
+    num="7.4.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement(
@@ -779,7 +779,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Aud = Requirement
     ),
     link=None,
     level=3,
-    num="7.5.8",
+    num="7.4.8",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement(
@@ -795,7 +795,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_IncorrectRequests_Body_Exp = Requirement
     ),
     link=None,
     level=3,
-    num="7.5.9",
+    num="7.4.9",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
@@ -810,7 +810,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Expired = Requirement(
     ),
     link=None,
     level=3,
-    num="7.6.1",
+    num="7.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
@@ -826,7 +826,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_Incorrect = Requirement(
     ),
     link=None,
     level=3,
-    num="7.6.2",
+    num="7.5.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirement(
@@ -842,7 +842,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_NonAlphaNumeric = Requirem
     ),
     link=None,
     level=3,
-    num="7.6.3",
+    num="7.5.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
@@ -858,7 +858,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_TokenHandling_EmptyString = Requirement(
     ),
     link=None,
     level=3,
-    num="7.6.4",
+    num="7.5.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
@@ -899,7 +899,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching = Requirement(
     ),
     link=None,
     level=3,
-    num="7.7.1",
+    num="7.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirement(
@@ -915,7 +915,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_NoCache = Requirem
     ),
     link=None,
     level=4,
-    num="7.7.2.1",
+    num="7.6.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Requirement(
@@ -931,7 +931,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_CacheLifetime = Re
     ),
     link=None,
     level=5,
-    num="7.7.3.1.1",
+    num="7.6.3.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Requirement(
@@ -947,7 +947,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_MaxCacheSize = Req
     ),
     link=None,
     level=5,
-    num="7.7.3.2.1",
+    num="7.6.3.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requirement(
@@ -963,7 +963,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Caching_CacheEviction_Policy = Requireme
     ),
     link=None,
     level=5,
-    num="7.7.3.3.1",
+    num="7.6.3.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
@@ -988,7 +988,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication = Requirement(
     ),
     link=None,
     level=4,
-    num="7.8.1.1",
+    num="7.7.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirement(
@@ -1004,7 +1004,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_Authentication_Client = Requirem
     ),
     link=None,
     level=4,
-    num="7.8.1.2",
+    num="7.7.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
@@ -1020,7 +1020,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
     ),
     link=None,
     level=4,
-    num="7.8.2.1",
+    num="7.7.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken = Requirement(
@@ -1040,7 +1040,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement_RefreshToken =
     ),
     link=None,
     level=4,
-    num="7.8.2.2",
+    num="7.7.2.2",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -1182,209 +1182,211 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=5,
             num="7.3.1.2.8",
         ),
-        Heading(name="User Roles", level=2, num="7.4"),
-        Heading(name="Query Execution Based on User Roles", level=3, num="7.4.1"),
+        Heading(name="User Roles", level=3, num="7.3.2"),
+        Heading(name="Query Execution Based on User Roles", level=4, num="7.3.2.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles",
-            level=4,
-            num="7.4.1.1",
+            level=5,
+            num="7.3.2.1.1",
         ),
-        Heading(name="Group Filtering", level=3, num="7.4.2"),
+        Heading(name="Group Filtering", level=4, num="7.3.2.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering",
-            level=4,
-            num="7.4.2.1",
+            level=5,
+            num="7.3.2.2.1",
         ),
-        Heading(name="User in Multiple Groups", level=3, num="7.4.3"),
+        Heading(name="User in Multiple Groups", level=4, num="7.3.2.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups",
-            level=4,
-            num="7.4.3.1",
+            level=5,
+            num="7.3.2.3.1",
         ),
-        Heading(name="Overlapping Users Across Groups", level=3, num="7.4.4"),
+        Heading(name="Overlapping Users Across Groups", level=4, num="7.3.2.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers",
-            level=4,
-            num="7.4.4.1",
+            level=5,
+            num="7.3.2.4.1",
         ),
-        Heading(name="No Groups in Identity Provider", level=3, num="7.4.5"),
+        Heading(name="No Groups in Identity Provider", level=4, num="7.3.2.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups",
-            level=4,
-            num="7.4.5.1",
+            level=5,
+            num="7.3.2.5.1",
         ),
-        Heading(name="Subgroup Memberships", level=3, num="7.4.6"),
+        Heading(name="Subgroup Memberships", level=4, num="7.3.2.6"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships",
-            level=4,
-            num="7.4.6.1",
+            level=5,
+            num="7.3.2.6.1",
         ),
-        Heading(name="Dynamic Group Membership Updates", level=3, num="7.4.7"),
+        Heading(name="Dynamic Group Membership Updates", level=4, num="7.3.2.7"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles",
-            level=4,
-            num="7.4.7.1",
+            level=5,
+            num="7.3.2.7.1",
         ),
-        Heading(name="IdP Group Names Match Roles in ClickHouse", level=3, num="7.4.8"),
+        Heading(
+            name="Azure Group Names Match Roles in ClickHouse", level=4, num="7.3.2.8"
+        ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName",
-            level=4,
-            num="7.4.8.1",
+            level=5,
+            num="7.3.2.8.1",
         ),
-        Heading(name="No Matching Roles in ClickHouse", level=3, num="7.4.9"),
+        Heading(name="No Matching Roles in ClickHouse", level=4, num="7.3.2.9"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles",
-            level=4,
-            num="7.4.9.1",
+            level=5,
+            num="7.3.2.9.1",
         ),
-        Heading(name="User Cannot View Groups in IdP", level=3, num="7.4.10"),
+        Heading(name="User Cannot View Groups in Azure", level=4, num="7.3.2.10"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups",
-            level=4,
-            num="7.4.10.1",
+            level=5,
+            num="7.3.2.10.1",
         ),
         Heading(
             name="In ClickHouse There Is No Default Role Specified",
-            level=3,
-            num="7.4.11",
+            level=4,
+            num="7.3.2.11",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole",
-            level=4,
-            num="7.4.11.1",
+            level=5,
+            num="7.3.2.11.1",
         ),
         Heading(
             name="Access Token Processors are Missing From ClickHouse Configuration ",
             level=3,
-            num="7.4.12",
+            num="7.3.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
             level=4,
-            num="7.4.12.1",
+            num="7.3.3.1",
         ),
-        Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.5"),
+        Heading(name="Incorrect Requests to ClickHouse", level=2, num="7.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests",
             level=3,
-            num="7.5.1",
+            num="7.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header",
             level=3,
-            num="7.5.2",
+            num="7.4.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg",
             level=3,
-            num="7.5.3",
+            num="7.4.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ",
             level=3,
-            num="7.5.4",
+            num="7.4.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature",
             level=3,
-            num="7.5.5",
+            num="7.4.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body",
             level=3,
-            num="7.5.6",
+            num="7.4.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub",
             level=3,
-            num="7.5.7",
+            num="7.4.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud",
             level=3,
-            num="7.5.8",
+            num="7.4.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp",
             level=3,
-            num="7.5.9",
+            num="7.4.9",
         ),
-        Heading(name="Token Handling", level=2, num="7.6"),
+        Heading(name="Token Handling", level=2, num="7.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired",
             level=3,
-            num="7.6.1",
+            num="7.5.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect",
             level=3,
-            num="7.6.2",
+            num="7.5.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric",
             level=3,
-            num="7.6.3",
+            num="7.5.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString",
             level=3,
-            num="7.6.4",
+            num="7.5.4",
         ),
-        Heading(name="Caching", level=2, num="7.7"),
+        Heading(name="Caching", level=2, num="7.6"),
         Heading(
-            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="7.7.1"
+            name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching", level=3, num="7.6.1"
         ),
-        Heading(name="Disable Caching", level=3, num="7.7.2"),
+        Heading(name="Disable Caching", level=3, num="7.6.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache",
             level=4,
-            num="7.7.2.1",
+            num="7.6.2.1",
         ),
-        Heading(name="Cache Eviction", level=3, num="7.7.3"),
-        Heading(name="Cache Lifetime", level=4, num="7.7.3.1"),
+        Heading(name="Cache Eviction", level=3, num="7.6.3"),
+        Heading(name="Cache Lifetime", level=4, num="7.6.3.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime",
             level=5,
-            num="7.7.3.1.1",
+            num="7.6.3.1.1",
         ),
-        Heading(name="Exceeding Max Cache Size", level=4, num="7.7.3.2"),
+        Heading(name="Exceeding Max Cache Size", level=4, num="7.6.3.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize",
             level=5,
-            num="7.7.3.2.1",
+            num="7.6.3.2.1",
         ),
-        Heading(name="Cache Eviction Policy", level=4, num="7.7.3.3"),
+        Heading(name="Cache Eviction Policy", level=4, num="7.6.3.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy",
             level=5,
-            num="7.7.3.3.1",
+            num="7.6.3.3.1",
         ),
         Heading(
             name="Actions Performed in ClickHouse After Token Validation",
             level=2,
-            num="7.8",
+            num="7.7",
         ),
-        Heading(name="Authentication and Login", level=3, num="7.8.1"),
+        Heading(name="Authentication and Login", level=3, num="7.7.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication",
             level=4,
-            num="7.8.1.1",
+            num="7.7.1.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client",
             level=4,
-            num="7.8.1.2",
+            num="7.7.1.2",
         ),
-        Heading(name="Session Management", level=3, num="7.8.2"),
+        Heading(name="Session Management", level=3, num="7.7.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement",
             level=4,
-            num="7.8.2.1",
+            num="7.7.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken",
             level=4,
-            num="7.8.2.2",
+            num="7.7.2.2",
         ),
     ),
     requirements=(
@@ -1490,64 +1492,64 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.3.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
                 * 7.3.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
                 * 7.3.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
-    * 7.4 [User Roles](#user-roles)
-        * 7.4.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
-            * 7.4.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
-        * 7.4.2 [Group Filtering](#group-filtering)
-            * 7.4.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
-        * 7.4.3 [User in Multiple Groups](#user-in-multiple-groups)
-            * 7.4.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
-        * 7.4.4 [Overlapping Users Across Groups](#overlapping-users-across-groups)
-            * 7.4.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
-        * 7.4.5 [No Groups in Identity Provider](#no-groups-in-identity-provider)
-            * 7.4.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
-        * 7.4.6 [Subgroup Memberships](#subgroup-memberships)
-            * 7.4.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
-        * 7.4.7 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
-            * 7.4.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
-        * 7.4.8 [IdP Group Names Match Roles in ClickHouse](#idp-group-names-match-roles-in-clickhouse)
-            * 7.4.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
-        * 7.4.9 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
-            * 7.4.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
-        * 7.4.10 [User Cannot View Groups in IdP](#user-cannot-view-groups-in-idp)
-            * 7.4.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.4.11 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
-            * 7.4.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
-        * 7.4.12 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
-            * 7.4.12.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
-    * 7.5 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
-        * 7.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
-        * 7.5.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
-        * 7.5.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
-        * 7.5.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
-        * 7.5.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
-        * 7.5.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
-        * 7.5.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
-        * 7.5.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
-    * 7.6 [Token Handling](#token-handling)
-        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
-        * 7.6.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
-        * 7.6.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
-        * 7.6.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
-    * 7.7 [Caching](#caching)
-        * 7.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
-        * 7.7.2 [Disable Caching](#disable-caching)
-            * 7.7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
-        * 7.7.3 [Cache Eviction](#cache-eviction)
-            * 7.7.3.1 [Cache Lifetime](#cache-lifetime)
-                * 7.7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
-            * 7.7.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
-                * 7.7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
-            * 7.7.3.3 [Cache Eviction Policy](#cache-eviction-policy)
-                * 7.7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
-    * 7.8 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
-        * 7.8.1 [Authentication and Login](#authentication-and-login)
-            * 7.8.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
-            * 7.8.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
-        * 7.8.2 [Session Management](#session-management)
-            * 7.8.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
-            * 7.8.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
+        * 7.3.2 [User Roles](#user-roles)
+            * 7.3.2.1 [Query Execution Based on User Roles](#query-execution-based-on-user-roles)
+                * 7.3.2.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles](#rqsrs-042oauthgrafanaauthenticationuserroles)
+            * 7.3.2.2 [Group Filtering](#group-filtering)
+                * 7.3.2.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaauthenticationuserrolesgroupfiltering)
+            * 7.3.2.3 [User in Multiple Groups](#user-in-multiple-groups)
+                * 7.3.2.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesmultiplegroups)
+            * 7.3.2.4 [Overlapping Users Across Groups](#overlapping-users-across-groups)
+                * 7.3.2.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaauthenticationuserrolesoverlappingusers)
+            * 7.3.2.5 [No Groups in Identity Provider](#no-groups-in-identity-provider)
+                * 7.3.2.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnogroups)
+            * 7.3.2.6 [Subgroup Memberships](#subgroup-memberships)
+                * 7.3.2.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaauthenticationuserrolessubgroupmemberships)
+            * 7.3.2.7 [Dynamic Group Membership Updates](#dynamic-group-membership-updates)
+                * 7.3.2.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingclickhouseroles)
+            * 7.3.2.8 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
+                * 7.3.2.8.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaauthenticationuserrolessamename)
+            * 7.3.2.9 [No Matching Roles in ClickHouse](#no-matching-roles-in-clickhouse)
+                * 7.3.2.9.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaauthenticationuserrolesnomatchingroles)
+            * 7.3.2.10 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
+                * 7.3.2.10.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaauthenticationuserrolesnopermissiontoviewgroups)
+            * 7.3.2.11 [In ClickHouse There Is No Default Role Specified](#in-clickhouse-there-is-no-default-role-specified)
+                * 7.3.2.11.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaauthenticationuserrolesnodefaultrole)
+        * 7.3.3 [Access Token Processors are Missing From ClickHouse Configuration ](#access-token-processors-are-missing-from-clickhouse-configuration-)
+            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+    * 7.4 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+        * 7.4.1 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests](#rqsrs-042oauthgrafanaauthenticationincorrectrequests)
+        * 7.4.2 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheader)
+        * 7.4.3 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheaderalg)
+        * 7.4.4 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadertyp)
+        * 7.4.5 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsheadersignature)
+        * 7.4.6 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbody)
+        * 7.4.7 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodysub)
+        * 7.4.8 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyaud)
+        * 7.4.9 [RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthgrafanaauthenticationincorrectrequestsbodyexp)
+    * 7.5 [Token Handling](#token-handling)
+        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired](#rqsrs-042oauthgrafanaauthenticationtokenhandlingexpired)
+        * 7.5.2 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthgrafanaauthenticationtokenhandlingincorrect)
+        * 7.5.3 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric](#rqsrs-042oauthgrafanaauthenticationtokenhandlingnonalphanumeric)
+        * 7.5.4 [RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthgrafanaauthenticationtokenhandlingemptystring)
+    * 7.6 [Caching](#caching)
+        * 7.6.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching](#rqsrs-042oauthgrafanaauthenticationcaching)
+        * 7.6.2 [Disable Caching](#disable-caching)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionnocache)
+        * 7.6.3 [Cache Eviction](#cache-eviction)
+            * 7.6.3.1 [Cache Lifetime](#cache-lifetime)
+                * 7.6.3.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictioncachelifetime)
+            * 7.6.3.2 [Exceeding Max Cache Size](#exceeding-max-cache-size)
+                * 7.6.3.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionmaxcachesize)
+            * 7.6.3.3 [Cache Eviction Policy](#cache-eviction-policy)
+                * 7.6.3.3.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy](#rqsrs-042oauthgrafanaauthenticationcachingcacheevictionpolicy)
+    * 7.7 [Actions Performed in ClickHouse After Token Validation](#actions-performed-in-clickhouse-after-token-validation)
+        * 7.7.1 [Authentication and Login](#authentication-and-login)
+            * 7.7.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication](#rqsrs-042oauthgrafanaauthenticationactionsauthentication)
+            * 7.7.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client](#rqsrs-042oauthgrafanaauthenticationactionsauthenticationclient)
+        * 7.7.2 [Session Management](#session-management)
+            * 7.7.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagement)
+            * 7.7.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement.RefreshToken](#rqsrs-042oauthgrafanaauthenticationactionssessionmanagementrefreshtoken)
 
     
 ## Introduction
@@ -1777,7 +1779,7 @@ validates user credentials and assigns roles based on data from this external sy
 #### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories
 version: 1.0
 
-When a user is not defined locally, [ClickHouse] SHALL use the `IdP` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
+When a user is not defined locally, [ClickHouse] SHALL use the `Azure` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
 
 For example,
 
@@ -1880,11 +1882,11 @@ version: 1.0
 
 [ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
-### User Roles
+#### User Roles
 
-#### Query Execution Based on User Roles
+##### Query Execution Based on User Roles
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles
 version: 1.0
 
 When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
@@ -1897,12 +1899,12 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 <img width="1480" height="730" alt="Screenshot from 2025-07-30 16-08-58" src="https://github.com/user-attachments/assets/fbd4b3c5-3f8e-429d-8bb6-141c240d0384" />
 
 
-#### Group Filtering
+##### Group Filtering
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the Identity Provider (IdP) based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -1922,69 +1924,69 @@ For example,
 </clickhouse>
 ```
 
-#### User in Multiple Groups
+##### User in Multiple Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.MultipleGroups
 version: 1.0
 
-When a user belongs to multiple groups in the IdP, [ClickHouse] SHALL combine all roles that match these group names.
+When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-#### Overlapping Users Across Groups
+##### Overlapping Users Across Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.OverlappingUsers
 version: 1.0
 
-When multiple groups in the IdP contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
 The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
 
-#### No Groups in Identity Provider
+##### No Groups in Identity Provider
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoGroups
 version: 1.0
 
 When a grafana user is authenticated via OAuth and the Identity Provider does not return any groups for the user, 
 [ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
-#### Subgroup Memberships
+##### Subgroup Memberships
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
 
-When a user belongs to subgroups in the IdP, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
+When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
-#### Dynamic Group Membership Updates
+##### Dynamic Group Membership Updates
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingClickHouseRoles
 version: 1.0
 
-[ClickHouse] SHALL reflect changes in a user’s group memberships from the IdP dynamically during the next token validation or cache refresh.
+[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.
 Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
 
-#### IdP Group Names Match Roles in ClickHouse
+##### Azure Group Names Match Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
-#### No Matching Roles in ClickHouse
+##### No Matching Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
 When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
 
-#### User Cannot View Groups in IdP
+##### User Cannot View Groups in Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
 
 When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
 
-#### In ClickHouse There Is No Default Role Specified
+##### In ClickHouse There Is No Default Role Specified
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
+###### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
 When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
