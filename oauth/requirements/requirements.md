@@ -23,7 +23,7 @@
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
 * 7 [Azure](#azure)
     * 7.1 [Getting Access Token from Azure](#getting-access-token-from-azure)
-            * 7.1.0.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
+        * 7.1.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.2 [Access Token Processors For Azure](#access-token-processors-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
     * 7.3 [Azure Identity Management Actions](#azure-identity-management-actions)
@@ -313,7 +313,7 @@ printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>Client
 
 ### Getting Access Token from Azure
 
-##### RQ.SRS-042.OAuth.Azure.GetAccessToken
+#### RQ.SRS-042.OAuth.Azure.GetAccessToken
 version: 1.0
 
 To obtain an access token from Azure AD, you need to register an application in Azure AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.

@@ -121,8 +121,8 @@ RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.1.0.1",
+    level=3,
+    num="7.1.1",
 )
 
 RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
@@ -1347,7 +1347,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="RQ.SRS-042.OAuth.Credentials", level=3, num="6.1.1"),
         Heading(name="Azure", level=1, num="7"),
         Heading(name="Getting Access Token from Azure", level=2, num="7.1"),
-        Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=4, num="7.1.0.1"),
+        Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.1.1"),
         Heading(name="Access Token Processors For Azure", level=2, num="7.2"),
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
@@ -1819,7 +1819,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
 * 7 [Azure](#azure)
     * 7.1 [Getting Access Token from Azure](#getting-access-token-from-azure)
-            * 7.1.0.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
+        * 7.1.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.2 [Access Token Processors For Azure](#access-token-processors-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
     * 7.3 [Azure Identity Management Actions](#azure-identity-management-actions)
@@ -2109,7 +2109,7 @@ printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>Client
 
 ### Getting Access Token from Azure
 
-##### RQ.SRS-042.OAuth.Azure.GetAccessToken
+#### RQ.SRS-042.OAuth.Azure.GetAccessToken
 version: 1.0
 
 To obtain an access token from Azure AD, you need to register an application in Azure AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.
