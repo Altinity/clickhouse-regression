@@ -1296,17 +1296,15 @@ version: 1.0
 
 [ClickHouse] SHALL support custom JWKS setup for services that need to issue their own JWT tokens without using a full Identity Provider.
 
-**Step A — Generate a signing key (RSA is the common choice):**
+**Generate RSA Key Pair for JWT Signing:**
 
 ```bash
-# RSA 2048 private key (PEM)
 openssl genrsa -out jwt-private.pem 2048
 
-# Public key from the private key
 openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
 ```
 
-**Step B — Produce a JWKS from the public key:**
+**Create JSON Web Key Set (JWKS) from Public Key:**
 
 A JWKS is a JSON document that includes your public key parameters. For RSA it looks like:
 
@@ -1325,7 +1323,7 @@ A JWKS is a JSON document that includes your public key parameters. For RSA it l
 }
 ```
 
-**Step C — Host the JWKS at a URL:**
+**Deploy JWKS to HTTPS Web Server:**
 
 Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny Flask/FastAPI app). Example path:
 
@@ -1333,7 +1331,7 @@ Drop `jwks.json` behind any HTTPS-capable web server (nginx, Caddy, even a tiny 
 https://auth.example.com/.well-known/jwks.json
 ```
 
-**Step D — Configure ClickHouse to use it:**
+**Configure ClickHouse Token Processor:**
 
 ```xml
 <clickhouse>
@@ -1347,7 +1345,7 @@ https://auth.example.com/.well-known/jwks.json
 </clickhouse>
 ```
 
-**Step E — Sign tokens with the private key:**
+**Sign JWT Tokens with Private Key:**
 
 Your token issuer must:
 
