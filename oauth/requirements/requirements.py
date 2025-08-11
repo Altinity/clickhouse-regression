@@ -80,6 +80,99 @@ RQ_SRS_042_OAuth_Credentials = Requirement(
     num="6.1.1",
 )
 
+RQ_SRS_042_OAuth_Azure_ApplicationSetup_ = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.ApplicationSetup ",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support integration with applications registered in Azure Active Directory. To set up an application in Azure for OAuth authentication, the following steps SHALL be performed:\n"
+        "\n"
+        "```bash\n"
+        'ACCESS_TOKEN="<admin-access-token>"\n'
+        "\n"
+        'curl -s -X POST "https://graph.microsoft.com/v1.0/applications" \\\n'
+        '  -H "Authorization: Bearer ${ACCESS_TOKEN}" \\\n'
+        '  -H "Content-Type: application/json" \\\n'
+        "  -d '{\n"
+        '    "displayName": "ClickHouse OAuth App",\n'
+        '    "signInAudience": "AzureADMyOrg",\n'
+        '    "web": {\n'
+        '      "redirectUris": ["http://localhost:3000/login/generic_oauth"]\n'
+        "    }\n"
+        "  }'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.1.1",
+)
+
+RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support validating opaque access tokens issued by Azure AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <token_processors>\n"
+        "        <azure_opaque>\n"
+        "            <provider>openid</provider>\n"
+        "            <configuration_endpoint>https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration</configuration_endpoint>\n"
+        "            <cache_lifetime>600</cache_lifetime>\n"
+        "            <username_claim>sub</username_claim>\n"
+        "            <groups_claim>groups</groups_claim>\n"
+        "        </azure_opaque>\n"
+        "    </token_processors>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="7.2.1",
+)
+
+RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reject the configuration if `configuration_endpoint` is not set and neither `userinfo_endpoint` nor `token_introspection_endpoint` is set.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.2.1",
+)
+
+RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL reject the configuration if `configuration`, `userinfo_endpoint`, and `token_introspection_endpoint` are set at the same time.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.3.1",
+)
+
 RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
     name="RQ.SRS-042.OAuth.Azure.GetAccessToken",
     version="1.0",
@@ -108,7 +201,7 @@ RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
     ),
     link=None,
     level=3,
-    num="7.1.1",
+    num="7.3.1",
 )
 
 RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
@@ -139,7 +232,7 @@ RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors = Requirement(
     ),
     link=None,
     level=3,
-    num="7.2.1",
+    num="7.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups = Requirement(
@@ -168,7 +261,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups = Requi
     ),
     link=None,
     level=4,
-    num="7.3.1.1",
+    num="7.5.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles = Requirement(
@@ -192,7 +285,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.2.1",
+    num="7.5.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering = Requirement(
@@ -234,7 +327,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering = Require
     ),
     link=None,
     level=4,
-    num="7.3.3.1",
+    num="7.5.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_MultipleGroups = Requirement(
@@ -251,7 +344,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_MultipleGroups = Require
     ),
     link=None,
     level=4,
-    num="7.3.4.1",
+    num="7.5.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_OverlappingUsers = Requirement(
@@ -268,7 +361,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_OverlappingUsers = Requi
     ),
     link=None,
     level=4,
-    num="7.3.5.1",
+    num="7.5.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoGroups = Requirement(
@@ -285,7 +378,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoGroups = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.6.1",
+    num="7.5.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SubgroupMemberships = Requirement(
@@ -301,7 +394,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SubgroupMemberships = Re
     ),
     link=None,
     level=4,
-    num="7.3.7.1",
+    num="7.5.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
@@ -318,7 +411,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingClickHouseRole
     ),
     link=None,
     level=4,
-    num="7.3.8.1",
+    num="7.5.8.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SameName = Requirement(
@@ -334,7 +427,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SameName = Requirement(
     ),
     link=None,
     level=4,
-    num="7.3.9.1",
+    num="7.5.9.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingRoles = Requirement(
@@ -350,7 +443,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingRoles = Requir
     ),
     link=None,
     level=4,
-    num="7.3.10.1",
+    num="7.5.10.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
@@ -366,7 +459,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoPermissionToViewGroups
     ),
     link=None,
     level=4,
-    num="7.3.11.1",
+    num="7.5.11.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoDefaultRole = Requirement(
@@ -403,7 +496,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoDefaultRole = Requirem
     ),
     link=None,
     level=4,
-    num="7.3.12.1",
+    num="7.5.12.1",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserDisabled = Requirement(
@@ -428,7 +521,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.1.1",
+    num="7.6.1.1",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserDeleted = Requirement(
@@ -449,7 +542,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.1.2",
+    num="7.6.1.2",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserAttributesUpdated = Requirement(
@@ -474,7 +567,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserAttributesUpdated = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.1.3",
+    num="7.6.1.3",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserPasswordReset = Requirement(
@@ -499,7 +592,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserPasswordReset = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.1.4",
+    num="7.6.1.4",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserAddedToGroup = Requirement(
@@ -524,7 +617,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserAddedToGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.2.1",
+    num="7.6.2.1",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserRemovedFromGroup = Requirement(
@@ -545,7 +638,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserRemovedFromGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.2.2",
+    num="7.6.2.2",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_GroupDeleted = Requirement(
@@ -566,7 +659,7 @@ RQ_SRS_042_OAuth_Azure_Actions_GroupDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.2.3",
+    num="7.6.2.3",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_ApplicationDisabled = Requirement(
@@ -591,7 +684,7 @@ RQ_SRS_042_OAuth_Azure_Actions_ApplicationDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.3.1",
+    num="7.6.3.1",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_AdminConsentRemoved = Requirement(
@@ -612,7 +705,7 @@ RQ_SRS_042_OAuth_Azure_Actions_AdminConsentRemoved = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.3.2",
+    num="7.6.3.2",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated = Requirement(
@@ -639,7 +732,7 @@ RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.3.3",
+    num="7.6.3.3",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked = Requirement(
@@ -662,7 +755,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.4.1",
+    num="7.6.4.1",
 )
 
 RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired = Requirement(
@@ -687,7 +780,7 @@ RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired = Requirement(
     ),
     link=None,
     level=4,
-    num="7.4.4.2",
+    num="7.6.4.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requirement(
@@ -704,7 +797,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserRoles_NoAccessTokenProcessors = Requ
     ),
     link=None,
     level=4,
-    num="7.4.5.1",
+    num="7.6.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
@@ -745,7 +838,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
     ),
     link=None,
     level=3,
-    num="7.5.1",
+    num="7.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_provider = Requirement(
@@ -761,7 +854,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_p
     ),
     link=None,
     level=5,
-    num="7.5.1.1.1",
+    num="7.7.1.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_clientId = Requirement(
@@ -777,7 +870,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_c
     ),
     link=None,
     level=5,
-    num="7.5.1.1.2",
+    num="7.7.1.1.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_tenantId = Requirement(
@@ -793,7 +886,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_t
     ),
     link=None,
     level=5,
-    num="7.5.1.1.3",
+    num="7.7.1.1.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor = Requirement(
@@ -809,7 +902,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.5.1.1.4",
+    num="7.7.1.1.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles = Requirement(
@@ -825,7 +918,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.5.1.1.5",
+    num="7.7.1.1.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries = Requirement(
@@ -843,7 +936,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_IncorrectConfiguration_T
     ),
     link=None,
     level=5,
-    num="7.5.1.1.6",
+    num="7.7.1.1.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors = Requirement(
@@ -859,7 +952,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Acc
     ),
     link=None,
     level=5,
-    num="7.5.1.2.1",
+    num="7.7.1.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider = Requirement(
@@ -875,7 +968,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.5.1.2.2",
+    num="7.7.1.2.2",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_clientId = Requirement(
@@ -891,7 +984,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.5.1.2.3",
+    num="7.7.1.2.3",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_tenantId = Requirement(
@@ -907,7 +1000,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Tok
     ),
     link=None,
     level=5,
-    num="7.5.1.2.4",
+    num="7.7.1.2.4",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories = Requirement(
@@ -923,7 +1016,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.5.1.2.5",
+    num="7.7.1.2.5",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token = Requirement(
@@ -939,7 +1032,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.5.1.2.6",
+    num="7.7.1.2.6",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor = Requirement(
@@ -955,7 +1048,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.5.1.2.7",
+    num="7.7.1.2.7",
 )
 
 RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles = Requirement(
@@ -972,7 +1065,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     ),
     link=None,
     level=5,
-    num="7.5.1.2.8",
+    num="7.7.1.2.8",
 )
 
 RQ_SRS_042_OAuth_Keycloak_GetAccessToken = Requirement(
@@ -2189,261 +2282,277 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Credentials", level=2, num="6.1"),
         Heading(name="RQ.SRS-042.OAuth.Credentials", level=3, num="6.1.1"),
         Heading(name="Azure", level=1, num="7"),
-        Heading(name="Getting Access Token from Azure", level=2, num="7.1"),
-        Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.1.1"),
-        Heading(name="Access Token Processors For Azure", level=2, num="7.2"),
+        Heading(name="Setting up an Application in Azure", level=2, num="7.1"),
+        Heading(name="RQ.SRS-042.OAuth.Azure.ApplicationSetup ", level=3, num="7.1.1"),
+        Heading(name="Opaque Token Support for Azure", level=2, num="7.2"),
+        Heading(name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport", level=3, num="7.2.1"),
+        Heading(name="Specifying the Configuration Endpoint", level=3, num="7.2.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
+            level=4,
+            num="7.2.2.1",
+        ),
+        Heading(name="Specifying all Endpoint parameters", level=3, num="7.2.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints",
+            level=4,
+            num="7.2.3.1",
+        ),
+        Heading(name="Getting Access Token from Azure", level=2, num="7.3"),
+        Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.3.1"),
+        Heading(name="Access Token Processors For Azure", level=2, num="7.4"),
         Heading(
             name="RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors",
             level=3,
-            num="7.2.1",
+            num="7.4.1",
         ),
-        Heading(name="User Groups in Azure", level=2, num="7.3"),
-        Heading(name="Setting up User Groups in Azure", level=3, num="7.3.1"),
+        Heading(name="User Groups in Azure", level=2, num="7.5"),
+        Heading(name="Setting up User Groups in Azure", level=3, num="7.5.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups",
             level=4,
-            num="7.3.1.1",
+            num="7.5.1.1",
         ),
         Heading(
             name="Query Execution Based on User Roles in ClickHouse with Azure",
             level=3,
-            num="7.3.2",
+            num="7.5.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles",
             level=4,
-            num="7.3.2.1",
+            num="7.5.2.1",
         ),
         Heading(
-            name="Filtering Azure Groups for Role Assignment", level=3, num="7.3.3"
+            name="Filtering Azure Groups for Role Assignment", level=3, num="7.5.3"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering",
             level=4,
-            num="7.3.3.1",
+            num="7.5.3.1",
         ),
-        Heading(name="User in Multiple Azure Groups", level=3, num="7.3.4"),
+        Heading(name="User in Multiple Azure Groups", level=3, num="7.5.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups",
             level=4,
-            num="7.3.4.1",
+            num="7.5.4.1",
         ),
         Heading(
             name="No Duplicate Role Assignments for Overlapping Azure Groups",
             level=3,
-            num="7.3.5",
+            num="7.5.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers",
             level=4,
-            num="7.3.5.1",
+            num="7.5.5.1",
         ),
-        Heading(name="No Azure Groups Returned for User", level=3, num="7.3.6"),
+        Heading(name="No Azure Groups Returned for User", level=3, num="7.5.6"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups",
             level=4,
-            num="7.3.6.1",
+            num="7.5.6.1",
         ),
-        Heading(name="Azure Subgroup Memberships Not Considered", level=3, num="7.3.7"),
+        Heading(name="Azure Subgroup Memberships Not Considered", level=3, num="7.5.7"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships",
             level=4,
-            num="7.3.7.1",
+            num="7.5.7.1",
         ),
         Heading(
             name="Dynamic Group Membership Updates For Azure Users",
             level=3,
-            num="7.3.8",
+            num="7.5.8",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles",
             level=4,
-            num="7.3.8.1",
+            num="7.5.8.1",
         ),
         Heading(
-            name="Azure Group Names Match Roles in ClickHouse", level=3, num="7.3.9"
+            name="Azure Group Names Match Roles in ClickHouse", level=3, num="7.5.9"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName",
             level=4,
-            num="7.3.9.1",
+            num="7.5.9.1",
         ),
         Heading(
             name="No Matching Roles in ClickHouse for Azure Groups",
             level=3,
-            num="7.3.10",
+            num="7.5.10",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles",
             level=4,
-            num="7.3.10.1",
+            num="7.5.10.1",
         ),
-        Heading(name="User Cannot View Groups in Azure", level=3, num="7.3.11"),
+        Heading(name="User Cannot View Groups in Azure", level=3, num="7.5.11"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups",
             level=4,
-            num="7.3.11.1",
+            num="7.5.11.1",
         ),
         Heading(
             name="In ClickHouse There Is No Default Role Specified for Azure Users",
             level=3,
-            num="7.3.12",
+            num="7.5.12",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole",
             level=4,
-            num="7.3.12.1",
+            num="7.5.12.1",
         ),
-        Heading(name="Azure Identity Management Actions", level=2, num="7.4"),
-        Heading(name="Azure User State Changes", level=3, num="7.4.1"),
+        Heading(name="Azure Identity Management Actions", level=2, num="7.6"),
+        Heading(name="Azure User State Changes", level=3, num="7.6.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.Actions.UserDisabled", level=4, num="7.4.1.1"
+            name="RQ.SRS-042.OAuth.Azure.Actions.UserDisabled", level=4, num="7.6.1.1"
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.Actions.UserDeleted", level=4, num="7.4.1.2"
+            name="RQ.SRS-042.OAuth.Azure.Actions.UserDeleted", level=4, num="7.6.1.2"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated",
             level=4,
-            num="7.4.1.3",
+            num="7.6.1.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset",
             level=4,
-            num="7.4.1.4",
+            num="7.6.1.4",
         ),
-        Heading(name="Azure Group and Role Membership", level=3, num="7.4.2"),
+        Heading(name="Azure Group and Role Membership", level=3, num="7.6.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup",
             level=4,
-            num="7.4.2.1",
+            num="7.6.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup",
             level=4,
-            num="7.4.2.2",
+            num="7.6.2.2",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted", level=4, num="7.4.2.3"
+            name="RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted", level=4, num="7.6.2.3"
         ),
-        Heading(name="Azure Application and Consent", level=3, num="7.4.3"),
+        Heading(name="Azure Application and Consent", level=3, num="7.6.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled",
             level=4,
-            num="7.4.3.1",
+            num="7.6.3.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved",
             level=4,
-            num="7.4.3.2",
+            num="7.6.3.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated",
             level=4,
-            num="7.4.3.3",
+            num="7.6.3.3",
         ),
-        Heading(name="Azure Token and Session Management", level=3, num="7.4.4"),
+        Heading(name="Azure Token and Session Management", level=3, num="7.6.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked",
             level=4,
-            num="7.4.4.1",
+            num="7.6.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired",
             level=4,
-            num="7.4.4.2",
+            num="7.6.4.2",
         ),
         Heading(
             name="Access Token Processors are Missing From ClickHouse Configuration",
             level=3,
-            num="7.4.5",
+            num="7.6.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors",
             level=4,
-            num="7.4.5.1",
+            num="7.6.5.1",
         ),
-        Heading(name="Azure as an External User Directory", level=2, num="7.5"),
+        Heading(name="Azure as an External User Directory", level=2, num="7.7"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories",
             level=3,
-            num="7.5.1",
+            num="7.7.1",
         ),
         Heading(
-            name="Incorrect Configuration in User Directories", level=4, num="7.5.1.1"
+            name="Incorrect Configuration in User Directories", level=4, num="7.7.1.1"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider",
             level=5,
-            num="7.5.1.1.1",
+            num="7.7.1.1.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId",
             level=5,
-            num="7.5.1.1.2",
+            num="7.7.1.1.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId",
             level=5,
-            num="7.5.1.1.3",
+            num="7.7.1.1.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor",
             level=5,
-            num="7.5.1.1.4",
+            num="7.7.1.1.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles",
             level=5,
-            num="7.5.1.1.5",
+            num="7.7.1.1.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries",
             level=5,
-            num="7.5.1.1.6",
+            num="7.7.1.1.6",
         ),
         Heading(
-            name="Missing Configuration in User Directories", level=4, num="7.5.1.2"
+            name="Missing Configuration in User Directories", level=4, num="7.7.1.2"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors",
             level=5,
-            num="7.5.1.2.1",
+            num="7.7.1.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider",
             level=5,
-            num="7.5.1.2.2",
+            num="7.7.1.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId",
             level=5,
-            num="7.5.1.2.3",
+            num="7.7.1.2.3",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId",
             level=5,
-            num="7.5.1.2.4",
+            num="7.7.1.2.4",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories",
             level=5,
-            num="7.5.1.2.5",
+            num="7.7.1.2.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token",
             level=5,
-            num="7.5.1.2.6",
+            num="7.7.1.2.6",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor",
             level=5,
-            num="7.5.1.2.7",
+            num="7.7.1.2.7",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles",
             level=5,
-            num="7.5.1.2.8",
+            num="7.7.1.2.8",
         ),
         Heading(name="Keycloak", level=1, num="8"),
         Heading(name="Getting Access Token from Keycloak", level=2, num="8.1"),
@@ -2757,6 +2866,10 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_IdentityProviders_Concurrent,
         RQ_SRS_042_OAuth_IdentityProviders_Change,
         RQ_SRS_042_OAuth_Credentials,
+        RQ_SRS_042_OAuth_Azure_ApplicationSetup_,
+        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport,
+        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint,
+        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups,
@@ -2876,72 +2989,80 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 6.1 [Credentials](#credentials)
         * 6.1.1 [RQ.SRS-042.OAuth.Credentials](#rqsrs-042oauthcredentials)
 * 7 [Azure](#azure)
-    * 7.1 [Getting Access Token from Azure](#getting-access-token-from-azure)
-        * 7.1.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
-    * 7.2 [Access Token Processors For Azure](#access-token-processors-for-azure)
-        * 7.2.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
-    * 7.3 [User Groups in Azure](#user-groups-in-azure)
-        * 7.3.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
-            * 7.3.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaazureauthenticationuserdirectoriesusergroups)
-        * 7.3.2 [Query Execution Based on User Roles in ClickHouse with Azure](#query-execution-based-on-user-roles-in-clickhouse-with-azure)
-            * 7.3.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles](#rqsrs-042oauthgrafanaazureauthenticationuserroles)
-        * 7.3.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
-            * 7.3.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaazureauthenticationuserrolesgroupfiltering)
-        * 7.3.4 [User in Multiple Azure Groups](#user-in-multiple-azure-groups)
-            * 7.3.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesmultiplegroups)
-        * 7.3.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
-            * 7.3.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaazureauthenticationuserrolesoverlappingusers)
-        * 7.3.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
-            * 7.3.6.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnogroups)
-        * 7.3.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
-            * 7.3.7.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaazureauthenticationuserrolessubgroupmemberships)
-        * 7.3.8 [Dynamic Group Membership Updates For Azure Users](#dynamic-group-membership-updates-for-azure-users)
-            * 7.3.8.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingclickhouseroles)
-        * 7.3.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
-            * 7.3.9.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolessamename)
-        * 7.3.10 [No Matching Roles in ClickHouse for Azure Groups](#no-matching-roles-in-clickhouse-for-azure-groups)
-            * 7.3.10.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingroles)
-        * 7.3.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
-            * 7.3.11.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnopermissiontoviewgroups)
-        * 7.3.12 [In ClickHouse There Is No Default Role Specified for Azure Users](#in-clickhouse-there-is-no-default-role-specified-for-azure-users)
-            * 7.3.12.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnodefaultrole)
-    * 7.4 [Azure Identity Management Actions](#azure-identity-management-actions)
-        * 7.4.1 [Azure User State Changes](#azure-user-state-changes)
-            * 7.4.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
-            * 7.4.1.2 [RQ.SRS-042.OAuth.Azure.Actions.UserDeleted](#rqsrs-042oauthazureactionsuserdeleted)
-            * 7.4.1.3 [RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated](#rqsrs-042oauthazureactionsuserattributesupdated)
-            * 7.4.1.4 [RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset](#rqsrs-042oauthazureactionsuserpasswordreset)
-        * 7.4.2 [Azure Group and Role Membership](#azure-group-and-role-membership)
-            * 7.4.2.1 [RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup](#rqsrs-042oauthazureactionsuseraddedtogroup)
-            * 7.4.2.2 [RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup](#rqsrs-042oauthazureactionsuserremovedfromgroup)
-            * 7.4.2.3 [RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted](#rqsrs-042oauthazureactionsgroupdeleted)
-        * 7.4.3 [Azure Application and Consent](#azure-application-and-consent)
-            * 7.4.3.1 [RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled](#rqsrs-042oauthazureactionsapplicationdisabled)
-            * 7.4.3.2 [RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved](#rqsrs-042oauthazureactionsadminconsentremoved)
-            * 7.4.3.3 [RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated](#rqsrs-042oauthazureactionsclientsecretrotated)
-        * 7.4.4 [Azure Token and Session Management](#azure-token-and-session-management)
-            * 7.4.4.1 [RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked](#rqsrs-042oauthazureactionsusersessionrevoked)
-            * 7.4.4.2 [RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired](#rqsrs-042oauthazureactionsrefreshtokenexpired)
-        * 7.4.5 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
-            * 7.4.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
-    * 7.5 [Azure as an External User Directory](#azure-as-an-external-user-directory)
-        * 7.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
-            * 7.5.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
-                * 7.5.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
-                * 7.5.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
-                * 7.5.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
-                * 7.5.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
-                * 7.5.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
-                * 7.5.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
-            * 7.5.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
-                * 7.5.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
-                * 7.5.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
-                * 7.5.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
-                * 7.5.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
-                * 7.5.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
-                * 7.5.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
-                * 7.5.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
-                * 7.5.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
+    * 7.1 [Setting up an Application in Azure](#setting-up-an-application-in-azure)
+        * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup ](#rqsrs-042oauthazureapplicationsetup-)
+    * 7.2 [Opaque Token Support for Azure](#opaque-token-support-for-azure)
+        * 7.2.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport](#rqsrs-042oauthazureopaquetokensupport)
+        * 7.2.2 [Specifying the Configuration Endpoint](#specifying-the-configuration-endpoint)
+            * 7.2.2.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint](#rqsrs-042oauthazureopaquetokensupportconfigurationendpoint)
+        * 7.2.3 [Specifying all Endpoint parameters](#specifying-all-endpoint-parameters)
+            * 7.2.3.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints](#rqsrs-042oauthazureopaquetokensupportendpoints)
+    * 7.3 [Getting Access Token from Azure](#getting-access-token-from-azure)
+        * 7.3.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
+    * 7.4 [Access Token Processors For Azure](#access-token-processors-for-azure)
+        * 7.4.1 [RQ.SRS-042.OAuth.IdentityProviders.AccessTokenProcessors](#rqsrs-042oauthidentityprovidersaccesstokenprocessors)
+    * 7.5 [User Groups in Azure](#user-groups-in-azure)
+        * 7.5.1 [Setting up User Groups in Azure](#setting-up-user-groups-in-azure)
+            * 7.5.1.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanaazureauthenticationuserdirectoriesusergroups)
+        * 7.5.2 [Query Execution Based on User Roles in ClickHouse with Azure](#query-execution-based-on-user-roles-in-clickhouse-with-azure)
+            * 7.5.2.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles](#rqsrs-042oauthgrafanaazureauthenticationuserroles)
+        * 7.5.3 [Filtering Azure Groups for Role Assignment](#filtering-azure-groups-for-role-assignment)
+            * 7.5.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaazureauthenticationuserrolesgroupfiltering)
+        * 7.5.4 [User in Multiple Azure Groups](#user-in-multiple-azure-groups)
+            * 7.5.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesmultiplegroups)
+        * 7.5.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
+            * 7.5.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaazureauthenticationuserrolesoverlappingusers)
+        * 7.5.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
+            * 7.5.6.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnogroups)
+        * 7.5.7 [Azure Subgroup Memberships Not Considered](#azure-subgroup-memberships-not-considered)
+            * 7.5.7.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanaazureauthenticationuserrolessubgroupmemberships)
+        * 7.5.8 [Dynamic Group Membership Updates For Azure Users](#dynamic-group-membership-updates-for-azure-users)
+            * 7.5.8.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingclickhouseroles)
+        * 7.5.9 [Azure Group Names Match Roles in ClickHouse](#azure-group-names-match-roles-in-clickhouse)
+            * 7.5.9.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanaazureauthenticationuserrolessamename)
+        * 7.5.10 [No Matching Roles in ClickHouse for Azure Groups](#no-matching-roles-in-clickhouse-for-azure-groups)
+            * 7.5.10.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnomatchingroles)
+        * 7.5.11 [User Cannot View Groups in Azure](#user-cannot-view-groups-in-azure)
+            * 7.5.11.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnopermissiontoviewgroups)
+        * 7.5.12 [In ClickHouse There Is No Default Role Specified for Azure Users](#in-clickhouse-there-is-no-default-role-specified-for-azure-users)
+            * 7.5.12.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnodefaultrole)
+    * 7.6 [Azure Identity Management Actions](#azure-identity-management-actions)
+        * 7.6.1 [Azure User State Changes](#azure-user-state-changes)
+            * 7.6.1.1 [RQ.SRS-042.OAuth.Azure.Actions.UserDisabled](#rqsrs-042oauthazureactionsuserdisabled)
+            * 7.6.1.2 [RQ.SRS-042.OAuth.Azure.Actions.UserDeleted](#rqsrs-042oauthazureactionsuserdeleted)
+            * 7.6.1.3 [RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated](#rqsrs-042oauthazureactionsuserattributesupdated)
+            * 7.6.1.4 [RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset](#rqsrs-042oauthazureactionsuserpasswordreset)
+        * 7.6.2 [Azure Group and Role Membership](#azure-group-and-role-membership)
+            * 7.6.2.1 [RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup](#rqsrs-042oauthazureactionsuseraddedtogroup)
+            * 7.6.2.2 [RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup](#rqsrs-042oauthazureactionsuserremovedfromgroup)
+            * 7.6.2.3 [RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted](#rqsrs-042oauthazureactionsgroupdeleted)
+        * 7.6.3 [Azure Application and Consent](#azure-application-and-consent)
+            * 7.6.3.1 [RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled](#rqsrs-042oauthazureactionsapplicationdisabled)
+            * 7.6.3.2 [RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved](#rqsrs-042oauthazureactionsadminconsentremoved)
+            * 7.6.3.3 [RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated](#rqsrs-042oauthazureactionsclientsecretrotated)
+        * 7.6.4 [Azure Token and Session Management](#azure-token-and-session-management)
+            * 7.6.4.1 [RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked](#rqsrs-042oauthazureactionsusersessionrevoked)
+            * 7.6.4.2 [RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired](#rqsrs-042oauthazureactionsrefreshtokenexpired)
+        * 7.6.5 [Access Token Processors are Missing From ClickHouse Configuration](#access-token-processors-are-missing-from-clickhouse-configuration)
+            * 7.6.5.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserrolesnoaccesstokenprocessors)
+    * 7.7 [Azure as an External User Directory](#azure-as-an-external-user-directory)
+        * 7.7.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectories)
+            * 7.7.1.1 [Incorrect Configuration in User Directories](#incorrect-configuration-in-user-directories)
+                * 7.7.1.1.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationprovider)
+                * 7.7.1.1.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationclientid)
+                * 7.7.1.1.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtenantid)
+                * 7.7.1.1.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenprocessor)
+                * 7.7.1.1.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorstokenroles)
+                * 7.7.1.1.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesincorrectconfigurationtokenprocessorsmultipleentries)
+            * 7.7.1.2 [Missing Configuration in User Directories](#missing-configuration-in-user-directories)
+                * 7.7.1.2.1 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationaccesstokenprocessors)
+                * 7.7.1.2.2 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsprovider)
+                * 7.7.1.2.3 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorsclientid)
+                * 7.7.1.2.4 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationtokenprocessorstenantid)
+                * 7.7.1.2.5 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectories)
+                * 7.7.1.2.6 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestoken)
+                * 7.7.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
+                * 7.7.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
 * 8 [Keycloak](#keycloak)
     * 8.1 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
         * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
@@ -3207,6 +3328,63 @@ printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>Client
 ## Azure
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with Azure Active Directory (Azure AD) as an identity provider.
+
+### Setting up an Application in Azure
+
+#### RQ.SRS-042.OAuth.Azure.ApplicationSetup 
+version: 1.0
+
+[ClickHouse] SHALL support integration with applications registered in Azure Active Directory. To set up an application in Azure for OAuth authentication, the following steps SHALL be performed:
+
+```bash
+ACCESS_TOKEN="<admin-access-token>"
+
+curl -s -X POST "https://graph.microsoft.com/v1.0/applications" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "displayName": "ClickHouse OAuth App",
+    "signInAudience": "AzureADMyOrg",
+    "web": {
+      "redirectUris": ["http://localhost:3000/login/generic_oauth"]
+    }
+  }'
+```
+
+### Opaque Token Support for Azure
+
+#### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport
+version: 1.0
+
+[ClickHouse] SHALL support validating opaque access tokens issued by Azure AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
+
+```xml
+<clickhouse>
+    <token_processors>
+        <azure_opaque>
+            <provider>openid</provider>
+            <configuration_endpoint>https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration</configuration_endpoint>
+            <cache_lifetime>600</cache_lifetime>
+            <username_claim>sub</username_claim>
+            <groups_claim>groups</groups_claim>
+        </azure_opaque>
+    </token_processors>
+</clickhouse>
+```
+
+#### Specifying the Configuration Endpoint
+
+##### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint
+version: 1.0
+
+[ClickHouse] SHALL reject the configuration if `configuration_endpoint` is not set and neither `userinfo_endpoint` nor `token_introspection_endpoint` is set.
+
+#### Specifying all Endpoint parameters
+
+##### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints
+version: 1.0
+
+[ClickHouse] SHALL reject the configuration if `configuration`, `userinfo_endpoint`, and `token_introspection_endpoint` are set at the same time.
 
 ### Getting Access Token from Azure
 
