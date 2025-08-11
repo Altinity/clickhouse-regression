@@ -237,6 +237,23 @@ RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ReferenceToken = Requirement(
     num="7.2.4",
 )
 
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_Failure = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.Failure",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "If the gateway’s introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, \n"
+        "[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.4.1",
+)
+
 RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
     name="RQ.SRS-042.OAuth.Azure.GetAccessToken",
     version="1.0",
@@ -1251,6 +1268,118 @@ RQ_SRS_042_OAuth_Keycloak_OpaqueTokenSupport = Requirement(
     link=None,
     level=3,
     num="8.2.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Constraints = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Constraints",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL assume that Keycloak-issued access tokens are JWT by default. If the `token_processors` entry for \n"
+        "[Keycloak] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When <provider>OpenID</provider> is used for Keycloak in the token_processors section, [ClickHouse] SHALL \n"
+        "validate tokens by calling the configured discovery and/or user info / introspection endpoints instead of verifying the token locally. \n"
+        "This SHALL be treated as “opaque behavior” operationally, regardless of the underlying token’s format.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.2",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Configuration_Validation = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Configuration.Validation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "For Keycloak opaque-mode operation, exactly one of the following SHALL be configured per processor:\n"
+        "\n"
+        "1. `configuration_endpoint`\n"
+        "2. both `userinfo_endpoint` and `token_introspection_endpoint`.\n"
+        "\n"
+        "If neither (or all three) are set, the configuration SHALL be rejected as invalid.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.3",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_ProviderType = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ProviderType",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "In opaque mode for Keycloak, provider SHALL be set to OpenID. The processor SHALL obtain endpoints from the Keycloak \n"
+        "realm’s `.well-known/openid-configuration` or from explicitly provided userinfo and `token_introspection` endpoints.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.4",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_ReferenceToken = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ReferenceToken",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of Keycloak. In this pattern:\n"
+        "\n"
+        "* The gateway exchanges Keycloak JWTs for gateway-issued reference tokens.\n"
+        "\n"
+        "* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway’s .well-known or its userinfo + token_introspection endpoints.\n"
+        "\n"
+        "* [ClickHouse] SHALL validate tokens exclusively via the gateway’s `introspection/userinfo` responses.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.5",
+)
+
+RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_Failure = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.Failure",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "If the gateway’s introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, \n"
+        "[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.2.2.6",
 )
 
 RQ_SRS_042_OAuth_Keycloak_GetAccessToken = Requirement(
@@ -2474,7 +2603,9 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Opaque Token Support for Azure", level=2, num="7.2"),
         Heading(name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque", level=3, num="7.2.1"),
         Heading(
-            name="Opaque Token Constraints and Gateway Workaround", level=3, num="7.2.2"
+            name="Opaque Token Constraints and Gateway Workaround For Azure",
+            level=3,
+            num="7.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints",
@@ -2500,6 +2631,11 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken",
             level=3,
             num="7.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.Failure",
+            level=4,
+            num="7.2.4.1",
         ),
         Heading(name="Getting Access Token from Azure", level=2, num="7.3"),
         Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.3.1"),
@@ -2763,6 +2899,39 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Opaque Token Support for Keycloak", level=2, num="8.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport", level=3, num="8.2.1"
+        ),
+        Heading(
+            name="Opaque Token Constraints and Gateway Workaround For Keycloak",
+            level=3,
+            num="8.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Constraints", level=4, num="8.2.2.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational",
+            level=4,
+            num="8.2.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Configuration.Validation",
+            level=4,
+            num="8.2.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ProviderType",
+            level=4,
+            num="8.2.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ReferenceToken",
+            level=4,
+            num="8.2.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.Failure",
+            level=4,
+            num="8.2.2.6",
         ),
         Heading(name="Getting Access Token from Keycloak", level=2, num="8.3"),
         Heading(name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken", level=3, num="8.3.1"),
@@ -3082,6 +3251,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation,
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ProviderType,
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ReferenceToken,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_Failure,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups,
@@ -3126,6 +3296,12 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
         RQ_SRS_042_OAuth_Keycloak_RealmSetup,
         RQ_SRS_042_OAuth_Keycloak_OpaqueTokenSupport,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Constraints,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Configuration_Validation,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_ProviderType,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_ReferenceToken,
+        RQ_SRS_042_OAuth_Keycloak_Tokens_Opaque_Operational_Failure,
         RQ_SRS_042_OAuth_Keycloak_GetAccessToken,
         RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups,
@@ -3207,12 +3383,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup ](#rqsrs-042oauthazureapplicationsetup-)
     * 7.2 [Opaque Token Support for Azure](#opaque-token-support-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque](#rqsrs-042oauthazuretokensopaque)
-        * 7.2.2 [Opaque Token Constraints and Gateway Workaround](#opaque-token-constraints-and-gateway-workaround)
+        * 7.2.2 [Opaque Token Constraints and Gateway Workaround For Azure](#opaque-token-constraints-and-gateway-workaround-for-azure)
             * 7.2.2.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints](#rqsrs-042oauthazuretokensopaqueconstraints)
             * 7.2.2.2 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational](#rqsrs-042oauthazuretokensopaqueoperational)
             * 7.2.2.3 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation](#rqsrs-042oauthazuretokensopaqueconfigurationvalidation)
         * 7.2.3 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType](#rqsrs-042oauthazuretokensopaqueoperationalprovidertype)
         * 7.2.4 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken](#rqsrs-042oauthazuretokensopaqueoperationalreferencetoken)
+            * 7.2.4.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.Failure](#rqsrs-042oauthazuretokensopaqueoperationalfailure)
     * 7.3 [Getting Access Token from Azure](#getting-access-token-from-azure)
         * 7.3.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.4 [Access Token Processors For Azure](#access-token-processors-for-azure)
@@ -3284,6 +3461,13 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.RealmSetup](#rqsrs-042oauthkeycloakrealmsetup)
     * 8.2 [Opaque Token Support for Keycloak](#opaque-token-support-for-keycloak)
         * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport](#rqsrs-042oauthkeycloakopaquetokensupport)
+        * 8.2.2 [Opaque Token Constraints and Gateway Workaround For Keycloak](#opaque-token-constraints-and-gateway-workaround-for-keycloak)
+            * 8.2.2.1 [RQ.SRS-042.OAuth.Keycloak.Tokens.Constraints](#rqsrs-042oauthkeycloaktokensconstraints)
+            * 8.2.2.2 [RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational](#rqsrs-042oauthkeycloaktokensopaqueoperational)
+            * 8.2.2.3 [RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Configuration.Validation](#rqsrs-042oauthkeycloaktokensopaqueconfigurationvalidation)
+            * 8.2.2.4 [RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ProviderType](#rqsrs-042oauthkeycloaktokensopaqueoperationalprovidertype)
+            * 8.2.2.5 [RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ReferenceToken](#rqsrs-042oauthkeycloaktokensopaqueoperationalreferencetoken)
+            * 8.2.2.6 [RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.Failure](#rqsrs-042oauthkeycloaktokensopaqueoperationalfailure)
     * 8.3 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
         * 8.3.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
     * 8.4 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
@@ -3592,7 +3776,7 @@ version: 1.0
 </clickhouse>
 ```
 
-#### Opaque Token Constraints and Gateway Workaround
+#### Opaque Token Constraints and Gateway Workaround For Azure
 
 ##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints
 version: 1.0
@@ -3634,6 +3818,12 @@ version: 1.0
 * [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway’s .well-known or its userinfo + `token_introspection` endpoints.
 
 * [ClickHouse] SHALL validate tokens exclusively via the gateway’s `introspection/userinfo` responses.
+
+##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.Failure
+version: 1.0
+
+If the gateway’s introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, 
+[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.
 
 ### Getting Access Token from Azure
 
@@ -4228,6 +4418,54 @@ version: 1.0
     </token_processors>
 </clickhouse>
 ```
+
+#### Opaque Token Constraints and Gateway Workaround For Keycloak
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Constraints
+version: 1.0
+
+[ClickHouse] SHALL assume that Keycloak-issued access tokens are JWT by default. If the `token_processors` entry for 
+[Keycloak] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational
+version: 1.0
+
+When <provider>OpenID</provider> is used for Keycloak in the token_processors section, [ClickHouse] SHALL 
+validate tokens by calling the configured discovery and/or user info / introspection endpoints instead of verifying the token locally. 
+This SHALL be treated as “opaque behavior” operationally, regardless of the underlying token’s format.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Configuration.Validation
+version: 1.0
+
+For Keycloak opaque-mode operation, exactly one of the following SHALL be configured per processor:
+
+1. `configuration_endpoint`
+2. both `userinfo_endpoint` and `token_introspection_endpoint`.
+
+If neither (or all three) are set, the configuration SHALL be rejected as invalid.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ProviderType
+version: 1.0
+
+In opaque mode for Keycloak, provider SHALL be set to OpenID. The processor SHALL obtain endpoints from the Keycloak 
+realm’s `.well-known/openid-configuration` or from explicitly provided userinfo and `token_introspection` endpoints.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ReferenceToken
+version: 1.0
+
+[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of Keycloak. In this pattern:
+
+* The gateway exchanges Keycloak JWTs for gateway-issued reference tokens.
+
+* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway’s .well-known or its userinfo + token_introspection endpoints.
+
+* [ClickHouse] SHALL validate tokens exclusively via the gateway’s `introspection/userinfo` responses.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.Failure
+version: 1.0
+
+If the gateway’s introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, 
+[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.
 
 ### Getting Access Token from Keycloak
 
