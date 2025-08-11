@@ -585,6 +585,7 @@ def add_config(
     user=None,
     wait_healthy=True,
     check_preprocessed=True,
+    after_removal=True,
 ):
     """Add dynamic configuration file to ClickHouse.
 
@@ -724,7 +725,9 @@ def add_config(
                             f"{config.preprocessed_name} should be updated",
                             description=f"timeout {timeout}",
                         ):
-                            check_preprocessed_config_is_updated(after_removal=True)
+                            check_preprocessed_config_is_updated(
+                                after_removal=after_removal
+                            )
 
                         with And("I wait for config to be reloaded"):
                             wait_for_config_to_be_loaded()
