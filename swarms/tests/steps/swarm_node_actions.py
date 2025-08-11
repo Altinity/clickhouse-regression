@@ -107,6 +107,9 @@ def fill_clickhouse_disks(self):
     delay = random.random() * 10 + 5
     file_name = "file.dat"
 
+    with Given("apply limited disk config"):
+        clickhouse_limited_disk_config(node=node)
+
     try:
         for disk_mount in clickhouse_disk_mounts:
             with When(f"I get the size of {disk_mount} on {node.name}"):
@@ -124,6 +127,8 @@ def fill_clickhouse_disks(self):
 
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
+
+        yield
 
     finally:
         with Finally(f"I delete the large file on {node.name}"):
@@ -172,12 +177,11 @@ def clickhouse_limited_disk_config(self, node):
         entries=config_override,
         config_file="override_data_dir.xml",
     )
-
     return add_config(
         config=config,
-        restart=False,
+        restart=True,
         node=node,
-        check_preprocessed=False,
+        check_preprocessed=True,
     )
 
 
