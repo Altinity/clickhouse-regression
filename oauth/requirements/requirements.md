@@ -45,7 +45,7 @@
             * 7.5.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaazureauthenticationuserrolesgroupfiltering)
         * 7.5.4 [User in Multiple Azure Groups](#user-in-multiple-azure-groups)
             * 7.5.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesmultiplegroups)
-        * 7.5.5 [No Duplicate Role Assignments for Overlapping [Azure] Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
+        * 7.5.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
             * 7.5.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaazureauthenticationuserrolesoverlappingusers)
         * 7.5.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
             * 7.5.6.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnogroups)
@@ -589,7 +589,7 @@ version: 1.0
 When a user belongs to multiple groups in the [Azure], [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-#### No Duplicate Role Assignments for Overlapping [Azure] Groups
+#### No Duplicate Role Assignments for Overlapping Azure Groups
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers
 version: 1.0
