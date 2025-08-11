@@ -205,11 +205,12 @@
         * 11.6.1 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.NetworkFailure](#rqsrs-042oauthremotejwkserrorhandlingnetworkfailure)
         * 11.6.2 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.InvalidResponse](#rqsrs-042oauthremotejwkserrorhandlinginvalidresponse)
         * 11.6.3 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.ExpiredCache](#rqsrs-042oauthremotejwkserrorhandlingexpiredcache)
-* 12 [Common Token Processor Requirements](#common-token-processor-requirements)
+* 12 [Token Processor](#token-processor)
     * 12.1 [Common Configuration Parameters](#common-configuration-parameters)
         * 12.1.1 [RQ.SRS-042.OAuth.Common.Parameters.CacheLifetime](#rqsrs-042oauthcommonparameterscachelifetime)
         * 12.1.2 [RQ.SRS-042.OAuth.Common.Parameters.UsernameClaim](#rqsrs-042oauthcommonparametersusernameclaim)
         * 12.1.3 [RQ.SRS-042.OAuth.Common.Parameters.GroupsClaim](#rqsrs-042oauthcommonparametersgroupsclaim)
+        * 12.1.4 [RQ.SRS-042.OAuth.Common.Parameters.Unfiltered](#rqsrs-042oauthcommonparametersunfiltered)
     * 12.2 [Token Cache Behavior](#token-cache-behavior)
         * 12.2.1 [RQ.SRS-042.OAuth.Common.Cache.Behavior](#rqsrs-042oauthcommoncachebehavior)
     * 12.3 [Configuration Validation](#configuration-validation)
@@ -2448,8 +2449,7 @@ Time 86400s+: Reject authentication if refresh still fails
 * Provides time for administrators to resolve connectivity problems
 * Prevents indefinite use of potentially outdated keys
 
-
-## Common Token Processor Requirements
+## Token Processor
 
 ### Common Configuration Parameters
 
@@ -2529,6 +2529,34 @@ In this example, the `roles` claim from the token will be used to determine user
 * `app_roles` - Application-specific roles
 * `resource_access` - Resource access permissions
 * `wids` - Windows Identity Foundation claims (Azure AD)
+
+#### RQ.SRS-042.OAuth.Common.Parameters.Unfiltered
+version: 1.0
+
+[ClickHouse] SHALL reject a configuration inside `token_processors` that contains all possible parameters.
+
+For example,
+
+```xml
+<clickhouse>
+    <token_processors>
+        <madness>
+          <algo>HS256</algo>
+          <static_key>my_static_secret</static_key>
+          <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
+          <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
+          <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+          <provider>openid</provider>
+          <cache_lifetime>600</cache_lifetime>
+          <username_claim>sub</username_claim>
+          <groups_claim>groups</groups_claim>
+          <configuration_endpoint></configuration_endpoint>
+          <userinfo_endpoint></userinfo_endpoint>
+          <token_introspection_endpoint></token_introspection_endpoint>
+        </madness>
+    </token_processors>
+</clickhouse>
+```
 
 ### Token Cache Behavior
 
