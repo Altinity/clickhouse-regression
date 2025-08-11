@@ -185,9 +185,9 @@ RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation = Requirement(
     description=(
         "For [Azure] opaque-mode operation, exactly one of the following SHALL be configured per processor:\n"
         "\n"
-        "1. configuration_endpoint only, or\n"
+        "1. `configuration_endpoint`\n"
         "\n"
-        "2. both userinfo_endpoint and token_introspection_endpoint.\n"
+        "2. both `userinfo_endpoint` and `token_introspection_endpoint`.\n"
         "\n"
         "If neither (or all three) are set, [ClickHouse] SHALL reject the configuration as invalid.\n"
         "\n"
@@ -197,36 +197,44 @@ RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation = Requirement(
     num="7.2.2.3",
 )
 
-RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint = Requirement(
-    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ProviderType = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reject the configuration if `configuration_endpoint` is not set and neither `userinfo_endpoint` nor `token_introspection_endpoint` is set.\n"
+        "In opaque mode, the provider parameter SHALL indicate the validation strategy and not the human-readable IdP name. \n"
+        "For Azure-backed validation, provider MAY be set to [Azure] (Azure-specific flow) or `OpenID` (generic OpenID Connect flow). \n"
+        "The chosen provider SHALL determine which endpoints and claims are used.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.2.3.1",
+    level=3,
+    num="7.2.3",
 )
 
-RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints = Requirement(
-    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints",
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ReferenceToken = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reject the configuration if `configuration`, `userinfo_endpoint`, and `token_introspection_endpoint` are set at the same time.\n"
+        "[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of [Azure]. In this pattern:\n"
+        "\n"
+        "* The gateway exchanges [Azure] JWTs for gateway-issued reference tokens.\n"
+        "\n"
+        "* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway’s .well-known or its userinfo + `token_introspection` endpoints.\n"
+        "\n"
+        "* [ClickHouse] SHALL validate tokens exclusively via the gateway’s `introspection/userinfo` responses.\n"
         "\n"
     ),
     link=None,
-    level=4,
-    num="7.2.4.1",
+    level=3,
+    num="7.2.4",
 )
 
 RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
@@ -2483,17 +2491,15 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=4,
             num="7.2.2.3",
         ),
-        Heading(name="Specifying the Configuration Endpoint", level=3, num="7.2.3"),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
-            level=4,
-            num="7.2.3.1",
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType",
+            level=3,
+            num="7.2.3",
         ),
-        Heading(name="Specifying all Endpoint parameters", level=3, num="7.2.4"),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints",
-            level=4,
-            num="7.2.4.1",
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken",
+            level=3,
+            num="7.2.4",
         ),
         Heading(name="Getting Access Token from Azure", level=2, num="7.3"),
         Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.3.1"),
@@ -3074,8 +3080,8 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Constraints,
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational,
         RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation,
-        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint,
-        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ProviderType,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational_ReferenceToken,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
         RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups,
@@ -3205,10 +3211,8 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             * 7.2.2.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints](#rqsrs-042oauthazuretokensopaqueconstraints)
             * 7.2.2.2 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational](#rqsrs-042oauthazuretokensopaqueoperational)
             * 7.2.2.3 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation](#rqsrs-042oauthazuretokensopaqueconfigurationvalidation)
-        * 7.2.3 [Specifying the Configuration Endpoint](#specifying-the-configuration-endpoint)
-            * 7.2.3.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint](#rqsrs-042oauthazureopaquetokensupportconfigurationendpoint)
-        * 7.2.4 [Specifying all Endpoint parameters](#specifying-all-endpoint-parameters)
-            * 7.2.4.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints](#rqsrs-042oauthazureopaquetokensupportendpoints)
+        * 7.2.3 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType](#rqsrs-042oauthazuretokensopaqueoperationalprovidertype)
+        * 7.2.4 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken](#rqsrs-042oauthazuretokensopaqueoperationalreferencetoken)
     * 7.3 [Getting Access Token from Azure](#getting-access-token-from-azure)
         * 7.3.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.4 [Access Token Processors For Azure](#access-token-processors-for-azure)
@@ -3607,25 +3611,29 @@ version: 1.0
 
 For [Azure] opaque-mode operation, exactly one of the following SHALL be configured per processor:
 
-1. configuration_endpoint only, or
+1. `configuration_endpoint`
 
-2. both userinfo_endpoint and token_introspection_endpoint.
+2. both `userinfo_endpoint` and `token_introspection_endpoint`.
 
 If neither (or all three) are set, [ClickHouse] SHALL reject the configuration as invalid.
 
-#### Specifying the Configuration Endpoint
-
-##### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint
+#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType
 version: 1.0
 
-[ClickHouse] SHALL reject the configuration if `configuration_endpoint` is not set and neither `userinfo_endpoint` nor `token_introspection_endpoint` is set.
+In opaque mode, the provider parameter SHALL indicate the validation strategy and not the human-readable IdP name. 
+For Azure-backed validation, provider MAY be set to [Azure] (Azure-specific flow) or `OpenID` (generic OpenID Connect flow). 
+The chosen provider SHALL determine which endpoints and claims are used.
 
-#### Specifying all Endpoint parameters
-
-##### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints
+#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken
 version: 1.0
 
-[ClickHouse] SHALL reject the configuration if `configuration`, `userinfo_endpoint`, and `token_introspection_endpoint` are set at the same time.
+[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of [Azure]. In this pattern:
+
+* The gateway exchanges [Azure] JWTs for gateway-issued reference tokens.
+
+* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway’s .well-known or its userinfo + `token_introspection` endpoints.
+
+* [ClickHouse] SHALL validate tokens exclusively via the gateway’s `introspection/userinfo` responses.
 
 ### Getting Access Token from Azure
 
