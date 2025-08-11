@@ -2023,18 +2023,29 @@ RQ_SRS_042_OAuth_StaticKey_Algorithms = Requirement(
         "[ClickHouse] SHALL support the following algorithms for static key validation:\n"
         "\n"
         "| HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |\n"
-        "|-------| ----- | ------ | ----- | ------- |\n"
+        "|-------|-------|--------|-------|---------|\n"
         "| HS256 | RS256 | ES256  | PS256 | Ed25519 |\n"
         "| HS384 | RS384 | ES384  | PS384 | Ed448   |\n"
         "| HS512 | RS512 | ES512  | PS512 |         |\n"
         "|       |       | ES256K |       |         |\n"
         "\n"
-        "[ClickHouse] SHALL also support `None` algorithm (though not recommended for production use).\n"
-        "\n"
     ),
     link=None,
     level=3,
     num="9.3.1",
+)
+
+RQ_SRS_042_OAuth_StaticKey_Algorithm_None = Requirement(
+    name="RQ.SRS-042.OAuth.StaticKey.Algorithm.None",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] SHALL  support `None` algorithm.\n" "\n"),
+    link=None,
+    level=4,
+    num="9.3.1.1",
 )
 
 RQ_SRS_042_OAuth_StaticKey_Parameters_StaticKey = Requirement(
@@ -4444,6 +4455,9 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="RQ.SRS-042.OAuth.StaticKey.UserDirectory", level=3, num="9.2.1"),
         Heading(name="Static Key Algorithm Support", level=2, num="9.3"),
         Heading(name="RQ.SRS-042.OAuth.StaticKey.Algorithms", level=3, num="9.3.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.StaticKey.Algorithm.None", level=4, num="9.3.1.1"
+        ),
         Heading(name="Static Key Configuration Parameters", level=2, num="9.4"),
         Heading(
             name="RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKey", level=3, num="9.4.1"
@@ -4806,6 +4820,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_StaticKey_AccessTokenProcessors,
         RQ_SRS_042_OAuth_StaticKey_UserDirectory,
         RQ_SRS_042_OAuth_StaticKey_Algorithms,
+        RQ_SRS_042_OAuth_StaticKey_Algorithm_None,
         RQ_SRS_042_OAuth_StaticKey_Parameters_StaticKey,
         RQ_SRS_042_OAuth_StaticKey_Parameters_StaticKeyBase64,
         RQ_SRS_042_OAuth_StaticKey_Parameters_PublicKey,
@@ -5027,6 +5042,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 9.2.1 [RQ.SRS-042.OAuth.StaticKey.UserDirectory](#rqsrs-042oauthstatickeyuserdirectory)
     * 9.3 [Static Key Algorithm Support](#static-key-algorithm-support)
         * 9.3.1 [RQ.SRS-042.OAuth.StaticKey.Algorithms](#rqsrs-042oauthstatickeyalgorithms)
+            * 9.3.1.1 [RQ.SRS-042.OAuth.StaticKey.Algorithm.None](#rqsrs-042oauthstatickeyalgorithmnone)
     * 9.4 [Static Key Configuration Parameters](#static-key-configuration-parameters)
         * 9.4.1 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKey](#rqsrs-042oauthstatickeyparametersstatickey)
         * 9.4.2 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKeyBase64](#rqsrs-042oauthstatickeyparametersstatickeybase64)
@@ -6408,13 +6424,16 @@ version: 1.0
 [ClickHouse] SHALL support the following algorithms for static key validation:
 
 | HMAC  | RSA   | ECDSA  | PSS   | EdDSA   |
-|-------| ----- | ------ | ----- | ------- |
+|-------|-------|--------|-------|---------|
 | HS256 | RS256 | ES256  | PS256 | Ed25519 |
 | HS384 | RS384 | ES384  | PS384 | Ed448   |
 | HS512 | RS512 | ES512  | PS512 |         |
 |       |       | ES256K |       |         |
 
-[ClickHouse] SHALL also support `None` algorithm (though not recommended for production use).
+##### RQ.SRS-042.OAuth.StaticKey.Algorithm.None
+version: 1.0
+
+[ClickHouse] SHALL  support `None` algorithm.
 
 ### Static Key Configuration Parameters
 
