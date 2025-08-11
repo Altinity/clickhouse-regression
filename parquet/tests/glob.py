@@ -12,7 +12,7 @@ glob3 = os.path.join("glob3")
 
 
 @TestOutline
-def select_with_glob(self, query, snapshot_name, order_by=None):
+def select_with_glob(self, query, snapshot_name, columns=None, order_by=None):
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -23,9 +23,12 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
             if order_by is None:
                 order_by = "j"
 
+            if columns is None:
+                columns = "*"
+
             select_file = node.query(
                 f"""
-            SELECT * FROM {query} ORDER BY {order_by} FORMAT TabSeparated
+            SELECT {columns} FROM {query} ORDER BY {order_by} FORMAT TabSeparated
             """
             )
 
@@ -35,7 +38,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                     snapshot(
                         select_file.output.strip(),
                         name=f"select_from_file_with_{snapshot_name}",
-                        mode=snapshot.CHECK,
+                        mode=snapshot.CHECK
                     )
                 ), error()
 
@@ -58,7 +61,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                 order = "tuple(*)"
 
             table_values = node.query(
-                f"SELECT * FROM {table_name} ORDER BY {order} FORMAT TabSeparated"
+                f"SELECT {columns} FROM {table_name} ORDER BY {order} FORMAT TabSeparated"
             )
 
         with Then("I check that the output is correct"):
@@ -67,6 +70,7 @@ def select_with_glob(self, query, snapshot_name, order_by=None):
                     snapshot(
                         table_values.output.strip(),
                         name=f"create_table_with_{snapshot_name}",
+                        mode=snapshot.CHECK
                     )
                 ), error()
 
@@ -162,10 +166,12 @@ def million_extensions(self):
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
     snapshot_name = "above_25_8" if check_clickhouse_version(">=25.8")(self) else ""
+    columns = "num" if check_clickhouse_version(">=25.8")(self) else None
     order_by = "ALL" if check_clickhouse_version(">23.9")(self) else "tuple(*)"
 
     for example in self.examples:
         select_with_glob(
+            columns=columns,
             query=example[0],
             snapshot_name=f"{example[1]}{snapshot_name}",
             order_by=order_by,
