@@ -88,7 +88,7 @@ RQ_SRS_042_OAuth_Azure_ApplicationSetup_ = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support integration with applications registered in Azure Active Directory. To set up an application in Azure for OAuth authentication, the following steps SHALL be performed:\n"
+        "[ClickHouse] SHALL support integration with applications registered in [Azure] Active Directory. To set up an application in [Azure] for OAuth authentication, the following steps SHALL be performed:\n"
         "\n"
         "```bash\n"
         'ACCESS_TOKEN="<admin-access-token>"\n'
@@ -111,15 +111,15 @@ RQ_SRS_042_OAuth_Azure_ApplicationSetup_ = Requirement(
     num="7.1.1",
 )
 
-RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport = Requirement(
-    name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport",
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support validating opaque access tokens issued by Azure AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:\n"
+        "[ClickHouse] SHALL support validating opaque access tokens issued by [Azure] AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in `config.xml` as follows:\n"
         "\n"
         "```xml\n"
         "<clickhouse>\n"
@@ -141,6 +141,62 @@ RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport = Requirement(
     num="7.2.1",
 )
 
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Constraints = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL assume that Azure-issued access tokens are JWT by default. If the token_processors entry for [Azure] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.2.1",
+)
+
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `<provider>azure</provider>` or `<provider>openid</provider>` is used for [Azure] in the `token_processors` section,  \n"
+        "[ClickHouse] SHALL validate tokens by calling the configured discovery and/or `/userinfo` introspection endpoints instead  \n"
+        "of verifying the token locally. This SHALL be treated as “opaque behavior” operationally, regardless of the underlying token format.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.2.2",
+)
+
+RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation = Requirement(
+    name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "For [Azure] opaque-mode operation, exactly one of the following SHALL be configured per processor:\n"
+        "\n"
+        "1. configuration_endpoint only, or\n"
+        "\n"
+        "2. both userinfo_endpoint and token_introspection_endpoint.\n"
+        "\n"
+        "If neither (or all three) are set, [ClickHouse] SHALL reject the configuration as invalid.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.2.2.3",
+)
+
 RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint = Requirement(
     name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
     version="1.0",
@@ -154,7 +210,7 @@ RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint = Requirement(
     ),
     link=None,
     level=4,
-    num="7.2.2.1",
+    num="7.2.3.1",
 )
 
 RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints = Requirement(
@@ -170,7 +226,7 @@ RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints = Requirement(
     ),
     link=None,
     level=4,
-    num="7.2.3.1",
+    num="7.2.4.1",
 )
 
 RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
@@ -181,7 +237,7 @@ RQ_SRS_042_OAuth_Azure_GetAccessToken = Requirement(
     type=None,
     uid=None,
     description=(
-        "To obtain an access token from Azure AD, you need to register an application in Azure AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.\n"
+        "To obtain an access token from [Azure] AD, you need to register an application in [Azure] AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.\n"
         "\n"
         "You can obtain an access token using the following command:\n"
         "\n"
@@ -243,7 +299,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserDirectories_UserGroups = Requi
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support user groups defined in Azure Active Directory (Azure AD) for role-based access control. In order to create a user group in Azure AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.\n"
+        "[ClickHouse] SHALL support user groups defined in [Azure] Active Directory ([Azure] AD) for role-based access control. In order to create a user group in [Azure] AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \\\n'
@@ -274,7 +330,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles = Requirement(
     description=(
         "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles \n"
         "assigned to the user in the `users_directories` section. Role mapping is based on the role name: \n"
-        "if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in\n"
+        "if a user has a group or permission in [Azure] (or another IdP) and there is a role with the same name in\n"
         "ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.\n"
         "\n"
         "The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.\n"
@@ -296,7 +352,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering = Require
     type=None,
     uid=None,
     description=(
-        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.\n"
+        "When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -316,7 +372,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_GroupFiltering = Require
         "</clickhouse>\n"
         "```\n"
         "\n"
-        "The regex pattern `\\bclickhouse-[a-zA-Z0-9]+\\b` filters Azure AD group names to only match those that:\n"
+        "The regex pattern `\\bclickhouse-[a-zA-Z0-9]+\\b` filters [Azure] AD group names to only match those that:\n"
         "\n"
         '* Begin with exactly "clickhouse-"\n'
         "* Are followed by one or more alphanumeric characters\n"
@@ -338,7 +394,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_MultipleGroups = Require
     type=None,
     uid=None,
     description=(
-        "When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.\n"
+        "When a user belongs to multiple groups in the [Azure], [ClickHouse] SHALL combine all roles that match these group names.\n"
         "The user SHALL inherit the union of all permissions from these roles.\n"
         "\n"
     ),
@@ -355,7 +411,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_OverlappingUsers = Requi
     type=None,
     uid=None,
     description=(
-        "When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
+        "When multiple groups in the [Azure] contain the same user, [ClickHouse] SHALL not create duplicate role assignments.\n"
         "The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.\n"
         "\n"
     ),
@@ -372,7 +428,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoGroups = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a grafana user is authenticated via OAuth and Azure does not return any groups for the user,\n"
+        "When a grafana user is authenticated via OAuth and [Azure] does not return any groups for the user,\n"
         "[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.\n"
         "\n"
     ),
@@ -389,7 +445,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_SubgroupMemberships = Re
     type=None,
     uid=None,
     description=(
-        "When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.\n"
+        "When a user belongs to subgroups in the [Azure], [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.\n"
         "\n"
     ),
     link=None,
@@ -405,7 +461,7 @@ RQ_SRS_042_OAuth_Grafana_Azure_Authentication_UserRoles_NoMatchingClickHouseRole
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.\n"
+        "[ClickHouse] SHALL reflect changes in a user’s group memberships from the [Azure] dynamically during the next token validation or cache refresh.\n"
         "Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.\n"
         "\n"
     ),
@@ -507,7 +563,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserDisabled = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is disabled in Azure AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.\n"
+        "When a user is disabled in [Azure] AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.\n"
         "\n"
         "```bash\n"
         'curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \\\n'
@@ -532,7 +588,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserDeleted = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is permanently deleted from Azure AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.\n"
+        "When a user is permanently deleted from [Azure] AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.\n"
         "\n"
         "```bash\n"
         'curl -s -X DELETE "https://graph.microsoft.com/v1.0/users/{user-id}" \\\n'
@@ -553,7 +609,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserAttributesUpdated = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user's attributes (such as `UPN`, `email`, or `name`) are updated in Azure AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.\n"
+        "When a user's attributes (such as `UPN`, `email`, or `name`) are updated in [Azure] AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.\n"
         "\n"
         "```bash\n"
         'curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \\\n'
@@ -578,7 +634,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserPasswordReset = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user's password is reset in Azure AD, [ClickHouse] SHALL continue to validate access tokens without interruption, as password changes do not invalidate existing tokens.\n"
+        "When a user's password is reset in [Azure] AD, [ClickHouse] SHALL continue to validate access tokens without interruption, as password changes do not invalidate existing tokens.\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication/passwordMethods/{method-id}/resetPassword" \\\n'
@@ -603,7 +659,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserAddedToGroup = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is added to a group in Azure AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].\n"
+        "When a user is added to a group in [Azure] AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref" \\\n'
@@ -628,7 +684,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserRemovedFromGroup = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is removed from a group in Azure AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.\n"
+        "When a user is removed from a group in [Azure] AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.\n"
         "\n"
         "```bash\n"
         'curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{user-id}/$ref" \\\n'
@@ -649,7 +705,7 @@ RQ_SRS_042_OAuth_Azure_Actions_GroupDeleted = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a group that is mapped to a [ClickHouse] role is deleted in Azure AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.\n"
+        "When a group that is mapped to a [ClickHouse] role is deleted in [Azure] AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.\n"
         "\n"
         "```bash\n"
         'curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \\\n'
@@ -670,7 +726,7 @@ RQ_SRS_042_OAuth_Azure_Actions_ApplicationDisabled = Requirement(
     type=None,
     uid=None,
     description=(
-        "When the client application (service principal) used for OAuth integration is disabled in Azure AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.\n"
+        "When the client application (service principal) used for OAuth integration is disabled in [Azure] AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.\n"
         "\n"
         "```bash\n"
         'curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \\\n'
@@ -695,7 +751,7 @@ RQ_SRS_042_OAuth_Azure_Actions_AdminConsentRemoved = Requirement(
     type=None,
     uid=None,
     description=(
-        "If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.\n"
+        "If the admin consent for required permissions is revoked in [Azure] AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.\n"
         "\n"
         "```bash\n"
         'curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \\\n'
@@ -716,7 +772,7 @@ RQ_SRS_042_OAuth_Azure_Actions_ClientSecretRotated = Requirement(
     type=None,
     uid=None,
     description=(
-        "When the client secret for the application is rotated in Azure AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.\n"
+        "When the client secret for the application is rotated in [Azure] AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassword" \\\n'
@@ -743,7 +799,7 @@ RQ_SRS_042_OAuth_Azure_Actions_UserSessionRevoked = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user's sign-in sessions are revoked in Azure AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.\n"
+        "When a user's sign-in sessions are revoked in [Azure] AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSessions" \\\n'
@@ -766,7 +822,7 @@ RQ_SRS_042_OAuth_Azure_Actions_RefreshTokenExpired = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a refresh token expires as per the policy in Azure AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.\n"
+        "When a refresh token expires as per the policy in [Azure] AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.\n"
         "\n"
         "```bash\n"
         'curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token" \\\n'
@@ -808,7 +864,7 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories = Requirement(
     type=None,
     uid=None,
     description=(
-        "When a user is not defined locally, [ClickHouse] SHALL use the `Azure` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.\n"
+        "When a user is not defined locally, [ClickHouse] SHALL use the [Azure] as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -1068,6 +1124,127 @@ RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_Use
     num="7.7.1.2.8",
 )
 
+RQ_SRS_042_OAuth_Keycloak_RealmSetup = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.RealmSetup",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support integration with Keycloak realms. To set up a realm for OAuth authentication, the following steps SHALL be performed:\n"
+        "\n"
+        "1. Prepare Realm Configuration JSON:\n"
+        "\n"
+        "```json\n"
+        "{\n"
+        '  "realm": "grafana",\n'
+        '  "enabled": true,\n'
+        '  "clients": [\n'
+        "    {\n"
+        '      "clientId": "grafana-client",\n'
+        '      "name": "Grafana",\n'
+        '      "protocol": "openid-connect",\n'
+        '      "publicClient": false,\n'
+        '      "secret": "grafana-secret",\n'
+        '      "redirectUris": ["http://localhost:3000/login/generic_oauth"],\n'
+        '      "baseUrl": "http://localhost:3000",\n'
+        '      "standardFlowEnabled": true,\n'
+        '      "directAccessGrantsEnabled": true,\n'
+        '      "protocolMappers": [\n'
+        "        {\n"
+        '          "name": "groups",\n'
+        '          "protocol": "openid-connect",\n'
+        '          "protocolMapper": "oidc-group-membership-mapper",\n'
+        '          "consentRequired": false,\n'
+        '          "config": {\n'
+        '            "claim.name": "groups",\n'
+        '            "jsonType.label": "String",\n'
+        '            "full.path": "false",\n'
+        '            "id.token.claim": "true",\n'
+        '            "access.token.claim": "true",\n'
+        '            "userinfo.token.claim": "true"\n'
+        "          }\n"
+        "        }\n"
+        "      ]\n"
+        "    }\n"
+        "  ],\n"
+        '  "users": [\n'
+        "    {\n"
+        '      "username": "demo",\n'
+        '      "enabled": true,\n'
+        '      "email": "demo@example.com",\n'
+        '      "firstName": "Demo",\n'
+        '      "lastName": "User",\n'
+        '      "emailVerified": true,\n'
+        '      "groups": ["/grafana-admins", "/can-read"],\n'
+        '      "credentials": [\n'
+        "        {\n"
+        '          "type": "password",\n'
+        '          "value": "demo"\n'
+        "        }\n"
+        "      ]\n"
+        "    }\n"
+        "  ],\n"
+        '  "groups": [\n'
+        "    {\n"
+        '      "name": "grafana-admins",\n'
+        '      "path": "/grafana-admins"\n'
+        "    },\n"
+        "    {\n"
+        '      "name": "can-read",\n'
+        '      "path": "/can-read"\n'
+        "    }\n"
+        "  ]\n"
+        "}\n"
+        "```\n"
+        "\n"
+        "2. Import Realm into Keycloak Docker Container:\n"
+        "\n"
+        "```bash\n"
+        "docker run --name keycloak \\\n"
+        "  -v $(pwd)/realm-export.json:/opt/keycloak/data/import/realm-export.json \\\n"
+        "  quay.io/keycloak/keycloak:latest \\\n"
+        "  start-dev --import-realm\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.1.1",
+)
+
+RQ_SRS_042_OAuth_Keycloak_OpaqueTokenSupport = Requirement(
+    name="RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support validating opaque access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <token_processors>\n"
+        "        <keycloak_opaque>\n"
+        "            <provider>openid</provider>\n"
+        "            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>\n"
+        "            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>\n"
+        "            <cache_lifetime>600</cache_lifetime>\n"
+        "            <username_claim>sub</username_claim>\n"
+        "            <groups_claim>groups</groups_claim>\n"
+        "        </keycloak_opaque>\n"
+        "    </token_processors>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="8.2.1",
+)
+
 RQ_SRS_042_OAuth_Keycloak_GetAccessToken = Requirement(
     name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken",
     version="1.0",
@@ -1093,7 +1270,7 @@ RQ_SRS_042_OAuth_Keycloak_GetAccessToken = Requirement(
     ),
     link=None,
     level=3,
-    num="8.1.1",
+    num="8.3.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors = Requirement(
@@ -1125,7 +1302,7 @@ RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors = Requirement(
     ),
     link=None,
     level=3,
-    num="8.2.1",
+    num="8.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups = Requirement(
@@ -1153,7 +1330,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups = Re
     ),
     link=None,
     level=4,
-    num="8.3.1.1",
+    num="8.5.1.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles = Requirement(
@@ -1174,7 +1351,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles = Requirement(
     ),
     link=None,
     level=4,
-    num="8.3.2.1",
+    num="8.5.2.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_GroupFiltering = Requirement(
@@ -1216,7 +1393,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_GroupFiltering = Requ
     ),
     link=None,
     level=4,
-    num="8.3.3.1",
+    num="8.5.3.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_MultipleGroups = Requirement(
@@ -1233,7 +1410,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_MultipleGroups = Requ
     ),
     link=None,
     level=4,
-    num="8.3.4.1",
+    num="8.5.4.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_OverlappingUsers = Requirement(
@@ -1250,7 +1427,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_OverlappingUsers = Re
     ),
     link=None,
     level=4,
-    num="8.3.5.1",
+    num="8.5.5.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoGroups = Requirement(
@@ -1267,7 +1444,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoGroups = Requiremen
     ),
     link=None,
     level=4,
-    num="8.3.6.1",
+    num="8.5.6.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SubgroupMemberships = Requirement(
@@ -1283,7 +1460,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SubgroupMemberships =
     ),
     link=None,
     level=4,
-    num="8.3.7.1",
+    num="8.5.7.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles = Requirement(
@@ -1300,7 +1477,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingClickHouseR
     ),
     link=None,
     level=4,
-    num="8.3.8.1",
+    num="8.5.8.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SameName = Requirement(
@@ -1316,7 +1493,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_SameName = Requiremen
     ),
     link=None,
     level=4,
-    num="8.3.9.1",
+    num="8.5.9.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingRoles = Requirement(
@@ -1332,7 +1509,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoMatchingRoles = Req
     ),
     link=None,
     level=4,
-    num="8.3.10.1",
+    num="8.5.10.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups = Requirement(
@@ -1348,7 +1525,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoPermissionToViewGro
     ),
     link=None,
     level=4,
-    num="8.3.11.1",
+    num="8.5.11.1",
 )
 
 RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoDefaultRole = Requirement(
@@ -1386,7 +1563,7 @@ RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserRoles_NoDefaultRole = Requi
     ),
     link=None,
     level=4,
-    num="8.3.12.1",
+    num="8.5.12.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled = Requirement(
@@ -1411,7 +1588,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.1.1",
+    num="8.6.1.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted = Requirement(
@@ -1432,7 +1609,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.1.2",
+    num="8.6.1.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated = Requirement(
@@ -1458,7 +1635,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserAttributesUpdated = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.1.3",
+    num="8.6.1.3",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup = Requirement(
@@ -1479,7 +1656,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.2.1",
+    num="8.6.2.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup = Requirement(
@@ -1500,7 +1677,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.2.2",
+    num="8.6.2.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted = Requirement(
@@ -1521,7 +1698,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.2.3",
+    num="8.6.2.3",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled = Requirement(
@@ -1546,7 +1723,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.3.1",
+    num="8.6.3.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked = Requirement(
@@ -1567,7 +1744,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.3.2",
+    num="8.6.3.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked = Requirement(
@@ -1588,7 +1765,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_UserSessionRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.4.1",
+    num="8.6.4.1",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked = Requirement(
@@ -1612,7 +1789,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_RefreshTokenRevoked = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.4.2",
+    num="8.6.4.2",
 )
 
 RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated = Requirement(
@@ -1633,7 +1810,7 @@ RQ_SRS_042_OAuth_Keycloak_Actions_NotBeforePolicyUpdated = Requirement(
     ),
     link=None,
     level=4,
-    num="8.4.4.3",
+    num="8.6.4.3",
 )
 
 RQ_SRS_042_OAuth_StaticKey_AccessTokenProcessors = Requirement(
@@ -2231,6 +2408,8 @@ RQ_SRS_042_OAuth_Grafana_Authentication_Actions_SessionManagement = Requirement(
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
+        "[Keycloak]: https://www.keycloak.org\n"
+        "[Azure]: https://azure.microsoft.com\n"
     ),
     link=None,
     level=3,
@@ -2285,18 +2464,36 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         Heading(name="Setting up an Application in Azure", level=2, num="7.1"),
         Heading(name="RQ.SRS-042.OAuth.Azure.ApplicationSetup ", level=3, num="7.1.1"),
         Heading(name="Opaque Token Support for Azure", level=2, num="7.2"),
-        Heading(name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport", level=3, num="7.2.1"),
-        Heading(name="Specifying the Configuration Endpoint", level=3, num="7.2.2"),
+        Heading(name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque", level=3, num="7.2.1"),
         Heading(
-            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
+            name="Opaque Token Constraints and Gateway Workaround", level=3, num="7.2.2"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints",
             level=4,
             num="7.2.2.1",
         ),
-        Heading(name="Specifying all Endpoint parameters", level=3, num="7.2.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational",
+            level=4,
+            num="7.2.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation",
+            level=4,
+            num="7.2.2.3",
+        ),
+        Heading(name="Specifying the Configuration Endpoint", level=3, num="7.2.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint",
+            level=4,
+            num="7.2.3.1",
+        ),
+        Heading(name="Specifying all Endpoint parameters", level=3, num="7.2.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints",
             level=4,
-            num="7.2.3.1",
+            num="7.2.4.1",
         ),
         Heading(name="Getting Access Token from Azure", level=2, num="7.3"),
         Heading(name="RQ.SRS-042.OAuth.Azure.GetAccessToken", level=3, num="7.3.1"),
@@ -2338,7 +2535,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             num="7.5.4.1",
         ),
         Heading(
-            name="No Duplicate Role Assignments for Overlapping Azure Groups",
+            name="No Duplicate Role Assignments for Overlapping [Azure] Groups",
             level=3,
             num="7.5.5",
         ),
@@ -2555,166 +2752,172 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             num="7.7.1.2.8",
         ),
         Heading(name="Keycloak", level=1, num="8"),
-        Heading(name="Getting Access Token from Keycloak", level=2, num="8.1"),
-        Heading(name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken", level=3, num="8.1.1"),
-        Heading(name="Access Token Processors For Keycloak", level=2, num="8.2"),
+        Heading(name="Setting up a Realm in Keycloak", level=2, num="8.1"),
+        Heading(name="RQ.SRS-042.OAuth.Keycloak.RealmSetup", level=3, num="8.1.1"),
+        Heading(name="Opaque Token Support for Keycloak", level=2, num="8.2"),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors", level=3, num="8.2.1"
+            name="RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport", level=3, num="8.2.1"
         ),
-        Heading(name="User Groups in Keycloak", level=2, num="8.3"),
-        Heading(name="Setting up User Groups in Keycloak", level=3, num="8.3.1"),
+        Heading(name="Getting Access Token from Keycloak", level=2, num="8.3"),
+        Heading(name="RQ.SRS-042.OAuth.Keycloak.GetAccessToken", level=3, num="8.3.1"),
+        Heading(name="Access Token Processors For Keycloak", level=2, num="8.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors", level=3, num="8.4.1"
+        ),
+        Heading(name="User Groups in Keycloak", level=2, num="8.5"),
+        Heading(name="Setting up User Groups in Keycloak", level=3, num="8.5.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups",
             level=4,
-            num="8.3.1.1",
+            num="8.5.1.1",
         ),
         Heading(
             name="Query Execution Based on User Roles in ClickHouse with Keycloak",
             level=3,
-            num="8.3.2",
+            num="8.5.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles",
             level=4,
-            num="8.3.2.1",
+            num="8.5.2.1",
         ),
         Heading(
-            name="Filtering Keycloak Groups for Role Assignment", level=3, num="8.3.3"
+            name="Filtering Keycloak Groups for Role Assignment", level=3, num="8.5.3"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering",
             level=4,
-            num="8.3.3.1",
+            num="8.5.3.1",
         ),
-        Heading(name="User in Multiple Keycloak Groups", level=3, num="8.3.4"),
+        Heading(name="User in Multiple Keycloak Groups", level=3, num="8.5.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups",
             level=4,
-            num="8.3.4.1",
+            num="8.5.4.1",
         ),
         Heading(
             name="No Duplicate Role Assignments for Overlapping Keycloak Groups",
             level=3,
-            num="8.3.5",
+            num="8.5.5",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers",
             level=4,
-            num="8.3.5.1",
+            num="8.5.5.1",
         ),
-        Heading(name="No Keycloak Groups Returned for User", level=3, num="8.3.6"),
+        Heading(name="No Keycloak Groups Returned for User", level=3, num="8.5.6"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups",
             level=4,
-            num="8.3.6.1",
+            num="8.5.6.1",
         ),
         Heading(
-            name="Keycloak Subgroup Memberships Not Considered", level=3, num="8.3.7"
+            name="Keycloak Subgroup Memberships Not Considered", level=3, num="8.5.7"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships",
             level=4,
-            num="8.3.7.1",
+            num="8.5.7.1",
         ),
         Heading(
-            name="Dynamic Group Membership Updates For Keycloak", level=3, num="8.3.8"
+            name="Dynamic Group Membership Updates For Keycloak", level=3, num="8.5.8"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles",
             level=4,
-            num="8.3.8.1",
+            num="8.5.8.1",
         ),
         Heading(
-            name="Keycloak Group Names Match Roles in ClickHouse", level=3, num="8.3.9"
+            name="Keycloak Group Names Match Roles in ClickHouse", level=3, num="8.5.9"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName",
             level=4,
-            num="8.3.9.1",
+            num="8.5.9.1",
         ),
         Heading(
             name="No Matching Roles in ClickHouse for Keycloak Groups",
             level=3,
-            num="8.3.10",
+            num="8.5.10",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles",
             level=4,
-            num="8.3.10.1",
+            num="8.5.10.1",
         ),
-        Heading(name="User Cannot View Groups in Keycloak", level=3, num="8.3.11"),
+        Heading(name="User Cannot View Groups in Keycloak", level=3, num="8.5.11"),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups",
             level=4,
-            num="8.3.11.1",
+            num="8.5.11.1",
         ),
         Heading(
             name="In ClickHouse There Is No Default Role Specified for Keycloak Users",
             level=3,
-            num="8.3.12",
+            num="8.5.12",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole",
             level=4,
-            num="8.3.12.1",
+            num="8.5.12.1",
         ),
-        Heading(name="Keycloak Identity Management Actions", level=2, num="8.4"),
-        Heading(name="Keycloak User State Changes", level=3, num="8.4.1"),
+        Heading(name="Keycloak Identity Management Actions", level=2, num="8.6"),
+        Heading(name="Keycloak User State Changes", level=3, num="8.6.1"),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled",
             level=4,
-            num="8.4.1.1",
+            num="8.6.1.1",
         ),
         Heading(
-            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted", level=4, num="8.4.1.2"
+            name="RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted", level=4, num="8.6.1.2"
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated",
             level=4,
-            num="8.4.1.3",
+            num="8.6.1.3",
         ),
-        Heading(name="Keycloak Group and Role Membership", level=3, num="8.4.2"),
+        Heading(name="Keycloak Group and Role Membership", level=3, num="8.6.2"),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup",
             level=4,
-            num="8.4.2.1",
+            num="8.6.2.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup",
             level=4,
-            num="8.4.2.2",
+            num="8.6.2.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted",
             level=4,
-            num="8.4.2.3",
+            num="8.6.2.3",
         ),
-        Heading(name="Keycloak Application and Consent", level=3, num="8.4.3"),
+        Heading(name="Keycloak Application and Consent", level=3, num="8.6.3"),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled",
             level=4,
-            num="8.4.3.1",
+            num="8.6.3.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked",
             level=4,
-            num="8.4.3.2",
+            num="8.6.3.2",
         ),
-        Heading(name="Keycloak Token and Session Management", level=3, num="8.4.4"),
+        Heading(name="Keycloak Token and Session Management", level=3, num="8.6.4"),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked",
             level=4,
-            num="8.4.4.1",
+            num="8.6.4.1",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked",
             level=4,
-            num="8.4.4.2",
+            num="8.6.4.2",
         ),
         Heading(
             name="RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated",
             level=4,
-            num="8.4.4.3",
+            num="8.6.4.3",
         ),
         Heading(name="Static Key", level=1, num="9"),
         Heading(name="Access Token Processors For Static Key", level=2, num="9.1"),
@@ -2867,7 +3070,10 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_IdentityProviders_Change,
         RQ_SRS_042_OAuth_Credentials,
         RQ_SRS_042_OAuth_Azure_ApplicationSetup_,
-        RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Constraints,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Operational,
+        RQ_SRS_042_OAuth_Azure_Tokens_Opaque_Configuration_Validation,
         RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_ConfigurationEndpoint,
         RQ_SRS_042_OAuth_Azure_OpaqueTokenSupport_Endpoints,
         RQ_SRS_042_OAuth_Azure_GetAccessToken,
@@ -2912,6 +3118,8 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor,
         RQ_SRS_042_OAuth_Grafana_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles,
+        RQ_SRS_042_OAuth_Keycloak_RealmSetup,
+        RQ_SRS_042_OAuth_Keycloak_OpaqueTokenSupport,
         RQ_SRS_042_OAuth_Keycloak_GetAccessToken,
         RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors,
         RQ_SRS_042_OAuth_Grafana_Keycloak_Authentication_UserDirectories_UserGroups,
@@ -2992,11 +3200,15 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 7.1 [Setting up an Application in Azure](#setting-up-an-application-in-azure)
         * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup ](#rqsrs-042oauthazureapplicationsetup-)
     * 7.2 [Opaque Token Support for Azure](#opaque-token-support-for-azure)
-        * 7.2.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport](#rqsrs-042oauthazureopaquetokensupport)
-        * 7.2.2 [Specifying the Configuration Endpoint](#specifying-the-configuration-endpoint)
-            * 7.2.2.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint](#rqsrs-042oauthazureopaquetokensupportconfigurationendpoint)
-        * 7.2.3 [Specifying all Endpoint parameters](#specifying-all-endpoint-parameters)
-            * 7.2.3.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints](#rqsrs-042oauthazureopaquetokensupportendpoints)
+        * 7.2.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque](#rqsrs-042oauthazuretokensopaque)
+        * 7.2.2 [Opaque Token Constraints and Gateway Workaround](#opaque-token-constraints-and-gateway-workaround)
+            * 7.2.2.1 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints](#rqsrs-042oauthazuretokensopaqueconstraints)
+            * 7.2.2.2 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational](#rqsrs-042oauthazuretokensopaqueoperational)
+            * 7.2.2.3 [RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation](#rqsrs-042oauthazuretokensopaqueconfigurationvalidation)
+        * 7.2.3 [Specifying the Configuration Endpoint](#specifying-the-configuration-endpoint)
+            * 7.2.3.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.ConfigurationEndpoint](#rqsrs-042oauthazureopaquetokensupportconfigurationendpoint)
+        * 7.2.4 [Specifying all Endpoint parameters](#specifying-all-endpoint-parameters)
+            * 7.2.4.1 [RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport.Endpoints](#rqsrs-042oauthazureopaquetokensupportendpoints)
     * 7.3 [Getting Access Token from Azure](#getting-access-token-from-azure)
         * 7.3.1 [RQ.SRS-042.OAuth.Azure.GetAccessToken](#rqsrs-042oauthazuregetaccesstoken)
     * 7.4 [Access Token Processors For Azure](#access-token-processors-for-azure)
@@ -3010,7 +3222,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             * 7.5.3.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanaazureauthenticationuserrolesgroupfiltering)
         * 7.5.4 [User in Multiple Azure Groups](#user-in-multiple-azure-groups)
             * 7.5.4.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesmultiplegroups)
-        * 7.5.5 [No Duplicate Role Assignments for Overlapping Azure Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
+        * 7.5.5 [No Duplicate Role Assignments for Overlapping [Azure] Groups](#no-duplicate-role-assignments-for-overlapping-azure-groups)
             * 7.5.5.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanaazureauthenticationuserrolesoverlappingusers)
         * 7.5.6 [No Azure Groups Returned for User](#no-azure-groups-returned-for-user)
             * 7.5.6.1 [RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanaazureauthenticationuserrolesnogroups)
@@ -3064,51 +3276,55 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
                 * 7.7.1.2.7 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenprocessor)
                 * 7.7.1.2.8 [RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthgrafanaauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
 * 8 [Keycloak](#keycloak)
-    * 8.1 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
-        * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
-    * 8.2 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
-        * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors](#rqsrs-042oauthkeycloakaccesstokenprocessors)
-    * 8.3 [User Groups in Keycloak](#user-groups-in-keycloak)
-        * 8.3.1 [Setting up User Groups in Keycloak](#setting-up-user-groups-in-keycloak)
-            * 8.3.1.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserdirectoriesusergroups)
-        * 8.3.2 [Query Execution Based on User Roles in ClickHouse with Keycloak](#query-execution-based-on-user-roles-in-clickhouse-with-keycloak)
-            * 8.3.2.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserroles)
-        * 8.3.3 [Filtering Keycloak Groups for Role Assignment](#filtering-keycloak-groups-for-role-assignment)
-            * 8.3.3.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesgroupfiltering)
-        * 8.3.4 [User in Multiple Keycloak Groups](#user-in-multiple-keycloak-groups)
-            * 8.3.4.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesmultiplegroups)
-        * 8.3.5 [No Duplicate Role Assignments for Overlapping Keycloak Groups](#no-duplicate-role-assignments-for-overlapping-keycloak-groups)
-            * 8.3.5.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesoverlappingusers)
-        * 8.3.6 [No Keycloak Groups Returned for User](#no-keycloak-groups-returned-for-user)
-            * 8.3.6.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnogroups)
-        * 8.3.7 [Keycloak Subgroup Memberships Not Considered](#keycloak-subgroup-memberships-not-considered)
-            * 8.3.7.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessubgroupmemberships)
-        * 8.3.8 [Dynamic Group Membership Updates For Keycloak](#dynamic-group-membership-updates-for-keycloak)
-            * 8.3.8.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingclickhouseroles)
-        * 8.3.9 [Keycloak Group Names Match Roles in ClickHouse](#keycloak-group-names-match-roles-in-clickhouse)
-            * 8.3.9.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessamename)
-        * 8.3.10 [No Matching Roles in ClickHouse for Keycloak Groups](#no-matching-roles-in-clickhouse-for-keycloak-groups)
-            * 8.3.10.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingroles)
-        * 8.3.11 [User Cannot View Groups in Keycloak](#user-cannot-view-groups-in-keycloak)
-            * 8.3.11.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnopermissiontoviewgroups)
-        * 8.3.12 [In ClickHouse There Is No Default Role Specified for Keycloak Users](#in-clickhouse-there-is-no-default-role-specified-for-keycloak-users)
-            * 8.3.12.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnodefaultrole)
-    * 8.4 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
-        * 8.4.1 [Keycloak User State Changes](#keycloak-user-state-changes)
-            * 8.4.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
-            * 8.4.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
-            * 8.4.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
-        * 8.4.2 [Keycloak Group and Role Membership](#keycloak-group-and-role-membership)
-            * 8.4.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
-            * 8.4.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
-            * 8.4.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
-        * 8.4.3 [Keycloak Application and Consent](#keycloak-application-and-consent)
-            * 8.4.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
-            * 8.4.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
-        * 8.4.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
-            * 8.4.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
-            * 8.4.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
-            * 8.4.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
+    * 8.1 [Setting up a Realm in Keycloak](#setting-up-a-realm-in-keycloak)
+        * 8.1.1 [RQ.SRS-042.OAuth.Keycloak.RealmSetup](#rqsrs-042oauthkeycloakrealmsetup)
+    * 8.2 [Opaque Token Support for Keycloak](#opaque-token-support-for-keycloak)
+        * 8.2.1 [RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport](#rqsrs-042oauthkeycloakopaquetokensupport)
+    * 8.3 [Getting Access Token from Keycloak](#getting-access-token-from-keycloak)
+        * 8.3.1 [RQ.SRS-042.OAuth.Keycloak.GetAccessToken](#rqsrs-042oauthkeycloakgetaccesstoken)
+    * 8.4 [Access Token Processors For Keycloak](#access-token-processors-for-keycloak)
+        * 8.4.1 [RQ.SRS-042.OAuth.Keycloak.AccessTokenProcessors](#rqsrs-042oauthkeycloakaccesstokenprocessors)
+    * 8.5 [User Groups in Keycloak](#user-groups-in-keycloak)
+        * 8.5.1 [Setting up User Groups in Keycloak](#setting-up-user-groups-in-keycloak)
+            * 8.5.1.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserdirectoriesusergroups)
+        * 8.5.2 [Query Execution Based on User Roles in ClickHouse with Keycloak](#query-execution-based-on-user-roles-in-clickhouse-with-keycloak)
+            * 8.5.2.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserroles)
+        * 8.5.3 [Filtering Keycloak Groups for Role Assignment](#filtering-keycloak-groups-for-role-assignment)
+            * 8.5.3.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesgroupfiltering)
+        * 8.5.4 [User in Multiple Keycloak Groups](#user-in-multiple-keycloak-groups)
+            * 8.5.4.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesmultiplegroups)
+        * 8.5.5 [No Duplicate Role Assignments for Overlapping Keycloak Groups](#no-duplicate-role-assignments-for-overlapping-keycloak-groups)
+            * 8.5.5.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesoverlappingusers)
+        * 8.5.6 [No Keycloak Groups Returned for User](#no-keycloak-groups-returned-for-user)
+            * 8.5.6.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnogroups)
+        * 8.5.7 [Keycloak Subgroup Memberships Not Considered](#keycloak-subgroup-memberships-not-considered)
+            * 8.5.7.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessubgroupmemberships)
+        * 8.5.8 [Dynamic Group Membership Updates For Keycloak](#dynamic-group-membership-updates-for-keycloak)
+            * 8.5.8.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingclickhouseroles)
+        * 8.5.9 [Keycloak Group Names Match Roles in ClickHouse](#keycloak-group-names-match-roles-in-clickhouse)
+            * 8.5.9.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolessamename)
+        * 8.5.10 [No Matching Roles in ClickHouse for Keycloak Groups](#no-matching-roles-in-clickhouse-for-keycloak-groups)
+            * 8.5.10.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnomatchingroles)
+        * 8.5.11 [User Cannot View Groups in Keycloak](#user-cannot-view-groups-in-keycloak)
+            * 8.5.11.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnopermissiontoviewgroups)
+        * 8.5.12 [In ClickHouse There Is No Default Role Specified for Keycloak Users](#in-clickhouse-there-is-no-default-role-specified-for-keycloak-users)
+            * 8.5.12.1 [RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole](#rqsrs-042oauthgrafanakeycloakauthenticationuserrolesnodefaultrole)
+    * 8.6 [Keycloak Identity Management Actions](#keycloak-identity-management-actions)
+        * 8.6.1 [Keycloak User State Changes](#keycloak-user-state-changes)
+            * 8.6.1.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled](#rqsrs-042oauthkeycloakactionsuserdisabled)
+            * 8.6.1.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted](#rqsrs-042oauthkeycloakactionsuserdeleted)
+            * 8.6.1.3 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated](#rqsrs-042oauthkeycloakactionsuserattributesupdated)
+        * 8.6.2 [Keycloak Group and Role Membership](#keycloak-group-and-role-membership)
+            * 8.6.2.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup](#rqsrs-042oauthkeycloakactionsuseraddedtogroup)
+            * 8.6.2.2 [RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup](#rqsrs-042oauthkeycloakactionsuserremovedfromgroup)
+            * 8.6.2.3 [RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted](#rqsrs-042oauthkeycloakactionsgroupdeleted)
+        * 8.6.3 [Keycloak Application and Consent](#keycloak-application-and-consent)
+            * 8.6.3.1 [RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled](#rqsrs-042oauthkeycloakactionsclientdisabled)
+            * 8.6.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
+        * 8.6.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
+            * 8.6.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked](#rqsrs-042oauthkeycloakactionsusersessionrevoked)
+            * 8.6.4.2 [RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked](#rqsrs-042oauthkeycloakactionsrefreshtokenrevoked)
+            * 8.6.4.3 [RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated](#rqsrs-042oauthkeycloakactionsnotbeforepolicyupdated)
 * 9 [Static Key](#static-key)
     * 9.1 [Access Token Processors For Static Key](#access-token-processors-for-static-key)
         * 9.1.1 [RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors](#rqsrs-042oauthstatickeyaccesstokenprocessors)
@@ -3188,13 +3404,13 @@ OAuth 2.0 typically issues two types of tokens:
 
 ## Definitions
 
-- **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include Azure Active Directory, Google Identity, and Okta.
+- **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include [Azure] Active Directory, Google Identity, and Okta.
 - **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
 - **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
 
 ## Overview of the Functionality
 
-To enable OAuth 2.0 authentication in [ClickHouse], one must define Access Token Processors, which allow [ClickHouse] to validate and trust OAuth 2.0 access tokens issued by external Identity Providers (IdPs), such as Azure AD.
+To enable OAuth 2.0 authentication in [ClickHouse], one must define Access Token Processors, which allow [ClickHouse] to validate and trust OAuth 2.0 access tokens issued by external Identity Providers (IdPs), such as [Azure] AD.
 
 OAuth-based authentication works by allowing users to authenticate using an access token (often a JWT) issued by the IdP. [ClickHouse] supports two modes of operation with these tokens:
 
@@ -3214,7 +3430,7 @@ Key Parameters:
 
 - **client_id:** The registered application ID in Azure.
 
-- **tenant_id:** The Azure tenant that issues the tokens.
+- **tenant_id:** The [Azure] tenant that issues the tokens.
 
 ### Authentication Modes with OAuth Tokens
 
@@ -3289,7 +3505,7 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with various identity providers, including but not limited to:
 
-- Azure Active Directory
+- [Azure] Active Directory
 - Google Identity
 - Keycloak
 - Remote JWKS
@@ -3327,14 +3543,14 @@ printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>Client
 
 ## Azure
 
-[ClickHouse] SHALL support OAuth 2.0 authentication with Azure Active Directory (Azure AD) as an identity provider.
+[ClickHouse] SHALL support OAuth 2.0 authentication with [Azure] Active Directory ([Azure] AD) as an identity provider.
 
 ### Setting up an Application in Azure
 
 #### RQ.SRS-042.OAuth.Azure.ApplicationSetup 
 version: 1.0
 
-[ClickHouse] SHALL support integration with applications registered in Azure Active Directory. To set up an application in Azure for OAuth authentication, the following steps SHALL be performed:
+[ClickHouse] SHALL support integration with applications registered in [Azure] Active Directory. To set up an application in [Azure] for OAuth authentication, the following steps SHALL be performed:
 
 ```bash
 ACCESS_TOKEN="<admin-access-token>"
@@ -3353,10 +3569,10 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications" \
 
 ### Opaque Token Support for Azure
 
-#### RQ.SRS-042.OAuth.Azure.OpaqueTokenSupport
+#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque
 version: 1.0
 
-[ClickHouse] SHALL support validating opaque access tokens issued by Azure AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
+[ClickHouse] SHALL support validating opaque access tokens issued by [Azure] AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in `config.xml` as follows:
 
 ```xml
 <clickhouse>
@@ -3371,6 +3587,31 @@ version: 1.0
     </token_processors>
 </clickhouse>
 ```
+
+#### Opaque Token Constraints and Gateway Workaround
+
+##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints
+version: 1.0
+
+[ClickHouse] SHALL assume that Azure-issued access tokens are JWT by default. If the token_processors entry for [Azure] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.
+
+##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational
+version: 1.0
+
+When `<provider>azure</provider>` or `<provider>openid</provider>` is used for [Azure] in the `token_processors` section,  
+[ClickHouse] SHALL validate tokens by calling the configured discovery and/or `/userinfo` introspection endpoints instead  
+of verifying the token locally. This SHALL be treated as “opaque behavior” operationally, regardless of the underlying token format.
+
+##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation
+version: 1.0
+
+For [Azure] opaque-mode operation, exactly one of the following SHALL be configured per processor:
+
+1. configuration_endpoint only, or
+
+2. both userinfo_endpoint and token_introspection_endpoint.
+
+If neither (or all three) are set, [ClickHouse] SHALL reject the configuration as invalid.
 
 #### Specifying the Configuration Endpoint
 
@@ -3391,7 +3632,7 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Azure.GetAccessToken
 version: 1.0
 
-To obtain an access token from Azure AD, you need to register an application in Azure AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.
+To obtain an access token from [Azure] AD, you need to register an application in [Azure] AD and configure the necessary permissions. After that you must collect your `CLIENT_ID`, `TENANT_ID`, and `CLIENT_SECRET`.
 
 You can obtain an access token using the following command:
 
@@ -3437,7 +3678,7 @@ Basic structure:
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups
 version: 1.0
 
-[ClickHouse] SHALL support user groups defined in Azure Active Directory (Azure AD) for role-based access control. In order to create a user group in Azure AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
+[ClickHouse] SHALL support user groups defined in [Azure] Active Directory ([Azure] AD) for role-based access control. In order to create a user group in [Azure] AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
@@ -3459,7 +3700,7 @@ version: 1.0
 
 When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
 assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
-if a user has a group or permission in Azure (or another IdP) and there is a role with the same name in
+if a user has a group or permission in [Azure] (or another IdP) and there is a role with the same name in
 ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
 
 The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
@@ -3472,7 +3713,7 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Azure` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -3492,7 +3733,7 @@ For example,
 </clickhouse>
 ```
 
-The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters Azure AD group names to only match those that:
+The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters [Azure] AD group names to only match those that:
 
 * Begin with exactly "clickhouse-"
 * Are followed by one or more alphanumeric characters
@@ -3505,15 +3746,15 @@ This filter ensures only groups with names like "clickhouse-admin" or "clickhous
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups
 version: 1.0
 
-When a user belongs to multiple groups in the `Azure`, [ClickHouse] SHALL combine all roles that match these group names.
+When a user belongs to multiple groups in the [Azure], [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-#### No Duplicate Role Assignments for Overlapping Azure Groups
+#### No Duplicate Role Assignments for Overlapping [Azure] Groups
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers
 version: 1.0
 
-When multiple groups in the `Azure` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
+When multiple groups in the [Azure] contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
 The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
 
 #### No Azure Groups Returned for User
@@ -3521,7 +3762,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a grafana user is authenticated via OAuth and Azure does not return any groups for the user,
+When a grafana user is authenticated via OAuth and [Azure] does not return any groups for the user,
 [ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
 #### Azure Subgroup Memberships Not Considered
@@ -3529,14 +3770,14 @@ When a grafana user is authenticated via OAuth and Azure does not return any gro
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
 
-When a user belongs to subgroups in the `Azure`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
+When a user belongs to subgroups in the [Azure], [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
 #### Dynamic Group Membership Updates For Azure Users
 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles
 version: 1.0
 
-[ClickHouse] SHALL reflect changes in a user’s group memberships from the `Azure` dynamically during the next token validation or cache refresh.
+[ClickHouse] SHALL reflect changes in a user’s group memberships from the [Azure] dynamically during the next token validation or cache refresh.
 Permissions SHALL update automatically without requiring ClickHouse restart or manual reconfiguration.
 
 #### Azure Group Names Match Roles in ClickHouse
@@ -3590,14 +3831,14 @@ The role configuration example,
 
 ### Azure Identity Management Actions
 
-This section outlines how [ClickHouse] SHALL respond to various actions performed in Azure Active Directory that affect user identity, group membership, and token validity.
+This section outlines how [ClickHouse] SHALL respond to various actions performed in [Azure] Active Directory that affect user identity, group membership, and token validity.
 
 #### Azure User State Changes
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDisabled
 version: 1.0
 
-When a user is disabled in Azure AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
+When a user is disabled in [Azure] AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
 
 ```bash
 curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
@@ -3611,7 +3852,7 @@ curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDeleted
 version: 1.0
 
-When a user is permanently deleted from Azure AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
+When a user is permanently deleted from [Azure] AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/users/{user-id}" \
@@ -3621,7 +3862,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/users/{user-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated
 version: 1.0
 
-When a user's attributes (such as `UPN`, `email`, or `name`) are updated in Azure AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
+When a user's attributes (such as `UPN`, `email`, or `name`) are updated in [Azure] AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
 
 ```bash
 curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
@@ -3635,7 +3876,7 @@ curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset
 version: 1.0
 
-When a user's password is reset in Azure AD, [ClickHouse] SHALL continue to validate access tokens without interruption, as password changes do not invalidate existing tokens.
+When a user's password is reset in [Azure] AD, [ClickHouse] SHALL continue to validate access tokens without interruption, as password changes do not invalidate existing tokens.
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication/passwordMethods/{method-id}/resetPassword" \
@@ -3651,7 +3892,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup
 version: 1.0
 
-When a user is added to a group in Azure AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
+When a user is added to a group in [Azure] AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref" \
@@ -3665,7 +3906,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup
 version: 1.0
 
-When a user is removed from a group in Azure AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
+When a user is removed from a group in [Azure] AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{user-id}/$ref" \
@@ -3675,7 +3916,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{u
 ##### RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted
 version: 1.0
 
-When a group that is mapped to a [ClickHouse] role is deleted in Azure AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
+When a group that is mapped to a [ClickHouse] role is deleted in [Azure] AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
@@ -3687,7 +3928,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled
 version: 1.0
 
-When the client application (service principal) used for OAuth integration is disabled in Azure AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.
+When the client application (service principal) used for OAuth integration is disabled in [Azure] AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.
 
 ```bash
 curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \
@@ -3701,7 +3942,7 @@ curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved
 version: 1.0
 
-If the admin consent for required permissions is revoked in Azure AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
+If the admin consent for required permissions is revoked in [Azure] AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \
@@ -3711,7 +3952,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/ap
 ##### RQ.SRS-042.OAuth.Azure.Actions.ClientSecretRotated
 version: 1.0
 
-When the client secret for the application is rotated in Azure AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.
+When the client secret for the application is rotated in [Azure] AD, [ClickHouse] SHALL continue to validate tokens signed with the old secret until they expire, and seamlessly accept tokens signed with the new secret.
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassword" \
@@ -3729,7 +3970,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassw
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked
 version: 1.0
 
-When a user's sign-in sessions are revoked in Azure AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
+When a user's sign-in sessions are revoked in [Azure] AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSessions" \
@@ -3741,7 +3982,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSe
 ##### RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired
 version: 1.0
 
-When a refresh token expires as per the policy in Azure AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
+When a refresh token expires as per the policy in [Azure] AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
 
 ```bash
 curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token" \
@@ -3769,7 +4010,7 @@ validates user credentials and assigns roles based on data from this external sy
 #### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories
 version: 1.0
 
-When a user is not defined locally, [ClickHouse] SHALL use the `Azure` as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
+When a user is not defined locally, [ClickHouse] SHALL use the [Azure] as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
 
 For example,
 
@@ -3876,6 +4117,109 @@ version: 1.0
 ## Keycloak
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
+
+### Setting up a Realm in Keycloak
+
+#### RQ.SRS-042.OAuth.Keycloak.RealmSetup
+version: 1.0
+
+[ClickHouse] SHALL support integration with Keycloak realms. To set up a realm for OAuth authentication, the following steps SHALL be performed:
+
+1. Prepare Realm Configuration JSON:
+
+```json
+{
+  "realm": "grafana",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "grafana-client",
+      "name": "Grafana",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "grafana-secret",
+      "redirectUris": ["http://localhost:3000/login/generic_oauth"],
+      "baseUrl": "http://localhost:3000",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "jsonType.label": "String",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "demo",
+      "enabled": true,
+      "email": "demo@example.com",
+      "firstName": "Demo",
+      "lastName": "User",
+      "emailVerified": true,
+      "groups": ["/grafana-admins", "/can-read"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "demo"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "grafana-admins",
+      "path": "/grafana-admins"
+    },
+    {
+      "name": "can-read",
+      "path": "/can-read"
+    }
+  ]
+}
+```
+
+2. Import Realm into Keycloak Docker Container:
+
+```bash
+docker run --name keycloak \
+  -v $(pwd)/realm-export.json:/opt/keycloak/data/import/realm-export.json \
+  quay.io/keycloak/keycloak:latest \
+  start-dev --import-realm
+```
+
+### Opaque Token Support for Keycloak
+
+#### RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport
+version: 1.0
+
+[ClickHouse] SHALL support validating opaque access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
+
+```xml
+<clickhouse>
+    <token_processors>
+        <keycloak_opaque>
+            <provider>openid</provider>
+            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
+            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <cache_lifetime>600</cache_lifetime>
+            <username_claim>sub</username_claim>
+            <groups_claim>groups</groups_claim>
+        </keycloak_opaque>
+    </token_processors>
+</clickhouse>
+```
 
 ### Getting Access Token from Keycloak
 
@@ -4555,5 +4899,7 @@ version: 1.0
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
+[Keycloak]: https://www.keycloak.org
+[Azure]: https://azure.microsoft.com
 """,
 )
