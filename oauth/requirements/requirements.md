@@ -366,7 +366,7 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 ## Authentication with OAuth
 
-To authenticate with OAuth, grafana user must obtain an access token from the identity provider and present it to [ClickHouse].
+To authenticate with OAuth, Grafana usermust obtain an access token from the identity provider and present it to [ClickHouse].
 
 ### Forward OAuth Identity
 
@@ -384,9 +384,6 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 - [Azure] Active Directory
 - Google Identity
 - Keycloak
-- Remote JWKS
-- Static JWKS
-- Static key
 
 ### Number of Identity Providers That Can Be Used Concurrently
 
@@ -409,7 +406,7 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Credentials
 version: 1.0
 
-[Grafana] SHALL redirect grafana user to the Identity Provider authorization endpoint to obtain an access token if the grafana user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect Grafana user to the Identity Provider authorization endpoint to obtain an access token if the Grafana userhas provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
@@ -584,7 +581,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
 assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
 if a user has a group or permission in [Azure] (or another IdP) and there is a role with the same name in
 ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
@@ -599,7 +596,7 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -648,7 +645,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a grafana user is authenticated via OAuth and [Azure] does not return any groups for the user,
+When a Grafana user is authenticated via OAuth and [Azure] does not return any groups for the user,
 [ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
 #### Azure Subgroup Memberships Not Considered
@@ -692,7 +689,7 @@ When a user does not have permission to view their groups in Identity Provider, 
 ##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
+When a Grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, Grafana userwill not be able to perform any actions after authentication.
 
 The role configuration example,
 
@@ -884,7 +881,7 @@ curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token
 ##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors
 version: 1.0
 
-When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the grafana user to authenticate and access resources.
+When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the Grafana user to authenticate and access resources.
 
 
 ### Azure as an External User Directory
@@ -928,32 +925,32 @@ For example,
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same.
 
 For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.
 
@@ -962,42 +959,42 @@ For example, if there are multiple `<azuure>` entries in the `token_processors` 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 ###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles
 version: 1.0
 
-[ClickHouse] SHALL not allow the grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
 
 
 ## Keycloak
@@ -1223,7 +1220,7 @@ curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/groups' \
 ##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
 assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
 if a user has a group or permission in Keycloak (or another IdP) and there is a role with the same name in
 ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
@@ -1235,7 +1232,7 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 ##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -1284,7 +1281,7 @@ The system SHALL merge roles and ensure no duplicated permissions are assigned t
 ##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a grafana user is authenticated via OAuth and Keycloak does not return any groups for the user,
+When a Grafana user is authenticated via OAuth and Keycloak does not return any groups for the user,
 [ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
 
 #### Keycloak Subgroup Memberships Not Considered
@@ -1328,7 +1325,7 @@ When a user does not have permission to view their groups in Identity Provider, 
 ##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When a grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, grafana user will not be able to perform any actions after authentication.
+When a Grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, Grafana userwill not be able to perform any actions after authentication.
 
 The role configuration example,
 
