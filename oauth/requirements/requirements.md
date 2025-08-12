@@ -283,6 +283,10 @@ OAuth 2.0 typically issues two types of tokens:
 - **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include [Azure] Active Directory, Google Identity, and Okta.
 - **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
 - **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
+- [Grafana] User: A user in [Grafana] who can authenticate with [ClickHouse] using OAuth 2.0.
+- [ClickHouse] User: A user defined in [ClickHouse] who can authenticate using OAuth 2.0 access tokens.
+- **User Directory:** A source of user information that [ClickHouse] can query to retrieve user details and roles. This can be an external IdP or a locally defined user directory.
+- User: A person or system that interacts with [ClickHouse] and can authenticate using OAuth 2.0 access tokens.
 
 ## Overview of the Functionality
 
