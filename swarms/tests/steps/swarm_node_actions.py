@@ -128,6 +128,12 @@ def fill_clickhouse_disks(self):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
+        with And("check that disk is actually full"):
+            result = node.query(
+                f"SELECT total_space, free_space FROM system.disks FORMAT TabSeparated"
+            )
+            assert result.output == "1073740800	0", error()
+
         yield
 
     finally:
@@ -182,6 +188,7 @@ def clickhouse_limited_disk_config(self, node):
         restart=True,
         node=node,
         check_preprocessed=True,
+        after_removal=False,
     )
 
 
