@@ -24,21 +24,26 @@ step_retry_timeout = 900
 step_retry_delay = 30
 
 
-@TestStep
-def restart_keeper(self):
+@TestStep(Given)
+def restart_zookeeper(self, delay=None, delay_before_interrupt=None):
     """
     Stop a random zookeeper instance, wait, and restart.
     This simulates a short outage.
     """
-    keeper_node = random.choice(self.context.keeper_nodes)
-    delay = random.random() * 10 + 1
+    zookeeper_node = random.choice(self.context.zookeeper_nodes)
 
-    with interrupt_node(keeper_node):
+    if delay is None:
+        delay = random.random() * 10 + 1
+
+    if delay_before_interrupt:
+        time.sleep(delay_before_interrupt)
+
+    with interrupt_node(zookeeper_node):
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
 
 
-@TestStep
+@TestStep(Given)
 def restart_random_swarm_node(self, delay=None):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
@@ -54,7 +59,7 @@ def restart_random_swarm_node(self, delay=None):
             time.sleep(delay)
 
 
-@TestStep
+@TestStep(Given)
 def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
@@ -70,7 +75,7 @@ def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
             time.sleep(delay)
 
 
-@TestStep
+@TestStep(Given)
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def restart_network_on_random_swarm_node(
     self, restart_node_after=True, delay_before_disconnect=2
@@ -95,7 +100,7 @@ def restart_network_on_random_swarm_node(
             node.restart()
 
 
-@TestStep(When)
+@TestStep(Given)
 def fill_clickhouse_disks(self):
     """Force clickhouse to run on a full disk."""
 
@@ -272,7 +277,7 @@ def limit_zookeeper_disks(self, node):
             node.start_zookeeper()
 
 
-@TestStep
+@TestStep(Given)
 def fill_zookeeper_disks(self):
     """Force zookeeper to run on a full disk."""
 
