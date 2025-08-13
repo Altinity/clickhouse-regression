@@ -3,6 +3,8 @@ from testflows.asserts import error
 
 from helpers.common import getuid
 
+import time
+
 import swarms.tests.steps.swarm_steps as swarm_steps
 import swarms.tests.steps.s3_steps as s3_steps
 import swarms.tests.steps.swarm_node_actions as actions
@@ -19,8 +21,11 @@ def run_long_query(
     sleep_each_row=1,
     exitcode=None,
     message=None,
+    delay_before_execution=None,
 ):
     """Run a long select from an iceberg table."""
+    if delay_before_execution:
+        time.sleep(delay_before_execution)
     result = node.query(
         f"""
             SELECT count(), hostName() 
@@ -137,34 +142,6 @@ def swarm_out_of_disk_space(
         )
 
 
-@TestScenario
-def restart_zookeeper(
-    self,
-    clickhouse_iceberg_table_name,
-    cluster_name="static_swarm_cluster",
-    node=None,
-):
-    """Check that swarm query does not fail if keeper is restarted during the query execution."""
-    if node is None:
-        node = self.context.node
-
-    with Then("run long select from iceberg table and restart random swarm node"):
-        with Pool() as pool:
-            Step("run long query", test=run_long_query, parallel=True, executor=pool)(
-                node=node,
-                clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-                cluster_name=cluster_name,
-                sleep_each_row=0.5,
-            )
-            Step(
-                "stop node",
-                test=actions.restart_zookeeper,
-                parallel=True,
-                executor=pool,
-            )(delay=20)
-            join()
-
-
 @TestFeature
 @Name("node failure")
 def feature(self, minio_root_user, minio_root_password, node=None):
@@ -220,6 +197,3 @@ def feature(self, minio_root_user, minio_root_password, node=None):
     Scenario(test=swarm_out_of_disk_space)(
         clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
     )
-    # Scenario(test=restart_zookeeper)(
-    #     clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-    # )
