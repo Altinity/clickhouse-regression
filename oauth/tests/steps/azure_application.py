@@ -61,21 +61,23 @@ async def create_azure_application(
 
 
 @TestStep(Given)
-async def create_azure_application_with_secret(self, tenant_id, secret, client_id):
+async def create_azure_application_with_secret(
+    self, tenant_id, client_secret, client_id
+):
     """Create an Azure AD application with a password credential."""
 
     application_name = "application_with_secret_" + getuid()
     application = await create_azure_application(
         tenant_id=tenant_id,
         client_id=client_id,
-        client_secret=secret,
+        client_secret=client_secret,
         application_name=application_name,
         redirect_uris=["http://localhost:3000/login/azuread"],
         home_page_url="http://localhost:3000",
         logout_url="http://localhost:3000/logout",
     )
 
-    client_secret = application.password_credentials[0].secret_text
+    secret = application.password_credentials[0].secret_text
     app_id = application.app_id
 
-    return application, client_secret, app_id
+    return application, secret, app_id
