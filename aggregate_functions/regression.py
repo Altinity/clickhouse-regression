@@ -772,6 +772,14 @@ ffails = {
         Skip,
         "Test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesPredictLinearToGrid": (
+        Skip,
+        "timeSeriesPredictLinearToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesDerivToGrid": (
+        Skip,
+        "timeSeriesDerivToGrid test is not implemented",
+    ),
 }
 
 

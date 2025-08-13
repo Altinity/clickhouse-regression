@@ -1,44 +1,25 @@
 #!/usr/bin/env python3
-import random
-import json
 import time
-from threading import RLock
-from itertools import chain
+import random
 
 from testflows.core import *
-from testflows.combinatorics import combinations
 
 from helpers.alter import *
 from helpers.common import *
-from alter.stress.tests.tc_netem import *
-from alter.stress.tests.steps import *
-from ssl_server.tests.zookeeper.steps import add_zookeeper_config_file
-
-table_schema_lock = RLock()
+from alter.stress.tests.steps import (
+    interrupt_clickhouse,
+    interrupt_node,
+    interrupt_network,
+)
 
 # There's an important tradeoff between these two sets of timeouts.
 # If the query runs for longer than the step timeout, the step will not
 # get retried using a different node and table.
-
 step_retry_timeout = 900
 step_retry_delay = 30
 
 
-@TestStep
-def restart_keeper(self):
-    """
-    Stop a random zookeeper instance, wait, and restart.
-    This simulates a short outage.
-    """
-    keeper_node = random.choice(self.context.keeper_nodes)
-    delay = random.random() * 10 + 1
-
-    with interrupt_node(keeper_node):
-        with When(f"I wait {delay:.2}s"):
-            time.sleep(delay)
-
-
-@TestStep
+@TestStep(Given)
 def restart_random_swarm_node(self, delay=None):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
@@ -54,7 +35,7 @@ def restart_random_swarm_node(self, delay=None):
             time.sleep(delay)
 
 
-@TestStep
+@TestStep(Given)
 def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
@@ -70,7 +51,7 @@ def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
             time.sleep(delay)
 
 
-@TestStep
+@TestStep(Given)
 @Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def restart_network_on_random_swarm_node(
     self, restart_node_after=True, delay_before_disconnect=2
@@ -95,7 +76,7 @@ def restart_network_on_random_swarm_node(
             node.restart()
 
 
-@TestStep(When)
+@TestStep(Given)
 def fill_clickhouse_disks(self):
     """Force clickhouse to run on a full disk."""
 
@@ -127,6 +108,12 @@ def fill_clickhouse_disks(self):
 
         with When(f"I wait {delay:.2}s"):
             time.sleep(delay)
+
+        with And("check that disk is actually full"):
+            result = node.query(
+                f"SELECT total_space, free_space FROM system.disks FORMAT TabSeparated"
+            )
+            assert result.output == "1073740800	0", error()
 
         yield
 
@@ -182,6 +169,7 @@ def clickhouse_limited_disk_config(self, node):
         restart=True,
         node=node,
         check_preprocessed=True,
+        after_removal=False,
     )
 
 
@@ -224,79 +212,3 @@ def limit_clickhouse_disks(self, node):
 
         with And("I restart clickhouse on those disks"):
             node.start_clickhouse()
-
-
-@TestStep(Given)
-def limit_zookeeper_disks(self, node):
-    """
-    Restart zookeeper using small disks.
-    """
-
-    migrate_dirs = {
-        "/data": "/data-limited",
-        "/datalog": "/datalog-limited",
-    }
-    zk_config = {"dataDir": "/data-limited", "dataLogDir": "/datalog-limited"}
-
-    try:
-        with Given("I stop zookeeper"):
-            node.stop_zookeeper()
-
-        with And("I move zookeeper files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
-            for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
-
-        with And("I write an override config for zookeeper"):
-            add_zookeeper_config_file(entries=zk_config, restart=True, node=node)
-
-        yield
-
-    finally:
-        with Finally("I stop zookeeper"):
-            node.stop_zookeeper()
-
-        with And("I move zookeeper files from the small disks"):
-            for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
-
-        with Finally("I start zookeeper"):
-            node.start_zookeeper()
-
-
-@TestStep
-def fill_zookeeper_disks(self):
-    """Force zookeeper to run on a full disk."""
-
-    node = random.choice(self.context.zk_nodes)
-    zookeeper_disk_mounts = ["/data-limited", "/datalog-limited"]
-    delay = random.random() * 10 + 5
-    file_name = "file.dat"
-
-    try:
-        for disk_mount in zookeeper_disk_mounts:
-            with When(f"I get the size of {disk_mount} on {node.name}"):
-                r = node.command(f"df -k --output=size {disk_mount}")
-                disk_size_k = r.output.splitlines()[1].strip()
-                assert int(disk_size_k) < 100e6, error(
-                    "Disk does not appear to be restricted!"
-                )
-
-            with And(f"I create a file to fill {disk_mount} on {node.name}"):
-
-                node.command(
-                    f"dd if=/dev/zero of={disk_mount}/{file_name} bs=1K count={disk_size_k}",
-                    no_checks=True,
-                )
-
-        with When(f"I wait {delay:.2}s"):
-            time.sleep(delay)
-
-    finally:
-        with Finally(f"I delete the large file on {node.name}"):
-            for disk_mount in zookeeper_disk_mounts:
-                node.command(f"rm {disk_mount}/{file_name}")
-
-        with And(f"I restart {node.name} in case it crashed"):
-            node.restart_zookeeper()
