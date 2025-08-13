@@ -163,7 +163,7 @@ def replicated_table_cluster(
                 ORDER BY {order_by} {partition_by} {primary_key} {ttl}
                 SETTINGS {', '.join(settings)}
                 """,
-                settings=[("distributed_ddl_task_timeout ", 360)],
+                settings=[("distributed_ddl_task_timeout", 360)],
                 exitcode=exitcode,
             )
 
