@@ -780,6 +780,10 @@ ffails = {
         Skip,
         "timeSeriesDerivToGrid test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesGroupArray": (
+        Skip,
+        "timeSeriesGroupArray test is not implemented",
+    ),
 }
 
 
