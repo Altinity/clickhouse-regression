@@ -281,8 +281,8 @@ OAuth 2.0 typically issues two types of tokens:
 ## Definitions
 
 - **Identity Provider (IdP):** A service that issues access tokens after authenticating users. Examples include [Azure] Active Directory, Google Identity, and Okta.
-- **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions.
-- **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It is used in OAuth 2.0 for access tokens.
+- **Access Token:** A token issued by an IdP that grants access to protected resources. It is often a JSON Web Token (JWT) containing user identity and permissions, but in general its structure is provider-specific. 
+- **[JWT (JSON Web Token)](https://github.com/Altinity/clickhouse-regression/blob/main/jwt_authentication/requirements/requirements.md):** A compact, URL-safe means of representing claims to be transferred between two parties. It can used in OAuth 2.0 for access tokens.
 - [Grafana] User: A user in [Grafana] who can authenticate with [ClickHouse] using OAuth 2.0.
 - [ClickHouse] User: A user defined in [ClickHouse] who can authenticate using OAuth 2.0 access tokens.
 - **User Directory:** A source of user information that [ClickHouse] can query to retrieve user details and roles. This can be an external IdP or a locally defined user directory.
@@ -292,11 +292,11 @@ OAuth 2.0 typically issues two types of tokens:
 
 To enable OAuth 2.0 authentication in [ClickHouse], one must define Access Token Processors, which allow [ClickHouse] to validate and trust OAuth 2.0 access tokens issued by external Identity Providers (IdPs), such as [Azure] AD.
 
-OAuth-based authentication works by allowing users to authenticate using an access token (often a JWT) issued by the IdP. [ClickHouse] supports two modes of operation with these tokens:
+OAuth-based authentication works by allowing users to authenticate using an access token issued by the IdP. [ClickHouse] supports two modes of operation with these tokens:
 
-**Locally Defined Users:** If a user is already defined in [ClickHouse] (via users.xml or SQL), their authentication method can be set to jwt, enabling token-based authentication.
+**Locally Defined Users:** If a user is already defined in [ClickHouse] (via `users.xml`), their authentication method can be set to jwt, enabling token-based authentication.
 
-**Externally Defined Users:** If a user is not defined locally, [ClickHouse] can still authenticate them by validating the token and retrieving user information from the Identity Provider. If valid, the user is granted access with predefined roles.
+**Externally Defined Users:** If a user is not defined locally, [ClickHouse] can still authenticate and authorize them by validating the token and retrieving user information from the Identity Provider. If valid, the user is granted access with roles predefined in configuration and groups retrieved from IdP.
 
 All OAuth 2.0 access tokens must be validated through one of the configured `token_processors` in `config.xml`.
 
@@ -304,41 +304,30 @@ All OAuth 2.0 access tokens must be validated through one of the configured `tok
 
 Key Parameters:
 
-- **provider:** Specifies the identity provider (for example, `azure`).
+- **type:** Defines type of token processing workflow (acceptable values: `jwt`, `openid`, `azure`).
 
-- **cache_lifetime:** maximum lifetime of cached token (in seconds). Optional, default: 3600
+- **token_cache_lifetime:** maximum lifetime of cached token (in seconds). Optional, default: 3600
 
-- **client_id:** The registered application ID in Azure.
+- **username_claim:** name of claim (field) that will be treated as ClickHouse username. Optional, default: "sub".
 
-- **tenant_id:** The [Azure] tenant that issues the tokens.
+- **groups_claim:** Name of claim (field) that contains list of groups user belongs to. This claim will be looked up in the token itself (in case token is a valid JWT, e.g. in Keycloak) or in response from `/userinfo`. Optional, default: "groups".
 
 ### Authentication Modes with OAuth Tokens
 
 1. **Locally Defined Users with JWT Authentication**
-Users defined in `users.xml` or `SQL` can authenticate using tokens if `jwt` is specified as their method:
+Users defined in `users.xml` can authenticate using tokens if `jwt` is specified as their method:
 
 ```xml
 <clickhouse>
     <my_user>
         <jwt>
+            <claims>{"resource_access":{"account": {"roles": ["view-profile"]}}}</claims>
         </jwt>
     </my_user>
 </clickhouse>
 ```
 
-Or via SQL:
-
-Without additional JWT payload checks
-
-```sql
-CREATE USER my_user IDENTIFIED WITH jwt;
-```
-
-And with additional JWT payload checks
-
-```sql
-CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"resource_access":{"account": {"roles": ["view-profile"]}}}'
-```
+`claims` is an optional parameter. If defined, presense of these claims in token is required, i.e. if a token is valid but does not have these claims -- authentication will fail. 
 
 2. **External Identity Provider as a User Directory**
 
@@ -348,10 +337,8 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 <clickhouse>
     <token_processors>
         <azuure>
-            <provider>azure</provider>
-            <client_id>$CLIENT_ID</client_id>
-            <tenant_id>$TENANT_ID</tenant_id>
-            <cache_lifetime>60</cache_lifetime>
+            <type>azure</type>
+            <token_cache_lifetime>60</token_cache_lifetime>
         </azuure>
     </token_processors>
     <user_directories>
@@ -370,11 +357,11 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
 
 ## Authentication with OAuth
 
-To authenticate with OAuth, Grafana usermust obtain an access token from the identity provider and present it to [ClickHouse].
+To authenticate with OAuth, an access token must be obtained from the identity provider and presented to [ClickHouse].
 
 ### Forward OAuth Identity
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.ForwardOAuthIdentity
+#### RQ.SRS-042.OAuth.Grafana.ForwardOAuthIdentity
 version: 1.0
 
 When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHALL include the JWT token in the HTTP Authorization header for requests sent to [ClickHouse]. The token SHALL be used by [ClickHouse] to validate the user's identity and permissions.
@@ -387,7 +374,7 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 
 - [Azure] Active Directory
 - Google Identity
-- Keycloak
+- OpenID-compatible providers (e.g. Keycloak)
 
 ### Number of Identity Providers That Can Be Used Concurrently
 
@@ -410,13 +397,111 @@ version: 1.0
 #### RQ.SRS-042.OAuth.Credentials
 version: 1.0
 
-[Grafana] SHALL redirect Grafana user to the Identity Provider authorization endpoint to obtain an access token if the Grafana userhas provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
+[Grafana] SHALL redirect the user to the Identity Provider authorization endpoint to obtain an access token if the user has provided a valid `CLIENT_ID`, `TENANT_ID` and the `CLIENT_SECRET`.
 
 The values SHALL be stored inside the `.env` file which can be generated as:
 
 ```bash
 printf "CLIENT_ID=<Client ID (Application ID)>ClientnTENANT_ID=<Tenant ID>ClientnCLIENT_SECRET=<Client Secret>Clientn" > .env
 ```
+
+#### Access Token Processors are Missing From ClickHouse Configuration
+
+##### RQ.SRS-042.OAuth.Authentication.UserRoles.NoAccessTokenProcessors
+version: 1.0
+
+When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the external user to authenticate and access resources.
+
+### External User Directory
+
+An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`)
+used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically
+validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
+
+#### RQ.SRS-042.OAuth.Authentication.UserDirectories
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use the external provider as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
+
+For example,
+
+```xml
+<clickhouse>
+    <token_processors>
+        <azuure>
+            <type>azure</type>
+        </azuure>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <common_roles>
+                <token_test_role_1 />
+            </common_roles>
+            <roles_filter>
+                \bclickhouse-[a-zA-Z0-9]+\b
+            </roles_filter>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+##### Incorrect Configuration in User Directories
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.IncorrectConfiguration.provider
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same.
+
+For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.
+
+##### Missing Configuration in User Directories
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
+###### RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles
+version: 1.0
+
+[ClickHouse] SHALL not allow the external user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
+
 
 ## Azure
 
@@ -446,18 +531,18 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications" \
 
 ### Opaque Token Support for Azure
 
-#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque
+#### RQ.SRS-042.OAuth.Tokens.Azure.Opaque
 version: 1.0
 
-[ClickHouse] SHALL support validating opaque access tokens issued by [Azure] AD using an Access Token Processor configured for OpenID. The processor SHALL be defined in `config.xml` as follows:
+[ClickHouse] SHALL support validating opaque access tokens issued by [Azure] AD using an Access Token Processor. The processor SHALL be defined in `config.xml` as follows:
 
 ```xml
 <clickhouse>
     <token_processors>
         <azure_opaque>
-            <provider>openid</provider>
+            <type>azure</type>
             <configuration_endpoint>https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration</configuration_endpoint>
-            <cache_lifetime>600</cache_lifetime>
+            <token_cache_lifetime>600</token_cache_lifetime>
             <username_claim>sub</username_claim>
             <groups_claim>groups</groups_claim>
         </azure_opaque>
@@ -475,7 +560,7 @@ version: 1.0
 ##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational
 version: 1.0
 
-When `<provider>azure</provider>` or `<provider>openid</provider>` is used for [Azure] in the `token_processors` section,  
+When `<type>azure</type>` or `<type>openid</type>` is used for [Azure] in the `token_processors` section,  
 [ClickHouse] SHALL validate tokens by calling the configured discovery and/or `/userinfo` introspection endpoints instead  
 of verifying the token locally. This SHALL be treated as "opaque behavior" operationally, regardless of the underlying token format.
 
@@ -504,7 +589,7 @@ version: 1.0
 
 * The gateway exchanges [Azure] JWTs for gateway-issued reference tokens.
 
-* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway's .well-known or its userinfo + `token_introspection` endpoints.
+* [ClickHouse] is configured with `<type>OpenID</type>` pointing to the gateway's .well-known or its userinfo + `token_introspection` endpoints.
 
 * [ClickHouse] SHALL validate tokens exclusively via the gateway's `introspection/userinfo` responses.
 
@@ -549,10 +634,8 @@ Basic structure:
 <clickhouse>
     <token_processors>
         <azure_ad>
-            <provider>azure</provider>
-            <client_id>your-client-id</client_id>
-            <tenant_id>your-tenant-id</tenant_id>
-            <cache_lifetime>3600</cache_lifetime>
+            <type>azure</type>
+            <token_cache_lifetime>3600</token_cache_lifetime>
         </azure_ad>
     </token_processors>
 </clickhouse>
@@ -562,7 +645,7 @@ Basic structure:
 
 #### Setting up User Groups in Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserDirectories.UserGroups
+##### RQ.SRS-042.OAuth.Authorization.Azure.UserDirectories.UserGroups
 version: 1.0
 
 [ClickHouse] SHALL support user groups defined in [Azure] Active Directory ([Azure] AD) for role-based access control. In order to create a user group in [Azure] AD, you must obtain an [access token with the necessary permissions](#getting-access-token-from-azure) to create groups.
@@ -582,13 +665,12 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups" \
 
 #### Query Execution Based on User Roles in ClickHouse with Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles
+##### RQ.SRS-042.OAuth.Authorization.Azure.UserRoles
 version: 1.0
 
-When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
-assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
-if a user has a group or permission in [Azure] (or another IdP) and there is a role with the same name in
-ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
+When an external user is authenticated and authorized via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles described in the `users_directories` section.
+
+Role mapping is based on the role name: if a user belongs to a group in [Azure] and there is a role with the same name in ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
 
 The roles defined in the `<common_roles>` section of the `<token>` SHALL determine the permissions granted to the user.
 
@@ -597,10 +679,10 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 
 #### Filtering Azure Groups for Role Assignment
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.GroupFiltering
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When an external user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the [Azure] based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -628,40 +710,34 @@ The regex pattern `\bclickhouse-[a-zA-Z0-9]+\b` filters [Azure] AD group names t
 
 This filter ensures only groups with names like "clickhouse-admin" or "clickhouse-reader" will be mapped to ClickHouse roles, allowing for controlled role-based access.
 
+If the filter is not set, all roles will be matched.
+
 #### User in Multiple Azure Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.MultipleGroups
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.MultipleGroups
 version: 1.0
 
 When a user belongs to multiple groups in the [Azure], [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-#### No Duplicate Role Assignments for Overlapping Azure Groups
-
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.OverlappingUsers
-version: 1.0
-
-When multiple groups in the [Azure] contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
-The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
-
 #### No Azure Groups Returned for User
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoGroups
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a Grafana user is authenticated via OAuth and [Azure] does not return any groups for the user,
-[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+When an external user is authenticated via OAuth and [Azure] does not return any groups for the user,
+[ClickHouse] SHALL assign only the default roles if they are specified in the `<common_roles>` section of the `<token>` configuration. If no default roles are specified, the user SHALL not be able to read or write anything after authentication.
 
 #### Azure Subgroup Memberships Not Considered
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SubgroupMemberships
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
 
 When a user belongs to subgroups in the [Azure], [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
 #### Dynamic Group Membership Updates For Azure Users
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingClickHouseRoles
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.DynamicMembershipUpdates
 version: 1.0
 
 [ClickHouse] SHALL reflect changes in a user's group memberships from the [Azure] dynamically during the next token validation or cache refresh.
@@ -669,41 +745,39 @@ Permissions SHALL update automatically without requiring ClickHouse restart or m
 
 #### Azure Group Names Match Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.SameName
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
 #### No Matching Roles in ClickHouse for Azure Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoMatchingRoles
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
-When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
+When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign only the default roles if they are specified in the `<common_roles>` section of the `<token>` configuration.
 
 #### User Cannot View Groups in Azure
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoPermissionToViewGroups
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
 
-When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
+When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign only the default roles if they are specified in the `<common_roles>` section of the `<token>` configuration.
 
 #### In ClickHouse There Is No Default Role Specified for Azure Users
 
-##### RQ.SRS-042.OAuth.Grafana.Azure.Authentication.UserRoles.NoDefaultRole
+##### RQ.SRS-042.OAuth.Azure.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When a Grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, Grafana userwill not be able to perform any actions after authentication.
+When an external user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, no default roles will be assigned to the user.
 
-The role configuration example,
+The role configuration example:
 
 ```xml
 <clickhouse>
     <token_processors>
         <azuure>
-            <provider>azure</provider>
-            <client_id>$CLIENT_ID</client_id>
-            <tenant_id>$TENANT_ID</tenant_id>
+            <type>azure</type>
         </azuure>
     </token_processors>
     <user_directories>
@@ -725,7 +799,7 @@ This section outlines how [ClickHouse] SHALL respond to various actions performe
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDisabled
 version: 1.0
 
-When a user is disabled in [Azure] AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
+When a user is disabled in [Azure] AD, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens. However, [ClickHouse] MAY allow authentication in case there is a valid cache entry with the token. 
 
 ```bash
 curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
@@ -739,25 +813,11 @@ curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserDeleted
 version: 1.0
 
-When a user is permanently deleted from [Azure] AD, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
+When a user is permanently deleted from [Azure] AD, [ClickHouse] SHALL reject any authentication attempts using their tokens. However, [ClickHouse] MAY allow authentication in case there is a valid cache entry with the token. 
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/users/{user-id}" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
-```
-
-##### RQ.SRS-042.OAuth.Azure.Actions.UserAttributesUpdated
-version: 1.0
-
-When a user's attributes (such as `UPN`, `email`, or `name`) are updated in [Azure] AD, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
-
-```bash
-curl -s -X PATCH "https://graph.microsoft.com/v1.0/users/{user-id}" \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "displayName": "New Name"
-  }'
 ```
 
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserPasswordReset
@@ -779,7 +839,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/authentication
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserAddedToGroup
 version: 1.0
 
-When a user is added to a group in [Azure] AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
+When a user is added to a group in [Azure] AD, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse]. However, in case there is a valid cache entry for the token, [ClickHouse] SHALL update user information only wafter the entry expires. 
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref" \
@@ -793,7 +853,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/groups/{group-id}/members/$ref
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserRemovedFromGroup
 version: 1.0
 
-When a user is removed from a group in [Azure] AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
+When a user is removed from a group in [Azure] AD, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login. However, in case there is a valid cache entry for the token, [ClickHouse] SHALL update user information only after the entry expires. 
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{user-id}/$ref" \
@@ -803,7 +863,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}/members/{u
 ##### RQ.SRS-042.OAuth.Azure.Actions.GroupDeleted
 version: 1.0
 
-When a group that is mapped to a [ClickHouse] role is deleted in [Azure] AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
+When a group that is mapped to a [ClickHouse] role is deleted in [Azure] AD, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication. However, in case there are valid cache entries for some users, [ClickHouse] SHALL update group information only after the entry expires. 
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
@@ -815,7 +875,7 @@ curl -s -X DELETE "https://graph.microsoft.com/v1.0/groups/{group-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.ApplicationDisabled
 version: 1.0
 
-When the client application (service principal) used for OAuth integration is disabled in [Azure] AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application.
+When the client application (service principal) used for OAuth integration is disabled in [Azure] AD, [ClickHouse] SHALL reject all incoming access tokens issued for that application. However, in case there are valid cache entreis for some users, [ClickHouse] SHALL allow them to authenticate until the corresponding entries expires. 
 
 ```bash
 curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \
@@ -829,7 +889,7 @@ curl -s -X PATCH "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}" \
 ##### RQ.SRS-042.OAuth.Azure.Actions.AdminConsentRemoved
 version: 1.0
 
-If the admin consent for required permissions is revoked in [Azure] AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
+If the admin consent for required permissions is revoked in [Azure] AD, [ClickHouse] SHALL reject authentication attempts until consent is granted again. However, in case there are valid cache entreis for some users, [ClickHouse] SHALL allow them to authenticate until the corresponding entries expires. 
 
 ```bash
 curl -s -X DELETE "https://graph.microsoft.com/v1.0/servicePrincipals/{sp-id}/appRoleAssignments/{assignment-id}" \
@@ -857,7 +917,7 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications/{app-id}/addPassw
 ##### RQ.SRS-042.OAuth.Azure.Actions.UserSessionRevoked
 version: 1.0
 
-When a user's sign-in sessions are revoked in [Azure] AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
+When a user's sign-in sessions are revoked in [Azure] AD (for example, via the `revokeSignInSessions` API), [ClickHouse] SHALL reject the user's authentication attempts. However, in case there is a valid cache entry for some users, [ClickHouse] SHALL allow them to authenticate until the corresponding entries expires. 
 
 ```bash
 curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSessions" \
@@ -866,144 +926,9 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/users/{user-id}/revokeSignInSe
   -d ''
 ```
 
-##### RQ.SRS-042.OAuth.Azure.Actions.RefreshTokenExpired
-version: 1.0
-
-When a refresh token expires as per the policy in [Azure] AD, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
-
-```bash
-curl -s -X POST "https://login.microsoftonline.com/{tenant-id}/oauth2/v2.0/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d 'client_id={client-id}' \
-  -d 'client_secret={client-secret}' \
-  -d 'grant_type=refresh_token' \
-  -d 'refresh_token={expired-refresh-token}'
-```
-
-#### Access Token Processors are Missing From ClickHouse Configuration
-
-##### RQ.SRS-042.OAuth.Grafana.Authentication.UserRoles.NoAccessTokenProcessors
-version: 1.0
-
-When there are no access token processors defined in [ClickHouse] configuration, [ClickHouse] SHALL not allow the Grafana user to authenticate and access resources.
-
-
-### Azure as an External User Directory
-
-An `external user directory` in [ClickHouse] is a remote identity source (such as `LDAP`, `Kerberos`, or an `OAuth Identity Provider`)
-used to authenticate and retrieve user information that is not defined locally in [ClickHouse]. When enabled, [ClickHouse] dynamically
-validates user credentials and assigns roles based on data from this external system instead of relying solely on locally configured users.
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories
-version: 1.0
-
-When a user is not defined locally, [ClickHouse] SHALL use the [Azure] as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
-
-For example,
-
-```xml
-<clickhouse>
-    <token_processors>
-        <azuure>
-            <provider>azure</provider>
-            <client_id>$CLIENT_ID</client_id>
-            <tenant_id>$TENANT_ID</tenant_id>
-        </azuure>
-    </token_processors>
-    <user_directories>
-        <token>
-            <processor>azuure</processor>
-            <common_roles>
-                <token_test_role_1 />
-            </common_roles>
-            <roles_filter>
-                \bclickhouse-[a-zA-Z0-9]+\b
-            </roles_filter>
-        </token>
-    </user_directories>
-</clickhouse>
-```
-
-##### Incorrect Configuration in User Directories
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.provider
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `provider` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.clientId
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `client_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.tenantId
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `tenant_id` attribute is incorrectly defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.processor
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `processor` attribute is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.token.roles
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `roles` section is incorrectly defined in the `token` section of the `user_directories` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.IncorrectConfiguration.TokenProcessors.multipleEntries
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token_processors` or `user_directories` sections contain multiple entries that are the same.
-
-For example, if there are multiple `<azuure>` entries in the `token_processors` section or multiple `<token>` entries in the `user_directories` section with the same `processor` attribute.
-
-##### Missing Configuration in User Directories
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.AccessTokenProcessors
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token_processors` section is not defined in the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.provider
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `provider` attribute is not defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.clientId
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `client_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.TokenProcessors.tenantId
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `tenant_id` attribute is not defined in the `token_processors` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `user_directories` section is not defined in the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `token` section is not defined in the `user_directories` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.processor
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `processor` attribute is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
-
-###### RQ.SRS-042.OAuth.Grafana.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles
-version: 1.0
-
-[ClickHouse] SHALL not allow the Grafana user to authenticate and access resources if the `roles` section is not defined in the `token` section of the `user_directories` section of the `config.xml` file.
-
-
 ## Keycloak
 
-[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak as an identity provider.
+[ClickHouse] SHALL support OAuth 2.0 authentication with Keycloak (or any other OpenID-compliant provider) as an external user directory.
 
 ### Setting up a Realm in Keycloak
 
@@ -1086,21 +1011,21 @@ docker run --name keycloak \
   start-dev --import-realm
 ```
 
-### Opaque Token Support for Keycloak
+### Access Token Support for Keycloak
 
-#### RQ.SRS-042.OAuth.Keycloak.OpaqueTokenSupport
+#### RQ.SRS-042.OAuth.Keycloak.AccessTokenSupport
 version: 1.0
 
-[ClickHouse] SHALL support validating opaque access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
+[ClickHouse] SHALL support validating access access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
 
 ```xml
 <clickhouse>
     <token_processors>
         <keycloak_opaque>
-            <provider>openid</provider>
+            <type>openid</type>
             <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
-            <cache_lifetime>600</cache_lifetime>
+            <token_cache_lifetime>600</token_cache_lifetime>
             <username_claim>sub</username_claim>
             <groups_claim>groups</groups_claim>
         </keycloak_opaque>
@@ -1108,49 +1033,49 @@ version: 1.0
 </clickhouse>
 ```
 
-#### Opaque Token Constraints and Gateway Workaround For Keycloak
+#### Access Token Constraints and Gateway Workaround For Keycloak
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Constraints
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.OperationModes
 version: 1.0
 
-[ClickHouse] SHALL assume that Keycloak-issued access tokens are JWT by default. If the `token_processors` entry for 
-[Keycloak] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.
+When <type>OpenID</type> is used (for Keycloak) in the `token_processors` section, [ClickHouse] SHALL 
+validate tokens and extract user information by calling the configured discovery endpoint (`configuration_endpoint`) or `userinfo_endpoint` and `token_introspection_endpoint`.  
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational
+In some cases (i.e. when working with Keycloak) access tokens are JWTs, thus can be decoded and verified locally. If `jwks_uri` is specified / found in response from `configuration_endpoint` AND token is a JWT -- [ClickHouse] SHALL attempt to validate the token locally against given JWKS.
+
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.OperationModes.Fallback
 version: 1.0
 
-When <provider>OpenID</provider> is used for Keycloak in the token_processors section, [ClickHouse] SHALL 
-validate tokens by calling the configured discovery and/or user info / introspection endpoints instead of verifying the token locally. 
-This SHALL be treated as "opaque behavior" operationally, regardless of the underlying token's format.
+If attempt to validate token locally failed, [ClickHouse] SHALL fall back to processing the token using given user info and token introspection endpoints.
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Configuration.Validation
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Configuration.Validation
 version: 1.0
 
-For Keycloak opaque-mode operation, exactly one of the following SHALL be configured per processor:
+Exactly one of the following SHALL be configured per processor:
 
 1. `configuration_endpoint`
-2. both `userinfo_endpoint` and `token_introspection_endpoint`.
+2. both `userinfo_endpoint` and `token_introspection_endpoint`, and optionally `jwks_uri`.
 
 If neither (or all three) are set, the configuration SHALL be rejected as invalid.
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ProviderType
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Operational.ProviderType
 version: 1.0
 
-In opaque mode for Keycloak, provider SHALL be set to OpenID. The processor SHALL obtain endpoints from the Keycloak 
-realm's `.well-known/openid-configuration` or from explicitly provided userinfo and `token_introspection` endpoints.
+To use Keycloak as provider, `type` SHALL be set to OpenID (case-insensitive). The processor SHALL obtain endpoints from the Keycloak 
+realm's `.well-known/openid-configuration` or from explicitly provided `userinfo_endpoint` and `token_introspection_endpoint`.
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.ReferenceToken
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Operational.ReferenceToken
 version: 1.0
 
 [ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of Keycloak. In this pattern:
 
 * The gateway exchanges Keycloak JWTs for gateway-issued reference tokens.
 
-* [ClickHouse] is configured with `<provider>OpenID</provider>` pointing to the gateway's .well-known or its userinfo + token_introspection endpoints.
+* [ClickHouse] is configured with `<type>OpenID</type>` pointing to the gateway's .well-known or its userinfo + token_introspection endpoints.
 
 * [ClickHouse] SHALL validate tokens exclusively via the gateway's `introspection/userinfo` responses.
 
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Opaque.Operational.Failure
+##### RQ.SRS-042.OAuth.Keycloak.Tokens.Operational.Failure
 version: 1.0
 
 If the gateway's introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, 
@@ -1188,7 +1113,7 @@ Basic structure:
 <clickhouse>
     <token_processors>
         <keycloak>
-            <provider>OpenID</provider>
+            <type>OpenID</type>
             <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
             <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
@@ -1202,7 +1127,7 @@ Basic structure:
 
 #### Setting up User Groups in Keycloak
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserDirectories.UserGroups
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserDirectories.UserGroups
 version: 1.0
 
 [ClickHouse] SHALL support user groups defined in Keycloak for role-based access control. In order to create a user group in Keycloak, you must obtain an access token with the necessary permissions to create groups.
@@ -1221,10 +1146,10 @@ curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/groups' \
 
 #### Query Execution Based on User Roles in ClickHouse with Keycloak
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles
 version: 1.0
 
-When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
+When an external user is authenticated via OAuth, [ClickHouse] SHALL be able to execute queries based on the roles 
 assigned to the user in the `users_directories` section. Role mapping is based on the role name: 
 if a user has a group or permission in Keycloak (or another IdP) and there is a role with the same name in
 ClickHouse (e.g., `Admin`), the user will receive the permissions defined by the ClickHouse role.
@@ -1233,10 +1158,10 @@ The roles defined in the `<common_roles>` section of the `<token>` SHALL determi
 
 #### Filtering Keycloak Groups for Role Assignment
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.GroupFiltering
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.GroupFiltering
 version: 1.0
 
-When a Grafana user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
+When an external user is authenticated via OAuth, [ClickHouse] SHALL filter the groups returned by the `Keycloak` based on the `roles_filter` regular expression defined in the `<token>` section of the `config.xml` file.
 
 For example,
 
@@ -1266,38 +1191,30 @@ This filter ensures only groups with names like "clickhouse-admin" or "clickhous
 
 #### User in Multiple Keycloak Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.MultipleGroups
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.MultipleGroups
 version: 1.0
 
 When a user belongs to multiple groups in the `Keycloak`, [ClickHouse] SHALL combine all roles that match these group names.
 The user SHALL inherit the union of all permissions from these roles.
 
-#### No Duplicate Role Assignments for Overlapping Keycloak Groups
-
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.OverlappingUsers
-version: 1.0
-
-When multiple groups in the `Keycloak` contain the same user, [ClickHouse] SHALL not create duplicate role assignments.
-The system SHALL merge roles and ensure no duplicated permissions are assigned to the same user.
-
 #### No Keycloak Groups Returned for User
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoGroups
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.NoGroups
 version: 1.0
 
-When a Grafana user is authenticated via OAuth and Keycloak does not return any groups for the user,
-[ClickHouse] SHALL assign only the default role if it is specified in the `<common_roles>` section of the `<token>` configuration. If no default role is specified, the user SHALL not be able to perform any actions after authentication.
+When an external user is authenticated via OAuth and Keycloak does not return any groups for the user,
+[ClickHouse] SHALL assign only the default roles that are specified in the `<common_roles>` section of the `<token>` configuration. If no default roles are specified, the user SHALL NOT be able to read or write any data.
 
 #### Keycloak Subgroup Memberships Not Considered
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SubgroupMemberships
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.SubgroupMemberships
 version: 1.0
 
 When a user belongs to subgroups in the `Keycloak`, [ClickHouse] SHALL not automatically assign roles based on subgroup memberships. Only direct group memberships SHALL be considered for role assignments.
 
 #### Dynamic Group Membership Updates For Keycloak
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.NoMatchingClickHouseRoles
 version: 1.0
 
 [ClickHouse] SHALL reflect changes in a user's group memberships from the `Keycloak` dynamically during the next token validation or cache refresh.
@@ -1305,31 +1222,31 @@ Permissions SHALL update automatically without requiring ClickHouse restart or m
 
 #### Keycloak Group Names Match Roles in ClickHouse
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.SameName
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.SameName
 version: 1.0
 
 When a user has permission to view groups in the Identity Provider and [ClickHouse] has roles with same names, [ClickHouse] SHALL map the user's Identity Provider group membership to the corresponding [ClickHouse] roles.
 
 #### No Matching Roles in ClickHouse for Keycloak Groups
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoMatchingRoles
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.NoMatchingRoles
 version: 1.0
 
-When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL assign a default role to the user.
+When a user has permission to view groups in Identity Provider but there are no matching roles in [ClickHouse], [ClickHouse] SHALL only assign default roles (listed in `common_roles`) to the user.
 
 #### User Cannot View Groups in Keycloak
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.NoPermissionToViewGroups
 version: 1.0
 
-When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL assign a default role to the user.
+When a user does not have permission to view their groups in Identity Provider, [ClickHouse] SHALL only assign default roles (listed in `common_roles`) to the user.
 
 #### In ClickHouse There Is No Default Role Specified for Keycloak Users
 
-##### RQ.SRS-042.OAuth.Grafana.Keycloak.Authentication.UserRoles.NoDefaultRole
+##### RQ.SRS-042.OAuth.Keycloak.Authentication.UserRoles.NoDefaultRole
 version: 1.0
 
-When a Grafana user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, Grafana userwill not be able to perform any actions after authentication.
+When an external user is authenticated via OAuth and no roles are specified in the `<common_roles>` section of the `<token>`, no roles other than mapped from Keycloak groups shall be assigned to the user.
 
 The role configuration example,
 
@@ -1337,7 +1254,7 @@ The role configuration example,
 <clickhouse>
     <token_processors>
         <keycloak_processor>
-            <provider>OpenID</provider>
+            <type>OpenID</type>
             <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
             <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
@@ -1362,7 +1279,7 @@ This section outlines how [ClickHouse] SHALL respond to various actions performe
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserDisabled
 version: 1.0
 
-When a user is disabled in Keycloak, [ClickHouse] SHALL reject any subsequent authentication attempts with that user's existing access tokens and SHALL prevent the issuance of new tokens for that user.
+When a user is disabled in Keycloak, [ClickHouse] SHALL reject any subsequent authentication attempts for that user. However, if [ClickHouse] has a valid token cache entry for the user, [ClickHouse] SHALL accept user authentication requests until the cache entry expires.
 
 ```bash
 curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
@@ -1376,26 +1293,11 @@ curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserDeleted
 version: 1.0
 
-When a user is permanently deleted from Keycloak, [ClickHouse] SHALL invalidate all of that user's existing sessions and reject any authentication attempts using their tokens.
+When a user is permanently deleted from Keycloak, [ClickHouse] SHALL reject any authentication attempts using their tokens. However, if [ClickHouse] has a valid token cache entry for the user, [ClickHouse] SHALL accept user authentication requests until the cache entry expires.
 
 ```bash
 curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
-```
-
-##### RQ.SRS-042.OAuth.Keycloak.Actions.UserAttributesUpdated
-version: 1.0
-
-When a user's attributes (such as `username`, `email`, or `firstName`) are updated in Keycloak, [ClickHouse] SHALL recognize the updated claims in newly issued tokens and reflect these changes upon the user's next authentication.
-
-```bash
-curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "new-username",
-    "email": "new-email@example.com"
-  }'
 ```
 
 #### Keycloak Group and Role Membership
@@ -1403,7 +1305,7 @@ curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}' 
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserAddedToGroup
 version: 1.0
 
-When a user is added to a group in Keycloak, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse].
+When a user is added to a group in Keycloak, [ClickHouse] SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in [ClickHouse]. However, if [ClickHouse] has a valid token cache entry for the user, [ClickHouse] SHALL update role grants on the next authentication request after cache expires.
 
 ```bash
 curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \
@@ -1413,7 +1315,7 @@ curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/g
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.UserRemovedFromGroup
 version: 1.0
 
-When a user is removed from a group in Keycloak, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login.
+When a user is removed from a group in Keycloak, [ClickHouse] SHALL revoke the corresponding role and its permissions from the user on their next login. However, if [ClickHouse] has a valid token cache entry for the user, [ClickHouse] SHALL update role grants on the next authentication request after cache expires.
 
 ```bash
 curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/groups/{group-id}' \
@@ -1423,7 +1325,7 @@ curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.GroupDeleted
 version: 1.0
 
-When a group that is mapped to a [ClickHouse] role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication.
+When a group that is mapped to a [ClickHouse] role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in [ClickHouse] upon their next authentication. However, if [ClickHouse] has a valid token cache entry for the user, [ClickHouse] SHALL remove corresponding role grants on the next authentication request after cache expires.
 
 ```bash
 curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/groups/{group-id}' \
@@ -1435,7 +1337,7 @@ curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/groups/{group-
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.ClientDisabled
 version: 1.0
 
-When the client application used for OAuth integration is disabled in Keycloak, [ClickHouse] SHALL reject all incoming access tokens issued for that client.
+When the client application used for OAuth integration is disabled in Keycloak, [ClickHouse] SHALL reject all incoming access tokens issued for that client. However, if [ClickHouse] has a valid token cache entry for some of the users, [ClickHouse] SHALL accept authentication requests while corresponding cache entries are valid.
 
 ```bash
 curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/clients/{client-id}' \
@@ -1449,8 +1351,7 @@ curl -X PUT 'https://keycloak.example.com/admin/realms/myrealm/clients/{client-i
 ##### RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked
 version: 1.0
 
-If a user's consent for the application is revoked in Keycloak, [ClickHouse] SHALL reject authentication attempts until consent is granted again.
-
+If a user's consent for the application is revoked in Keycloak, [ClickHouse] SHALL reject authentication attempts until consent is granted again. However, if [ClickHouse] has a valid token cache entry for some of the users, [ClickHouse] SHALL accept authentication requests while corresponding cache entries are valid.
 ```bash
 curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/consents/{client-id}' \
   -H "Authorization: Bearer ${ACCESS_TOKEN}"
@@ -1458,38 +1359,10 @@ curl -X DELETE 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id
 
 #### Keycloak Token and Session Management
 
-##### RQ.SRS-042.OAuth.Keycloak.Actions.UserSessionRevoked
+##### RQ.SRS-042.OAuth.Keycloak.Actions.TokenInvalid
 version: 1.0
 
-When a user's sign-in sessions are revoked in Keycloak, [ClickHouse] SHALL reject the user's access and refresh tokens upon the next validation attempt.
-
-```bash
-curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/users/{user-id}/logout' \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}"
-```
-
-##### RQ.SRS-042.OAuth.Keycloak.Actions.RefreshTokenRevoked
-version: 1.0
-
-When a refresh token is revoked via the logout endpoint, [ClickHouse] SHALL require the user to re-authenticate to obtain a new access token.
-
-```bash
-curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connect/logout' \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'client_id=my-client' \
-  -d 'client_secret=xxxxxx' \
-  -d 'refresh_token=eyJ...'
-```
-
-##### RQ.SRS-042.OAuth.Keycloak.Actions.NotBeforePolicyUpdated
-version: 1.0
-
-When a `not-before` policy is pushed for a realm or user in Keycloak, all tokens issued before this time SHALL be invalidated, and [ClickHouse] SHALL reject them.
-
-```bash
-curl -X POST 'https://keycloak.example.com/admin/realms/myrealm/push-revocation' \
-  -H "Authorization: Bearer ${ACCESS_TOKEN}"
-```
+If user's token becomes invalidated (for various reasons other than token expiration), [ClickHouse] SHALL reject authentication attempts with that token. However, if [ClickHouse] has a valid token cache entry for the corresponding user, [ClickHouse] SHALL accept authentication requests while corresponding cache entries are valid.
 
 ## Static Key
 
@@ -1504,6 +1377,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_key_validator>
+          <type>jwt</type>
           <algo>HS256</algo>
           <static_key>my_static_secret</static_key>
         </my_static_key_validator>
@@ -1522,6 +1396,7 @@ When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with 
 <clickhouse>
     <token_processors>
         <my_static_key_validator>
+          <type>jwt</type>
           <algo>HS256</algo>
           <static_key>my_static_secret</static_key>
         </my_static_key_validator>
@@ -1568,6 +1443,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_hs256_validator>
+            <type>jwt</type>
             <algo>HS256</algo>
             <static_key>my_secret_key_for_jwt_signing</static_key>
         </my_hs256_validator>
@@ -1585,6 +1461,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_hs256_validator>
+            <type>jwt</type>
             <algo>HS256</algo>
             <static_key>bXlfc2VjcmV0X2tleV9mb3Jfand0X3NpZ25pbmc=</static_key>
             <static_key_in_base64>true</static_key_in_base64>
@@ -1605,6 +1482,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1624,6 +1502,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1646,6 +1525,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN ENCRYPTED PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1666,6 +1546,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1675,6 +1556,26 @@ MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...
 -----END ENCRYPTED PRIVATE KEY-----</private_key>
             <private_key_password>my_private_key_password</private_key_password>
         </my_rs256_validator>
+    </token_processors>
+</clickhouse>
+```
+
+
+#### RQ.SRS-042.OAuth.StaticKey.Parameters.Claims
+version: 1.0
+
+[ClickHouse] SHALL support the `claims` parameter as a string containing a JSON object that should be contained in the token payload. If this parameter is defined, tokens without corresponding payload SHALL be considered invalid. This parameter SHALL be optional.
+
+**Example:**
+```xml
+<clickhouse>
+    <token_processors>
+        <my_static_jwks_validator>
+            <type>jwt</type>
+            <algo>HS256</algo>
+            <static_key>my_secret_key_for_jwt_signing</static_key>
+            <claims>{"iss": "https://my-auth-server.com", "aud": "clickhouse-app"}</claims>
+        </my_static_jwks_validator>
     </token_processors>
 </clickhouse>
 ```
@@ -1698,6 +1599,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <hs256_validator>
+            <type>jwt</type>
             <algo>HS256</algo>
             <static_key>my_secret_key</static_key>
         </hs256_validator>
@@ -1710,6 +1612,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1726,6 +1629,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <clickhouse>
     <token_processors>
         <invalid_hs256_validator>
+            <type>jwt</type>
             <algo>HS256</algo>
             <!-- Missing static_key - will be rejected -->
         </invalid_hs256_validator>
@@ -1738,6 +1642,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <clickhouse>
     <token_processors>
         <invalid_rs256_validator>
+            <type>jwt</type>
             <algo>RS256</algo>
             <!-- Missing public_key - will be rejected -->
         </invalid_rs256_validator>
@@ -1759,6 +1664,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+          <type>jwt</type>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </my_static_jwks_validator>
     </token_processors>
@@ -1776,6 +1682,7 @@ When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with 
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+          <type>jwt</type>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </my_static_jwks_validator>
     </token_processors>
@@ -1802,6 +1709,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{
                 "keys": [
                     {
@@ -1829,6 +1737,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+            <type>jwt</type>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
         </my_static_jwks_validator>
     </token_processors>
@@ -1869,6 +1778,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <claims>{"iss": "https://my-auth-server.com", "aud": "clickhouse-app"}</claims>
         </my_static_jwks_validator>
@@ -1888,6 +1798,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <verifier_leeway>30</verifier_leeway>
         </my_static_jwks_validator>
@@ -1917,6 +1828,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </valid_jwks_validator>
     </token_processors>
@@ -1928,6 +1840,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_jwks_file_validator>
+            <type>jwt</type>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
         </valid_jwks_file_validator>
     </token_processors>
@@ -1941,6 +1854,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
             <!-- Both specified - will be rejected -->
@@ -1954,6 +1868,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
+            <type>jwt</type>
             <!-- Neither specified - will be rejected -->
         </invalid_jwks_validator>
     </token_processors>
@@ -1965,6 +1880,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
+            <type>jwt</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "HS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <!-- HS256 not supported for JWKS - will be rejected -->
         </invalid_jwks_validator>
@@ -2064,8 +1980,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <basic_auth_server>
+          <type>jwt</type>
           <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
-          <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+          <jwks_refresh_timeout>300</jwks_refresh_timeout>
         </basic_auth_server>
     </token_processors>
 </clickhouse>
@@ -2119,8 +2036,9 @@ https://auth.example.com/.well-known/jwks.json
 <clickhouse>
   <token_processors>
     <my_service>
+      <type>jwt</type>
       <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-      <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+      <jwks_refresh_timeout>300</jwks_refresh_timeout>
       <!-- Optional: claims / verifier_leeway -->
     </my_service>
   </token_processors>
@@ -2155,8 +2073,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+            <jwks_refresh_timeout>300</jwks_refresh_timeout>
         </my_remote_jwks_validator>
     </token_processors>
 </clickhouse>
@@ -2170,15 +2089,16 @@ version: 1.0
 #### RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksRefreshTimeout
 version: 1.0
 
-[ClickHouse] SHALL support the `jwks_refresh_timeout` parameter to specify the period for resending requests to refresh the JWKS. This parameter SHALL be optional with a default value of 300000 milliseconds.
+[ClickHouse] SHALL support the `jwks_refresh_timeout` parameter to specify the period for resending requests to refresh the JWKS. This parameter SHALL be optional with a default value of 300 seconds.
 
 **Example:**
 ```xml
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>600000</jwks_refresh_timeout>
+            <jwks_refresh_timeout>600</jwks_refresh_timeout>
         </my_remote_jwks_validator>
     </token_processors>
 </clickhouse>
@@ -2196,6 +2116,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
             <claims>{"iss": "https://auth.example.com", "aud": "clickhouse-app", "azp": "clickhouse-client"}</claims>
         </my_remote_jwks_validator>
@@ -2215,6 +2136,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
             <verifier_leeway>60</verifier_leeway>
         </my_remote_jwks_validator>
@@ -2243,6 +2165,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_remote_jwks>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
         </valid_remote_jwks>
     </token_processors>
@@ -2254,8 +2177,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <complete_remote_jwks>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>600000</jwks_refresh_timeout>
+            <jwks_refresh_timeout>600</jwks_refresh_timeout>
             <claims>{"iss": "https://auth.example.com"}</claims>
             <verifier_leeway>30</verifier_leeway>
         </complete_remote_jwks>
@@ -2270,8 +2194,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
+            <type>jwt</type>
             <!-- Missing jwks_uri - will be rejected -->
-            <jwks_refresh_timeout>300000</jwks_refresh_timeout>
+            <jwks_refresh_timeout>300</jwks_refresh_timeout>
         </invalid_remote_jwks>
     </token_processors>
 </clickhouse>
@@ -2282,6 +2207,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
+            <type>jwt</type>
             <jwks_uri>not-a-valid-uri</jwks_uri>
             <!-- Invalid URI format - will be rejected -->
         </invalid_remote_jwks>
@@ -2294,6 +2220,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
+            <type>jwt</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
             <jwks_refresh_timeout>-1000</jwks_refresh_timeout>
             <!-- Negative value - will be rejected -->
@@ -2433,20 +2360,18 @@ Closing brace is missing, making it invalid JSON.
 #### RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.ExpiredCache
 version: 1.0
 
-[ClickHouse] SHALL attempt to refresh the JWKS cache when it expires. If the refresh fails, [ClickHouse] SHALL continue using the expired cache for a limited time before rejecting authentication.
+[ClickHouse] SHALL attempt to refresh the JWKS cache when it expires. If the refresh fails, [ClickHouse] SHALL reject future authentication attempts.
 
 **Cache expiration behavior:**
 * When cache expires, [ClickHouse] SHALL attempt to fetch fresh JWKS
 * If fetch succeeds: Use new JWKS immediately
-* If fetch fails: Continue using expired cache for up to 24 hours
-* After 24 hours of failed refreshes: Reject all authentication attempts
+* If fetch fails: Reject all authentication attempts
 
 **Example timeline:**
 ```
 Time 0: JWKS cached successfully
 Time 300s: Cache expires, refresh attempt fails
-Time 300s-86400s: Use expired cache, continue refresh attempts
-Time 86400s+: Reject authentication if refresh still fails
+Time 300+: Reject authentication if refresh still fails
 ```
 
 **Graceful degradation:**
@@ -2461,17 +2386,15 @@ Time 86400s+: Reject authentication if refresh still fails
 #### RQ.SRS-042.OAuth.Common.Parameters.CacheLifetime
 version: 1.0
 
-[ClickHouse] SHALL support the `cache_lifetime` parameter for all token processor types. This parameter SHALL specify the maximum lifetime of cached tokens in seconds. This parameter SHALL be optional with a default value of 3600 seconds.
+[ClickHouse] SHALL support the `token_cache_lifetime` parameter for all token processor types. This parameter SHALL specify the maximum lifetime of cached tokens in seconds. This parameter SHALL be optional with a default value of 3600 seconds.
 
 **Example:**
 ```xml
 <clickhouse>
     <token_processors>
         <my_token_processor>
-            <provider>azure</provider>
-            <client_id>my-client-id</client_id>
-            <tenant_id>my-tenant-id</tenant_id>
-            <cache_lifetime>1800</cache_lifetime>
+            <type>azure</type>
+            <token_cache_lifetime>1800</token_cache_lifetime>
         </my_token_processor>
     </token_processors>
 </clickhouse>
@@ -2489,9 +2412,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_token_processor>
-            <provider>azure</provider>
-            <client_id>my-client-id</client_id>
-            <tenant_id>my-tenant-id</tenant_id>
+            <type>azure</type>
             <username_claim>preferred_username</username_claim>
         </my_token_processor>
     </token_processors>
@@ -2517,9 +2438,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_token_processor>
-            <provider>azure</provider>
-            <client_id>my-client-id</client_id>
-            <tenant_id>my-tenant-id</tenant_id>
+            <type>azure</type>
             <groups_claim>roles</groups_claim>
         </my_token_processor>
     </token_processors>
@@ -2550,9 +2469,9 @@ For example,
           <static_key>my_static_secret</static_key>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
           <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
-          <jwks_refresh_timeout>300000</jwks_refresh_timeout>
-          <provider>openid</provider>
-          <cache_lifetime>600</cache_lifetime>
+          <jwks_refresh_timeout>300</jwks_refresh_timeout>
+          <type>openid</type>
+          <token_cache_lifetime>600</token_cache_lifetime>
           <username_claim>sub</username_claim>
           <groups_claim>groups</groups_claim>
           <configuration_endpoint></configuration_endpoint>
@@ -2570,25 +2489,25 @@ version: 1.0
 
 [ClickHouse] SHALL implement token caching behavior as follows:
 
-* Tokens SHALL be cached internally for no longer than `cache_lifetime` seconds
-* If a token expires sooner than `cache_lifetime`, the cache entry SHALL only be valid while the token is valid
-* If a token lifetime is longer than `cache_lifetime`, the cache entry SHALL be valid for `cache_lifetime`
+* Tokens SHALL be cached internally for no longer than `token_cache_lifetime` seconds
+* If a token expires sooner than `token_cache_lifetime`, the cache entry SHALL only be valid while the token is valid
+* If a token lifetime is longer than `token_cache_lifetime`, the cache entry SHALL be valid for `token_cache_lifetime`
 * Caching SHALL reduce the number of requests to Identity Providers
 
 **Example caching scenarios:**
 
-**Scenario 1: Token expires before cache_lifetime**
+**Scenario 1: Token expires before token_cache_lifetime**
 ```
 Token expiration: 30 minutes
 Cache lifetime: 60 minutes
 Result: Token cached for 30 minutes (until token expires)
 ```
 
-**Scenario 2: Token expires after cache_lifetime**
+**Scenario 2: Token expires after token_cache_lifetime**
 ```
 Token expiration: 120 minutes
 Cache lifetime: 60 minutes
-Result: Token cached for 60 minutes (cache_lifetime limit)
+Result: Token cached for 60 minutes (token_cache_lifetime limit)
 ```
 
 **Scenario 3: Cache disabled**
@@ -2602,10 +2521,8 @@ Result: No caching, validate token on every request
 <clickhouse>
     <token_processors>
         <my_processor>
-            <provider>azure</provider>
-            <client_id>my-client-id</client_id>
-            <tenant_id>my-tenant-id</tenant_id>
-            <cache_lifetime>1800</cache_lifetime>
+            <type>azure</type>
+            <token_cache_lifetime>1800</token_cache_lifetime>
         </my_processor>
     </token_processors>
 </clickhouse>
@@ -2627,7 +2544,7 @@ version: 1.0
 [ClickHouse] SHALL validate token processor configurations as follows:
 
 * At least one token processor SHALL be defined in the `token_processors` section
-* Each token processor SHALL have a unique identifier
+* Each token processor SHALL have a unique name
 * Required parameters for each processor type SHALL be present and valid
 * [ClickHouse] SHALL reject invalid configurations and log appropriate error messages
 
@@ -2638,12 +2555,10 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <azure_processor>
-            <provider>azure</provider>
-            <client_id>azure-client-id</client_id>
-            <tenant_id>azure-tenant-id</tenant_id>
+            <type>azure</type>
         </azure_processor>
         <keycloak_processor>
-            <provider>openid</provider>
+            <type>openid</type>
             <userinfo_endpoint>https://keycloak.example.com/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>https://keycloak.example.com/introspect</token_introspection_endpoint>
         </keycloak_processor>
@@ -2666,33 +2581,27 @@ version: 1.0
 </clickhouse>
 ```
 
+**No token processors defined:**
+```xml
+<clickhouse>
+    <token_processors>
+        <algo>None</algo>
+        <!-- `type` is not specified - will be rejected -->
+    </token_processors>
+</clickhouse>
+```
+
 **Duplicate processor identifiers:**
 ```xml
 <clickhouse>
     <token_processors>
         <my_processor>
-            <provider>azure</provider>
-            <client_id>client1</client_id>
-            <tenant_id>tenant1</tenant_id>
+            <type>azure</type>
         </my_processor>
         <my_processor>
-            <provider>azure</provider>
-            <client_id>client2</client_id>
-            <tenant_id>tenant2</tenant_id>
+            <type>azure</type>
             <!-- Duplicate identifier - will be rejected -->
         </my_processor>
-    </token_processors>
-</clickhouse>
-```
-
-**Missing required parameters:**
-```xml
-<clickhouse>
-    <token_processors>
-        <invalid_azure_processor>
-            <provider>azure</provider>
-            <!-- Missing client_id and tenant_id - will be rejected -->
-        </invalid_azure_processor>
     </token_processors>
 </clickhouse>
 ```
@@ -2706,79 +2615,54 @@ version: 1.0
 
 ### Incorrect Requests to ClickHouse
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests
-version: 1.0
-
-When [Grafana] makes requests to [ClickHouse] without a valid JWT token in the Authorization header, [ClickHouse] SHALL return an HTTP 401 Unauthorized response.
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header
-version: 1.0
-
-[ClickHouse] SHALL reject requests that do not include the Authorization header with a valid JWT token.
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Alg
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Alg
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `alg` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Typ
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Typ
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `typ` value that is not supported by [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Header.Signature
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Signature
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a JWT token that has an invalid signature.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body
-version: 1.0
-
-[ClickHouse] SHALL reject requests that include incorrect or malformed body content.
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Sub
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Sub
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with a `sub` value that does not match any user in [ClickHouse].
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Aud
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Aud
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `aud` value that does not match the expected audience for the JWT token.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.IncorrectRequests.Body.Exp
+#### RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Exp
 version: 1.0
 
 [ClickHouse] SHALL reject requests that include an Authorization header with an `exp` value that indicates the token has expired.
 
 ### Token Handling
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Expired
-version: 1.0
-
-[ClickHouse] SHALL reject expired JWT tokens sent by [Grafana].
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.Incorrect
+#### RQ.SRS-042.OAuth.Authentication.TokenHandling.Incorrect
 version: 1.0
 
 [ClickHouse] SHALL reject JWT tokens that are malformed, have an invalid signature, or do not conform to the expected structure.
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.NonAlphaNumeric
-version: 1.0
-
-[ClickHouse] SHALL reject JWT tokens that contain non-alphanumeric characters in the header or payload sections, as these are not valid according to the JWT specification.
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.TokenHandling.EmptyString
+#### RQ.SRS-042.OAuth.Authentication.TokenHandling.EmptyString
 version: 1.0
 
 [ClickHouse] SHALL reject empty string values in the Authorization header or any other part of the request that expects a JWT token. An empty string is not a valid JWT and SHALL not be accepted.
 
 ### Caching
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.Caching
+#### RQ.SRS-042.OAuth.Authentication.Caching
 version: 1.0
 
-[ClickHouse] SHALL cache the token provided by [Grafana] for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.
+[ClickHouse] SHALL cache the provided valid access token token for a configurable period of time to reduce the load on the Identity Provider. The cache lifetime SHALL be defined in the `token_processors` configuration.
 
 For example,
 
@@ -2786,10 +2670,8 @@ For example,
 <clickhouse>
     <token_processors>
         <azuure>
-            <provider>azure</provider>
-            <client_id>$CLIENT_ID</client_id>
-            <tenant_id>$TENANT_ID</tenant_id>
-            <cache_lifetime>60</cache_lifetime>
+            <type>azure</type>
+            <token_cache_lifetime>60</token_cache_lifetime>
         </azuure>
     </token_processors>
     <user_directories>
@@ -2803,39 +2685,42 @@ For example,
 </clickhouse>
 ```
 
-In this case the cache will be valid for 60 seconds. After this period.
+In this case the cache will be valid for 60 seconds.
 
 #### Disable Caching
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.NoCache
+##### RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.NoCache
 version: 1.0
 
-If the value of `cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
+If the value of `token_cache_lifetime` is `0` in the `token_processors` configuration, [ClickHouse] SHALL not cache the tokens and SHALL validate each token on every request.
 
 #### Cache Lifetime
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.CacheLifetime
+##### RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.CacheLifetime
 version: 1.0
 
-[ClickHouse] SHALL evict cached tokens after the `cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by [Grafana] for the next requests.
-
-#### Exceeding Max Cache Size
-
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.MaxCacheSize
-version: 1.0
-
-[ClickHouse] SHALL limit the maximum size of the cache for access tokens. If the cache exceeds this size, [ClickHouse] SHALL evict the oldest tokens to make room for new ones.
+[ClickHouse] SHALL evict cached tokens after the `token_cache_lifetime` period defined in the `token_processors` configuration. If the cache was evicted, [ClickHouse] SHALL cache the new token provided by user for the next requests.
 
 #### Cache Eviction Policy
 
-##### RQ.SRS-042.OAuth.Grafana.Authentication.Caching.CacheEviction.Policy
+##### RQ.SRS-042.OAuth.Authentication.Caching.TokensPerUser
 version: 1.0
 
-[ClickHouse] SHALL use the Least Recently Used (LRU) cache eviction policy for access tokens. This means that when the cache reaches its maximum size, the least recently used tokens SHALL be removed to make space for new tokens.
+[ClickHouse] SHALL store no more than one cache entry for each external user.
+
+##### RQ.SRS-042.OAuth.Authentication.Caching.CacheEntryRefresh
+version: 1.0
+
+[ClickHouse] SHALL remove an existing cache entry for a user if the user successfully authenticated using another token. Old cache entry SHALL be removed even if old token / cache entry is still valid.
+
+##### RQ.SRS-042.OAuth.Authentication.Caching.LazyCleanup
+version: 1.0
+
+[ClickHouse] SHALL NOT automatically remove expired cache entries. Cache entry will only be refreshed on user's next successful authentication.
 
 ### Authentication and Login
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication
+#### RQ.SRS-042.OAuth.Authentication.Actions.Authentication
 version: 1.0
 
 [ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via `HTTP` or `TCP` connection.
@@ -2849,17 +2734,10 @@ curl 'http://localhost:8080/?' Client
  --data-raw 'SELECT current_user()'
 ```
 
-#### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.Authentication.Client
+#### RQ.SRS-042.OAuth.Authentication.Actions.Authentication.Client
 version: 1.0
 
-[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an `OAuth` access token via the `clickhouse client --jwt <token>` command.
-
-### Session Management
-
-#### RQ.SRS-042.OAuth.Grafana.Authentication.Actions.SessionManagement
-version: 1.0
-
-[ClickHouse] SHALL manage user sessions based on the validity of the access token. If the token is valid, the session SHALL remain active. If the token is invalid or expired, the session SHALL be terminated, and the user SHALL be required to log in again with a new token.
+[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an access token via the `clickhouse client --jwt <token>` command.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com
