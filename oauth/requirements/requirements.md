@@ -529,75 +529,32 @@ curl -s -X POST "https://graph.microsoft.com/v1.0/applications" \
   }'
 ```
 
-### Opaque Token Support for Azure
+### Support for Azure
 
-#### RQ.SRS-042.OAuth.Tokens.Azure.Opaque
+#### RQ.SRS-042.OAuth.Azure.Token.Supported
 version: 1.0
 
-[ClickHouse] SHALL support validating opaque access tokens issued by [Azure] AD using an Access Token Processor. The processor SHALL be defined in `config.xml` as follows:
+[ClickHouse] SHALL support validating access tokens issued by [Azure] AD using an Access Token Processor. The processor SHALL be defined in `config.xml` as follows:
 
 ```xml
 <clickhouse>
     <token_processors>
-        <azure_opaque>
+        <azuure>
             <type>azure</type>
-            <configuration_endpoint>https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration</configuration_endpoint>
             <token_cache_lifetime>600</token_cache_lifetime>
             <username_claim>sub</username_claim>
             <groups_claim>groups</groups_claim>
-        </azure_opaque>
+        </azuure>
     </token_processors>
 </clickhouse>
 ```
 
-#### Opaque Token Constraints and Gateway Workaround For Azure
+#### Token Constraints and Gateway Workaround For Azure
 
-##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Constraints
+##### RQ.SRS-042.OAuth.Azure.Tokens.Constraints
 version: 1.0
 
-[ClickHouse] SHALL assume that Azure-issued access tokens are JWT by default. If the token_processors entry for [Azure] is configured in opaque mode, [ClickHouse] SHALL still accept tokens that are JWT strings while performing validation via remote calls as configured by the processor.
-
-##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational
-version: 1.0
-
-When `<type>azure</type>` or `<type>openid</type>` is used for [Azure] in the `token_processors` section,  
-[ClickHouse] SHALL validate tokens by calling the configured discovery and/or `/userinfo` introspection endpoints instead  
-of verifying the token locally. This SHALL be treated as "opaque behavior" operationally, regardless of the underlying token format.
-
-##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Configuration.Validation
-version: 1.0
-
-For [Azure] opaque-mode operation, exactly one of the following SHALL be configured per processor:
-
-1. `configuration_endpoint`
-
-2. both `userinfo_endpoint` and `token_introspection_endpoint`.
-
-If neither (or all three) are set, [ClickHouse] SHALL reject the configuration as invalid.
-
-#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ProviderType
-version: 1.0
-
-In opaque mode, the provider parameter SHALL indicate the validation strategy and not the human-readable IdP name. 
-For Azure-backed validation, provider MAY be set to [Azure] (Azure-specific flow) or `OpenID` (generic OpenID Connect flow). 
-The chosen provider SHALL determine which endpoints and claims are used.
-
-#### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.ReferenceToken
-version: 1.0
-
-[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of [Azure]. In this pattern:
-
-* The gateway exchanges [Azure] JWTs for gateway-issued reference tokens.
-
-* [ClickHouse] is configured with `<type>OpenID</type>` pointing to the gateway's .well-known or its userinfo + `token_introspection` endpoints.
-
-* [ClickHouse] SHALL validate tokens exclusively via the gateway's `introspection/userinfo` responses.
-
-##### RQ.SRS-042.OAuth.Azure.Tokens.Opaque.Operational.Failure
-version: 1.0
-
-If the gateway's introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, 
-[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.
+[ClickHouse] SHALL assume that Azure-issued access tokens are not JWTs, thus cannot be decoded and validated locally.
 
 ### Getting Access Token from Azure
 
@@ -1021,14 +978,14 @@ version: 1.0
 ```xml
 <clickhouse>
     <token_processors>
-        <keycloak_opaque>
+        <keycloak>
             <type>openid</type>
             <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
             <token_cache_lifetime>600</token_cache_lifetime>
             <username_claim>sub</username_claim>
             <groups_claim>groups</groups_claim>
-        </keycloak_opaque>
+        </keycloak>
     </token_processors>
 </clickhouse>
 ```
@@ -1063,23 +1020,6 @@ version: 1.0
 
 To use Keycloak as provider, `type` SHALL be set to OpenID (case-insensitive). The processor SHALL obtain endpoints from the Keycloak 
 realm's `.well-known/openid-configuration` or from explicitly provided `userinfo_endpoint` and `token_introspection_endpoint`.
-
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Operational.ReferenceToken
-version: 1.0
-
-[ClickHouse] SHALL support an external OAuth gateway that issues reference (opaque) tokens on behalf of Keycloak. In this pattern:
-
-* The gateway exchanges Keycloak JWTs for gateway-issued reference tokens.
-
-* [ClickHouse] is configured with `<type>OpenID</type>` pointing to the gateway's .well-known or its userinfo + token_introspection endpoints.
-
-* [ClickHouse] SHALL validate tokens exclusively via the gateway's `introspection/userinfo` responses.
-
-##### RQ.SRS-042.OAuth.Keycloak.Tokens.Operational.Failure
-version: 1.0
-
-If the gateway's introspection or userinfo call fails, returns inactive/invalid status, or omits required claims, 
-[ClickHouse] SHALL deny authentication and SHALL not fall back to local JWT verification for that request.
 
 ### Getting Access Token from Keycloak
 
@@ -2431,7 +2371,7 @@ In this example, the `preferred_username` claim from the token will be used as t
 #### RQ.SRS-042.OAuth.Common.Parameters.GroupsClaim
 version: 1.0
 
-[ClickHouse] SHALL support the `groups_claim` parameter for all token processor types. This parameter SHALL specify the name of the claim (field) that contains the list of groups the user belongs to. This claim SHALL be looked up in the token itself (for valid JWTs) or in the response from `/userinfo` (for opaque tokens). This parameter SHALL be optional with a default value of "groups".
+[ClickHouse] SHALL support the `groups_claim` parameter for all token processor types. This parameter SHALL specify the name of the claim (field) that contains the list of groups the user belongs to. This claim SHALL be looked up in the token itself (for valid JWTs) or in the response from `/userinfo` (for Non-JWTs). This parameter SHALL be optional with a default value of "groups".
 
 **Example:**
 ```xml
