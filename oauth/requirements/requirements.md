@@ -301,7 +301,7 @@ Users defined in `users.xml` can authenticate using tokens if `jwt` is specified
 </clickhouse>
 ```
 
-`claims` is an optional parameter. If defined, presense of these claims in token is required, i.e. if a token is valid but does not have these claims -- authentication will fail. 
+`claims` is an optional parameter. If defined, presense of these claims in token is required, i.e. if a token is valid but does not have these claims - authentication will fail. 
 
 2. **External Identity Provider as a User Directory**
 
@@ -972,7 +972,7 @@ version: 1.0
 When <type>OpenID</type> is used (for Keycloak) in the `token_processors` section, [ClickHouse] SHALL 
 validate tokens and extract user information by calling the configured discovery endpoint (`configuration_endpoint`) or `userinfo_endpoint` and `token_introspection_endpoint`.  
 
-In some cases (i.e. when working with Keycloak) access tokens are JWTs, thus can be decoded and verified locally. If `jwks_uri` is specified / found in response from `configuration_endpoint` AND token is a JWT -- [ClickHouse] SHALL attempt to validate the token locally against given JWKS.
+In some cases (i.e. when working with Keycloak) access tokens are JWTs, thus can be decoded and verified locally. If `jwks_uri` is specified / found in response from `configuration_endpoint` AND token is a JWT - [ClickHouse] SHALL attempt to validate the token locally against given JWKS.
 
 ##### RQ.SRS-042.OAuth.Keycloak.Tokens.OperationModes.Fallback
 version: 1.0
