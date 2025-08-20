@@ -1,6 +1,15 @@
 # OAuth Testing Suite
 
-## Setting up automated application in Azure AD
+
+<!-- TOC -->
+  * [Running Tests for Azure AD OAuth](#running-tests-for-azure-ad-oauth)
+    * [1. Create an application in Azure AD](#1-create-an-application-in-azure-ad)
+    * [2. In the application overview, navigate to API permissions.](#2-in-the-application-overview-navigate-to-api-permissions)
+    * [3. Click `Grant admin consent for <your tenant name>`.](#3-click-grant-admin-consent-for-your-tenant-name)
+    * [4. Get back to overview and generate a client secret.](#4-get-back-to-overview-and-generate-a-client-secret)
+<!-- TOC -->
+
+## Running Tests for Azure AD OAuth
 
 In order to test the OAuth flow, you need to set up an application in Azure Active Directory (Azure AD) with the necessary permissions. Follow these steps:
 
