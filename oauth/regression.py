@@ -11,6 +11,8 @@ from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
 from msgraph.graph_service_client import GraphServiceClient
+from oauth.tests.steps import azure_application as azure
+from oauth.tests.steps import keycloak_realm as keycloak
 
 
 def argparser(parser):
@@ -94,8 +96,12 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+        self.context.provider_client = (
+            keycloak if identity_provider == "keycloak" else azure
+        )
+        self.context.provider = identity_provider
 
-    if identity_provider == "Azure":
+    if identity_provider.lower() == "azure":
         self.context.redirect_uris = ["http://localhost:3000/login/azuread"]
         self.context.home_page_url = "http://localhost:3000"
         self.context.logout_url = "http://localhost:3000/logout"
