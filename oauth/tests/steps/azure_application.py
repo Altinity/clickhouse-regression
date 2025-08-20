@@ -3,6 +3,10 @@ from msgraph.generated.models.application import Application
 from msgraph.generated.models.implicit_grant_settings import ImplicitGrantSettings
 from msgraph.generated.models.password_credential import PasswordCredential
 from msgraph.generated.models.web_application import WebApplication
+from msgraph.generated.models.user import User
+from msgraph.generated.models.group import Group
+from msgraph.generated.models.reference_create import ReferenceCreate
+from msgraph.generated.models.password_profile import PasswordProfile
 from msgraph.graph_service_client import GraphServiceClient
 from testflows.core import *
 
@@ -23,10 +27,7 @@ async def create_azure_application(
     """Create an Azure AD application."""
 
     secret_name = "secret_" + getuid()
-    cred = ClientSecretCredential(tenant_id, client_id, client_secret)
-    client = GraphServiceClient(
-        credentials=cred, scopes=["https://graph.microsoft.com/.default"]
-    )
+    client = self.context.client
 
     app_config = {
         "display_name": application_name,
@@ -81,3 +82,91 @@ async def create_azure_application_with_secret(
     app_id = application.app_id
 
     return application, secret, app_id
+
+
+@TestStep(Given)
+async def create_user_in_application(
+    self,
+    tenant_id: str,
+    client_id: str,
+    client_secret: str,
+    display_name: str,
+    mail_nickname: str,
+    user_principal_name: str,
+    password: str = None,
+):
+    """Create a user in Azure AD application."""
+
+    client = self.context.client
+
+    if password is None:
+        password = "TempPassword123!"
+
+    user_config = {
+        "account_enabled": True,
+        "display_name": display_name,
+        "mail_nickname": mail_nickname,
+        "user_principal_name": user_principal_name,
+        "password_profile": PasswordProfile(
+            force_change_password_next_sign_in=True, password=password
+        ),
+    }
+
+    user = User(**user_config)
+    created_user = await client.users.post(user)
+
+    return created_user
+
+
+@TestStep(Given)
+async def create_group(
+    self,
+    tenant_id: str,
+    client_id: str,
+    client_secret: str,
+    display_name: str,
+    mail_nickname: str,
+    description: str = None,
+    security_enabled: bool = True,
+    mail_enabled: bool = False,
+):
+    """Create a group in Azure AD."""
+
+    client = self.context.client
+
+    group_config = {
+        "display_name": display_name,
+        "mail_nickname": mail_nickname,
+        "security_enabled": security_enabled,
+        "mail_enabled": mail_enabled,
+    }
+
+    if description is not None:
+        group_config["description"] = description
+
+    group = Group(**group_config)
+    created_group = await client.groups.post(group)
+
+    return created_group
+
+
+@TestStep(Given)
+async def assign_user_to_group(
+    self,
+    tenant_id: str,
+    client_id: str,
+    client_secret: str,
+    user_id: str,
+    group_id: str,
+):
+    """Assign a user to a group in Azure AD."""
+
+    client = self.context.client
+
+    user_reference = ReferenceCreate(
+        odata_id=f"https://graph.microsoft.com/v1.0/directoryObjects/{user_id}"
+    )
+
+    await client.groups.by_group_id(group_id).members.ref.post(user_reference)
+
+    return True
