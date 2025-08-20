@@ -85,17 +85,14 @@ async def create_azure_application_with_secret(
 
 
 @TestStep(Given)
-async def create_user_in_application(
+async def create_user(
     self,
-    tenant_id: str,
-    client_id: str,
-    client_secret: str,
     display_name: str,
     mail_nickname: str,
     user_principal_name: str,
     password: str = None,
 ):
-    """Create a user in Azure AD application."""
+    """Create a user in Azure AD."""
 
     client = self.context.client
 
@@ -121,9 +118,6 @@ async def create_user_in_application(
 @TestStep(Given)
 async def create_group(
     self,
-    tenant_id: str,
-    client_id: str,
-    client_secret: str,
     display_name: str,
     mail_nickname: str,
     description: str = None,
@@ -153,9 +147,6 @@ async def create_group(
 @TestStep(Given)
 async def assign_user_to_group(
     self,
-    tenant_id: str,
-    client_id: str,
-    client_secret: str,
     user_id: str,
     group_id: str,
 ):
