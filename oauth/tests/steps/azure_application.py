@@ -161,3 +161,15 @@ async def assign_user_to_group(
     await client.groups.by_group_id(group_id).members.ref.post(user_reference)
 
     return True
+
+
+@TestStep(Given)
+def init_azure(self):
+    application, secret, app_id = create_azure_application_with_secret(
+        tenant_id=self.context.tenant_id,
+        client_secret=self.context.client_secret,
+        client_id=self.context.client_id,
+    )
+    self.context.application = application
+    self.context.secret = secret
+    self.context.app_id = app_id
