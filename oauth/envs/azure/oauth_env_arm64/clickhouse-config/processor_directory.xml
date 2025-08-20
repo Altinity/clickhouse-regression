@@ -1,0 +1,18 @@
+<clickhouse>
+    <access_token_processors>
+        <azuure>
+            <provider>azure</provider>
+            <client_id>30704e58-0f4a-4603-9a80-d6f51b646165</client_id>
+            <tenant_id>bc005f76-01e1-42e8-a9db-ec96f127a922</tenant_id>
+            <cache_lifetime>60</cache_lifetime>
+        </azuure>
+    </access_token_processors>
+    <user_directories>
+        <token>
+            <processor>azuure</processor>
+            <roles>
+                <token_test_role_1 />
+            </roles>
+        </token>
+    </user_directories>
+</clickhouse>

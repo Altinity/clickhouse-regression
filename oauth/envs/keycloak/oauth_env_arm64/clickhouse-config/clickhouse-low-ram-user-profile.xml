@@ -1,0 +1,11 @@
+<clickhouse>
+  <profiles>
+    <default>
+      <max_threads>2</max_threads>
+      <queue_max_wait_ms>1000</queue_max_wait_ms>
+      <max_execution_time>600</max_execution_time>
+      <input_format_parallel_parsing>0</input_format_parallel_parsing>
+      <output_format_parallel_formatting>0</output_format_parallel_formatting>
+    </default>
+  </profiles>
+</clickhouse>
