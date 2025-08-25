@@ -90,14 +90,11 @@ async def create_user(
     display_name: str,
     mail_nickname: str,
     user_principal_name: str,
-    password: str = None,
+    password: str = "TempPassword123!",
 ):
     """Create a user in Azure AD."""
 
     client = self.context.client
-
-    if password is None:
-        password = "TempPassword123!"
 
     user_config = {
         "account_enabled": True,
@@ -118,8 +115,8 @@ async def create_user(
 @TestStep(Given)
 async def create_group(
     self,
-    display_name: str,
-    mail_nickname: str,
+    display_name: str = None,
+    mail_nickname: str = None,
     description: str = None,
     security_enabled: bool = True,
     mail_enabled: bool = False,
@@ -127,6 +124,12 @@ async def create_group(
     """Create a group in Azure AD."""
 
     client = self.context.client
+    if display_name is None:
+        display_name = "group_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "group_" + getuid()
+
 
     group_config = {
         "display_name": display_name,
@@ -190,7 +193,7 @@ def setup_azure(self, tenant_id, client_id, client_secret):
     )
 
 
-class Infrastructure:
+class OAuthProvider:
     create_application = create_azure_application
     create_application_with_secret = create_azure_application_with_secret
     create_user = create_user
