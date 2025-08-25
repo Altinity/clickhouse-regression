@@ -164,7 +164,7 @@ async def assign_user_to_group(
 
 
 @TestStep(Given)
-def init_azure(self):
+def setup_azure_application(self):
     application, secret, app_id = create_azure_application_with_secret(
         tenant_id=self.context.tenant_id,
         client_secret=self.context.client_secret,
@@ -173,3 +173,26 @@ def init_azure(self):
     self.context.application = application
     self.context.secret = secret
     self.context.app_id = app_id
+
+
+@TestStep(Given)
+def setup_azure(self, tenant_id, client_id, client_secret):
+    """Set up Azure Graph client."""
+    self.context.redirect_uris = ["http://localhost:3000/login/azuread"]
+    self.context.home_page_url = "http://localhost:3000"
+    self.context.logout_url = "http://localhost:3000/logout"
+    self.context.tenant_id = tenant_id
+    self.context.client_id = client_id
+    self.context.client_secret = client_secret
+    cred = ClientSecretCredential(tenant_id, client_id, client_secret)
+    self.context.client = GraphServiceClient(
+        credentials=cred, scopes=["https://graph.microsoft.com/.default"]
+    )
+
+
+class Infrastructure:
+    create_application = create_azure_application
+    create_application_with_secret = create_azure_application_with_secret
+    create_user = create_user
+    create_group = create_group
+    assign_user_to_group = assign_user_to_group

@@ -34,8 +34,5 @@ def check_authentication_flow(self):
 @TestFeature
 def feature(self):
     """Feature to test OAuth authentication flow."""
-    if self.context.identity_provider != "Azure AD":
-        with Given("an Azure AD application"):
-            init_azure()
 
     Scenario(run=check_authentication_flow)

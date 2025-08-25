@@ -3,6 +3,8 @@ import sys
 
 from testflows.core import *
 
+from oauth.tests.steps.azure_application import setup_azure, setup_azure_application
+
 append_path(sys.path, "..")
 
 from azure.identity import ClientSecretCredential
@@ -90,28 +92,21 @@ def regression(
         self.context.stress = stress
 
     with Given("docker-compose cluster"):
+        providers = {"keycloak": keycloak, "azure": azure}
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
-        self.context.provider_client = (
-            keycloak if identity_provider == "keycloak" else azure
-        )
+        self.context.provider_client = providers[identity_provider.lower()]
         self.context.provider = identity_provider
 
     if identity_provider.lower() == "azure":
-        self.context.redirect_uris = ["http://localhost:3000/login/azuread"]
-        self.context.home_page_url = "http://localhost:3000"
-        self.context.logout_url = "http://localhost:3000/logout"
-        self.context.tenant_id = tenant_id
-        self.context.client_id = client_id
-        self.context.client_secret = client_secret
-        cred = ClientSecretCredential(tenant_id, client_id, client_secret)
-        self.context.client = GraphServiceClient(
-            credentials=cred, scopes=["https://graph.microsoft.com/.default"]
+        setup_azure(
+            tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
         )
+        setup_azure_application()
 
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
