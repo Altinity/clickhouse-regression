@@ -257,7 +257,7 @@ def get_keycloak_group_by_name(
 
 class OAuthProvider:
     create_application = import_keycloak_realm
-    create_application_with_secret = import_keycloak_realm  # Keycloak doesn't use secrets in the same way
+    create_application_with_secret = import_keycloak_realm
     create_user = create_user
     create_group = create_group
     assign_user_to_group = assign_user_to_group
