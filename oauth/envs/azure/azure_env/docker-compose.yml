@@ -1,5 +1,6 @@
 services:
   clickhouse1:
+    env_file: ".env"
     extends:
       file: clickhouse-service.yml
       service: clickhouse
@@ -9,20 +10,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     mem_limit: 4000M
     cpus: 2.0
-
-#  clickhouse:
-#    env_file: ".env"
-#    image: altinityinfra/clickhouse-server:920-25.6.2.28000.altinityantalya
-#    ports:
-#      - "8123:8123"
-#    volumes:
-#      - clickhouse-data:/var/lib/clickhouse
-#      - ./clickhouse-config/clickhouse-low-ram-config.xml:/etc/clickhouse-server/config.d/clickhouse-low-ram-config.xml:ro
-#      - ./clickhouse-config/clickhouse-low-ram-user-profile.xml:/etc/clickhouse-server/users.d/clickhouse-low-ram-user-profile.xml:ro
-#      - ./clickhouse-config/startup_scripts.xml:/etc/clickhouse-server/config.d/startup_scripts.xml:ro
-#      - ./clickhouse-config/processor_directory.xml:/etc/clickhouse-server/config.d/processor_directory.xml:ro
-#    mem_limit: 4000M
-#    cpus: 2.0
 
   grafana:
     env_file: ".env"
@@ -45,10 +32,10 @@ services:
       - GF_AUTH_SIGNOUT_REDIRECT_URL=http://localhost:3000
       - GF_LOG_LEVEL=error      
       - GF_AUTH_ANONYMOUS_ENABLED=true
-        GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=vertamedia-clickhouse-datasource
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=vertamedia-clickhouse-datasource
       - GF_INSTALL_PLUGINS=https://github.com/Altinity/clickhouse-grafana/releases/download/v3.3.0/vertamedia-clickhouse-datasource-3.3.0.zip;vertamedia-clickhouse-datasource
     depends_on:
-      clickhouse:
+      clickhouse1:
         condition: service_started
 
 volumes:
