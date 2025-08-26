@@ -426,7 +426,7 @@ def regression(
         pool = 2
         parallel = NO_PARALLEL
     else:
-        pool = 4
+        pool = 1
         parallel = PARALLEL
 
     if stress is not None:
