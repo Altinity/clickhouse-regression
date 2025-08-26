@@ -16,9 +16,6 @@ from helpers.common import getuid
 @TestStep(Given)
 async def create_azure_application(
     self,
-    tenant_id: str,
-    client_id: str,
-    client_secret: str,
     application_name: str,
     redirect_uris: list[str] = None,
     home_page_url: str = None,
@@ -62,20 +59,15 @@ async def create_azure_application(
 
 
 @TestStep(Given)
-async def create_azure_application_with_secret(
-    self, tenant_id, client_secret, client_id
-):
+async def create_azure_application_with_secret(self):
     """Create an Azure AD application with a password credential."""
 
     application_name = "application_with_secret_" + getuid()
     application = await create_azure_application(
-        tenant_id=tenant_id,
-        client_id=client_id,
-        client_secret=client_secret,
         application_name=application_name,
         redirect_uris=["http://localhost:3000/login/azuread"],
         home_page_url="http://localhost:3000",
-        logout_url="http://localhost:3000/logout",
+        logout_url="https://localhost:3000/logout",
     )
 
     secret = application.password_credentials[0].secret_text
@@ -130,7 +122,6 @@ async def create_group(
     if mail_nickname is None:
         mail_nickname = "group_" + getuid()
 
-
     group_config = {
         "display_name": display_name,
         "mail_nickname": mail_nickname,
@@ -166,31 +157,27 @@ async def assign_user_to_group(
     return True
 
 
+@TestStep(Then)
+async def delete_application(self, application_id: str):
+    """Delete an Azure AD application."""
+    client = self.context.client
+    await client.applications.by_application_id(application_id).delete()
+    return True
+
+
 @TestStep(Given)
-def setup_azure_application(self):
-    application, secret, app_id = create_azure_application_with_secret(
-        tenant_id=self.context.tenant_id,
-        client_secret=self.context.client_secret,
-        client_id=self.context.client_id,
-    )
+def setup_azure_application(self, tenant_id, client_id, client_secret):
+    application, secret, app_id = create_azure_application_with_secret()
     self.context.application = application
     self.context.secret = secret
     self.context.app_id = app_id
-
-
-@TestStep(Given)
-def setup_azure(self, tenant_id, client_id, client_secret):
-    """Set up Azure Graph client."""
-    self.context.redirect_uris = ["http://localhost:3000/login/azuread"]
-    self.context.home_page_url = "http://localhost:3000"
-    self.context.logout_url = "http://localhost:3000/logout"
-    self.context.tenant_id = tenant_id
-    self.context.client_id = client_id
-    self.context.client_secret = client_secret
     cred = ClientSecretCredential(tenant_id, client_id, client_secret)
     self.context.client = GraphServiceClient(
         credentials=cred, scopes=["https://graph.microsoft.com/.default"]
     )
+
+    yield
+    delete_application(app_id)
 
 
 class OAuthProvider:
@@ -199,3 +186,4 @@ class OAuthProvider:
     create_user = create_user
     create_group = create_group
     assign_user_to_group = assign_user_to_group
+    setup_azure_application = setup_azure_application
