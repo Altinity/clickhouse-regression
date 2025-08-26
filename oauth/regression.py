@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 import sys
+import os
 
 from testflows.core import *
 
-from oauth.tests.steps.azure_application import setup_azure, setup_azure_application
 
 append_path(sys.path, "..")
 
-from azure.identity import ClientSecretCredential
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
-from msgraph.graph_service_client import GraphServiceClient
 from oauth.tests.steps import azure_application as azure
 from oauth.tests.steps import keycloak_realm as keycloak
+from oauth.tests.steps.azure_application import setup_azure, setup_azure_application
 
 
 def argparser(parser):
@@ -23,7 +22,8 @@ def argparser(parser):
 
     parser.add_argument(
         "--tenant-id",
-        type=Secret(name="tenant_id"),
+        # type=Secret(name="tenant_id"),
+        type=str,
         dest="tenant_id",
         help="Tenant ID for Azure AD",
         metavar="path",
@@ -41,7 +41,8 @@ def argparser(parser):
 
     parser.add_argument(
         "--client-secret",
-        type=Secret(name="client_secret"),
+        # type=Secret(name="client_secret"),
+        type=str,
         dest="client_secret",
         help="Client secret for Azure AD application",
         metavar="path",
@@ -63,6 +64,24 @@ xfails = {}
 ffails = {}
 
 
+def write_env_file(identity_provider, tenant_id, client_id, client_secret):
+    env_dir = os.path.join(
+        current_dir(),
+        "envs",
+        f"{identity_provider.lower()}",
+        f"{identity_provider.lower()}_env",
+    )
+    os.makedirs(env_dir, exist_ok=True)
+    env_path = os.path.join(env_dir, ".env")
+    print(env_path)
+    with open(env_path, "w") as f:
+        f.write(
+            f"TENANT_ID = {tenant_id}\n"
+            f"CLIENT_SECRET = {client_secret}\n"
+            f"CLIENT_ID = {client_id}\n"
+        )
+
+
 @TestFeature
 @Name("oauth")
 @FFails(ffails)
@@ -82,9 +101,7 @@ def regression(
     client_secret=None,
 ):
     """Run tests for OAuth in Clickhouse."""
-    nodes = {
-        "clickhouse": ("clickhouse1",),
-    }
+    nodes = {"clickhouse": ("clickhouse1",), "grafana": ("grafana",)}
 
     self.context.clickhouse_version = clickhouse_version
 
@@ -93,27 +110,34 @@ def regression(
 
     with Given("docker-compose cluster"):
         providers = {"keycloak": keycloak, "azure": azure}
+
+        write_env_file(identity_provider, tenant_id, client_id, client_secret)
+
+        docker_compose_config = os.path.join(
+            current_dir(), "envs", identity_provider.lower()
+        )
+
+        if identity_provider.lower() == "azure":
+            setup_azure_application(
+                tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
+            )
+
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            configs_dir=current_dir(),
+            configs_dir=docker_compose_config,
         )
         self.context.cluster = cluster
         self.context.provider_client = providers[identity_provider.lower()]
         self.context.provider = identity_provider
 
-    if identity_provider.lower() == "azure":
-        setup_azure(
-            tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
-        )
-        setup_azure_application()
-
     self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.node2 = self.context.cluster.node("clickhouse2")
-    self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [
-        self.context.cluster.node(node) for node in nodes["clickhouse"]
-    ]
+    pause()
+    # self.context.node2 = self.context.cluster.node("clickhouse2")
+    # self.context.node3 = self.context.cluster.node("clickhouse3")
+    # self.context.nodes = [
+    #     self.context.cluster.node(node) for node in nodes["clickhouse"]
+    # ]
 
     Scenario(run=load("oauth.tests.sanity", "feature"))
 
