@@ -1,6 +1,16 @@
 # OAuth Testing Suite
 
-## Setting up automated application in Azure AD
+
+<!-- TOC -->
+  * [Running Tests for Azure AD OAuth](#running-tests-for-azure-ad-oauth)
+    * [1. Create an application in Azure AD](#1-create-an-application-in-azure-ad)
+    * [2. In the application overview, navigate to API permissions.](#2-in-the-application-overview-navigate-to-api-permissions)
+    * [3. Click `Grant admin consent for <your tenant name>`.](#3-click-grant-admin-consent-for-your-tenant-name)
+    * [4. Get back to overview and generate a client secret.](#4-get-back-to-overview-and-generate-a-client-secret)
+    * [5. Use the token to run tests](#5-use-the-token-to-run-tests)
+<!-- TOC -->
+
+## Running Tests for Azure AD OAuth
 
 In order to test the OAuth flow, you need to set up an application in Azure Active Directory (Azure AD) with the necessary permissions. Follow these steps:
 
@@ -30,3 +40,17 @@ In order to test the OAuth flow, you need to set up an application in Azure Acti
    - Click `New client secret`, fill in the description and expiration, then click `Add`.
    - Copy the `value` of the client secret.
 <img width="2483" height="830" alt="client_secret_4" src="https://github.com/user-attachments/assets/49fdc648-2825-4b07-a244-f868653198f1" />
+
+### 5. Use the token to run tests
+
+You can run the tests via `./regression.py` and provide the following parameters:
+
+```bash
+./regression.py --clickhouse https://altinity-build-artifacts.s3.amazonaws.com/PRs/920/7498a034ab5c1083a9394b79c1bbec8abb92250a/build_amd_release/clickhouse-common-static_25.6.5.1_amd64.deb --identity-provider azure --tenant-id <tenant_id> --client-id <client_id> --client-secret <client_secret>
+```
+
+For keycloak no parameters are required:
+
+```bash
+./regression.py --clickhouse https://altinity-build-artifacts.s3.amazonaws.com/PRs/920/7498a034ab5c1083a9394b79c1bbec8abb92250a/build_amd_release/clickhouse-common-static_25.6.5.1_amd64.deb --identity-provider keycloak
+```

@@ -29,10 +29,16 @@ def parquet_argparser(parser):
     argparser_s3(parser)
 
     parser.add_argument(
-        "--native-parquet-reader",
+        "--native-parquet-reader-v2",
         action="store_true",
         default=False,
-        help="Use native parquet reader.",
+        help="Use native parquet reader v2.",
+    )
+    parser.add_argument(
+        "--native-parquet-reader-v3",
+        action="store_true",
+        default=False,
+        help="Use native parquet reader v3.",
     )
     parser.add_argument(
         "--stress-bloom",
@@ -401,7 +407,8 @@ def regression(
     clickhouse_version: str,
     node="clickhouse1",
     with_analyzer=False,
-    native_parquet_reader=False,
+    native_parquet_reader_v2=False,
+    native_parquet_reader_v3=False,
     stress_bloom=False,
 ):
     """Parquet regression."""
@@ -419,7 +426,7 @@ def regression(
         pool = 2
         parallel = NO_PARALLEL
     else:
-        pool = 4
+        pool = 1
         parallel = PARALLEL
 
     if stress is not None:
@@ -445,11 +452,18 @@ def regression(
             )
 
     with And("I enable or disable the native parquet reader"):
-        if native_parquet_reader:
+        if native_parquet_reader_v2:
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
             default_query_settings.append(("input_format_parquet_use_native_reader", 1))
+        if native_parquet_reader_v3:
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            default_query_settings.append(
+                ("input_format_parquet_use_native_reader_v3", 1)
+            )
 
     with And("I have a Parquet table definition"):
         columns = (
