@@ -38,7 +38,7 @@ def select_with_glob(self, query, snapshot_name, columns=None, order_by=None):
                     snapshot(
                         select_file.output.strip(),
                         name=f"select_from_file_with_{snapshot_name}",
-                        mode=snapshot.CHECK
+                        mode=snapshot.CHECK,
                     )
                 ), error()
 
@@ -70,7 +70,7 @@ def select_with_glob(self, query, snapshot_name, columns=None, order_by=None):
                     snapshot(
                         table_values.output.strip(),
                         name=f"create_table_with_{snapshot_name}",
-                        mode=snapshot.CHECK
+                        mode=snapshot.CHECK,
                     )
                 ), error()
 

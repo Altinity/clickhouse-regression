@@ -16,7 +16,6 @@ services:
       retries: 20
 
   clickhouse1:
-    env_file: ".env"
     extends:
       file: clickhouse-service.yml
       service: clickhouse

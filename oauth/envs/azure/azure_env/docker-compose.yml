@@ -10,6 +10,10 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     mem_limit: 4000M
     cpus: 2.0
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
 
   grafana:
     env_file: ".env"
