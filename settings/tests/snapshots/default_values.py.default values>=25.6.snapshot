@@ -360,6 +360,8 @@ backup_restore_keeper_value_max_size = r"""'{"default":"1048576"}'"""
 
 backup_restore_s3_retry_attempts = r"""'{"default":"1000"}'"""
 
+backup_slow_all_threads_after_retryable_s3_error = r"""'{"default":"1"}'"""
+
 backup_threads = r"""'{"default":"16"}'"""
 
 bool_false_representation = r"""'{"default":"false"}'"""
@@ -667,6 +669,8 @@ enable_reads_from_query_cache = r"""'{"default":"1"}'"""
 enable_s3_requests_logging = r"""'{"default":"0"}'"""
 
 enable_scalar_subquery_optimization = r"""'{"default":"1"}'"""
+
+enable_scopes_for_with_statement = r"""'{"default":"1"}'"""
 
 enable_shared_storage_snapshot_in_query = r"""'{"default":"0"}'"""
 
