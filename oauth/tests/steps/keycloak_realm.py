@@ -5,18 +5,17 @@ from helpers.common import getuid
 
 
 @TestStep(Given)
-def get_keycloak_admin_token(
-    self, keycloak_url="http://localhost:8080", username="admin", password="admin"
-):
-    """Get an admin access token from Keycloak."""
+def get_oauth_token(self, username="demo", password="demo"):
+    """Get an OAuth token from Keycloak for a user."""
 
-    token_url = f"{keycloak_url}/realms/master/protocol/openid-connect/token"
+    token_url = f"http://localhost:8080/realms/grafana/protocol/openid-connect/token"
 
     data = {
         "grant_type": "password",
-        "client_id": "admin-cli",
+        "client_id": "grafana-client",
         "username": username,
         "password": password,
+        "client_secret": "grafana-secret",
     }
 
     response = requests.post(token_url, data=data)
@@ -256,6 +255,7 @@ def get_keycloak_group_by_name(
 
 
 class OAuthProvider:
+    get_oauth_token = get_oauth_token
     create_application = import_keycloak_realm
     create_application_with_secret = import_keycloak_realm
     create_user = create_user
