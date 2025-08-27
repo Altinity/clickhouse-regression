@@ -1,0 +1,48 @@
+services:
+  clickhouse1:
+    env_file: ".env"
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+    mem_limit: 4000M
+    cpus: 2.0
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
+
+  grafana:
+    env_file: ".env"
+    image: ${GRAFANA_IMAGE:-grafana/grafana:12.0.2}
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_AUTH_AZUREAD_NAME=Azure AD
+      - GF_AUTH_AZUREAD_ENABLED=true
+      - GF_AUTH_AZUREAD_CLIENT_ID=${CLIENT_ID}
+      - GF_AUTH_AZUREAD_CLIENT_SECRET=${CLIENT_SECRET}
+      - GF_AUTH_AZUREAD_SCOPES=openid profile email User.Read GroupMember.Read.All
+      - GF_AUTH_AZUREAD_AUTH_URL=https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize
+      - GF_AUTH_AZUREAD_TOKEN_URL=https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token
+      - GF_AUTH_AZUREAD_ROLE_ATTRIBUTE_STRICT=false
+      - GF_USERS_AUTO_ASSIGN_ORG_ROLE=Admin
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_AUTH_SIGNOUT_REDIRECT_URL=http://localhost:3000
+      - GF_LOG_LEVEL=error      
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=vertamedia-clickhouse-datasource
+      - GF_INSTALL_PLUGINS=https://github.com/Altinity/clickhouse-grafana/releases/download/v3.3.0/vertamedia-clickhouse-datasource-3.3.0.zip;vertamedia-clickhouse-datasource
+    depends_on:
+      clickhouse1:
+        condition: service_started
+
+volumes:
+  grafana-data:
+  clickhouse-data:
+

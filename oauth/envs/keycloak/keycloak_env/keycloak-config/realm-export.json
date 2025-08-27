@@ -1,0 +1,60 @@
+{
+  "realm": "grafana",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "grafana-client",
+      "name": "Grafana",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "grafana-secret",
+      "redirectUris": ["http://localhost:3000/login/generic_oauth"],
+      "baseUrl": "http://localhost:3000",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "jsonType.label": "String",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "demo",
+      "enabled": true,
+      "email": "demo@example.com",
+      "firstName": "Demo",
+      "lastName": "User",
+      "emailVerified": true,
+      "groups": ["/grafana-admins", "/can-read"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "demo"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "name": "grafana-admins",
+      "path": "/grafana-admins"
+    },
+    {
+      "name": "can-read",
+      "path": "/can-read"
+    }
+  ]
+}
