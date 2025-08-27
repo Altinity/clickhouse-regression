@@ -13,12 +13,27 @@ from testflows.core import *
 from helpers.common import getuid
 
 
+@TestStep(Given)
 def get_oauth_token(
-    tenant_id, client_id, client_secret, scope="https://graph.microsoft.com/.default"
+    self,
+    tenant_id=None,
+    client_id=None,
+    client_secret=None,
+    scope="https://graph.microsoft.com/.default",
 ):
     """
     Acquire an OAuth token from Azure AD using client credentials.
     """
+
+    if tenant_id is None:
+        tenant_id = self.context.tenant_id
+
+    if client_id is None:
+        client_id = self.context.client_id
+
+    if client_secret is None:
+        client_secret = self.context.client_secret
+
     credential = ClientSecretCredential(
         tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
     )
@@ -179,14 +194,17 @@ async def delete_application(self, application_id: str):
 
 
 @TestStep(Given)
-def setup_azure_application(self, tenant_id, client_id, client_secret):
-    application, secret, app_id = create_azure_application_with_secret()
-    self.context.application = application
-    self.context.secret = secret
-    self.context.app_id = app_id
+def setup_azure_application(self):
+    try:
+        with Given("I create an Azure AD application with a secret"):
+            application, secret, app_id = create_azure_application_with_secret()
+            self.context.application = application
+            self.context.secret = secret
+            self.context.app_id = app_id
 
-    yield application
-    delete_application(application_id=app_id)
+        yield application
+    finally:
+        delete_application(application_id=app_id)
 
 
 class OAuthProvider:
