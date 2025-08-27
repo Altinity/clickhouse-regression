@@ -12,17 +12,19 @@ from testflows.core import *
 
 from helpers.common import getuid
 
-def get_azure_oauth_token(tenant_id, client_id, client_secret, scope="https://graph.microsoft.com/.default"):
+
+def get_oauth_token(
+    tenant_id, client_id, client_secret, scope="https://graph.microsoft.com/.default"
+):
     """
     Acquire an OAuth token from Azure AD using client credentials.
     """
     credential = ClientSecretCredential(
-        tenant_id=tenant_id,
-        client_id=client_id,
-        client_secret=client_secret
+        tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
     )
     token = credential.get_token(scope)
     return token.token
+
 
 @TestStep(Given)
 async def create_azure_application(
@@ -188,6 +190,7 @@ def setup_azure_application(self, tenant_id, client_id, client_secret):
 
 
 class OAuthProvider:
+    get_oauth_token = get_oauth_token
     create_application = create_azure_application
     create_application_with_secret = create_azure_application_with_secret
     create_user = create_user
