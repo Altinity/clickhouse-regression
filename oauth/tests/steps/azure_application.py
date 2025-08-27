@@ -171,13 +171,9 @@ def setup_azure_application(self, tenant_id, client_id, client_secret):
     self.context.application = application
     self.context.secret = secret
     self.context.app_id = app_id
-    cred = ClientSecretCredential(tenant_id, client_id, client_secret)
-    self.context.client = GraphServiceClient(
-        credentials=cred, scopes=["https://graph.microsoft.com/.default"]
-    )
 
-    yield
-    delete_application(app_id)
+    yield application
+    delete_application(application_id=app_id)
 
 
 class OAuthProvider:
