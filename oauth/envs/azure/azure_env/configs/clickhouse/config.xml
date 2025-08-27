@@ -8,6 +8,14 @@
           <type>azure</type>
         </azure_processor>
     </token_processors>
+    <user_directories>
+        <token>
+            <processor>azure_processor</processor>
+            <common_roles>
+                <token_test_role_1 />
+            </common_roles>
+        </token>
+    </user_directories>
     <logger>
         <!-- Possible levels: https://github.com/pocoproject/poco/blob/develop/Foundation/include/Poco/Logger.h#L105 -->
         <level>trace</level>
