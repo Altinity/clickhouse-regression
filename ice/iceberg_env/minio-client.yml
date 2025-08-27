@@ -1,0 +1,21 @@
+version: '2.3'
+
+services:
+  mc:
+    depends_on:
+      - minio
+    image: minio/mc:RELEASE.2025-03-12T17-29-24Z-cpuv1
+    container_name: mc
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc rm -r --force minio/warehouse;
+      /usr/bin/mc mb minio/warehouse --ignore-existing;
+      /usr/bin/mc policy set public minio/warehouse;
+      tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/mc ls minio/warehouse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

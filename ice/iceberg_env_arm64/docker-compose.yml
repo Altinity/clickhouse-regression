@@ -1,0 +1,168 @@
+services:
+      
+  spark-iceberg:
+    image: tabulario/spark-iceberg
+    container_name: spark-iceberg
+    build: spark/
+    depends_on:
+      - rest
+      - minio
+    environment:
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_REGION=us-east-1
+    ports:
+      - 8080:8080
+      - 10000:10000
+      - 10001:10001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rest:
+    image: tabulario/iceberg-rest
+    ports:
+      - 8182:8181
+    environment:
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_REGION=us-east-1
+      - CATALOG_WAREHOUSE=s3://warehouse/
+      - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+      - CATALOG_S3_ENDPOINT=http://minio:9000
+
+  ice-rest-catalog:
+    image: altinity/ice-rest-catalog:latest
+    restart: unless-stopped
+    ports:
+      - '5000:5000' # iceberg/http
+    configs:
+      - source: ice-rest-catalog-yaml
+        target: /etc/ice/ice-rest-catalog.yaml
+    tmpfs:
+      # for access to /var/lib/ice-rest-catalog/db.sqlite
+      - /var/lib/ice-rest-catalog 
+    depends_on:
+      minio:
+        condition: service_healthy
+  
+  localstack:
+    image: localstack/localstack-pro
+    container_name: localstack
+    ports:
+      - "4566:4566"  
+    environment:
+      - SERVICES=glue     
+      - DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
+      - DEBUG=${DEBUG:-0}
+      - PERSISTENCE=${PERSISTENCE:-0}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/var/lib/localstack
+    
+  minio:
+    extends:
+      file: minio-service.yml
+      service: minio
+  mc:
+    extends:
+      file: minio-client.yml
+      service: mc
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  zookeeper1:
+    extends:
+      file: ../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+
+  keeper:
+    image: altinity/clickhouse-keeper:25.3.3.20186.altinityantalya
+    container_name: keeper
+    hostname: keeper
+    ports:
+      - 2181:2181
+    volumes:
+      # Note special location of Keeper config overrides. 
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependencies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      # spark-iceberg:
+      #   condition: service_healthy
+      mc:
+        condition: service_healthy
+
+volumes:
+  localstack_data:
+
+configs:
+  ice-rest-catalog-yaml:
+    content: |
+      uri: jdbc:sqlite:file:/var/lib/ice-rest-catalog/db.sqlite?journal_mode=WAL&synchronous=OFF&journal_size_limit=500
+      warehouse: s3://warehouse/
+      s3:
+        endpoint: http://minio:9000
+        pathStyleAccess: true
+        accessKeyID: admin
+        secretAccessKey: password
+        region: us-east-1
+      bearerTokens:
+        - value: foo
+      
