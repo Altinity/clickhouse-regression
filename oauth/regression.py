@@ -2,6 +2,8 @@
 import sys
 import os
 
+from azure.identity import ClientSecretCredential
+from msgraph import GraphServiceClient
 from testflows.core import *
 
 
@@ -13,7 +15,7 @@ from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
 from oauth.tests.steps import azure_application as azure
 from oauth.tests.steps import keycloak_realm as keycloak
-from oauth.tests.steps.azure_application import setup_azure, setup_azure_application
+from oauth.tests.steps.azure_application import setup_azure_application
 
 
 def argparser(parser):
@@ -111,15 +113,24 @@ def regression(
     with Given("docker-compose cluster"):
         providers = {"keycloak": keycloak, "azure": azure}
 
-        write_env_file(identity_provider, tenant_id, client_id, client_secret)
-
         docker_compose_config = os.path.join(
             current_dir(), "envs", identity_provider.lower()
         )
 
         if identity_provider.lower() == "azure":
-            setup_azure_application(
+            cred = ClientSecretCredential(tenant_id, client_id, client_secret)
+            self.context.client = GraphServiceClient(
+                credentials=cred, scopes=["https://graph.microsoft.com/.default"]
+            )
+            application = setup_azure_application(
                 tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
+            )
+
+            write_env_file(
+                identity_provider,
+                tenant_id,
+                application.app_id,
+                application.password_credentials[0].secret_text,
             )
 
         cluster = create_cluster(

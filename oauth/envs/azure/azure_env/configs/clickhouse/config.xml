@@ -3,22 +3,11 @@
   NOTE: User and query level settings are set up in "users.xml" file.
 -->
 <clickhouse>
-    <access_token_processors>
-        <azuure>
-            <provider>azure</provider>
-            <client_id from_env="CLIENT_ID"/>
-            <tenant_id from_env="TENANT_ID"/>
-            <cache_lifetime>60</cache_lifetime>
-        </azuure>
-    </access_token_processors>
-    <user_directories>
-        <token>
-            <processor>azuure</processor>
-            <roles>
-                <token_test_role_1 />
-            </roles>
-        </token>
-    </user_directories>
+    <token_processors>
+        <azure_processor>
+          <type>azure</type>
+        </azure_processor>
+    </token_processors>
     <logger>
         <!-- Possible levels: https://github.com/pocoproject/poco/blob/develop/Foundation/include/Poco/Logger.h#L105 -->
         <level>trace</level>

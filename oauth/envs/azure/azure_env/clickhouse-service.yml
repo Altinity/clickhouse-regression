@@ -6,7 +6,7 @@ services:
       file: ../../../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
-      - "./configs/startup_scripts.xml:/etc/clickhouse-server/config.d/startup_scripts.xml:ro"
+      - "./configs/clickhouse/startup_scripts.xml:/etc/clickhouse-server/config.d/startup_scripts.xml:ro"
       - "./configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"
       - "./configs/clickhouse/config.d/jwt.xml:/etc/clickhouse-server/config.d/jwt.xml"
       - "./configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
