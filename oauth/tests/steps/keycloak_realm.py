@@ -8,7 +8,9 @@ from helpers.common import getuid
 def get_oauth_token(self, username="demo", password="demo"):
     """Get an OAuth token from Keycloak for a user."""
 
-    token_url = f"http://localhost:8080/realms/grafana/protocol/openid-connect/token"
+    token_url = (
+        f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
+    )
 
     data = {
         "grant_type": "password",
@@ -22,7 +24,38 @@ def get_oauth_token(self, username="demo", password="demo"):
     response.raise_for_status()
 
     token_data = response.json()
-    return token_data["access_token"]
+    access_token = token_data["access_token"]
+    expiration = token_data["expires_in"]
+    refresh_expiration = token_data["refresh_expires_in"]
+
+    return access_token
+
+
+@TestStep(Given)
+def get_admin_token(self):
+    """Get an admin token from Keycloak."""
+
+    token_url = (
+        f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
+    )
+
+    data = {
+        "grant_type": "password",
+        "client_id": "grafana-client",
+        "username": "admin",
+        "password": "admin",
+        "client_secret": "grafana-secret",
+    }
+
+    response = requests.post(token_url, data=data)
+    response.raise_for_status()
+
+    token_data = response.json()
+    access_token = token_data["access_token"]
+    expiration = token_data["expires_in"]
+    refresh_expiration = token_data["refresh_expires_in"]
+
+    return access_token, expiration, refresh_expiration
 
 
 @TestStep(Given)
@@ -31,20 +64,12 @@ def create_user(
     display_name: str,
     mail_nickname: str,
     user_principal_name: str,
+    realm_name: str = "grafana",
     password: str = None,
 ):
     """Create a user in Keycloak."""
-
-    realm_name = getattr(self.context, "realm_name", "grafana")
-    keycloak_url = getattr(self.context, "keycloak_url", "http://localhost:8080")
-    admin_token = getattr(self.context, "admin_token", None)
-
-    if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
-
-        self.context.admin_token = admin_token
-
-    users_url = f"{keycloak_url}/admin/realms/{realm_name}/users"
+    users_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users"
+    admin_token = get_oauth_token()
 
     headers = {
         "Authorization": f"Bearer {admin_token}",
@@ -70,9 +95,7 @@ def create_user(
     user_id = response.headers["Location"].split("/")[-1]
 
     if password:
-        password_url = (
-            f"{keycloak_url}/admin/realms/{realm_name}/users/{user_id}/reset-password"
-        )
+        password_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user_id}/reset-password"
         password_data = {"type": "password", "value": password, "temporary": False}
 
         response = requests.put(password_url, json=password_data, headers=headers)
@@ -97,7 +120,7 @@ def create_group(
     admin_token = getattr(self.context, "admin_token", None)
 
     if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
+        admin_token = get_admin_token()
         self.context.admin_token = admin_token
 
     groups_url = f"{keycloak_url}/admin/realms/{realm_name}/groups"
@@ -143,7 +166,7 @@ def assign_user_to_group(
     admin_token = getattr(self.context, "admin_token", None)
 
     if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
+        admin_token = get_admin_token()
         self.context.admin_token = admin_token
 
     membership_url = (
@@ -171,7 +194,7 @@ def import_keycloak_realm(
     """Import a realm configuration from a JSON file."""
 
     if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
+        admin_token = get_admin_token()
 
     import_url = f"{keycloak_url}/admin/realms"
 
@@ -202,7 +225,7 @@ def get_keycloak_user_by_username(
     """Get a user by username from Keycloak realm."""
 
     if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
+        admin_token = get_admin_token()
 
     users_url = f"{keycloak_url}/admin/realms/{realm_name}/users"
 
@@ -233,7 +256,7 @@ def get_keycloak_group_by_name(
     """Get a group by name from Keycloak realm."""
 
     if admin_token is None:
-        admin_token = get_keycloak_admin_token(self, keycloak_url)
+        admin_token = get_admin_token()
 
     groups_url = f"{keycloak_url}/admin/realms/{realm_name}/groups"
 

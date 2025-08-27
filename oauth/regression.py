@@ -126,21 +126,28 @@ def regression(
                 tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
             )
 
+            self.context.tenant_id = tenant_id
+            self.context.client_id = application.app_id
+            self.context.client_secret = application.password_credentials[0].secret_text
+
             write_env_file(
                 identity_provider,
                 tenant_id,
-                application.app_id,
-                application.password_credentials[0].secret_text,
+                self.context.client_id,
+                self.context.client_secret,
             )
+        elif identity_provider.lower() == "keycloak":
+            self.context.keycloak_url = "http://localhost:8080"
 
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
             configs_dir=docker_compose_config,
         )
+
         self.context.cluster = cluster
         self.context.provider_client = providers[identity_provider.lower()]
-        self.context.provider = identity_provider
+        self.context.provider_name = identity_provider
 
     self.context.node = self.context.cluster.node("clickhouse1")
     pause()
