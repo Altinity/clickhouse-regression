@@ -86,6 +86,36 @@ def change_token_processors(
 
 
 @TestStep(Given)
+def change_user_directories_config(
+    self,
+    processor,
+    common_roles=None,
+    roles_filter=None,
+    node=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+):
+    entries = {"user_directories": {}}
+    entries["user_directories"]["token"] = {}
+
+    entries["user_directories"]["token"]["processor"] = processor
+
+    if common_roles is not None:
+        entries["user_directories"]["token"]["common_roles"] = common_roles
+
+    if roles_filter is not None:
+        entries["user_directories"]["token"]["roles_filter"] = roles_filter
+
+    change_clickhouse_config(
+        entires=entries,
+        config_d_dir=config_d_dir,
+        preprocessed_name="config.xml",
+        restart=True,
+        config_file=f"user_directory_{processor}.xml",
+        node=node,
+    )
+
+
+@TestStep(Given)
 def get_oauth_token(
     self,
     tenant_id=None,
