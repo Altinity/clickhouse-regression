@@ -4,7 +4,7 @@ from jwt_authentication.tests.steps import change_clickhouse_config
 
 
 @TestStep(Then)
-def access_clickhouse(token, ip="clickhouse", https=False):
+def access_clickhouse(self, token, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse with JWT token authentication."""
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:8123/"
@@ -18,7 +18,7 @@ def access_clickhouse(token, ip="clickhouse", https=False):
     response = requests.get(url, headers=headers, params=params, verify=verify)
     response.raise_for_status()
 
-    return response.text.strip()
+    return response
 
 
 @TestStep(Given)
