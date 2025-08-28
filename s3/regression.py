@@ -593,23 +593,25 @@ def aws_s3_regression(
     self.context.bucket_name = bucket
     self.context.region = region
 
-    with Cluster(
-        **cluster_args,
-        nodes=nodes,
-        environ={
-            "S3_AMAZON_ACCESS_KEY": access_key,
-            "S3_AMAZON_KEY_ID": key_id,
-            "AWS_ACCESS_KEY_ID": key_id,
-            "AWS_SECRET_ACCESS_KEY": access_key,
-            "AWS_DEFAULT_REGION": region,
-        },
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            **cluster_args,
+            nodes=nodes,
+            environ={
+                "S3_AMAZON_ACCESS_KEY": access_key,
+                "S3_AMAZON_KEY_ID": key_id,
+                "AWS_ACCESS_KEY_ID": key_id,
+                "AWS_SECRET_ACCESS_KEY": access_key,
+                "AWS_DEFAULT_REGION": region,
+            },
+            configs_dir=current_dir(),
+        )
 
         self.context.cluster = cluster
         self.context.cluster.bucket = bucket
         self.context.node = cluster.node("clickhouse1")
 
-        with Given("I enable or disable experimental analyzer if needed"):
+        with By("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
@@ -693,21 +695,23 @@ def azure_regression(
     self.context.azure_account_key = storage_key
     self.context.azure_container_name = container_name
 
-    with Cluster(
-        **cluster_args,
-        nodes=nodes,
-        # environ={
-        #     "AZURE_CLIENT_ID": client_id,
-        #     "AZURE_CLIENT_SECRET": client_secret,
-        #     "AZURE_STORAGE_KEY": storage_key,
-        #     "AZURE_TENANT_ID": tenant_id,
-        # },
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            **cluster_args,
+            nodes=nodes,
+            # environ={
+            #     "AZURE_CLIENT_ID": client_id,
+            #     "AZURE_CLIENT_SECRET": client_secret,
+            #     "AZURE_STORAGE_KEY": storage_key,
+            #     "AZURE_TENANT_ID": tenant_id,
+            # },
+            configs_dir=current_dir(),
+        )
 
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        with Given("I enable or disable experimental analyzer if needed"):
+        with By("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
@@ -769,14 +773,18 @@ def gcs_regression(
     self.context.secret_access_key = access_key
     self.context.bucket_name = Secret(name="gcs_bucket")(bucket_name).value
 
-    with Cluster(
-        **cluster_args,
-        nodes=nodes,
-        environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
-    ) as cluster:
+    with Given("docker-compose cluster"):
+        cluster = create_cluster(
+            **cluster_args,
+            nodes=nodes,
+            environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
+            configs_dir=current_dir(),
+        )
+
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
-        with Given("I enable or disable experimental analyzer if needed"):
+
+        with By("I enable or disable experimental analyzer if needed"):
             for node in nodes["clickhouse"]:
                 experimental_analyzer(
                     node=cluster.node(node), with_analyzer=with_analyzer
