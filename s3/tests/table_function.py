@@ -819,7 +819,7 @@ def outline(self):
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
-            scenario()
+            Scenario(run=scenario, flags=TE)
 
 
 @TestFeature
