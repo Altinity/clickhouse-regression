@@ -1364,7 +1364,7 @@ class PackageDownloader:
             path = path.split("-", 1)[1]
 
         if path.startswith("url://"):
-            path.replace("url://", "https://", 1)
+            path = path.replace("url://", "https://", 1)
 
         if path.startswith("file://"):
             path = path.replace("file://", "", 1)
