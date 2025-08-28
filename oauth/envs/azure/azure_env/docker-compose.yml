@@ -1,4 +1,10 @@
 services:
+
+  zookeeper1:
+    extends:
+      file: ../../../../docker-compose/zookeeper-service.yml
+      service: zookeeper-alone
+
   clickhouse1:
     env_file: ".env"
     extends:
@@ -14,6 +20,31 @@ services:
       - "8123:8123"
       - "9000:9000"
       - "9009:9009"
+
+  clickhouse2:
+    env_file: ".env"
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    mem_limit: 4000M
+    cpus: 2.0
+
+  clickhouse3:
+    env_file: ".env"
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+    mem_limit: 4000M
+    cpus: 2.0
+
 
   grafana:
     env_file: ".env"
@@ -41,6 +72,18 @@ services:
     depends_on:
       clickhouse1:
         condition: service_started
+
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
 
 volumes:
   grafana-data:
