@@ -486,9 +486,9 @@ def minio_regression(
         )
 
     self.context.cluster = cluster
-
     self.context.node = cluster.node("clickhouse1")
-    with Given("I have a minio client"):
+
+    with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
         uri_bucket_file = uri + f"/{self.context.cluster.minio_bucket}/{bucket_prefix}/"
         self.context.bucket_name = self.context.cluster.minio_bucket
@@ -611,52 +611,50 @@ def aws_s3_regression(
         self.context.cluster.bucket = bucket
         self.context.node = cluster.node("clickhouse1")
 
-        with By("I enable or disable experimental analyzer if needed"):
-            for node in nodes["clickhouse"]:
-                experimental_analyzer(
-                    node=cluster.node(node), with_analyzer=with_analyzer
-                )
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-        with And("allow higher cpu_wait_ratio "):
-            if check_clickhouse_version(">=25.4")(self):
-                allow_higher_cpu_wait_ratio(
-                    min_os_cpu_wait_time_ratio_to_throw=15,
-                    max_os_cpu_wait_time_ratio_to_throw=25,
-                )
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
+            )
 
-        with And("I add all possible clusters for nodes"):
-            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+    with And("I add all possible clusters for nodes"):
+        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
-        with And("I get all possible clusters for nodes"):
-            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+    with And("I get all possible clusters for nodes"):
+        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
-        with Feature("part 1"):
-            Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.table_function", "aws_s3"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.disk", "aws_s3"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.alter", "feature"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-        with Feature("part 2"):
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
-            Feature(test=load("s3.tests.backup", "aws_s3"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.orphans", "feature"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
+    with Feature("part 1"):
+        Feature(test=load("s3.tests.sanity", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.table_function_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk_invalid", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+    with Feature("part 2"):
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.reconnect", "aws_s3"))(uri=uri)
+        Feature(test=load("s3.tests.backup", "aws_s3"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_performance", "aws_s3"))(uri=uri)
 
 
 @TestFeature
@@ -711,35 +709,33 @@ def azure_regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        with By("I enable or disable experimental analyzer if needed"):
-            for node in nodes["clickhouse"]:
-                experimental_analyzer(
-                    node=cluster.node(node), with_analyzer=with_analyzer
-                )
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-        with And("allow higher cpu_wait_ratio "):
-            if check_clickhouse_version(">=25.4")(self):
-                allow_higher_cpu_wait_ratio(
-                    min_os_cpu_wait_time_ratio_to_throw=15,
-                    max_os_cpu_wait_time_ratio_to_throw=25,
-                )
-
-        with Feature("part 1"):
-            Feature(test=load("s3.tests.sanity", "azure"))()
-            Feature(test=load("s3.tests.alter", "feature"))(
-                uri=uri, bucket_prefix=bucket_prefix
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
             )
-            Feature(test=load("s3.tests.disk", "azure"))()
-            Feature(test=load("s3.tests.disk_invalid", "azure"))()
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-        with Feature("part 2"):
-            Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
-            Feature(test=load("s3.tests.reconnect", "azure"))()
-            Feature(test=load("s3.tests.backup", "azure"))()
-            # Feature(test=load("s3.tests.orphans", "feature"))(
-            #     uri=uri, bucket_prefix=bucket_prefix
-            # )
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+
+    with Feature("part 1"):
+        Feature(test=load("s3.tests.sanity", "azure"))()
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.disk", "azure"))()
+        Feature(test=load("s3.tests.disk_invalid", "azure"))()
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+    with Feature("part 2"):
+        Feature(test=load("s3.tests.zero_copy_replication", "azure"))()
+        Feature(test=load("s3.tests.reconnect", "azure"))()
+        Feature(test=load("s3.tests.backup", "azure"))()
+        # Feature(test=load("s3.tests.orphans", "feature"))(
+        #     uri=uri, bucket_prefix=bucket_prefix
+        # )
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
 
 
 @TestFeature
@@ -784,51 +780,47 @@ def gcs_regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        with By("I enable or disable experimental analyzer if needed"):
-            for node in nodes["clickhouse"]:
-                experimental_analyzer(
-                    node=cluster.node(node), with_analyzer=with_analyzer
-                )
+    with And("I enable or disable experimental analyzer if needed"):
+        for node in nodes["clickhouse"]:
+            experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-        with And("allow higher cpu_wait_ratio "):
-            if check_clickhouse_version(">=25.4")(self):
-                allow_higher_cpu_wait_ratio(
-                    min_os_cpu_wait_time_ratio_to_throw=15,
-                    max_os_cpu_wait_time_ratio_to_throw=25,
-                )
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
+            )
 
-        with And("I add all possible clusters for nodes"):
-            add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+    with And("I add all possible clusters for nodes"):
+        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
-        with And("I get all possible clusters for nodes"):
-            self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+    with And("I get all possible clusters for nodes"):
+        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
-        with Feature("part 1"):
-            Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.table_function", "gcs"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.disk", "gcs"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
-            Feature(test=load("s3.tests.alter", "feature"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-        with Feature("part 2"):
-            Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.backup", "gcs"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.orphans", "feature"))(
-                uri=uri, bucket_prefix=bucket_prefix
-            )
-            Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
-            Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
+    with Feature("part 1"):
+        Feature(test=load("s3.tests.sanity", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.table_function", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.table_function_invalid", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.disk", "gcs"))(uri=uri, bucket_prefix=bucket_prefix)
+        Feature(test=load("s3.tests.disk_invalid", "gcs"))(uri=uri)
+        Feature(test=load("s3.tests.alter", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+    with Feature("part 2"):
+        Feature(test=load("s3.tests.combinatoric_table", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.zero_copy_replication", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.backup", "gcs"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.orphans", "feature"))(
+            uri=uri, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.settings", "feature"))(uri=uri)
+        Feature(test=load("s3.tests.table_function_performance", "gcs"))(uri=uri)
 
 
 @TestModule
