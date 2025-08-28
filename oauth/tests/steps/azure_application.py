@@ -31,6 +31,8 @@ def change_token_processors(
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
 ):
+    """Change ClickHouse token processor configuration."""
+
     entries = {"token_processor": {}}
     entries["jwt_validators"][processor_name] = {}
 
@@ -94,6 +96,8 @@ def change_user_directories_config(
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
 ):
+    """Change ClickHouse user directories configuration."""
+
     entries = {"user_directories": {}}
     entries["user_directories"]["token"] = {}
 
