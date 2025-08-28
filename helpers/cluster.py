@@ -94,8 +94,6 @@ def unpack_deb(deb_binary_path, program_name):
     with Shell() as bash:
         bash.timeout = 300
         if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
-            pause()
-            note("execution paused")
             cmd = bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
             assert cmd.exitcode == 0, error()
             cmd = bash(
