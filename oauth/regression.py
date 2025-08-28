@@ -103,8 +103,15 @@ def regression(
     client_secret=None,
 ):
     """Run tests for OAuth in Clickhouse."""
-    nodes = {"clickhouse": ("clickhouse1",), "grafana": ("grafana",)}
 
+    nodes = {
+        "clickhouse": (
+            "clickhouse1",
+            "clickhouse2",
+            "clickhouse3",
+        ),
+        "grafana": ("grafana",),
+    }
     self.context.clickhouse_version = clickhouse_version
 
     if stress is not None:
@@ -122,9 +129,7 @@ def regression(
             self.context.client = GraphServiceClient(
                 credentials=cred, scopes=["https://graph.microsoft.com/.default"]
             )
-            application = setup_azure_application(
-                tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
-            )
+            application = setup_azure_application()
 
             self.context.tenant_id = tenant_id
             self.context.client_id = application.app_id

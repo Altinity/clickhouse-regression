@@ -7,10 +7,34 @@ from msgraph.generated.models.user import User
 from msgraph.generated.models.group import Group
 from msgraph.generated.models.reference_create import ReferenceCreate
 from msgraph.generated.models.password_profile import PasswordProfile
-from msgraph.graph_service_client import GraphServiceClient
+from oauth.tests.steps.clikhouse import (
+    change_token_processors,
+    change_user_directories_config,
+)
 from testflows.core import *
 
 from helpers.common import getuid
+
+
+@TestStep(Given)
+def default_configuration(self, node=None):
+    """Configure ClickHouse to use Azure token processor."""
+    change_token_processors(
+        processor_name="azure",
+        processor_type="azure",
+    )
+
+
+@TestStep(Given)
+def default_idp(self, node=None, common_roles=None, roles_filter=None):
+    """Set up default ClickHouse configuration for Azure OAuth authentication."""
+    default_configuration(self, node=node)
+    change_user_directories_config(
+        processor="azure",
+        node=node,
+        common_roles=common_roles,
+        roles_filter=roles_filter,
+    )
 
 
 @TestStep(Given)
@@ -204,7 +228,8 @@ def setup_azure_application(self):
 
         yield application
     finally:
-        delete_application(application_id=app_id)
+        with Finally("I delete the Azure AD application"):
+            delete_application(application_id=app_id)
 
 
 class OAuthProvider:
