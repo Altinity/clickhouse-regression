@@ -93,6 +93,48 @@ xfails = {
             check_clickhouse_version("<24.5"),
         )
     ],
+    ":/:/table function performance/wildcard/one folder/*": [
+        (
+            Fail,
+            "Need investigation, fails on 25.6 Antalya",
+        )
+    ],
+    ":/:/table function performance/wildcard/nums/*": [
+        (
+            Fail,
+            "Need investigation, fails on 25.6 Antalya",
+        )
+    ],
+    ":/:/table function performance/wildcard/nums one invalid*": [
+        (
+            Fail,
+            "Need investigation, fails on 25.6 Antalya",
+        )
+    ],
+    ":/:/table function performance/wildcard/star/*": [
+        (
+            Fail,
+            "Need investigation",
+        )
+    ],
+    ":/:/table function performance/wildcard/question encoded/*": [
+        (
+            Fail,
+            "Need investigation",
+        )
+    ],
+    ":/:/table function performance/wildcard/question/*": [
+        (
+            Fail,
+            "Need investigation",
+        )
+    ],
+    ":/:/table function performance/wildcard/range/*": [
+        (
+            Fail,
+            "Need investigation",
+        )
+    ],
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
