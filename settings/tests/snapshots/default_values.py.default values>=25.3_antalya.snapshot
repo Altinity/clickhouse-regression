@@ -52,9 +52,9 @@ allow_experimental_codecs = r"""'{"default":"0"}'"""
 
 allow_experimental_database_atomic = r"""'{"default":"1"}'"""
 
-allow_experimental_database_glue_catalog = r"""'{"default":"0"}'"""
+allow_experimental_database_glue_catalog = r"""'{"default":"1"}'"""
 
-allow_experimental_database_iceberg = r"""'{"default":"0"}'"""
+allow_experimental_database_iceberg = r"""'{"default":"1"}'"""
 
 allow_experimental_database_materialized_mysql = r"""'{"default":"0"}'"""
 
@@ -62,7 +62,7 @@ allow_experimental_database_materialized_postgresql = r"""'{"default":"0"}'"""
 
 allow_experimental_database_replicated = r"""'{"default":"1"}'"""
 
-allow_experimental_database_unity_catalog = r"""'{"default":"0"}'"""
+allow_experimental_database_unity_catalog = r"""'{"default":"1"}'"""
 
 allow_experimental_dynamic_type = r"""'{"default":"1"}'"""
 
