@@ -165,8 +165,8 @@ def million_extensions(self):
 )
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
-    snapshot_name = "above_25_8" if check_clickhouse_version(">=25.8")(self) else ""
-    columns = "num" if check_clickhouse_version(">=25.8")(self) else None
+    snapshot_name = "above_25_8" if check_clickhouse_version(">=25.8")(self) or check_clickhouse_version(">=25.6")(self) and check_if_antalya_build(self) else ""
+    columns = "num"
     order_by = "ALL" if check_clickhouse_version(">23.9")(self) else "tuple(*)"
 
     for example in self.examples:
