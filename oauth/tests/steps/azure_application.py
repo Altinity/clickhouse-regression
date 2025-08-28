@@ -26,7 +26,7 @@ def default_configuration(self, node=None):
 
 
 @TestStep(Given)
-def default_azure_configuration(self, node=None, common_roles=None, roles_filter=None):
+def default_idp(self, node=None, common_roles=None, roles_filter=None):
     """Set up default ClickHouse configuration for Azure OAuth authentication."""
     default_configuration(self, node=node)
     change_user_directories_config(
