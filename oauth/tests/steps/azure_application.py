@@ -228,7 +228,8 @@ def setup_azure_application(self):
 
         yield application
     finally:
-        delete_application(application_id=app_id)
+        with Finally("I delete the Azure AD application"):
+            delete_application(application_id=app_id)
 
 
 class OAuthProvider:
