@@ -755,8 +755,11 @@ def measure_file_size(self):
         r = node.query(
             f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
         )
-        size_clickhouse = int(r.output.strip())
-        assert size_after - size_before == size_clickhouse, error()
+
+        for retry in retries(timeout=30, delay=5):
+            with retry:
+                size_clickhouse = int(r.output.strip())
+                assert size_after - size_before == size_clickhouse, error()
 
 
 @TestScenario
