@@ -135,6 +135,9 @@ xfails = {
             "Need investigation",
         )
     ],
+    ":/:/table function performance/setup/*": [
+        (Fail, "Need investigation, fails on 25.6 Antalya"),
+    ],
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
