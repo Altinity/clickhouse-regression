@@ -42,6 +42,9 @@ def regression(
             "clickhouse2",
             "clickhouse3",
         ),
+        "ice": (
+            "ice",
+        )
     }
 
     self.context.clickhouse_version = clickhouse_version
@@ -64,10 +67,15 @@ def regression(
         )
         self.context.cluster = cluster
 
+    self.context.ice_node = self.context.cluster.node("ice")
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
+
+    Feature(
+        test=load("ice.tests.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
 
 if main():
