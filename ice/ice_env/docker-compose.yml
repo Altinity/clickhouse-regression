@@ -204,9 +204,3 @@ configs:
     content: |
       uri: http://ice-rest-catalog:5000
       bearerToken: foo
-      s3:
-        endpoint: http://minio:9000
-        pathStyleAccess: true
-        accessKeyID: admin
-        secretAccessKey: password
-        region: us-east-1

@@ -28,7 +28,7 @@ def create_test_merge_tree_table(self):
 
         with And("populate the table"):
             node.query(
-                f"INSERT INTO {table_name} VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021)"
+                f"INSERT INTO {table_name} VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021), (1, 2020), (0, 2020)"
             )
             node.query(f"INSERT INTO {table_name} VALUES (5, 2020), (6, 2020)")
 
@@ -123,4 +123,7 @@ def feature(self, minio_root_user, minio_root_password):
         )
         note(result.output)
 
-    pause()
+    with And("check show create table"):
+        node.query(
+            f"SHOW CREATE TABLE {database_name}.\\`default.{iceberg_table_name}\\`"
+        )
