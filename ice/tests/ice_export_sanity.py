@@ -100,8 +100,15 @@ def feature(self, minio_root_user, minio_root_password):
             storage_endpoint="http://minio:9000/warehouse",
         )
 
-    with Then("run ice insert command"):
+    with Then(
+        "create iceberg table with partitioning and sort order using schema from parquet file"
+    ):
         iceberg_table_name = f"iceberg_table_{getuid()}"
+        ice_node.command(
+            f'ice create-table default.{iceberg_table_name} -p --schema-from-parquet s3://warehouse/{s3_table_name}/year=2020/*.parquet --partition=\'[{{"column":"year","transform":"identity"}}]\' --sort=\'[{{"column":"id"}}]\''
+        )
+
+    with And("run ice insert command"):
         for partition_id in partition_ids:
             ice_node.command(
                 f"ice insert default.{iceberg_table_name} -p s3://warehouse/{s3_table_name}/year={partition_id}/*.parquet"
