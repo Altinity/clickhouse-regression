@@ -37,6 +37,13 @@ services:
     image: altinity/ice:debug-0.6.0
     container_name: ice
     entrypoint: ["/bin/sh","-c","echo -e '#!/bin/sh\\nexec /bin/sh \"$$@\"' > /bin/bash && chmod +x /bin/bash && while :; do sleep 3600; done"] # fake bash
+    environment:
+      - ICE_CONFIG=/root/.ice.yaml
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password 
+      - AWS_S3_PATH_STYLE_ACCESS=true
+      - AWS_ENDPOINT_URL=http://minio:9000
     depends_on:
       ice-rest-catalog:
         condition: service_started
@@ -199,3 +206,7 @@ configs:
       bearerToken: foo
       s3:
         endpoint: http://minio:9000
+        pathStyleAccess: true
+        accessKeyID: admin
+        secretAccessKey: password
+        region: us-east-1
