@@ -32,6 +32,33 @@ services:
       - CATALOG_WAREHOUSE=s3://warehouse/
       - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
       - CATALOG_S3_ENDPOINT=http://minio:9000
+  
+  ice:
+    image: altinity/ice:debug-0.6.0
+    container_name: ice
+    entrypoint: ["/bin/sh","-c","echo -e '#!/bin/sh\\nexec /bin/sh \"$$@\"' > /bin/bash && chmod +x /bin/bash && while :; do sleep 3600; done"] # fake bash
+    depends_on:
+      ice-rest-catalog:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    configs:
+      - source: ice-cli-config
+        target: /root/.ice.yaml
+
+  # ice:
+  #   image: altinity/ice:debug-0.6.0
+  #   container_name: ice
+  #   # Run the same proven loop you used manually, as one array (no YAML quoting issues)
+  #   # entrypoint: ["/bin/sh","-c","while :; do sleep 3600; done"]
+  #   depends_on:
+  #     ice-rest-catalog:
+  #       condition: service_started
+  #     minio:
+  #       condition: service_healthy
+  #   configs:
+  #     - source: ice-cli-config
+  #       target: /root/.ice.yaml    
 
   ice-rest-catalog:
     image: altinity/ice-rest-catalog:latest
@@ -165,3 +192,10 @@ configs:
         region: us-east-1
       bearerTokens:
         - value: foo
+  
+  ice-cli-config:
+    content: |
+      uri: http://ice-rest-catalog:5000
+      bearerToken: foo
+      s3:
+        endpoint: http://minio:9000
