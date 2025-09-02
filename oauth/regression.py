@@ -143,6 +143,10 @@ def regression(
             )
         elif identity_provider.lower() == "keycloak":
             self.context.keycloak_url = "http://localhost:8080"
+            self.context.username = "demo"
+            self.context.password = "demo"
+            self.context.client_secret = "grafana-secret"
+            self.context.realm_name = "grafana"
 
         cluster = create_cluster(
             **cluster_args,
