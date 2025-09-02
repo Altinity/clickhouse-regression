@@ -1,8 +1,12 @@
 from oauth.tests.steps.clikhouse import *
 from testflows.asserts import *
+from oauth.requirements.requirements import *
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Credentials("1.0"), RQ_SRS_042_OAuth_Azure_ApplicationSetup("1.0")
+)
 def check_authentication_flow(self):
     """Check the authentication flow with Azure AD."""
     client = self.context.provider_client
@@ -15,6 +19,11 @@ def check_authentication_flow(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_042_OAuth_Azure_Token_Supported("1.0"),
+    RQ_SRS_042_OAuth_Azure_GetAccessToken("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
+)
 def feature(self):
     """Feature to test OAuth authentication flow."""
 
