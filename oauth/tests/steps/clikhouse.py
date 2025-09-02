@@ -1,4 +1,5 @@
 import requests
+from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
 
@@ -124,3 +125,15 @@ def change_user_directories_config(
         config_file=f"user_directory_{processor}.xml",
         node=node,
     )
+
+
+@TestStep(Then)
+def check_clickhouse_is_alive(self, node=None):
+    """Check if ClickHouse server is alive."""
+    node = self.context.node if node is None else node
+
+    with When("I check if ClickHouse is alive"):
+        request = node.query("SELECT 1").output.strip()
+
+    with Then("ClickHouse is alive"):
+        assert request == "1", error()
