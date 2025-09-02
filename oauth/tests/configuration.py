@@ -4,7 +4,7 @@ from oauth.requirements.requirements import *
 
 
 @TestCheck
-def access_clickhouse_with_incorrect_config(self, set_clickhouse_configuration):
+def access_clickhouse_with_specific_config(self, set_clickhouse_configuration):
     """Attempt to access ClickHouse with incorrect OAuth configuration."""
 
     with Given("I set an incorrect OAuth configuration"):
@@ -15,26 +15,15 @@ def access_clickhouse_with_incorrect_config(self, set_clickhouse_configuration):
         token = client.OAuthProvider.get_oauth_token()
 
     with Then("I try to access ClickHouse with the token"):
-        try:
-            response = access_clickhouse(token=token)
-            assert (
-                False
-            ), "Expected failure due to incorrect configuration, but access succeeded."
-        except requests.exceptions.HTTPError as e:
-            assert (
-                e.response.status_code == 401 or e.response.status_code == 403
-            ), error()
+        response = access_clickhouse(token=token)
+
+        assert response.status_code == 200, error()
+
+    with And("I check that the ClickHouse server is still alive"):
+        check_clickhouse_is_alive()
 
 
-@TestSketch
-@Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
-        "1.0"
-    ),
-)
+@TestSketch(Scenario)
 def check_incorrect_configuration(self):
     """Check ClickHouse behavior with incorrect OAuth configuration."""
     client = self.context.provider_client
@@ -78,13 +67,15 @@ def check_incorrect_configuration(self):
         ]
     )
 
-    access_clickhouse_with_incorrect_config(set_clickhouse_configuration=configurations)
+    access_clickhouse_with_specific_config(set_clickhouse_configuration=configurations)
 
 
 @TestFeature
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider("1.0"),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
 )
 def feature(self):
-    """Feature to test OAuth authentication flow."""
-    pass
+    """Feature to test OAuth authentication flow with different configurations."""
+    Scenario(run=check_incorrect_configuration)

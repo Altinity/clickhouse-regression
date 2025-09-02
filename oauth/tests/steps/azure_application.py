@@ -12,6 +12,7 @@ from oauth.tests.steps.clikhouse import (
     change_user_directories_config,
 )
 from testflows.core import *
+from oauth.requirements.requirements import *
 
 from helpers.common import getuid
 
@@ -237,6 +238,11 @@ def setup_azure_application(self):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def invalid_processor_type_configuration(self, node=None):
     """Configure ClickHouse with invalid Azure processor type."""
     change_token_processors(
@@ -247,6 +253,11 @@ def invalid_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
 def missing_processor_type_configuration(self, node=None):
     """Configure ClickHouse with missing Azure processor type."""
     change_token_processors(
@@ -256,6 +267,11 @@ def missing_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
 def empty_processor_type_configuration(self, node=None):
     """Configure ClickHouse with empty Azure processor type."""
     change_token_processors(
@@ -266,6 +282,11 @@ def empty_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
 def whitespace_processor_type_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only Azure processor type."""
     change_token_processors(
@@ -276,6 +297,11 @@ def whitespace_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def case_sensitive_processor_type_configuration(self, node=None):
     """Configure ClickHouse with case-sensitive Azure processor type."""
     change_token_processors(
@@ -286,6 +312,11 @@ def case_sensitive_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def non_azure_processor_type_configuration(self, node=None):
     """Configure ClickHouse with non-Azure processor type."""
     change_token_processors(
@@ -296,6 +327,11 @@ def non_azure_processor_type_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def invalid_processor_name_configuration(self, node=None):
     """Configure ClickHouse with invalid processor name."""
     change_token_processors(
@@ -306,6 +342,11 @@ def invalid_processor_name_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def whitespace_processor_name_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only processor name."""
     change_token_processors(
@@ -316,6 +357,11 @@ def whitespace_processor_name_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def special_chars_processor_name_configuration(self, node=None):
     """Configure ClickHouse with special characters in processor name."""
     change_token_processors(
@@ -326,6 +372,11 @@ def special_chars_processor_name_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    )
+)
 def missing_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with missing processor in user directories."""
     change_user_directories_config(
@@ -335,6 +386,11 @@ def missing_processor_user_directory_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    )
+)
 def whitespace_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only processor in user directories."""
     change_user_directories_config(
@@ -344,6 +400,11 @@ def whitespace_processor_user_directory_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def non_existent_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with non-existent processor in user directories."""
     change_user_directories_config(
@@ -353,6 +414,11 @@ def non_existent_processor_user_directory_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def case_mismatch_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with case-mismatched processor in user directories."""
     change_user_directories_config(
@@ -362,6 +428,11 @@ def case_mismatch_processor_user_directory_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
 def invalid_common_roles_configuration(self, node=None):
     """Configure ClickHouse with invalid common roles."""
     change_user_directories_config(
@@ -372,6 +443,11 @@ def invalid_common_roles_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
 def whitespace_common_roles_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only common roles."""
     change_user_directories_config(
@@ -382,6 +458,11 @@ def whitespace_common_roles_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
 def special_chars_common_roles_configuration(self, node=None):
     """Configure ClickHouse with special characters in common roles."""
     change_user_directories_config(
@@ -392,6 +473,11 @@ def special_chars_common_roles_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
 def invalid_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with invalid roles filter regex."""
     change_user_directories_config(
@@ -402,6 +488,11 @@ def invalid_roles_filter_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
+        "1.0"
+    )
+)
 def empty_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with empty roles filter."""
     change_user_directories_config(
@@ -412,6 +503,11 @@ def empty_roles_filter_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
+        "1.0"
+    )
+)
 def whitespace_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only roles filter."""
     change_user_directories_config(
@@ -422,6 +518,11 @@ def whitespace_roles_filter_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
 def malformed_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with malformed roles filter."""
     change_user_directories_config(
@@ -432,6 +533,12 @@ def malformed_roles_filter_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserRoles_NoAccessTokenProcessors("1.0"),
+)
 def no_token_processors_configuration(self, node=None):
     """Configure ClickHouse without any token processors."""
     change_token_processors(
@@ -442,6 +549,11 @@ def no_token_processors_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
+        "1.0"
+    )
+)
 def duplicate_processor_names_configuration(self, node=None):
     """Configure ClickHouse with duplicate processor names."""
     change_token_processors(
@@ -457,6 +569,11 @@ def duplicate_processor_names_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def invalid_processor_attributes_configuration(self, node=None):
     """Configure ClickHouse with invalid processor attributes."""
     change_token_processors(
@@ -470,6 +587,11 @@ def invalid_processor_attributes_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
+        "1.0"
+    )
+)
 def missing_user_directories_configuration(self, node=None):
     """Configure ClickHouse with token processors but no user directories."""
     change_token_processors(
@@ -480,6 +602,11 @@ def missing_user_directories_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
+        "1.0"
+    )
+)
 def empty_user_directories_configuration(self, node=None):
     """Configure ClickHouse with empty user directories configuration."""
     change_user_directories_config(
@@ -491,6 +618,11 @@ def empty_user_directories_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def malformed_xml_structure_configuration(self, node=None):
     """Configure ClickHouse with malformed XML structure."""
     change_token_processors(
@@ -501,6 +633,11 @@ def malformed_xml_structure_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
 def null_values_configuration(self, node=None):
     """Configure ClickHouse with null values in configuration."""
     change_token_processors(
@@ -511,6 +648,11 @@ def null_values_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def extremely_long_values_configuration(self, node=None):
     """Configure ClickHouse with extremely long values."""
     long_string = "a" * 10000
@@ -522,6 +664,11 @@ def extremely_long_values_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def unicode_special_chars_configuration(self, node=None):
     """Configure ClickHouse with Unicode and special characters."""
     change_token_processors(
@@ -532,6 +679,11 @@ def unicode_special_chars_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def sql_injection_attempt_configuration(self, node=None):
     """Configure ClickHouse with SQL injection attempt."""
     change_token_processors(
@@ -542,6 +694,11 @@ def sql_injection_attempt_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
 def path_traversal_attempt_configuration(self, node=None):
     """Configure ClickHouse with path traversal attempt."""
     change_token_processors(
@@ -555,6 +712,14 @@ def path_traversal_attempt_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    ),
+)
 def completely_invalid_configuration(self, node=None):
     """Configure ClickHouse with completely invalid Azure configuration."""
     invalid_processor_type_configuration(self, node=node)
@@ -562,6 +727,11 @@ def completely_invalid_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def partially_invalid_configuration(self, node=None):
     """Configure ClickHouse with partially invalid Azure configuration."""
     change_token_processors(
@@ -576,6 +746,14 @@ def partially_invalid_configuration(self, node=None):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    ),
+)
 def mixed_valid_invalid_configuration(self, node=None):
     """Configure ClickHouse with mixed valid and invalid configuration."""
     change_token_processors(
