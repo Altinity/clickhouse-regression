@@ -1,0 +1,45 @@
+name: 🗓 Scheduled ClickHouse 25.8
+run-name: 🗓 Scheduled ClickHouse 25.8
+on:
+  workflow_dispatch:
+  #Run at 10:00 PM (UTC) on Sunday
+  schedule:
+    - cron: "0 22 * * 0"
+
+jobs:
+  get_clickhouse_version:
+    runs-on: [self-hosted, x86, type-cx42, image-x86-app-docker-ce]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Pull Docker image
+        run: docker pull clickhouse/clickhouse-server:25.8
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION_25_8=$(docker image inspect --format '{{json .}}' "clickhouse/clickhouse-server:25.8" | jq -r '.Config.Labels."com.clickhouse.build.version" | ltrimstr("v") | split("-")[0]')
+          echo "version=$VERSION_25_8" >> "$GITHUB_OUTPUT"
+          echo $VERSION_25_8
+
+  clickhouse-25-8-x86-with-analyzer_zookeeper:
+    needs: get_clickhouse_version
+    uses: ./.github/workflows/run-regression.yml
+    name: "x86-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
+    with:
+      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+      extra_args: '--with-analyzer'
+      arch: x86
+    secrets: inherit
+
+  clickhouse-25-8-arm-with-analyzer_zookeeper:
+   needs: get_clickhouse_version
+   uses: ./.github/workflows/run-regression.yml
+   name: "arm-with-analyzer-${{ needs.get_clickhouse_version.outputs.version }}-zookeeper"
+   with:
+     package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+     version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
+     extra_args: '--with-analyzer'
+     arch: arm64
+   secrets: inherit
