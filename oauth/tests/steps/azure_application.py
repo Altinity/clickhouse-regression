@@ -22,6 +22,7 @@ def default_configuration(self, node=None):
     change_token_processors(
         processor_name="azure",
         processor_type="azure",
+        node=node,
     )
 
 
@@ -232,6 +233,364 @@ def setup_azure_application(self):
             delete_application(application_id=app_id)
 
 
+# Negative Test Steps for Azure OAuth Configuration
+
+
+@TestStep(Given)
+def invalid_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with invalid Azure processor type."""
+    change_token_processors(
+        processor_name="azure_invalid",
+        processor_type="invalid_type",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def missing_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with missing Azure processor type."""
+    change_token_processors(
+        processor_name="azure_missing_type",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def empty_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with empty Azure processor type."""
+    change_token_processors(
+        processor_name="azure_empty_type",
+        processor_type="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def whitespace_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only Azure processor type."""
+    change_token_processors(
+        processor_name="azure_whitespace_type",
+        processor_type="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def case_sensitive_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with case-sensitive Azure processor type."""
+    change_token_processors(
+        processor_name="azure_case_sensitive",
+        processor_type="Azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def non_azure_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with non-Azure processor type."""
+    change_token_processors(
+        processor_name="azure_wrong_type",
+        processor_type="google",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def invalid_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with invalid processor name."""
+    change_token_processors(
+        processor_name="",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def whitespace_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only processor name."""
+    change_token_processors(
+        processor_name="   ",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def special_chars_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with special characters in processor name."""
+    change_token_processors(
+        processor_name="azure@#$%",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def missing_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with missing processor in user directories."""
+    change_user_directories_config(
+        processor="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def whitespace_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only processor in user directories."""
+    change_user_directories_config(
+        processor="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def non_existent_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with non-existent processor in user directories."""
+    change_user_directories_config(
+        processor="non_existent_processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def case_mismatch_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with case-mismatched processor in user directories."""
+    change_user_directories_config(
+        processor="Azure_Processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def invalid_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with invalid common roles."""
+    change_user_directories_config(
+        processor="azure",
+        common_roles=[""],
+        node=node,
+    )
+
+
+@TestStep(Given)
+def whitespace_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only common roles."""
+    change_user_directories_config(
+        processor="azure",
+        common_roles=["   "],
+        node=node,
+    )
+
+
+@TestStep(Given)
+def special_chars_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with special characters in common roles."""
+    change_user_directories_config(
+        processor="azure",
+        common_roles=["role@#$%"],
+        node=node,
+    )
+
+
+@TestStep(Given)
+def invalid_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with invalid roles filter regex."""
+    change_user_directories_config(
+        processor="azure",
+        roles_filter="[invalid regex",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def empty_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with empty roles filter."""
+    change_user_directories_config(
+        processor="azure",
+        roles_filter="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def whitespace_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only roles filter."""
+    change_user_directories_config(
+        processor="azure",
+        roles_filter="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def malformed_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with malformed roles filter."""
+    change_user_directories_config(
+        processor="azure",
+        roles_filter="\\bclickhouse-[a-zA-Z0-9]+\\b\\",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def no_token_processors_configuration(self, node=None):
+    """Configure ClickHouse without any token processors."""
+    change_token_processors(
+        processor_name="empty_processor",
+        processor_type=None,
+        node=node,
+    )
+
+
+@TestStep(Given)
+def duplicate_processor_names_configuration(self, node=None):
+    """Configure ClickHouse with duplicate processor names."""
+    change_token_processors(
+        processor_name="azure_duplicate",
+        processor_type="azure",
+        node=node,
+    )
+    change_token_processors(
+        processor_name="azure_duplicate",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def invalid_processor_attributes_configuration(self, node=None):
+    """Configure ClickHouse with invalid processor attributes."""
+    change_token_processors(
+        processor_name="azure_invalid_attrs",
+        processor_type="azure",
+        jwks_uri="invalid://url",
+        jwks_cache_lifetime=-1,
+        verifier_leeway="invalid",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def missing_user_directories_configuration(self, node=None):
+    """Configure ClickHouse with token processors but no user directories."""
+    change_token_processors(
+        processor_name="azure_no_user_dirs",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def empty_user_directories_configuration(self, node=None):
+    """Configure ClickHouse with empty user directories configuration."""
+    change_user_directories_config(
+        processor="",
+        common_roles=[],
+        roles_filter="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def malformed_xml_structure_configuration(self, node=None):
+    """Configure ClickHouse with malformed XML structure."""
+    change_token_processors(
+        processor_name="<malformed>",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def null_values_configuration(self, node=None):
+    """Configure ClickHouse with null values in configuration."""
+    change_token_processors(
+        processor_name=None,
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def extremely_long_values_configuration(self, node=None):
+    """Configure ClickHouse with extremely long values."""
+    long_string = "a" * 10000
+    change_token_processors(
+        processor_name=long_string,
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def unicode_special_chars_configuration(self, node=None):
+    """Configure ClickHouse with Unicode and special characters."""
+    change_token_processors(
+        processor_name="azure_unicode_测试_🚀",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def sql_injection_attempt_configuration(self, node=None):
+    """Configure ClickHouse with SQL injection attempt."""
+    change_token_processors(
+        processor_name="azure'; DROP TABLE users; --",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def path_traversal_attempt_configuration(self, node=None):
+    """Configure ClickHouse with path traversal attempt."""
+    change_token_processors(
+        processor_name="../../../etc/passwd",
+        processor_type="azure",
+        node=node,
+    )
+
+
+# Combined negative configurations for comprehensive testing
+
+
+@TestStep(Given)
+def completely_invalid_configuration(self, node=None):
+    """Configure ClickHouse with completely invalid Azure configuration."""
+    invalid_processor_type_configuration(self, node=node)
+    missing_processor_user_directory_configuration(self, node=node)
+
+
+@TestStep(Given)
+def partially_invalid_configuration(self, node=None):
+    """Configure ClickHouse with partially invalid Azure configuration."""
+    change_token_processors(
+        processor_name="azure_partial",
+        processor_type="azure",
+        node=node,
+    )
+    change_user_directories_config(
+        processor="non_existent_processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+def mixed_valid_invalid_configuration(self, node=None):
+    """Configure ClickHouse with mixed valid and invalid configuration."""
+    change_token_processors(
+        processor_name="azure_mixed",
+        processor_type="azure",
+        jwks_uri="invalid://url",
+        node=node,
+    )
+    change_user_directories_config(
+        processor="azure_mixed",
+        common_roles=["valid_role", ""],
+        node=node,
+    )
+
+
 class OAuthProvider:
     get_oauth_token = get_oauth_token
     create_application = create_azure_application
@@ -240,3 +599,53 @@ class OAuthProvider:
     create_group = create_group
     assign_user_to_group = assign_user_to_group
     setup_azure_application = setup_azure_application
+
+    # Negative configuration test steps
+    invalid_processor_type_configuration = invalid_processor_type_configuration
+    missing_processor_type_configuration = missing_processor_type_configuration
+    empty_processor_type_configuration = empty_processor_type_configuration
+    whitespace_processor_type_configuration = whitespace_processor_type_configuration
+    case_sensitive_processor_type_configuration = (
+        case_sensitive_processor_type_configuration
+    )
+    non_azure_processor_type_configuration = non_azure_processor_type_configuration
+    invalid_processor_name_configuration = invalid_processor_name_configuration
+    whitespace_processor_name_configuration = whitespace_processor_name_configuration
+    special_chars_processor_name_configuration = (
+        special_chars_processor_name_configuration
+    )
+    missing_processor_user_directory_configuration = (
+        missing_processor_user_directory_configuration
+    )
+    whitespace_processor_user_directory_configuration = (
+        whitespace_processor_user_directory_configuration
+    )
+    non_existent_processor_user_directory_configuration = (
+        non_existent_processor_user_directory_configuration
+    )
+    case_mismatch_processor_user_directory_configuration = (
+        case_mismatch_processor_user_directory_configuration
+    )
+    invalid_common_roles_configuration = invalid_common_roles_configuration
+    whitespace_common_roles_configuration = whitespace_common_roles_configuration
+    special_chars_common_roles_configuration = special_chars_common_roles_configuration
+    invalid_roles_filter_configuration = invalid_roles_filter_configuration
+    empty_roles_filter_configuration = empty_roles_filter_configuration
+    whitespace_roles_filter_configuration = whitespace_roles_filter_configuration
+    malformed_roles_filter_configuration = malformed_roles_filter_configuration
+    no_token_processors_configuration = no_token_processors_configuration
+    duplicate_processor_names_configuration = duplicate_processor_names_configuration
+    invalid_processor_attributes_configuration = (
+        invalid_processor_attributes_configuration
+    )
+    missing_user_directories_configuration = missing_user_directories_configuration
+    empty_user_directories_configuration = empty_user_directories_configuration
+    malformed_xml_structure_configuration = malformed_xml_structure_configuration
+    null_values_configuration = null_values_configuration
+    extremely_long_values_configuration = extremely_long_values_configuration
+    unicode_special_chars_configuration = unicode_special_chars_configuration
+    sql_injection_attempt_configuration = sql_injection_attempt_configuration
+    path_traversal_attempt_configuration = path_traversal_attempt_configuration
+    completely_invalid_configuration = completely_invalid_configuration
+    partially_invalid_configuration = partially_invalid_configuration
+    mixed_valid_invalid_configuration = mixed_valid_invalid_configuration

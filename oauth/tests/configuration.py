@@ -1,0 +1,90 @@
+from oauth.tests.steps.clikhouse import *
+from testflows.asserts import *
+from oauth.requirements.requirements import *
+
+
+@TestCheck
+def access_clickhouse_with_incorrect_config(self, set_clickhouse_configuration):
+    """Attempt to access ClickHouse with incorrect OAuth configuration."""
+
+    with Given("I set an incorrect OAuth configuration"):
+        set_clickhouse_configuration()
+
+    with When("I get an OAuth token from the provider"):
+        client = self.context.provider_client
+        token = client.OAuthProvider.get_oauth_token()
+
+    with Then("I try to access ClickHouse with the token"):
+        try:
+            response = access_clickhouse(token=token)
+            assert (
+                False
+            ), "Expected failure due to incorrect configuration, but access succeeded."
+        except requests.exceptions.HTTPError as e:
+            assert (
+                e.response.status_code == 401 or e.response.status_code == 403
+            ), error()
+
+
+@TestSketch
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
+        "1.0"
+    ),
+)
+def check_incorrect_configuration(self):
+    """Check ClickHouse behavior with incorrect OAuth configuration."""
+    client = self.context.provider_client
+
+    configurations = either(
+        *[
+            client.OAuthProvider.invalid_processor_type_configuration,
+            client.OAuthProvider.missing_processor_type_configuration,
+            client.OAuthProvider.empty_processor_type_configuration,
+            client.OAuthProvider.whitespace_processor_type_configuration,
+            client.OAuthProvider.case_sensitive_processor_type_configuration,
+            client.OAuthProvider.non_azure_processor_type_configuration,
+            client.OAuthProvider.invalid_processor_name_configuration,
+            client.OAuthProvider.whitespace_processor_name_configuration,
+            client.OAuthProvider.special_chars_processor_name_configuration,
+            client.OAuthProvider.missing_processor_user_directory_configuration,
+            client.OAuthProvider.whitespace_processor_user_directory_configuration,
+            client.OAuthProvider.non_existent_processor_user_directory_configuration,
+            client.OAuthProvider.case_mismatch_processor_user_directory_configuration,
+            client.OAuthProvider.invalid_common_roles_configuration,
+            client.OAuthProvider.whitespace_common_roles_configuration,
+            client.OAuthProvider.special_chars_common_roles_configuration,
+            client.OAuthProvider.invalid_roles_filter_configuration,
+            client.OAuthProvider.empty_roles_filter_configuration,
+            client.OAuthProvider.whitespace_roles_filter_configuration,
+            client.OAuthProvider.malformed_roles_filter_configuration,
+            client.OAuthProvider.no_token_processors_configuration,
+            client.OAuthProvider.duplicate_processor_names_configuration,
+            client.OAuthProvider.invalid_processor_attributes_configuration,
+            client.OAuthProvider.missing_user_directories_configuration,
+            client.OAuthProvider.empty_user_directories_configuration,
+            client.OAuthProvider.malformed_xml_structure_configuration,
+            client.OAuthProvider.null_values_configuration,
+            client.OAuthProvider.extremely_long_values_configuration,
+            client.OAuthProvider.unicode_special_chars_configuration,
+            client.OAuthProvider.sql_injection_attempt_configuration,
+            client.OAuthProvider.path_traversal_attempt_configuration,
+            client.OAuthProvider.completely_invalid_configuration,
+            client.OAuthProvider.partially_invalid_configuration,
+            client.OAuthProvider.mixed_valid_invalid_configuration,
+        ]
+    )
+
+    access_clickhouse_with_incorrect_config(set_clickhouse_configuration=configurations)
+
+
+@TestFeature
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider("1.0"),
+)
+def feature(self):
+    """Feature to test OAuth authentication flow."""
+    pass
