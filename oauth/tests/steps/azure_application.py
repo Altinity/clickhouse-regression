@@ -159,6 +159,38 @@ async def create_user(
 
 
 @TestStep(Given)
+async def create_multiple_users(
+    self,
+    count: int,
+    base_display_name: str = "User",
+    base_mail_nickname: str = "user",
+    base_user_principal_name: str = "user",
+    base_password: str = "TempPassword123!",
+):
+    """Create multiple users in Azure AD."""
+
+    created_users = []
+
+    for i in range(count):
+        display_name = f"{base_display_name}_{i+1}"
+        mail_nickname = f"{base_mail_nickname}_{i+1}"
+        user_principal_name = (
+            f"{base_user_principal_name}_{i+1}@{self.context.tenant_domain}"
+        )
+
+        user = await self.create_user(
+            display_name=display_name,
+            mail_nickname=mail_nickname,
+            user_principal_name=user_principal_name,
+            password=base_password,
+        )
+
+        created_users.append(user)
+
+    return created_users
+
+
+@TestStep(Given)
 async def create_group(
     self,
     display_name: str = None,

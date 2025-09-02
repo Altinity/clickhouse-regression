@@ -106,6 +106,38 @@ def create_user(
 
 
 @TestStep(Given)
+def create_multiple_users(
+    self,
+    count: int,
+    base_display_name: str = "User",
+    base_mail_nickname: str = "user",
+    base_user_principal_name: str = "user",
+    realm_name: str = "grafana",
+    base_password: str = None,
+):
+    """Create multiple users in Keycloak."""
+
+    created_users = []
+
+    for i in range(count):
+        display_name = f"{base_display_name}_{i+1}"
+        mail_nickname = f"{base_mail_nickname}_{i+1}"
+        user_principal_name = f"{base_user_principal_name}_{i+1}@example.com"
+
+        user_id = self.create_user(
+            display_name=display_name,
+            mail_nickname=mail_nickname,
+            user_principal_name=user_principal_name,
+            realm_name=realm_name,
+            password=base_password,
+        )
+
+        created_users.append(user_id)
+
+    return created_users
+
+
+@TestStep(Given)
 def create_group(
     self,
     display_name: str,
