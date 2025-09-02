@@ -178,7 +178,7 @@ async def create_multiple_users(
             f"{base_user_principal_name}_{i+1}@{self.context.tenant_domain}"
         )
 
-        user = await self.create_user(
+        user = await create_user(
             display_name=display_name,
             mail_nickname=mail_nickname,
             user_principal_name=user_principal_name,
@@ -241,6 +241,198 @@ async def assign_user_to_group(
     await client.groups.by_group_id(group_id).members.ref.post(user_reference)
 
     return True
+
+
+@TestStep(Given)
+async def assign_multiple_users_to_group(
+    self,
+    user_ids: list[str],
+    group_id: str,
+):
+    """Assign multiple users to a group in Azure AD."""
+
+    results = []
+
+    for user_id in user_ids:
+        result = await assign_user_to_group(
+            user_id=user_id,
+            group_id=group_id,
+        )
+        results.append(result)
+
+    return results
+
+
+@TestStep(Given)
+async def create_user_with_no_group_access(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    password: str = "TempPassword123!",
+):
+    """Create a user in Azure AD with no access to view groups."""
+
+    if display_name is None:
+        display_name = "user_no_groups_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_no_groups_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_no_groups_{getuid()}@{self.context.tenant_domain}"
+
+    user = await create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        password=password,
+    )
+
+    return user
+
+
+@TestStep(Given)
+async def create_user_with_app_access_but_no_group_permissions(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    password: str = "TempPassword123!",
+):
+    """Create a user in Azure AD with app access but no group viewing permissions."""
+
+    if display_name is None:
+        display_name = "user_app_only_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_app_only_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_app_only_{getuid()}@{self.context.tenant_domain}"
+
+    user = await create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        password=password,
+    )
+
+    return user
+
+
+@TestStep(Given)
+async def create_user_with_group_permissions_and_matching_roles(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    password: str = "TempPassword123!",
+):
+    """Create a user in Azure AD with group viewing permissions and matching ClickHouse roles."""
+
+    if display_name is None:
+        display_name = "user_with_roles_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_with_roles_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_with_roles_{getuid()}@{self.context.tenant_domain}"
+
+    user = await create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        password=password,
+    )
+
+    return user
+
+
+@TestStep(Given)
+async def create_user_with_group_permissions_no_matching_roles(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    password: str = "TempPassword123!",
+):
+    """Create a user in Azure AD with group viewing permissions but no matching ClickHouse roles."""
+
+    if display_name is None:
+        display_name = "user_no_matching_roles_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_no_matching_roles_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = (
+            f"user_no_matching_roles_{getuid()}@{self.context.tenant_domain}"
+        )
+
+    user = await create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        password=password,
+    )
+
+    return user
+
+
+@TestStep(Given)
+async def create_group_with_matching_role_name(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    description: str = None,
+):
+    """Create a group in Azure AD with a name that matches a ClickHouse role."""
+
+    if display_name is None:
+        display_name = "clickhouse-admin"
+
+    if mail_nickname is None:
+        mail_nickname = "clickhouse-admin"
+
+    if description is None:
+        description = "Group with matching ClickHouse role name"
+
+    group = await create_group(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        description=description,
+    )
+
+    return group
+
+
+@TestStep(Given)
+async def create_group_with_non_matching_role_name(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    description: str = None,
+):
+    """Create a group in Azure AD with a name that doesn't match any ClickHouse role."""
+
+    if display_name is None:
+        display_name = "non-matching-group"
+
+    if mail_nickname is None:
+        mail_nickname = "non-matching-group"
+
+    if description is None:
+        description = "Group with non-matching ClickHouse role name"
+
+    group = await create_group(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        description=description,
+    )
+
+    return group
 
 
 @TestStep(Then)
@@ -808,6 +1000,20 @@ class OAuthProvider:
     create_user = create_user
     create_group = create_group
     assign_user_to_group = assign_user_to_group
+    assign_multiple_users_to_group = assign_multiple_users_to_group
+    create_multiple_users = create_multiple_users
+    create_user_with_no_group_access = create_user_with_no_group_access
+    create_user_with_app_access_but_no_group_permissions = (
+        create_user_with_app_access_but_no_group_permissions
+    )
+    create_user_with_group_permissions_and_matching_roles = (
+        create_user_with_group_permissions_and_matching_roles
+    )
+    create_user_with_group_permissions_no_matching_roles = (
+        create_user_with_group_permissions_no_matching_roles
+    )
+    create_group_with_matching_role_name = create_group_with_matching_role_name
+    create_group_with_non_matching_role_name = create_group_with_non_matching_role_name
     setup_azure_application = setup_azure_application
 
     # Negative configuration test steps

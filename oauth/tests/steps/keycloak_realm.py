@@ -6,7 +6,7 @@ from helpers.common import getuid
 
 
 @TestStep(Given)
-def get_oauth_token(self, username="demo", password="demo"):
+def get_oauth_token(self):
     """Get an OAuth token from Keycloak for a user."""
 
     token_url = (
@@ -16,9 +16,9 @@ def get_oauth_token(self, username="demo", password="demo"):
     data = {
         "grant_type": "password",
         "client_id": "grafana-client",
-        "username": username,
-        "password": password,
-        "client_secret": "grafana-secret",
+        "username": self.context.username,
+        "password": self.context.password,
+        "client_secret": self.context.client_secret,
     }
 
     response = requests.post(token_url, data=data)
@@ -124,7 +124,7 @@ def create_multiple_users(
         mail_nickname = f"{base_mail_nickname}_{i+1}"
         user_principal_name = f"{base_user_principal_name}_{i+1}@example.com"
 
-        user_id = self.create_user(
+        user_id = create_user(
             display_name=display_name,
             mail_nickname=mail_nickname,
             user_principal_name=user_principal_name,
@@ -145,11 +145,14 @@ def create_group(
     description: str = None,
     security_enabled: bool = True,
     mail_enabled: bool = False,
+    realm_name: str = None,
 ):
     """Create a group in Keycloak."""
 
-    realm_name = getattr(self.context, "realm_name", "grafana")
-    keycloak_url = getattr(self.context, "keycloak_url", "http://localhost:8080")
+    if realm_name is None:
+        realm_name = self.context.realm_name = "grafana"
+
+    keycloak_url = self.context.keycloak_url
     admin_token = getattr(self.context, "admin_token", None)
 
     if admin_token is None:
@@ -191,11 +194,14 @@ def assign_user_to_group(
     self,
     user_id: str,
     group_id: str,
+    realm_name: str = None,
 ):
     """Assign a user to a group in Keycloak."""
 
-    realm_name = getattr(self.context, "realm_name", "grafana")
-    keycloak_url = getattr(self.context, "keycloak_url", "http://localhost:8080")
+    if realm_name is None:
+        realm_name = self.context.realm_name = "grafana"
+
+    keycloak_url = self.context.keycloak_url
     admin_token = getattr(self.context, "admin_token", None)
 
     if admin_token is None:
@@ -215,6 +221,208 @@ def assign_user_to_group(
     response.raise_for_status()
 
     return True
+
+
+@TestStep(Given)
+def assign_multiple_users_to_group(
+    self,
+    user_ids: list[str],
+    group_id: str,
+):
+    """Assign multiple users to a group in Keycloak."""
+
+    results = []
+
+    for user_id in user_ids:
+        result = assign_user_to_group(
+            user_id=user_id,
+            group_id=group_id,
+        )
+        results.append(result)
+
+    return results
+
+
+@TestStep(Given)
+def create_user_with_no_group_access(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    realm_name: str = "grafana",
+    password: str = None,
+):
+    """Create a user in Keycloak with no access to view groups."""
+
+    if display_name is None:
+        display_name = "user_no_groups_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_no_groups_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_no_groups_{getuid()}@example.com"
+
+    user_id = create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        realm_name=realm_name,
+        password=password,
+    )
+
+    return user_id
+
+
+@TestStep(Given)
+def create_user_with_app_access_but_no_group_permissions(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    realm_name: str = "grafana",
+    password: str = None,
+):
+    """Create a user in Keycloak with app access but no group viewing permissions."""
+
+    if display_name is None:
+        display_name = "user_app_only_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_app_only_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_app_only_{getuid()}@example.com"
+
+    user_id = create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        realm_name=realm_name,
+        password=password,
+    )
+
+    return user_id
+
+
+@TestStep(Given)
+def create_user_with_group_permissions_and_matching_roles(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    realm_name: str = "grafana",
+    password: str = None,
+):
+    """Create a user in Keycloak with group viewing permissions and matching ClickHouse roles."""
+
+    if display_name is None:
+        display_name = "user_with_roles_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_with_roles_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_with_roles_{getuid()}@example.com"
+
+    user_id = create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        realm_name=realm_name,
+        password=password,
+    )
+
+    return user_id
+
+
+@TestStep(Given)
+def create_user_with_group_permissions_no_matching_roles(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    user_principal_name: str = None,
+    realm_name: str = "grafana",
+    password: str = None,
+):
+    """Create a user in Keycloak with group viewing permissions but no matching ClickHouse roles."""
+
+    if display_name is None:
+        display_name = "user_no_matching_roles_" + getuid()
+
+    if mail_nickname is None:
+        mail_nickname = "user_no_matching_roles_" + getuid()
+
+    if user_principal_name is None:
+        user_principal_name = f"user_no_matching_roles_{getuid()}@example.com"
+
+    user_id = create_user(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        user_principal_name=user_principal_name,
+        realm_name=realm_name,
+        password=password,
+    )
+
+    return user_id
+
+
+@TestStep(Given)
+def create_group_with_matching_role_name(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    description: str = None,
+    realm_name: str = "grafana",
+):
+    """Create a group in Keycloak with a name that matches a ClickHouse role."""
+
+    if display_name is None:
+        display_name = "clickhouse-admin"
+
+    if mail_nickname is None:
+        mail_nickname = "clickhouse-admin"
+
+    if description is None:
+        description = "Group with matching ClickHouse role name"
+
+    group_id = create_group(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        description=description,
+        realm_name=realm_name,
+    )
+
+    return group_id
+
+
+@TestStep(Given)
+def create_group_with_non_matching_role_name(
+    self,
+    display_name: str = None,
+    mail_nickname: str = None,
+    description: str = None,
+    realm_name: str = "grafana",
+):
+    """Create a group in Keycloak with a name that doesn't match any ClickHouse role."""
+
+    if display_name is None:
+        display_name = "non-matching-group"
+
+    if mail_nickname is None:
+        mail_nickname = "non-matching-group"
+
+    if description is None:
+        description = "Group with non-matching ClickHouse role name"
+
+    group_id = create_group(
+        display_name=display_name,
+        mail_nickname=mail_nickname,
+        description=description,
+        realm_name=realm_name,
+    )
+
+    return group_id
 
 
 @TestStep(Given)
@@ -920,6 +1128,20 @@ class OAuthProvider:
     create_application_with_secret = import_keycloak_realm
     create_user = create_user
     create_group = create_group
+    assign_multiple_users_to_group = assign_multiple_users_to_group
+    create_multiple_users = create_multiple_users
+    create_user_with_no_group_access = create_user_with_no_group_access
+    create_user_with_app_access_but_no_group_permissions = (
+        create_user_with_app_access_but_no_group_permissions
+    )
+    create_user_with_group_permissions_and_matching_roles = (
+        create_user_with_group_permissions_and_matching_roles
+    )
+    create_user_with_group_permissions_no_matching_roles = (
+        create_user_with_group_permissions_no_matching_roles
+    )
+    create_group_with_matching_role_name = create_group_with_matching_role_name
+    create_group_with_non_matching_role_name = create_group_with_non_matching_role_name
     assign_user_to_group = assign_user_to_group
 
     # Negative configuration test steps
