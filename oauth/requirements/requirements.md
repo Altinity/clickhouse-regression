@@ -38,7 +38,7 @@
                 * 6.2.1.2.6 [RQ.SRS-042.OAuth.Authentication.UserDirectories.MissingConfiguration.UserDirectories.token.roles](#rqsrs-042oauthauthenticationuserdirectoriesmissingconfigurationuserdirectoriestokenroles)
 * 7 [Azure](#azure)
     * 7.1 [Setting up an Application in Azure](#setting-up-an-application-in-azure)
-        * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup ](#rqsrs-042oauthazureapplicationsetup-)
+        * 7.1.1 [RQ.SRS-042.OAuth.Azure.ApplicationSetup](#rqsrs-042oauthazureapplicationsetup)
     * 7.2 [Support for Azure](#support-for-azure)
         * 7.2.1 [RQ.SRS-042.OAuth.Azure.Token.Supported](#rqsrs-042oauthazuretokensupported)
         * 7.2.2 [Token Constraints and Gateway Workaround For Azure](#token-constraints-and-gateway-workaround-for-azure)
@@ -483,7 +483,7 @@ version: 1.0
 
 ### Setting up an Application in Azure
 
-#### RQ.SRS-042.OAuth.Azure.ApplicationSetup 
+#### RQ.SRS-042.OAuth.Azure.ApplicationSetup
 version: 1.0
 
 [ClickHouse] SHALL support integration with applications registered in [Azure] Active Directory. To set up an application in [Azure] for OAuth authentication, the following steps SHALL be performed:
