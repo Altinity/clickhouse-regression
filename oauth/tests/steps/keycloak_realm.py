@@ -1,6 +1,7 @@
 import json
 import requests
 from testflows.core import *
+from oauth.requirements.requirements import *
 from helpers.common import getuid
 
 
@@ -277,6 +278,610 @@ def get_keycloak_group_by_name(
     return None
 
 
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def invalid_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with invalid Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_invalid",
+        processor_type="invalid_type",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
+def missing_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with missing Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_missing_type",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
+def empty_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with empty Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_empty_type",
+        processor_type="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
+def whitespace_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_whitespace_type",
+        processor_type="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def case_sensitive_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with case-sensitive Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_case_sensitive",
+        processor_type="Keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def non_keycloak_processor_type_configuration(self, node=None):
+    """Configure ClickHouse with non-Keycloak processor type."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_wrong_type",
+        processor_type="azure",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def invalid_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with invalid processor name."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def whitespace_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only processor name."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="   ",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def special_chars_processor_name_configuration(self, node=None):
+    """Configure ClickHouse with special characters in processor name."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak@#$%",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    )
+)
+def missing_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with missing processor in user directories."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    )
+)
+def whitespace_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only processor in user directories."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def non_existent_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with non-existent processor in user directories."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="non_existent_processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def case_mismatch_processor_user_directory_configuration(self, node=None):
+    """Configure ClickHouse with case-mismatched processor in user directories."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="Keycloak_Processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
+def invalid_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with invalid common roles."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        common_roles=[""],
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
+def whitespace_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only common roles."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        common_roles=["   "],
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
+def special_chars_common_roles_configuration(self, node=None):
+    """Configure ClickHouse with special characters in common roles."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        common_roles=["role@#$%"],
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
+def invalid_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with invalid roles filter regex."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        roles_filter="[invalid regex",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
+        "1.0"
+    )
+)
+def empty_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with empty roles filter."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        roles_filter="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
+        "1.0"
+    )
+)
+def whitespace_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with whitespace-only roles filter."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        roles_filter="   ",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    )
+)
+def malformed_roles_filter_configuration(self, node=None):
+    """Configure ClickHouse with malformed roles filter."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak",
+        roles_filter="\\bkeycloak-[a-zA-Z0-9]+\\b\\",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserRoles_NoAccessTokenProcessors("1.0"),
+)
+def no_token_processors_configuration(self, node=None):
+    """Configure ClickHouse without any token processors."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="empty_processor",
+        processor_type=None,
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
+        "1.0"
+    )
+)
+def duplicate_processor_names_configuration(self, node=None):
+    """Configure ClickHouse with duplicate processor names."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_duplicate",
+        processor_type="keycloak",
+        node=node,
+    )
+    change_token_processors(
+        processor_name="keycloak_duplicate",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def invalid_processor_attributes_configuration(self, node=None):
+    """Configure ClickHouse with invalid processor attributes."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_invalid_attrs",
+        processor_type="keycloak",
+        jwks_uri="invalid://url",
+        jwks_cache_lifetime=-1,
+        verifier_leeway="invalid",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
+        "1.0"
+    )
+)
+def missing_user_directories_configuration(self, node=None):
+    """Configure ClickHouse with token processors but no user directories."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_no_user_dirs",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
+        "1.0"
+    )
+)
+def empty_user_directories_configuration(self, node=None):
+    """Configure ClickHouse with empty user directories configuration."""
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="",
+        common_roles=[],
+        roles_filter="",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def malformed_xml_structure_configuration(self, node=None):
+    """Configure ClickHouse with malformed XML structure."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="<malformed>",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    )
+)
+def null_values_configuration(self, node=None):
+    """Configure ClickHouse with null values in configuration."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name=None,
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def extremely_long_values_configuration(self, node=None):
+    """Configure ClickHouse with extremely long values."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    long_string = "a" * 10000
+    change_token_processors(
+        processor_name=long_string,
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def unicode_special_chars_configuration(self, node=None):
+    """Configure ClickHouse with Unicode and special characters."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak_unicode_测试_🚀",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def sql_injection_attempt_configuration(self, node=None):
+    """Configure ClickHouse with SQL injection attempt."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak'; DROP TABLE users; --",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    )
+)
+def path_traversal_attempt_configuration(self, node=None):
+    """Configure ClickHouse with path traversal attempt."""
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="../../../etc/passwd",
+        processor_type="keycloak",
+        node=node,
+    )
+
+
+# Combined negative configurations for comprehensive testing
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
+        "1.0"
+    ),
+)
+def completely_invalid_configuration(self, node=None):
+    """Configure ClickHouse with completely invalid Keycloak configuration."""
+    invalid_processor_type_configuration(self, node=node)
+    missing_processor_user_directory_configuration(self, node=node)
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
+def partially_invalid_configuration(self, node=None):
+    """Configure ClickHouse with partially invalid Keycloak configuration."""
+    from oauth.tests.steps.clikhouse import (
+        change_token_processors,
+        change_user_directories_config,
+    )
+
+    change_token_processors(
+        processor_name="keycloak_partial",
+        processor_type="keycloak",
+        node=node,
+    )
+    change_user_directories_config(
+        processor="non_existent_processor",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    ),
+)
+def mixed_valid_invalid_configuration(self, node=None):
+    """Configure ClickHouse with mixed valid and invalid configuration."""
+    from oauth.tests.steps.clikhouse import (
+        change_token_processors,
+        change_user_directories_config,
+    )
+
+    change_token_processors(
+        processor_name="keycloak_mixed",
+        processor_type="keycloak",
+        jwks_uri="invalid://url",
+        node=node,
+    )
+    change_user_directories_config(
+        processor="keycloak_mixed",
+        common_roles=["valid_role", ""],
+        node=node,
+    )
+
+
 class OAuthProvider:
     get_oauth_token = get_oauth_token
     create_application = import_keycloak_realm
@@ -284,3 +889,55 @@ class OAuthProvider:
     create_user = create_user
     create_group = create_group
     assign_user_to_group = assign_user_to_group
+
+    # Negative configuration test steps
+    invalid_processor_type_configuration = invalid_processor_type_configuration
+    missing_processor_type_configuration = missing_processor_type_configuration
+    empty_processor_type_configuration = empty_processor_type_configuration
+    whitespace_processor_type_configuration = whitespace_processor_type_configuration
+    case_sensitive_processor_type_configuration = (
+        case_sensitive_processor_type_configuration
+    )
+    non_keycloak_processor_type_configuration = (
+        non_keycloak_processor_type_configuration
+    )
+    invalid_processor_name_configuration = invalid_processor_name_configuration
+    whitespace_processor_name_configuration = whitespace_processor_name_configuration
+    special_chars_processor_name_configuration = (
+        special_chars_processor_name_configuration
+    )
+    missing_processor_user_directory_configuration = (
+        missing_processor_user_directory_configuration
+    )
+    whitespace_processor_user_directory_configuration = (
+        whitespace_processor_user_directory_configuration
+    )
+    non_existent_processor_user_directory_configuration = (
+        non_existent_processor_user_directory_configuration
+    )
+    case_mismatch_processor_user_directory_configuration = (
+        case_mismatch_processor_user_directory_configuration
+    )
+    invalid_common_roles_configuration = invalid_common_roles_configuration
+    whitespace_common_roles_configuration = whitespace_common_roles_configuration
+    special_chars_common_roles_configuration = special_chars_common_roles_configuration
+    invalid_roles_filter_configuration = invalid_roles_filter_configuration
+    empty_roles_filter_configuration = empty_roles_filter_configuration
+    whitespace_roles_filter_configuration = whitespace_roles_filter_configuration
+    malformed_roles_filter_configuration = malformed_roles_filter_configuration
+    no_token_processors_configuration = no_token_processors_configuration
+    duplicate_processor_names_configuration = duplicate_processor_names_configuration
+    invalid_processor_attributes_configuration = (
+        invalid_processor_attributes_configuration
+    )
+    missing_user_directories_configuration = missing_user_directories_configuration
+    empty_user_directories_configuration = empty_user_directories_configuration
+    malformed_xml_structure_configuration = malformed_xml_structure_configuration
+    null_values_configuration = null_values_configuration
+    extremely_long_values_configuration = extremely_long_values_configuration
+    unicode_special_chars_configuration = unicode_special_chars_configuration
+    sql_injection_attempt_configuration = sql_injection_attempt_configuration
+    path_traversal_attempt_configuration = path_traversal_attempt_configuration
+    completely_invalid_configuration = completely_invalid_configuration
+    partially_invalid_configuration = partially_invalid_configuration
+    mixed_valid_invalid_configuration = mixed_valid_invalid_configuration
