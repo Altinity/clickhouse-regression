@@ -422,7 +422,7 @@ def add_remove_replica_on_third_node(
     )
 
 
-@TestStep
+@TestStep(Given)
 def get_partition_list(self, table_name, node, exitcode=None, message=None):
     "Get list of partitions from system.parts table."
     partition_list_query = f"SELECT partition FROM system.parts WHERE table='{table_name}' FORMAT TabSeparated"
