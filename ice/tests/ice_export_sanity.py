@@ -118,9 +118,6 @@ def test_datatype_export_pipeline(self, datatype, minio_root_user, minio_root_pa
 
     with And("creating Iceberg table from Parquet schema"):
         iceberg_table_name = f"iceberg_{datatype.name.lower().replace('(', '_').replace(')', '_').replace(',', '_')}_{getuid()}"
-        # ice_node.command(
-        #     f'ice create-table default.{iceberg_table_name} -p --schema-from-parquet s3://warehouse/{s3_table_name}/year=*/*.parquet --partition=\'[{{"column":"year","transform":"identity"}}]\' --sort=\'[{{"column":"data_col"}}]\''
-        # )
         ice_create_table_from_parquet(
             iceberg_table_name=iceberg_table_name,
             parquet_path=f"s3://warehouse/{s3_table_name}/year=*/*.parquet",
@@ -131,9 +128,6 @@ def test_datatype_export_pipeline(self, datatype, minio_root_user, minio_root_pa
 
     with And("inserting data into Iceberg table"):
         for partition_id in partition_ids:
-            # ice_node.command(
-            #     f"ice insert default.{iceberg_table_name} -p s3://warehouse/{s3_table_name}/year={partition_id}/*.parquet"
-            # )
             ice_insert_data_from_parquet(
                 iceberg_table_name=iceberg_table_name,
                 parquet_path=f"s3://warehouse/{s3_table_name}/year={partition_id}/*.parquet",
