@@ -1,0 +1,38 @@
+from testflows.core import *
+
+
+@TestStep(Given)
+def ice_create_table_from_parquet(
+    self,
+    iceberg_table_name,
+    parquet_path,
+    partition_column,
+    sort_column,
+    ice_node=None,
+):
+    """Create an iceberg table from parquet schema."""
+    if ice_node is None:
+        ice_node = self.context.ice_node
+
+    if partition_column:
+        partition_columns_str = f'--partition=\'[{{"column":"{partition_column}","transform":"identity"}}]\''
+    if sort_column:
+        sort_columns_str = f'--sort=\'[{{"column":"{sort_column}"}}]\''
+
+    try:
+        ice_node.command(
+            f"ice create-table default.{iceberg_table_name} -p --schema-from-parquet {parquet_path} {partition_columns_str} {sort_columns_str}"
+        )
+        yield iceberg_table_name
+    finally:
+        with Finally("drop the table"):
+            ice_node.command(f"ice delete-table default.{iceberg_table_name}")
+
+
+@TestStep(Given)
+def ice_insert_data_from_parquet(self, iceberg_table_name, parquet_path, ice_node=None):
+    """Insert parquet data into an iceberg table."""
+    if ice_node is None:
+        ice_node = self.context.ice_node
+
+    ice_node.command(f"ice insert default.{iceberg_table_name} -p {parquet_path}")

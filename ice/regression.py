@@ -42,9 +42,7 @@ def regression(
             "clickhouse2",
             "clickhouse3",
         ),
-        "ice": (
-            "ice",
-        )
+        "ice": ("ice",),
     }
 
     self.context.clickhouse_version = clickhouse_version
