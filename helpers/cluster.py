@@ -54,7 +54,7 @@ def download_http_binary(binary_source):
     file_dir = f"{current_dir()}/../binaries/"
     os.makedirs(file_dir, exist_ok=True)
     file_path = file_dir + file_name
-    
+
     for retry in retries(count=10, delay=10):
         with retry:
             if not os.path.exists(file_path):
