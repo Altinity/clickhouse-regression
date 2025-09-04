@@ -193,18 +193,22 @@ class Decimal(DataType):
         )
 
     def max_value(self):
-        return f"to{self.name[:-4]}({self.max}, {self.scale})"
+        base_type = self.name.split("(")[0]
+        return f"to{base_type}({self.max}, {self.scale})"
 
     def min_value(self):
-        return f"to{self.name[:-4]}({self.min}, {self.scale})"
+        base_type = self.name.split("(")[0]
+        return f"to{base_type}({self.min}, {self.scale})"
 
     def rand_value(self, random=None):
         if random is None:
             random = default_random
-        return f"to{self.name[:-4]}({random.uniform(float(self.min), float(self.max))},{self.scale})"
+        base_type = self.name.split("(")[0]
+        return f"to{base_type}({random.uniform(float(self.min), float(self.max))},{self.scale})"
 
     def zero_or_null_value(self):
-        return f"to{self.name[:-4]}(0,{self.scale})"
+        base_type = self.name.split("(")[0]
+        return f"to{base_type}(0,{self.scale})"
 
 
 class Decimal32(Decimal):
