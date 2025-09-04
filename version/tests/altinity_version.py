@@ -154,12 +154,12 @@ def embedded_logos(self):
 
     with When("checking logos that are embedded in the binary"):
         altinity_logos = node.command(
-            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwI' /usr/bin/clickhouse",
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwI' /usr/bin/clickhouse | uniq",
             no_checks=True,
         ).output
 
         clickhouse_logos = node.command(
-            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDkgOCI+PHN0eWx' /usr/bin/clickhouse",
+            "grep --color=never -i -a 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDkgOCI+PHN0eWx' /usr/bin/clickhouse | uniq",
             no_checks=True,
         ).output
 
