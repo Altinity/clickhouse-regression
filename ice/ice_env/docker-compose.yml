@@ -53,25 +53,11 @@ services:
       - source: ice-cli-config
         target: /root/.ice.yaml
 
-  # ice:
-  #   image: altinity/ice:debug-0.6.0
-  #   container_name: ice
-  #   # Run the same proven loop you used manually, as one array (no YAML quoting issues)
-  #   # entrypoint: ["/bin/sh","-c","while :; do sleep 3600; done"]
-  #   depends_on:
-  #     ice-rest-catalog:
-  #       condition: service_started
-  #     minio:
-  #       condition: service_healthy
-  #   configs:
-  #     - source: ice-cli-config
-  #       target: /root/.ice.yaml    
-
   ice-rest-catalog:
     image: altinity/ice-rest-catalog:latest
     restart: unless-stopped
     ports:
-      - '5000:5000' # iceberg/http
+      - '5000:5000'
     configs:
       - source: ice-rest-catalog-yaml
         target: /etc/ice/ice-rest-catalog.yaml
