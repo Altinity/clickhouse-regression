@@ -9,6 +9,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/output_format_json_quote_64bit_integers.xml:/etc/clickhouse-server/users.d/output_format_json_quote_64bit_integers.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/output_format_json_quote_64bit_integers.xml:/etc/clickhouse-server/config.d/output_format_json_quote_64bit_integers.xml"
