@@ -74,6 +74,20 @@ xfails = {
             and check_clickhouse_version("<25.4")(test),
         )
     ],
+    "/iceberg/iceberg engine/rest catalog/feature/alter:/*": [
+        (
+            Fail,
+            "https://github.com/clickhouse/clickhouse/issues/86024",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "/iceberg/iceberg table engine/feature/alter:/*": [
+        (
+            Fail,
+            "https://github.com/clickhouse/clickhouse/issues/86024",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
 }
 
 ffails = {
