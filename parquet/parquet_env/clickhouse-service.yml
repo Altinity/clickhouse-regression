@@ -51,3 +51,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/users.d/users_disabled_caching.xml:/other_user_configs/users_disabled_caching.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/output_format_json_quote_64bit_integers.xml:/etc/clickhouse-server/users.d/output_format_json_quote_64bit_integers.xml"

@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<clickhouse>
+    <profiles>
+        <default>
+            <output_format_json_quote_64bit_integers>1</output_format_json_quote_64bit_integers>
+        </default>
+    </profiles>
+</clickhouse>
