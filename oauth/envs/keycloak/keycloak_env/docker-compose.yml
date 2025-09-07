@@ -33,6 +33,34 @@ services:
       keycloak:
         condition: service_healthy
 
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    mem_limit: 4000M
+    cpus: 2.0
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+    mem_limit: 4000M
+    cpus: 2.0
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
   grafana:
     image: ${GRAFANA_IMAGE:-grafana/grafana:12.0.2}
     environment:

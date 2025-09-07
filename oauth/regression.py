@@ -146,6 +146,7 @@ def regression(
             self.context.username = "demo"
             self.context.password = "demo"
             self.context.client_secret = "grafana-secret"
+            self.context.client_id = "grafana-client"
             self.context.realm_name = "grafana"
 
         cluster = create_cluster(
