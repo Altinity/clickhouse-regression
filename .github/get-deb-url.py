@@ -72,6 +72,7 @@ def get_cached_build_url(workflow_config_file, s3_base_url):
         raise Exception("Only x86_64 and ARM are supported.")
 
     for build_type in ["release", "binary"]:
+        print(f"Checking cache for {build_arch}_{build_type}")
         cache_details = workflow_config["cache_artifacts"].get(
             f"Build ({build_arch}_{build_type})"
         )
