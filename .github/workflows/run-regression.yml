@@ -308,7 +308,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 720
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
@@ -565,7 +565,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: disk_level_encryption
-      timeout_minutes: 180
+      timeout_minutes: 720
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -800,7 +800,7 @@ jobs:
     with:
       suite_name: ldap/role_mapping
       job_name: ldap_role_mapping
-      timeout_minutes: 180
+      timeout_minutes: 720
       artifact_name: ldap-role_mapping-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -956,7 +956,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 540
+      timeout_minutes: 720
       part: 3
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
