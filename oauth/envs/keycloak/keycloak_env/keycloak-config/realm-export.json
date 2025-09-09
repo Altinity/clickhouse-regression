@@ -6,7 +6,7 @@
       "clientId": "grafana-client",
       "name": "Grafana",
       "protocol": "openid-connect",
-      "publicClient": false,
+      "publicClient": true,
       "secret": "grafana-secret",
       "redirectUris": ["http://localhost:3000/login/generic_oauth"],
       "baseUrl": "http://localhost:3000",

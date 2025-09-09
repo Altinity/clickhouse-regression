@@ -64,4 +64,6 @@ if response.status_code == 201:
     print(f"✅ Commit status set: {suite} - {state}")
 else:
     print(f"❌ Failed to set commit status: {response.text}")
+    print(f"Headers sent: {response.request.headers}")
+    print(f"Headers received: {response.headers}")
     exit(1)
