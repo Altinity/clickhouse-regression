@@ -86,6 +86,10 @@ def modify_sql_security(self):
                 == "0"
             ), error()
 
+        with And("I create new definer user without any privileges"):
+            new_definer_name = "new_definer_" + getuid()
+            create_user(user_name=new_definer_name)
+
         with And(
             "I create a materialized view without specifying SQL security options"
         ):
@@ -108,10 +112,6 @@ def modify_sql_security(self):
                 f"SELECT sum(x) FROM {mv_name} FORMAT TabSeparated"
             ).output
             assert output == "45", error()
-
-        with And("I create new definer user without any privileges"):
-            new_definer_name = "new_definer_" + getuid()
-            create_user(user_name=new_definer_name)
 
         with And("I modify SQL security to DEFINER for mv"):
             node.query(f"ALTER TABLE {mv_name} MODIFY DEFINER {new_definer_name}")
