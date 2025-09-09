@@ -8,28 +8,41 @@ from helpers.common import getuid
 @TestStep(Given)
 def get_oauth_token(self):
     """Get an OAuth token from Keycloak for a user."""
+    url = f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
 
-    token_url = (
-        f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
-    )
+    payload = f"client_id={self.context.client_id}&grant_type=password&username={self.context.username}&password={self.context.password}&client_secret={self.context.client_secret}"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
-    data = {
-        "grant_type": "password",
-        "client_id": "grafana-client",
-        "username": self.context.username,
-        "password": self.context.password,
-        "client_secret": self.context.client_secret,
-    }
+    response = requests.request("POST", url, headers=headers, data=payload).json()
+    note(response["access_token"])
+    yield response["access_token"]
 
-    response = requests.post(token_url, data=data)
-    response.raise_for_status()
 
-    token_data = response.json()
-    access_token = token_data["access_token"]
-    expiration = token_data["expires_in"]
-    refresh_expiration = token_data["refresh_expires_in"]
-
-    return access_token
+# @TestStep(Given)
+# def get_oauth_token(self):
+#     """Get an OAuth token from Keycloak for a user."""
+#
+#     token_url = (
+#         f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
+#     )
+#
+#     data = {
+#         "grant_type": "password",
+#         "client_id": "grafana-client",
+#         "username": self.context.username,
+#         "password": self.context.password,
+#         "client_secret": self.context.client_secret,
+#     }
+#
+#     response = requests.post(token_url, data=data)
+#     response.raise_for_status()
+#
+#     token_data = response.json()
+#     access_token = token_data["access_token"]
+#     expiration = token_data["expires_in"]
+#     refresh_expiration = token_data["refresh_expires_in"]
+#
+#     return access_token
 
 
 @TestStep(Given)

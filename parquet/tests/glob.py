@@ -12,9 +12,19 @@ glob3 = os.path.join("glob3")
 
 
 @TestOutline
-def select_with_glob(self, query, snapshot_name, columns=None, order_by=None):
+def select_with_glob(
+    self,
+    query,
+    snapshot_name,
+    columns=None,
+    order_by=None,
+    suspicious_low_cardinality=False,
+):
     node = self.context.node
     table_name = "table_" + getuid()
+
+    if suspicious_low_cardinality:
+        suspicious_low_cardinality = [("allow_suspicious_low_cardinality_types", 1)]
 
     with Check("Import"):
         with When(
@@ -52,7 +62,8 @@ def select_with_glob(self, query, snapshot_name, columns=None, order_by=None):
                 ORDER BY tuple() AS
                 SELECT *
                 FROM {query}
-                """
+                """,
+                settings=suspicious_low_cardinality,
             )
 
             if check_clickhouse_version(">23.9")(self):
@@ -165,7 +176,17 @@ def million_extensions(self):
 )
 def fastparquet_globs(self):
     """Importing multiple Parquet files using the glob patterns from a single directory."""
-    snapshot_name = "above_25_8" if check_clickhouse_version(">=25.8")(self) or check_clickhouse_version(">=25.6")(self) and check_if_antalya_build(self) else ""
+    snapshot_name = (
+        "above_25_8"
+        if check_clickhouse_version(">=25.8")(self)
+        or check_clickhouse_version(">=25.6")(self)
+        and check_if_antalya_build(self)
+        else ""
+    )
+
+    suspicious_low_cardinality = (
+        True if check_clickhouse_version(">=25.8")(self) else False
+    )
     columns = "num"
     order_by = "ALL" if check_clickhouse_version(">23.9")(self) else "tuple(*)"
 
@@ -175,6 +196,7 @@ def fastparquet_globs(self):
             query=example[0],
             snapshot_name=f"{example[1]}{snapshot_name}",
             order_by=order_by,
+            suspicious_low_cardinality=suspicious_low_cardinality,
         )
 
 

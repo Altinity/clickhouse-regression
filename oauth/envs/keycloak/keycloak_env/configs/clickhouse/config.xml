@@ -4,15 +4,19 @@
 -->
 <clickhouse>
     <token_processors>
-        <azure_processor>
-          <type>azure</type>
-        </azure_processor>
+        <keycloak>
+            <type>OpenID</type>
+            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
+            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
+            <token_cache_lifetime>60</token_cache_lifetime>
+        </keycloak>
     </token_processors>
     <user_directories>
         <token>
-            <processor>azure_processor</processor>
+            <processor>keycloak</processor>
             <common_roles>
-                <token_test_role_1 />
+                <general-role />
             </common_roles>
         </token>
     </user_directories>
