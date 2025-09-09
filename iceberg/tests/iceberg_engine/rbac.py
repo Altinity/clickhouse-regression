@@ -99,47 +99,83 @@ def drop_table_privilege(self, minio_root_user, minio_root_password):
         user_name = f"test_user_{getuid()}"
         create_user(name=user_name)
 
-    with Then("attempt to drop table"):
-        exitcode, message = 241, f"DB::Exception: {user_name}: Not enough privileges."
-        node.query(
-            f"DROP TABLE {clickhouse_iceberg_table_name}",
-            settings=[("user", user_name)],
-            exitcode=exitcode,
-            message=message,
-        )
+    if check_clickhouse_version("<25.8")(self):
+        with Then("attempt to drop table"):
+            exitcode, message = (
+                241,
+                f"DB::Exception: {user_name}: Not enough privileges.",
+            )
+            node.query(
+                f"DROP TABLE {clickhouse_iceberg_table_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with And("grant DROP TABLE privilege to the user"):
-        node.query(f"GRANT DROP ON {clickhouse_iceberg_table_name} TO {user_name}")
+        with And("grant DROP TABLE privilege to the user"):
+            node.query(f"GRANT DROP ON {clickhouse_iceberg_table_name} TO {user_name}")
 
-    with And("check that it is not possible to drop iceberg table"):
-        database_engine_name = (
-            "DatabaseIceberg"
-            if check_clickhouse_version("<25.3")(self)
-            else "DatabaseDataLakeCatalog"
-        )
-        exitcode = 48
-        message = (
-            f"DB::Exception: There is no DROP TABLE query for {database_engine_name}."
-        )
-        node.query(
-            f"DROP TABLE {clickhouse_iceberg_table_name}",
-            settings=[("user", user_name)],
-            exitcode=exitcode,
-            message=message,
-        )
+        with And("check that it is not possible to drop iceberg table"):
+            database_engine_name = (
+                "DatabaseIceberg"
+                if check_clickhouse_version("<25.3")(self)
+                else "DatabaseDataLakeCatalog"
+            )
+            exitcode = 48
+            message = f"DB::Exception: There is no DROP TABLE query for {database_engine_name}."
+            node.query(
+                f"DROP TABLE {clickhouse_iceberg_table_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
 
-    with And("check that table is still there"):
-        res = node.query(f"SHOW TABLES FROM {database_name}")
-        assert f"{namespace}.{table_name}" in res.output, error()
-        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-            database_name=database_name,
-            namespace=namespace,
-            table_name=table_name,
-        )
-        assert "true	1000	456.78	Alice	2024-01-01" in result.output, error()
-        assert "true	3000	6.7	Charlie	2022-01-01" in result.output, error()
-        assert "false	2000	456.78	Bob	2023-05-15" in result.output, error()
-        assert "false	4000	8.9	1	2021-01-01" in result.output, error()
+        with And("check that table is still there"):
+            res = node.query(f"SHOW TABLES FROM {database_name}")
+            assert f"{namespace}.{table_name}" in res.output, error()
+            result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+            )
+            assert "true	1000	456.78	Alice	2024-01-01" in result.output, error()
+            assert "true	3000	6.7	Charlie	2022-01-01" in result.output, error()
+            assert "false	2000	456.78	Bob	2023-05-15" in result.output, error()
+            assert "false	4000	8.9	1	2021-01-01" in result.output, error()
+    else:
+        with Then("attempt to drop table"):
+            exitcode, message = (
+                241,
+                f"DB::Exception: {user_name}: Not enough privileges.",
+            )
+            node.query(
+                f"DROP TABLE {clickhouse_iceberg_table_name}",
+                settings=[("user", user_name)],
+                exitcode=exitcode,
+                message=message,
+            )
+
+        with And("grant DROP TABLE privilege to the user"):
+            node.query(f"GRANT DROP ON {clickhouse_iceberg_table_name} TO {user_name}")
+
+        with And("check that it is not possible to drop iceberg table"):
+            node.query(
+                f"DROP TABLE {clickhouse_iceberg_table_name}",
+                settings=[("user", user_name)],
+            )
+
+        with And("check that table is dropped"):
+            res = node.query(f"SHOW TABLES FROM {database_name}")
+            assert f"{namespace}.{table_name}" not in res.output, error()
+
+        with And("check that select fails"):
+            result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+                exitcode=60,
+                message=f"DB::Exception: Unknown table expression identifier '{database_name}.{namespace}.{table_name}'",
+            )
 
 
 @TestScenario
