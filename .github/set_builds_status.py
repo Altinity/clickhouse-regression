@@ -4,6 +4,8 @@ Set commit status on GitHub based on the outcome of a regression test.
 Used by the builds pipeline.
 """
 import os
+import time
+import random
 import subprocess
 import requests
 
@@ -44,26 +46,65 @@ if state == "error":
 else:
     status_message = make_status_message()
 
-# GitHub API request to set commit status
-response = requests.post(
-    f"https://api.github.com/repos/{repo_name}/statuses/{sha}",
-    headers={
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
-    },
-    json={
-        "state": state,
-        "context": suite,
-        "description": status_message,
-        "target_url": target_url,
-    },
-)
 
-# Print result
-if response.status_code == 201:
+def send_request():
+    # GitHub API request to set commit status
+    response = requests.post(
+        f"https://api.github.com/repos/{repo_name}/statuses/{sha}",
+        headers={
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github.v3+json",
+        },
+        json={
+            "state": state,
+            "context": suite,
+            "description": status_message,
+            "target_url": target_url,
+        },
+    )
+    return response
+
+
+def print_success():
     print(f"✅ Commit status set: {suite} - {state}")
-else:
+
+
+def print_failure(response):
     print(f"❌ Failed to set commit status: {response.text}")
     print(f"Headers sent: {response.request.headers}")
     print(f"Headers received: {response.headers}")
+
+
+response = send_request()
+
+# Print result
+if response.status_code == 201:
+    print_success()
+    exit(0)
+else:
+    print_failure(response)
+
+    rate_limit_reset_time = response.headers.get("X-RateLimit-Reset")
+    if not rate_limit_reset_time:
+        print("No rate limit reset time found, exiting")
+        exit(1)
+    if int(rate_limit_reset_time) > time.time() + 60 * 15:
+        print("Rate limit reset time is more than 15 minutes in the future, exiting")
+        exit(1)
+
+
+rate_limit_reset_time = int(rate_limit_reset_time)
+sleep_time = rate_limit_reset_time - time.time() + random.randint(10, 60)
+print(
+    f"Rate limit resets at {time.ctime(rate_limit_reset_time)}, sleeping for {sleep_time/60:.2f}m"
+)
+time.sleep(sleep_time)
+
+response = send_request()
+
+if response.status_code == 201:
+    print_success()
+    exit(0)
+else:
+    print_failure(response)
     exit(1)
