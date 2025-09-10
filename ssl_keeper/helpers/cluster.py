@@ -344,9 +344,9 @@ class ClickHouseNode(Node):
             with And("forcing to sync everything to disk"):
                 self.command("sync", timeout=300, exitcode=0)
 
-        with By(f"sending kill -TERM to ClickHouse server process on {self.name}"):
+        with By(f"sending kill -SEGV to ClickHouse server process on {self.name}"):
             pid = self.clickhouse_pid()
-            self.command(f"kill -TERM {pid}", exitcode=0, steps=False)
+            self.command(f"kill -SEGV {pid}", exitcode=0, steps=False)
 
         with And("checking pid does not exist"):
             for i, attempt in enumerate(retries(timeout=100, delay=3)):

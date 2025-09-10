@@ -687,7 +687,7 @@ class ClickHouseNode(Node):
             return r.output.strip()
         return None
 
-    def stop_clickhouse(self, timeout=300, safe=True, signal="TERM"):
+    def stop_clickhouse(self, timeout=300, safe=True, signal="SEGV"):
         """Stop ClickHouse server."""
         with By("capturing pid"):
             pid = self.clickhouse_pid()
