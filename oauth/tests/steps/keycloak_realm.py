@@ -3,6 +3,7 @@ import requests
 from testflows.core import *
 from oauth.requirements.requirements import *
 from helpers.common import getuid
+from oauth.tests.steps.clikhouse import change_token_processors
 
 
 @TestStep(Given)
@@ -539,7 +540,6 @@ def get_keycloak_group_by_name(
 )
 def invalid_processor_type_configuration(self, node=None):
     """Configure ClickHouse with invalid Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_invalid",
@@ -556,7 +556,6 @@ def invalid_processor_type_configuration(self, node=None):
 )
 def missing_processor_type_configuration(self, node=None):
     """Configure ClickHouse with missing Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_missing_type",
@@ -572,7 +571,6 @@ def missing_processor_type_configuration(self, node=None):
 )
 def empty_processor_type_configuration(self, node=None):
     """Configure ClickHouse with empty Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_empty_type",
@@ -589,7 +587,6 @@ def empty_processor_type_configuration(self, node=None):
 )
 def whitespace_processor_type_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_whitespace_type",
@@ -606,7 +603,6 @@ def whitespace_processor_type_configuration(self, node=None):
 )
 def case_sensitive_processor_type_configuration(self, node=None):
     """Configure ClickHouse with case-sensitive Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_case_sensitive",
@@ -623,7 +619,6 @@ def case_sensitive_processor_type_configuration(self, node=None):
 )
 def non_keycloak_processor_type_configuration(self, node=None):
     """Configure ClickHouse with non-Keycloak processor type."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_wrong_type",
@@ -640,7 +635,6 @@ def non_keycloak_processor_type_configuration(self, node=None):
 )
 def invalid_processor_name_configuration(self, node=None):
     """Configure ClickHouse with invalid processor name."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="",
@@ -657,7 +651,6 @@ def invalid_processor_name_configuration(self, node=None):
 )
 def whitespace_processor_name_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only processor name."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="   ",
@@ -674,7 +667,6 @@ def whitespace_processor_name_configuration(self, node=None):
 )
 def special_chars_processor_name_configuration(self, node=None):
     """Configure ClickHouse with special characters in processor name."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak@#$%",
@@ -875,7 +867,6 @@ def malformed_roles_filter_configuration(self, node=None):
 )
 def no_token_processors_configuration(self, node=None):
     """Configure ClickHouse without any token processors."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="empty_processor",
@@ -892,7 +883,6 @@ def no_token_processors_configuration(self, node=None):
 )
 def duplicate_processor_names_configuration(self, node=None):
     """Configure ClickHouse with duplicate processor names."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_duplicate",
@@ -914,7 +904,6 @@ def duplicate_processor_names_configuration(self, node=None):
 )
 def invalid_processor_attributes_configuration(self, node=None):
     """Configure ClickHouse with invalid processor attributes."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_invalid_attrs",
@@ -930,11 +919,11 @@ def invalid_processor_attributes_configuration(self, node=None):
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
         "1.0"
-    )
+    ),
+    RQ_SRS_042_OAuth_StaticKey_UserDirectory("1.0"),
 )
 def missing_user_directories_configuration(self, node=None):
     """Configure ClickHouse with token processors but no user directories."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_no_user_dirs",
@@ -969,7 +958,6 @@ def empty_user_directories_configuration(self, node=None):
 )
 def malformed_xml_structure_configuration(self, node=None):
     """Configure ClickHouse with malformed XML structure."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="<malformed>",
@@ -986,7 +974,6 @@ def malformed_xml_structure_configuration(self, node=None):
 )
 def null_values_configuration(self, node=None):
     """Configure ClickHouse with null values in configuration."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name=None,
@@ -1003,7 +990,6 @@ def null_values_configuration(self, node=None):
 )
 def extremely_long_values_configuration(self, node=None):
     """Configure ClickHouse with extremely long values."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     long_string = "a" * 10000
     change_token_processors(
@@ -1021,7 +1007,6 @@ def extremely_long_values_configuration(self, node=None):
 )
 def unicode_special_chars_configuration(self, node=None):
     """Configure ClickHouse with Unicode and special characters."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak_unicode_测试_🚀",
@@ -1038,7 +1023,6 @@ def unicode_special_chars_configuration(self, node=None):
 )
 def sql_injection_attempt_configuration(self, node=None):
     """Configure ClickHouse with SQL injection attempt."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak'; DROP TABLE users; --",
@@ -1055,7 +1039,6 @@ def sql_injection_attempt_configuration(self, node=None):
 )
 def path_traversal_attempt_configuration(self, node=None):
     """Configure ClickHouse with path traversal attempt."""
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="../../../etc/passwd",

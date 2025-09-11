@@ -24,6 +24,7 @@ def access_clickhouse(self, token, ip="clickhouse1", https=False):
 
 @TestStep(Given)
 def change_token_processors(
+    self,
     processor_name,
     algo=None,
     static_key=None,
