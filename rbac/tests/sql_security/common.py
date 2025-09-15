@@ -246,7 +246,10 @@ def create_materialized_view(
 
     finally:
         with Finally("I drop the materialized view if exists"):
-            node.query(f"DROP TABLE IF EXISTS {view_name}")
+            if cluster is not None:
+                node.query(f"DROP TABLE IF EXISTS {view_name} ON CLUSTER {cluster}")
+            else:
+                node.query(f"DROP TABLE IF EXISTS {view_name}")
 
 
 @TestStep(Given)

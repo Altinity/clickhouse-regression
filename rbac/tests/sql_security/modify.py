@@ -307,6 +307,12 @@ def modify_sql_security_on_cluster(self):
                     == "0"
                 ), error()
 
+        with And("I create new definer user on cluster without any privileges"):
+            new_definer_name = "new_definer_" + getuid()
+            create_user_on_cluster(
+                user_name=new_definer_name, cluster="replicated_cluster"
+            )
+
         with And(
             "I create materialized view on cluster without specifying SQL security options"
         ):
@@ -332,12 +338,6 @@ def modify_sql_security_on_cluster(self):
                     f"SELECT sum(x) FROM {mv_name} FORMAT TabSeparated",
                 ).output
                 assert output == "45", error()
-
-        with And("I create new definer user on cluster without any privileges"):
-            new_definer_name = "new_definer_" + getuid()
-            create_user_on_cluster(
-                user_name=new_definer_name, cluster="replicated_cluster"
-            )
 
         with And("I modify SQL security to DEFINER for mv on first node"):
             node_1.query(f"ALTER TABLE {mv_name} MODIFY DEFINER {new_definer_name}")
