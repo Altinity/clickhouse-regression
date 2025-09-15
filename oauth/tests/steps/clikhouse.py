@@ -2,6 +2,7 @@ import requests
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
+from oauth.requirements.requirements import *
 
 
 @TestStep(Then)
@@ -23,13 +24,23 @@ def access_clickhouse(self, token, ip="clickhouse1", https=False):
 
 
 @TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
+        "1.0"
+    )
+)
 def change_token_processors(
+    self,
     processor_name,
     algo=None,
     static_key=None,
     static_jwks=None,
     jwks_uri=None,
     jwks_cache_lifetime=None,
+    token_cache_lifetime=None,
+    username_claim=None,
+    groups_claim=None,
+    unfiltered=None,
     claims=None,
     verifier_leeway=None,
     configuration_endpoint=None,
@@ -42,7 +53,7 @@ def change_token_processors(
     """Change ClickHouse token processor configuration."""
 
     entries = {"token_processor": {}}
-    entries["jwt_validators"][processor_name] = {}
+    entries["token_processor"][processor_name] = {}
 
     if processor_type is not None:
         entries["token_processor"][processor_name]["type"] = processor_type
@@ -118,7 +129,7 @@ def change_user_directories_config(
         entries["user_directories"]["token"]["roles_filter"] = roles_filter
 
     change_clickhouse_config(
-        entires=entries,
+        entries=entries,
         config_d_dir=config_d_dir,
         preprocessed_name="config.xml",
         restart=True,
