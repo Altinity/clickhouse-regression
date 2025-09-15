@@ -12,7 +12,7 @@ def access_clickhouse_with_modified_token(self, token_modification_step):
         original_token = client.OAuthProvider.get_oauth_token()
 
     with When("I modify the token using the specified step"):
-        modified_token = token_modification_step(original_token)
+        modified_token = token_modification_step(token=original_token)
 
     with Then("I try to access ClickHouse with the modified token"):
         pass
@@ -32,26 +32,11 @@ def test_jwt_header_modifications(self):
     client = self.context.provider_client
 
     header_modifications = [
-        (
-            "modify_jwt_header_alg_to_none",
-            client.OAuthProvider.modify_jwt_header_alg_to_none,
-        ),
-        (
-            "modify_jwt_header_alg_to_hs256",
-            client.OAuthProvider.modify_jwt_header_alg_to_hs256,
-        ),
-        (
-            "modify_jwt_header_alg_to_invalid",
-            client.OAuthProvider.modify_jwt_header_alg_to_invalid,
-        ),
-        (
-            "modify_jwt_header_typ_to_invalid",
-            client.OAuthProvider.modify_jwt_header_typ_to_invalid,
-        ),
-        (
-            "modify_jwt_header_kid_to_invalid",
-            client.OAuthProvider.modify_jwt_header_kid_to_invalid,
-        ),
+        client.OAuthProvider.modify_jwt_header_alg_to_none,
+        client.OAuthProvider.modify_jwt_header_alg_to_hs256,
+        client.OAuthProvider.modify_jwt_header_alg_to_invalid,
+        client.OAuthProvider.modify_jwt_header_typ_to_invalid,
+        client.OAuthProvider.modify_jwt_header_kid_to_invalid,
     ]
 
     for modification_step in header_modifications:
@@ -69,18 +54,9 @@ def test_jwt_payload_exp_modifications(self):
     client = self.context.provider_client
 
     exp_modifications = [
-        (
-            "modify_jwt_payload_exp_to_expired",
-            client.OAuthProvider.modify_jwt_payload_exp_to_expired,
-        ),
-        (
-            "modify_jwt_payload_exp_to_far_future",
-            client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
-        ),
-        (
-            "modify_jwt_payload_iat_to_future",
-            client.OAuthProvider.modify_jwt_payload_iat_to_future,
-        ),
+        client.OAuthProvider.modify_jwt_payload_exp_to_expired,
+        client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
+        client.OAuthProvider.modify_jwt_payload_iat_to_future,
     ]
 
     for modification_step in exp_modifications:
@@ -98,30 +74,12 @@ def test_jwt_payload_identity_modifications(self):
     client = self.context.provider_client
 
     identity_modifications = [
-        (
-            "modify_jwt_payload_jti_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_iss_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_sub_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_typ_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_azp_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_sid_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
-        ),
+        client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
     ]
 
     for modification_step in identity_modifications:
@@ -139,26 +97,11 @@ def test_jwt_payload_authorization_modifications(self):
     client = self.context.provider_client
 
     auth_modifications = [
-        (
-            "modify_jwt_payload_acr_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_allowed_origins_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_scope_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_groups_to_admin",
-            client.OAuthProvider.modify_jwt_payload_groups_to_admin,
-        ),
-        (
-            "modify_jwt_payload_groups_to_empty",
-            client.OAuthProvider.modify_jwt_payload_groups_to_empty,
-        ),
+        client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_groups_to_admin,
+        client.OAuthProvider.modify_jwt_payload_groups_to_empty,
     ]
 
     for modification_step in auth_modifications:
@@ -176,30 +119,12 @@ def test_jwt_payload_user_info_modifications(self):
     client = self.context.provider_client
 
     user_info_modifications = [
-        (
-            "modify_jwt_payload_email_verified_to_false",
-            client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
-        ),
-        (
-            "modify_jwt_payload_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_preferred_username_to_admin",
-            client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
-        ),
-        (
-            "modify_jwt_payload_given_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_family_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_email_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_email_to_invalid,
-        ),
+        client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
+        client.OAuthProvider.modify_jwt_payload_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
+        client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_email_to_invalid,
     ]
 
     for modification_step in user_info_modifications:
@@ -217,24 +142,12 @@ def test_jwt_signature_modifications(self):
     client = self.context.provider_client
 
     signature_modifications = [
-        (
-            "modify_jwt_signature_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_to_invalid,
-        ),
-        ("invalidate_jwt_signature", client.OAuthProvider.invalidate_jwt_signature),
-        ("remove_jwt_signature", client.OAuthProvider.remove_jwt_signature),
-        (
-            "modify_jwt_signature_e_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_e_to_invalid,
-        ),
-        (
-            "modify_jwt_signature_kty_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
-        ),
-        (
-            "modify_jwt_signature_n_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_n_to_invalid,
-        ),
+        client.OAuthProvider.modify_jwt_signature_to_invalid,
+        client.OAuthProvider.invalidate_jwt_signature,
+        client.OAuthProvider.remove_jwt_signature,
+        client.OAuthProvider.modify_jwt_signature_e_to_invalid,
+        client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
+        client.OAuthProvider.modify_jwt_signature_n_to_invalid,
     ]
 
     for modification_step in signature_modifications:
@@ -252,124 +165,37 @@ def test_comprehensive_jwt_modifications(self):
     client = self.context.provider_client
 
     all_modifications = [
-        (
-            "modify_jwt_header_alg_to_none",
-            client.OAuthProvider.modify_jwt_header_alg_to_none,
-        ),
-        (
-            "modify_jwt_header_alg_to_hs256",
-            client.OAuthProvider.modify_jwt_header_alg_to_hs256,
-        ),
-        (
-            "modify_jwt_header_alg_to_invalid",
-            client.OAuthProvider.modify_jwt_header_alg_to_invalid,
-        ),
-        (
-            "modify_jwt_header_typ_to_invalid",
-            client.OAuthProvider.modify_jwt_header_typ_to_invalid,
-        ),
-        (
-            "modify_jwt_header_kid_to_invalid",
-            client.OAuthProvider.modify_jwt_header_kid_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_exp_to_expired",
-            client.OAuthProvider.modify_jwt_payload_exp_to_expired,
-        ),
-        (
-            "modify_jwt_payload_exp_to_far_future",
-            client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
-        ),
-        (
-            "modify_jwt_payload_iat_to_future",
-            client.OAuthProvider.modify_jwt_payload_iat_to_future,
-        ),
-        (
-            "modify_jwt_payload_jti_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_iss_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_sub_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_typ_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_azp_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_sid_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_acr_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_allowed_origins_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_scope_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_groups_to_admin",
-            client.OAuthProvider.modify_jwt_payload_groups_to_admin,
-        ),
-        (
-            "modify_jwt_payload_groups_to_empty",
-            client.OAuthProvider.modify_jwt_payload_groups_to_empty,
-        ),
-        (
-            "modify_jwt_payload_email_verified_to_false",
-            client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
-        ),
-        (
-            "modify_jwt_payload_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_preferred_username_to_admin",
-            client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
-        ),
-        (
-            "modify_jwt_payload_given_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_family_name_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
-        ),
-        (
-            "modify_jwt_payload_email_to_invalid",
-            client.OAuthProvider.modify_jwt_payload_email_to_invalid,
-        ),
-        (
-            "modify_jwt_signature_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_to_invalid,
-        ),
-        ("invalidate_jwt_signature", client.OAuthProvider.invalidate_jwt_signature),
-        ("remove_jwt_signature", client.OAuthProvider.remove_jwt_signature),
-        (
-            "modify_jwt_signature_e_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_e_to_invalid,
-        ),
-        (
-            "modify_jwt_signature_kty_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
-        ),
-        (
-            "modify_jwt_signature_n_to_invalid",
-            client.OAuthProvider.modify_jwt_signature_n_to_invalid,
-        ),
+        client.OAuthProvider.modify_jwt_header_alg_to_none,
+        client.OAuthProvider.modify_jwt_header_alg_to_hs256,
+        client.OAuthProvider.modify_jwt_header_alg_to_invalid,
+        client.OAuthProvider.modify_jwt_header_typ_to_invalid,
+        client.OAuthProvider.modify_jwt_header_kid_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_exp_to_expired,
+        client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
+        client.OAuthProvider.modify_jwt_payload_iat_to_future,
+        client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_groups_to_admin,
+        client.OAuthProvider.modify_jwt_payload_groups_to_empty,
+        client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
+        client.OAuthProvider.modify_jwt_payload_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
+        client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
+        client.OAuthProvider.modify_jwt_payload_email_to_invalid,
+        client.OAuthProvider.modify_jwt_signature_to_invalid,
+        client.OAuthProvider.invalidate_jwt_signature,
+        client.OAuthProvider.remove_jwt_signature,
+        client.OAuthProvider.modify_jwt_signature_e_to_invalid,
+        client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
+        client.OAuthProvider.modify_jwt_signature_n_to_invalid,
     ]
 
     for modification_step in all_modifications:
