@@ -1,4 +1,5 @@
 import json
+import base64
 import requests
 from testflows.core import *
 from oauth.requirements.requirements import *
@@ -67,10 +68,8 @@ def get_admin_token(self):
 
     token_data = response.json()
     access_token = token_data["access_token"]
-    expiration = token_data["expires_in"]
-    refresh_expiration = token_data["refresh_expires_in"]
 
-    return access_token, expiration, refresh_expiration
+    return access_token
 
 
 @TestStep(Given)
@@ -1393,6 +1392,312 @@ def authentication_caching(self, node=None):
     )
 
 
+def _decode_jwt_token(token: str):
+    """Helper function to decode a JWT token into its components."""
+    try:
+        parts = token.split(".")
+        if len(parts) != 3:
+            raise ValueError("Invalid JWT token format")
+
+        header_data = json.loads(base64.urlsafe_b64decode(parts[0] + "=="))
+        payload_data = json.loads(base64.urlsafe_b64decode(parts[1] + "=="))
+        signature = parts[2]
+
+        return header_data, payload_data, signature
+    except Exception as e:
+        raise ValueError(f"Failed to decode JWT token: {e}")
+
+
+def _encode_jwt_token(header: dict, payload: dict, signature: str):
+    """Helper function to encode JWT components back into a token."""
+    try:
+        header_b64 = (
+            base64.urlsafe_b64encode(json.dumps(header, separators=(",", ":")).encode())
+            .decode()
+            .rstrip("=")
+        )
+        payload_b64 = (
+            base64.urlsafe_b64encode(
+                json.dumps(payload, separators=(",", ":")).encode()
+            )
+            .decode()
+            .rstrip("=")
+        )
+        return f"{header_b64}.{payload_b64}.{signature}"
+    except Exception as e:
+        raise ValueError(f"Failed to encode JWT token: {e}")
+
+
+@TestStep(Given)
+def modify_jwt_token(
+    self,
+    token: str,
+    header_changes: dict = None,
+    payload_changes: dict = None,
+    signature_change: str = None,
+):
+    """Modify a JWT token by changing header, payload, or signature components."""
+    header, payload, signature = _decode_jwt_token(token)
+
+    if header_changes:
+        header.update(header_changes)
+        note(f"Modified JWT header: {header_changes}")
+
+    if payload_changes:
+        payload.update(payload_changes)
+        note(f"Modified JWT payload: {payload_changes}")
+
+    if signature_change:
+        signature = signature_change
+        note(f"Modified JWT signature")
+
+    modified_token = _encode_jwt_token(header, payload, signature)
+    note(f"Modified JWT token: {modified_token}")
+    return modified_token
+
+
+# JWT Header Field Manipulation Steps
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"))
+def modify_jwt_header_alg_to_none(self, token: str):
+    """Modify the 'alg' field to 'none'."""
+    return modify_jwt_token(token=token, header_changes={"alg": "none"})
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"))
+def modify_jwt_header_alg_to_hs256(self, token: str):
+    """Modify the 'alg' field to 'HS256'."""
+    return modify_jwt_token(token=token, header_changes={"alg": "HS256"})
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"))
+def modify_jwt_header_alg_to_invalid(self, token: str):
+    """Modify the 'alg' field to an invalid algorithm."""
+    return modify_jwt_token(token=token, header_changes={"alg": "INVALID_ALG"})
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Typ("1.0"))
+def modify_jwt_header_typ_to_invalid(self, token: str):
+    """Modify the 'typ' field to an invalid type."""
+    return modify_jwt_token(token=token, header_changes={"typ": "INVALID"})
+
+
+@TestStep(Given)
+def modify_jwt_header_kid_to_invalid(self, token: str):
+    """Modify the 'kid' field to an invalid key ID."""
+    return modify_jwt_token(token=token, header_changes={"kid": "invalid-key-id"})
+
+
+# JWT Payload Field Manipulation Steps
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Exp("1.0"))
+def modify_jwt_payload_exp_to_expired(self, token: str):
+    """Modify the 'exp' field to an expired timestamp."""
+    return modify_jwt_token(token=token, payload_changes={"exp": 1000000000})
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Exp("1.0"))
+def modify_jwt_payload_exp_to_far_future(self, token: str):
+    """Modify the 'exp' field to a far future timestamp."""
+    return modify_jwt_token(token=token, payload_changes={"exp": 9999999999})
+
+
+@TestStep(Given)
+def modify_jwt_payload_iat_to_future(self, token: str):
+    """Modify the 'iat' field to a future timestamp."""
+    return modify_jwt_token(token=token, payload_changes={"iat": 9999999999})
+
+
+@TestStep(Given)
+def modify_jwt_payload_jti_to_invalid(self, token: str):
+    """Modify the 'jti' field to an invalid JWT ID."""
+    return modify_jwt_token(
+        token=token, payload_changes={"jti": "invalid-jwt-id-12345"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_iss_to_invalid(self, token: str):
+    """Modify the 'iss' field to an invalid issuer."""
+    return modify_jwt_token(
+        token=token, payload_changes={"iss": "http://invalid-issuer.com"}
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Sub("1.0"))
+def modify_jwt_payload_sub_to_invalid(self, token: str):
+    """Modify the 'sub' field to an invalid subject ID."""
+    return modify_jwt_token(
+        token=token, payload_changes={"sub": "invalid-subject-id-12345"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_typ_to_invalid(self, token: str):
+    """Modify the 'typ' field to an invalid type."""
+    return modify_jwt_token(token=token, payload_changes={"typ": "InvalidType"})
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Aud("1.0"))
+def modify_jwt_payload_azp_to_invalid(self, token: str):
+    """Modify the 'azp' field to an invalid authorized party."""
+    return modify_jwt_token(token=token, payload_changes={"azp": "invalid-client-id"})
+
+
+@TestStep(Given)
+def modify_jwt_payload_sid_to_invalid(self, token: str):
+    """Modify the 'sid' field to an invalid session ID."""
+    return modify_jwt_token(
+        token=token, payload_changes={"sid": "invalid-session-id-12345"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_acr_to_invalid(self, token: str):
+    """Modify the 'acr' field to an invalid ACR value."""
+    return modify_jwt_token(token=token, payload_changes={"acr": "99"})
+
+
+@TestStep(Given)
+def modify_jwt_payload_allowed_origins_to_invalid(self, token: str):
+    """Modify the 'allowed-origins' field to invalid origins."""
+    return modify_jwt_token(
+        token=token,
+        payload_changes={
+            "allowed-origins": ["http://malicious.com", "http://evil.org"]
+        },
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_scope_to_invalid(self, token: str):
+    """Modify the 'scope' field to invalid scopes."""
+    return modify_jwt_token(
+        token=token, payload_changes={"scope": "admin delete write execute"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_email_verified_to_false(self, token: str):
+    """Modify the 'email_verified' field to false."""
+    return modify_jwt_token(token=token, payload_changes={"email_verified": False})
+
+
+@TestStep(Given)
+def modify_jwt_payload_name_to_invalid(self, token: str):
+    """Modify the 'name' field to an invalid name."""
+    return modify_jwt_token(
+        token=token, payload_changes={"name": "Invalid User Name 12345"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_groups_to_admin(self, token: str):
+    """Modify the 'groups' field to admin groups."""
+    return modify_jwt_token(
+        token=token, payload_changes={"groups": ["admin", "superuser", "root"]}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_groups_to_empty(self, token: str):
+    """Modify the 'groups' field to empty list."""
+    return modify_jwt_token(token=token, payload_changes={"groups": []})
+
+
+@TestStep(Given)
+def modify_jwt_payload_preferred_username_to_admin(self, token: str):
+    """Modify the 'preferred_username' field to admin."""
+    return modify_jwt_token(
+        token=token, payload_changes={"preferred_username": "admin"}
+    )
+
+
+@TestStep(Given)
+def modify_jwt_payload_given_name_to_invalid(self, token: str):
+    """Modify the 'given_name' field to an invalid name."""
+    return modify_jwt_token(token=token, payload_changes={"given_name": "Invalid"})
+
+
+@TestStep(Given)
+def modify_jwt_payload_family_name_to_invalid(self, token: str):
+    """Modify the 'family_name' field to an invalid name."""
+    return modify_jwt_token(token=token, payload_changes={"family_name": "InvalidUser"})
+
+
+@TestStep(Given)
+def modify_jwt_payload_email_to_invalid(self, token: str):
+    """Modify the 'email' field to an invalid email."""
+    return modify_jwt_token(
+        token=token, payload_changes={"email": "invalid@malicious.com"}
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"))
+def modify_jwt_signature_to_invalid(self, token: str):
+    """Modify the signature to make it invalid."""
+    return modify_jwt_token(token=token, signature_change="invalid-signature-12345")
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"))
+def invalidate_jwt_signature(self, token: str):
+    """Invalidate the JWT signature by appending random characters."""
+    header, payload, signature = _decode_jwt_token(token)
+    invalid_signature = signature + "invalid"
+    return modify_jwt_token(token=token, signature_change=invalid_signature)
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"))
+def remove_jwt_signature(self, token: str):
+    """Remove the JWT signature entirely."""
+    return modify_jwt_token(token=token, signature_change="")
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"))
+def modify_jwt_signature_e_to_invalid(self, token: str):
+    """Modify the RSA exponent conceptually by invalidating signature."""
+    note("Conceptually modifying RSA exponent to: INVALID")
+    return invalidate_jwt_signature(token)
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"))
+def modify_jwt_signature_kty_to_invalid(self, token: str):
+    """Modify the key type conceptually by invalidating signature."""
+    note("Conceptually modifying key type to: INVALID")
+    return invalidate_jwt_signature(token)
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"))
+def modify_jwt_signature_n_to_invalid(self, token: str):
+    """Modify the RSA modulus conceptually by invalidating signature."""
+    note("Conceptually modifying RSA modulus to: INVALID")
+    return invalidate_jwt_signature(token)
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"))
+def create_empty_token(self, token: str):
+    """Create an empty token string."""
+    note("Creating empty token string")
+    return ""
+
+
 class OAuthProvider:
     get_oauth_token = get_oauth_token
     create_application = import_keycloak_realm
@@ -1503,3 +1808,52 @@ class OAuthProvider:
     common_cache_behavior = common_cache_behavior
     common_configuration_validation = common_configuration_validation
     authentication_caching = authentication_caching
+
+    # JWT Token Manipulation Steps
+    modify_jwt_token = modify_jwt_token
+
+    # JWT Header Field Manipulation Steps
+    modify_jwt_header_alg_to_none = modify_jwt_header_alg_to_none
+    modify_jwt_header_alg_to_hs256 = modify_jwt_header_alg_to_hs256
+    modify_jwt_header_alg_to_invalid = modify_jwt_header_alg_to_invalid
+    modify_jwt_header_typ_to_invalid = modify_jwt_header_typ_to_invalid
+    modify_jwt_header_kid_to_invalid = modify_jwt_header_kid_to_invalid
+
+    # JWT Payload Field Manipulation Steps
+    modify_jwt_payload_exp_to_expired = modify_jwt_payload_exp_to_expired
+    modify_jwt_payload_exp_to_far_future = modify_jwt_payload_exp_to_far_future
+    modify_jwt_payload_iat_to_future = modify_jwt_payload_iat_to_future
+    modify_jwt_payload_jti_to_invalid = modify_jwt_payload_jti_to_invalid
+    modify_jwt_payload_iss_to_invalid = modify_jwt_payload_iss_to_invalid
+    modify_jwt_payload_sub_to_invalid = modify_jwt_payload_sub_to_invalid
+    modify_jwt_payload_typ_to_invalid = modify_jwt_payload_typ_to_invalid
+    modify_jwt_payload_azp_to_invalid = modify_jwt_payload_azp_to_invalid
+    modify_jwt_payload_sid_to_invalid = modify_jwt_payload_sid_to_invalid
+    modify_jwt_payload_acr_to_invalid = modify_jwt_payload_acr_to_invalid
+    modify_jwt_payload_allowed_origins_to_invalid = (
+        modify_jwt_payload_allowed_origins_to_invalid
+    )
+    modify_jwt_payload_scope_to_invalid = modify_jwt_payload_scope_to_invalid
+    modify_jwt_payload_email_verified_to_false = (
+        modify_jwt_payload_email_verified_to_false
+    )
+    modify_jwt_payload_name_to_invalid = modify_jwt_payload_name_to_invalid
+    modify_jwt_payload_groups_to_admin = modify_jwt_payload_groups_to_admin
+    modify_jwt_payload_groups_to_empty = modify_jwt_payload_groups_to_empty
+    modify_jwt_payload_preferred_username_to_admin = (
+        modify_jwt_payload_preferred_username_to_admin
+    )
+    modify_jwt_payload_given_name_to_invalid = modify_jwt_payload_given_name_to_invalid
+    modify_jwt_payload_family_name_to_invalid = (
+        modify_jwt_payload_family_name_to_invalid
+    )
+    modify_jwt_payload_email_to_invalid = modify_jwt_payload_email_to_invalid
+
+    # JWT Signature Manipulation Steps
+    modify_jwt_signature_to_invalid = modify_jwt_signature_to_invalid
+    invalidate_jwt_signature = invalidate_jwt_signature
+    remove_jwt_signature = remove_jwt_signature
+    modify_jwt_signature_e_to_invalid = modify_jwt_signature_e_to_invalid
+    modify_jwt_signature_kty_to_invalid = modify_jwt_signature_kty_to_invalid
+    modify_jwt_signature_n_to_invalid = modify_jwt_signature_n_to_invalid
+    create_empty_token = create_empty_token
