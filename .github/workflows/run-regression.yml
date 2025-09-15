@@ -219,7 +219,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 1
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -236,7 +236,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 2
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -253,7 +253,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 3
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -286,7 +286,7 @@ jobs:
     with:
       suite_name: alter
       job_name: alter_replace_partition
-      timeout_minutes: 300
+      timeout_minutes: 180
       storage_path: /replace_partition
       regression_args: '--only "/alter/replace partition/*"'
       artifact_name: alter-replace-partition-artifacts
@@ -308,7 +308,7 @@ jobs:
       suite_name: alter
       job_name: alter_attach_partition
       part: 1
-      timeout_minutes: 720
+      timeout_minutes: 180
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
@@ -351,7 +351,7 @@ jobs:
     with:
       suite_name: alter
       job_name: alter_move_partition
-      timeout_minutes: 600
+      timeout_minutes: 180
       storage_path: /move_partition
       regression_args: '--only "/alter/move partition/*"'
       artifact_name: alter-move-partition-artifacts
@@ -371,7 +371,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: attach
-      timeout_minutes: 600
+      timeout_minutes: 180
       regression_args: '--only "/attach/*"'
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -407,7 +407,7 @@ jobs:
       suite_name: ontime_benchmark
       job_name: ontime_benchmark_aws
       suite_executable: benchmark.py
-      timeout_minutes: 240
+      timeout_minutes: 180
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: benchmark-aws-artifacts
@@ -430,7 +430,7 @@ jobs:
       suite_name: ontime_benchmark
       job_name: ontime_benchmark_gcs
       suite_executable: benchmark.py
-      timeout_minutes: 240
+      timeout_minutes: 180
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: benchmark-gcs-artifacts
@@ -565,7 +565,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: disk_level_encryption
-      timeout_minutes: 720
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -800,7 +800,7 @@ jobs:
     with:
       suite_name: ldap/role_mapping
       job_name: ldap_role_mapping
-      timeout_minutes: 720
+      timeout_minutes: 180
       artifact_name: ldap-role_mapping-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -817,7 +817,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: lightweight_delete
-      timeout_minutes: 240
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -849,7 +849,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
-      timeout_minutes: 300
+      timeout_minutes: 180
       storage_path: /no_s3
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -867,7 +867,7 @@ jobs:
     with:
       suite_name: parquet
       job_name: parquet_minio
-      timeout_minutes: 300
+      timeout_minutes: 180
       storage_path: /minio
       regression_args: '--storage minio --only "/parquet/minio/*"'
       artifact_name: parquet-minio-artifacts
@@ -887,7 +887,7 @@ jobs:
     with:
       suite_name: parquet
       job_name: parquet_aws_s3
-      timeout_minutes: 300
+      timeout_minutes: 180
       storage_path: /aws_s3
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
       artifact_name: parquet-aws-artifacts
@@ -922,7 +922,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 540
+      timeout_minutes: 180
       part: 1
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -939,7 +939,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 540
+      timeout_minutes: 180
       part: 2
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -956,7 +956,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 720
+      timeout_minutes: 180
       part: 3
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1212,7 +1212,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 1
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1229,7 +1229,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 2
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1246,7 +1246,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 3
-      timeout_minutes: 360
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
