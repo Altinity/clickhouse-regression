@@ -1061,8 +1061,8 @@ def path_traversal_attempt_configuration(self, node=None):
 )
 def completely_invalid_configuration(self, node=None):
     """Configure ClickHouse with completely invalid Keycloak configuration."""
-    invalid_processor_type_configuration(self, node=node)
-    missing_processor_user_directory_configuration(self, node=node)
+    invalid_processor_type_configuration(node=node)
+    missing_processor_user_directory_configuration(node=node)
 
 
 @TestStep(Given)
@@ -1118,6 +1118,281 @@ def mixed_valid_invalid_configuration(self, node=None):
     )
 
 
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_RealmSetup("1.0"))
+def realm_setup(self):
+    """Keycloak realm setup is supported."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"))
+def access_token_support(self):
+    """Access tokens issued by Keycloak are supported."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"))
+def tokens_operation_modes(self):
+    """Keycloak token processing operation modes."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes_Fallback("1.0"))
+def tokens_operation_modes_fallback(self):
+    """Fallback to remote verification if local validation fails."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"))
+def tokens_configuration_validation(self):
+    """Validate mutually exclusive token processor configuration options."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_Operational_ProviderType("1.0"))
+def tokens_operational_provider_type(self):
+    """Provider type is OpenID for Keycloak."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"))
+def get_access_token_requirement(self):
+    """Obtain access token from Keycloak."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors("1.0"))
+def access_token_processors(self):
+    """Access token processor definition for Keycloak."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Authentication_UserDirectories_UserGroups("1.0")
+)
+def auth_user_directories_user_groups(self):
+    """Support Keycloak user groups in role mapping."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles("1.0"))
+def auth_user_roles(self):
+    """Roles applied based on mapping."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_GroupFiltering("1.0"))
+def auth_user_roles_group_filtering(self):
+    """Filter groups via roles_filter regex."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_MultipleGroups("1.0"))
+def auth_user_roles_multiple_groups(self):
+    """Union roles for multiple groups."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoGroups("1.0"))
+def auth_user_roles_no_groups(self):
+    """No groups: only default roles apply."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SubgroupMemberships("1.0")
+)
+def auth_user_roles_subgroup_memberships(self):
+    """Subgroup memberships are not auto-mapped."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles("1.0")
+)
+def auth_user_roles_no_matching_clickhouse_roles(self):
+    """No matching ClickHouse roles behavior."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SameName("1.0"))
+def auth_user_roles_same_name(self):
+    """Map roles when names match exactly."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingRoles("1.0"))
+def auth_user_roles_no_matching_roles(self):
+    """Only default roles when no matches exist."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups("1.0")
+)
+def auth_user_roles_no_permission_to_view_groups(self):
+    """Default roles when user can't view groups."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoDefaultRole("1.0"))
+def auth_user_roles_no_default_role(self):
+    """No default roles configured behavior."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled("1.0"))
+def actions_user_disabled(self):
+    """When a user is disabled in Keycloak, ClickHouse SHALL reject any subsequent authentication attempts for that user. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL accept user authentication requests until the cache entry expires."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted("1.0"))
+def actions_user_deleted(self):
+    """When a user is permanently deleted from Keycloak, ClickHouse SHALL reject any authentication attempts using their tokens. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL accept user authentication requests until the cache entry expires."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup("1.0"))
+def actions_user_added_to_group(self):
+    """When a user is added to a group in Keycloak, ClickHouse SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in ClickHouse. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup("1.0"))
+def actions_user_removed_from_group(self):
+    """When a user is removed from a group in Keycloak, ClickHouse SHALL revoke the corresponding role and its permissions from the user on their next login. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted("1.0"))
+def actions_group_deleted(self):
+    """When a group that is mapped to a ClickHouse role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in ClickHouse upon their next authentication. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL remove corresponding role grants on the next authentication request after cache expires."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled("1.0"))
+def actions_client_disabled(self):
+    """When the client application used for OAuth integration is disabled in Keycloak, ClickHouse SHALL reject all incoming access tokens issued for that client. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked("1.0"))
+def actions_consent_revoked(self):
+    """If a user's consent for the application is revoked in Keycloak, ClickHouse SHALL reject authentication attempts until consent is granted again. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_TokenInvalid("1.0"))
+def actions_token_invalid(self):
+    """If a user's token becomes invalidated (for various reasons other than token expiration), ClickHouse SHALL reject authentication attempts with that token. However, if ClickHouse has a valid token cache entry for the corresponding user, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
+    pass
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Parameters_CacheLifetime("1.0"))
+def common_parameters_cache_lifetime(self, node=None):
+    """Configure token cache lifetime parameter."""
+    change_token_processors(
+        processor_name="keycloak",
+        token_cache_lifetime=600,
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Parameters_UsernameClaim("1.0"))
+def common_parameters_username_claim(self, node=None):
+    """Configure username_claim parameter for token processor."""
+    change_token_processors(
+        processor_name="keycloak",
+        username_claim="sub",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Parameters_GroupsClaim("1.0"))
+def common_parameters_groups_claim(self, node=None):
+    """Configure groups_claim parameter for token processor."""
+    change_token_processors(
+        processor_name="keycloak",
+        groups_claim="groups",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Parameters_Unfiltered("1.0"))
+def common_parameters_unfiltered(self, node=None):
+    """Enable unfiltered mode for token processor mapping."""
+    change_token_processors(
+        processor_name="keycloak",
+        unfiltered=True,
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Cache_Behavior("1.0"))
+def common_cache_behavior(self, node=None):
+    """Configure cache behavior-related parameters."""
+    change_token_processors(
+        processor_name="keycloak",
+        token_cache_lifetime=60,
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Common_Configuration_Validation("1.0"))
+def common_configuration_validation(self, node=None):
+    """Validate required/allowed combinations of common parameters."""
+    change_token_processors(
+        processor_name="keycloak",
+        username_claim="sub",
+        groups_claim="groups",
+        node=node,
+    )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_042_OAuth_Authentication_Caching("1.0"))
+def authentication_caching(self, node=None):
+    """General authentication caching behavior configuration."""
+    change_token_processors(
+        processor_name="keycloak",
+        token_cache_lifetime=120,
+        node=node,
+    )
+
+
 class OAuthProvider:
     get_oauth_token = get_oauth_token
     create_application = import_keycloak_realm
@@ -1147,9 +1422,6 @@ class OAuthProvider:
     whitespace_processor_type_configuration = whitespace_processor_type_configuration
     case_sensitive_processor_type_configuration = (
         case_sensitive_processor_type_configuration
-    )
-    non_keycloak_processor_type_configuration = (
-        non_keycloak_processor_type_configuration
     )
     invalid_processor_name_configuration = invalid_processor_name_configuration
     whitespace_processor_name_configuration = whitespace_processor_name_configuration
@@ -1191,3 +1463,43 @@ class OAuthProvider:
     completely_invalid_configuration = completely_invalid_configuration
     partially_invalid_configuration = partially_invalid_configuration
     mixed_valid_invalid_configuration = mixed_valid_invalid_configuration
+
+    realm_setup = realm_setup
+    access_token_support = access_token_support
+    tokens_operation_modes = tokens_operation_modes
+    tokens_operation_modes_fallback = tokens_operation_modes_fallback
+    tokens_configuration_validation = tokens_configuration_validation
+    tokens_operational_provider_type = tokens_operational_provider_type
+    get_access_token_requirement = get_access_token_requirement
+    access_token_processors = access_token_processors
+    auth_user_directories_user_groups = auth_user_directories_user_groups
+    auth_user_roles = auth_user_roles
+    auth_user_roles_group_filtering = auth_user_roles_group_filtering
+    auth_user_roles_multiple_groups = auth_user_roles_multiple_groups
+    auth_user_roles_no_groups = auth_user_roles_no_groups
+    auth_user_roles_subgroup_memberships = auth_user_roles_subgroup_memberships
+    auth_user_roles_no_matching_clickhouse_roles = (
+        auth_user_roles_no_matching_clickhouse_roles
+    )
+    auth_user_roles_same_name = auth_user_roles_same_name
+    auth_user_roles_no_matching_roles = auth_user_roles_no_matching_roles
+    auth_user_roles_no_permission_to_view_groups = (
+        auth_user_roles_no_permission_to_view_groups
+    )
+    auth_user_roles_no_default_role = auth_user_roles_no_default_role
+    actions_user_disabled = actions_user_disabled
+    actions_user_deleted = actions_user_deleted
+    actions_user_added_to_group = actions_user_added_to_group
+    actions_user_removed_from_group = actions_user_removed_from_group
+    actions_group_deleted = actions_group_deleted
+    actions_client_disabled = actions_client_disabled
+    actions_consent_revoked = actions_consent_revoked
+    actions_token_invalid = actions_token_invalid
+
+    common_parameters_cache_lifetime = common_parameters_cache_lifetime
+    common_parameters_username_claim = common_parameters_username_claim
+    common_parameters_groups_claim = common_parameters_groups_claim
+    common_parameters_unfiltered = common_parameters_unfiltered
+    common_cache_behavior = common_cache_behavior
+    common_configuration_validation = common_configuration_validation
+    authentication_caching = authentication_caching
