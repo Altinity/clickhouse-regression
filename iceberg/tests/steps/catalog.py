@@ -323,7 +323,7 @@ def create_iceberg_table_with_five_columns(
             source_id=4,
             field_id=1001,
             transform=IdentityTransform(),
-            name="symbol_partition",
+            name="name",
         ),
     )
 
