@@ -90,6 +90,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-1:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-1:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -102,6 +105,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-2:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-2:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -114,6 +120,9 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-3:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-3:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
         condition: service_healthy
@@ -151,6 +160,50 @@ services:
 
 volumes:
   localstack_data:
+
+  data1-1:
+  
+  var_lib_clickhouse-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-1:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_lib_clickhouse-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-2:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_lib_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
 
 configs:
   ice-rest-catalog-yaml:
