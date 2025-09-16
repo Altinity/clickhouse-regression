@@ -88,6 +88,13 @@ xfails = {
             check_clickhouse_version(">=25.8"),
         )
     ],
+    "/iceberg/iceberg table engine/feature/alter comment columns": [
+        (
+            Fail,
+            "Need to investigate",
+            check_clickhouse_version(">=25.6"),
+        )
+    ],
 }
 
 ffails = {
