@@ -1538,16 +1538,19 @@ def distributed_table_cluster(
         node=self.context.cluster.node("clickhouse1"),
         name=table_name + "_local",
         policy="default",
+        columns=columns,
     )
     simple_table(
         node=self.context.cluster.node("clickhouse2"),
         name=table_name + "_local",
         policy="default",
+        columns=columns,
     )
     simple_table(
         node=self.context.cluster.node("clickhouse3"),
         name=table_name + "_local",
         policy="default",
+        columns=columns,
     )
 
     if order_by is None:
