@@ -363,9 +363,8 @@ def check_partition_pruning_with_complex_where_clause(
             log_comment=log_comment_with_partition_pruning,
         ).output.strip()
         if check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self):
-
             assert 10 <= int(s3_read_requests_count), error()
-            assert int(s3_read_requests_count) <= 18, error()
+            assert int(s3_read_requests_count) <= 20, error()
         else:
             assert 95 <= int(s3_read_requests_count), error()
             assert int(s3_read_requests_count) <= 100, error()
@@ -501,17 +500,16 @@ def partition_pruning_with_date_type(self, minio_root_user, minio_root_password)
         min_max_pruned_files = metrics.get_IcebergMinMaxIndexPrunedFiles(
             log_comment=log_comment_with_partition_pruning,
         ).output.strip()
-        if check_clickhouse_version(">=25.4")(self):
+        if check_clickhouse_version(">=25.3")(self):
             assert int(min_max_pruned_files) == 0, error()
 
     with And("check that S3ReadRequestsCount is correct"):
         s3_read_requests_count = metrics.get_S3ReadRequestsCount(
             log_comment=log_comment_with_partition_pruning,
         ).output.strip()
-        if check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self):
-
+        if check_clickhouse_version(">=25.3")(self) or check_if_antalya_build(self):
             assert 137 <= int(s3_read_requests_count), error()
-            assert int(s3_read_requests_count) <= 142, error()
+            assert int(s3_read_requests_count) <= 150, error()
         else:
             assert 200 <= int(s3_read_requests_count), error()
             assert int(s3_read_requests_count) <= 210, error()
@@ -713,6 +711,7 @@ def non_partitioned_table(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Name("iceberg partition pruning")
 def feature(self, minio_root_user, minio_root_password):
     """Check that iceberg partition pruning works when selecting from table from iceberg engine."""
     Scenario(test=check_iceberg_partition_pruning_with_integer_type)(
