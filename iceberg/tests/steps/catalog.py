@@ -276,7 +276,7 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
             source_id=1,
             field_id=1001,
             transform=IdentityTransform(),
-            name="symbol_partition",
+            name="name",
         ),
     )
     table = create_iceberg_table(
