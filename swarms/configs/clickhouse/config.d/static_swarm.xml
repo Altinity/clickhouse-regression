@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <remote_servers>
+        <static_swarm_cluster>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse3</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </static_swarm_cluster>
+    </remote_servers>
+</clickhouse>
