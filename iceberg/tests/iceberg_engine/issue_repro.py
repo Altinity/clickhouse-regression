@@ -81,8 +81,6 @@ def hive_issue(self, minio_root_user, minio_root_password):
         df = pa.Table.from_pylist(data)
         table.append(df)
 
-    pause()
-
 
 @TestFeature
 @Name("issue repro")
