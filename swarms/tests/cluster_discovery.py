@@ -4,6 +4,7 @@ from swarms.requirements.requirements import *
 from helpers.common import (
     check_if_antalya_build,
     getuid,
+    check_clickhouse_version,
 )
 
 import swarms.tests.steps.swarm_steps as swarm_steps
@@ -303,9 +304,17 @@ def check_cluster_discovery_with_wrong_cluster_name(
         )
         assert "clickhouse2" in output, error()
 
+    with And("define expected exit code and message"):
+        if check_if_antalya_build(self) and check_clickhouse_version(">=25.6")(self):
+            exitcode = 100
+            message = "DB::Exception: Received from localhost:9000. DB::Exception: Unknown packet 18 from one of the following replicas"
+        else:
+            exitcode = 32
+            message = "DB::Exception: Attempt to read after eof"
+
     with And(
-        """check that select with s3Cluster fails since swarm node has not 
-        correct cluster name in config"""
+        """check that select with s3Cluster fails since swarm node does not have 
+        the correct cluster name in config"""
     ):
         result = s3_steps.read_data_with_s3Cluster_table_function(
             cluster_name=cluster_name,
@@ -313,13 +322,13 @@ def check_cluster_discovery_with_wrong_cluster_name(
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             group_by="hostName()",
-            exitcode=32,
-            message="DB::Exception: Attempt to read after eof",
+            exitcode=exitcode,
+            message=message,
         )
 
     with And(
         """check that select with s3Cluster table function and with swarm cluster fails 
-        since swarm node has not correct cluster name in config"""
+        since swarm node does not have the correct cluster name in config"""
     ):
         if check_if_antalya_build(self):
             result = s3_steps.read_data_with_s3_table_function(
@@ -328,8 +337,8 @@ def check_cluster_discovery_with_wrong_cluster_name(
                 s3_access_key_id=minio_root_user,
                 s3_secret_access_key=minio_root_password,
                 group_by="hostName()",
-                exitcode=32,
-                message="DB::Exception: Attempt to read after eof",
+                exitcode=exitcode,
+                message=message,
             )
 
 
