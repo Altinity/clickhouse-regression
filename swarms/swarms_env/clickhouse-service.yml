@@ -22,3 +22,4 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl/server.crt:/etc/clickhouse-server/server.crt"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl/server.key:/etc/clickhouse-server/server.key"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/static_swarm.xml:/etc/clickhouse-server/config.d/static_swarm.xml"
