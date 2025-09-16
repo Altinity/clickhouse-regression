@@ -36,7 +36,7 @@ def hive_issue(self, minio_root_user, minio_root_password):
         }
 
         catalog = load_catalog(
-            name,
+            "test_catalog",
             **conf,
         )
 
