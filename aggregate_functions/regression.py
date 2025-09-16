@@ -784,6 +784,14 @@ ffails = {
         Skip,
         "timeSeriesGroupArray test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesResetsToGrid": (
+        Skip,
+        "timeSeriesResetsToGrid test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function timeSeriesChangesToGrid": (
+        Skip,
+        "timeSeriesChangesToGrid test is not implemented",
+    ),
 }
 
 
