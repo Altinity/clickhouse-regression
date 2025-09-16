@@ -281,8 +281,6 @@ def setup_iceberg_table(
 
     with By("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri=uri,
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_access_key_id=minio_root_user,
             s3_endpoint=s3_endpoint,
             s3_secret_access_key=minio_root_password,
