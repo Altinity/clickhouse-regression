@@ -185,7 +185,7 @@ def fastparquet_globs(self):
     )
 
     suspicious_low_cardinality = (
-        True if check_clickhouse_version(">=25.8")(self) else False
+        True if check_clickhouse_version(">=25.6")(self) else False
     )
     columns = "num"
     order_by = "ALL" if check_clickhouse_version(">23.9")(self) else "tuple(*)"
