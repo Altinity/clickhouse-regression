@@ -12,6 +12,7 @@ from helpers.argparser import (
 )
 from helpers.common import (
     check_if_not_antalya_build,
+    experimental_analyzer,
 )
 
 from swarms.requirements.requirements import *
@@ -72,14 +73,20 @@ def regression(
         )
         self.context.cluster = cluster
 
-    self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.node2 = self.context.cluster.node("clickhouse2")
-    self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [
-        self.context.node,
-        self.context.node2,
-        self.context.node3,
-    ]
+        self.context.node = self.context.cluster.node("clickhouse1")
+        self.context.node2 = self.context.cluster.node("clickhouse2")
+        self.context.node3 = self.context.cluster.node("clickhouse3")
+        self.context.nodes = [
+            self.context.node,
+            self.context.node2,
+            self.context.node3,
+        ]
+        self.context.swarm_nodes = [self.context.node2, self.context.node3]
+        self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
+
+    with And("enable or disable experimental analyzer if needed"):
+        for node in self.context.swarm_nodes:
+            experimental_analyzer(node=node, with_analyzer=with_analyzer)
 
     Feature(test=load("swarms.tests.feature", "feature"))(
         minio_root_user=minio_root_user,
