@@ -34,7 +34,7 @@ services:
   #     - CATALOG_S3_ENDPOINT=http://minio:9000
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:latest
+    image: altinity/ice-rest-catalog:0.4.0
     restart: unless-stopped
     ports:
       - '5000:5000' # iceberg/http
