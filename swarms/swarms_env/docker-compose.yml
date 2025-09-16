@@ -127,16 +127,16 @@ services:
       zookeeper1:
         condition: service_healthy
 
-  keeper:
-    image: altinity/clickhouse-keeper:25.3.3.20186.altinityantalya
-    container_name: keeper
-    hostname: keeper
-    ports:
-      - 2181:2181
-    volumes:
-      # Note special location of Keeper config overrides. 
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
+  # keeper:
+  #   image: altinity/clickhouse-keeper:25.3.3.20186.altinityantalya
+  #   container_name: keeper
+  #   hostname: keeper
+  #   ports:
+  #     - 2181:2181
+  #   volumes:
+  #     # Note special location of Keeper config overrides. 
+  #     - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
+  #     - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
 
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
