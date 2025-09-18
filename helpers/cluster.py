@@ -2051,13 +2051,17 @@ class Cluster(object):
         def start_cluster(max_up_attempts=3):
             if not self.reuse_env:
                 with By("pulling images for all the services"):
-                    cmd = self.command(
-                        None,
-                        f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                        no_checks=True,
-                        timeout=timeout,
-                    )
-                    if cmd.exitcode != 0:
+                    for pull_attempt in retries(count=5, delay=10):
+                        with pull_attempt:
+                            cmd = self.command(
+                                None,
+                                f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
+                                no_checks=True,
+                                timeout=timeout,
+                            )
+                            if cmd.exitcode == 0:
+                                break
+                    else:
                         return False
 
                 with And("checking if any containers are already running"):
