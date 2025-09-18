@@ -12,6 +12,6 @@ RUN if [ -f /etc/alpine-release ]; then \
     apk update && \
     apk add --no-cache curl openssl shadow openssh-client ca-certificates; \
     else \
-    apt-get update && \
-    apt-get install -y curl openssh-client; \
+    apt-get update -o Acquire::Retries=5 --fix-missing && \
+    apt-get install -y --no-install-recommends curl openssh-client; \
     fi
