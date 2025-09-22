@@ -216,7 +216,9 @@ def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=Non
 
     with And("check that swarm cluster is created"):
         output = swarm_steps.show_clusters(node=self.context.node)
-        assert cluster_name in output.output, error()
+        for retry in retries(count=10, delay=2):
+            with retry:
+                assert cluster_name in output.output, error()
 
     with When("try to select data with s3 table function using swarm cluster"):
         result = s3_steps.read_data_with_s3_table_function(
