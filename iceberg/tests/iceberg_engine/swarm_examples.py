@@ -2,7 +2,7 @@
 
 from testflows.core import *
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version, check_if_not_antalya_build
 
 import pyarrow as pa
 
@@ -93,12 +93,19 @@ def swarm_examples(self, minio_root_user, minio_root_password, node=None):
         )
 
     with And("select Iceberg actual table data with GROUP BY"):
+        exitcode, message = None, None
+        if check_clickhouse_version("<25.8") and check_if_not_antalya_build(self):
+            exitcode = 70
+            message = "DB::Exception: Conversion from AggregateFunction(groupArray, LowCardinality(String)) to AggregateFunction(groupArray, Nullable(String)) is not supported: While executing Remote."
+
         node.query(
             f"""
                 SELECT hostName() AS host, arrayStringConcat(groupArray(name), ', ') AS names, sum(integer) AS total_age
                 FROM s3Cluster('swarm', 'http://minio:9000/warehouse/data/data/**/**.parquet', '{minio_root_user}', '{minio_root_password}')
                 SETTINGS use_hive_partitioning=1
-            """
+            """,
+            exitcode=exitcode,
+            message=message,
         )
 
 
