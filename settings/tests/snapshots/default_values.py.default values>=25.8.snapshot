@@ -550,6 +550,10 @@ delta_lake_enable_engine_predicate = r"""'{"default":"1"}'"""
 
 delta_lake_enable_expression_visitor_logging = r"""'{"default":"0"}'"""
 
+delta_lake_insert_max_bytes_in_data_file = r"""'{"default":"1073741824"}'"""
+
+delta_lake_insert_max_rows_in_data_file = r"""'{"default":"100000"}'"""
+
 delta_lake_snapshot_version = r"""'{"default":"-1"}'"""
 
 delta_lake_throw_on_engine_predicate_error = r"""'{"default":"0"}'"""
