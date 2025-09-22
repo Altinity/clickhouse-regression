@@ -36,7 +36,14 @@ def load_defaults(version: str) -> dict[str, str]:
         json_str = json_str.replace(r"\'", "'")
 
         try:
-            settings[name] = json.loads(json_str)["value"]
+            parsed = json.loads(json_str)
+            # Handle both old format with "value" and new format with "default"
+            if "value" in parsed:
+                settings[name] = parsed["value"]
+            elif "default" in parsed:
+                settings[name] = parsed["default"]
+            else:
+                print(f"couldn't find 'value' or 'default' key for {name} in {path}")
         except (json.JSONDecodeError, KeyError):
             print(f"couldn't parse {name} in {path}")
     return settings
@@ -73,7 +80,7 @@ def diff(old: str, new: str) -> None:
 
 
 if __name__ == "__main__":
-    version_1 = "25.2_antalya"
-    version_2 = "25.3_antalya"
+    version_1 = "25.3_antalya"
+    version_2 = "25.6_antalya"
 
     diff(version_1, version_2)
