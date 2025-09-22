@@ -82,6 +82,27 @@ xfails = {
             check_if_head,
         )
     ],
+    "/settings/default values/allow_experimental_database_glue_catalog": [
+        (
+            Fail,
+            "1 by default from 25.6",
+            check_clickhouse_version("<25.6"),
+        )
+    ],
+    "/settings/default values/allow_experimental_database_iceberg": [
+        (
+            Fail,
+            "1 by default from 25.6",
+            check_clickhouse_version("<25.6"),
+        )
+    ],
+    "/settings/default values/allow_experimental_database_unity_catalog": [
+        (
+            Fail,
+            "1 by default from 25.6",
+            check_clickhouse_version("<25.6"),
+        )
+    ],
 }
 
 ffails = {
