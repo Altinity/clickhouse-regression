@@ -11,3 +11,4 @@ def feature(self):
     Feature(run=load("rbac.tests.sql_security.view_tests", "feature"))
     Feature(run=load("rbac.tests.sql_security.multiple_source_tables", "feature"))
     Feature(run=load("rbac.tests.sql_security.cascading_views", "feature"))
+    Feature(run=load("rbac.tests.sql_security.drop_definer", "feature"))

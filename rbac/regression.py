@@ -369,6 +369,11 @@ ffails = {
         "check privilege was introduced in 25.1",
         check_clickhouse_version("<25.1"),
     ),
+    "/rbac/part 2/SQL security/drop definer": (
+        Skip,
+        "before 25.8, definer user can be dropped when mv depends on it",
+        check_clickhouse_version("<25.8"),
+    ),
 }
 
 
