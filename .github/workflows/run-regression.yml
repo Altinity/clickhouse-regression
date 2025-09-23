@@ -87,6 +87,9 @@ on:
           - parquet
           - parquet_minio
           - parquet_s3
+          - parquet_native_v3
+          - parquet_minio_native_v3
+          - parquet_s3_native_v3
           - part_moves_between_shards
           - rbac
           - s3_all
@@ -193,6 +196,10 @@ on:
         required: false
       run_s3_suites:
         description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
+      parquet_native_v3:
+        description: "Whether to run Parquet Native V3 suites"
         type: boolean
         default: false
 
@@ -902,7 +909,7 @@ jobs:
     secrets: inherit
 
   parquet_native_v3:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_native_v3' || inputs.suite == 'parquet_all'}}
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 'parquet_native_v3' || inputs.suite == 'parquet_all') && (github.event_name == 'workflow_dispatch' || inputs.parquet_native_v3 == true) }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
@@ -921,7 +928,7 @@ jobs:
     secrets: inherit
 
   parquet_minio_native_v3:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio_native_v3' || inputs.suite == 'parquet_all'}}
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 'parquet_minio_native_v3' || inputs.suite == 'parquet_all') && (github.event_name == 'workflow_dispatch' || inputs.parquet_native_v3 == true) }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
@@ -941,7 +948,7 @@ jobs:
     secrets: inherit
 
   parquet_aws_s3_native_v3:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') && (github.event_name == 'workflow_dispatch' || inputs.parquet_native_v3 == true) }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
