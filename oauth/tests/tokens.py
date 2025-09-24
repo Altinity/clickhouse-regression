@@ -147,9 +147,8 @@ def try_access_with_incorrect_token(self, token_step):
         note(token)
 
     with Then("I try to access ClickHouse with the token"):
-        # response = access_clickhouse(token=token)
-        # assert response.status_code == 401, error()
-        pass
+        response = access_clickhouse(token=token)
+        assert response.status_code == 401, error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()

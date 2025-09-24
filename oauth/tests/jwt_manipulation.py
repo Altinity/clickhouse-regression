@@ -15,7 +15,8 @@ def access_clickhouse_with_modified_token(self, token_modification_step):
         modified_token = token_modification_step(token=original_token)
 
     with Then("I try to access ClickHouse with the modified token"):
-        pass
+        response = access_clickhouse(token=modified_token)
+        assert response.status_code == 401, error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()

@@ -15,9 +15,8 @@ def verify_keycloak_action_effect(self, action_step):
         token = client.OAuthProvider.get_oauth_token()
 
     with Then("I try to access ClickHouse with the token"):
-        # response = access_clickhouse(token=token)
-        # assert response.status_code in (200, 401), error()
-        pass
+        response = access_clickhouse(token=token)
+        assert response.status_code in (200, 401), error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()
