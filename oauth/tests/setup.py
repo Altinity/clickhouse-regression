@@ -15,9 +15,8 @@ def verify_keycloak_realm_setup(self, realm_setup_step):
         token = client.OAuthProvider.get_oauth_token()
 
     with Then("I try to access ClickHouse with the token"):
-        # response = access_clickhouse(token=token)
-        # assert response.status_code == 200, error()
-        pass
+        response = access_clickhouse(token=token)
+        assert response.status_code == 200, error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()
