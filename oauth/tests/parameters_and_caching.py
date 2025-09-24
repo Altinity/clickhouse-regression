@@ -4,7 +4,7 @@ from oauth.requirements.requirements import *
 
 
 @TestCheck
-def verify_common_behavior(self, setup_step):
+def check_parameters_and_caching(self, setup_step):
     """Verify common parameter/caching behavior via setup step."""
 
     with Given("I configure common OAuth parameters or caching"):
@@ -15,9 +15,8 @@ def verify_common_behavior(self, setup_step):
         token = client.OAuthProvider.get_oauth_token()
 
     with Then("I try to access ClickHouse with the token"):
-        # response = access_clickhouse(token=token)
-        # assert response.status_code in (200, 401), error()
-        pass
+        response = access_clickhouse(token=token)
+        assert response.status_code in (200, 401), error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()
@@ -49,11 +48,11 @@ def oauth_common_parameters_and_caching(self):
     ]
 
     for s in steps:
-        Scenario(test=verify_common_behavior)(setup_step=s)
+        Scenario(test=check_parameters_and_caching)(setup_step=s)
 
 
 @TestFeature
-@Name("oauth_common_parameters_and_caching")
+@Name("parameters and caching")
 @Requirements(
     RQ_SRS_042_OAuth_Common_Configuration_Validation("1.0"),
 )
