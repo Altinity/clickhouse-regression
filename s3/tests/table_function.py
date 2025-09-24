@@ -112,13 +112,14 @@ def wildcard(self):
     test_clusters = {None}.union(set(self.context.clusters))
 
     for i, combination in enumerate(product(test_values, test_clusters)):
+        wildcard, expected = combination[0]
+        cluster_name = combination[1]
         with Combination(
-            f"test_values = {combination[0]}, cluster_name = {combination[1]}"
+            f"wildcard = {wildcard}, cluster_name = {cluster_name}",
+            flags=TE,
         ):
             table1_name = "table_" + getuid()
             table2_name = "table_" + getuid()
-            wildcard, expected = combination[0]
-            cluster_name = combination[1]
 
             if self.context.storage == "minio":
                 with Given(
@@ -179,7 +180,7 @@ def wildcard(self):
                     f"""I check that a simple SELECT * query on the second table
                             {table2_name} returns expected data"""
                 ):
-                    for attempt in retries(timeout=600, delay=5):
+                    for attempt in retries(timeout=60, delay=5):
                         with attempt:
                             if cluster_name is None:
                                 r = node.query(
@@ -225,7 +226,8 @@ def compression(self):
 
     for compression_method, cluster_name in product(compression_methods, test_clusters):
         with Combination(
-            f"compression_method = {compression_method}, cluster_name = {cluster_name}"
+            f"compression_method = {compression_method}, cluster_name = {cluster_name}",
+            flags=TE,
         ):
             table1_name = "table_" + getuid()
             table2_name = "table_" + getuid()
@@ -276,7 +278,7 @@ def compression(self):
                     ).output.strip()
                     assert r == expected, error()
                 else:
-                    for attempt in retries(timeout=600, delay=5):
+                    for attempt in retries(timeout=60, delay=5):
                         with attempt:
                             r = (
                                 self.context.cluster.node("clickhouse1")
@@ -312,7 +314,8 @@ def auto(self):
 
     for compression_method, cluster_name in product(compression_methods, test_clusters):
         with Combination(
-            f"compression_method = {compression_method}, cluster_name = {cluster_name}"
+            f"compression_method = {compression_method}, cluster_name = {cluster_name}",
+            flags=TE,
         ):
             table1_name = "table_" + getuid()
             table2_name = "table_" + getuid()
@@ -363,7 +366,7 @@ def auto(self):
                     ).output.strip()
                     assert r == expected, error()
                 else:
-                    for attempt in retries(timeout=600, delay=5):
+                    for attempt in retries(timeout=60, delay=5):
                         with attempt:
                             r = (
                                 self.context.cluster.node("clickhouse1")
@@ -391,7 +394,7 @@ def credentials(self):
         simple_table(node=node, name=table2_name, policy="default")
 
     with And(f"I store simple data in the first table {table1_name}"):
-        for attempt in retries(timeout=600, delay=5):
+        for attempt in retries(timeout=60, delay=5):
             with attempt:
                 node.query(f"INSERT INTO {table1_name} VALUES (427)")
 
@@ -433,7 +436,7 @@ def credentials_s3Cluster(self):
                 )
 
             with And(f"I store simple data in the first table {table1_name}"):
-                for attempt in retries(timeout=600, delay=5):
+                for attempt in retries(timeout=60, delay=5):
                     with attempt:
                         node.query(f"INSERT INTO {table1_name} VALUES (427)")
 

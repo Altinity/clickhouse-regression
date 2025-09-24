@@ -123,6 +123,8 @@ def invalid_endpoint(self):
     if self.context.storage == "azure":
         if check_clickhouse_version("<24.12")(self):
             message = "Couldn't resolve host name"
+        elif check_clickhouse_version(">=25.8")(self):
+            message = "Cannot resolve host"
         else:
             message = "Could not resolve hostname"
 
