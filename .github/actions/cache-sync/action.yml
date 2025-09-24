@@ -12,74 +12,74 @@ runs:
             exit 0
         fi
 
-        # if [ -d "/mnt/cache" ]; then
-        #     {
-        #         echo "Stopping containers and cleaning up..."
-        #         sudo docker stop $(sudo docker ps -q) || true
-        #         sudo docker rm -fv $(sudo docker ps -a -q) || true
-        #     }
-        #     {
-        #         echo "Cleaning up old Docker digest images"
-        #         # Get all images with repository and tag
-        #         docker images --digests --format '{{.Repository}} {{.Tag}} {{.ID}}' | sort > /tmp/docker_images_list.txt
-        #         while read -r line; do
-        #             repo=$(awk '{print $1}' <<< "$line")
-        #             tag=$(awk '{print $2}' <<< "$line")
-        #             image_id=$(awk '{print $3}' <<< "$line")
-        #             key="${repo}:${tag}"
-        #             if [[ "$repo" == "<none>" || "$tag" == "<none>" ]]; then
-        #                 echo "Removing image with no repository/tag: $key"
-        #                 docker rmi -f "$image_id"
-        #                 continue
-        #             fi                   
-        #         done < /tmp/docker_images_list.txt
+        if [ -d "/mnt/cache" ]; then
+            {
+                echo "Stopping containers and cleaning up..."
+                sudo docker stop $(sudo docker ps -q) || true
+                sudo docker rm -fv $(sudo docker ps -a -q) || true
+            }
+            {
+                echo "Cleaning up old Docker digest images"
+                # Get all images with repository and tag
+                docker images --digests --format '{{.Repository}} {{.Tag}} {{.ID}}' | sort > /tmp/docker_images_list.txt
+                while read -r line; do
+                    repo=$(awk '{print $1}' <<< "$line")
+                    tag=$(awk '{print $2}' <<< "$line")
+                    image_id=$(awk '{print $3}' <<< "$line")
+                    key="${repo}:${tag}"
+                    if [[ "$repo" == "<none>" || "$tag" == "<none>" ]]; then
+                        echo "Removing image with no repository/tag: $key"
+                        docker rmi -f "$image_id"
+                        continue
+                    fi                   
+                done < /tmp/docker_images_list.txt
                 
-        #         # List all image IDs with repository starting with "clickhouse-regression"
-        #         images_to_delete=$(docker images --format '{{.Repository}} {{.ID}}' | awk '$1 ~ /^clickhouse-regression/ {print $2}')
-        #         if [ -z "$images_to_delete" ]; then
-        #             echo "No images found with repository starting with 'clickhouse-regression'."
-        #         else
-        #             echo "Deleting the following images:"
-        #             echo "$images_to_delete"
+                # List all image IDs with repository starting with "clickhouse-regression"
+                images_to_delete=$(docker images --format '{{.Repository}} {{.ID}}' | awk '$1 ~ /^clickhouse-regression/ {print $2}')
+                if [ -z "$images_to_delete" ]; then
+                    echo "No images found with repository starting with 'clickhouse-regression'."
+                else
+                    echo "Deleting the following images:"
+                    echo "$images_to_delete"
                 
-        #             # Delete the images
-        #             docker rmi -f $images_to_delete
-        #         fi
-        #         echo "Cleanup complete"
-        #     }
-        #     {
-        #         sudo sync
-        #         if [ -f "/etc/hetzner-volumes" ]; then
-        #             echo "Hetzner volumes"
-        #             cat /etc/hetzner-volumes
-        #         fi
-        #         echo "Stopping Docker daemon"
-        #         sudo systemctl stop docker
-        #         sudo sync
-        #         echo "Syncing docker folders to cache"
-        #         sudo mkdir -p /mnt/cache/docker
-        #     }
-        #     {
-        #         if sudo test -d "/var/lib/docker/overlay2"; then
-        #             sudo mkdir -p /mnt/cache/docker/overlay2
-        #             targets=$(sudo find "/var/lib/docker/overlay2" -mindepth 1 -maxdepth 1)
-        #             if [ -z "$targets" ]; then
-        #                 echo "⚠️  No entries found in /var/lib/docker/overlay2 — skipping"
-        #             else
-        #                 for target in $targets; do
-        #                     id=$(basename "$target")
-        #                     if [ ! -f /etc/docker-cache-mounts ] || ! grep -Fxq "$target" /etc/docker-cache-mounts; then
-        #                         sudo rsync -aH --delete "$target/" /mnt/cache/docker/overlay2/$id/
-        #                     fi
-        #                 done
-        #             fi
-        #         fi
-        #         for DIR in image buildkit; do
-        #             sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
-        #         done
-        #         sudo sync
-        #     }
-        # else
-        #     echo "/mnt/cache not available — skipping Docker cache sync"
-        # fi
+                    # Delete the images
+                    docker rmi -f $images_to_delete
+                fi
+                echo "Cleanup complete"
+            }
+            {
+                sudo sync
+                if [ -f "/etc/hetzner-volumes" ]; then
+                    echo "Hetzner volumes"
+                    cat /etc/hetzner-volumes
+                fi
+                echo "Stopping Docker daemon"
+                sudo systemctl stop docker
+                sudo sync
+                echo "Syncing docker folders to cache"
+                sudo mkdir -p /mnt/cache/docker
+            }
+            {
+                if sudo test -d "/var/lib/docker/overlay2"; then
+                    sudo mkdir -p /mnt/cache/docker/overlay2
+                    targets=$(sudo find "/var/lib/docker/overlay2" -mindepth 1 -maxdepth 1)
+                    if [ -z "$targets" ]; then
+                        echo "⚠️  No entries found in /var/lib/docker/overlay2 — skipping"
+                    else
+                        for target in $targets; do
+                            id=$(basename "$target")
+                            if [ ! -f /etc/docker-cache-mounts ] || ! grep -Fxq "$target" /etc/docker-cache-mounts; then
+                                sudo rsync -aH --delete "$target/" /mnt/cache/docker/overlay2/$id/
+                            fi
+                        done
+                    fi
+                fi
+                for DIR in image buildkit; do
+                    sudo rsync -aH --delete /var/lib/docker/$DIR/ /mnt/cache/docker/$DIR/
+                done
+                sudo sync
+            }
+        else
+            echo "/mnt/cache not available — skipping Docker cache sync"
+        fi
         
