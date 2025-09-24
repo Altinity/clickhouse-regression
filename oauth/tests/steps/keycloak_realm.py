@@ -1260,56 +1260,120 @@ def auth_user_roles_no_default_role(self):
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled("1.0"))
-def actions_user_disabled(self):
+def disable_user(self):
     """When a user is disabled in Keycloak, ClickHouse SHALL reject any subsequent authentication attempts for that user. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL accept user authentication requests until the cache entry expires."""
     pass
 
 
 @TestStep(Given)
+def create_default_user(self, username: str = "demo", password: str = "demo"):
+    """Create a default user with the same configuration as the Keycloak config."""
+
+    admin_token = get_admin_token()
+
+    user_id = create_user(
+        display_name="Demo User",
+        mail_nickname=username,
+        user_principal_name=f"{username}@example.com",
+        realm_name="grafana",
+        password=password,
+    )
+
+    groups_to_assign = ["/grafana-admins", "/can-read"]
+
+    for group_path in groups_to_assign:
+        # Extract group name from path (remove leading slash)
+        group_name = group_path.lstrip("/")
+
+        # Get the group by name
+        group = get_keycloak_group_by_name(
+            realm_name="grafana",
+            group_name=group_name,
+            keycloak_url=self.context.keycloak_url,
+            admin_token=admin_token,
+        )
+
+        if group:
+            assign_user_to_group(
+                user_id=user_id, group_id=group["id"], realm_name="grafana"
+            )
+            note(f"User '{username}' assigned to group '{group_name}'")
+        else:
+            note(f"Warning: Group '{group_name}' not found, skipping assignment")
+
+    note(f"Default user '{username}' created successfully with ID: {user_id}")
+    return user_id
+
+
+@TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted("1.0"))
-def actions_user_deleted(self):
-    """When a user is permanently deleted from Keycloak, ClickHouse SHALL reject any authentication attempts using their tokens. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL accept user authentication requests until the cache entry expires."""
-    pass
+def delete_user(self, username: str, realm_name: str = "grafana"):
+    """Delete user from Keycloak."""
+
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        raise Exception(f"User '{username}' not found in realm '{realm_name}'")
+
+    user_id = user["id"]
+    delete_url = (
+        f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user_id}"
+    )
+
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.delete(delete_url, headers=headers)
+    response.raise_for_status()
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup("1.0"))
-def actions_user_added_to_group(self):
+def add_user_to_group(self):
     """When a user is added to a group in Keycloak, ClickHouse SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in ClickHouse. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
     pass
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup("1.0"))
-def actions_user_removed_from_group(self):
+def remove_user_from_group(self):
     """When a user is removed from a group in Keycloak, ClickHouse SHALL revoke the corresponding role and its permissions from the user on their next login. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
     pass
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted("1.0"))
-def actions_group_deleted(self):
+def delete_group(self):
     """When a group that is mapped to a ClickHouse role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in ClickHouse upon their next authentication. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL remove corresponding role grants on the next authentication request after cache expires."""
     pass
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled("1.0"))
-def actions_client_disabled(self):
+def disable_client(self):
     """When the client application used for OAuth integration is disabled in Keycloak, ClickHouse SHALL reject all incoming access tokens issued for that client. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
     pass
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked("1.0"))
-def actions_consent_revoked(self):
+def revoke_consent(self):
     """If a user's consent for the application is revoked in Keycloak, ClickHouse SHALL reject authentication attempts until consent is granted again. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
     pass
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_TokenInvalid("1.0"))
-def actions_token_invalid(self):
+def invalidate_token(self):
     """If a user's token becomes invalidated (for various reasons other than token expiration), ClickHouse SHALL reject authentication attempts with that token. However, if ClickHouse has a valid token cache entry for the corresponding user, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
     pass
 
@@ -1792,14 +1856,14 @@ class OAuthProvider:
         auth_user_roles_no_permission_to_view_groups
     )
     auth_user_roles_no_default_role = auth_user_roles_no_default_role
-    actions_user_disabled = actions_user_disabled
-    actions_user_deleted = actions_user_deleted
-    actions_user_added_to_group = actions_user_added_to_group
-    actions_user_removed_from_group = actions_user_removed_from_group
-    actions_group_deleted = actions_group_deleted
-    actions_client_disabled = actions_client_disabled
-    actions_consent_revoked = actions_consent_revoked
-    actions_token_invalid = actions_token_invalid
+    disable_user = disable_user
+    delete_user = delete_user
+    add_user_to_group = add_user_to_group
+    remove_user_from_group = remove_user_from_group
+    delete_group = delete_group
+    disable_client = disable_client
+    revoke_consent = revoke_consent
+    invalidate_token = invalidate_token
 
     common_parameters_cache_lifetime = common_parameters_cache_lifetime
     common_parameters_username_claim = common_parameters_username_claim
