@@ -1046,9 +1046,6 @@ def path_traversal_attempt_configuration(self, node=None):
     )
 
 
-# Combined negative configurations for comprehensive testing
-
-
 @TestStep(Given)
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
@@ -1120,57 +1117,104 @@ def mixed_valid_invalid_configuration(self, node=None):
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_RealmSetup("1.0"))
 def realm_setup(self):
-    """Keycloak realm setup is supported."""
-    pass
+    """Setup Keycloak realm configuration."""
+    note("Setting up Keycloak realm configuration")
+    import_keycloak_realm(
+        realm_config_path="oauth/envs/keycloak/keycloak_env/grafana-realm.json",
+        keycloak_url=self.context.keycloak_url,
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"))
 def access_token_support(self):
-    """Access tokens issued by Keycloak are supported."""
-    pass
+    """Verify Keycloak access token support."""
+    note("Verifying Keycloak access token support")
+    token = get_oauth_token()
+    assert token is not None, "Failed to obtain access token from Keycloak"
+    note(f"Successfully obtained access token: {token[:20]}...")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"))
 def tokens_operation_modes(self):
-    """Keycloak token processing operation modes."""
-    pass
+    """Configure Keycloak token processing operation modes."""
+    note("Configuring Keycloak token processing operation modes")
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="keycloak",
+        jwks_uri=f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/certs",
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes_Fallback("1.0"))
 def tokens_operation_modes_fallback(self):
-    """Fallback to remote verification if local validation fails."""
-    pass
+    """Configure fallback to remote verification."""
+    note("Configuring fallback to remote verification")
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="keycloak",
+        jwks_uri=f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/certs",
+        jwks_cache_lifetime=0,
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"))
 def tokens_configuration_validation(self):
-    """Validate mutually exclusive token processor configuration options."""
-    pass
+    """Validate token processor configuration options."""
+    note("Validating token processor configuration options")
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="keycloak",
+        jwks_uri=f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/certs",
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Tokens_Operational_ProviderType("1.0"))
 def tokens_operational_provider_type(self):
-    """Provider type is OpenID for Keycloak."""
-    pass
+    """Configure OpenID provider type for Keycloak."""
+    note("Configuring OpenID provider type for Keycloak")
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="keycloak",
+        jwks_uri=f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/certs",
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"))
 def get_access_token_requirement(self):
     """Obtain access token from Keycloak."""
-    pass
+    note("Obtaining access token from Keycloak")
+    token = get_oauth_token()
+    assert token is not None, "Failed to obtain access token"
+    note(f"Access token obtained: {token[:20]}...")
+    return token
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors("1.0"))
 def access_token_processors(self):
-    """Access token processor definition for Keycloak."""
-    pass
+    """Configure access token processor for Keycloak."""
+    note("Configuring access token processor for Keycloak")
+    from oauth.tests.steps.clikhouse import change_token_processors
+
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="keycloak",
+        jwks_uri=f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/certs",
+    )
 
 
 @TestStep(Given)
@@ -1178,36 +1222,53 @@ def access_token_processors(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserDirectories_UserGroups("1.0")
 )
 def auth_user_directories_user_groups(self):
-    """Support Keycloak user groups in role mapping."""
-    pass
+    """Configure user groups in role mapping."""
+    note("Configuring user groups in role mapping")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles("1.0"))
 def auth_user_roles(self):
-    """Roles applied based on mapping."""
-    pass
+    """Configure roles based on mapping."""
+    note("Configuring roles based on mapping")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["mapped_role"])
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_GroupFiltering("1.0"))
 def auth_user_roles_group_filtering(self):
-    """Filter groups via roles_filter regex."""
-    pass
+    """Configure group filtering via roles_filter regex."""
+    note("Configuring group filtering via roles_filter regex")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", roles_filter="^keycloak-.*$")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_MultipleGroups("1.0"))
 def auth_user_roles_multiple_groups(self):
-    """Union roles for multiple groups."""
-    pass
+    """Configure union roles for multiple groups."""
+    note("Configuring union roles for multiple groups")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak", common_roles=["group1_role", "group2_role"]
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoGroups("1.0"))
 def auth_user_roles_no_groups(self):
-    """No groups: only default roles apply."""
-    pass
+    """Configure default roles when no groups."""
+    note("Configuring default roles when no groups")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
 
 @TestStep(Given)
@@ -1215,8 +1276,13 @@ def auth_user_roles_no_groups(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SubgroupMemberships("1.0")
 )
 def auth_user_roles_subgroup_memberships(self):
-    """Subgroup memberships are not auto-mapped."""
-    pass
+    """Configure subgroup memberships not auto-mapped."""
+    note("Configuring subgroup memberships not auto-mapped")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak", common_roles=["parent_group_role"]
+    )
 
 
 @TestStep(Given)
@@ -1224,22 +1290,33 @@ def auth_user_roles_subgroup_memberships(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles("1.0")
 )
 def auth_user_roles_no_matching_clickhouse_roles(self):
-    """No matching ClickHouse roles behavior."""
-    pass
+    """Configure no matching ClickHouse roles behavior."""
+    note("Configuring no matching ClickHouse roles behavior")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["fallback_role"])
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SameName("1.0"))
 def auth_user_roles_same_name(self):
-    """Map roles when names match exactly."""
-    pass
+    """Configure role mapping when names match exactly."""
+    note("Configuring role mapping when names match exactly")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(
+        processor="keycloak", common_roles=["exact_match_role"]
+    )
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingRoles("1.0"))
 def auth_user_roles_no_matching_roles(self):
-    """Only default roles when no matches exist."""
-    pass
+    """Configure default roles when no matches exist."""
+    note("Configuring default roles when no matches exist")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
 
 @TestStep(Given)
@@ -1247,22 +1324,60 @@ def auth_user_roles_no_matching_roles(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups("1.0")
 )
 def auth_user_roles_no_permission_to_view_groups(self):
-    """Default roles when user can't view groups."""
-    pass
+    """Configure default roles when user can't view groups."""
+    note("Configuring default roles when user can't view groups")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=["limited_role"])
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoDefaultRole("1.0"))
 def auth_user_roles_no_default_role(self):
-    """No default roles configured behavior."""
-    pass
+    """Configure no default roles behavior."""
+    note("Configuring no default roles behavior")
+    from oauth.tests.steps.clikhouse import change_user_directories_config
+
+    change_user_directories_config(processor="keycloak", common_roles=[])
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled("1.0"))
-def disable_user(self):
-    """When a user is disabled in Keycloak, ClickHouse SHALL reject any subsequent authentication attempts for that user. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL accept user authentication requests until the cache entry expires."""
-    pass
+def disable_user(self, username: str = "test_user", realm_name: str = "grafana"):
+    """Disable a user in Keycloak."""
+    note(f"Disabling user '{username}' in Keycloak")
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        note(f"User '{username}' not found, creating first")
+        user_id = create_user(
+            display_name=username,
+            mail_nickname=username,
+            user_principal_name=f"{username}@example.com",
+            realm_name=realm_name,
+        )
+    else:
+        user_id = user["id"]
+
+    disable_url = (
+        f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user_id}"
+    )
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    user_data = {"enabled": False}
+    response = requests.put(disable_url, json=user_data, headers=headers)
+    response.raise_for_status()
+    note(f"User '{username}' disabled successfully")
 
 
 @TestStep(Given)
@@ -1282,10 +1397,8 @@ def create_default_user(self, username: str = "demo", password: str = "demo"):
     groups_to_assign = ["/grafana-admins", "/can-read"]
 
     for group_path in groups_to_assign:
-        # Extract group name from path (remove leading slash)
         group_name = group_path.lstrip("/")
 
-        # Get the group by name
         group = get_keycloak_group_by_name(
             realm_name="grafana",
             group_name=group_name,
@@ -1338,44 +1451,237 @@ def delete_user(self, username: str, realm_name: str = "grafana"):
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserAddedToGroup("1.0"))
-def add_user_to_group(self):
-    """When a user is added to a group in Keycloak, ClickHouse SHALL grant the user the corresponding role and associated permissions on their next login, provided the group is mapped to a role in ClickHouse. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
-    pass
+def add_user_to_group(
+    self,
+    username: str = "test_user",
+    group_name: str = "test_group",
+    realm_name: str = "grafana",
+):
+    """Add a user to a group in Keycloak."""
+    note(f"Adding user '{username}' to group '{group_name}'")
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        note(f"User '{username}' not found, creating first")
+        user_id = create_user(
+            display_name=username,
+            mail_nickname=username,
+            user_principal_name=f"{username}@example.com",
+            realm_name=realm_name,
+        )
+    else:
+        user_id = user["id"]
+
+    group = get_keycloak_group_by_name(
+        realm_name=realm_name,
+        group_name=group_name,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if group is None:
+        note(f"Group '{group_name}' not found, creating first")
+        group_id = create_group(
+            display_name=group_name, mail_nickname=group_name, realm_name=realm_name
+        )
+    else:
+        group_id = group["id"]
+
+    assign_user_to_group(user_id=user_id, group_id=group_id, realm_name=realm_name)
+    note(f"User '{username}' added to group '{group_name}' successfully")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup("1.0"))
-def remove_user_from_group(self):
-    """When a user is removed from a group in Keycloak, ClickHouse SHALL revoke the corresponding role and its permissions from the user on their next login. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL update role grants on the next authentication request after cache expires."""
-    pass
+def remove_user_from_group(
+    self,
+    username: str = "test_user",
+    group_name: str = "test_group",
+    realm_name: str = "grafana",
+):
+    """Remove a user from a group in Keycloak."""
+    note(f"Removing user '{username}' from group '{group_name}'")
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        note(f"User '{username}' not found")
+        return
+
+    group = get_keycloak_group_by_name(
+        realm_name=realm_name,
+        group_name=group_name,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if group is None:
+        note(f"Group '{group_name}' not found")
+        return
+
+    remove_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user['id']}/groups/{group['id']}"
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.delete(remove_url, headers=headers)
+    response.raise_for_status()
+    note(f"User '{username}' removed from group '{group_name}' successfully")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_GroupDeleted("1.0"))
-def delete_group(self):
-    """When a group that is mapped to a ClickHouse role is deleted in Keycloak, users who were members of that group SHALL lose the associated permissions in ClickHouse upon their next authentication. However, if ClickHouse has a valid token cache entry for the user, ClickHouse SHALL remove corresponding role grants on the next authentication request after cache expires."""
-    pass
+def delete_group(self, group_name: str = "test_group", realm_name: str = "grafana"):
+    """Delete a group in Keycloak."""
+    note(f"Deleting group '{group_name}' in Keycloak")
+    admin_token = get_admin_token()
+
+    group = get_keycloak_group_by_name(
+        realm_name=realm_name,
+        group_name=group_name,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if group is None:
+        note(f"Group '{group_name}' not found")
+        return
+
+    delete_url = (
+        f"{self.context.keycloak_url}/admin/realms/{realm_name}/groups/{group['id']}"
+    )
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.delete(delete_url, headers=headers)
+    response.raise_for_status()
+    note(f"Group '{group_name}' deleted successfully")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ClientDisabled("1.0"))
-def disable_client(self):
-    """When the client application used for OAuth integration is disabled in Keycloak, ClickHouse SHALL reject all incoming access tokens issued for that client. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
-    pass
+def disable_client(
+    self, client_id: str = "grafana-client", realm_name: str = "grafana"
+):
+    """Disable a client in Keycloak."""
+    note(f"Disabling client '{client_id}' in Keycloak")
+    admin_token = get_admin_token()
+
+    clients_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    params = {"clientId": client_id}
+    response = requests.get(clients_url, params=params, headers=headers)
+    response.raise_for_status()
+
+    clients = response.json()
+    if not clients:
+        note(f"Client '{client_id}' not found")
+        return
+
+    client = clients[0]
+    disable_url = (
+        f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients/{client['id']}"
+    )
+
+    client_data = {"enabled": False}
+    response = requests.put(disable_url, json=client_data, headers=headers)
+    response.raise_for_status()
+    note(f"Client '{client_id}' disabled successfully")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_ConsentRevoked("1.0"))
-def revoke_consent(self):
-    """If a user's consent for the application is revoked in Keycloak, ClickHouse SHALL reject authentication attempts until consent is granted again. However, if ClickHouse has a valid token cache entry for some of the users, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
-    pass
+def revoke_consent(
+    self,
+    username: str = "test_user",
+    client_id: str = "grafana-client",
+    realm_name: str = "grafana",
+):
+    """Revoke user consent for an application in Keycloak."""
+    note(f"Revoking consent for user '{username}' and client '{client_id}'")
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        note(f"User '{username}' not found")
+        return
+
+    clients_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    params = {"clientId": client_id}
+    response = requests.get(clients_url, params=params, headers=headers)
+    response.raise_for_status()
+
+    clients = response.json()
+    if not clients:
+        note(f"Client '{client_id}' not found")
+        return
+
+    client = clients[0]
+    consent_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user['id']}/consents/{client['id']}"
+
+    response = requests.delete(consent_url, headers=headers)
+    response.raise_for_status()
+    note(f"Consent revoked for user '{username}' and client '{client_id}' successfully")
 
 
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Keycloak_Actions_TokenInvalid("1.0"))
-def invalidate_token(self):
-    """If a user's token becomes invalidated (for various reasons other than token expiration), ClickHouse SHALL reject authentication attempts with that token. However, if ClickHouse has a valid token cache entry for the corresponding user, ClickHouse SHALL accept authentication requests while corresponding cache entries are valid."""
-    pass
+def invalidate_token(self, username: str = "test_user", realm_name: str = "grafana"):
+    """Invalidate user sessions in Keycloak."""
+    note(f"Invalidating sessions for user '{username}'")
+    admin_token = get_admin_token()
+
+    user = get_keycloak_user_by_username(
+        realm_name=realm_name,
+        username=username,
+        keycloak_url=self.context.keycloak_url,
+        admin_token=admin_token,
+    )
+
+    if user is None:
+        note(f"User '{username}' not found")
+        return
+
+    logout_url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users/{user['id']}/logout"
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json",
+    }
+
+    response = requests.post(logout_url, headers=headers)
+    response.raise_for_status()
+    note(f"Sessions invalidated for user '{username}' successfully")
 
 
 @TestStep(Given)
@@ -1520,9 +1826,6 @@ def modify_jwt_token(
     return modified_token
 
 
-# JWT Header Field Manipulation Steps
-
-
 @TestStep(Given)
 @Requirements(RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"))
 def modify_jwt_header_alg_to_none(self, token: str):
@@ -1555,9 +1858,6 @@ def modify_jwt_header_typ_to_invalid(self, token: str):
 def modify_jwt_header_kid_to_invalid(self, token: str):
     """Modify the 'kid' field to an invalid key ID."""
     return modify_jwt_token(token=token, header_changes={"kid": "invalid-key-id"})
-
-
-# JWT Payload Field Manipulation Steps
 
 
 @TestStep(Given)
