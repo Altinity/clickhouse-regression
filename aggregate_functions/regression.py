@@ -792,6 +792,10 @@ ffails = {
         Skip,
         "timeSeriesChangesToGrid test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function studentTTestOneSample": (
+        Skip,
+        "studentTTestOneSample test is not implemented",
+    ),
 }
 
 
