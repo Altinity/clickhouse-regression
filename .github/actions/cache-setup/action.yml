@@ -51,18 +51,9 @@ runs:
                 fi
             fi
             }
-            {
-                for DIR in image buildkit; do
-                    if [ -d "$DOCKER_CACHE_DIR/$DIR" ]; then
-                    echo "Restoring $DIR from cache"
-                    sudo rm -rf "/var/lib/docker/$DIR"
-                    sudo cp -a "$DOCKER_CACHE_DIR/$DIR" "/var/lib/docker/$DIR"
-                    fi
-                done
 
-                sudo sync
-                sudo systemctl start docker
-            }
+            sudo sync
+            sudo systemctl start docker
         else
             echo "No docker cache directory available, proceeding without caching"
         fi
