@@ -1,72 +1,72 @@
-name: 'Cache setup'
-description: 'Cache setup'
+# name: 'Cache setup'
+# description: 'Cache setup'
 
-runs:
-  using: 'composite'
-  steps:
-    - name: Setup Docker cache
-      shell: bash
-      run: |
-        if ! systemctl is-active --quiet docker; then
-            echo "Docker is not running, skipping Docker cache setup"
-            exit 0
-        fi
+# runs:
+#   using: 'composite'
+#   steps:
+#     - name: Setup Docker cache
+#       shell: bash
+#       run: |
+#         if ! systemctl is-active --quiet docker; then
+#             echo "Docker is not running, skipping Docker cache setup"
+#             exit 0
+#         fi
 
-        if [ -f "/etc/hetzner-volumes" ]; then
-            echo "Hetzner volumes"
-            cat /etc/hetzner-volumes
-        fi
+#         if [ -f "/etc/hetzner-volumes" ]; then
+#             echo "Hetzner volumes"
+#             cat /etc/hetzner-volumes
+#         fi
 
-        if [ -d "/mnt/cache" ]; then
-            {
-                DOCKER_CACHE_DIR="/mnt/cache/docker"
-                echo "Using docker cache directory: $DOCKER_CACHE_DIR"
-            }
-            {
-                echo "Stopping Docker to prepare cache"
-                sudo systemctl stop docker
-                sudo sync
-            }
+#         if [ -d "/mnt/cache" ]; then
+#             {
+#                 DOCKER_CACHE_DIR="/mnt/cache/docker"
+#                 echo "Using docker cache directory: $DOCKER_CACHE_DIR"
+#             }
+#             {
+#                 echo "Stopping Docker to prepare cache"
+#                 sudo systemctl stop docker
+#                 sudo sync
+#             }
 
-            {
-                echo "Deleting empty overlay2 directories"
-                mkdir -p "$DOCKER_CACHE_DIR/overlay2"
-                sudo find "$DOCKER_CACHE_DIR/overlay2" -maxdepth 1 -mindepth 1 -type d -empty -delete
-            }
-            {
-            if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
-                echo "Restoring overlay2 from cache"
-                sudo rm -rf "/var/lib/docker/overlay2"
-                targets=$(sudo find "$DOCKER_CACHE_DIR/overlay2" -mindepth 1 -maxdepth 1)
-                if [ -z "$targets" ]; then
-                    echo "⚠️  No entries found in $DOCKER_CACHE_DIR/overlay2 — skipping"
-                else
-                    for target in $targets; do
-                        id=$(basename "$target")
-                        echo "Mounting $target to /var/lib/docker/overlay2/$id"
-                        sudo mkdir -p "/var/lib/docker/overlay2/$id"
-                        sudo mount --bind "$target" "/var/lib/docker/overlay2/$id"
-                        echo "/var/lib/docker/overlay2/$id" | sudo tee -a /etc/docker-cache-mounts > /dev/null
-                    done
-                fi
-            fi
-            }
+#             {
+#                 echo "Deleting empty overlay2 directories"
+#                 mkdir -p "$DOCKER_CACHE_DIR/overlay2"
+#                 sudo find "$DOCKER_CACHE_DIR/overlay2" -maxdepth 1 -mindepth 1 -type d -empty -delete
+#             }
+#             {
+#             if [ -d "$DOCKER_CACHE_DIR/overlay2" ]; then
+#                 echo "Restoring overlay2 from cache"
+#                 sudo rm -rf "/var/lib/docker/overlay2"
+#                 targets=$(sudo find "$DOCKER_CACHE_DIR/overlay2" -mindepth 1 -maxdepth 1)
+#                 if [ -z "$targets" ]; then
+#                     echo "⚠️  No entries found in $DOCKER_CACHE_DIR/overlay2 — skipping"
+#                 else
+#                     for target in $targets; do
+#                         id=$(basename "$target")
+#                         echo "Mounting $target to /var/lib/docker/overlay2/$id"
+#                         sudo mkdir -p "/var/lib/docker/overlay2/$id"
+#                         sudo mount --bind "$target" "/var/lib/docker/overlay2/$id"
+#                         echo "/var/lib/docker/overlay2/$id" | sudo tee -a /etc/docker-cache-mounts > /dev/null
+#                     done
+#                 fi
+#             fi
+#             }
 
-            sudo sync
-            sudo systemctl start docker
-        else
-            echo "No docker cache directory available, proceeding without caching"
-        fi
+#             sudo sync
+#             sudo systemctl start docker
+#         else
+#             echo "No docker cache directory available, proceeding without caching"
+#         fi
 
-    - name: Setup Python cache
-      shell: bash
-      run: |
-        if [ -d "/mnt/cache" ]; then
-            PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
-            mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
-            sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
-            echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
-        else
-            PYTHON_CACHE_DIR=""
-            echo "No Python venv cache directory available, proceeding without caching"
-        fi
+#     - name: Setup Python cache
+#       shell: bash
+#       run: |
+#         if [ -d "/mnt/cache" ]; then
+#             PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
+#             mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
+#             sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
+#             echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
+#         else
+#             PYTHON_CACHE_DIR=""
+#             echo "No Python venv cache directory available, proceeding without caching"
+#         fi
