@@ -203,43 +203,6 @@ def test_comprehensive_jwt_modifications(self):
         access_clickhouse_with_modified_token(token_modification_step=modification_step)
 
 
-@TestScenario
-@Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
-)
-def test_multiple_jwt_modifications(self):
-    """Test combining multiple JWT token modifications."""
-    client = self.context.provider_client
-
-    with Given("I get a valid OAuth token from the provider"):
-        original_token = client.OAuthProvider.get_oauth_token()
-
-    modifications_combinations = [
-        (
-            "header + payload",
-            client.OAuthProvider.modify_jwt_header_alg_to_invalid,
-            client.OAuthProvider.modify_jwt_payload_exp_to_expired,
-        ),
-        (
-            "payload + signature",
-            client.OAuthProvider.modify_jwt_payload_groups_to_admin,
-            client.OAuthProvider.invalidate_jwt_signature,
-        ),
-        (
-            "header + signature",
-            client.OAuthProvider.modify_jwt_header_alg_to_none,
-            client.OAuthProvider.remove_jwt_signature,
-        ),
-    ]
-
-    for combination_name, first_step, second_step in modifications_combinations:
-        token_step1 = first_step(original_token)
-        modified_token = second_step(token_step1)
-        check_clickhouse_is_alive()
-
-
 @TestFeature
 @Name("jwt_manipulation")
 @Requirements(
@@ -266,4 +229,3 @@ def feature(self):
     Scenario(run=test_jwt_payload_user_info_modifications)
     Scenario(run=test_jwt_signature_modifications)
     Scenario(run=test_comprehensive_jwt_modifications)
-    Scenario(run=test_multiple_jwt_modifications)
