@@ -4,7 +4,10 @@ import requests
 from testflows.core import *
 from oauth.requirements.requirements import *
 from helpers.common import getuid
-from oauth.tests.steps.clikhouse import change_token_processors
+from oauth.tests.steps.clikhouse import (
+    change_token_processors,
+    change_user_directories_config,
+)
 
 
 @TestStep(Given)
@@ -682,7 +685,6 @@ def special_chars_processor_name_configuration(self, node=None):
 )
 def missing_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with missing processor in user directories."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="",
@@ -698,7 +700,6 @@ def missing_processor_user_directory_configuration(self, node=None):
 )
 def whitespace_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only processor in user directories."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="   ",
@@ -714,7 +715,6 @@ def whitespace_processor_user_directory_configuration(self, node=None):
 )
 def non_existent_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with non-existent processor in user directories."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="non_existent_processor",
@@ -730,7 +730,6 @@ def non_existent_processor_user_directory_configuration(self, node=None):
 )
 def case_mismatch_processor_user_directory_configuration(self, node=None):
     """Configure ClickHouse with case-mismatched processor in user directories."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="Keycloak_Processor",
@@ -746,7 +745,6 @@ def case_mismatch_processor_user_directory_configuration(self, node=None):
 )
 def invalid_common_roles_configuration(self, node=None):
     """Configure ClickHouse with invalid common roles."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -763,7 +761,6 @@ def invalid_common_roles_configuration(self, node=None):
 )
 def whitespace_common_roles_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only common roles."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -780,7 +777,6 @@ def whitespace_common_roles_configuration(self, node=None):
 )
 def special_chars_common_roles_configuration(self, node=None):
     """Configure ClickHouse with special characters in common roles."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -797,7 +793,6 @@ def special_chars_common_roles_configuration(self, node=None):
 )
 def invalid_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with invalid roles filter regex."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -814,7 +809,6 @@ def invalid_roles_filter_configuration(self, node=None):
 )
 def empty_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with empty roles filter."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -831,7 +825,6 @@ def empty_roles_filter_configuration(self, node=None):
 )
 def whitespace_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with whitespace-only roles filter."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -848,7 +841,6 @@ def whitespace_roles_filter_configuration(self, node=None):
 )
 def malformed_roles_filter_configuration(self, node=None):
     """Configure ClickHouse with malformed roles filter."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak",
@@ -939,7 +931,6 @@ def missing_user_directories_configuration(self, node=None):
 )
 def empty_user_directories_configuration(self, node=None):
     """Configure ClickHouse with empty user directories configuration."""
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="",
@@ -1069,10 +1060,6 @@ def completely_invalid_configuration(self, node=None):
 )
 def partially_invalid_configuration(self, node=None):
     """Configure ClickHouse with partially invalid Keycloak configuration."""
-    from oauth.tests.steps.clikhouse import (
-        change_token_processors,
-        change_user_directories_config,
-    )
 
     change_token_processors(
         processor_name="keycloak_partial",
@@ -1096,10 +1083,6 @@ def partially_invalid_configuration(self, node=None):
 )
 def mixed_valid_invalid_configuration(self, node=None):
     """Configure ClickHouse with mixed valid and invalid configuration."""
-    from oauth.tests.steps.clikhouse import (
-        change_token_processors,
-        change_user_directories_config,
-    )
 
     change_token_processors(
         processor_name="keycloak_mixed",
@@ -1140,7 +1123,6 @@ def access_token_support(self):
 def tokens_operation_modes(self):
     """Configure Keycloak token processing operation modes."""
     note("Configuring Keycloak token processing operation modes")
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak",
@@ -1154,7 +1136,6 @@ def tokens_operation_modes(self):
 def tokens_operation_modes_fallback(self):
     """Configure fallback to remote verification."""
     note("Configuring fallback to remote verification")
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak",
@@ -1169,7 +1150,6 @@ def tokens_operation_modes_fallback(self):
 def tokens_configuration_validation(self):
     """Validate token processor configuration options."""
     note("Validating token processor configuration options")
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak",
@@ -1183,7 +1163,6 @@ def tokens_configuration_validation(self):
 def tokens_operational_provider_type(self):
     """Configure OpenID provider type for Keycloak."""
     note("Configuring OpenID provider type for Keycloak")
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak",
@@ -1208,7 +1187,6 @@ def get_access_token_requirement(self):
 def access_token_processors(self):
     """Configure access token processor for Keycloak."""
     note("Configuring access token processor for Keycloak")
-    from oauth.tests.steps.clikhouse import change_token_processors
 
     change_token_processors(
         processor_name="keycloak",
@@ -1224,7 +1202,6 @@ def access_token_processors(self):
 def auth_user_directories_user_groups(self):
     """Configure user groups in role mapping."""
     note("Configuring user groups in role mapping")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
@@ -1234,7 +1211,6 @@ def auth_user_directories_user_groups(self):
 def auth_user_roles(self):
     """Configure roles based on mapping."""
     note("Configuring roles based on mapping")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["mapped_role"])
 
@@ -1244,7 +1220,6 @@ def auth_user_roles(self):
 def auth_user_roles_group_filtering(self):
     """Configure group filtering via roles_filter regex."""
     note("Configuring group filtering via roles_filter regex")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", roles_filter="^keycloak-.*$")
 
@@ -1254,7 +1229,6 @@ def auth_user_roles_group_filtering(self):
 def auth_user_roles_multiple_groups(self):
     """Configure union roles for multiple groups."""
     note("Configuring union roles for multiple groups")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak", common_roles=["group1_role", "group2_role"]
@@ -1266,7 +1240,6 @@ def auth_user_roles_multiple_groups(self):
 def auth_user_roles_no_groups(self):
     """Configure default roles when no groups."""
     note("Configuring default roles when no groups")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
@@ -1278,7 +1251,6 @@ def auth_user_roles_no_groups(self):
 def auth_user_roles_subgroup_memberships(self):
     """Configure subgroup memberships not auto-mapped."""
     note("Configuring subgroup memberships not auto-mapped")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak", common_roles=["parent_group_role"]
@@ -1292,7 +1264,6 @@ def auth_user_roles_subgroup_memberships(self):
 def auth_user_roles_no_matching_clickhouse_roles(self):
     """Configure no matching ClickHouse roles behavior."""
     note("Configuring no matching ClickHouse roles behavior")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["fallback_role"])
 
@@ -1302,7 +1273,6 @@ def auth_user_roles_no_matching_clickhouse_roles(self):
 def auth_user_roles_same_name(self):
     """Configure role mapping when names match exactly."""
     note("Configuring role mapping when names match exactly")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(
         processor="keycloak", common_roles=["exact_match_role"]
@@ -1314,7 +1284,6 @@ def auth_user_roles_same_name(self):
 def auth_user_roles_no_matching_roles(self):
     """Configure default roles when no matches exist."""
     note("Configuring default roles when no matches exist")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["default_role"])
 
@@ -1326,7 +1295,6 @@ def auth_user_roles_no_matching_roles(self):
 def auth_user_roles_no_permission_to_view_groups(self):
     """Configure default roles when user can't view groups."""
     note("Configuring default roles when user can't view groups")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=["limited_role"])
 
@@ -1336,7 +1304,6 @@ def auth_user_roles_no_permission_to_view_groups(self):
 def auth_user_roles_no_default_role(self):
     """Configure no default roles behavior."""
     note("Configuring no default roles behavior")
-    from oauth.tests.steps.clikhouse import change_user_directories_config
 
     change_user_directories_config(processor="keycloak", common_roles=[])
 
