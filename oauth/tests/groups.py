@@ -49,7 +49,7 @@ def group_actions(self):
     ]
 
     for step in steps:
-        Scenario(test=verify_keycloak_action_effect)(action_step=step)
+        Check(test=verify_keycloak_action_effect)(action_step=step)
 
 
 @TestFeature
@@ -58,6 +58,6 @@ def group_actions(self):
     RQ_SRS_042_OAuth_Keycloak_Actions_UserDisabled("1.0"),
 )
 def feature(self):
-    """Feature to test Keycloak actions requirements."""
+    """Test ClickHouse role related actions."""
 
     Scenario(run=group_actions)
