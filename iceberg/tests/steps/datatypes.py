@@ -35,6 +35,9 @@ class IcebergIntegerType(BaseIcebergTypeTest):
     iceberg_type = IntegerType()
     arrow_type = pa.int32()
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.randint(0, 10000)
 
@@ -43,6 +46,9 @@ class IcebergLongType(BaseIcebergTypeTest):
     name = "long"
     iceberg_type = LongType()
     arrow_type = pa.int64()
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         return random.randint(0, 10000)
@@ -53,6 +59,9 @@ class IcebergDoubleType(BaseIcebergTypeTest):
     iceberg_type = DoubleType()
     arrow_type = pa.float64()
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.uniform(0, 100)
 
@@ -61,6 +70,9 @@ class IcebergFloatType(BaseIcebergTypeTest):
     name = "float"
     iceberg_type = FloatType()
     arrow_type = pa.float32()
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         return random.uniform(0, 100)
@@ -71,6 +83,9 @@ class IcebergBooleanType(BaseIcebergTypeTest):
     iceberg_type = BooleanType()
     arrow_type = pa.bool_()
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.choice([True, False])
 
@@ -79,6 +94,9 @@ class IcebergTimestampType(BaseIcebergTypeTest):
     name = "timestamp"
     iceberg_type = TimestampType()
     arrow_type = pa.timestamp("us")
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         return random.randint(0, 100000000)
@@ -94,6 +112,9 @@ class IcebergTimestamptzType(BaseIcebergTypeTest):
     iceberg_type = TimestamptzType()
     arrow_type = pa.timestamp("us", tz="UTC")
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.randint(0, 10000)
 
@@ -106,6 +127,9 @@ class IcebergDateType(BaseIcebergTypeTest):
     name = "date"
     iceberg_type = DateType()
     arrow_type = pa.date32()
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         return random.randint(0, 10000)
@@ -120,6 +144,9 @@ class IcebergStringType(BaseIcebergTypeTest):
     iceberg_type = StringType()
     arrow_type = pa.string()
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.choice(["test", "test2", "test3"])
 
@@ -132,6 +159,9 @@ class IcebergFixedStringType(BaseIcebergTypeTest):
     name = "fixed_string"
     iceberg_type = FixedType(length=10)
     arrow_type = pa.binary(10)
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         # Generate exactly 10 bytes for fixed-length binary
@@ -148,6 +178,9 @@ class IcebergUUIDType(BaseIcebergTypeTest):
     iceberg_type = UUIDType()
     arrow_type = pa.binary(16)
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return uuid.uuid4().bytes
 
@@ -162,6 +195,9 @@ class IcebergBinaryType(BaseIcebergTypeTest):
     iceberg_type = BinaryType()
     arrow_type = pa.binary()
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return random.choice(["test", "test2", "test3"])
 
@@ -175,6 +211,9 @@ class IcebergDecimalType(BaseIcebergTypeTest):
     iceberg_type = DecimalType(38, 18)
     arrow_type = pa.decimal128(38, 18)
 
+    def __init__(self, required=False):
+        self.required = required
+
     def generate(self):
         return Decimal(random.randint(0, 10000)) / Decimal(100)
 
@@ -183,6 +222,9 @@ class IcebergTimeType(BaseIcebergTypeTest):
     name = "time"
     iceberg_type = TimeType()
     arrow_type = pa.time64("us")
+
+    def __init__(self, required=False):
+        self.required = required
 
     def generate(self):
         return random.randint(0, 100000000)
