@@ -1,9 +1,14 @@
-# name: 'Cache sync'
-# description: 'Cache sync'
+name: 'Cache sync'
+description: 'Cache sync (disabled)'
 
-# runs:
-#   using: 'composite'
-#   steps:
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache sync (disabled)
+      shell: bash
+      run: |
+        echo "Caching is disabled - skipping cache sync"
+
 #     - name: Sync Docker cache
 #       shell: bash
 #       run: |

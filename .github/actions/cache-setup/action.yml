@@ -1,9 +1,14 @@
-# name: 'Cache setup'
-# description: 'Cache setup'
+name: 'Cache setup'
+description: 'Cache setup (disabled)'
 
-# runs:
-#   using: 'composite'
-#   steps:
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache setup (disabled)
+      shell: bash
+      run: |
+        echo "Caching is disabled - skipping cache setup"
+
 #     - name: Setup Docker cache
 #       shell: bash
 #       run: |
