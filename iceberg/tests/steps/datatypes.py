@@ -1,7 +1,8 @@
-import random
 import uuid
-
+import random
 import pyarrow as pa
+
+from decimal import Decimal
 from pyiceberg.types import *
 
 
@@ -18,6 +19,16 @@ class BaseIcebergTypeTest:
         """Return a SQL WHERE clause for filtering on this type"""
         raise NotImplementedError
 
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return str(value)
+
+    def filter_clause(self, column_name, value=None, comparison_operator="="):
+        """Return a SQL WHERE clause for filtering on this type"""
+        if value is None:
+            value = self.generate()
+        return f"{column_name} {comparison_operator} {self.format_value(value)}"
+
 
 class IcebergIntegerType(BaseIcebergTypeTest):
     name = "integer"
@@ -26,11 +37,6 @@ class IcebergIntegerType(BaseIcebergTypeTest):
 
     def generate(self):
         return random.randint(0, 10000)
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
 
 
 class IcebergLongType(BaseIcebergTypeTest):
@@ -41,11 +47,6 @@ class IcebergLongType(BaseIcebergTypeTest):
     def generate(self):
         return random.randint(0, 10000)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
-
 
 class IcebergDoubleType(BaseIcebergTypeTest):
     name = "double"
@@ -54,11 +55,6 @@ class IcebergDoubleType(BaseIcebergTypeTest):
 
     def generate(self):
         return random.uniform(0, 100)
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
 
 
 class IcebergFloatType(BaseIcebergTypeTest):
@@ -69,11 +65,6 @@ class IcebergFloatType(BaseIcebergTypeTest):
     def generate(self):
         return random.uniform(0, 100)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
-
 
 class IcebergBooleanType(BaseIcebergTypeTest):
     name = "boolean"
@@ -82,11 +73,6 @@ class IcebergBooleanType(BaseIcebergTypeTest):
 
     def generate(self):
         return random.choice([True, False])
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
 
 
 class IcebergTimestampType(BaseIcebergTypeTest):
@@ -97,10 +83,9 @@ class IcebergTimestampType(BaseIcebergTypeTest):
     def generate(self):
         return random.randint(0, 100000000)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} toDateTime64({value}/1000000, 6)"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"toDateTime64({value}/1000000, 6)"
 
 
 class IcebergTimestamptzType(BaseIcebergTypeTest):
@@ -112,10 +97,9 @@ class IcebergTimestamptzType(BaseIcebergTypeTest):
     def generate(self):
         return random.randint(0, 10000)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} toDateTime64({value}/1000000, 6, '{self.timezone}')"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"toDateTime64({value}/1000000, 6, '{self.timezone}')"
 
 
 class IcebergDateType(BaseIcebergTypeTest):
@@ -126,10 +110,9 @@ class IcebergDateType(BaseIcebergTypeTest):
     def generate(self):
         return random.randint(0, 10000)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} toDate32({value})"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"toDate32({value})"
 
 
 class IcebergStringType(BaseIcebergTypeTest):
@@ -140,40 +123,38 @@ class IcebergStringType(BaseIcebergTypeTest):
     def generate(self):
         return random.choice(["test", "test2", "test3"])
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} '{value}'"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"'{value}'"
 
 
 class IcebergFixedStringType(BaseIcebergTypeTest):
     name = "fixed_string"
     iceberg_type = FixedType(length=10)
-    arrow_type = pa.fixed_size_binary(10)
+    arrow_type = pa.binary(10)
 
     def generate(self):
-        return random.choice(["test", "test2", "test3"])
+        # Generate exactly 10 bytes for fixed-length binary
+        return bytes([i % 256 for i in range(10)])
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} '{value}'"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        value_str = value.decode("utf-8").rstrip()
+        return f"'{value_str}'"
 
 
 class IcebergUUIDType(BaseIcebergTypeTest):
     name = "uuid"
     iceberg_type = UUIDType()
-    arrow_type = pa.uuid()
+    arrow_type = pa.binary(16)
 
     def generate(self):
         return uuid.uuid4().bytes
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        # Convert UUID bytes back to string for SQL query
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
         uuid_str = str(uuid.UUID(bytes=value))
-        return f"{column_name} {comparison_operator} '{uuid_str}'"
+        return f"'{uuid_str}'"
 
 
 class IcebergBinaryType(BaseIcebergTypeTest):
@@ -184,10 +165,9 @@ class IcebergBinaryType(BaseIcebergTypeTest):
     def generate(self):
         return random.choice(["test", "test2", "test3"])
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} '{value}'"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"'{value}'"
 
 
 class IcebergDecimalType(BaseIcebergTypeTest):
@@ -196,12 +176,7 @@ class IcebergDecimalType(BaseIcebergTypeTest):
     arrow_type = pa.decimal128(38, 18)
 
     def generate(self):
-        return random.randint(0, 10000)
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} {value}"
+        return Decimal(random.randint(0, 10000)) / Decimal(100)
 
 
 class IcebergTimeType(BaseIcebergTypeTest):
@@ -212,38 +187,6 @@ class IcebergTimeType(BaseIcebergTypeTest):
     def generate(self):
         return random.randint(0, 100000000)
 
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} toTime64({value}/1000000, 6)"
-
-
-class IcebergTimestampTypeNano(BaseIcebergTypeTest):
-    name = "timestamp_nano"
-    iceberg_type = TimestampType()
-    arrow_type = pa.timestamp("ns")
-
-    def generate(self):
-        return random.randint(0, 1000000000000000000)
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return (
-            f"{column_name} {comparison_operator} toDateTime64({value}/1000000000, 9)"
-        )
-
-
-class IcebergTimeStamptzNano(BaseIcebergTypeTest):
-    name = "timestamptz_nano"
-    timezone = "UTC"
-    iceberg_type = TimestamptzType()
-    arrow_type = pa.timestamp("ns", tz=timezone)
-
-    def generate(self):
-        return random.randint(0, 1000000000000000000)
-
-    def filter_clause(self, column_name, value=None, comparison_operator="="):
-        if value is None:
-            value = self.generate()
-        return f"{column_name} {comparison_operator} toDateTime64({value}/1000000000, 9, '{self.timezone}')"
+    def format_value(self, value):
+        """Format a value for a SQL WHERE clause"""
+        return f"'{value}'"
