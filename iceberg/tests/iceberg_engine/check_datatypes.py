@@ -13,11 +13,11 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 
 ALL_DATATYPES = [
-    IcebergIntegerType(),
-    IcebergLongType(),
-    IcebergDoubleType(),
-    IcebergFloatType(),
-    IcebergBooleanType(),
+    IcebergIntegerType(required=True),
+    IcebergLongType(required=True),
+    IcebergDoubleType(required=True),
+    IcebergFloatType(required=True),
+    IcebergBooleanType(required=True),
     IcebergTimestampType(),
     IcebergTimestamptzType(),
     IcebergDateType(),
