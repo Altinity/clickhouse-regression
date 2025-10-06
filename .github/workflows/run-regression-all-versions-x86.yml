@@ -86,12 +86,10 @@ jobs:
             artifact_name: altinitystable-23-8-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:24.3.12.76.altinitystable
             artifact_name: altinitystable-24-3-x86-zookeeper
-          - clickhouse_package: docker://altinity/clickhouse-server:24.8.7.43.altinityedge
+          - clickhouse_package: docker://altinity/clickhouse-server:24.8.14.10501.altinitystable
             artifact_name: altinityedge-24-8-x86-zookeeper
           - clickhouse_package: docker://clickhouse/clickhouse-server:head-alpine
             artifact_name: clickhouse-head-x86-zookeeper
-          - clickhouse_package: docker://altinity/clickhouse-server:25.3.3.20186.altinityantalya
-            artifact_name: altinityantalya-25-3-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:25.6.5.20420.altinityantalya
             artifact_name: altinityantalya-25-6-x86-zookeeper
 
