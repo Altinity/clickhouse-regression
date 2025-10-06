@@ -57,7 +57,7 @@ on:
       runner_volume:
         required: false
         type: string
-        default: "volume-cache"
+        default: "volume-cache-10GB"
       artifacts:
         required: true
         type: string
