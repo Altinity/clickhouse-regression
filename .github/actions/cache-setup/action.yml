@@ -4,7 +4,7 @@ description: 'Cache setup'
 runs:
   using: 'composite'
   steps:
-    - name: Cache setup (disabled)
+    - name: Cache setup
       shell: bash
       run: |
       - name: Setup Python cache
