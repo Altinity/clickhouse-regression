@@ -44,6 +44,9 @@ def argparser():
     group.add_argument("--pr-number", type=int, help="PR number", default=None)
     group.add_argument("--branch-name", type=str, help="Branch name", default=None)
     group.add_argument("--commit-hash", type=str, help="Commit hash", default=None)
+    group.add_argument(
+        "--binary", action="store_true", help="Return binary url instead of deb url"
+    )
 
     return parser
 
@@ -127,8 +130,15 @@ if __name__ == "__main__":
         ) as file_handler:
             build_report = json.load(file_handler)
 
+    if args.binary:
+        is_desired_file = lambda url: url.endswith("/clickhouse")
+    else:
+        is_desired_file = (
+            lambda url: "clickhouse-common-static_" in url and "deb" in url
+        )
+
     for url in build_report["build_urls"]:
-        if "clickhouse-common-static_" in url and "deb" in url:
+        if is_desired_file(url):
             with open(github_env, "a") as f:
                 f.write("version=" + url.split("/")[-1].split("_")[1] + "\n")
                 f.write("clickhouse_path=" + url + "\n")
