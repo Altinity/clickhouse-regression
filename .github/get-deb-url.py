@@ -51,11 +51,11 @@ def argparser():
     return parser
 
 
-def get_build_url(s3_base_url, pr_number, branch, commit_hash):
+def get_build_url(s3_base_url, pr_number, branch, commit_hash, build="release"):
     if ARCH == "x86_64":
-        build_file = "build_amd_release/artifact_report_build_amd_release.json"
+        build_file = f"build_amd_{build}/artifact_report_build_amd_{build}.json"
     elif ARCH == "aarch64":
-        build_file = "build_arm_release/artifact_report_build_arm_release.json"
+        build_file = f"build_arm_{build}/artifact_report_build_arm_{build}.json"
 
     if pr_number == 0 or pr_number is None:
         return f"{s3_base_url.rstrip('/')}/REFs/{branch}/{commit_hash}/{build_file}"
@@ -87,6 +87,7 @@ def get_cached_build_url(workflow_config_file, s3_base_url):
             cache_details["pr_number"],
             cache_details["branch"],
             cache_details["sha"],
+            build_type,
         )
 
     return None
@@ -113,7 +114,12 @@ if __name__ == "__main__":
         url = get_cached_build_url(args.workflow_config_file, args.s3_base_url)
         if url is None:
             url = get_build_url(
-                args.s3_base_url, args.pr_number, args.branch_name, args.commit_hash
+                args.s3_base_url,
+                args.pr_number,
+                args.branch_name,
+                args.commit_hash,
+                # This is a good heuristic
+                "binary" if args.binary else "release",
             )
         build_report = requests.get(url)
         assert (
