@@ -1,0 +1,26 @@
+name: 🗓 Scheduled Altinity 25.3
+run-name: 🗓 Scheduled Altinity 25.3
+on:
+  workflow_dispatch:
+  #Run at 10:00 PM (UTC) on Saturday
+  schedule:
+    - cron: "0 22 * * 6"
+
+jobs:
+  altinitystable-25-3-x86-with-analyzer-zookeeper:
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: docker://altinity/clickhouse-server:25.3.6.10034.altinitystable
+      version: '25.3.6.10034'
+      extra_args: '--with-analyzer'
+      arch: x86
+    secrets: inherit
+
+  altinitystable-25-3-arm-with-analyzer-zookeeper:
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: docker://altinity/clickhouse-server:25.3.6.10034.altinitystable
+      version: '25.3.6.10034'
+      extra_args: '--with-analyzer'
+      arch: arm64
+    secrets: inherit
