@@ -4,18 +4,15 @@ description: 'Cache setup'
 runs:
   using: 'composite'
   steps:
-    - name: Cache setup
+    - name: Setup Python cache
       shell: bash
       run: |
-      - name: Setup Python cache
-        shell: bash
-        run: |
-          if [ -d "/mnt/cache" ]; then
-              PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
-              mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
-              sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
-              echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
-          else
-              PYTHON_CACHE_DIR=""
-              echo "No Python venv cache directory available, proceeding without caching"
-          fi
+        if [ -d "/mnt/cache" ]; then
+            PYTHON_CACHE_DIR="/mnt/cache/python3.12-venv"
+            mkdir -p "$PYTHON_CACHE_DIR" "$PWD/venv"
+            sudo mount --bind "$PYTHON_CACHE_DIR" "$PWD/venv"
+            echo "Using Python cached venv directory: $PYTHON_CACHE_DIR"
+        else
+            PYTHON_CACHE_DIR=""
+            echo "No Python venv cache directory available, proceeding without caching"
+        fi
