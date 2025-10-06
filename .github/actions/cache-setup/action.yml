@@ -4,6 +4,13 @@ description: 'Cache setup'
 runs:
   using: 'composite'
   steps:
+    - name: "Mounted volumes"
+      shell: bash
+      run: |
+         if [ -f "/etc/hetzner-volumes" ]; then
+             echo "Hetzner volumes"
+             cat /etc/hetzner-volumes
+         fi
     - name: Setup Python cache
       shell: bash
       run: |
