@@ -50,8 +50,8 @@ def short_hash(s):
 
 def download_http_binary(binary_source):
     """Download binary from http source and return path to the downloaded file."""
-    file_name = f"{short_hash(binary_source)}-{binary_source.rsplit('/', 1)[-1]}"
-    file_dir = f"{current_dir()}/../binaries/"
+    file_name = f"{binary_source.rsplit('/', 1)[-1]}"
+    file_dir = f"{current_dir()}/../binaries/{short_hash(binary_source)}/"
     os.makedirs(file_dir, exist_ok=True)
     file_path = file_dir + file_name
 
@@ -1408,9 +1408,13 @@ class PackageDownloader:
                 bash(f"chmod +x {self.binary_path}")
 
                 if not self.package_version:
-                    self.package_version = bash(
-                        f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
-                    ).output.strip(".")
+                    self.package_version = (
+                        bash(
+                            f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                        )
+                        .output.split("\n")[-1]
+                        .strip(".")
+                    )
 
         if binary_only:
             # Hide the package path / image to force using binary
