@@ -30,7 +30,7 @@ class IcebergTestTable:
         self.sort_order = sort_order or SortOrder()
 
         self.fields = [
-            NestedField(i + 1, dt.name, dt.iceberg_type, required=False)
+            NestedField(i + 1, dt.name, dt.iceberg_type, required=dt.required)
             for i, dt in enumerate(self.datatypes)
         ]
         self.schema = Schema(*self.fields)
@@ -44,7 +44,7 @@ class IcebergTestTable:
         )
 
         self.arrow_schema = pa.schema(
-            [(dt.name, dt.arrow_type) for dt in self.datatypes]
+            [(dt.name, dt.arrow_type, not dt.required) for dt in self.datatypes]
         )
 
         self.rows = []
@@ -75,7 +75,7 @@ class IcebergTestTable:
         return sum(1 for row in self.rows if op_func(row[column_name], value))
 
     def expected_where_result(self, column_name, comparison_operator="=", value=None):
-        """Compute expected number of rows matching the filter locally."""
+        """Compute expected select from one column matching the filter locally."""
         if value is None:
             return None
 
@@ -90,7 +90,7 @@ class IcebergTestTable:
         op_func = ops[comparison_operator]
         return "\n".join(
             [
-                "\t".join(str(val) for val in row.values())
+                str(row[column_name]).lower()
                 for row in self.rows
                 if op_func(row[column_name], value)
             ]
