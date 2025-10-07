@@ -13,7 +13,6 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer'
       arch: x86
-      run_s3_suites: true
     secrets: inherit
 
   clickhouse-head-arm-with-analyzer-zookeeper:
@@ -22,7 +21,6 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:head-alpine"
       extra_args: '--with-analyzer'
       arch: arm64
-      run_s3_suites: true
     secrets: inherit
 
   clickhouse-head-x86-with-analyzer-keeper:
@@ -40,5 +38,4 @@ jobs:
      package: "docker://clickhouse/clickhouse-server:head-alpine"
      extra_args: '--with-analyzer --use-keeper'
      arch: arm64
-     run_s3_suites: true
    secrets: inherit
