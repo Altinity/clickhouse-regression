@@ -30,7 +30,7 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
-      parquet_native_v3: true
+      run_s3_suites: true
       arch: x86
     secrets: inherit
 
@@ -42,6 +42,6 @@ jobs:
      package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
      version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
      extra_args: '--with-analyzer'
-     parquet_native_v3: true
+     run_s3_suites: true
      arch: arm64
    secrets: inherit
