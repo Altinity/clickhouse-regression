@@ -21,7 +21,7 @@
 
 **Summary:**
 
-[TBD]
+Approved for release.
 
 ## Table of Contents
 
@@ -117,8 +117,8 @@ The testing of 25.8.x binaries SHALL be started on [TBD] and be completed by [TB
 The following team members SHALL be dedicated to the release:
 
 * Vitaliy Zakaznikov (manager)
-* Davit Mnatobishvili (regression)
-* Alsu Giliazova (regression)
+* Davit Mnatobishvili (regression, clickhouse-odbc, grafana, superset, DBeaver)
+* Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
 * Saba Momtselidze (clickhouse-operator)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
@@ -141,7 +141,7 @@ The following team members SHALL be dedicated to the release:
 Build report: [TBD]
 
 > [!NOTE]
-> **TBD\*** - tests passed with known fails
+> **\*Pass** - tests passed with known fails
 
 | Test Suite  | Result                                        | Comments |
 | --- |-----------------------------------------------| --- |
@@ -618,20 +618,14 @@ clickhouse-driver version:
 * 0.2.9
 
 Results: 
-* [TBD]clickhouse-driver/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-driver/
 
 Created Patched for version 0.2.9:
-* [TBD]
-* [TBD]-json.patch
-* [TBD]-progress.patch
-* [TBD]-totals.patch
-* [TBD].patch
-
-Opened issues:
- * [TBD]
-
-Opened PRs:
- * [TBD]
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-cert.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-json.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-progress.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-totals.patch
+* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9.patch
   
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
@@ -650,10 +644,10 @@ The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc
 #### SQLAlchemy
 
 clickhouse-sqlalchemy version: 
-* 0.3.2
+* 0.2.9
 
 Results: 
-* [TBD]clickhouse-sqlalchemy/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
@@ -663,7 +657,7 @@ clickhouse-jdbc version:
 * 0.9.0
 
 Results: 
-* [TBD]clickhouse-jdbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-jdbc/
 
 Results (DBeaver): 
 * [TBD]clickhouse-jdbc/DBeaver/
