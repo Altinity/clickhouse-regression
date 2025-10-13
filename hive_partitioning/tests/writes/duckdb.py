@@ -113,7 +113,6 @@ def duckdb_supported_characters(
                 assert data == [(1,)], error()
 
 
-
 @TestFeature
 @Name("duckdb")
 def feature(

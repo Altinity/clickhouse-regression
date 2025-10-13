@@ -59,6 +59,7 @@ def partition_strategy_default(
             message="DB::Exception: Failed to check existence",
         )
 
+
 @TestFeature
 @Name("strategy parameter")
 def feature(
