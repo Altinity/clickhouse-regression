@@ -8,7 +8,7 @@ def verify_keycloak_action_effect(self, action_step):
     """Verify ClickHouse behavior for Keycloak-driven actions."""
 
     with Given("I apply a Keycloak-related action or state change"):
-        action_step()
+        action_step[0]()
 
     with When("I get an OAuth token from the provider"):
         client = self.context.provider_client
@@ -16,7 +16,7 @@ def verify_keycloak_action_effect(self, action_step):
 
     with Then("I try to access ClickHouse with the token"):
         response = access_clickhouse(token=token)
-        assert response.status_code in (200, 401), error()
+        assert response.status_code == action_step[1], error()
 
     with And("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()
@@ -38,14 +38,14 @@ def group_actions(self):
     client = self.context.provider_client
 
     steps = [
-        client.OAuthProvider.disable_user,
-        client.OAuthProvider.delete_user,
-        client.OAuthProvider.add_user_to_group,
-        client.OAuthProvider.remove_user_from_group,
-        client.OAuthProvider.delete_group,
-        client.OAuthProvider.disable_client,
-        client.OAuthProvider.revoke_consent,
-        client.OAuthProvider.invalidate_token,
+        (client.OAuthProvider.disable_user, 403),
+        (client.OAuthProvider.delete_user, 403),
+        (client.OAuthProvider.add_user_to_group, 200),
+        (client.OAuthProvider.remove_user_from_group, 403),
+        (client.OAuthProvider.delete_group, 403),
+        (client.OAuthProvider.disable_client, 403),
+        (client.OAuthProvider.revoke_consent, 403),
+        (client.OAuthProvider.invalidate_token, 403),
     ]
 
     for step in steps:

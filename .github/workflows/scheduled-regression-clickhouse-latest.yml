@@ -53,6 +53,7 @@ jobs:
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer --use-keeper'
       arch: x86
+      run_s3_suites: true
     secrets: inherit
 
   clickhouse-latest-arm-with-analyzer-keeper:
