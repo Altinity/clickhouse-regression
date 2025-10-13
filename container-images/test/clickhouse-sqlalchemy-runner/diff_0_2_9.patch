@@ -1,0 +1,22 @@
+diff --git a/tests/testcase.py b/tests/testcase.py
+index 67627c0..480d4e0 100644
+--- a/tests/testcase.py
++++ b/tests/testcase.py
+@@ -79,7 +79,7 @@ class BaseTestCase(BaseAbstractTestCase, TestCase):
+         )
+ 
+         version = system_native_session.execute('SELECT version()').fetchall()
+-        cls.server_version = tuple(int(x) for x in version[0][0].split('.'))
++        cls.server_version = tuple(int(x) for x in version[0][0].split('.')[0:-1])
+ 
+         super(BaseTestCase, cls).setUpClass()
+ 
+@@ -109,7 +109,7 @@ class BaseAsynchTestCase(BaseTestCase):
+         version = (
+             await system_asynch_session.execute('SELECT version()')
+         ).fetchall()
+-        cls.server_version = tuple(int(x) for x in version[0][0].split('.'))
++        cls.server_version = tuple(int(x) for x in version[0][0].split('.')[0:-1])
+ 
+         super(BaseTestCase, cls).setUpClass()
+ 
