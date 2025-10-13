@@ -4,11 +4,14 @@ from hive_partitioning.tests.steps import *
 from hive_partitioning.requirements.requirements import *
 from helpers.common import run_duckdb_query
 
+
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
-def s3_supported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_supported_types(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse supports only supported types for hive partitioning."""
 
     if node is None:
@@ -33,7 +36,10 @@ def s3_supported_types(self, uri, uri_readonly, minio_root_user, minio_root_pass
                             engine=f"S3(s3_conn, format = Parquet, filename='{table_name}/', partition_strategy='hive')",
                             partition_by="p",
                             node=node,
-                            settings=[("allow_experimental_object_type", "1"), ("enable_time_time64_type", "1")],
+                            settings=[
+                                ("allow_experimental_object_type", "1"),
+                                ("enable_time_time64_type", "1"),
+                            ],
                         )
 
                 if input_format == "positional_args":
@@ -44,7 +50,10 @@ def s3_supported_types(self, uri, uri_readonly, minio_root_user, minio_root_pass
                             engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
                             partition_by="p",
                             node=node,
-                            settings=[("allow_experimental_object_type", "1"), ("enable_time_time64_type", "1")],
+                            settings=[
+                                ("allow_experimental_object_type", "1"),
+                                ("enable_time_time64_type", "1"),
+                            ],
                         )
 
                 with When("I insert data into table"):
@@ -66,12 +75,14 @@ def s3_supported_types(self, uri, uri_readonly, minio_root_user, minio_root_pass
 @Requirements(
     RQ_HivePartitioning_Writes_DataTypesUnsupported("1.0"),
 )
-def s3_unsupported_types(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_unsupported_types(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that clickhouse returns an error when column defined in `PARTITION BY` clause has unsupported type."""
-    
+
     if node is None:
         node = self.context.node
-    
+
     hive_partition_column_types_values = unsupported_types_example_values
 
     input_formats = ["named_collections", "positional_args"]
@@ -90,7 +101,10 @@ def s3_unsupported_types(self, uri, uri_readonly, minio_root_user, minio_root_pa
                         engine=f"S3(s3_conn, format = Parquet, filename='{table_name}/', partition_strategy='hive')",
                         partition_by="p",
                         node=node,
-                        settings=[("allow_experimental_object_type", "1"), ("enable_time_time64_type", "1")],
+                        settings=[
+                            ("allow_experimental_object_type", "1"),
+                            ("enable_time_time64_type", "1"),
+                        ],
                     )
             if input_format == "positional_args":
                 with Given("I create table for hive partition writes"):
@@ -100,25 +114,38 @@ def s3_unsupported_types(self, uri, uri_readonly, minio_root_user, minio_root_pa
                         engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
                         partition_by="p",
                         node=node,
-                        settings=[("allow_experimental_object_type", "1"), ("enable_time_time64_type", "1")],
+                        settings=[
+                            ("allow_experimental_object_type", "1"),
+                            ("enable_time_time64_type", "1"),
+                        ],
                     )
                 with Then("I check exit code and message"):
-                    assert r.exitcode == 37 or r.exitcode == 36 or r.exitcode == 44, error()
-                    assert ("DB::Exception: Column with type" in r.output) or ("DB::Exception: Hive partitioning supports only partition columns of types" in r.output) or ("is not allowed in key expression" in r.output), error()
-
+                    assert (
+                        r.exitcode == 37 or r.exitcode == 36 or r.exitcode == 44
+                    ), error()
+                    assert (
+                        ("DB::Exception: Column with type" in r.output)
+                        or (
+                            "DB::Exception: Hive partitioning supports only partition columns of types"
+                            in r.output
+                        )
+                        or ("is not allowed in key expression" in r.output)
+                    ), error()
 
 
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
-def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_supported_characters(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse supports all the characters in the partition key except `{}\/"'*?`."""
-    
+
     if node is None:
         node = self.context.node
-    
-    not_supported_characters = ["{", "}", "\\",  '"', "'", "*", "?", "/"]
+
+    not_supported_characters = ["{", "}", "\\", '"', "'", "*", "?", "/"]
 
     if self.context.stress:
         characters_range = range(32, 1114111, 16)
@@ -134,7 +161,7 @@ def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root
             debug(string)
         with Scenario(name=f"characters from {i} to {i+16}"):
             table_name = f"s3_supported_characters_{i}_{i+16}"
-            
+
             with Given("I create table for hive partition writes"):
                 create_table(
                     columns="d String, i Int32",
@@ -145,11 +172,11 @@ def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root
                 )
             with When("I insert data into table"):
                 insert_into_table_values(
-                    node=node, 
-                    table_name=table_name, 
+                    node=node,
+                    table_name=table_name,
                     values=f"('{string}', 1)",
                 )
-            with Then("I check data in table"): 
+            with Then("I check data in table"):
                 check_select(
                     select=f"SELECT i FROM {table_name} WHERE d = '{string}' ORDER BY i",
                     expected_result="1",
@@ -161,19 +188,21 @@ def s3_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root
 @Requirements(
     RQ_HivePartitioning_Writes_DataTypesUnsupported("1.0"),
 )
-def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_not_supported_characters(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse does not support the characters in the partition key `{}\/"'*?`."""
-    
+
     if node is None:
         node = self.context.node
-    
+
     not_supported_characters = ["{", "}", "\\", "/", '"', "'", "*", "?"]
-    
+
     for character in not_supported_characters:
         i = ord(character)
         with Scenario(name=f"x{hex(i)[2:]}"):
             table_name = f"s3_not_supported_characters_{i}"
-            
+
             with Given("I create table for hive partition writes"):
                 create_table(
                     columns="d String, i Int32",
@@ -185,11 +214,11 @@ def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_
 
             with When("I insert data into table"):
                 insert_into_table_values(
-                    node=node, 
-                    table_name=table_name, 
+                    node=node,
+                    table_name=table_name,
                     values=f"('\\x{hex(i)[2:]}', 1)",
-                    exitcode = 6,
-                    message = f"DB::Exception: Illegal character",
+                    exitcode=6,
+                    message=f"DB::Exception: Illegal character",
                 )
 
 
@@ -197,12 +226,14 @@ def s3_not_supported_characters(self, uri, uri_readonly, minio_root_user, minio_
 @Requirements(
     RQ_HivePartitioning_Writes_SupportedDataTypes("1.0"),
 )
-def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_partition_key_length(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse supports the partition key with 1024 length and returns an error if length is greater than 1024."""
 
     if node is None:
         node = self.context.node
-    
+
     table_name = "s3_partition_key_length"
 
     with Given("I create table for hive partition writes"):
@@ -215,8 +246,8 @@ def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root
         )
     with When("I insert data into table"):
         insert_into_table_values(
-            node=node, 
-            table_name=table_name, 
+            node=node,
+            table_name=table_name,
             values=f"('{'a'*1023}', 1)",
         )
     with Then("I check data in table"):
@@ -227,8 +258,8 @@ def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root
         )
     with When("I insert data into table with length greater than 1024"):
         r = insert_into_table_values(
-            node=node, 
-            table_name=table_name, 
+            node=node,
+            table_name=table_name,
             values=f"('{'a'*1024}', 1)",
         )
     with Then("I check exit code and message"):
@@ -240,14 +271,16 @@ def s3_partition_key_length(self, uri, uri_readonly, minio_root_user, minio_root
 @Requirements(
     RQ_HivePartitioning_Writes_Expressions("1.0"),
 )
-def hive_partition_expressions(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def hive_partition_expressions(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse does not support expressions in the partition key."""
-    
+
     if node is None:
         node = self.context.node
-    
+
     table_name = "s3_expressions"
-    
+
     with Given("I create table for hive partition writes"):
         r = create_table(
             columns="p Int32, i Int32",
@@ -256,10 +289,13 @@ def hive_partition_expressions(self, uri, uri_readonly, minio_root_user, minio_r
             partition_by="abs(p)",
             node=node,
         )
-    
+
     with Then("I check exit code and message"):
         assert r.exitcode == 36, error()
-        assert "DB::Exception: Hive partitioning expects that the partition by expression columns are a part of the storage columns" in r.output, error()
+        assert (
+            "DB::Exception: Hive partitioning expects that the partition by expression columns are a part of the storage columns"
+            in r.output
+        ), error()
 
 
 @TestScenario
@@ -267,19 +303,21 @@ def hive_partition_expressions(self, uri, uri_readonly, minio_root_user, minio_r
     RQ_HivePartitioning_Writes_PartitionsParts("1.0"),
     RQ_HivePartitioning_Writes_FileExist("1.0"),
 )
-def s3_partitions_parts(self, uri, uri_readonly, minio_root_user, minio_root_password, node=None):
+def s3_partitions_parts(
+    self, uri, uri_readonly, minio_root_user, minio_root_password, node=None
+):
     """Check that ClickHouse supports hive partition writes with partitions and parts."""
-    
+
     if node is None:
         node = self.context.node
 
-    partitions = [1,30]
+    partitions = [1, 30]
     parts = [1, 30]
-    
+
     for partition, part in product(partitions, parts):
         with Scenario(name=f"partition={partition} part={part}"):
             table_name = f"s3_partitions_parts_{partition}_{part}"
-            
+
             with Given("I create table for hive partition writes"):
                 create_table(
                     columns="d Int32, i Int32",
@@ -296,7 +334,7 @@ def s3_partitions_parts(self, uri, uri_readonly, minio_root_user, minio_root_pas
                         table_name=table_name,
                         select_statement=f"number AS d, {i} AS i from numbers({partition})",
                     )
-                    
+
             with Then("I check data in table"):
                 check_select(
                     select=f"SELECT count() FROM {table_name}",
@@ -313,7 +351,7 @@ def s3_partitions_parts(self, uri, uri_readonly, minio_root_user, minio_root_pas
                     expected_result=f"{partition}",
                     node=node,
                 )
-        
+
 
 @TestScenario
 @Requirements(
@@ -359,7 +397,6 @@ def s3_use_hive_partitioning(
         assert f"{table_name}/d=1/" in files, error()
 
 
-
 @TestScenario
 @Requirements(
     RQ_HivePartitioning_Writes_MissingColumn("1.0"),
@@ -401,7 +438,7 @@ def null_in_column(
     table_name = "null_in_column_s3"
 
     with Given("I create table for hive partition writes"):
-        r =create_table(
+        r = create_table(
             columns="d Nullable(Int32), i Int32",
             table_name=table_name,
             engine=f"S3('{uri}{table_name}/', '{minio_root_user}', '{minio_root_password}', '', Parquet, 'auto', 'hive')",
@@ -411,7 +448,11 @@ def null_in_column(
 
     with Then("I check exit code and message"):
         assert r.exitcode == 36, error()
-        assert "DB::Exception: Hive partitioning supports only partition columns of types" in r.output, error()
+        assert (
+            "DB::Exception: Hive partitioning supports only partition columns of types"
+            in r.output
+        ), error()
+
 
 @TestScenario
 @Requirements(
@@ -575,7 +616,10 @@ def parallel_inserts_different_users(
                     )(
                         table_name=table_name,
                         values="(1, 1)",
-                        settings=[("use_hive_partitioning", "1"), ("user", "second_user")],
+                        settings=[
+                            ("use_hive_partitioning", "1"),
+                            ("user", "second_user"),
+                        ],
                     )
             finally:
                 join()
@@ -587,6 +631,7 @@ def parallel_inserts_different_users(
             node=node,
             settings=[("use_hive_partitioning", "1")],
         )
+
 
 @TestScenario
 @Requirements(
@@ -643,12 +688,10 @@ def write_fail(
             expected_result="",
             node=node,
         )
-        
+
 
 @TestFeature
-@Requirements(
-    RQ_HivePartitioning_Writes_S3("1.0")
-)
+@Requirements(RQ_HivePartitioning_Writes_S3("1.0"))
 @Name("generic")
 def feature(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None

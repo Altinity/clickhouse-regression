@@ -378,6 +378,7 @@ def argparser_minio(parser):
         default="password",
     )
 
+
 def argparser_minio_hive(parser):
     """Extended argument parser for suites with only minio."""
     argparser(parser)
@@ -405,6 +406,7 @@ def argparser_minio_hive(parser):
         type=Secret(name="minio_root_password"),
         default="password",
     )
+
 
 def CaptureMinioArgs(func):
     """
