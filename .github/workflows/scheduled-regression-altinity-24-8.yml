@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:24.8.14.10501.altinitystable
-      version: '24.8.11.51285'
+      version: '24.8.14.10501'
       extra_args: '--with-analyzer'
       arch: x86
     secrets: inherit
@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:24.8.14.10501.altinitystable
-      version: '24.8.11.51285'
+      version: '24.8.14.10501'
       extra_args: '--with-analyzer'
       arch: arm64
     secrets: inherit
