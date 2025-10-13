@@ -11,4 +11,4 @@ COPY diff-0.2.9-progress.patch diff-0.2.9-progress.patch
 COPY diff-0.2.9-json.patch diff-0.2.9-json.patch
 
 
-CMD ./runner.sh
+CMD ["./runner.sh"]
