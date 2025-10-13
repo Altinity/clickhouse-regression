@@ -207,7 +207,7 @@ supported_types_example_values = [
         "DateTime64",
         ("'1970-01-01 00:00:00'", "'2106-02-07 06:28:15'", "'2025-06-09 14:30:00'"),
     ),
-        ("Date32", ("'1900-01-01'", "'2299-12-31'", "'2299-12-31'")),
+    ("Date32", ("'1900-01-01'", "'2299-12-31'", "'2299-12-31'")),
     (
         "DateTime64(3)",
         (
@@ -414,7 +414,9 @@ def insert_into_table_select(
 
     with When(f"I insert into table {table_name} values"):
         return node.query(
-            f"INSERT INTO {table_name} SELECT {select_statement}", settings=settings, no_checks=no_checks
+            f"INSERT INTO {table_name} SELECT {select_statement}",
+            settings=settings,
+            no_checks=no_checks,
         )
 
 
@@ -503,6 +505,7 @@ def replace_ascii_characters(string):
         for i in string:
             new_string += f"\\\\x{hex(ord(i))[2:]}"
         return new_string
+
 
 def remove_unsupported_character(string, not_supported_characters):
     for i in not_supported_characters:

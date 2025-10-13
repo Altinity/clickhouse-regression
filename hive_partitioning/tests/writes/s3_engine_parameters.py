@@ -97,6 +97,7 @@ def s3_engine_parameters(
                 assert f"{table_name}/d=1/" in files, error()
                 assert f".{format}".lower() in files, error()
 
+
 @TestScenario
 def s3_engine_parameters_partition_columns_in_data_file(
     self,

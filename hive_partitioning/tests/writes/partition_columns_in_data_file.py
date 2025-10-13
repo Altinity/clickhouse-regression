@@ -6,9 +6,7 @@ from hive_partitioning.requirements.requirements import *
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile(
-        "1.0"
-    ),
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile("1.0"),
 )
 def write_partition_columns_into_files(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -66,9 +64,7 @@ def write_partition_columns_into_files(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile(
-        "1.0"
-    ),
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFile("1.0"),
 )
 def write_partition_columns_into_files_default(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
@@ -105,9 +101,7 @@ def write_partition_columns_into_files_default(
 
 @TestScenario
 @Requirements(
-    RQ_HivePartitioning_Writes_PartitionColumnsInDataFileWrongArgument(
-        "1.0"
-    ),
+    RQ_HivePartitioning_Writes_PartitionColumnsInDataFileWrongArgument("1.0"),
 )
 def write_partition_columns_into_files_wrong_argument(
     self, uri=None, minio_root_user=None, minio_root_password=None, uri_readonly=None
