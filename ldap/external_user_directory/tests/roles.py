@@ -58,7 +58,7 @@ def new_role(self, server):
 
                         message = "DB::Exception: There is no role `{user}` in user directories"
                         exitcode = 255
-                        
+
                         if check_clickhouse_version(">=25.6")(self):
                             message = "DB::Exception: There is no role `{user}` in `user directories`"
 
