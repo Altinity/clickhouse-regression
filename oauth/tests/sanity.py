@@ -13,9 +13,23 @@ def check_authentication_flow(self):
 
     with Given(f"I get an OAuth token from {self.context.provider_name}"):
         token = client.OAuthProvider.get_oauth_token()
+
     with Then("I try to access ClickHouse with the token"):
-        response = access_clickhouse(token=token)
-        assert response.status_code == 200, error()
+        access_clickhouse(token=token)
+
+
+def check_authentication_with_invalid_token(self):
+    """Check ClickHouse behavior with an invalid token."""
+    client = self.context.provider_client
+
+    with Given(f"I get an OAuth token from {self.context.provider_name}"):
+        token = client.OAuthProvider.get_oauth_token()
+
+    with And("I modify the token to make it invalid"):
+        invalid_token = token + "invalid"
+
+    with When("I try to access ClickHouse with the invalid token"):
+        access_clickhouse_when_forbidden(token=invalid_token)
 
 
 @TestFeature

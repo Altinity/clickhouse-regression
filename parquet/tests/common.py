@@ -125,10 +125,16 @@ def generate_random_value(data_type, only_true=False):
             random.choices("abcdefghijklmnopqrstuvwxyz", k=random.randint(3, 10))
         )
     elif data_type.startswith("FIXED_LEN_BYTE_ARRAY"):
+        match = re.search(r"\((\d+)\)", data_type)
+        if match:
+            length = max(1, int(match.group(1)))
+        else:
+            length = random.randint(3, 10)
+
         return "".join(
             random.choices(
                 "abcdefghijklmnopqrstuvwxyz",
-                k=random.randint(3, int(data_type.split("(")[1].split(")")[0])),
+                k=length,
             )
         )
     elif data_type == "UTF8" or data_type == "STRING" or data_type == "ENUM":

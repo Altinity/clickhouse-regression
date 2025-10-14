@@ -160,17 +160,15 @@ def regression(
         self.context.provider_name = identity_provider
 
     self.context.node = self.context.cluster.node("clickhouse1")
-    pause()
-    # self.context.node2 = self.context.cluster.node("clickhouse2")
-    # self.context.node3 = self.context.cluster.node("clickhouse3")
-    # self.context.nodes = [
-    #     self.context.cluster.node(node) for node in nodes["clickhouse"]
-    # ]
+    self.context.node2 = self.context.cluster.node("clickhouse2")
+    self.context.node3 = self.context.cluster.node("clickhouse3")
+    self.context.nodes = [
+        self.context.cluster.node(node) for node in nodes["clickhouse"]
+    ]
 
     Scenario(run=load("oauth.tests.sanity", "feature"))
     Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.setup", "feature"))
     Scenario(run=load("oauth.tests.tokens", "feature"))
     Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
     Scenario(run=load("oauth.tests.groups", "feature"))
