@@ -1,0 +1,14 @@
+version: '2.3'
+
+services:
+  parquetify:
+    build:
+      context: .
+      dockerfile: ../../docker-compose/parquetify.Dockerfile
+    init: true
+    restart: always
+    ports:
+      - "8085:8085"
+    entrypoint: tail -f /dev/null
+    volumes:
+        - "${CLICKHOUSE_TESTS_DIR}/data/json_files:/json_files"
