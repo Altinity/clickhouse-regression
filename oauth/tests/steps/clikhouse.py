@@ -6,7 +6,7 @@ from oauth.requirements.requirements import *
 
 
 @TestStep(Then)
-def access_clickhouse(self, token, ip="clickhouse1", https=False):
+def access_clickhouse(self, token, ip="clickhouse1", https=False, status_code=200):
     """Execute a query to ClickHouse with JWT token authentication."""
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:8123/"
@@ -20,7 +20,21 @@ def access_clickhouse(self, token, ip="clickhouse1", https=False):
     response = requests.get(url, headers=headers, params=params, verify=verify)
     response.raise_for_status()
 
-    return response
+    assert response.status_code == status_code, error()
+
+
+@TestStep(Then)
+def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False):
+    """Execute a query to ClickHouse with an invalid JWT token."""
+
+    access_clickhouse(token=token, ip=ip, https=https, status_code=403)
+
+
+@TestStep(Then)
+def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
+    """Execute a query to ClickHouse without authentication."""
+
+    access_clickhouse(token="", ip=ip, https=https, status_code=401)
 
 
 @TestStep(Given)
@@ -37,6 +51,7 @@ def change_token_processors(
     static_jwks=None,
     jwks_uri=None,
     jwks_cache_lifetime=None,
+    token_cache_lifetime=None,
     claims=None,
     verifier_leeway=None,
     configuration_endpoint=None,
@@ -70,6 +85,11 @@ def change_token_processors(
         entries["token_processor"][processor_name][
             "jwks_cache_lifetime"
         ] = jwks_cache_lifetime
+
+    if token_cache_lifetime is not None:
+        entries["token_processor"][processor_name][
+            "token_cache_lifetime"
+        ] = token_cache_lifetime
 
     if claims is not None:
         entries["jwt_validators"][processor_name]["claims"] = claims
