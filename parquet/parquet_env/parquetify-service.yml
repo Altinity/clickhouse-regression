@@ -4,7 +4,7 @@ services:
   parquetify:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ../../docker-compose/parquetify.Dockerfile
     init: true
     restart: always
     ports:
