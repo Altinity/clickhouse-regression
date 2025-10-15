@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v2.0.241127.1225014.
+# document by TestFlows v2.0.250110.1002922.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -708,13 +708,355 @@ RQ_SRS_044_Swarm_Performance = Requirement(
         "Query performance using swarm cluster SHALL be not worse than the performance of a single ClickHouse node\n"
         "for queries that accesses data from multiple files in average.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="2.10.1",
+)
+
+RQ_SRS_044_Swarm_Joins = Requirement(
+    name="RQ.SRS-044.Swarm.Joins",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support joins for swarm queries. This includes both standard SQL join types and ClickHouse-specific join types.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="2.11.1",
+)
+
+RQ_SRS_044_Swarm_Joins_Inner = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Inner",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support inner joins for swarm queries. Inner joins SHALL return only matching rows from both tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.2.1",
+)
+
+RQ_SRS_044_Swarm_Joins_LeftOuter = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.LeftOuter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support left outer joins for swarm queries. Left outer joins SHALL return non-matching rows from the left table in addition to matching rows. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.2.2",
+)
+
+RQ_SRS_044_Swarm_Joins_RightOuter = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.RightOuter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support right outer joins for swarm queries. Right outer joins SHALL return non-matching rows from the right table in addition to matching rows. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.2.3",
+)
+
+RQ_SRS_044_Swarm_Joins_FullOuter = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.FullOuter",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support full outer joins for swarm queries. Full outer joins SHALL return non-matching rows from both tables in addition to matching rows. \n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.2.4",
+)
+
+RQ_SRS_044_Swarm_Joins_Cross = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Cross",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support cross joins for swarm queries. Cross joins SHALL produce a cartesian product of whole tables without requiring join keys. An alternative syntax for CROSS JOIN is specifying multiple tables in the FROM clause separated by commas.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.2.5",
+)
+
+RQ_SRS_044_Swarm_Joins_Semi = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Semi",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        '[ClickHouse] SHALL support left semi joins and right semi joins for swarm queries. Semi joins SHALL act as an allowlist on "join keys" without producing a cartesian product.\n'
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.3.1",
+)
+
+RQ_SRS_044_Swarm_Joins_Anti = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Anti",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        '[ClickHouse] SHALL support left anti joins and right anti joins for swarm queries. Anti joins SHALL act as a denylist on "join keys" without producing a cartesian product.\n'
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.3.2",
+)
+
+RQ_SRS_044_Swarm_Joins_Any = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Any",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support left any joins, right any joins, and inner any joins for swarm queries. Any joins SHALL partially (for opposite side of LEFT and RIGHT) or completely (for INNER and FULL) disable the cartesian product for standard JOIN types.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.3.3",
+)
+
+RQ_SRS_044_Swarm_Joins_Asof = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Asof",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support ASOF joins and left ASOF joins for swarm queries. ASOF joins SHALL enable joining sequences with a non-exact match.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.3.4",
+)
+
+RQ_SRS_044_Swarm_Joins_Paste = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Paste",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support paste joins for swarm queries. Paste joins SHALL perform a horizontal concatenation of two tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.3.5",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_DefaultStrictness = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `join_default_strictness` setting to override the default join type for swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.1",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_AnyJoinDistinct = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `any_join_distinct_right_table_keys` setting to control the behavior of ANY JOIN operations for swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.2",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_CrossToInnerRewrite = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `cross_to_inner_join_rewrite` setting to define behavior when CROSS JOIN cannot be rewritten as INNER JOIN for swarm queries. The setting SHALL support values 0 (throw error), 1 (allow slower join), and 2 (force rewrite or error).\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.3",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_Algorithm = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.Algorithm",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `join_algorithm` setting to control the join algorithm used for swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.4",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_AnyTakeLastRow = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `join_any_take_last_row` setting to control behavior when multiple matching rows are found in ANY JOIN operations for swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.5",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_UseNulls = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.UseNulls",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `join_use_nulls` setting to control whether NULL values are used for non-matching rows in outer joins for swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.6",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_PartialMergeRows = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `partial_merge_join_rows_in_right_blocks` setting to control the number of rows in right blocks for partial merge joins in swarm queries.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="2.11.4.7",
+)
+
+RQ_SRS_044_Swarm_Joins_Settings_OnDiskMaxFiles = Requirement(
+    name="RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "  \n"
+        "\n"
+        "[ClickHouse] SHALL support the `join_on_disk_max_files_to_merge` setting to control the maximum number of files to merge when using disk-based join algorithms for swarm queries. \n"
+        "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Ability Antalya]: https://altinity.com/blog/getting-started-with-altinitys-project-antalya\n"
     ),
     link=None,
-    level=3,
-    num="2.10.1",
+    level=4,
+    num="2.11.4.8",
 )
 
 SRS_044_Swarm_Cluster_Query_Execution = Specification(
@@ -872,6 +1214,57 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         Heading(name="RQ.SRS-044.Swarm.RBAC.ColumnPolicy", level=3, num="2.9.2"),
         Heading(name="Performance", level=2, num="2.10"),
         Heading(name="RQ.SRS-044.Swarm.Performance", level=3, num="2.10.1"),
+        Heading(name="Joins", level=2, num="2.11"),
+        Heading(name="RQ.SRS-044.Swarm.Joins", level=3, num="2.11.1"),
+        Heading(name="Standard Join Types", level=3, num="2.11.2"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Inner", level=4, num="2.11.2.1"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.LeftOuter", level=4, num="2.11.2.2"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.RightOuter", level=4, num="2.11.2.3"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.FullOuter", level=4, num="2.11.2.4"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Cross", level=4, num="2.11.2.5"),
+        Heading(name="ClickHouse-Specific Join Types", level=3, num="2.11.3"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Semi", level=4, num="2.11.3.1"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Anti", level=4, num="2.11.3.2"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Any", level=4, num="2.11.3.3"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Asof", level=4, num="2.11.3.4"),
+        Heading(name="RQ.SRS-044.Swarm.Joins.Paste", level=4, num="2.11.3.5"),
+        Heading(name="Join Settings", level=3, num="2.11.4"),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness",
+            level=4,
+            num="2.11.4.1",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct",
+            level=4,
+            num="2.11.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite",
+            level=4,
+            num="2.11.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.Algorithm", level=4, num="2.11.4.4"
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow",
+            level=4,
+            num="2.11.4.5",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.UseNulls", level=4, num="2.11.4.6"
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows",
+            level=4,
+            num="2.11.4.7",
+        ),
+        Heading(
+            name="RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles",
+            level=4,
+            num="2.11.4.8",
+        ),
     ),
     requirements=(
         RQ_SRS_044_Swarm_NodeRegistration,
@@ -909,6 +1302,25 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         RQ_SRS_044_Swarm_RBAC_RowPolicy,
         RQ_SRS_044_Swarm_RBAC_ColumnPolicy,
         RQ_SRS_044_Swarm_Performance,
+        RQ_SRS_044_Swarm_Joins,
+        RQ_SRS_044_Swarm_Joins_Inner,
+        RQ_SRS_044_Swarm_Joins_LeftOuter,
+        RQ_SRS_044_Swarm_Joins_RightOuter,
+        RQ_SRS_044_Swarm_Joins_FullOuter,
+        RQ_SRS_044_Swarm_Joins_Cross,
+        RQ_SRS_044_Swarm_Joins_Semi,
+        RQ_SRS_044_Swarm_Joins_Anti,
+        RQ_SRS_044_Swarm_Joins_Any,
+        RQ_SRS_044_Swarm_Joins_Asof,
+        RQ_SRS_044_Swarm_Joins_Paste,
+        RQ_SRS_044_Swarm_Joins_Settings_DefaultStrictness,
+        RQ_SRS_044_Swarm_Joins_Settings_AnyJoinDistinct,
+        RQ_SRS_044_Swarm_Joins_Settings_CrossToInnerRewrite,
+        RQ_SRS_044_Swarm_Joins_Settings_Algorithm,
+        RQ_SRS_044_Swarm_Joins_Settings_AnyTakeLastRow,
+        RQ_SRS_044_Swarm_Joins_Settings_UseNulls,
+        RQ_SRS_044_Swarm_Joins_Settings_PartialMergeRows,
+        RQ_SRS_044_Swarm_Joins_Settings_OnDiskMaxFiles,
     ),
     content=r"""
 # SRS-044 Swarm Cluster Query Execution
@@ -966,6 +1378,29 @@ SRS_044_Swarm_Cluster_Query_Execution = Specification(
         * 2.9.2 [RQ.SRS-044.Swarm.RBAC.ColumnPolicy](#rqsrs-044swarmrbaccolumnpolicy)
     * 2.10 [Performance](#performance)
         * 2.10.1 [RQ.SRS-044.Swarm.Performance](#rqsrs-044swarmperformance)
+    * 2.11 [Joins](#joins)
+        * 2.11.1 [RQ.SRS-044.Swarm.Joins](#rqsrs-044swarmjoins)
+        * 2.11.2 [Standard Join Types](#standard-join-types)
+            * 2.11.2.1 [RQ.SRS-044.Swarm.Joins.Inner](#rqsrs-044swarmjoinsinner)
+            * 2.11.2.2 [RQ.SRS-044.Swarm.Joins.LeftOuter](#rqsrs-044swarmjoinsleftouter)
+            * 2.11.2.3 [RQ.SRS-044.Swarm.Joins.RightOuter](#rqsrs-044swarmjoinsrightouter)
+            * 2.11.2.4 [RQ.SRS-044.Swarm.Joins.FullOuter](#rqsrs-044swarmjoinsfullouter)
+            * 2.11.2.5 [RQ.SRS-044.Swarm.Joins.Cross](#rqsrs-044swarmjoinscross)
+        * 2.11.3 [ClickHouse-Specific Join Types](#clickhouse-specific-join-types)
+            * 2.11.3.1 [RQ.SRS-044.Swarm.Joins.Semi](#rqsrs-044swarmjoinssemi)
+            * 2.11.3.2 [RQ.SRS-044.Swarm.Joins.Anti](#rqsrs-044swarmjoinsanti)
+            * 2.11.3.3 [RQ.SRS-044.Swarm.Joins.Any](#rqsrs-044swarmjoinsany)
+            * 2.11.3.4 [RQ.SRS-044.Swarm.Joins.Asof](#rqsrs-044swarmjoinsasof)
+            * 2.11.3.5 [RQ.SRS-044.Swarm.Joins.Paste](#rqsrs-044swarmjoinspaste)
+        * 2.11.4 [Join Settings](#join-settings)
+            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
+            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
+            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
+            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
+            * 2.11.4.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
+            * 2.11.4.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
+            * 2.11.4.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
+            * 2.11.4.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
 
 
 ## Introduction
@@ -1271,6 +1706,109 @@ version: 1.0
 
 Query performance using swarm cluster SHALL be not worse than the performance of a single ClickHouse node
 for queries that accesses data from multiple files in average.
+
+### Joins
+
+#### RQ.SRS-044.Swarm.Joins
+version: 1.0  
+
+[ClickHouse] SHALL support joins for swarm queries. This includes both standard SQL join types and ClickHouse-specific join types.
+
+#### Standard Join Types
+
+##### RQ.SRS-044.Swarm.Joins.Inner
+version: 1.0  
+
+[ClickHouse] SHALL support inner joins for swarm queries. Inner joins SHALL return only matching rows from both tables.
+
+##### RQ.SRS-044.Swarm.Joins.LeftOuter
+version: 1.0  
+
+[ClickHouse] SHALL support left outer joins for swarm queries. Left outer joins SHALL return non-matching rows from the left table in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.RightOuter
+version: 1.0  
+
+[ClickHouse] SHALL support right outer joins for swarm queries. Right outer joins SHALL return non-matching rows from the right table in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.FullOuter
+version: 1.0  
+
+[ClickHouse] SHALL support full outer joins for swarm queries. Full outer joins SHALL return non-matching rows from both tables in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.Cross
+version: 1.0  
+
+[ClickHouse] SHALL support cross joins for swarm queries. Cross joins SHALL produce a cartesian product of whole tables without requiring join keys. An alternative syntax for CROSS JOIN is specifying multiple tables in the FROM clause separated by commas.
+
+#### ClickHouse-Specific Join Types
+
+##### RQ.SRS-044.Swarm.Joins.Semi
+version: 1.0  
+
+[ClickHouse] SHALL support left semi joins and right semi joins for swarm queries. Semi joins SHALL act as an allowlist on "join keys" without producing a cartesian product.
+
+##### RQ.SRS-044.Swarm.Joins.Anti
+version: 1.0  
+
+[ClickHouse] SHALL support left anti joins and right anti joins for swarm queries. Anti joins SHALL act as a denylist on "join keys" without producing a cartesian product.
+
+##### RQ.SRS-044.Swarm.Joins.Any
+version: 1.0  
+
+[ClickHouse] SHALL support left any joins, right any joins, and inner any joins for swarm queries. Any joins SHALL partially (for opposite side of LEFT and RIGHT) or completely (for INNER and FULL) disable the cartesian product for standard JOIN types.
+
+##### RQ.SRS-044.Swarm.Joins.Asof
+version: 1.0  
+
+[ClickHouse] SHALL support ASOF joins and left ASOF joins for swarm queries. ASOF joins SHALL enable joining sequences with a non-exact match.
+
+##### RQ.SRS-044.Swarm.Joins.Paste
+version: 1.0  
+
+[ClickHouse] SHALL support paste joins for swarm queries. Paste joins SHALL perform a horizontal concatenation of two tables.
+
+#### Join Settings
+
+##### RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_default_strictness` setting to override the default join type for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct
+version: 1.0  
+
+[ClickHouse] SHALL support the `any_join_distinct_right_table_keys` setting to control the behavior of ANY JOIN operations for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite
+version: 1.0  
+
+[ClickHouse] SHALL support the `cross_to_inner_join_rewrite` setting to define behavior when CROSS JOIN cannot be rewritten as INNER JOIN for swarm queries. The setting SHALL support values 0 (throw error), 1 (allow slower join), and 2 (force rewrite or error).
+
+##### RQ.SRS-044.Swarm.Joins.Settings.Algorithm
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_algorithm` setting to control the join algorithm used for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_any_take_last_row` setting to control behavior when multiple matching rows are found in ANY JOIN operations for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.UseNulls
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_use_nulls` setting to control whether NULL values are used for non-matching rows in outer joins for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows
+version: 1.0  
+
+[ClickHouse] SHALL support the `partial_merge_join_rows_in_right_blocks` setting to control the number of rows in right blocks for partial merge joins in swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_on_disk_max_files_to_merge` setting to control the maximum number of files to merge when using disk-based join algorithms for swarm queries. 
 
 
 [ClickHouse]: https://clickhouse.com
