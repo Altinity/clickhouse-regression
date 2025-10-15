@@ -95,6 +95,7 @@ def generate_parquet_file_from_json(
     logical_type,
     compression_value,
     bloom_filter,
+    json_file_location=None,
 ):
     """Generate the parquet file from its JSON definition."""
 
@@ -106,13 +107,14 @@ def generate_parquet_file_from_json(
             logical_type=logical_type,
             compression_value=compression_value,
             bloom_filter=bloom_filter,
+            json_file_location=json_file_location
         )
     json_files = "/json_files"
     json_file_path = json_files + "/" + json_file_name
     generate_parquet_file(json_file_path=json_file_path)
 
 
-def _generate_files_for_physical_types(self, physical_types):
+def _generate_files_for_physical_types(self, physical_types, json_file_location=None):
     """Helper function to generate files for a list of physical types."""
     for physical_func in physical_types:
         if physical_func in physical_to_logical_annotation:
@@ -128,11 +130,12 @@ def _generate_files_for_physical_types(self, physical_types):
                                     logical_type=logical_func,
                                     compression_value=compression_func,
                                     bloom_filter=enable_bf,
+                                    json_file_location=json_file_location,
                                 )
 
 
 @TestSketch
-def generate_first_part_files(self):
+def generate_first_part_files(self, json_file_location=None):
     """Generate parquet files for binary, fixed_len_byte_array_16, and fixed_len_byte_array_2 physical types."""
     _generate_files_for_physical_types(
         self,
@@ -141,17 +144,18 @@ def generate_first_part_files(self):
             fixed_len_byte_array_physical_16,
             fixed_len_byte_array_physical_2,
         ],
+        json_file_location=json_file_location,
     )
 
 
 @TestSketch
-def generate_second_part_files(self):
+def generate_second_part_files(self, json_file_location=None):
     """Generate parquet files for int32 and int64 physical types."""
-    _generate_files_for_physical_types(self, [int32_physical, int64_physical])
+    _generate_files_for_physical_types(self, [int32_physical, int64_physical], json_file_location=json_file_location)
 
 
 @TestSketch
-def generate_third_part_files(self):
+def generate_third_part_files(self, json_file_location=None):
     """Generate parquet files for remaining physical types."""
     excluded_physicals = {
         binary_physical,
@@ -167,46 +171,46 @@ def generate_third_part_files(self):
         if physical_func not in excluded_physicals
     ]
 
-    _generate_files_for_physical_types(self, remaining_physicals)
+    _generate_files_for_physical_types(self, remaining_physicals, json_file_location=json_file_location)
 
 
 @TestScenario
-def run_first_part_files(self):
+def run_first_part_files(self, json_file_location=None):
     """Run the first part: binary_physical, fixed_len_byte_array_physical_16, fixed_len_byte_array_physical_2."""
-    generate_first_part_files()
+    generate_first_part_files(json_file_location=json_file_location)
 
 
 @TestScenario
-def run_second_part_files(self):
+def run_second_part_files(self,json_file_location=None):
     """Run the second part: int32_physical, int64_physical."""
-    generate_second_part_files()
+    generate_second_part_files(json_file_location=json_file_location)
 
 
 @TestScenario
-def run_third_part_files(self):
+def run_third_part_files(self, json_file_location=None):
     """Run the third part: remaining physical types."""
-    generate_third_part_files()
+    generate_third_part_files(json_file_location=json_file_location)
 
 
 @TestScenario
-def run_all_possible_files(self, pool=3):
+def run_all_possible_files(self, pool=3, json_file_location=None):
     """Run the feature to generate all possible parquet files."""
 
     with Pool(pool) as pool:
         Scenario(
-            run=run_first_part_files,
+            test=run_first_part_files,
             parallel=True,
             executor=pool,
-        )
+        )(json_file_location=json_file_location)
         Scenario(
-            run=run_second_part_files,
+            test=run_second_part_files,
             parallel=True,
             executor=pool,
-        )
+        )(json_file_location=json_file_location)
         Scenario(
-            run=run_third_part_files,
+            test=run_third_part_files,
             parallel=True,
             executor=pool,
-        )
+        )(json_file_location=json_file_location)
         join()
 

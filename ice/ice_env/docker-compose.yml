@@ -149,6 +149,13 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
 
+  parquetify:
+    extends:
+      file: parquetify-service.yml
+      service: parquetify
+    volumes:
+      - parquet-files:/parquet-files
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
@@ -171,6 +178,7 @@ services:
 
 volumes:
   localstack_data:
+  parquet-files:
 
 configs:
   ice-rest-catalog-yaml:
