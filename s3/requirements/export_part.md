@@ -62,8 +62,7 @@
 
 ## Introduction
 
-This software requirements specification covers requirements related to
-exporting MergeTree engine data parts to S3 object storage.
+This specification defines requirements for exporting individual MergeTree data parts to S3-compatible object storage.
 
 ## Exporting Parts to S3
 
@@ -89,12 +88,6 @@ TO TABLE [database.]destination_table_name
 - `source_table_name`: Name of the source MergeTree table
 - `part_name`: Name of the specific part to export (string literal)
 - `destination_table_name`: Name of the destination object storage table
-
-**Examples:**
-```sql
-ALTER TABLE mydb.mytable EXPORT PART '20231201_1_1_0' TO TABLE mydb.s3_table;
-ALTER TABLE logs EXPORT PART '20231201_2_2_1' TO TABLE logs_backup;
-```
 
 ## Supported source table engines
 
@@ -346,7 +339,7 @@ version: 1.0
 
 ### Graceful failure handling
 
-### RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure
+#### RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure
 version: 1.0
 
 [ClickHouse] SHALL handle export failures gracefully by:
@@ -357,7 +350,7 @@ version: 1.0
 
 ### Automatic cleanup on failure
 
-### RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup
+#### RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup
 version: 1.0
 
 [ClickHouse] SHALL automatically clean up failed export operations by:
