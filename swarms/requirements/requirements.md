@@ -53,6 +53,29 @@
         * 2.9.2 [RQ.SRS-044.Swarm.RBAC.ColumnPolicy](#rqsrs-044swarmrbaccolumnpolicy)
     * 2.10 [Performance](#performance)
         * 2.10.1 [RQ.SRS-044.Swarm.Performance](#rqsrs-044swarmperformance)
+    * 2.11 [Joins](#joins)
+        * 2.11.1 [RQ.SRS-044.Swarm.Joins](#rqsrs-044swarmjoins)
+        * 2.11.2 [Standard Join Types](#standard-join-types)
+            * 2.11.2.1 [RQ.SRS-044.Swarm.Joins.Inner](#rqsrs-044swarmjoinsinner)
+            * 2.11.2.2 [RQ.SRS-044.Swarm.Joins.LeftOuter](#rqsrs-044swarmjoinsleftouter)
+            * 2.11.2.3 [RQ.SRS-044.Swarm.Joins.RightOuter](#rqsrs-044swarmjoinsrightouter)
+            * 2.11.2.4 [RQ.SRS-044.Swarm.Joins.FullOuter](#rqsrs-044swarmjoinsfullouter)
+            * 2.11.2.5 [RQ.SRS-044.Swarm.Joins.Cross](#rqsrs-044swarmjoinscross)
+        * 2.11.3 [ClickHouse-Specific Join Types](#clickhouse-specific-join-types)
+            * 2.11.3.1 [RQ.SRS-044.Swarm.Joins.Semi](#rqsrs-044swarmjoinssemi)
+            * 2.11.3.2 [RQ.SRS-044.Swarm.Joins.Anti](#rqsrs-044swarmjoinsanti)
+            * 2.11.3.3 [RQ.SRS-044.Swarm.Joins.Any](#rqsrs-044swarmjoinsany)
+            * 2.11.3.4 [RQ.SRS-044.Swarm.Joins.Asof](#rqsrs-044swarmjoinsasof)
+            * 2.11.3.5 [RQ.SRS-044.Swarm.Joins.Paste](#rqsrs-044swarmjoinspaste)
+        * 2.11.4 [Join Settings](#join-settings)
+            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
+            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
+            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
+            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
+            * 2.11.4.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
+            * 2.11.4.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
+            * 2.11.4.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
+            * 2.11.4.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
 
 
 ## Introduction
@@ -358,6 +381,109 @@ version: 1.0
 
 Query performance using swarm cluster SHALL be not worse than the performance of a single ClickHouse node
 for queries that accesses data from multiple files in average.
+
+### Joins
+
+#### RQ.SRS-044.Swarm.Joins
+version: 1.0  
+
+[ClickHouse] SHALL support joins for swarm queries. This includes both standard SQL join types and ClickHouse-specific join types.
+
+#### Standard Join Types
+
+##### RQ.SRS-044.Swarm.Joins.Inner
+version: 1.0  
+
+[ClickHouse] SHALL support inner joins for swarm queries. Inner joins SHALL return only matching rows from both tables.
+
+##### RQ.SRS-044.Swarm.Joins.LeftOuter
+version: 1.0  
+
+[ClickHouse] SHALL support left outer joins for swarm queries. Left outer joins SHALL return non-matching rows from the left table in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.RightOuter
+version: 1.0  
+
+[ClickHouse] SHALL support right outer joins for swarm queries. Right outer joins SHALL return non-matching rows from the right table in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.FullOuter
+version: 1.0  
+
+[ClickHouse] SHALL support full outer joins for swarm queries. Full outer joins SHALL return non-matching rows from both tables in addition to matching rows. 
+
+##### RQ.SRS-044.Swarm.Joins.Cross
+version: 1.0  
+
+[ClickHouse] SHALL support cross joins for swarm queries. Cross joins SHALL produce a cartesian product of whole tables without requiring join keys. An alternative syntax for CROSS JOIN is specifying multiple tables in the FROM clause separated by commas.
+
+#### ClickHouse-Specific Join Types
+
+##### RQ.SRS-044.Swarm.Joins.Semi
+version: 1.0  
+
+[ClickHouse] SHALL support left semi joins and right semi joins for swarm queries. Semi joins SHALL act as an allowlist on "join keys" without producing a cartesian product.
+
+##### RQ.SRS-044.Swarm.Joins.Anti
+version: 1.0  
+
+[ClickHouse] SHALL support left anti joins and right anti joins for swarm queries. Anti joins SHALL act as a denylist on "join keys" without producing a cartesian product.
+
+##### RQ.SRS-044.Swarm.Joins.Any
+version: 1.0  
+
+[ClickHouse] SHALL support left any joins, right any joins, and inner any joins for swarm queries. Any joins SHALL partially (for opposite side of LEFT and RIGHT) or completely (for INNER and FULL) disable the cartesian product for standard JOIN types.
+
+##### RQ.SRS-044.Swarm.Joins.Asof
+version: 1.0  
+
+[ClickHouse] SHALL support ASOF joins and left ASOF joins for swarm queries. ASOF joins SHALL enable joining sequences with a non-exact match.
+
+##### RQ.SRS-044.Swarm.Joins.Paste
+version: 1.0  
+
+[ClickHouse] SHALL support paste joins for swarm queries. Paste joins SHALL perform a horizontal concatenation of two tables.
+
+#### Join Settings
+
+##### RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_default_strictness` setting to override the default join type for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct
+version: 1.0  
+
+[ClickHouse] SHALL support the `any_join_distinct_right_table_keys` setting to control the behavior of ANY JOIN operations for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite
+version: 1.0  
+
+[ClickHouse] SHALL support the `cross_to_inner_join_rewrite` setting to define behavior when CROSS JOIN cannot be rewritten as INNER JOIN for swarm queries. The setting SHALL support values 0 (throw error), 1 (allow slower join), and 2 (force rewrite or error).
+
+##### RQ.SRS-044.Swarm.Joins.Settings.Algorithm
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_algorithm` setting to control the join algorithm used for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_any_take_last_row` setting to control behavior when multiple matching rows are found in ANY JOIN operations for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.UseNulls
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_use_nulls` setting to control whether NULL values are used for non-matching rows in outer joins for swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows
+version: 1.0  
+
+[ClickHouse] SHALL support the `partial_merge_join_rows_in_right_blocks` setting to control the number of rows in right blocks for partial merge joins in swarm queries.
+
+##### RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles
+version: 1.0  
+
+[ClickHouse] SHALL support the `join_on_disk_max_files_to_merge` setting to control the maximum number of files to merge when using disk-based join algorithms for swarm queries. 
 
 
 [ClickHouse]: https://clickhouse.com
