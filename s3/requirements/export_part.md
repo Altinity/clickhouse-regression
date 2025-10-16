@@ -12,39 +12,49 @@
     * 4.1 [RQ.ClickHouse.ExportPart.SourceEngines](#rqclickhouseexportpartsourceengines)
 * 5 [Supported destination table engines](#supported-destination-table-engines)
     * 5.1 [RQ.ClickHouse.ExportPart.DestinationEngines](#rqclickhouseexportpartdestinationengines)
-* 6 [Schema compatibility](#schema-compatibility)
-    * 6.1 [RQ.ClickHouse.ExportPart.SchemaCompatibility](#rqclickhouseexportpartschemacompatibility)
-* 7 [Export operation restrictions](#export-operation-restrictions)
-    * 7.1 [Preventing same table exports](#preventing-same-table-exports)
-        * 7.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
-    * 7.2 [Destination table compatibility](#destination-table-compatibility)
-        * 7.2.1 [RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport](#rqclickhouseexportpartrestrictionsdestinationsupport)
-    * 7.3 [Source part availability](#source-part-availability)
-        * 7.3.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
-* 8 [Export operation concurrency](#export-operation-concurrency)
-    * 8.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
-* 9 [Export operation idempotency](#export-operation-idempotency)
-    * 9.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
-* 10 [Export operation error recovery](#export-operation-error-recovery)
-    * 10.1 [Graceful failure handling](#graceful-failure-handling)
-        * 10.1.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure](#rqclickhouseexportparterrorrecoverygracefulfailure)
-    * 10.2 [Automatic cleanup on failure](#automatic-cleanup-on-failure)
-        * 10.2.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup](#rqclickhouseexportparterrorrecoveryautomaticcleanup)
-* 11 [Export operation logging](#export-operation-logging)
-    * 11.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
-* 12 [Monitoring export operations](#monitoring-export-operations)
-    * 12.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
-* 13 [Enabling export functionality](#enabling-export-functionality)
-    * 13.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
-* 14 [Handling file conflicts during export](#handling-file-conflicts-during-export)
-    * 14.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
-* 15 [Export operation configuration](#export-operation-configuration)
-    * 15.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
-* 16 [Controlling export performance](#controlling-export-performance)
-    * 16.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-* 17 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
-    * 17.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
-    * 17.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
+* 6 [Destination setup and file management](#destination-setup-and-file-management)
+    * 6.1 [RQ.ClickHouse.ExportPart.DestinationSetup](#rqclickhouseexportpartdestinationsetup)
+* 7 [Export data preparation](#export-data-preparation)
+    * 7.1 [RQ.ClickHouse.ExportPart.DataPreparation](#rqclickhouseexportpartdatapreparation)
+* 8 [Schema compatibility](#schema-compatibility)
+    * 8.1 [RQ.ClickHouse.ExportPart.SchemaCompatibility](#rqclickhouseexportpartschemacompatibility)
+* 9 [Partition key types support](#partition-key-types-support)
+    * 9.1 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
+* 10 [Part types and content support](#part-types-and-content-support)
+    * 10.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
+* 11 [Export operation failure recovery](#export-operation-failure-recovery)
+    * 11.1 [RQ.ClickHouse.ExportPart.FailureRecovery](#rqclickhouseexportpartfailurerecovery)
+* 12 [Export operation restrictions](#export-operation-restrictions)
+    * 12.1 [Preventing same table exports](#preventing-same-table-exports)
+        * 12.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
+    * 12.2 [Destination table compatibility](#destination-table-compatibility)
+        * 12.2.1 [RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport](#rqclickhouseexportpartrestrictionsdestinationsupport)
+    * 12.3 [Source part availability](#source-part-availability)
+        * 12.3.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
+* 13 [Export operation concurrency](#export-operation-concurrency)
+    * 13.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
+* 14 [Export operation idempotency](#export-operation-idempotency)
+    * 14.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
+* 15 [Export operation error recovery](#export-operation-error-recovery)
+    * 15.1 [Graceful failure handling](#graceful-failure-handling)
+        * 15.1.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure](#rqclickhouseexportparterrorrecoverygracefulfailure)
+    * 15.2 [Automatic cleanup on failure](#automatic-cleanup-on-failure)
+        * 15.2.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup](#rqclickhouseexportparterrorrecoveryautomaticcleanup)
+* 16 [Export operation logging](#export-operation-logging)
+    * 16.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
+* 17 [Monitoring export operations](#monitoring-export-operations)
+    * 17.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
+* 18 [Enabling export functionality](#enabling-export-functionality)
+    * 18.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
+* 19 [Handling file conflicts during export](#handling-file-conflicts-during-export)
+    * 19.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
+* 20 [Export operation configuration](#export-operation-configuration)
+    * 20.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
+* 21 [Controlling export performance](#controlling-export-performance)
+    * 21.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+* 22 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
+    * 22.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
+    * 22.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
 
 ## Introduction
 
@@ -135,6 +145,110 @@ version: 1.0
 * The same partition key expression in both tables
 * Compatible data types for all columns
 * Matching column order and names
+
+## Partition key types support
+
+### RQ.ClickHouse.ExportPart.PartitionKeyTypes
+version: 1.0
+
+[ClickHouse] SHALL support export operations for tables with partition key types that are compatible with Hive partitioning, as shown in the following table:
+
+| Partition Key Type | Supported | Examples | Notes |
+|-------------------|------------|----------|-------|
+| **Integer Types** | ✅ Yes | `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Int8`, `Int16`, `Int32`, `Int64` | All integer types supported |
+| **Date/DateTime Types** | ✅ Yes | `Date`, `DateTime`, `DateTime64` | All date/time types supported |
+| **String Types** | ✅ Yes | `String`, `FixedString` | All string types supported |
+| **Date Functions** | ✅ Yes | `toYYYYMM(date_col)`, `toMonday(date_col)`, `toYear(date_col)` | Result in supported types |
+| **Mathematical Expressions** | ✅ Yes | `column1 + column2`, `column * 1000` | If result is supported type |
+| **String Functions** | ✅ Yes | `substring(column, 1, 4)` | Result in String type |
+| **Tuple Expressions** | ✅ Yes | `(toMonday(StartDate), EventType)` | If all elements are supported types |
+| **No Partition Key** | ✅ Yes | Tables without `PARTITION BY` clause | Unpartitioned tables supported |
+| **UUID Types** | ❌ No | `UUID` | Not supported by Hive partitioning |
+| **Enum Types** | ❌ No | `Enum8`, `Enum16` | Not supported by Hive partitioning |
+| **Floating-point Types** | ❌ No | `Float32`, `Float64` | Not supported by Hive partitioning |
+| **Hash Functions** | ❌ No | `intHash32(column)`, `cityHash64(column)` | Result in unsupported types |
+
+[ClickHouse] SHALL automatically extract partition values from source parts and use them to create proper Hive partitioning structure in destination storage, but only for partition key types that are compatible with Hive partitioning requirements.
+
+[ClickHouse] SHALL require destination tables to support Hive partitioning, which limits the supported partition key types to Integer, Date/DateTime, and String types. Complex expressions that result in unsupported types are not supported for export operations.
+
+## Part types and content support
+
+### RQ.ClickHouse.ExportPart.PartTypes
+version: 1.0
+
+[ClickHouse] SHALL support export operations for all valid MergeTree part types and their contents, including:
+
+| Part Type | Supported | Description | Special Features |
+|-----------|------------|-------------|------------------|
+| **Wide Parts** | ✅ Yes | Data of each column stored in separate files with marks | Standard format for most parts |
+| **Compact Parts** | ✅ Yes | All column data stored in single file with single marks file | Optimized for small parts |
+| **Regular Parts** | ✅ Yes | Standard data parts created by inserts, merges, mutations | Full data content |
+| **Patch Parts** | ✅ Yes | Lightweight update parts containing only changed columns | Applied during export |
+| **Active Parts** | ✅ Yes | Currently active data parts | Primary export target |
+| **Outdated Parts** | ✅ Yes | Parts that have been replaced by newer versions | Can be exported for backup |
+
+[ClickHouse] SHALL handle all special columns and metadata present in parts during export:
+
+| Column Type | Supported | Description | Export Behavior |
+|-------------|------------|-------------|-----------------|
+| **Physical Columns** | ✅ Yes | User-defined table columns | All physical columns exported |
+| **RowExistsColumn (_row_exists)** | ✅ Yes | Lightweight delete mask showing row existence | Exported to maintain delete state |
+| **BlockNumberColumn (_block_number)** | ✅ Yes | Original block number from insert | Exported for row identification |
+| **BlockOffsetColumn (_block_offset)** | ✅ Yes | Original row offset within block | Exported for row identification |
+| **PartDataVersionColumn (_part_data_version)** | ✅ Yes | Data version for mutations | Exported for version tracking |
+| **Virtual Columns** | ✅ Yes | Runtime columns like _part, _partition_id | Generated during export |
+| **System Metadata** | ✅ Yes | Checksums, compression info, serialization | Preserved in export |
+
+[ClickHouse] SHALL handle all mutation and schema change information present in parts:
+
+| Mutation/Schema Type | Supported | Description | Export Behavior |
+|---------------------|------------|-------------|-----------------|
+| **Mutation Commands** | ✅ Yes | DELETE, UPDATE, MATERIALIZE_INDEX, DROP_COLUMN, RENAME_COLUMN | Applied during export |
+| **Alter Conversions** | ✅ Yes | Column renames, type changes, schema modifications | Applied during export |
+| **Patch Parts** | ✅ Yes | Lightweight updates with only changed columns | Applied during export |
+| **Mutation Versions** | ✅ Yes | Version tracking for applied mutations | Preserved in export |
+| **Schema Changes** | ✅ Yes | ALTER MODIFY, ALTER DROP, ALTER RENAME | Applied during export |
+| **TTL Information** | ✅ Yes | Time-to-live settings and expiration data | Preserved in export |
+| **Index Information** | ✅ Yes | Primary key, secondary indices, projections | Preserved in export |
+| **Statistics** | ✅ Yes | Column statistics and sampling information | Preserved in export |
+
+[ClickHouse] SHALL automatically apply lightweight delete masks during export to ensure only non-deleted rows are exported, and SHALL handle all part metadata including checksums, compression information, serialization details, mutation history, schema changes, and structural modifications to maintain data integrity in the destination storage.
+
+## Export operation failure recovery
+
+### RQ.ClickHouse.ExportPart.FailureRecovery
+version: 1.0
+
+[ClickHouse] SHALL provide comprehensive failure recovery for export operations across all failure scenarios:
+
+| Failure Type | Recovery Behavior | User Impact | Retry Capability |
+|--------------|-------------------|-------------|------------------|
+| **Source Part Failures** | ✅ Yes | Part not found, corrupted, or inaccessible | Export fails gracefully with clear error message |
+| **Destination Storage Failures** | ✅ Yes | S3/object storage unavailable, network issues | Export fails with retry recommendation |
+| **Server Resource Failures** | ✅ Yes | Out of memory, disk space, CPU limits | Export fails with resource error |
+| **Server Restart Failures** | ✅ Yes | Graceful or abrupt server shutdown | Active exports are lost, can be retried |
+| **Network Interruptions** | ✅ Yes | Connection timeouts, network errors | Export fails with retry capability |
+| **Concurrent Operation Failures** | ✅ Yes | Part locked by other operations | Export fails with lock error |
+| **Schema Change Failures** | ✅ Yes | Table structure changed during export | Export fails with schema mismatch error |
+
+[ClickHouse] SHALL handle server restart scenarios by:
+* **Graceful Shutdown**: All active export operations are properly terminated and cleaned up
+* **Abrupt Shutdown**: Export manifests are preserved for recovery on restart
+* **Restart Recovery**: Failed exports can be identified and retried after server restart
+* **State Consistency**: No partial or corrupted exports remain after restart
+
+[ClickHouse] SHALL handle resource constraint failures by:
+* **Memory Exhaustion**: Export fails with clear memory error and retry recommendation
+* **Disk Space**: Export fails when insufficient disk space for temporary files
+* **CPU Limits**: Export respects server CPU limits and throttling
+* **Network Bandwidth**: Export respects bandwidth limits and throttling
+
+[ClickHouse] SHALL handle destination storage failures by:
+* **S3/Object Storage Unavailable**: Export fails with storage error and retry recommendation
+* **Network Timeouts**: Export fails with timeout error and retry capability
+* **Authentication Failures**: Export fails with authentication error
+* **Permission Denied**: Export fails with permission error
 
 ## Export operation restrictions
 
