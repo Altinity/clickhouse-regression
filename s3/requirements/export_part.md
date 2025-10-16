@@ -38,11 +38,13 @@
     * 13.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
 * 14 [Handling file conflicts during export](#handling-file-conflicts-during-export)
     * 14.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
-* 15 [Controlling export performance](#controlling-export-performance)
-    * 15.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-* 16 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
-    * 16.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
-    * 16.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
+* 15 [Export operation configuration](#export-operation-configuration)
+    * 15.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
+* 16 [Controlling export performance](#controlling-export-performance)
+    * 16.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+* 17 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
+    * 17.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
+    * 17.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
 
 ## Introduction
 
@@ -98,6 +100,30 @@ version: 1.0
   * `Azure` - Microsoft Azure Blob Storage (with Hive partitioning)
   * `GCS` - Google Cloud Storage (with Hive partitioning)
 * Implement the `supportsImport()` method and return `true`
+
+## Destination setup and file management
+
+### RQ.ClickHouse.ExportPart.DestinationSetup
+version: 1.0
+
+[ClickHouse] SHALL handle destination setup and file management by:
+* Creating appropriate import sinks for destination storage systems
+* Generating unique file names in the format `{part_name}_{checksum_hex}` to avoid conflicts
+* Allowing destination storage to determine the final file path based on Hive partitioning
+* Creating files in the destination storage that users can observe and access
+* Providing the final destination file path in the `system.exports` table for monitoring
+* Ensuring file naming consistency and uniqueness across export operations
+
+## Export data preparation
+
+### RQ.ClickHouse.ExportPart.DataPreparation
+version: 1.0
+
+[ClickHouse] SHALL prepare data for export by:
+* Automatically selecting all physical columns from source table metadata
+* Extracting partition key values for proper Hive partitioning in destination
+* Applying any pending schema changes to ensure data consistency
+* Ensuring data integrity and schema compatibility throughout the export process
 
 ## Schema compatibility
 
@@ -249,6 +275,17 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support the `export_merge_tree_part_overwrite_file_if_exists` setting that controls whether to overwrite files if they already exist when exporting a merge tree part. The default value SHALL be `0` (turned off).
+
+## Export operation configuration
+
+### RQ.ClickHouse.ExportPart.ParallelFormatting
+version: 1.0
+
+[ClickHouse] SHALL support parallel formatting for export operations by:
+* Automatically enabling parallel formatting for large export operations to improve performance
+* Using the `output_format_parallel_formatting` setting to control parallel formatting behavior
+* Optimizing data processing based on export size and system resources
+* Providing consistent formatting performance across different export scenarios
 
 ## Controlling export performance
 
