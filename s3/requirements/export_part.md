@@ -124,7 +124,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support exporting to destination tables that:
-* Use Hive partitioning strategy (`partition_strategy = 'hive'`)
 * Support object storage engines including:
   * `S3` - Amazon S3 and S3-compatible storage
   * `StorageObjectStorage` - Generic object storage interface
@@ -144,7 +143,6 @@ version: 1.0
 * Allowing destination storage to determine the final file path based on Hive partitioning
 * Creating files in the destination storage that users can observe and access
 * Providing the final destination file path in the `system.exports` table for monitoring
-* Ensuring file naming consistency and uniqueness across export operations
 
 ## Export data preparation
 
@@ -154,8 +152,6 @@ version: 1.0
 [ClickHouse] SHALL prepare data for export by:
 * Automatically selecting all physical columns from source table metadata
 * Extracting partition key values for proper Hive partitioning in destination
-* Applying any pending schema changes to ensure data consistency
-* Ensuring data integrity and schema compatibility throughout the export process
 
 ## Schema compatibility
 
@@ -237,40 +233,17 @@ version: 1.0
 
 [ClickHouse] SHALL automatically apply lightweight delete masks during export to ensure only non-deleted rows are exported, and SHALL handle all part metadata including checksums, compression information, serialization details, mutation history, schema changes, and structural modifications to maintain data integrity in the destination storage.
 
-## Export operation failure recovery
+## Export operation failure handling
 
-### RQ.ClickHouse.ExportPart.FailureRecovery
+### RQ.ClickHouse.ExportPart.FailureHandling
 version: 1.0
 
-[ClickHouse] SHALL provide comprehensive failure recovery for export operations across all failure scenarios:
-
-| Failure Type | Recovery Behavior | User Impact | Retry Capability |
-|--------------|-------------------|-------------|------------------|
-| **Source Part Failures** | ✅ Yes | Part not found, corrupted, or inaccessible | Export fails gracefully with clear error message |
-| **Destination Storage Failures** | ✅ Yes | S3/object storage unavailable, network issues | Export fails with retry recommendation |
-| **Server Resource Failures** | ✅ Yes | Out of memory, disk space, CPU limits | Export fails with resource error |
-| **Server Restart Failures** | ✅ Yes | Graceful or abrupt server shutdown | Active exports are lost, can be retried |
-| **Network Interruptions** | ✅ Yes | Connection timeouts, network errors | Export fails with retry capability |
-| **Concurrent Operation Failures** | ✅ Yes | Part locked by other operations | Export fails with lock error |
-| **Schema Change Failures** | ✅ Yes | Table structure changed during export | Export fails with schema mismatch error |
-
-[ClickHouse] SHALL handle server restart scenarios by:
-* **Graceful Shutdown**: All active export operations are properly terminated and cleaned up
-* **Abrupt Shutdown**: Export manifests are preserved for recovery on restart
-* **Restart Recovery**: Failed exports can be identified and retried after server restart
-* **State Consistency**: No partial or corrupted exports remain after restart
-
-[ClickHouse] SHALL handle resource constraint failures by:
-* **Memory Exhaustion**: Export fails with clear memory error and retry recommendation
-* **Disk Space**: Export fails when insufficient disk space for temporary files
-* **CPU Limits**: Export respects server CPU limits and throttling
-* **Network Bandwidth**: Export respects bandwidth limits and throttling
-
-[ClickHouse] SHALL handle destination storage failures by:
-* **S3/Object Storage Unavailable**: Export fails with storage error and retry recommendation
-* **Network Timeouts**: Export fails with timeout error and retry capability
-* **Authentication Failures**: Export fails with authentication error
-* **Permission Denied**: Export fails with permission error
+[ClickHouse] SHALL handle export operation failures in the following ways:
+* **Stateless Operation**: Export operations are stateless and ephemeral
+* **No Recovery**: If an export fails, it fails completely with no retry mechanism
+* **No State Persistence**: No export manifests or state are preserved across server restarts
+* **Simple Failure**: Export operations either succeed completely or fail with an error message
+* **No Partial Exports**: Failed exports leave no partial or corrupted data in destination storage
 
 ## Export operation restrictions
 
