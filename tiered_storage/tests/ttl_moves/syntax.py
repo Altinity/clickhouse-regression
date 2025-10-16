@@ -172,10 +172,9 @@ def scenario(self, name, engine):
 
         with When("TTL expressions with non-date type"):
 
-            if check_clickhouse_version(">=25.6")(self) or (
-                check_clickhouse_version(">=24.8.14.10044")(self)
-                and check_clickhouse_version("~24.8.*altinity*")(self)
-            ):
+            if check_clickhouse_version(">=25.6")(self) or check_clickhouse_version(
+                "==24.8.14.10501.altinitystable"
+            )(self):
                 message = "DB::Exception: TTL expression result column should have Date, Date32, DateTime or DateTime64 type, but has String"
             else:
                 message = "Exception: TTL expression result column should have DateTime or Date type, but has String"
