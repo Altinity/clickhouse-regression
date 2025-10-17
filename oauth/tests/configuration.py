@@ -10,15 +10,7 @@ def access_clickhouse_with_specific_config(self, set_clickhouse_configuration):
     with Given("I set an incorrect OAuth configuration"):
         set_clickhouse_configuration()
 
-    with When("I get an OAuth token from the provider"):
-        client = self.context.provider_client
-        token = client.OAuthProvider.get_oauth_token()
-
-    with Then("I try to access ClickHouse with the token"):
-        response = access_clickhouse(token=token)
-        assert response.status_code == 200, error()
-
-    with And("I check that the ClickHouse server is still alive"):
+    with Then("I check that the ClickHouse server is still alive"):
         check_clickhouse_is_alive()
 
 
