@@ -12,7 +12,7 @@ def check_authentication_flow(self):
     client = self.context.provider_client
 
     with Given(f"I get an OAuth token from {self.context.provider_name}"):
-        token = client.OAuthProvider.get_oauth_token()
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
     with Then("I try to access ClickHouse with the token"):
         access_clickhouse(token=token)
