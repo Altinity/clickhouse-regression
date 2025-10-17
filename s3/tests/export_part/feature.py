@@ -9,7 +9,6 @@ from s3.tests.export_part.steps import *
 @TestScenario
 def sanity(self):
     """Check that ClickHouse can export data parts to S3 storage."""
-    node = self.context.node
 
     with Given("I create a source table"):
         source = create_source_table()
@@ -20,9 +19,8 @@ def sanity(self):
     with And("I turn off merges for source table"):
         source.stop_merges()
 
-    with When("I insert data into the source table"):
-        for i in range(10):
-            node.query(f"INSERT INTO {source.name} VALUES ({i % 10}, {i})", exitcode=0)
+    with When("I insert test data into the source table"):
+        source.insert_test_data(row_count=10, cardinality=1)
 
     with And("I get a list of parts for source table"):
         parts = source.get_parts()
@@ -30,15 +28,16 @@ def sanity(self):
     with And("I read current export events"):
         events_before = export_events()
 
-    with When("I export parts to the destination table"):
-        for _ in range(10):
-            export_part(parts=parts, source=source, destination=destination)
+    with And("I export parts to the destination table"):
+        export_part(parts=parts, source=source, destination=destination)
 
-    with And("I check that all exports are successful"):
+    with Then("I check system.events that all exports are successful"):
         events_after = export_events()
-        assert (
-            events_after["PartsExports"] == events_before.get("PartsExports", 0) + 10
-        ), error()
+        assert events_after["PartsExports"] == events_before.get(
+            "PartsExports", 0
+        ) + len(parts), error()
+
+    # FIXME: read back data and assert destination matches source
 
 
 @TestOutline(Feature)
