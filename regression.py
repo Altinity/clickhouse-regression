@@ -23,9 +23,9 @@ ffails = {
 def regression(
     self,
     cluster_args,
+    s3_args,
     clickhouse_version,
     use_specific_version=None,
-    node="clickhouse1",
     stress=None,
     with_analyzer=False,
 ):
