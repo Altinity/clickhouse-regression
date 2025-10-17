@@ -1,4 +1,4 @@
-import requests
+import json
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
@@ -6,21 +6,38 @@ from oauth.requirements.requirements import *
 
 
 @TestStep(Then)
-def access_clickhouse(self, token, ip="clickhouse1", https=False, status_code=200):
-    """Execute a query to ClickHouse with JWT token authentication."""
+def access_clickhouse(
+    self, token, ip="clickhouse1", https=False, status_code=200, node=None
+):
+    """Execute a query to ClickHouse with JWT token authentication and return both response and status code."""
+    if node is None:
+        node = self.context.bash_tools
+
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:8123/"
 
-    headers = {"X-ClickHouse-JWT-Token": f"Bearer {token}"}
+    curl_command = f"""curl -s -o /tmp/ch_response.txt -w "%{{http_code}}" \
+--location '{url}?query=SELECT%20currentUser()' \
+--header 'Authorization: Bearer {token}'"""
 
-    params = {"query": "SELECT currentUser()"}
+    if https:
+        curl_command += " -k"
 
-    verify = False if https else True
+    result = node.command(command=curl_command)
 
-    response = requests.get(url, headers=headers, params=params, verify=verify)
-    response.raise_for_status()
+    output = result.output.strip()
+    http_code = output[-3:]
+    try:
+        http_code = int(http_code)
+    except ValueError:
+        http_code = None
 
-    assert response.status_code == status_code, error()
+    body_result = node.command(command="cat /tmp/ch_response.txt")
+    response_body = body_result.output.strip()
+
+    assert http_code == status_code, error()
+
+    return response_body
 
 
 @TestStep(Then)

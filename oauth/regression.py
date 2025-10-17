@@ -142,7 +142,7 @@ def regression(
                 self.context.client_secret,
             )
         elif identity_provider.lower() == "keycloak":
-            self.context.keycloak_url = "http://localhost:8080"
+            self.context.keycloak_url = "http://keycloak:8080"
             self.context.username = "demo"
             self.context.password = "demo"
             self.context.client_secret = "grafana-secret"
