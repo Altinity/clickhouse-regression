@@ -24,8 +24,8 @@
     * 10.1 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
 * 11 [Part types and content support](#part-types-and-content-support)
     * 11.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
-* 12 [Export operation failure recovery](#export-operation-failure-recovery)
-    * 12.1 [RQ.ClickHouse.ExportPart.FailureRecovery](#rqclickhouseexportpartfailurerecovery)
+* 12 [Export operation failure handling](#export-operation-failure-handling)
+    * 12.1 [RQ.ClickHouse.ExportPart.FailureHandling](#rqclickhouseexportpartfailurehandling)
 * 13 [Export operation restrictions](#export-operation-restrictions)
     * 13.1 [Preventing same table exports](#preventing-same-table-exports)
         * 13.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
@@ -343,7 +343,7 @@ version: 1.0
 * Recording the specific part name and destination for all operations
 * Including execution time and progress information for all operations
 * Writing operation information to the `system.part_log` table with the following columns:
-  * `event_type` - Set to `EXPORT_PART` for export operations
+  * `event_type` - Set to `ExportPart` for export operations
   * `event_time` - Timestamp when the export operation occurred
   * `table` - Source table name
   * `part_name` - Name of the part being exported
