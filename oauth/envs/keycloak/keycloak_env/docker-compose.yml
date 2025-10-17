@@ -91,6 +91,11 @@ services:
       keycloak:
         condition: service_healthy
 
+  bash-tools:
+    extends:
+      file: ../../../../docker-compose/bash-tools.yml
+      service: bash-tools
+
   all_services_ready:
     image: hello-world
     depends_on:
