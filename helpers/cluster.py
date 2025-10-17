@@ -1006,7 +1006,7 @@ class ClickHouseNode(Node):
         sql,
         message=None,
         exitcode=None,
-        steps=True,
+        steps=False,
         no_checks=False,
         raise_on_exception=False,
         ignore_exception=False,
