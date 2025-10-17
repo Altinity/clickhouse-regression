@@ -24,8 +24,8 @@
     * 10.1 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
 * 11 [Part types and content support](#part-types-and-content-support)
     * 11.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
-* 12 [Export operation failure recovery](#export-operation-failure-recovery)
-    * 12.1 [RQ.ClickHouse.ExportPart.FailureRecovery](#rqclickhouseexportpartfailurerecovery)
+* 12 [Export operation failure handling](#export-operation-failure-handling)
+    * 12.1 [RQ.ClickHouse.ExportPart.FailureHandling](#rqclickhouseexportpartfailurehandling)
 * 13 [Export operation restrictions](#export-operation-restrictions)
     * 13.1 [Preventing same table exports](#preventing-same-table-exports)
         * 13.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
@@ -37,28 +37,23 @@
     * 14.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
 * 15 [Export operation idempotency](#export-operation-idempotency)
     * 15.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
-* 16 [Export operation error recovery](#export-operation-error-recovery)
-    * 16.1 [Graceful failure handling](#graceful-failure-handling)
-        * 16.1.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure](#rqclickhouseexportparterrorrecoverygracefulfailure)
-    * 16.2 [Automatic cleanup on failure](#automatic-cleanup-on-failure)
-        * 16.2.1 [RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup](#rqclickhouseexportparterrorrecoveryautomaticcleanup)
-* 17 [Export operation logging](#export-operation-logging)
-    * 17.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
-* 18 [Monitoring export operations](#monitoring-export-operations)
-    * 18.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
-* 19 [Enabling export functionality](#enabling-export-functionality)
-    * 19.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
-* 20 [Handling file conflicts during export](#handling-file-conflicts-during-export)
-    * 20.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
-* 21 [Export operation configuration](#export-operation-configuration)
-    * 21.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
-* 22 [Controlling export performance](#controlling-export-performance)
-    * 22.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-* 23 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
-    * 23.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
-    * 23.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
-* 24 [Export operation security](#export-operation-security)
-    * 24.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+* 16 [Export operation logging](#export-operation-logging)
+    * 16.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
+* 17 [Monitoring export operations](#monitoring-export-operations)
+    * 17.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
+* 18 [Enabling export functionality](#enabling-export-functionality)
+    * 18.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
+* 19 [Handling file conflicts during export](#handling-file-conflicts-during-export)
+    * 19.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
+* 20 [Export operation configuration](#export-operation-configuration)
+    * 20.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
+* 21 [Controlling export performance](#controlling-export-performance)
+    * 21.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+* 22 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
+    * 22.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
+    * 22.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
+* 23 [Export operation security](#export-operation-security)
+    * 23.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
 
 ## Introduction
 
@@ -308,31 +303,6 @@ version: 1.0
 * Generating unique file names using part name and checksum to avoid conflicts
 * Maintaining export state consistency across retries
 
-## Export operation error recovery
-
-### Graceful failure handling
-
-#### RQ.ClickHouse.ExportPart.ErrorRecovery.GracefulFailure
-version: 1.0
-
-[ClickHouse] SHALL handle export failures gracefully by:
-* Allowing users to retry failed export operations
-* Maintaining system stability even when exports fail
-* Not corrupting source data when export operations fail
-* Continuing to process other export operations when one fails
-
-### Automatic cleanup on failure
-
-#### RQ.ClickHouse.ExportPart.ErrorRecovery.AutomaticCleanup
-version: 1.0
-
-[ClickHouse] SHALL automatically clean up failed export operations by:
-* Removing export manifests from the system when operations fail
-* Cleaning up any partial data written to destination storage
-* Releasing system resources (memory, file handles) used by failed exports
-* Updating export status to reflect the failure state
-* Allowing the system to recover and process other export operations
-
 ## Export operation logging
 
 ### RQ.ClickHouse.ExportPart.Logging
@@ -343,7 +313,7 @@ version: 1.0
 * Recording the specific part name and destination for all operations
 * Including execution time and progress information for all operations
 * Writing operation information to the `system.part_log` table with the following columns:
-  * `event_type` - Set to `EXPORT_PART` for export operations
+  * `event_type` - Set to `ExportPart` for export operations
   * `event_time` - Timestamp when the export operation occurred
   * `table` - Source table name
   * `part_name` - Name of the part being exported
