@@ -89,26 +89,26 @@ def sanity(self):
         )
 
     with And("I turn off merges for source table"):
-        stop_merges(source)
+        stop_merges(table=source)
 
     with When("I insert data into the source table"):
         for i in range(10):
             node.query(f"INSERT INTO {source.name} VALUES ({i % 10}, {i})", exitcode=0)
 
     with And("I get a list of parts for source table"):
-        parts = get_parts(source)
+        parts = get_parts(table=source)
 
     with And("I read current export events"):
         events_before = export_events()
 
     with When("I export parts to the destination table"):
         for _ in range(10):
-            export_part(parts, source, destination)
+            export_part(parts=parts, source=source, destination=destination)
 
     with And("I check that all exports are successful"):
         events_after = export_events()
         assert (
-            events_after["PartsExports"] == events_before["PartsExports"] + 10
+            events_after["PartsExports"] == events_before.get("PartsExports", 0) + 10
         ), error()
 
 
