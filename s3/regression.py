@@ -316,6 +316,13 @@ xfails = {
             check_clickhouse_version(">=25.7"),
         )
     ],
+    ":/part 1/table function/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/88699",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
 }
 
 ffails = {
