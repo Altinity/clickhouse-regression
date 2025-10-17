@@ -11,43 +11,24 @@ from oauth.tests.steps.clikhouse import (
 
 
 @TestStep(Given)
-def get_oauth_token(self):
+def get_oauth_token(self, node=None):
     """Get an OAuth token from Keycloak for a user."""
-    url = f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
+    if node is None:
+        node = self.context.bash_tools
 
-    payload = f"client_id={self.context.client_id}&grant_type=password&username={self.context.username}&password={self.context.password}&client_secret={self.context.client_secret}"
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    curl_command = f"""curl --location '{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id={self.context.client_id}' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'username={self.context.username}' \
+--data-urlencode 'password={self.context.password}' \
+--data-urlencode 'client_secret={self.context.client_secret}'"""
 
-    response = requests.request("POST", url, headers=headers, data=payload).json()
-    note(response["access_token"])
-    yield response["access_token"]
+    result = node.command(command=curl_command)
 
+    response = json.loads(result.output)
 
-# @TestStep(Given)
-# def get_oauth_token(self):
-#     """Get an OAuth token from Keycloak for a user."""
-#
-#     token_url = (
-#         f"{self.context.keycloak_url}/realms/grafana/protocol/openid-connect/token"
-#     )
-#
-#     data = {
-#         "grant_type": "password",
-#         "client_id": "grafana-client",
-#         "username": self.context.username,
-#         "password": self.context.password,
-#         "client_secret": self.context.client_secret,
-#     }
-#
-#     response = requests.post(token_url, data=data)
-#     response.raise_for_status()
-#
-#     token_data = response.json()
-#     access_token = token_data["access_token"]
-#     expiration = token_data["expires_in"]
-#     refresh_expiration = token_data["refresh_expires_in"]
-#
-#     return access_token
+    yield response
 
 
 @TestStep(Given)
