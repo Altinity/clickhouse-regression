@@ -13,7 +13,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
-from oauth.tests.steps import azure_application as azure
+from oauth.tests.steps import azure_application as azure, keycloak_realm
 from oauth.tests.steps import keycloak_realm as keycloak
 from oauth.tests.steps.azure_application import setup_azure_application
 
@@ -159,6 +159,7 @@ def regression(
         self.context.provider_client = providers[identity_provider.lower()]
         self.context.provider_name = identity_provider
 
+    self.context.bash_tools = self.context.cluster.node("bash-tools")
     self.context.node = self.context.cluster.node("clickhouse1")
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
@@ -166,6 +167,12 @@ def regression(
         self.context.cluster.node(node) for node in nodes["clickhouse"]
     ]
 
+    if identity_provider.lower() == "keycloak":
+        for retry in retries(timeout=300, delay=20):
+            with retry:
+                keycloak_realm.OAuthProvider.get_oauth_token()
+
+    pause()
     Scenario(run=load("oauth.tests.sanity", "feature"))
     Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
