@@ -343,9 +343,10 @@ def generate_all_map_column_types():
 
 
 class Table:
-    def __init__(self, name, columns, engine):
+    def __init__(self, name, columns, partition_by, engine):
         self.name = name
         self.columns = columns
+        self.partition_by = partition_by
         self.engine = engine
 
     def insert_test_data(
@@ -400,6 +401,23 @@ class Table:
         if get_values:
             return result, values
         return result
+
+    def get_parts(self, node=None):
+        """Get all parts for a table."""
+        if node is None:
+            node = current().context.node
+
+        output = node.query(
+            f"SELECT name FROM system.parts WHERE table = '{self.name}'", exitcode=0
+        ).output
+        return [row.strip() for row in output.splitlines()]
+
+    def stop_merges(self, node=None):
+        """Stop merges for a table."""
+        if node is None:
+            node = current().context.node
+
+        node.query(f"SYSTEM STOP MERGES {self.name}", exitcode=0)
 
 
 @TestStep(Given)
@@ -484,7 +502,9 @@ def create_table(
                 settings=settings,
             )
 
-            yield Table(name, columns, engine)
+            yield Table(
+                name=name, columns=columns, partition_by=partition_by, engine=engine
+            )
 
     finally:
         with Finally(f"drop the table {name}"):
