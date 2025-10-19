@@ -19,8 +19,8 @@ def sanity(self):
     with And("I turn off merges for source table"):
         source.stop_merges()
 
-    with When("I insert test data into the source table"):
-        source.insert_test_data(row_count=10, cardinality=1)
+    with When("I insert random test data into the source table"):
+        source.insert_test_data() # default row_count=10, cardinality=1
 
     with And("I get a list of parts for source table"):
         source_parts = source.get_parts()
