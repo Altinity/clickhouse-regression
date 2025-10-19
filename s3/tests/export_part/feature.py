@@ -6,6 +6,10 @@ from s3.tests.common import *
 from s3.tests.export_part.steps import *
 
 
+# TODO: simplify tests by using the same source and destination tables for all scenarios?
+# is this better than using different tables for each scenario?
+# regardless, i think the tests can be cleaned up, maybe create a "setup" step for making source/destination tables, turning off merges, inserting test data, etc.
+
 @TestScenario
 def sanity(self):
     """Check that ClickHouse can export data parts to S3 storage."""
@@ -41,6 +45,33 @@ def sanity(self):
         destination_data = destination.select_ordered_by_partition_and_index()
         source_data = source.select_ordered_by_partition_and_index()
         assert destination_data == source_data, error()
+
+
+@TestScenario
+def invalid_part_name(self):
+    """Check that exporting a non-existent part returns the correct error."""
+
+    with Given("I create a source table"):
+        source = create_source_table()
+
+    with And("I create a destination table"):
+        destination = create_destination_table(source=source)
+
+    with And("I turn off merges for source table"):
+        source.stop_merges()
+
+    with When("I insert random test data into the source table"):
+        source.insert_test_data() # default row_count=10, cardinality=1
+
+    with And("I create an invalid part name"):
+        invalid_part_name = "in_va_lid_part"
+
+    with Then("I try to export the invalid part and expect an error"):
+        results = export_part(parts=[invalid_part_name], source=source, destination=destination, exitcode=1)
+        assert len(results) == 1, error()
+        # note(f"Result: {results[0].output}")
+        assert results[0].exitcode == 233, error()
+        assert f"Unexpected part name: {invalid_part_name}" in results[0].output, error()
 
 
 @TestOutline(Feature)

@@ -20,16 +20,22 @@ def export_events(self):
 
 
 @TestStep(When)
-def export_part(self, parts, source, destination):
+def export_part(self, parts, source, destination, exitcode=0):
     """Alter export of parts."""
     node = self.context.node
+
+    no_checks = exitcode != 0
+    results = []
+
     for part in parts:
-        node.query(
+        results.append(node.query(
             f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source.name} EXPORT PART '{part}' TO TABLE {destination.name}",
             # settings=[("allow_experimental_export_merge_tree_part", 1)],
-            exitcode=0,
-        )
+            exitcode=exitcode,
+            no_checks=no_checks
+        ))
 
+    return results
 
 @TestStep(When)
 def create_source_table(
