@@ -418,6 +418,17 @@ class Table:
             node = current().context.node
 
         node.query(f"SYSTEM STOP MERGES {self.name}", exitcode=0)
+    
+    def query(self, query, node=None):
+        """Query data from a table."""
+        if node is None:
+            node = current().context.node
+
+        return node.query(query, exitcode=0).output
+    
+    def select_ordered_by_partition_and_index(self, node=None):
+        """Select all data from a table ordered by partition and index columns."""
+        return self.query(f"SELECT * FROM {self.name} ORDER BY p, i", node=node)
 
 
 @TestStep(Given)
