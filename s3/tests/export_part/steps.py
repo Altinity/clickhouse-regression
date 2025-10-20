@@ -5,6 +5,18 @@ from helpers.common import getuid
 from helpers.tables import *
 from s3.tests.common import temporary_bucket_path
 
+
+@TestStep(Given)
+def create_source_and_destination_tables(self, stop_merges=True):
+    """Create source and destination tables."""
+    create_temp_bucket()
+    source = create_source_table()
+    destination = create_destination_table(source=source)
+    if stop_merges:
+        source.stop_merges()
+    return source, destination
+
+
 @TestStep(Given)
 def create_temp_bucket(self, uri=None, bucket_prefix=None):
     """Create temporary s3 bucket."""
