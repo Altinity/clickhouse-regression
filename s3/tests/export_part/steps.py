@@ -27,6 +27,7 @@ def export_part(self, parts, source, destination, exitcode=0):
     no_checks = exitcode != 0
     results = []
 
+    # we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
     for part in parts:
         results.append(node.query(
             f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source.name} EXPORT PART '{part}' TO TABLE {destination.name}",
