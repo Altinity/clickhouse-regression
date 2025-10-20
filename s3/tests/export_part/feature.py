@@ -8,11 +8,6 @@ from s3.tests.common import *
 from s3.tests.export_part.steps import *
 
 
-# TODO: Simplify tests by using the same source and destination tables for all scenarios?
-    # Is this better than using different tables for each scenario?
-# Regardless, I think the tests can be cleaned up. Maybe create a "setup" step for making
-    # source/destination tables, turning off merges, inserting test data, etc.
-
 @TestScenario
 def sanity(self):
     """Check that ClickHouse can export data parts to S3 storage."""
@@ -30,15 +25,10 @@ def sanity(self):
         events_before = export_events()
 
     with And("I export parts to the destination table"):
-        note(f"Exporting parts: {source_parts}")
-        note(f"Source table: {source.name}")
-        note(f"Destination table: {destination.name}")
         export_part(parts=source_parts, source=source, destination=destination)
 
     with Then("I check system.events that all exports are successful"):
         events_after = export_events()
-        note(f"Events before: {events_before}")
-        note(f"Events after: {events_after}")
         total_exports_after = events_after.get("PartsExports", 0) + events_after.get("PartsExportDuplicated", 0)
         total_exports_before = events_before.get("PartsExports", 0) + events_before.get("PartsExportDuplicated", 0)
         assert total_exports_after == total_exports_before + len(source_parts), error()
@@ -46,8 +36,6 @@ def sanity(self):
     with And("I read back data and assert destination matches source"):
         destination_data = destination.select_ordered_by_partition_and_index()
         source_data = source.select_ordered_by_partition_and_index()
-        note(f"Destination data: {destination_data}")
-        note(f"Source data: {source_data}")
         assert destination_data == source_data, error()
 
 
