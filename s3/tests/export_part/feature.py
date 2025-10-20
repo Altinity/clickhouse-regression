@@ -148,13 +148,10 @@ def outline(self):
 @Requirements()
 @Name("export part")
 def minio(self, uri, bucket_prefix):
+    self.context.uri_base = uri
+    self.context.bucket_prefix = bucket_prefix
 
     with Given("a temporary s3 path"):
-        temp_s3_path = temporary_bucket_path(
-            bucket_prefix=f"{bucket_prefix}/export_part"
-        )
-
-        self.context.uri = f"{uri}export_part/{temp_s3_path}/"
-        self.context.bucket_path = f"{bucket_prefix}/export_part/{temp_s3_path}"
+        create_temp_bucket()
 
     outline()
