@@ -3,6 +3,23 @@ import json
 from testflows.core import *
 from helpers.common import getuid
 from helpers.tables import *
+from s3.tests.common import temporary_bucket_path
+
+@TestStep(Given)
+def create_temp_bucket(self, uri=None, bucket_prefix=None):
+    """Create temporary s3 bucket."""
+    if uri is None:
+        uri = self.context.uri_base
+        
+    if bucket_prefix is None:
+        bucket_prefix = self.context.bucket_prefix
+
+    temp_s3_path = temporary_bucket_path(
+        bucket_prefix=f"{bucket_prefix}/export_part"
+    )
+
+    self.context.uri = f"{uri}export_part/{temp_s3_path}/"
+    self.context.bucket_path = f"{bucket_prefix}/export_part/{temp_s3_path}"
 
 
 @TestStep(When)
@@ -70,12 +87,14 @@ def create_source_table(
 @TestStep(When)
 def create_destination_table(self, source, engine=None):
     """Create a destination table."""
+    name = "destination_table_" + getuid()
     if engine is None:
         engine = f"""
         S3(
             '{self.context.uri}',
             '{self.context.access_key_id}',
             '{self.context.secret_access_key}',
+            filename='{name}',
             format='Parquet',
             compression='auto',
             partition_strategy='hive'
@@ -83,7 +102,7 @@ def create_destination_table(self, source, engine=None):
     """
 
     destination = create_table(
-        name="destination_table_" + getuid(),
+        name=name,
         columns=source.columns,
         partition_by=source.partition_by,
         engine=engine,
