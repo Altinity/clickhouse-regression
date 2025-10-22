@@ -1,115 +1,20 @@
-import random
-
 from testflows.core import *
-from testflows.asserts import error
-
-from helpers.tables import *
-from s3.tests.common import *
-from s3.tests.export_part.steps import *
-
-
-@TestScenario
-def sanity(self):
-    """Check that ClickHouse can export data parts to S3 storage."""
-
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables()
-
-    with When("I insert random test data into the source table"):
-        source.insert_test_data() # default row_count=10, cardinality=1
-
-    with And("I get a list of parts for source table"):
-        source_parts = source.get_parts()
-
-    with And("I read current export events"):
-        events_before = export_events()
-
-    with And("I export parts to the destination table"):
-        export_part(parts=source_parts, source=source, destination=destination)
-
-    with Then("I check system.events that all exports are successful"):
-        events_after = export_events()
-        total_exports_after = events_after.get("PartsExports", 0) + events_after.get("PartsExportDuplicated", 0)
-        total_exports_before = events_before.get("PartsExports", 0) + events_before.get("PartsExportDuplicated", 0)
-        assert total_exports_after == total_exports_before + len(source_parts), error()
-
-    with And("I read back data and assert destination matches source"):
-        destination_data = destination.select_ordered_by_partition_and_index()
-        source_data = source.select_ordered_by_partition_and_index()
-        assert destination_data == source_data, error()
-
-
-@TestScenario
-def invalid_part_name(self):
-    """Check that exporting a non-existent part returns the correct error."""
-
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables()
-
-    with When("I insert random test data into the source table"):
-        source.insert_test_data() # default row_count=10, cardinality=1
-
-    with And("I create an invalid part name"):
-        invalid_part_name = "in_va_lid_part"
-
-    with Then("I try to export the invalid part and expect an error"):
-        results = export_part(parts=[invalid_part_name], source=source, destination=destination, exitcode=1)
-        assert len(results) == 1, error()
-        # note(f"Result: {results[0].output}")
-        assert results[0].exitcode == 233, error()
-        assert f"Unexpected part name: {invalid_part_name}" in results[0].output, error()
-
-
-@TestScenario
-def duplicate_exports(self):
-    """Check that duplicate export attempts are properly tracked in system.events."""
-
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables()
-
-    with When("I insert random test data into the source table"):
-        source.insert_test_data() # default row_count=10, cardinality=1
-
-    with And("I get a list of parts for source table"):
-        source_parts = source.get_parts()
-        test_part = source_parts[1]
-
-    with And("I read initial export events"):
-        events_initial = export_events()
-        initial_exports = events_initial.get("PartsExports", 0)
-        initial_duplicates = events_initial.get("PartsExportDuplicated", 0)
-
-    with When("I export the same part twice"):
-        export_part(parts=[test_part], source=source, destination=destination)
-        export_part(parts=[test_part], source=source, destination=destination)
-
-    with Then("I check system.events for duplicate tracking"):
-        events_final = export_events()
-        final_exports = events_final.get("PartsExports", 0)
-        final_duplicates = events_final.get("PartsExportDuplicated", 0)
-        
-        # 1 successful export
-        assert final_exports - initial_exports == 1, error()
-        # 1 of the exports was counted as a duplicate
-        assert final_duplicates - initial_duplicates == 1, error()
-
-
-@TestOutline(Feature)
-@Requirements(
-    # TBD
-)
-def outline(self):
-    """Run export part scenarios."""
-
-    for scenario in loads(current_module(), Scenario):
-        Scenario(run=scenario, flags=TE)
 
 
 @TestFeature
-@Requirements()
-@Name("export part")
+@Name("export parts")
 def minio(self, uri, bucket_prefix):
+    """Run features from the export parts suite."""
+
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
 
-    outline()
+    self.context.node_1 = self.context.cluster.node("clickhouse1")
+    self.context.node_2 = self.context.cluster.node("clickhouse2")
+    self.context.node_3 = self.context.cluster.node("clickhouse3")
+    self.context.nodes = [self.context.node_1, self.context.node_2, self.context.node_3]
+
+    Feature(run=load("s3.tests.export_part.sanity", "feature"))
+    Feature(run=load("s3.tests.export_part.error_handling", "feature"))
+    Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
+    Feature(run=load("s3.tests.export_part.clusters", "feature"))
