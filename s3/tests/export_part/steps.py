@@ -49,9 +49,10 @@ def export_events(self):
 
 
 @TestStep(When)
-def export_part(self, parts, source, destination, exitcode=0):
+def export_part(self, parts, source, destination, exitcode=0, node=None):
     """Alter export of parts."""
-    node = self.context.node
+    if node is None:
+        node = self.context.node
 
     no_checks = exitcode != 0
     results = []
@@ -66,6 +67,7 @@ def export_part(self, parts, source, destination, exitcode=0):
         ))
 
     return results
+
 
 @TestStep(When)
 def create_source_table(
