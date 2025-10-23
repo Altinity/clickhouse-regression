@@ -7,19 +7,22 @@ from s3.tests.common import temporary_bucket_path
 
 
 @TestStep(Given)
-def create_source_and_destination_tables(self, stop_merges=True):
+def create_source_and_destination_tables(self, engine=None, columns=None, partition_by=None, order_by=None, node=None, cluster=None, stop_merges=True):
     """Create source and destination tables."""
+
     create_temp_bucket()
-    source = create_source_table()
+    source = create_source_table(engine=engine, columns=columns, partition_by=partition_by, order_by=order_by, node=node, cluster=cluster)
     destination = create_destination_table(source=source)
     if stop_merges:
         source.stop_merges()
+    
     return source, destination
 
 
 @TestStep(Given)
 def create_temp_bucket(self, uri=None, bucket_prefix=None):
     """Create temporary s3 bucket."""
+
     if uri is None:
         uri = self.context.uri_base
         
@@ -35,9 +38,12 @@ def create_temp_bucket(self, uri=None, bucket_prefix=None):
 
 
 @TestStep(When)
-def export_events(self):
+def export_events(self, node=None):
     """Get the number of successful parts exports from the system.events table."""
-    node = self.context.node
+
+    if node is None:
+        node = self.context.node
+
     output = node.query(
         "SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
         exitcode=0,
@@ -51,6 +57,7 @@ def export_events(self):
 @TestStep(When)
 def export_part(self, parts, source, destination, exitcode=0, node=None):
     """Alter export of parts."""
+
     if node is None:
         node = self.context.node
 
@@ -70,11 +77,11 @@ def export_part(self, parts, source, destination, exitcode=0, node=None):
 
 
 @TestStep(When)
-def create_source_table(
-    self, columns=None, partition_by=None, order_by=None, engine=None
-):
+def create_source_table(self, engine=None, columns=None, partition_by=None, order_by=None, node=None, cluster=None):
     """Create a source table."""
 
+    if engine is None:
+        engine = "MergeTree"
     if columns is None:
         columns = [
             Column(name="p", datatype=UInt16()),
@@ -84,15 +91,17 @@ def create_source_table(
         partition_by = columns[0].name
     if order_by is None:
         order_by = "tuple()"
-    if engine is None:
-        engine = "MergeTree"
+    if cluster is None:
+        cluster = "one_shard_cluster"
 
     source = create_table(
         name="source_table_" + getuid(),
+        engine=engine,
         columns=columns,
         partition_by=partition_by,
         order_by=order_by,
-        engine=engine,
+        cluster=cluster,
+        node=node,
     )
 
     return source
@@ -101,7 +110,9 @@ def create_source_table(
 @TestStep(When)
 def create_destination_table(self, source, engine=None):
     """Create a destination table."""
+    
     name = "destination_table_" + getuid()
+    
     if engine is None:
         engine = f"""
         S3(
