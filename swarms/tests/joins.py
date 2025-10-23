@@ -153,6 +153,11 @@ def check_join(
             and left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table"
         )
+        or (
+            object_storage_cluster_join_mode == "allow"
+            and left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "iceberg_table"
+        )
     ):
         exitcode, message = (
             81,
@@ -164,6 +169,7 @@ def check_join(
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "local"
+            and left_table.location == right_table.location
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -217,17 +223,47 @@ def check_join(
         )
         or (
             left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "icebergS3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "icebergS3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
         )
     ):
@@ -291,27 +327,27 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             )
             for url in urls
         ]
-        # iceberg_s3_cluster_table_functions = [
-        #     JoinTable.create_icebergS3Cluster_table_function(location)
-        #     for location in locations
-        # ]
+        iceberg_s3_cluster_table_functions = [
+            JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster")
+            for url in urls
+        ]
         # s3_cluster_table_functions = [
-        #     JoinTable.create_s3Cluster_table_function(location)
-        #     for location in locations
+        #     JoinTable.create_s3Cluster_table_function(url)
+        #     for url in urls
         # ]
 
         left_tables = (
             iceberg_tables
             + iceberg_table_functions
             + s3_table_functions
-            # + iceberg_s3_cluster_table_functions
+            + iceberg_s3_cluster_table_functions
             # + s3_cluster_table_functions
         )
         right_tables = (
             iceberg_tables
             + iceberg_table_functions
             + s3_table_functions
-            # + iceberg_s3_cluster_table_functions
+            + iceberg_s3_cluster_table_functions
             # + s3_cluster_table_functions
         )
         modes = ["allow", "local"]
