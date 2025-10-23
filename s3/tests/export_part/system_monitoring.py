@@ -32,9 +32,10 @@ def duplicate_exports(self):
         final_exports = events_final.get("PartsExports", 0)
         final_duplicates = events_final.get("PartsExportDuplicated", 0)
         
-        # 1 successful export
+    with By("Checking we have 1 successful export"):
         assert final_exports - initial_exports == 1, error()
-        # 1 of the exports was counted as a duplicate
+    
+    with And("Checking we have 1 duplicate export"):
         assert final_duplicates - initial_duplicates == 1, error()
 
 

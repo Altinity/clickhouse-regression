@@ -539,6 +539,8 @@ def minio_regression(
 
     self.context.cluster = cluster
     self.context.node = cluster.node("clickhouse1")
+    self.context.node2 = cluster.node("clickhouse2")
+    self.context.node3 = cluster.node("clickhouse3")
 
     with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
@@ -549,18 +551,18 @@ def minio_regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with And("allow higher cpu_wait_ratio "):
-        if check_clickhouse_version(">=25.4")(self):
-            allow_higher_cpu_wait_ratio(
-                min_os_cpu_wait_time_ratio_to_throw=15,
-                max_os_cpu_wait_time_ratio_to_throw=25,
-            )
+    # with And("allow higher cpu_wait_ratio "):
+    #     if check_clickhouse_version(">=25.4")(self):
+    #         allow_higher_cpu_wait_ratio(
+    #             min_os_cpu_wait_time_ratio_to_throw=15,
+    #             max_os_cpu_wait_time_ratio_to_throw=25,
+    #         )
 
-    with And("I add all possible clusters for nodes"):
-        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+    # with And("I add all possible clusters for nodes"):
+    #     add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
-    with And("I get all possible clusters for nodes"):
-        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+    # with And("I get all possible clusters for nodes"):
+    #     self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
     with Feature("part 1"):
         Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
