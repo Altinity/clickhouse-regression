@@ -107,6 +107,8 @@ def check_join(
     join_condition,
     object_storage_cluster_join_mode,
     node=None,
+    object_storage_cluster="replicated_cluster_two_nodes",
+    format="Values",
 ):
     """Check join operation."""
     if node is None:
@@ -158,6 +160,11 @@ def check_join(
             and left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table"
         )
+        or (
+            object_storage_cluster_join_mode == "allow"
+            and left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "iceberg_table"
+        )
     ):
         exitcode, message = (
             81,
@@ -183,27 +190,43 @@ def check_join(
             and object_storage_cluster_join_mode == "local"
             and left_table.location == right_table.location
         )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "local"
+            and left_table.location == right_table.location
+        )
     ):
         exitcode, message = (
             10,
             "DB::Exception:",
         )
 
-    result = node.query(
-        f"""
+    query = f"""
         SELECT *
         FROM {left_table} AS t1
         {join_clause} {right_table} AS t2
         ON {join_condition}
         ORDER BY tuple(*)
-        SETTINGS 
-            object_storage_cluster_join_mode='{object_storage_cluster_join_mode}',
-            object_storage_cluster='replicated_cluster_two_nodes'
-        FORMAT Values
-        """,
-        exitcode=exitcode,
-        message=message,
-    )
+        """
+
+    settings = {}
+
+    if object_storage_cluster_join_mode:
+        settings["object_storage_cluster_join_mode"] = (
+            f"'{object_storage_cluster_join_mode}'"
+        )
+
+    if object_storage_cluster:
+        settings["object_storage_cluster"] = f"'{object_storage_cluster}'"
+
+    if settings:
+        query += f" SETTINGS {', '.join([f'{key}={value}' for key, value in settings.items()])}"
+
+    if format:
+        query += f" FORMAT {format}"
+
+    result = node.query(query, exitcode=exitcode, message=message)
 
     if (
         (
@@ -266,6 +289,46 @@ def check_join(
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
         )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "icebergS3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "s3Cluster_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
     ):
         assert result.output == "", error()
     elif not exitcode:
@@ -280,8 +343,14 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         node = self.context.node
 
     database_name = f"database_{getuid()}"
-    locations = [f"s3://warehouse/data{i}" for i in range(1, 5)]
-    urls = [f"http://minio:9000/warehouse/data{i}" for i in range(1, 5)]
+    number_of_iceberg_tables = 3
+    locations = [
+        f"s3://warehouse/data{i}" for i in range(1, number_of_iceberg_tables + 1)
+    ]
+    urls = [
+        f"http://minio:9000/warehouse/data{i}"
+        for i in range(1, number_of_iceberg_tables + 1)
+    ]
     iceberg_tables = []
 
     with Given("create DataLakeCatalog database"):
@@ -293,7 +362,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create iceberg tables in different locations"):
         for location in locations:
-            table, table_name, namespace = (
+            _, table_name, namespace = (
                 swarm_steps.iceberg_table_with_all_basic_data_types(
                     minio_root_user=minio_root_user,
                     minio_root_password=minio_root_password,
@@ -331,48 +400,52 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster")
             for url in urls
         ]
-        # s3_cluster_table_functions = [
-        #     JoinTable.create_s3Cluster_table_function(url)
-        #     for url in urls
-        # ]
+        s3_cluster_table_functions = [
+            JoinTable.create_s3Cluster_table_function(url, "replicated_cluster")
+            for url in urls
+        ]
 
         left_tables = (
             iceberg_tables
             + iceberg_table_functions
             + s3_table_functions
             + iceberg_s3_cluster_table_functions
-            # + s3_cluster_table_functions
+            + s3_cluster_table_functions
         )
         right_tables = (
             iceberg_tables
             + iceberg_table_functions
             + s3_table_functions
             + iceberg_s3_cluster_table_functions
-            # + s3_cluster_table_functions
+            + s3_cluster_table_functions
         )
         modes = ["allow", "local"]
         join_conditions = [
             "t1.boolean_col = t2.boolean_col",
-            # "t1.boolean_col = t2.boolean_col AND t1.string_col = t2.string_col",
-            # "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
+            "t1.boolean_col = t2.boolean_col AND t1.string_col = t2.string_col",
+            "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
         ]
 
     length = len(list(product(left_tables, right_tables, modes, join_conditions)))
 
-    for num, (left_table, right_table, mode, join_condition) in enumerate(
-        product(left_tables, right_tables, modes, join_conditions)
-    ):
+    with Pool(5) as pool:
+        for num, (left_table, right_table, mode, join_condition) in enumerate(
+            product(left_tables, right_tables, modes, join_conditions)
+        ):
 
-        Scenario(
-            name=f"join {num} of {length}: {left_table} with {right_table} in {mode} mode",
-            test=check_join,
-        )(
-            left_table=left_table,
-            right_table=right_table,
-            join_clause="JOIN",
-            join_condition=join_condition,
-            object_storage_cluster_join_mode=mode,
-        )
+            Scenario(
+                name=f"join {num} of {length}: {left_table} with {right_table} in {mode} mode",
+                test=check_join,
+                parallel=True,
+                executor=pool,
+            )(
+                left_table=left_table,
+                right_table=right_table,
+                join_clause="JOIN",
+                join_condition=join_condition,
+                object_storage_cluster_join_mode=mode,
+            )
+        join()
 
 
 @TestScenario
