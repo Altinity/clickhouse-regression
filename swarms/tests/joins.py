@@ -3,14 +3,9 @@ from testflows.asserts import error
 from testflows.combinatorics import product
 
 from helpers.common import getuid
-from iceberg.tests.steps.icebergS3 import (
-    read_data_with_icebergS3_table_function,
-    read_data_with_icebergS3Cluster_table_function,
-)
 from swarms.requirements.requirements import *
 
 import swarms.tests.steps.swarm_steps as swarm_steps
-import swarms.tests.steps.s3_steps as s3_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 
@@ -33,7 +28,6 @@ class JoinTable:
         self.location = location
         self.table_type = table_type
         self.cluster_name = cluster_name
-        # Use provided values or fall back to class defaults
         self.minio_root_user = minio_root_user or JoinTable.minio_root_user
         self.minio_root_password = minio_root_password or JoinTable.minio_root_password
         self.database_name = database_name
@@ -148,6 +142,10 @@ def check_join(
         object_storage_cluster_join_mode == "allow"
         and left_table.table_type == "iceberg_table"
         and right_table.table_type == "iceberg_table"
+    ) or (
+        object_storage_cluster_join_mode == "allow"
+        and left_table.table_type == "iceberg_table_function"
+        and right_table.table_type == "iceberg_table"
     ):
         exitcode, message = (
             81,
@@ -158,6 +156,11 @@ def check_join(
         left_table.table_type == "icebergS3Cluster_table_function"
         and right_table.table_type == "icebergS3Cluster_table_function"
         and object_storage_cluster_join_mode == "local"
+    ) or (
+        left_table.table_type == "iceberg_table_function"
+        and right_table.table_type == "iceberg_table_function"
+        and object_storage_cluster_join_mode == "local"
+        and left_table.location == right_table.location
     ):
         exitcode, message = (
             10,
@@ -180,7 +183,17 @@ def check_join(
         message=message,
     )
 
-    if not exitcode:
+    if (
+        left_table.table_type == "iceberg_table"
+        and right_table.table_type == "iceberg_table_function"
+        and object_storage_cluster_join_mode == "allow"
+    ) or (
+        left_table.table_type == "iceberg_table_function"
+        and right_table.table_type == "iceberg_table_function"
+        and object_storage_cluster_join_mode == "allow"
+    ):
+        assert result.output == "", error()
+    elif not exitcode:
         assert result.output == expected_result.output, error()
 
 
@@ -269,11 +282,14 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             # "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
         ]
 
-    for left_table, right_table, mode, join_condition in product(
-        left_tables, right_tables, modes, join_conditions
+    length = len(list(product(left_tables, right_tables, modes, join_conditions)))
+
+    for num, (left_table, right_table, mode, join_condition) in enumerate(
+        product(left_tables, right_tables, modes, join_conditions)
     ):
+
         Scenario(
-            name=f"join {left_table} with {right_table} in {mode} mode",
+            name=f"join {num} of {length}: {left_table} with {right_table} in {mode} mode",
             test=check_join,
         )(
             left_table=left_table,
