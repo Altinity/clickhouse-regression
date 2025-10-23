@@ -10,7 +10,6 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 
 class JoinTable:
-    # Class-level default credentials
     minio_root_user = None
     minio_root_password = None
 
@@ -139,13 +138,21 @@ def check_join(
     exitcode, message = None, None
 
     if (
-        object_storage_cluster_join_mode == "allow"
-        and left_table.table_type == "iceberg_table"
-        and right_table.table_type == "iceberg_table"
-    ) or (
-        object_storage_cluster_join_mode == "allow"
-        and left_table.table_type == "iceberg_table_function"
-        and right_table.table_type == "iceberg_table"
+        (
+            object_storage_cluster_join_mode == "allow"
+            and left_table.table_type == "iceberg_table"
+            and right_table.table_type == "iceberg_table"
+        )
+        or (
+            object_storage_cluster_join_mode == "allow"
+            and left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "iceberg_table"
+        )
+        or (
+            object_storage_cluster_join_mode == "allow"
+            and left_table.table_type == "s3_table_function"
+            and right_table.table_type == "iceberg_table"
+        )
     ):
         exitcode, message = (
             81,
@@ -153,14 +160,23 @@ def check_join(
         )
 
     if (
-        left_table.table_type == "icebergS3Cluster_table_function"
-        and right_table.table_type == "icebergS3Cluster_table_function"
-        and object_storage_cluster_join_mode == "local"
-    ) or (
-        left_table.table_type == "iceberg_table_function"
-        and right_table.table_type == "iceberg_table_function"
-        and object_storage_cluster_join_mode == "local"
-        and left_table.location == right_table.location
+        (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "icebergS3Cluster_table_function"
+            and object_storage_cluster_join_mode == "local"
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "local"
+            and left_table.location == right_table.location
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "local"
+            and left_table.location == right_table.location
+        )
     ):
         exitcode, message = (
             10,
@@ -184,13 +200,36 @@ def check_join(
     )
 
     if (
-        left_table.table_type == "iceberg_table"
-        and right_table.table_type == "iceberg_table_function"
-        and object_storage_cluster_join_mode == "allow"
-    ) or (
-        left_table.table_type == "iceberg_table_function"
-        and right_table.table_type == "iceberg_table_function"
-        and object_storage_cluster_join_mode == "allow"
+        (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "s3_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "iceberg_table_function"
+            and object_storage_cluster_join_mode == "allow"
+        )
     ):
         assert result.output == "", error()
     elif not exitcode:
@@ -264,14 +303,14 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         left_tables = (
             iceberg_tables
             + iceberg_table_functions
-            # + s3_table_functions
+            + s3_table_functions
             # + iceberg_s3_cluster_table_functions
             # + s3_cluster_table_functions
         )
         right_tables = (
             iceberg_tables
             + iceberg_table_functions
-            # + s3_table_functions
+            + s3_table_functions
             # + iceberg_s3_cluster_table_functions
             # + s3_cluster_table_functions
         )
@@ -298,6 +337,12 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             join_condition=join_condition,
             object_storage_cluster_join_mode=mode,
         )
+
+
+@TestScenario
+def s3Cluster_stability(self, minio_root_user, minio_root_password, node=None):
+    """Check stability of s3Cluster table function with different joins."""
+    pass
 
 
 @TestFeature
