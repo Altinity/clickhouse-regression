@@ -402,34 +402,6 @@ class Table:
             return result, values
         return result
 
-    def get_parts(self, node=None):
-        """Get all parts for a table."""
-        if node is None:
-            node = current().context.node
-
-        output = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{self.name}'", exitcode=0
-        ).output
-        return [row.strip() for row in output.splitlines()]
-
-    def stop_merges(self, node=None):
-        """Stop merges for a table."""
-        if node is None:
-            node = current().context.node
-
-        node.query(f"SYSTEM STOP MERGES {self.name}", exitcode=0)
-    
-    def query(self, query, node=None):
-        """Query data from a table."""
-        if node is None:
-            node = current().context.node
-
-        return node.query(query, exitcode=0).output
-    
-    def select_ordered_by_partition_and_index(self, node=None):
-        """Select all data from a table ordered by partition and index columns."""
-        return self.query(f"SELECT * FROM {self.name} ORDER BY p, i", node=node)
-
 
 @TestStep(Given)
 def create_table(
