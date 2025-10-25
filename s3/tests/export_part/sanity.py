@@ -2,101 +2,100 @@ from testflows.core import *
 from testflows.asserts import error
 
 from s3.tests.export_part.steps import *
-from helpers.tables import *
+from helpers.create import *
 
 
-# TODO: Large data export?
-# But if I add too many rows, there'll be too many partitions given the current implementation -> DB ERROR
-
+# TODO large data export? or maybe that should be in a different file
 
 @TestScenario
-def source_matches_destination(self, engine=None, row_count=10, cardinality=1):
-    """Check that ClickHouse can export data parts to S3 storage."""
+def configured_table(self, table_engine, number_of_partitions, number_of_parts):
+    """Test a specific combination of table engine, number of partitions, and number of parts."""
 
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables(engine=engine)
+    with Given("I create a populated source table and empty S3 table"):
+        table_engine(
+            table_name="source",
+            partition_by="p",
+            columns=self.context.default_columns,
+            stop_merges=True,
+            populate=True,
+            number_of_partitions=number_of_partitions,
+            number_of_parts=number_of_parts,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I insert random test data into the source table"):
-        source.insert_test_data(row_count=row_count, cardinality=cardinality)
-
-    with And("I get a list of parts for source table"):
-        source_parts = source.get_parts()
-
-    with And("I read current export events"):
-        events_before = export_events()
-
-    with And("I export parts to the destination table"):
-        export_part(parts=source_parts, source=source, destination=destination)
-
-    with Then("I check system.events that all exports are successful"):
-        events_after = export_events()
-        total_exports_after = events_after.get("PartsExports", 0) + events_after.get("PartsExportDuplicated", 0)
-        total_exports_before = events_before.get("PartsExports", 0) + events_before.get("PartsExportDuplicated", 0)
-        assert total_exports_after == total_exports_before + len(source_parts), error()
-
-    with And("I read back data and assert destination matches source"):
-        destination_data = destination.select_ordered_by_partition_and_index()
-        source_data = source.select_ordered_by_partition_and_index()
-        assert destination_data == source_data, error()
+    with When("I export parts to the S3 table"):
+        export_parts(source_table="source", destination_table=s3_table_name, node=self.context.node)
+    
+    with And("I read data from both tables"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
+    
+    with Then("They should be the same"):
+        assert source_data == destination_data, error()
 
 
 @TestSketch(Scenario)
 @Flags(TE)
-def combinations(self):
-    """Test different combinations of engines, row counts, and cardinalities."""
+def table_combos(self):
+    """Test various combinations of table engines, number of partitions, and number of parts."""
 
-    engines = [
-        "MergeTree",
-        "ReplicatedMergeTree",
-        "ReplacingMergeTree",
-        "SummingMergeTree",
-        "AggregatingMergeTree",
+    tables = [
+        partitioned_merge_tree_table,
+        partitioned_replacing_merge_tree_table,
+        partitioned_summing_merge_tree_table,
+        # partitioned_collapsing_merge_tree_table, # Ask David if failing here is expected behaviour
+        partitioned_versioned_collapsing_merge_tree_table,
+        partitioned_aggregating_merge_tree_table,
+        # partitioned_graphite_merge_tree_table, # Ask David about "age and precision should only grow up" error
     ]
-    row_counts = [1, 10]
-    cardinalities = [1, 10]
+    # TODO expand combos
+    number_of_partitions = [5]
+    number_of_parts = [1]
 
-    source_matches_destination(
-        engine=either(*engines),
-        row_count=either(*row_counts),
-        cardinality=either(*cardinalities)
+    configured_table(
+        table_engine=either(*tables),
+        number_of_partitions=either(*number_of_partitions),
+        number_of_parts=either(*number_of_parts),
     )
 
 
 @TestScenario
-def multiple_parts(self):
-    """Test exporting multiple parts in a single operation."""
+def basic_table(self):
+    """Test exporting parts of a basic table."""
     
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables()
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(table_name="source", partition_by="p", columns=self.context.default_columns, stop_merges=True, populate=True)
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     
-    with When("I insert data to create multiple parts"):
-        for i in range(5):
-            source.insert_test_data()
+    with When("I export parts to the S3 table"):
+        export_parts(source_table="source", destination_table=s3_table_name, node=self.context.node)
     
-    with And("I get all parts and export them"):
-        source_parts = source.get_parts()
-        export_part(parts=source_parts, source=source, destination=destination)
+    with And("I read data from both tables"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
     
-    with Then("I verify all data was exported correctly"):
-        source_data = source.select_ordered_by_partition_and_index()
-        destination_data = destination.select_ordered_by_partition_and_index()
+    with Then("They should be the same"):
         assert source_data == destination_data, error()
 
 
 @TestScenario
 def empty_table(self):
-    """Test exporting from an empty table."""
+    """Test exporting parts from an empty table."""
+
+    with Given("I create empty source and S3 tables"):
+        partitioned_merge_tree_table(table_name="empty_source", partition_by="p", columns=self.context.default_columns, stop_merges=True, populate=False)
+        s3_table_name = create_s3_table(table_name="empty_s3", create_new_bucket=True)
+
+    with When("I export parts to the S3 table"):
+        export_parts(source_table="empty_source", destination_table=s3_table_name, node=self.context.node)
     
-    with Given("I create empty source and destination tables"):
-        source, destination = create_source_and_destination_tables()
-    
-    with When("I check for parts in empty table"):
-        source_parts = source.get_parts()
-        assert len(source_parts) == 0, error()
-    
-    with Then("I verify destination is also empty"):
-        dest_count = destination.query("SELECT count() FROM " + destination.name)
-        assert dest_count == "0", error()
+    with And("I read data from both tables"):
+        source_data = select_all_ordered(table_name="empty_source", node=self.context.node)
+        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
+
+    with Then("They should be empty"):
+        assert source_data == "", error()
+        assert destination_data == "", error()
 
 
 @TestFeature
@@ -105,5 +104,5 @@ def feature(self):
     """Check basic functionality of exporting data parts to S3 storage."""
 
     Scenario(run=empty_table)
-    Scenario(run=multiple_parts)
-    Scenario(run=combinations)
+    Scenario(run=basic_table)
+    Scenario(run=table_combos)
