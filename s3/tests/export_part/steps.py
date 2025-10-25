@@ -21,9 +21,12 @@ def create_temp_bucket(self):
 
 
 @TestStep(Given)
-def create_s3_table(self, table_name, cluster):
+def create_s3_table(self, table_name, cluster=None, create_new_bucket=False):
     """Create a destination S3 table."""
     
+    if create_new_bucket:
+        create_temp_bucket()
+
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
         S3(
@@ -40,11 +43,13 @@ def create_s3_table(self, table_name, cluster):
     # TODO columns and partition_by are hardcoded for now, but i should make them configurable
     create_table(
         table_name=table_name,
-        columns=[{"name": "p", "type": "Int8"}, {"name": "i", "type": "UInt64"}],
+        columns=self.context.default_columns,
         partition_by="p",
         engine=engine,
         cluster=cluster,
     )
+
+    return table_name
 
 
 @TestStep(When)
@@ -59,8 +64,7 @@ def get_parts(self, table_name, node):
 def select_all_ordered(self, table_name, node):
     """Select all data from a table ordered by partition and index columns."""
 
-    output = node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output
-    return [row.strip() for row in output.splitlines()]
+    return node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output
 
 
 @TestStep(When)
@@ -68,7 +72,7 @@ def export_parts(self, source_table, destination_table, node, parts=None, exitco
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
-        parts = get_parts(source_table, node)
+        parts = get_parts(table_name=source_table, node=node)
     no_checks = exitcode != 0
 
     for part in parts:

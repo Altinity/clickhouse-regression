@@ -4,6 +4,8 @@ from testflows.asserts import error
 from s3.tests.export_part.steps import *
 
 
+# TODO checks on export_events should go here, not in sanity.py
+
 @TestScenario
 def duplicate_exports(self):
     """Check duplicate export attempts are properly tracked in system.events."""
