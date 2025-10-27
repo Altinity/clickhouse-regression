@@ -1,9 +1,8 @@
 import random
-from itertools import combinations
 
+from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error
-
 from s3.tests.export_part.steps import *
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
 
@@ -16,7 +15,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=self.context.default_columns,
+            columns=default_columns(),
             stop_merges=True,
             populate=False,
             cluster=cluster,
@@ -76,5 +75,4 @@ def feature(self):
         for node1_name, node2_name in combinations(node_names, 2):
             node1 = self.context.cluster.node(node1_name)
             node2 = self.context.cluster.node(node2_name)
-            # with When(f"I export parts from nodes {node1_name} and {node2_name} to S3 in cluster {cluster}"):
             different_nodes_same_destination(cluster=cluster, node1=node1, node2=node2)

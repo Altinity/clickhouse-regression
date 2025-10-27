@@ -7,6 +7,19 @@ from helpers.create import *
 from s3.tests.common import temporary_bucket_path
 
 
+def default_columns():
+    partition_columns = [
+        {"name": "p", "type": "Int8"},
+        {"name": "i", "type": "UInt64"},
+        {"name": "Path", "type": "String"},
+        {"name": "Time", "type": "DateTime"},
+        {"name": "Value", "type": "Float64"},
+        {"name": "Timestamp", "type": "Int64"},
+    ]
+
+    return partition_columns
+
+
 @TestStep(Given)
 def create_temp_bucket(self):
     """Create temporary S3 bucket."""
@@ -16,8 +29,6 @@ def create_temp_bucket(self):
     )
 
     self.context.uri = f"{self.context.uri_base}export_part/{temp_s3_path}/"
-    # Delete the next line if the context var is never used
-    # self.context.bucket_path = f"{self.context.bucket_prefix}/export_part/{temp_s3_path}"
 
 
 @TestStep(Given)
@@ -30,7 +41,7 @@ def create_s3_table(
         create_temp_bucket()
 
     if columns is None:
-        columns = self.context.default_columns
+        columns = default_columns()
 
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
