@@ -23,7 +23,7 @@ def export_partitions_to_s3(
     settings = {}
 
     if allow_experimental_export_merge_tree_partition:
-        settings["allow_experimental_export_merge_tree_partition"] = (
+        settings["allow_experimental_export_merge_tree_part"] = (
             allow_experimental_export_merge_tree_partition
         )
     if export_merge_tree_partition_background_execution:
