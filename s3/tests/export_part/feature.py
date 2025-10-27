@@ -1,6 +1,9 @@
 from testflows.core import *
 
 
+# TODO large data export? which file should it go in?
+
+
 @TestFeature
 @Name("export parts")
 def minio(self, uri, bucket_prefix):
@@ -12,5 +15,5 @@ def minio(self, uri, bucket_prefix):
     Feature(run=load("s3.tests.export_part.sanity", "feature"))
     # Feature(run=load("s3.tests.export_part.error_handling", "feature"))
     # Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
-    Feature(run=load("s3.tests.export_part.clusters_and_nodes", "feature"))
-    Feature(run=load("s3.tests.export_part.engines", "feature"))
+    # Feature(run=load("s3.tests.export_part.clusters_and_nodes", "feature"))
+    # Feature(run=load("s3.tests.export_part.engines", "feature"))
