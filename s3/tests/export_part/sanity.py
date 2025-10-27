@@ -4,14 +4,33 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 
 
-# TODO large data export? or maybe that should be in a different file
-
-
 @TestScenario
 def mismatched_columns(self):
     """Test exporting parts when source and destination tables have mismatched columns."""
 
-    # with Given()
+    with Given("I create a source table and S3 table with different columns"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(simple=True),
+            stop_merges=True,
+            populate=True,
+        )
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True, simple_columns=False
+        )
+
+    with When("I export parts to the S3 table"):
+        results = export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+        )
+
+    with Then("I should see an error related to mismatched columns"):
+        assert results[0].exitcode == 122, error()
+        assert "Tables have different structure" in results[0].output, error()
 
 
 @TestScenario
@@ -56,7 +75,7 @@ def empty_table(self):
             table_name="empty_source",
             partition_by="p",
             columns=default_columns(simple=True),
-            stop_merges=True,
+            stop_merges=False,
             populate=False,
         )
         s3_table_name = create_s3_table(
@@ -90,3 +109,4 @@ def feature(self):
 
     Scenario(run=empty_table)
     Scenario(run=basic_table)
+    Scenario(run=mismatched_columns)
