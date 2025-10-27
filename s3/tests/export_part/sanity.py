@@ -26,7 +26,9 @@ def basic_table(self):
             stop_merges=True,
             populate=True,
         )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True, simple_columns=True
+        )
 
     with When("I export parts to the S3 table"):
         export_parts(
@@ -57,7 +59,9 @@ def empty_table(self):
             stop_merges=True,
             populate=False,
         )
-        s3_table_name = create_s3_table(table_name="empty_s3", create_new_bucket=True)
+        s3_table_name = create_s3_table(
+            table_name="empty_s3", create_new_bucket=True, simple_columns=True
+        )
 
     with When("I export parts to the S3 table"):
         export_parts(
