@@ -21,11 +21,16 @@ def create_temp_bucket(self):
 
 
 @TestStep(Given)
-def create_s3_table(self, table_name, cluster=None, create_new_bucket=False):
+def create_s3_table(
+    self, table_name, cluster=None, create_new_bucket=False, columns=None
+):
     """Create a destination S3 table."""
-    
+
     if create_new_bucket:
         create_temp_bucket()
+
+    if columns is None:
+        columns = self.context.default_columns
 
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
@@ -43,7 +48,7 @@ def create_s3_table(self, table_name, cluster=None, create_new_bucket=False):
     # TODO columns and partition_by are hardcoded for now, but i should make them configurable
     create_table(
         table_name=table_name,
-        columns=self.context.default_columns,
+        columns=columns,
         partition_by="p",
         engine=engine,
         cluster=cluster,
@@ -56,7 +61,9 @@ def create_s3_table(self, table_name, cluster=None, create_new_bucket=False):
 def get_parts(self, table_name, node):
     """Get all parts for a table on a given node."""
 
-    output = node.query(f"SELECT name FROM system.parts WHERE table = '{table_name}'", exitcode=0).output
+    output = node.query(
+        f"SELECT name FROM system.parts WHERE table = '{table_name}'", exitcode=0
+    ).output
     return [row.strip() for row in output.splitlines()]
 
 
@@ -76,11 +83,11 @@ def export_parts(self, source_table, destination_table, node, parts=None, exitco
     no_checks = exitcode != 0
 
     for part in parts:
-        node.query(# we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
+        node.query(  # we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
             f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
             # settings=[("allow_experimental_export_merge_tree_part", 1)],
             exitcode=exitcode,
-            no_checks=no_checks
+            no_checks=no_checks,
         )
 
 
@@ -89,14 +96,19 @@ def export_parts(self, source_table, destination_table, node, parts=None, exitco
 def get_export_events(self, node):
     """Get the export data from the system.events table of a given node."""
 
-    output = node.query("SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow", exitcode=0).output
+    output = node.query(
+        "SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
+        exitcode=0,
+    ).output
     # return {row.name: int(row.value) for row in json.loads(output)}
     # return [json.loads(row) for row in output.splitlines()]
     return output
 
 
 @TestStep(Then)
-def source_matches_destination(self, source_table, destination_table, source_node, destination_node):
+def source_matches_destination(
+    self, source_table, destination_table, source_node, destination_node
+):
     """Check that source and destination table data matches."""
 
     source_data = select_all_ordered(source_table, source_node)

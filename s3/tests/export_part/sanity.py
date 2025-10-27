@@ -7,6 +7,20 @@ from helpers.create import *
 
 # TODO large data export? or maybe that should be in a different file
 
+
+def columns():
+    partition_columns = [
+        {"name": "p", "type": "Int8"},
+        {"name": "i", "type": "UInt64"},
+        {"name": "Path", "type": "String"},
+        {"name": "Time", "type": "DateTime"},
+        {"name": "Value", "type": "Float64"},
+        {"name": "Timestamp", "type": "Int64"},
+    ]
+
+    return partition_columns
+
+
 @TestScenario
 def configured_table(self, table_engine, number_of_partitions, number_of_parts):
     """Test a specific combination of table engine, number of partitions, and number of parts."""
@@ -15,21 +29,29 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
         table_engine(
             table_name="source",
             partition_by="p",
-            columns=self.context.default_columns,
             stop_merges=True,
             populate=True,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
+            columns=columns(),
         )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True, columns=columns()
+        )
 
     with When("I export parts to the S3 table"):
-        export_parts(source_table="source", destination_table=s3_table_name, node=self.context.node)
-    
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
     with And("I read data from both tables"):
         source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
-    
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
     with Then("They should be the same"):
         assert source_data == destination_data, error()
 
@@ -43,10 +65,10 @@ def table_combos(self):
         partitioned_merge_tree_table,
         partitioned_replacing_merge_tree_table,
         partitioned_summing_merge_tree_table,
-        # partitioned_collapsing_merge_tree_table, # Ask David if failing here is expected behaviour
+        partitioned_collapsing_merge_tree_table,
         partitioned_versioned_collapsing_merge_tree_table,
         partitioned_aggregating_merge_tree_table,
-        # partitioned_graphite_merge_tree_table, # Ask David about "age and precision should only grow up" error
+        partitioned_graphite_merge_tree_table,
     ]
     # TODO expand combos
     number_of_partitions = [5]
@@ -62,18 +84,30 @@ def table_combos(self):
 @TestScenario
 def basic_table(self):
     """Test exporting parts of a basic table."""
-    
+
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(table_name="source", partition_by="p", columns=self.context.default_columns, stop_merges=True, populate=True)
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=self.context.default_columns,
+            stop_merges=True,
+            populate=True,
+        )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-    
+
     with When("I export parts to the S3 table"):
-        export_parts(source_table="source", destination_table=s3_table_name, node=self.context.node)
-    
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
     with And("I read data from both tables"):
         source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
-    
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
     with Then("They should be the same"):
         assert source_data == destination_data, error()
 
@@ -83,15 +117,29 @@ def empty_table(self):
     """Test exporting parts from an empty table."""
 
     with Given("I create empty source and S3 tables"):
-        partitioned_merge_tree_table(table_name="empty_source", partition_by="p", columns=self.context.default_columns, stop_merges=True, populate=False)
+        partitioned_merge_tree_table(
+            table_name="empty_source",
+            partition_by="p",
+            columns=self.context.default_columns,
+            stop_merges=True,
+            populate=False,
+        )
         s3_table_name = create_s3_table(table_name="empty_s3", create_new_bucket=True)
 
     with When("I export parts to the S3 table"):
-        export_parts(source_table="empty_source", destination_table=s3_table_name, node=self.context.node)
-    
+        export_parts(
+            source_table="empty_source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
     with And("I read data from both tables"):
-        source_data = select_all_ordered(table_name="empty_source", node=self.context.node)
-        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
+        source_data = select_all_ordered(
+            table_name="empty_source", node=self.context.node
+        )
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
 
     with Then("They should be empty"):
         assert source_data == "", error()
