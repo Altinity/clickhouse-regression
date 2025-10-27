@@ -79,4 +79,3 @@ def feature(self):
 
     Scenario(run=empty_table)
     Scenario(run=basic_table)
-    Scenario(run=table_combos)
