@@ -1,6 +1,7 @@
 from testflows.core import *
 
-from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from alter.table.replace_partition.common import create_partitions_with_random_uint64, \
+    create_partitions_for_collapsing_merge_tree
 
 
 @TestStep(Given)
@@ -465,7 +466,7 @@ def partitioned_collapsing_merge_tree_table(
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(
+            create_partitions_for_collapsing_merge_tree(
                 table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts
             )
 
