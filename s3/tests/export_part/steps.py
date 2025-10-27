@@ -119,13 +119,15 @@ def export_parts(self, source_table, destination_table, node, parts=None, exitco
     output = []
 
     for part in parts:
-        output.append(node.query(  # we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
-            f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-            # settings=[("allow_experimental_export_merge_tree_part", 1)],
-            exitcode=exitcode,
-            no_checks=no_checks,
-        ))
-    
+        output.append(
+            node.query(  # we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
+                f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                # settings=[("allow_experimental_export_merge_tree_part", 1)],
+                exitcode=exitcode,
+                no_checks=no_checks,
+            )
+        )
+
     return output
 
 
