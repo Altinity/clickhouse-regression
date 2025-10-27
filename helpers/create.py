@@ -64,7 +64,7 @@ def create_table(
             query += f"{table_name}"
         else:
             query += f" {table_name}"
-
+        
         if cluster:
             query += f" ON CLUSTER {cluster}"
 
@@ -117,7 +117,10 @@ def create_table(
 
     finally:
         with Finally(f"drop the table {table_name}"):
-            node.query(f"DROP TABLE IF EXISTS {table_name}")
+            query = f"DROP TABLE IF EXISTS {table_name}"
+            if cluster:
+                query += f" ON CLUSTER {cluster}"
+            node.query(query)
 
     return query
 
