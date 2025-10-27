@@ -246,9 +246,6 @@ def test_datatype_export_pipeline(self, datatype, minio_root_user, minio_root_pa
                 length = name.split("(")[2].split(")")[0]
                 return f"toFixedString(data_col, {length})"
 
-            if name.startswith("Enum"):
-                return f"CAST(data_col, '{name}')"
-
             if name.startswith("Nullable("):
                 inner_type = name[9:-1]
                 return f"to{inner_type.split('(')[0]}(data_col)"
@@ -261,6 +258,7 @@ def test_datatype_export_pipeline(self, datatype, minio_root_user, minio_root_pa
                 name.startswith("Array(")
                 or name.startswith("Map(")
                 or name.startswith("Tuple(")
+                or name.startswith("Enum")
             ):
                 return "data_col"
 
