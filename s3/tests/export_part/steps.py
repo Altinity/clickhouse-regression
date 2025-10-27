@@ -7,8 +7,8 @@ from helpers.create import *
 from s3.tests.common import temporary_bucket_path
 
 
-def default_columns():
-    partition_columns = [
+def default_columns(simple=False):
+    columns = [
         {"name": "p", "type": "Int8"},
         {"name": "i", "type": "UInt64"},
         {"name": "Path", "type": "String"},
@@ -17,7 +17,10 @@ def default_columns():
         {"name": "Timestamp", "type": "Int64"},
     ]
 
-    return partition_columns
+    if simple:
+        columns = columns[:2]
+
+    return columns
 
 
 @TestStep(Given)
@@ -71,15 +74,14 @@ def create_s3_table(
 @TestStep(Given)
 def get_cluster_nodes(self, cluster, node=None):
     """Get all nodes in a cluster."""
-    
+
     if node is None:
         node = self.context.node
-    
+
     result = node.query(
-        f"SELECT host_name FROM system.clusters WHERE cluster = '{cluster}'",
-        exitcode=0
+        f"SELECT host_name FROM system.clusters WHERE cluster = '{cluster}'", exitcode=0
     )
-    
+
     nodes = [line.strip() for line in result.output.splitlines() if line.strip()]
     return nodes
 

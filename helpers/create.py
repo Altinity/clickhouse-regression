@@ -1,7 +1,9 @@
 from testflows.core import *
 
-from alter.table.replace_partition.common import create_partitions_with_random_uint64, \
-    create_partitions_for_collapsing_merge_tree
+from alter.table.replace_partition.common import (
+    create_partitions_with_random_uint64,
+    create_partitions_for_collapsing_merge_tree,
+)
 
 
 @TestStep(Given)
@@ -64,7 +66,7 @@ def create_table(
             query += f"{table_name}"
         else:
             query += f" {table_name}"
-        
+
         if cluster:
             query += f" ON CLUSTER {cluster}"
 
@@ -111,7 +113,7 @@ def create_table(
 
         if stop_merges:
             query += f" SYSTEM STOP MERGES {table_name};"
-            
+
         node.query(query)
         yield
 
@@ -391,92 +393,179 @@ def create_replicated_merge_tree_table(
 
 @TestStep(Given)
 def partitioned_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a MergeTree table partitioned by a specific column."""
     with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
         create_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
 
 
 @TestStep(Given)
 def partitioned_replicated_merge_tree_table(
-    self, table_name, partition_by, columns=None, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns=None,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
     ):
         create_replicated_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
 
 
 @TestStep(Given)
 def partitioned_replacing_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a ReplacingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplacingMergeTree engine"
     ):
         create_replacing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
 
 
 @TestStep(Given)
 def partitioned_summing_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a SummingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a SummingMergeTree engine"
     ):
         create_aggregating_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
 
 
 @TestStep(Given)
 def partitioned_collapsing_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=1, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=1,
+    number_of_parts=1,
 ):
     """Create a CollapsingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a CollapsingMergeTree engine"
     ):
         create_collapsing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, sign="p", cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            sign="p",
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
             create_partitions_for_collapsing_merge_tree(
-                table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
             )
 
 
 @TestStep(Given)
 def partitioned_versioned_collapsing_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=1, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=1,
+    number_of_parts=1,
 ):
     """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
     with By(
@@ -495,30 +584,56 @@ def partitioned_versioned_collapsing_merge_tree_table(
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
             create_partitions_with_random_uint64(
-                table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
             )
 
 
 @TestStep(Given)
 def partitioned_aggregating_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a AggregatingMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
     ):
         create_summing_merge_tree_table(
-            table_name=table_name, columns=columns, partition_by=partition_by, cluster=cluster, stop_merges=stop_merges
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition_by,
+            cluster=cluster,
+            stop_merges=stop_merges,
         )
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
 
 
 @TestStep(Given)
 def partitioned_graphite_merge_tree_table(
-    self, table_name, partition_by, columns, cluster=None, stop_merges=False, populate=True, number_of_partitions=5, number_of_parts=1
+    self,
+    table_name,
+    partition_by,
+    columns,
+    cluster=None,
+    stop_merges=False,
+    populate=True,
+    number_of_partitions=5,
+    number_of_parts=1,
 ):
     """Create a GraphiteMergeTree table partitioned by a specific column."""
     with By(
@@ -535,4 +650,8 @@ def partitioned_graphite_merge_tree_table(
 
     if populate:
         with And("populating it with the data needed to create multiple partitions"):
-            create_partitions_with_random_uint64(table_name=table_name, number_of_partitions=number_of_partitions, number_of_parts=number_of_parts)
+            create_partitions_with_random_uint64(
+                table_name=table_name,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )

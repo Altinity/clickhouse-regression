@@ -6,6 +6,7 @@ from s3.tests.export_part.steps import *
 
 # TODO checks on export_events should go here, not in sanity.py
 
+
 @TestScenario
 def duplicate_exports(self):
     """Check duplicate export attempts are properly tracked in system.events."""
@@ -14,7 +15,7 @@ def duplicate_exports(self):
         source, destination = create_source_and_destination_tables()
 
     with When("I insert random test data into the source table"):
-        source.insert_test_data() # default row_count=10, cardinality=1
+        source.insert_test_data()  # default row_count=10, cardinality=1
 
     with And("I get a list of parts for source table"):
         source_parts = source.get_parts()
@@ -33,10 +34,10 @@ def duplicate_exports(self):
         events_final = export_events()
         final_exports = events_final.get("PartsExports", 0)
         final_duplicates = events_final.get("PartsExportDuplicated", 0)
-        
+
     with By("Checking we have 1 successful export"):
         assert final_exports - initial_exports == 1, error()
-    
+
     with And("Checking we have 1 duplicate export"):
         assert final_duplicates - initial_duplicates == 1, error()
 

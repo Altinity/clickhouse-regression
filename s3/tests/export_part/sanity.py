@@ -8,6 +8,13 @@ from helpers.create import *
 
 
 @TestScenario
+def mismatched_columns(self):
+    """Test exporting parts when source and destination tables have mismatched columns."""
+
+    # with Given()
+
+
+@TestScenario
 def basic_table(self):
     """Test exporting parts of a basic table."""
 
@@ -15,7 +22,7 @@ def basic_table(self):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(),
+            columns=default_columns(simple=True),
             stop_merges=True,
             populate=True,
         )
@@ -46,7 +53,7 @@ def empty_table(self):
         partitioned_merge_tree_table(
             table_name="empty_source",
             partition_by="p",
-            columns=default_columns(),
+            columns=default_columns(simple=True),
             stop_merges=True,
             populate=False,
         )
