@@ -3,6 +3,11 @@ from testflows.core import *
 from helpers.common import getuid
 
 
+def sanitize(s):
+    for ch in "(),'= ":
+        s = s.replace(ch, "_")
+    return s
+
+
 def generate_database_name(datatype):
-    """Generate a unique database name for the given datatype."""
-    return f'iceberg_db_{datatype.name.lower().replace("(", "_").replace(")", "_").replace(",", "_").replace("\'", "_").replace("=", "_").replace(" ", "_")}_{getuid()}'
+    return f"iceberg_db_{sanitize(datatype.name.lower())}_{getuid()}"
