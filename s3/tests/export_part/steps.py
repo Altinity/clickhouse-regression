@@ -36,7 +36,12 @@ def create_temp_bucket(self):
 
 @TestStep(Given)
 def create_s3_table(
-    self, table_name, cluster=None, create_new_bucket=False, columns=None
+    self,
+    table_name,
+    cluster=None,
+    create_new_bucket=False,
+    columns=None,
+    simple_columns=False,
 ):
     """Create a destination S3 table."""
 
@@ -44,7 +49,7 @@ def create_s3_table(
         create_temp_bucket()
 
     if columns is None:
-        columns = default_columns()
+        columns = default_columns(simple=simple_columns)
 
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
