@@ -282,7 +282,6 @@ def test_datatype_export_pipeline(self, datatype, minio_root_user, minio_root_pa
         node.query(
             f"SHOW CREATE TABLE {database_name}.\\`default.{iceberg_table_name}\\`"
         )
-        pause()
 
 
 @TestFeature
