@@ -5,7 +5,8 @@ from s3.tests.export_part.steps import *
 
 
 # TODO checks on export_events should go here, not in sanity.py
-
+# partsexports incrementing correctly
+# duplicates incrementing correctly
 
 @TestScenario
 def duplicate_exports(self):
