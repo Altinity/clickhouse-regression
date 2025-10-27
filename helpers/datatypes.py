@@ -122,8 +122,13 @@ class UInt32(UInt):
 
 
 class UInt64(UInt):
+    def __init__(self, max=18446744073709551615):
+        super().__init__("UInt64", max=max)
+
+
+class UInt64_63(UInt64):
     def __init__(self):
-        super().__init__("UInt64", max=18446744073709551615)
+        super().__init__("UInt64", max=2**63 - 1)
 
 
 class UInt128(UInt):
