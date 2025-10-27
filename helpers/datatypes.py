@@ -456,6 +456,55 @@ class UUID(DataType):
         return self.min
 
 
+class Enum(DataType):
+    def __init__(self, name, values):
+        """
+        Initialize Enum datatype.
+
+        :param name: The enum name (e.g., 'Enum8', 'Enum16')
+        :param values: List of tuples (string_value, numeric_value) or dict
+        """
+        self.enum_values = values
+        if isinstance(values, dict):
+            self.enum_values = list(values.items())
+
+        enum_def = ",".join([f"'{k}' = {v}" for k, v in self.enum_values])
+        self.enum_definition = f"{name}({enum_def})"
+
+        super().__init__(
+            self.enum_definition,
+            supports_low_cardinality=True,
+            is_valid_map_key=True,
+            is_numeric=False,
+            max=f"'{self.enum_values[0][0]}'",
+            min=f"'{self.enum_values[-1][0]}'",
+        )
+
+    def rand_value(self, random=None):
+        if random is None:
+            random = default_random
+        return f"'{random.choice(self.enum_values)[0]}'"
+
+    def max_value(self):
+        return f"'{self.enum_values[0][0]}'"
+
+    def min_value(self):
+        return f"'{self.enum_values[-1][0]}'"
+
+    def zero_or_null_value(self):
+        return f"'{self.enum_values[0][0]}'"
+
+
+class Enum8(Enum):
+    def __init__(self, values):
+        super().__init__("Enum8", values)
+
+
+class Enum16(Enum):
+    def __init__(self, values):
+        super().__init__("Enum16", values)
+
+
 # Modifiers
 class Nullable(DataType):
     def __init__(self, datatype):
