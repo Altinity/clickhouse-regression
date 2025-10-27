@@ -222,10 +222,13 @@ class Decimal32(Decimal):
 
 class Decimal64(Decimal):
     def __init__(self, scale):
-        if scale == 18:
-            limit = "0." + "9" * (scale - 1)
+        precision = 18
+        int_digits = precision - scale
+        if scale == precision:
+            limit = "0." + "9" * (scale - 2)
         else:
-            limit = "9" * (18 - scale) + "." + "9" * scale
+            # safe boundary: one extra unit inside range
+            limit = "9" * (int_digits - 1) + "8" + "." + "9" * scale
         super().__init__(f"Decimal64({scale})", max=limit, min="-" + limit, scale=scale)
 
 
@@ -405,10 +408,10 @@ class FixedString(String):
         super().__init__(f"FixedString({length})", max=max)
 
     def max_value(self):
-        return f"to{self.name[:-4]}({self.max},{self.length})"
+        return f"toFixedString({self.max},{self.length})"
 
     def min_value(self):
-        return f"to{self.name[:-4]}({self.min},{self.length})"
+        return f"toFixedString({self.min},{self.length})"
 
     def rand_value(self, random=None):
         if random is None:
