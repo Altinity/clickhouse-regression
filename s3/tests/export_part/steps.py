@@ -57,6 +57,22 @@ def create_s3_table(
     return table_name
 
 
+@TestStep(Given)
+def get_cluster_nodes(self, cluster, node=None):
+    """Get all nodes in a cluster."""
+    
+    if node is None:
+        node = self.context.node
+    
+    result = node.query(
+        f"SELECT host_name FROM system.clusters WHERE cluster = '{cluster}'",
+        exitcode=0
+    )
+    
+    nodes = [line.strip() for line in result.output.splitlines() if line.strip()]
+    return nodes
+
+
 @TestStep(When)
 def get_parts(self, table_name, node):
     """Get all parts for a table on a given node."""
