@@ -19,7 +19,6 @@ def part_exports(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True

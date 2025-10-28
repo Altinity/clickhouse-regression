@@ -12,7 +12,6 @@ def configured_table(self, partition_key_type):
             partition_by="p",
             columns=default_columns(partition_key_type=partition_key_type),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True, columns=default_columns(partition_key_type=partition_key_type)

@@ -16,10 +16,9 @@ def mismatched_columns(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
+            table_name="s3", create_new_bucket=True, columns=default_columns(simple=False)
         )
 
     with When("I export parts to the S3 table"):
@@ -49,7 +48,6 @@ def basic_table(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True
@@ -104,8 +102,8 @@ def empty_table(self):
         )
 
     with Then("They should be empty"):
-        assert source_data == "", error()
-        assert destination_data == "", error()
+        assert source_data == [], error()
+        assert destination_data == [], error()
 
 
 @TestFeature
