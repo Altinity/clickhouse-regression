@@ -16,13 +16,13 @@ def different_nodes_same_destination(self, cluster, node1, node2):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(simple=False),
+            columns=default_columns(),
             stop_merges=True,
             populate=False,
             cluster=cluster,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, cluster=cluster, columns=default_columns(simple=False)
+            table_name="s3", create_new_bucket=True, cluster=cluster
         )
 
     with And("I populate the source tables on both nodes"):

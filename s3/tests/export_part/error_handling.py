@@ -49,19 +49,18 @@ def duplicate_exports(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True
         )
 
     with When("I try to export the parts twice"):
-        results1 = export_parts(
+        export_parts(
             source_table="source",
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        results2 = export_parts(
+        export_parts(
             source_table="source",
             destination_table=s3_table_name,
             node=self.context.node,

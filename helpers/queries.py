@@ -16,11 +16,26 @@ from helpers.cluster import ClickHouseNode
 # The extra [0] could be avoided with TSV format, but that does not guarantee valid JSON.
 
 
+@TestStep(Given)
+def get_cluster_nodes(self, cluster, node=None):
+    """Get all nodes in a cluster."""
+
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"SELECT host_name FROM system.clusters WHERE cluster = '{cluster}'", exitcode=0
+    )
+
+    nodes = [line.strip() for line in result.output.splitlines() if line.strip()]
+    return nodes
+
+
 @TestStep(When)
 def select_all_ordered(self, table_name, node):
     """Select all data from a table ordered by partition and index columns."""
 
-    return node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output
+    return node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output.splitlines()
 
 
 @TestStep(When)

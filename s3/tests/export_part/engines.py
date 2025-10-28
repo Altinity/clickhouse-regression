@@ -17,7 +17,6 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
             table_name="source",
             partition_by="p",
             stop_merges=True,
-            populate=True,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
             columns=default_columns(simple=False),
