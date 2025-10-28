@@ -4,6 +4,7 @@ from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
+from helpers.queries import *
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
 
 
@@ -15,13 +16,13 @@ def different_nodes_same_destination(self, cluster, node1, node2):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(),
+            columns=default_columns(simple=False),
             stop_merges=True,
             populate=False,
             cluster=cluster,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, cluster=cluster
+            table_name="s3", create_new_bucket=True, cluster=cluster, columns=default_columns(simple=False)
         )
 
     with And("I populate the source tables on both nodes"):

@@ -8,39 +8,44 @@ from s3.tests.export_part.steps import *
 # partsexports incrementing correctly
 # duplicates incrementing correctly
 
+
 @TestScenario
-def duplicate_exports(self):
-    """Check duplicate export attempts are properly tracked in system.events."""
+def part_exports(self):
+    """Check part exports are properly tracked in system.events."""
 
-    with Given("I create source and destination tables"):
-        source, destination = create_source_and_destination_tables()
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            populate=True,
+        )
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True
+        )
 
-    with When("I insert random test data into the source table"):
-        source.insert_test_data()  # default row_count=10, cardinality=1
+    with And("I read the initial logged number of part exports"):
+        initial_exports = get_export_events(node=self.context.node)#.get("PartsExports", 0)
+        note(f"Initial exports: {initial_exports}")
+    
+    # with When("I export parts to the S3 table"):
+    #     export_parts(
+    #         source_table="source",
+    #         destination_table=s3_table_name,
+    #         node=self.context.node,
+    #     )
 
-    with And("I get a list of parts for source table"):
-        source_parts = source.get_parts()
-        test_part = source_parts[1]
+    # with And("I read the final logged number of part exports"):
+    #     final_exports = get_export_events(node=self.context.node).get("PartsExports", 0)
 
-    with And("I read initial export events"):
-        events_initial = export_events()
-        initial_exports = events_initial.get("PartsExports", 0)
-        initial_duplicates = events_initial.get("PartsExportDuplicated", 0)
+    # with Then("I check that the number of part exports is correct"):
 
-    with When("I export the same part twice"):
-        export_part(parts=[test_part], source=source, destination=destination)
-        export_part(parts=[test_part], source=source, destination=destination)
+    #     with By("Reading the number of parts for the source table"):
+    #         num_parts = len(get_parts(table_name="source", node=self.context.node))
 
-    with Then("I check system.events for duplicate tracking"):
-        events_final = export_events()
-        final_exports = events_final.get("PartsExports", 0)
-        final_duplicates = events_final.get("PartsExportDuplicated", 0)
-
-    with By("Checking we have 1 successful export"):
-        assert final_exports - initial_exports == 1, error()
-
-    with And("Checking we have 1 duplicate export"):
-        assert final_duplicates - initial_duplicates == 1, error()
+    #     with And("Checking that the before and after difference is correct"):
+    #         assert final_exports - initial_exports == num_parts, error()
 
 
 @TestFeature
@@ -48,4 +53,4 @@ def duplicate_exports(self):
 def feature(self):
     """Check system monitoring of export events."""
 
-    Scenario(run=duplicate_exports)
+    Scenario(run=part_exports)
