@@ -1,9 +1,9 @@
 from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
+from s3.requirements.export_part import *
 
-
-@TestScenario
+@TestCheck
 def configured_table(self, table_engine, number_of_partitions, number_of_parts):
     """Test a specific combination of table engine, number of partitions, and number of parts."""
 
@@ -40,6 +40,7 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
 
 @TestSketch(Scenario)
 @Flags(TE)
+@Requirements(RQ_ClickHouse_ExportPart_SourceEngines("1.0"))
 def table_combos(self):
     """Test various combinations of table engines, number of partitions, and number of parts."""
 
