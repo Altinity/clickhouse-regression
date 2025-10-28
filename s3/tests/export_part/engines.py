@@ -2,6 +2,11 @@ from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
+from helpers.queries import *
+
+
+# TODO replicated merge tree tables (all types)
+
 
 @TestCheck
 def configured_table(self, table_engine, number_of_partitions, number_of_parts):
@@ -15,10 +20,10 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
             populate=True,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
-            columns=default_columns(),
+            columns=default_columns(simple=False),
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, columns=default_columns()
+            table_name="s3", create_new_bucket=True, columns=default_columns(simple=False)
         )
 
     with When("I export parts to the S3 table"):

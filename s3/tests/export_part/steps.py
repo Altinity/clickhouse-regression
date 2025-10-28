@@ -7,9 +7,9 @@ from helpers.create import *
 from s3.tests.common import temporary_bucket_path
 
 
-def default_columns(simple=False):
+def default_columns(simple=True, partition_key_type="Int8"):
     columns = [
-        {"name": "p", "type": "Int8"},
+        {"name": "p", "type": partition_key_type},
         {"name": "i", "type": "UInt64"},
         {"name": "Path", "type": "String"},
         {"name": "Time", "type": "DateTime"},
@@ -18,9 +18,9 @@ def default_columns(simple=False):
     ]
 
     if simple:
-        columns = columns[:2]
-
-    return columns
+        return columns[:2]
+    else:
+        return columns
 
 
 @TestStep(Given)
@@ -41,7 +41,6 @@ def create_s3_table(
     cluster=None,
     create_new_bucket=False,
     columns=None,
-    simple_columns=False,
 ):
     """Create a destination S3 table."""
 
@@ -49,7 +48,7 @@ def create_s3_table(
         create_temp_bucket()
 
     if columns is None:
-        columns = default_columns(simple=simple_columns)
+        columns = default_columns(simple=True)
 
     table_name = f"{table_name}_{getuid()}"
     engine = f"""
@@ -64,7 +63,6 @@ def create_s3_table(
         )
     """
 
-    # TODO columns and partition_by are hardcoded for now, but i should make them configurable
     create_table(
         table_name=table_name,
         columns=columns,
@@ -99,13 +97,6 @@ def get_parts(self, table_name, node):
         f"SELECT name FROM system.parts WHERE table = '{table_name}'", exitcode=0
     ).output
     return [row.strip() for row in output.splitlines()]
-
-
-@TestStep(When)
-def select_all_ordered(self, table_name, node):
-    """Select all data from a table ordered by partition and index columns."""
-
-    return node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output
 
 
 @TestStep(When)

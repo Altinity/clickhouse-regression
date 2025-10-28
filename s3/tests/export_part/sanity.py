@@ -2,6 +2,8 @@ from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from helpers.create import *
+from helpers.queries import *
+from s3.requirements.export_part import *
 
 
 @TestScenario
@@ -12,12 +14,12 @@ def mismatched_columns(self):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(simple=True),
+            columns=default_columns(),
             stop_merges=True,
             populate=True,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, simple_columns=False
+            table_name="s3", create_new_bucket=True
         )
 
     with When("I export parts to the S3 table"):
@@ -34,6 +36,10 @@ def mismatched_columns(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPart_S3("1.0"),
+    RQ_ClickHouse_ExportPart_SQLCommand("1.0"),
+)
 def basic_table(self):
     """Test exporting parts of a basic table."""
 
@@ -41,12 +47,12 @@ def basic_table(self):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(simple=True),
+            columns=default_columns(),
             stop_merges=True,
             populate=True,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, simple_columns=True
+            table_name="s3", create_new_bucket=True
         )
 
     with When("I export parts to the S3 table"):
@@ -74,12 +80,12 @@ def empty_table(self):
         partitioned_merge_tree_table(
             table_name="empty_source",
             partition_by="p",
-            columns=default_columns(simple=True),
+            columns=default_columns(),
             stop_merges=False,
             populate=False,
         )
         s3_table_name = create_s3_table(
-            table_name="empty_s3", create_new_bucket=True, simple_columns=True
+            table_name="empty_s3", create_new_bucket=True
         )
 
     with When("I export parts to the S3 table"):

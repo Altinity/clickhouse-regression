@@ -17,6 +17,13 @@ from helpers.cluster import ClickHouseNode
 
 
 @TestStep(When)
+def select_all_ordered(self, table_name, node):
+    """Select all data from a table ordered by partition and index columns."""
+
+    return node.query(f"SELECT * FROM {table_name} ORDER BY p, i", exitcode=0).output
+
+
+@TestStep(When)
 def sync_replica(
     self, node: ClickHouseNode, table_name: str, raise_on_timeout=False, **kwargs
 ) -> Command:

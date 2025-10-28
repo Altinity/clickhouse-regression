@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
-from helpers.tables import *
+from helpers.queries import *
 
 
 @TestScenario
@@ -12,12 +12,12 @@ def invalid_part_name(self):
         partitioned_merge_tree_table(
             table_name="source",
             partition_by="p",
-            columns=default_columns(simple=True),
+            columns=default_columns(),
             stop_merges=True,
             populate=True,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, simple_columns=True
+            table_name="s3", create_new_bucket=True
         )
 
     with And("I create an invalid part name"):
@@ -39,9 +39,44 @@ def invalid_part_name(self):
         ), error()
 
 
+@TestScenario
+def duplicate_exports(self):
+    """Check duplicate exports are ignored and not exported again."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            populate=True,
+        )
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True
+        )
+
+    with When("I try to export the parts twice"):
+        results1 = export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+        results2 = export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+    
+    with Then("The source and destination tables should still be the same"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
+        assert source_data == destination_data, error()
+
+
 @TestFeature
 @Name("error handling")
 def feature(self):
     """Check correct error handling when exporting parts."""
 
     Scenario(run=invalid_part_name)
+    Scenario(run=duplicate_exports)
