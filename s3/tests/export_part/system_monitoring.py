@@ -1,12 +1,13 @@
 from testflows.core import *
 from testflows.asserts import error
-
 from s3.tests.export_part.steps import *
+from s3.requirements.export_part import *
 
 
-# TODO checks on export_events should go here, not in sanity.py
+# TODO checks on export_events should go here
 # partsexports incrementing correctly
 # duplicates incrementing correctly
+# NOTE WIP
 
 
 @TestScenario
@@ -49,6 +50,7 @@ def part_exports(self):
 
 @TestFeature
 @Name("system monitoring")
+@Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
 def feature(self):
     """Check system monitoring of export events."""
 

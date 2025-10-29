@@ -2,6 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from helpers.queries import *
+from s3.requirements.export_part import *
 
 
 @TestScenario
@@ -72,6 +73,7 @@ def duplicate_exports(self):
 
 @TestFeature
 @Name("error handling")
+@Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
 def feature(self):
     """Check correct error handling when exporting parts."""
 

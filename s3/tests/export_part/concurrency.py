@@ -2,6 +2,7 @@ from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
+from s3.requirements.export_part import *
 
 
 @TestScenario
@@ -41,6 +42,7 @@ def basic_concurrent_export(self, threads):
 
 
 @TestFeature
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 @Name("concurrency")
 def feature(self):
     """Check that concurrent exports work correctly."""
