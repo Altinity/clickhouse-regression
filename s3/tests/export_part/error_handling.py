@@ -71,6 +71,31 @@ def duplicate_exports(self):
         assert source_data == destination_data, error()
 
 
+@TestScenario
+def same_table(self):
+    """Check exporting parts where source and destination tables are the same."""
+
+    with Given("I create a populated source table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+
+    with When("I try to export parts to itself"):
+        results = export_parts(
+            source_table="source",
+            destination_table="source",
+            node=self.context.node,
+            exitcode=1,
+        )
+
+    with Then("I should see an error related to same table exports"):
+        assert results[0].exitcode == 36, error()
+        assert "Exporting to the same table is not allowed" in results[0].output, error()
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
@@ -79,3 +104,4 @@ def feature(self):
 
     Scenario(run=invalid_part_name)
     Scenario(run=duplicate_exports)
+    Scenario(run=same_table)
