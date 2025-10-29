@@ -4,8 +4,27 @@ from helpers.create import *
 from helpers.queries import *
 
 
+# TODO
+
+# in common.py
+# def create_int8()
+# def create_int16()
+# def create_UIint8()
+
+# in here
+# def create_all_integer_types()
+
+# a reference:
+# @TestStep(Given)
+# def create_partitioned_table_with_fixed_string(self, ...):
+#     with By("creating a MergeTree table with FixedString datatype") 
+#         create_table(table_name=table_name)
+#     with And(f"inserting data into a {table_name} table to create {number_of_parts} parts")
+#         create_partitions_for_fixedstring(table_name=table_name)
+
+
 @TestCheck
-def configured_table(self, partition_key_type):
+def simple_configured_table(self, partition_key_type):
     with Given(f"I create a populated source table with partition key type {partition_key_type} and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -55,7 +74,7 @@ def basic_partition_key_types(self):
         # "FixedString(1)",
     ]
 
-    configured_table(partition_key_type=either(*key_types))
+    simple_configured_table(partition_key_type=either(*key_types))
 
 
 @TestFeature

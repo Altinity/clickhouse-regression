@@ -7,6 +7,50 @@ from s3.requirements.export_part import *
 
 
 @TestScenario
+def export_setting(self):
+    """Check that the export setting is settable in 2 ways when exporting parts."""
+
+    with Given("I create a populated source table and 2 empty S3 tables"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name1 = create_s3_table(
+            table_name="s3_1", create_new_bucket=True
+        )
+        s3_table_name2 = create_s3_table(
+            table_name="s3_2"
+        )
+
+    with When("I export parts to the first S3 table using the SET query"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name1,
+            node=self.context.node,
+            explicit_set=True,
+        )
+
+    with And("I export parts to the second S3 table using the settings argument"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name2,
+            node=self.context.node,
+            explicit_set=False,
+        )
+
+    with And("I read data from all tables"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data1 = select_all_ordered(table_name=s3_table_name1, node=self.context.node)
+        destination_data2 = select_all_ordered(table_name=s3_table_name2, node=self.context.node)
+
+    with Then("All tables should have the same data"):
+        assert source_data == destination_data1, error()
+        assert source_data == destination_data2, error()
+
+
+@TestScenario
 def mismatched_columns(self):
     """Test exporting parts when source and destination tables have mismatched columns."""
 
@@ -114,3 +158,4 @@ def feature(self):
     Scenario(run=empty_table)
     Scenario(run=basic_table)
     Scenario(run=mismatched_columns)
+    # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

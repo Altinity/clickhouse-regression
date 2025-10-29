@@ -86,24 +86,30 @@ def get_parts(self, table_name, node):
 
 
 @TestStep(When)
-def export_parts(self, source_table, destination_table, node, parts=None, exitcode=0):
+def export_parts(self, source_table, destination_table, node, parts=None, exitcode=0, explicit_set=True):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
         parts = get_parts(table_name=source_table, node=node)
+
     no_checks = exitcode != 0
 
     output = []
 
     for part in parts:
-        output.append(
-            node.query(  # we should be able to set the settings here instead of using the SET query, but this is a quick workaround for the bug
+        if explicit_set:
+            output.append(node.query(
                 f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                # settings=[("allow_experimental_export_merge_tree_part", 1)],
                 exitcode=exitcode,
                 no_checks=no_checks,
-            )
-        )
+            ))
+        else:
+            output.append(node.query(
+                f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                settings=[("allow_experimental_export_merge_tree_part", 1)],
+                exitcode=exitcode,
+                no_checks=no_checks,
+            ))
 
     return output
 
