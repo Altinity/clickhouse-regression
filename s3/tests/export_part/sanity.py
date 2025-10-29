@@ -17,12 +17,8 @@ def export_setting(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name1 = create_s3_table(
-            table_name="s3_1", create_new_bucket=True
-        )
-        s3_table_name2 = create_s3_table(
-            table_name="s3_2"
-        )
+        s3_table_name1 = create_s3_table(table_name="s3_1", create_new_bucket=True)
+        s3_table_name2 = create_s3_table(table_name="s3_2")
 
     with When("I export parts to the first S3 table using the SET query"):
         export_parts(
@@ -42,8 +38,12 @@ def export_setting(self):
 
     with And("I read data from all tables"):
         source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data1 = select_all_ordered(table_name=s3_table_name1, node=self.context.node)
-        destination_data2 = select_all_ordered(table_name=s3_table_name2, node=self.context.node)
+        destination_data1 = select_all_ordered(
+            table_name=s3_table_name1, node=self.context.node
+        )
+        destination_data2 = select_all_ordered(
+            table_name=s3_table_name2, node=self.context.node
+        )
 
     with Then("All tables should have the same data"):
         assert source_data == destination_data1, error()
@@ -62,7 +62,9 @@ def mismatched_columns(self):
             stop_merges=True,
         )
         s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True, columns=default_columns(simple=False)
+            table_name="s3",
+            create_new_bucket=True,
+            columns=default_columns(simple=False),
         )
 
     with When("I export parts to the S3 table"):
@@ -93,9 +95,7 @@ def basic_table(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export parts to the S3 table"):
         export_parts(
@@ -126,9 +126,7 @@ def empty_table(self):
             stop_merges=False,
             populate=False,
         )
-        s3_table_name = create_s3_table(
-            table_name="empty_s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="empty_s3", create_new_bucket=True)
 
     with When("I export parts to the S3 table"):
         export_parts(

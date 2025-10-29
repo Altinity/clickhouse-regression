@@ -1,5 +1,3 @@
-import json
-
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
@@ -24,6 +22,25 @@ def default_columns(simple=True, partition_key_type="Int8"):
         return columns
 
 
+def valid_partition_key_types_columns():
+    return [
+        {"name": "int8", "type": "Int8"},
+        {"name": "int16", "type": "Int16"},
+        {"name": "int32", "type": "Int32"},
+        {"name": "int64", "type": "Int64"},
+        {"name": "uint8", "type": "UInt8"},
+        {"name": "uint16", "type": "UInt16"},
+        {"name": "uint32", "type": "UInt32"},
+        {"name": "uint64", "type": "UInt64"},
+        {"name": "date", "type": "Date"},
+        {"name": "date32", "type": "Date32"},
+        {"name": "datetime", "type": "DateTime"},
+        {"name": "datetime64", "type": "DateTime64"},
+        {"name": "string", "type": "String"},
+        {"name": "fixedstring", "type": "FixedString(10)"},
+    ]
+
+
 @TestStep(Given)
 def create_temp_bucket(self):
     """Create temporary S3 bucket."""
@@ -42,6 +59,7 @@ def create_s3_table(
     cluster=None,
     create_new_bucket=False,
     columns=None,
+    partition_by="p",
 ):
     """Create a destination S3 table."""
 
@@ -67,7 +85,7 @@ def create_s3_table(
     create_table(
         table_name=table_name,
         columns=columns,
-        partition_by="p",
+        partition_by=partition_by,
         engine=engine,
         cluster=cluster,
     )
@@ -86,7 +104,15 @@ def get_parts(self, table_name, node):
 
 
 @TestStep(When)
-def export_parts(self, source_table, destination_table, node, parts=None, exitcode=0, explicit_set=True):
+def export_parts(
+    self,
+    source_table,
+    destination_table,
+    node,
+    parts=None,
+    exitcode=0,
+    explicit_set=True,
+):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
@@ -98,18 +124,22 @@ def export_parts(self, source_table, destination_table, node, parts=None, exitco
 
     for part in parts:
         if explicit_set:
-            output.append(node.query(
-                f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                exitcode=exitcode,
-                no_checks=no_checks,
-            ))
+            output.append(
+                node.query(
+                    f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                    exitcode=exitcode,
+                    no_checks=no_checks,
+                )
+            )
         else:
-            output.append(node.query(
-                f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                settings=[("allow_experimental_export_merge_tree_part", 1)],
-                exitcode=exitcode,
-                no_checks=no_checks,
-            ))
+            output.append(
+                node.query(
+                    f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                    settings=[("allow_experimental_export_merge_tree_part", 1)],
+                    exitcode=exitcode,
+                    no_checks=no_checks,
+                )
+            )
 
     return output
 
