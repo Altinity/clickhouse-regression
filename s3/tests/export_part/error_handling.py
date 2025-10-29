@@ -72,6 +72,7 @@ def duplicate_exports(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_SameTable("1.0"))
 def same_table(self):
     """Check exporting parts where source and destination tables are the same."""
 
