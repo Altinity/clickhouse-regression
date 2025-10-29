@@ -174,6 +174,7 @@ def scenario(self, name, engine):
             if check_clickhouse_version(">=25.6")(self) or (
                 check_clickhouse_version(">=24.8")(self)
                 and check_is_altinity_build(node)
+                and check_clickhouse_version("<=24.9")(self)
             ):
                 message = "DB::Exception: TTL expression result column should have Date, Date32, DateTime or DateTime64 type, but has String"
             else:
