@@ -149,6 +149,37 @@ def empty_table(self):
         assert destination_data == [], error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
+def no_partition_by(self):
+    """Test exporting parts when the source table has no PARTITION BY type."""
+    
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="tuple()",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True, partition_by="tuple()")
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I read data from both tables"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
+    with Then("They should be the same"):
+        assert source_data == destination_data, error()
+
+
 @TestFeature
 @Name("sanity")
 def feature(self):
@@ -156,5 +187,6 @@ def feature(self):
 
     Scenario(run=empty_table)
     Scenario(run=basic_table)
+    Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

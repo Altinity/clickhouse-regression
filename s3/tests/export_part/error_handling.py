@@ -131,6 +131,9 @@ def local_table(self):
         assert "Destination storage MergeTree does not support MergeTree parts or uses unsupported partitioning" in results[0].output, error()
 
 
+# TODO different partition key
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
