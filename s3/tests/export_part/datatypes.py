@@ -3,6 +3,7 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from helpers.common import getuid
+from s3.requirements.export_part import *
 
 
 @TestStep(Given)
@@ -73,6 +74,7 @@ def valid_partition_key_table(self, partition_key_type):
 
 @TestSketch(Scenario)
 @Flags(TE)
+@Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
 def valid_partition_key_types(self):
     """Check that all partition key data types are supported when exporting parts."""
 

@@ -51,6 +51,7 @@ def export_setting(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_SchemaCompatibility("1.0"))
 def mismatched_columns(self):
     """Test exporting parts when source and destination tables have mismatched columns."""
 
