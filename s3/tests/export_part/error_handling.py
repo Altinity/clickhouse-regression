@@ -16,9 +16,7 @@ def invalid_part_name(self):
             stop_merges=True,
             populate=True,
         )
-        s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I create an invalid part name"):
         invalid_part_name = "in_va_lid_part"
@@ -50,9 +48,7 @@ def duplicate_exports(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I try to export the parts twice"):
         export_parts(
@@ -65,10 +61,12 @@ def duplicate_exports(self):
             destination_table=s3_table_name,
             node=self.context.node,
         )
-    
+
     with Then("The source and destination tables should still be the same"):
         source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(table_name=s3_table_name, node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
         assert source_data == destination_data, error()
 
 

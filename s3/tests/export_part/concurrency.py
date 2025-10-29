@@ -16,9 +16,7 @@ def basic_concurrent_export(self, threads):
                 columns=default_columns(),
                 stop_merges=True,
             )
-        s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export parts from all sources concurrently to the S3 table"):
         for i in range(threads):

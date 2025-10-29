@@ -20,14 +20,14 @@ def part_exports(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name = create_s3_table(
-            table_name="s3", create_new_bucket=True
-        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I read the initial logged number of part exports"):
-        initial_exports = get_export_events(node=self.context.node)#.get("PartsExports", 0)
+        initial_exports = get_export_events(
+            node=self.context.node
+        )  # .get("PartsExports", 0)
         note(f"Initial exports: {initial_exports}")
-    
+
     # with When("I export parts to the S3 table"):
     #     export_parts(
     #         source_table="source",
