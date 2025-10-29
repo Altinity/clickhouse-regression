@@ -97,6 +97,40 @@ def same_table(self):
         assert "Exporting to the same table is not allowed" in results[0].output, error()
 
 
+@TestScenario
+def local_table(self):
+    """Test exporting parts to a local table."""
+    
+    with Given("I create a populated source table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+    
+    with And("I create an empty local table"):
+        partitioned_merge_tree_table(
+            table_name="destination",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            populate=False,
+        )
+
+    with When("I export parts to the local table"):
+        results = export_parts(
+            source_table="source",
+            destination_table="destination",
+            node=self.context.node,
+            exitcode=1,
+        )
+
+    with Then("I should see an error related to local table exports"):
+        assert results[0].exitcode == 48, error()
+        assert "Destination storage MergeTree does not support MergeTree parts or uses unsupported partitioning" in results[0].output, error()
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
@@ -106,3 +140,4 @@ def feature(self):
     Scenario(run=invalid_part_name)
     Scenario(run=duplicate_exports)
     Scenario(run=same_table)
+    Scenario(run=local_table)
