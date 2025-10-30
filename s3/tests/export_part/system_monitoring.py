@@ -13,7 +13,7 @@ from s3.requirements.export_part import *
 
 @TestScenario
 def part_exports(self):
-    """Check part exports are properly tracked in system.events."""
+    """Check part exports are properly tracked in system.part_log."""
 
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
