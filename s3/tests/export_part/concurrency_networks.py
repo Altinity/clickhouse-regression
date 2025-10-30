@@ -43,8 +43,15 @@ def basic_concurrent_export(self, threads):
 
 @TestFeature
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-@Name("concurrency")
+@Name("concurrency and networks")
 def feature(self):
-    """Check that concurrent exports work correctly."""
+    """Check that exports work correctly with concurrency and various network conditions."""
 
     Scenario(test=basic_concurrent_export)(threads=5)
+    # Scenario(test=network_packet_delay)(delay_ms=100)
+    # Scenario(test=network_packet_loss)(percent_loss=50)
+    # Scenario(test=network_packet_loss_gemodel)(interruption_probability=10, recovery_probability=90)
+    # Scenario(test=network_packet_corruption)(percent_corrupt=20)
+    # Scenario(test=network_packet_duplication)(percent_duplicated=10)
+    # Scenario(test=network_packet_reordering)(delay_ms=100, percent_reordered=90)
+    # Scenario(test=network_packet_rate_limit)(rate_mbit=10)
