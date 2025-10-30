@@ -113,7 +113,6 @@ RQ_ClickHouse_ExportPart_DestinationEngines = Requirement(
         "  * `HDFS` - Hadoop Distributed File System (with Hive partitioning)\n"
         "  * `Azure` - Microsoft Azure Blob Storage (with Hive partitioning)\n"
         "  * `GCS` - Google Cloud Storage (with Hive partitioning)\n"
-        "* Implement the `supportsImport()` method and return `true`\n"
         "\n"
     ),
     link=None,
@@ -193,17 +192,9 @@ RQ_ClickHouse_ExportPart_PartitionKeyTypes = Requirement(
         "| Partition Key Type | Supported | Examples | Notes |\n"
         "|-------------------|------------|----------|-------|\n"
         "| **Integer Types** | ✅ Yes | `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Int8`, `Int16`, `Int32`, `Int64` | All integer types supported |\n"
-        "| **Date/DateTime Types** | ✅ Yes | `Date`, `DateTime`, `DateTime64` | All date/time types supported |\n"
+        "| **Date/DateTime Types** | ✅ Yes | `Date`, `Date32`, `DateTime`, `DateTime64` | All date/time types supported |\n"
         "| **String Types** | ✅ Yes | `String`, `FixedString` | All string types supported |\n"
-        "| **Date Functions** | ✅ Yes | `toYYYYMM(date_col)`, `toMonday(date_col)`, `toYear(date_col)` | Result in supported types |\n"
-        "| **Mathematical Expressions** | ✅ Yes | `column1 + column2`, `column * 1000` | If result is supported type |\n"
-        "| **String Functions** | ✅ Yes | `substring(column, 1, 4)` | Result in String type |\n"
-        "| **Tuple Expressions** | ✅ Yes | `(toMonday(StartDate), EventType)` | If all elements are supported types |\n"
         "| **No Partition Key** | ✅ Yes | Tables without `PARTITION BY` clause | Unpartitioned tables supported |\n"
-        "| **UUID Types** | ❌ No | `UUID` | Not supported by Hive partitioning |\n"
-        "| **Enum Types** | ❌ No | `Enum8`, `Enum16` | Not supported by Hive partitioning |\n"
-        "| **Floating-point Types** | ❌ No | `Float32`, `Float64` | Not supported by Hive partitioning |\n"
-        "| **Hash Functions** | ❌ No | `intHash32(column)`, `cityHash64(column)` | Result in unsupported types |\n"
         "\n"
         "[ClickHouse] SHALL automatically extract partition values from source parts and use them to create proper Hive partitioning structure in destination storage, but only for partition key types that are compatible with Hive partitioning requirements.\n"
         "\n"
@@ -895,7 +886,6 @@ version: 1.0
   * `HDFS` - Hadoop Distributed File System (with Hive partitioning)
   * `Azure` - Microsoft Azure Blob Storage (with Hive partitioning)
   * `GCS` - Google Cloud Storage (with Hive partitioning)
-* Implement the `supportsImport()` method and return `true`
 
 ## Destination setup and file management
 
@@ -939,17 +929,9 @@ version: 1.0
 | Partition Key Type | Supported | Examples | Notes |
 |-------------------|------------|----------|-------|
 | **Integer Types** | ✅ Yes | `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Int8`, `Int16`, `Int32`, `Int64` | All integer types supported |
-| **Date/DateTime Types** | ✅ Yes | `Date`, `DateTime`, `DateTime64` | All date/time types supported |
+| **Date/DateTime Types** | ✅ Yes | `Date`, `Date32`, `DateTime`, `DateTime64` | All date/time types supported |
 | **String Types** | ✅ Yes | `String`, `FixedString` | All string types supported |
-| **Date Functions** | ✅ Yes | `toYYYYMM(date_col)`, `toMonday(date_col)`, `toYear(date_col)` | Result in supported types |
-| **Mathematical Expressions** | ✅ Yes | `column1 + column2`, `column * 1000` | If result is supported type |
-| **String Functions** | ✅ Yes | `substring(column, 1, 4)` | Result in String type |
-| **Tuple Expressions** | ✅ Yes | `(toMonday(StartDate), EventType)` | If all elements are supported types |
 | **No Partition Key** | ✅ Yes | Tables without `PARTITION BY` clause | Unpartitioned tables supported |
-| **UUID Types** | ❌ No | `UUID` | Not supported by Hive partitioning |
-| **Enum Types** | ❌ No | `Enum8`, `Enum16` | Not supported by Hive partitioning |
-| **Floating-point Types** | ❌ No | `Float32`, `Float64` | Not supported by Hive partitioning |
-| **Hash Functions** | ❌ No | `intHash32(column)`, `cityHash64(column)` | Result in unsupported types |
 
 [ClickHouse] SHALL automatically extract partition values from source parts and use them to create proper Hive partitioning structure in destination storage, but only for partition key types that are compatible with Hive partitioning requirements.
 

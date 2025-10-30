@@ -180,6 +180,9 @@ def no_partition_by(self):
         assert source_data == destination_data, error()
 
 
+# TODO wildcard partition strategy?
+
+
 @TestFeature
 @Name("sanity")
 def feature(self):
