@@ -94,13 +94,15 @@ def same_table(self):
 
     with Then("I should see an error related to same table exports"):
         assert results[0].exitcode == 36, error()
-        assert "Exporting to the same table is not allowed" in results[0].output, error()
+        assert (
+            "Exporting to the same table is not allowed" in results[0].output
+        ), error()
 
 
 @TestScenario
 def local_table(self):
     """Test exporting parts to a local table."""
-    
+
     with Given("I create a populated source table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -108,7 +110,7 @@ def local_table(self):
             columns=default_columns(),
             stop_merges=True,
         )
-    
+
     with And("I create an empty local table"):
         partitioned_merge_tree_table(
             table_name="destination",
@@ -128,7 +130,10 @@ def local_table(self):
 
     with Then("I should see an error related to local table exports"):
         assert results[0].exitcode == 48, error()
-        assert "Destination storage MergeTree does not support MergeTree parts or uses unsupported partitioning" in results[0].output, error()
+        assert (
+            "Destination storage MergeTree does not support MergeTree parts or uses unsupported partitioning"
+            in results[0].output
+        ), error()
 
 
 # TODO different partition key

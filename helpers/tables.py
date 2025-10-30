@@ -423,6 +423,7 @@ def create_table(
     node=None,
     cluster=None,
     order_by_all_columns=False,
+    stop_merges=False,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -479,6 +480,11 @@ def create_table(
                 query += f"\nAS SELECT {as_select}"
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
+
+            query += ";"
+
+            if stop_merges:
+                query += f" SYSTEM STOP MERGES {name};"
 
             node.query(
                 query,
@@ -564,19 +570,25 @@ def create_partitioned_table_with_compact_and_wide_parts(
     min_rows_for_wide_part=10,
     min_bytes_for_wide_part=100,
     engine="MergeTree",
+    columns=[
+            Column(name="p", datatype=UInt8()),
+            Column(name="i", datatype=UInt64()),
+        ],
+    partition_by="p",
+    cluster=None,
+    stop_merges=False,
 ):
     """Create a partitioned table that has specific settings in order
     to get both wide and compact parts."""
     create_table(
         name=table_name,
         engine=engine,
-        partition_by="p",
+        partition_by=partition_by,
         order_by="tuple()",
-        columns=[
-            Column(name="p", datatype=UInt8()),
-            Column(name="i", datatype=UInt64()),
-        ],
+        columns=columns,
+        cluster=cluster,
         query_settings=f"min_rows_for_wide_part={min_rows_for_wide_part}, min_bytes_for_wide_part={min_bytes_for_wide_part}",
+        stop_merges=stop_merges,
     )
 
 

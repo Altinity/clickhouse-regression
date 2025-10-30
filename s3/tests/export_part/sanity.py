@@ -4,6 +4,7 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
+from alter.table.replace_partition.partition_types import *
 
 
 @TestScenario
@@ -153,7 +154,7 @@ def empty_table(self):
 @Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
 def no_partition_by(self):
     """Test exporting parts when the source table has no PARTITION BY type."""
-    
+
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -161,7 +162,34 @@ def no_partition_by(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True, partition_by="tuple()")
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True, partition_by="tuple()"
+        )
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I read data from both tables"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
+    with Then("They should be the same"):
+        assert source_data == destination_data, error()
+
+
+@TestScenario
+def wide_and_compact_parts(self):
+    """Check that exporting with both wide and compact parts is supported."""
+
+    with Given("I create a source table with wide and compact parts"):
+        table_with_compact_and_wide_parts(table_name="source")
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export parts to the S3 table"):
         export_parts(
@@ -192,4 +220,5 @@ def feature(self):
     Scenario(run=basic_table)
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
+    Scenario(run=wide_and_compact_parts)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

@@ -6,7 +6,7 @@ from helpers.queries import *
 from s3.tests.common import temporary_bucket_path
 
 
-def default_columns(simple=True, partition_key_type="Int8"):
+def default_columns(simple=True, partition_key_type="UInt8"):
     columns = [
         {"name": "p", "type": partition_key_type},
         {"name": "i", "type": "UInt64"},
