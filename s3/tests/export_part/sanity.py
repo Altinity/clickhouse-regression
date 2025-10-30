@@ -8,6 +8,7 @@ from alter.table.replace_partition.partition_types import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
 def export_setting(self):
     """Check that the export setting is settable in 2 ways when exporting parts."""
 
@@ -184,6 +185,7 @@ def no_partition_by(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_PartTypes("1.0"))
 def wide_and_compact_parts(self):
     """Check that exporting with both wide and compact parts is supported."""
 
@@ -206,9 +208,6 @@ def wide_and_compact_parts(self):
 
     with Then("They should be the same"):
         assert source_data == destination_data, error()
-
-
-# TODO wildcard partition strategy?
 
 
 @TestFeature
