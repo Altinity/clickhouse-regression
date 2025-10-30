@@ -571,9 +571,9 @@ def create_partitioned_table_with_compact_and_wide_parts(
     min_bytes_for_wide_part=100,
     engine="MergeTree",
     columns=[
-            Column(name="p", datatype=UInt8()),
-            Column(name="i", datatype=UInt64()),
-        ],
+        Column(name="p", datatype=UInt8()),
+        Column(name="i", datatype=UInt64()),
+    ],
     partition_by="p",
     cluster=None,
     stop_merges=False,

@@ -35,7 +35,9 @@ def get_cluster_nodes(self, cluster, node=None):
 def select_all_ordered(self, table_name, node, order_by="p, i"):
     """Select all data from a table ordered by partition and index columns."""
 
-    return node.query(f"SELECT * FROM {table_name} ORDER BY {order_by}", exitcode=0).output.splitlines()
+    return node.query(
+        f"SELECT * FROM {table_name} ORDER BY {order_by}", exitcode=0
+    ).output.splitlines()
 
 
 @TestStep(When)

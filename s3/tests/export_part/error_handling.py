@@ -136,6 +136,33 @@ def local_table(self):
         ), error()
 
 
+@TestScenario
+def disable_export_setting(self):
+    """Check that exporting parts without the export setting set returns the correct error."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I try to export the parts with the export setting disabled"):
+        results = export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+            explicit_set=-1,
+        )
+
+    with Then("I should see an error related to the export setting"):
+        assert results[0].exitcode == 88, error()
+        assert "Exporting merge tree part is experimental" in results[0].output, error()
+
+
 # TODO different partition key
 
 
@@ -149,3 +176,4 @@ def feature(self):
     Scenario(run=duplicate_exports)
     Scenario(run=same_table)
     Scenario(run=local_table)
+    Scenario(run=disable_export_setting)

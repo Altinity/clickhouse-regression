@@ -27,7 +27,7 @@ def export_setting(self):
             source_table="source",
             destination_table=s3_table_name1,
             node=self.context.node,
-            explicit_set=True,
+            explicit_set=1,
         )
 
     with And("I export parts to the second S3 table using the settings argument"):
@@ -35,7 +35,7 @@ def export_setting(self):
             source_table="source",
             destination_table=s3_table_name2,
             node=self.context.node,
-            explicit_set=False,
+            explicit_set=0,
         )
 
     with And("I read data from all tables"):

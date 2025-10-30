@@ -111,7 +111,7 @@ def export_parts(
     node,
     parts=None,
     exitcode=0,
-    explicit_set=True,
+    explicit_set=1,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
@@ -123,7 +123,7 @@ def export_parts(
     output = []
 
     for part in parts:
-        if explicit_set:
+        if explicit_set == 1:
             output.append(
                 node.query(
                     f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
@@ -131,11 +131,19 @@ def export_parts(
                     no_checks=no_checks,
                 )
             )
-        else:
+        elif explicit_set == 0:
             output.append(
                 node.query(
                     f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
                     settings=[("allow_experimental_export_merge_tree_part", 1)],
+                    exitcode=exitcode,
+                    no_checks=no_checks,
+                )
+            )
+        elif explicit_set == -1:
+            output.append(
+                node.query(
+                    f"SET allow_experimental_export_merge_tree_part = 0; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
                     exitcode=exitcode,
                     no_checks=no_checks,
                 )
