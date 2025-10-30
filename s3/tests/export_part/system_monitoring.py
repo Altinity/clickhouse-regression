@@ -4,9 +4,10 @@ from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 
 
-# TODO checks on export_events should go here
+# TODO checks on export events should go here
 # partsexports incrementing correctly
 # duplicates incrementing correctly
+# part_log is where to look
 # NOTE WIP
 
 
