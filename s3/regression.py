@@ -541,6 +541,7 @@ def minio_regression(
     self.context.node = cluster.node("clickhouse1")
     self.context.node2 = cluster.node("clickhouse2")
     self.context.node3 = cluster.node("clickhouse3")
+    self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
 
     with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
@@ -550,6 +551,10 @@ def minio_regression(
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+    with And("I install tc-netem on all clickhouse nodes"):
+        for node in self.context.nodes:
+            node.command("apt install --yes iproute2 procps")
 
     # with And("allow higher cpu_wait_ratio "):
     #     if check_clickhouse_version(">=25.4")(self):
