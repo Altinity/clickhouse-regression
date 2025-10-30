@@ -26,7 +26,7 @@ def create_merge_tree_all_valid_partition_key_types(
         )
 
     with And("I insert data into the table"):
-        for i in range(1):
+        for i in range(10):
             node.query(
                 f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) VALUES (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14')"
             )
