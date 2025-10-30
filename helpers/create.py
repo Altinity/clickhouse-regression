@@ -25,6 +25,7 @@ def create_table(
     settings=None,
     partition_by=None,
     stop_merges=False,
+    query_settings=None,
 ):
     """
     Generates a query to create a table in ClickHouse.
@@ -109,6 +110,9 @@ def create_table(
         if comment:
             query += f" COMMENT '{comment}'"
 
+        if query_settings:
+            query += f" SETTINGS {query_settings}"
+
         query += ";"
 
         if stop_merges:
@@ -140,6 +144,7 @@ def create_merge_tree_table(
     partition_by: str = None,
     cluster: str = None,
     stop_merges: bool = False,
+    query_settings: str = None,
 ):
     """Create a table with the MergeTree engine."""
     create_table(
@@ -154,6 +159,7 @@ def create_merge_tree_table(
         partition_by=partition_by,
         cluster=cluster,
         stop_merges=stop_merges,
+        query_settings=query_settings,
     )
 
 

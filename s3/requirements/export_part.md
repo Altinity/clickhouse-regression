@@ -192,10 +192,6 @@ version: 1.0
 |-----------|------------|-------------|------------------|
 | **Wide Parts** | ✅ Yes | Data of each column stored in separate files with marks | Standard format for most parts |
 | **Compact Parts** | ✅ Yes | All column data stored in single file with single marks file | Optimized for small parts |
-| **Regular Parts** | ✅ Yes | Standard data parts created by inserts, merges, mutations | Full data content |
-| **Patch Parts** | ✅ Yes | Lightweight update parts containing only changed columns | Applied during export |
-| **Active Parts** | ✅ Yes | Currently active data parts | Primary export target |
-| **Outdated Parts** | ✅ Yes | Parts that have been replaced by newer versions | Can be exported for backup |
 
 [ClickHouse] SHALL handle all special columns and metadata present in parts during export:
 

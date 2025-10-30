@@ -8,9 +8,9 @@ from s3.requirements.export_part import *
 
 @TestStep(Given)
 def create_merge_tree_all_valid_partition_key_types(
-    self, column_name, cluster=None, node=None
+    self, column_name, cluster=None, node=None, rows=1
 ):
-    """Create a MergeTree table with all valid partition key types."""
+    """Create a MergeTree table with all valid partition key types and both wide and compact parts."""
 
     if node is None:
         node = self.context.node
@@ -23,26 +23,27 @@ def create_merge_tree_all_valid_partition_key_types(
             partition_by=column_name,
             cluster=cluster,
             stop_merges=True,
+            query_settings=f"min_rows_for_wide_part=10",
         )
 
-    with And("I insert data into the table"):
-        for i in range(10):
-            node.query(
-                f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) VALUES (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14')"
-            )
+    with And("I insert compact and wide parts into the table"):
+        node.query(
+            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
+        )
 
     return table_name
 
 
 @TestCheck
-def valid_partition_key_table(self, partition_key_type):
-    """Check exporting to a source table with specified valid partition key type."""
+def valid_partition_key_table(self, partition_key_type, rows=1):
+    """Check exporting to a source table with specified valid partition key type and rows."""
 
     with Given(
         f"I create a source table with valid partition key type {partition_key_type} and empty S3 table"
     ):
         table_name = create_merge_tree_all_valid_partition_key_types(
             column_name=partition_key_type,
+            rows=rows,
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -75,16 +76,30 @@ def valid_partition_key_table(self, partition_key_type):
 @TestSketch(Scenario)
 @Flags(TE)
 @Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
-def valid_partition_key_types(self):
-    """Check that all partition key data types are supported when exporting parts."""
+def valid_partition_key_types_compact(self):
+    """Check that all partition key data types are supported when exporting compact parts."""
 
     key_types = [datatype["name"] for datatype in valid_partition_key_types_columns()]
-    valid_partition_key_table(partition_key_type=either(*key_types))
+    valid_partition_key_table(partition_key_type=either(*key_types), rows=1)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def valid_partition_key_types_wide(self):
+    """Check that all partition key data types are supported when exporting wide parts."""
+
+    key_types = [datatype["name"] for datatype in valid_partition_key_types_columns()]
+    valid_partition_key_table(partition_key_type=either(*key_types), rows=100)
 
 
 @TestFeature
 @Name("datatypes")
+@Requirements(
+    RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"),
+    RQ_ClickHouse_ExportPart_PartTypes("1.0"),
+)
 def feature(self):
     """Check that all data types are supported when exporting parts."""
 
-    Scenario(run=valid_partition_key_types)
+    Scenario(run=valid_partition_key_types_compact)
+    Scenario(run=valid_partition_key_types_wide)
