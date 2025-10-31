@@ -19,12 +19,12 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
             stop_merges=True,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
-            columns=default_columns(simple=False),
+            columns=default_columns(simple=False, partition_key_type="Int8"),
         )
         s3_table_name = create_s3_table(
             table_name="s3",
             create_new_bucket=True,
-            columns=default_columns(simple=False),
+            columns=default_columns(simple=False, partition_key_type="Int8"),
         )
 
     with When("I export parts to the S3 table"):

@@ -107,14 +107,11 @@ def basic_table(self):
             node=self.context.node,
         )
 
-    with And("I read data from both tables"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
         )
-
-    with Then("They should be the same"):
-        assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -174,14 +171,11 @@ def no_partition_by(self):
             node=self.context.node,
         )
 
-    with And("I read data from both tables"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
         )
-
-    with Then("They should be the same"):
-        assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -200,14 +194,11 @@ def wide_and_compact_parts(self):
             node=self.context.node,
         )
 
-    with And("I read data from both tables"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
         )
-
-    with Then("They should be the same"):
-        assert source_data == destination_data, error()
 
 
 @TestFeature

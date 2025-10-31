@@ -168,10 +168,17 @@ def get_export_events(self, node):
 
 @TestStep(Then)
 def source_matches_destination(
-    self, source_table, destination_table, source_node, destination_node
+    self, source_table, destination_table, source_node=None, destination_node=None
 ):
     """Check that source and destination table data matches."""
 
-    source_data = select_all_ordered(source_table, source_node)
-    destination_data = select_all_ordered(destination_table, destination_node)
+    if source_node is None:
+        source_node = self.context.node
+    if destination_node is None:
+        destination_node = self.context.node
+
+    source_data = select_all_ordered(table_name=source_table, node=source_node)
+    destination_data = select_all_ordered(
+        table_name=destination_table, node=destination_node
+    )
     assert source_data == destination_data, error()

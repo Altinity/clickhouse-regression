@@ -8,11 +8,11 @@ from s3.requirements.export_part import *
 # part_log is where to look
 # overwrite file
 # max bandwidth
-    # some of system.events stuff wont appear unless i set this maybe? just a guess
+# some of system.events stuff wont appear unless i set this maybe? just a guess
 # system.events
-    # Export row in system.metrics??
-    # partsexports incrementing correctly
-    # duplicates incrementing correctly
+# Export row in system.metrics??
+# partsexports incrementing correctly
+# duplicates incrementing correctly
 
 
 @TestScenario
