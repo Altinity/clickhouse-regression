@@ -1,5 +1,3 @@
-import random
-
 from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error

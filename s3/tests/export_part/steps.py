@@ -4,6 +4,7 @@ from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path
+import json
 
 
 def default_columns(simple=True, partition_key_type="UInt8"):
@@ -152,7 +153,6 @@ def export_parts(
     return output
 
 
-# TODO find the simplest way to parse the output
 @TestStep(When)
 def get_export_events(self, node):
     """Get the export data from the system.events table of a given node."""
@@ -161,9 +161,13 @@ def get_export_events(self, node):
         "SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
         exitcode=0,
     ).output
-    # return {row.name: int(row.value) for row in json.loads(output)}
-    # return [json.loads(row) for row in output.splitlines()]
-    return output
+
+    events = {}
+    for line in output.strip().splitlines():
+        event = json.loads(line)
+        events[event["name"]] = int(event["value"])
+
+    return events
 
 
 @TestStep(Then)

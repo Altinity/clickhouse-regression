@@ -4,7 +4,9 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
-from alter.table.replace_partition.partition_types import *
+from alter.table.replace_partition.partition_types import (
+    table_with_compact_and_wide_parts,
+)
 
 
 @TestScenario

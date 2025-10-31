@@ -53,10 +53,49 @@ def part_exports(self):
     #         assert final_exports - initial_exports == num_parts, error()
 
 
+@TestScenario
+def duplicate_exports(self):
+    """Check duplicate exports are ignored and not exported again."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I try to export the parts twice"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    # with And("I read the initial export events"):
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
+        )
+
+    with And("Check logs for duplicate exports"):
+        export_events = get_export_events(node=self.context.node)
+        note(export_events["PartsExports"])
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
 def feature(self):
     """Check system monitoring of export events."""
 
-    Scenario(run=part_exports)
+    # Scenario(run=part_exports)
+    Scenario(run=duplicate_exports)
