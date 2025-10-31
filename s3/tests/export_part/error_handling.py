@@ -63,12 +63,11 @@ def duplicate_exports(self):
             node=self.context.node,
         )
 
-    with Then("The source and destination tables should still be the same"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
         )
-        assert source_data == destination_data, error()
 
 
 @TestScenario

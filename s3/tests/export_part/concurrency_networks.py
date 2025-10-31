@@ -67,20 +67,17 @@ def packet_delay(self, delay_ms):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
 
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
-    
 
 @TestScenario
 def packet_loss(self, percent_loss):
     """Check that exports work correctly with packet loss."""
-    
+
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -102,14 +99,11 @@ def packet_loss(self, percent_loss):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -126,7 +120,11 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I apply packet loss using the GE model"):
-        network_packet_loss_gemodel(node=self.context.node, interruption_probability=interruption_probability, recovery_probability=recovery_probability)
+        network_packet_loss_gemodel(
+            node=self.context.node,
+            interruption_probability=interruption_probability,
+            recovery_probability=recovery_probability,
+        )
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
@@ -137,14 +135,11 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -161,7 +156,9 @@ def packet_corruption(self, percent_corrupt):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I apply packet corruption"):
-        network_packet_corruption(node=self.context.node, percent_corrupt=percent_corrupt)
+        network_packet_corruption(
+            node=self.context.node, percent_corrupt=percent_corrupt
+        )
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
@@ -172,14 +169,11 @@ def packet_corruption(self, percent_corrupt):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -196,7 +190,9 @@ def packet_duplication(self, percent_duplicated):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I apply packet duplication"):
-        network_packet_duplication(node=self.context.node, percent_duplicated=percent_duplicated)
+        network_packet_duplication(
+            node=self.context.node, percent_duplicated=percent_duplicated
+        )
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
@@ -207,14 +203,11 @@ def packet_duplication(self, percent_duplicated):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -231,7 +224,11 @@ def packet_reordering(self, delay_ms, percent_reordered):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I apply packet reordering"):
-        network_packet_reordering(node=self.context.node, delay_ms=delay_ms, percent_reordered=percent_reordered)
+        network_packet_reordering(
+            node=self.context.node,
+            delay_ms=delay_ms,
+            percent_reordered=percent_reordered,
+        )
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
@@ -242,14 +239,11 @@ def packet_reordering(self, delay_ms, percent_reordered):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestScenario
@@ -277,14 +271,11 @@ def packet_rate_limit(self, rate_mbit):
 
     for retry in retries(timeout=30, delay=1):
         with retry:
-            with Then("I read data from both tables"):
-                source_data = select_all_ordered(table_name="source", node=self.context.node)
-                destination_data = select_all_ordered(
-                    table_name=s3_table_name, node=self.context.node
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
                 )
-
-            with And("They should be the same"):
-                assert source_data == destination_data, error()
 
 
 @TestFeature
@@ -296,8 +287,10 @@ def feature(self):
     Scenario(test=basic_concurrent_export)(threads=5)
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
-    Scenario(test=packet_loss_gemodel)(interruption_probability=40, recovery_probability=70)
+    Scenario(test=packet_loss_gemodel)(
+        interruption_probability=40, recovery_probability=70
+    )
     Scenario(test=packet_corruption)(percent_corrupt=50)
-    Scenario(test=packet_duplication)(percent_duplicated=50) # How do I make this fail?
-    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90) # And this?
-    Scenario(test=packet_rate_limit)(rate_mbit=0.05) # Am I using this right lol
+    Scenario(test=packet_duplication)(percent_duplicated=50)  # How do I make this fail?
+    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)  # And this?
+    Scenario(test=packet_rate_limit)(rate_mbit=0.05)  # Am I using this right lol
