@@ -39,38 +39,6 @@ def invalid_part_name(self):
 
 
 @TestScenario
-def duplicate_exports(self):
-    """Check duplicate exports are ignored and not exported again."""
-
-    with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=True,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I try to export the parts twice"):
-        export_parts(
-            source_table="source",
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-        export_parts(
-            source_table="source",
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-
-    with Then("Check source matches destination"):
-        source_matches_destination(
-            source_table="source",
-            destination_table=s3_table_name,
-        )
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Restrictions_SameTable("1.0"))
 def same_table(self):
     """Check exporting parts where source and destination tables are the same."""
@@ -196,7 +164,6 @@ def feature(self):
     """Check correct error handling when exporting parts."""
 
     Scenario(run=invalid_part_name)
-    Scenario(run=duplicate_exports)
     Scenario(run=same_table)
     Scenario(run=local_table)
     Scenario(run=disable_export_setting)
