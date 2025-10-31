@@ -137,6 +137,7 @@ def local_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
 def disable_export_setting(self):
     """Check that exporting parts without the export setting set returns the correct error."""
 
@@ -163,7 +164,30 @@ def disable_export_setting(self):
         assert "Exporting merge tree part is experimental" in results[0].output, error()
 
 
-# TODO different partition key
+@TestScenario
+def different_partition_key(self):
+    """Check exporting parts with a different partition key returns the correct error."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="i",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I try to export the parts"):
+        results = export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+        )
+
+    with Then("I should see an error related to the different partition key"):
+        assert results[0].exitcode == 36, error()
+        assert "Tables have different partition key" in results[0].output, error()
 
 
 @TestFeature
@@ -177,3 +201,4 @@ def feature(self):
     Scenario(run=same_table)
     Scenario(run=local_table)
     Scenario(run=disable_export_setting)
+    Scenario(run=different_partition_key)
