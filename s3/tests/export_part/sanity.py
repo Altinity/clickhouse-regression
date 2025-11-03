@@ -203,6 +203,34 @@ def wide_and_compact_parts(self):
         )
 
 
+@TestScenario
+def large_export(self):
+    """Test exporting a large part."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            number_of_parts=100,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("sanity")
 def feature(self):
@@ -213,4 +241,6 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
+    if self.context.stress:
+        Scenario(run=large_export)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting
