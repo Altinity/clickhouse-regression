@@ -291,6 +291,6 @@ def feature(self):
         interruption_probability=40, recovery_probability=70
     )
     Scenario(test=packet_corruption)(percent_corrupt=50)
-    Scenario(test=packet_duplication)(percent_duplicated=50)  # How do I make this fail?
-    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)  # And this?
-    Scenario(test=packet_rate_limit)(rate_mbit=0.05)  # Am I using this right lol
+    Scenario(test=packet_duplication)(percent_duplicated=50)
+    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
