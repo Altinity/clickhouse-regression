@@ -6,6 +6,19 @@ from helpers.common import getuid
 from s3.requirements.export_part import *
 
 
+@TestStep(When)
+def insert_all_datatypes(self, table_name, rows=1, num_parts=1, node=None):
+    """Insert all datatypes into a MergeTree table."""
+
+    if node is None:
+        node = self.context.node
+
+    for part in range(num_parts):
+        node.query(
+                f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
+            )
+
+
 @TestStep(Given)
 def create_merge_tree_all_valid_partition_key_types(
     self, column_name, cluster=None, node=None, rows=1
@@ -27,9 +40,7 @@ def create_merge_tree_all_valid_partition_key_types(
         )
 
     with And("I insert compact and wide parts into the table"):
-        node.query(
-            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
-        )
+        insert_all_datatypes(table_name=table_name, rows=rows, num_parts=self.context.num_parts, node=node)
 
     return table_name
 
@@ -98,8 +109,10 @@ def valid_partition_key_types_wide(self):
     RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"),
     RQ_ClickHouse_ExportPart_PartTypes("1.0"),
 )
-def feature(self):
+def feature(self, num_parts=10):
     """Check that all data types are supported when exporting parts."""
+
+    self.context.num_parts = num_parts
 
     Scenario(run=valid_partition_key_types_compact)
     Scenario(run=valid_partition_key_types_wide)

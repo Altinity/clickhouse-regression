@@ -14,8 +14,8 @@ def minio(self, uri, bucket_prefix):
 
     # Feature(run=load("s3.tests.export_part.sanity", "feature"))
     # Feature(run=load("s3.tests.export_part.error_handling", "feature"))
-    Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
+    # Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
     # Feature(run=load("s3.tests.export_part.clusters_nodes", "feature"))
     # Feature(run=load("s3.tests.export_part.engines", "feature"))
-    # Feature(run=load("s3.tests.export_part.datatypes", "feature"))
+    Feature(run=load("s3.tests.export_part.datatypes", "feature"))
     # Feature(run=load("s3.tests.export_part.concurrency_networks", "feature"))
