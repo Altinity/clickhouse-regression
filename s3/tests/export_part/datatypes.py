@@ -7,7 +7,7 @@ from s3.requirements.export_part import *
 
 
 @TestStep(When)
-def insert_all_datatypes(self, table_name, rows=1, num_parts=1, node=None):
+def insert_all_datatypes(self, table_name, rows_per_part=1, num_parts=1, node=None):
     """Insert all datatypes into a MergeTree table."""
 
     if node is None:
@@ -15,13 +15,13 @@ def insert_all_datatypes(self, table_name, rows=1, num_parts=1, node=None):
 
     for part in range(num_parts):
         node.query(
-            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
+            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows_per_part})"
         )
 
 
 @TestStep(Given)
 def create_merge_tree_all_valid_partition_key_types(
-    self, column_name, cluster=None, node=None, rows=1
+    self, column_name, cluster=None, node=None, rows_per_part=1
 ):
     """Create a MergeTree table with all valid partition key types and both wide and compact parts."""
 
@@ -42,7 +42,7 @@ def create_merge_tree_all_valid_partition_key_types(
     with And("I insert compact and wide parts into the table"):
         insert_all_datatypes(
             table_name=table_name,
-            rows=rows,
+            rows_per_part=rows_per_part,
             num_parts=self.context.num_parts,
             node=node,
         )
@@ -51,7 +51,7 @@ def create_merge_tree_all_valid_partition_key_types(
 
 
 @TestCheck
-def valid_partition_key_table(self, partition_key_type, rows=1):
+def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
     """Check exporting to a source table with specified valid partition key type and rows."""
 
     with Given(
@@ -59,7 +59,7 @@ def valid_partition_key_table(self, partition_key_type, rows=1):
     ):
         table_name = create_merge_tree_all_valid_partition_key_types(
             column_name=partition_key_type,
-            rows=rows,
+            rows_per_part=rows_per_part,
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -96,7 +96,7 @@ def valid_partition_key_types_compact(self):
     """Check that all partition key data types are supported when exporting compact parts."""
 
     key_types = [datatype["name"] for datatype in valid_partition_key_types_columns()]
-    valid_partition_key_table(partition_key_type=either(*key_types), rows=1)
+    valid_partition_key_table(partition_key_type=either(*key_types), rows_per_part=1)
 
 
 @TestSketch(Scenario)
@@ -105,7 +105,7 @@ def valid_partition_key_types_wide(self):
     """Check that all partition key data types are supported when exporting wide parts."""
 
     key_types = [datatype["name"] for datatype in valid_partition_key_types_columns()]
-    valid_partition_key_table(partition_key_type=either(*key_types), rows=100)
+    valid_partition_key_table(partition_key_type=either(*key_types), rows_per_part=100)
 
 
 @TestFeature

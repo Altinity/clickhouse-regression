@@ -176,6 +176,15 @@ def get_export_events(self, node):
     return events
 
 
+@TestStep(When)
+def drop_column(self, node, table_name, column_name):
+    """Drop a column from a table."""
+
+    node.query(
+        f"ALTER TABLE {table_name} DROP COLUMN {column_name}", exitcode=0, steps=True
+    )
+
+
 @TestStep(Then)
 def source_matches_destination(
     self, source_table, destination_table, source_node=None, destination_node=None
