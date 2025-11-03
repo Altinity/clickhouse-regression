@@ -1,10 +1,14 @@
 from testflows.core import *
-
-
-# TODO large data export? which file should it go in?
+from s3.requirements.export_part import *
 
 
 @TestFeature
+@Specifications(
+    SRS_015_ClickHouse_Export_Part_to_S3,
+)
+@Requirements(
+    RQ_ClickHouse_ExportPart_S3("1.0"),
+)
 @Name("export parts")
 def minio(self, uri, bucket_prefix):
     """Run features from the export parts suite."""

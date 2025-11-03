@@ -15,8 +15,8 @@ def insert_all_datatypes(self, table_name, rows=1, num_parts=1, node=None):
 
     for part in range(num_parts):
         node.query(
-                f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
-            )
+            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows})"
+        )
 
 
 @TestStep(Given)
@@ -40,7 +40,12 @@ def create_merge_tree_all_valid_partition_key_types(
         )
 
     with And("I insert compact and wide parts into the table"):
-        insert_all_datatypes(table_name=table_name, rows=rows, num_parts=self.context.num_parts, node=node)
+        insert_all_datatypes(
+            table_name=table_name,
+            rows=rows,
+            num_parts=self.context.num_parts,
+            node=node,
+        )
 
     return table_name
 
