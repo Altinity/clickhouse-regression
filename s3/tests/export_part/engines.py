@@ -59,7 +59,6 @@ def table_combos(self):
         partitioned_aggregating_merge_tree_table,
         partitioned_graphite_merge_tree_table,
     ]
-    # TODO expand combos
     number_of_partitions = [5] if not self.context.stress else [1, 5, 10]
     number_of_parts = [1] if not self.context.stress else [1, 5, 10]
 
