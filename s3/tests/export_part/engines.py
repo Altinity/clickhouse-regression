@@ -60,13 +60,20 @@ def table_combos(self):
         partitioned_graphite_merge_tree_table,
     ]
     # TODO expand combos
-    number_of_partitions = [5]
-    number_of_parts = [1]
+    number_of_partitions = [5] if not self.context.stress else [5, 10, 20]
+    number_of_parts = [1] if not self.context.stress else [1, 2, 5]
 
-    configured_table(
-        table_engine=either(*tables),
-        number_of_partitions=either(*number_of_partitions),
-        number_of_parts=either(*number_of_parts),
+    table_engine = either(*tables)
+    number_of_partitions = either(*number_of_partitions)
+    number_of_parts = either(*number_of_parts)
+
+    Combination(
+        name=f"{table_engine.__name__} partitions={number_of_partitions} parts={number_of_parts}",
+        test=configured_table,
+    )(
+        table_engine=table_engine,
+        number_of_partitions=number_of_partitions,
+        number_of_parts=number_of_parts,
     )
 
 
