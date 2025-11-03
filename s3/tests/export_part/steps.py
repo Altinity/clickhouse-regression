@@ -99,7 +99,9 @@ def get_parts(self, table_name, node):
     """Get all parts for a table on a given node."""
 
     output = node.query(
-        f"SELECT name FROM system.parts WHERE table = '{table_name}'", exitcode=0
+        f"SELECT name FROM system.parts WHERE table = '{table_name}'",
+        exitcode=0,
+        steps=True,
     ).output
     return [row.strip() for row in output.splitlines()]
 
@@ -130,6 +132,7 @@ def export_parts(
                     f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
                     exitcode=exitcode,
                     no_checks=no_checks,
+                    steps=True,
                 )
             )
         elif explicit_set == 0:
@@ -139,6 +142,7 @@ def export_parts(
                     settings=[("allow_experimental_export_merge_tree_part", 1)],
                     exitcode=exitcode,
                     no_checks=no_checks,
+                    steps=True,
                 )
             )
         elif explicit_set == -1:
@@ -147,6 +151,7 @@ def export_parts(
                     f"SET allow_experimental_export_merge_tree_part = 0; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
                     exitcode=exitcode,
                     no_checks=no_checks,
+                    steps=True,
                 )
             )
 
@@ -160,6 +165,7 @@ def get_export_events(self, node):
     output = node.query(
         "SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
         exitcode=0,
+        steps=True,
     ).output
 
     events = {}
