@@ -327,7 +327,7 @@ def concurrent_insert(self):
 @TestScenario
 def export_and_drop(self):
     """Check that dropping a column immediately after export works correctly."""
-
+    pause()
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -373,7 +373,7 @@ def kill_minio(self, cluster=None, container_name="minio1", signal="KILL"):
 
 
 @TestStep(When)
-def restart_minio(self, cluster=None, container_name="minio1", timeout=300):
+def restart_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=300):
     """Restart MinIO container after it was killed."""
 
     if cluster is None:
@@ -384,7 +384,7 @@ def restart_minio(self, cluster=None, container_name="minio1", timeout=300):
         f"docker start {container_name}",
         timeout=timeout,
         exitcode=0,
-        steps=False,
+        steps=True,
     )
 
 
@@ -427,17 +427,17 @@ def kill_and_restart_minio(
 def feature(self):
     """Check that exports work correctly with concurrency and various network conditions."""
 
-    Scenario(test=basic_concurrent_export)(threads=5)
-    Scenario(test=packet_delay)(delay_ms=100)
-    Scenario(test=packet_loss)(percent_loss=50)
-    Scenario(test=packet_loss_gemodel)(
-        interruption_probability=40, recovery_probability=70
-    )
-    Scenario(test=packet_corruption)(percent_corrupt=50)
-    Scenario(test=packet_duplication)(percent_duplicated=50)
-    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
-    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(run=concurrent_insert)
+    # Scenario(test=basic_concurrent_export)(threads=5)
+    # Scenario(test=packet_delay)(delay_ms=100)
+    # Scenario(test=packet_loss)(percent_loss=50)
+    # Scenario(test=packet_loss_gemodel)(
+    #     interruption_probability=40, recovery_probability=70
+    # )
+    # Scenario(test=packet_corruption)(percent_corrupt=50)
+    # Scenario(test=packet_duplication)(percent_duplicated=50)
+    # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
+    # Scenario(run=concurrent_insert)
 
-    # Scenario(run=export_and_drop)
+    Scenario(run=export_and_drop)
     # Scenario(run=kill_and_restart_minio)

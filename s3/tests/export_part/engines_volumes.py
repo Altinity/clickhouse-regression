@@ -34,14 +34,11 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
             node=self.context.node,
         )
 
-    with And("I read data from both tables"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+    with Then("Source and destination tables should match"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
         )
-
-    with Then("They should be the same"):
-        assert source_data == destination_data, error()
 
 
 @TestSketch(Scenario)
@@ -76,9 +73,70 @@ def table_combos(self):
     )
 
 
+@TestCheck
+def configured_volume(self, volume):
+    """Test a specific combination of volume."""
+
+    with Given(f"I create an empty source table on volume {volume} and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            query_settings=f"storage_policy = '{volume}'",
+            populate=False,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I populate the source table with parts exceeding 2KB each"):
+        create_partitions_with_random_uint64(
+            table_name="source",
+            node=self.context.node,
+            number_of_values=500,
+        )
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Source and destination tables should match"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
+        )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def volume_combos(self):
+    """Test exporting to various storage policies."""
+
+    volumes = [
+        "jbod1",
+        "jbod2",
+        "jbod3",
+        "jbod4",
+        "external",
+        "external2",
+        "tiered_storage",
+    ]
+    volume = either(*volumes)
+
+    Combination(
+        name=f"volume={volume}",
+        test=configured_volume,
+    )(
+        volume=volume,
+    )
+
+
 @TestFeature
-@Name("engines")
+@Name("engines and volumes")
 def feature(self):
-    """Check exporting parts to S3 storage with different table engines."""
+    """Check exporting parts to S3 storage with different table engines and volumes."""
 
     Scenario(run=table_combos)
+    Scenario(run=volume_combos)
