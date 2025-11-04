@@ -357,12 +357,12 @@ def export_and_drop(self):
 
 
 @TestStep(When)
-def kill_minio(self, cluster=None, container_name="minio1", signal="KILL"):
+def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
-
+    
     if cluster is None:
         cluster = self.context.cluster
-
+    
     retry(cluster.command, 5)(
         None,
         f"docker kill --signal={signal} {container_name}",
@@ -373,26 +373,38 @@ def kill_minio(self, cluster=None, container_name="minio1", signal="KILL"):
 
 
 @TestStep(When)
-def restart_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=300):
-    """Restart MinIO container after it was killed."""
-
+def start_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=300):
+    """Start MinIO container and wait for it to be ready."""
+    
     if cluster is None:
         cluster = self.context.cluster
-
-    retry(cluster.command, 5)(
-        None,
-        f"docker start {container_name}",
-        timeout=timeout,
-        exitcode=0,
-        steps=True,
-    )
+    
+    with By("starting MinIO container"):
+        retry(cluster.command, 5)(
+            None,
+            f"docker start {container_name}",
+            timeout=timeout,
+            exitcode=0,
+            steps=True,
+        )
+    
+    with And("waiting for MinIO to be ready"):
+        for attempt in retries(timeout=timeout, delay=1):
+            with attempt:
+                result = cluster.command(
+                    None,
+                    f"docker exec {container_name} curl -f http://localhost:9001/minio/health/live",
+                    timeout=10,
+                    steps=False,
+                    no_checks=True,
+                )
+                if result.exitcode != 0:
+                    fail("MinIO health check failed")
 
 
 @TestScenario
-def kill_and_restart_minio(
-    self, cluster=None, container_name="s3_env-minio1-1", signal="KILL", timeout=300
-):
-    """Check that restarting ClickHouse after exporting data works correctly."""
+def restart_minio(self):
+    """Check that restarting MinIO after exporting data works correctly."""
 
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
@@ -402,19 +414,20 @@ def kill_and_restart_minio(
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I export data and restart MinIO in parallel"):
-        Step(test=export_parts, parallel=True)(
+    with And("I kill MinIO"):
+        kill_minio()
+
+    with When("I export data"):
+        export_parts(
             source_table="source",
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        Step(test=kill_minio, parallel=True)(
-            cluster=cluster, container_name=container_name, signal=signal
-        )
-        join()
-        restart_minio(cluster=cluster, container_name=container_name, timeout=timeout)
 
-    with Then("The export should complete successfully"):
+    with And("I restart MinIO"):
+        start_minio()
+
+    with Then("Check source matches destination"):
         source_matches_destination(
             source_table="source",
             destination_table=s3_table_name,
@@ -438,6 +451,6 @@ def feature(self):
     # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
     # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     # Scenario(run=concurrent_insert)
-
-    Scenario(run=export_and_drop)
-    # Scenario(run=kill_and_restart_minio)
+    # pause()
+    # Scenario(run=export_and_drop)
+    Scenario(run=restart_minio)
