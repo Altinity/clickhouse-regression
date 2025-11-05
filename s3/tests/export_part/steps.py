@@ -1,11 +1,13 @@
+import json
+
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path
-import json
 
+default_settings = [("allow_experimental_export_merge_tree_part", 1)]
 
 def default_columns(simple=True, partition_key_type="UInt8"):
     columns = [
@@ -114,46 +116,31 @@ def export_parts(
     node,
     parts=None,
     exitcode=0,
-    explicit_set=1,
+    settings=None,
+    inline_settings=True
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
         parts = get_parts(table_name=source_table, node=node)
 
+    if inline_settings is True:
+        inline_settings = default_settings
+    
     no_checks = exitcode != 0
-
     output = []
-
+ 
     for part in parts:
-        if explicit_set == 1:
-            output.append(
-                node.query(
-                    f"SET allow_experimental_export_merge_tree_part = 1; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                    exitcode=exitcode,
-                    no_checks=no_checks,
-                    steps=True,
-                )
+        output.append(
+            node.query(
+                f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                exitcode=exitcode,
+                no_checks=no_checks,
+                steps=True,
+                settings=settings,
+                inline_settings=inline_settings,
             )
-        elif explicit_set == 0:
-            output.append(
-                node.query(
-                    f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                    settings=[("allow_experimental_export_merge_tree_part", 1)],
-                    exitcode=exitcode,
-                    no_checks=no_checks,
-                    steps=True,
-                )
-            )
-        elif explicit_set == -1:
-            output.append(
-                node.query(
-                    f"SET allow_experimental_export_merge_tree_part = 0; ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                    exitcode=exitcode,
-                    no_checks=no_checks,
-                    steps=True,
-                )
-            )
+        )
 
     return output
 
