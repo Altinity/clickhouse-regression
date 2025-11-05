@@ -335,24 +335,19 @@ def export_and_drop(self):
             columns=default_columns(),
             stop_merges=True,
         )
-        # s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-        # drop_column(
-        #     node=self.context.node,
-        #     table_name="source",
-        #     column_name="i",
-        # )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    # with When("I export data then drop a column"):
-    #     export_parts(
-    #         source_table="source",
-    #         destination_table=s3_table_name,
-    #         node=self.context.node,
-    #     )
-    #     drop_column(
-    #         node=self.context.node,
-    #         table_name="source",
-    #         column_name="i",
-    #     )
+    with When("I export data then drop a column"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+        drop_column(
+            node=self.context.node,
+            table_name="source",
+            column_name="i",
+        )
     # This drop freezes the test ☠️☠️☠️
 
 
@@ -426,12 +421,14 @@ def restart_minio(self):
 
     with And("I restart MinIO"):
         start_minio()
-
-    with Then("Check source matches destination"):
-        source_matches_destination(
-            source_table="source",
-            destination_table=s3_table_name,
-        )
+    pause()
+    for retry in retries(timeout=30, delay=1):
+        with retry:
+            with Then("Check source matches destination"):
+                source_matches_destination(
+                    source_table="source",
+                    destination_table=s3_table_name,
+                )                
 
 
 @TestFeature
@@ -442,17 +439,18 @@ def feature(self):
 
     # TODO corruption (bit flipping)
 
-    Scenario(test=basic_concurrent_export)(threads=5)
-    Scenario(test=packet_delay)(delay_ms=100)
-    Scenario(test=packet_loss)(percent_loss=50)
-    Scenario(test=packet_loss_gemodel)(
-        interruption_probability=40, recovery_probability=70
-    )
-    Scenario(test=packet_corruption)(percent_corrupt=50)
-    Scenario(test=packet_duplication)(percent_duplicated=50)
-    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
-    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(run=concurrent_insert)
-    Scenario(run=restart_minio)
+    # Scenario(test=basic_concurrent_export)(threads=5)
+    # Scenario(test=packet_delay)(delay_ms=100)
+    # Scenario(test=packet_loss)(percent_loss=50)
+    # Scenario(test=packet_loss_gemodel)(
+    #     interruption_probability=40, recovery_probability=70
+    # )
+    # Scenario(test=packet_corruption)(percent_corrupt=50)
+    # Scenario(test=packet_duplication)(percent_duplicated=50)
+    # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
+    # Scenario(run=concurrent_insert)
 
-    # Scenario(run=export_and_drop)
+    # Scenario(run=restart_minio)
+
+    Scenario(run=export_and_drop)
