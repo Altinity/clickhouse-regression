@@ -613,6 +613,9 @@ def minio_regression(
         Feature(test=load("s3.tests.export_part.feature", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
+        Feature(test=load("s3.tests.export_partition.feature", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
 
 
 @TestFeature
