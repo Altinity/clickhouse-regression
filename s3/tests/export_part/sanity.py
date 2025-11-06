@@ -94,7 +94,6 @@ def mismatched_columns(self):
 
 @TestScenario
 @Requirements(
-    RQ_ClickHouse_ExportPart_S3("1.0"),
     RQ_ClickHouse_ExportPart_SQLCommand("1.0"),
 )
 def basic_table(self):

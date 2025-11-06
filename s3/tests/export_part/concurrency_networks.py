@@ -405,6 +405,7 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
             partition_by="p",
             columns=default_columns(),
             number_of_values=number_of_values,
+            stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -449,6 +450,7 @@ def clickhouse_network_interruption(self, safe=False):
             table_name="source",
             partition_by="p",
             columns=default_columns(),
+            stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 

@@ -4,20 +4,9 @@ from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 
 
-# TODO
-# part_log is where to look
-# overwrite file
-# max bandwidth
-# some of system.events stuff wont appear unless i set this maybe? just a guess
-# system.events
-# Export row in system.metrics??
-# partsexports incrementing correctly
-# duplicates incrementing correctly
-
-
 @TestScenario
-def part_exports(self):
-    """Check part exports are properly tracked in system.part_log."""
+def part_logging(self):
+    """Check part exports are logged correctly in both system.events and system.part_log."""
 
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
@@ -29,10 +18,10 @@ def part_exports(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I read the initial logged number of part exports"):
-        initial_exports = get_export_events(
-            node=self.context.node
-        )  # .get("PartsExports", 0)
-        note(f"Initial exports: {initial_exports}")
+        initial_events = get_export_events(node=self.context.node)
+        initial_part_log = get_part_log(node=self.context.node)
+        note(f"Initial events: {initial_events}")
+        note(f"Initial part log: {initial_part_log}")
 
     # with When("I export parts to the S3 table"):
     #     export_parts(
@@ -54,8 +43,8 @@ def part_exports(self):
 
 
 @TestScenario
-def duplicate_exports(self):
-    """Check duplicate exports are ignored and not exported again."""
+def duplicate_logging(self):
+    """Check duplicate exports are logged correctly in system.events."""
 
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
@@ -65,6 +54,9 @@ def duplicate_exports(self):
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I read the initial export events"):
+        initial_events = get_export_events(node=self.context.node)
 
     with When("I try to export the parts twice"):
         export_parts(
@@ -78,17 +70,19 @@ def duplicate_exports(self):
             node=self.context.node,
         )
 
-    # with And("I read the initial export events"):
-
     with Then("Check source matches destination"):
         source_matches_destination(
             source_table="source",
             destination_table=s3_table_name,
         )
 
-    with And("Check logs for duplicate exports"):
-        export_events = get_export_events(node=self.context.node)
-        note(export_events["PartsExports"])
+    with And("Check logs for correct number of duplicate exports"):
+        final_events = get_export_events(node=self.context.node)
+        assert (
+            final_events["PartsExportDuplicated"]
+            - initial_events["PartsExportDuplicated"]
+            == 5
+        ), error()
 
 
 @TestFeature
@@ -97,5 +91,15 @@ def duplicate_exports(self):
 def feature(self):
     """Check system monitoring of export events."""
 
-    # Scenario(run=part_exports)
-    Scenario(run=duplicate_exports)
+    # TODO
+    # part_log is where to look
+    # overwrite file
+    # max bandwidth
+    # some of system.events stuff wont appear unless i set this maybe? just a guess
+    # system.events
+    # Export row in system.metrics??
+    # partsexports incrementing correctly
+    # duplicates incrementing correctly
+
+    Scenario(run=part_logging)
+    # Scenario(run=duplicate_logging)
