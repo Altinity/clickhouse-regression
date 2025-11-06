@@ -570,16 +570,18 @@ def create_partitioned_table_with_compact_and_wide_parts(
     min_rows_for_wide_part=10,
     min_bytes_for_wide_part=100,
     engine="MergeTree",
-    columns=[
-        Column(name="p", datatype=UInt8()),
-        Column(name="i", datatype=UInt64()),
-    ],
+    columns=None,
     partition_by="p",
     cluster=None,
     stop_merges=False,
 ):
     """Create a partitioned table that has specific settings in order
     to get both wide and compact parts."""
+    if columns is None:
+        columns = [
+            Column(name="p", datatype=UInt8()),
+            Column(name="i", datatype=UInt64()),
+        ]
     create_table(
         name=table_name,
         engine=engine,
