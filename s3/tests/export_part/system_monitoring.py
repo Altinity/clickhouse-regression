@@ -89,13 +89,5 @@ def duplicate_logging(self):
 def feature(self):
     """Check system monitoring of export events."""
 
-    # TODO
-    # part_log is where to look
-    # overwrite file
-    # max bandwidth
-    # some of system.events stuff wont appear unless i set this maybe? just a guess
-    # system.events
-    # Export row in system.metrics??
-
     Scenario(run=part_logging)
     Scenario(run=duplicate_logging)
