@@ -2,6 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
+from s3.tests.common import s3_storage
 from helpers.queries import *
 from helpers.common import getuid
 from testflows.combinatorics import product
@@ -61,7 +62,7 @@ def table_combos(self):
     combinations = product(tables, number_of_partitions, number_of_parts)
 
     with Pool(16) as executor:
-        for (table_engine, number_of_partitions, number_of_parts) in combinations:
+        for table_engine, number_of_partitions, number_of_parts in combinations:
             Combination(
                 name=f"{table_engine.__name__} partitions={number_of_partitions} parts={number_of_parts}",
                 test=configured_table,
@@ -147,6 +148,9 @@ def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
 
     # TODO replicated merge tree tables (all types)
+
+    with Given("I set up MinIO storage configuration"):
+        minio_storage_configuration(restart=True)
 
     Scenario(run=table_combos)
     Scenario(run=volume_combos)
