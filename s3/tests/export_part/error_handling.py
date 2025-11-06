@@ -6,6 +6,7 @@ from s3.requirements.export_part import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_SourcePart("1.0"))
 def invalid_part_name(self):
     """Check that exporting a non-existent part returns the correct error."""
 
@@ -67,6 +68,7 @@ def same_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_LocalTable("1.0"))
 def local_table(self):
     """Test exporting parts to a local table."""
 
@@ -132,6 +134,7 @@ def disable_export_setting(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_PartitionKey("1.0"))
 def different_partition_key(self):
     """Check exporting parts with a different partition key returns the correct error."""
 
