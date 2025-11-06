@@ -9,7 +9,7 @@ from s3.requirements.export_part import *
 @Requirements(
     RQ_ClickHouse_ExportPart_S3("1.0"),
 )
-@Name("export parts")
+@Name("export part")
 def minio(self, uri, bucket_prefix):
     """Run features from the export parts suite."""
 
