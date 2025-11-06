@@ -122,8 +122,13 @@ class UInt32(UInt):
 
 
 class UInt64(UInt):
+    def __init__(self, max=18446744073709551615):
+        super().__init__("UInt64", max=max)
+
+
+class UInt64_63(UInt64):
     def __init__(self):
-        super().__init__("UInt64", max=18446744073709551615)
+        super().__init__("UInt64", max=2**63 - 1)
 
 
 class UInt128(UInt):
@@ -222,10 +227,13 @@ class Decimal32(Decimal):
 
 class Decimal64(Decimal):
     def __init__(self, scale):
-        if scale == 18:
-            limit = "0." + "9" * (scale - 1)
+        precision = 18
+        int_digits = precision - scale
+        if scale == precision:
+            limit = "0." + "9" * (scale - 2)
         else:
-            limit = "9" * (18 - scale) + "." + "9" * scale
+            # safe boundary: one extra unit inside range
+            limit = "9" * (int_digits - 1) + "8" + "." + "9" * scale
         super().__init__(f"Decimal64({scale})", max=limit, min="-" + limit, scale=scale)
 
 
@@ -405,10 +413,10 @@ class FixedString(String):
         super().__init__(f"FixedString({length})", max=max)
 
     def max_value(self):
-        return f"to{self.name[:-4]}({self.max},{self.length})"
+        return f"toFixedString({self.max},{self.length})"
 
     def min_value(self):
-        return f"to{self.name[:-4]}({self.min},{self.length})"
+        return f"toFixedString({self.min},{self.length})"
 
     def rand_value(self, random=None):
         if random is None:
@@ -454,6 +462,55 @@ class UUID(DataType):
 
     def zero_or_null_value(self):
         return self.min
+
+
+class Enum(DataType):
+    def __init__(self, name, values):
+        """
+        Initialize Enum datatype.
+
+        :param name: The enum name (e.g., 'Enum8', 'Enum16')
+        :param values: List of tuples (string_value, numeric_value) or dict
+        """
+        self.enum_values = values
+        if isinstance(values, dict):
+            self.enum_values = list(values.items())
+
+        enum_def = ",".join([f"'{k}' = {v}" for k, v in self.enum_values])
+        self.enum_definition = f"{name}({enum_def})"
+
+        super().__init__(
+            self.enum_definition,
+            supports_low_cardinality=True,
+            is_valid_map_key=True,
+            is_numeric=False,
+            max=f"'{self.enum_values[0][0]}'",
+            min=f"'{self.enum_values[-1][0]}'",
+        )
+
+    def rand_value(self, random=None):
+        if random is None:
+            random = default_random
+        return f"'{random.choice(self.enum_values)[0]}'"
+
+    def max_value(self):
+        return f"'{self.enum_values[0][0]}'"
+
+    def min_value(self):
+        return f"'{self.enum_values[-1][0]}'"
+
+    def zero_or_null_value(self):
+        return f"'{self.enum_values[0][0]}'"
+
+
+class Enum8(Enum):
+    def __init__(self, values):
+        super().__init__("Enum8", values)
+
+
+class Enum16(Enum):
+    def __init__(self, values):
+        super().__init__("Enum16", values)
 
 
 # Modifiers

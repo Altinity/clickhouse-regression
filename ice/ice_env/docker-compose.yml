@@ -34,7 +34,7 @@ services:
       - CATALOG_S3_ENDPOINT=http://minio:9000
   
   ice:
-    image: altinity/ice:debug-0.7.0
+    image: altinity/ice:debug-0.9.0
     container_name: ice
     entrypoint: ["/bin/sh","-c","echo -e '#!/bin/sh\\nexec /bin/sh \"$$@\"' > /bin/bash && chmod +x /bin/bash && while :; do sleep 3600; done"] # fake bash
     environment:
@@ -54,7 +54,7 @@ services:
         target: /root/.ice.yaml
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:latest
+    image: altinity/ice-rest-catalog:debug-0.9.0
     restart: unless-stopped
     ports:
       - '5000:5000'
@@ -89,6 +89,8 @@ services:
     extends:
       file: minio-service.yml
       service: minio
+    volumes:
+      - parquet-files:/parquet-files
   mc:
     extends:
       file: minio-client.yml
@@ -139,7 +141,7 @@ services:
         condition: service_healthy
 
   keeper:
-    image: altinity/clickhouse-keeper:25.6.5.20420.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.9.20207.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:

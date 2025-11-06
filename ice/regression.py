@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import sys
 from testflows.core import *
 
@@ -12,6 +13,7 @@ from helpers.argparser import (
     CaptureMinioArgs,
 )
 from helpers.common import check_clickhouse_version, check_if_not_antalya_build
+from parquet.tests.common import start_minio
 
 
 xfails = {}
@@ -47,6 +49,11 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
+    # Set up parquet module context variables
+    self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
+    self.context.json_files = "/json_files"
+    self.context.parquet_output_path = "/parquet-files"
+
     if stress is not None:
         self.context.stress = stress
 
@@ -70,6 +77,14 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
+
+    with Given("I set up MinIO S3 client"):
+        self.context.storage = "minio"
+        start_minio(
+            access_key=minio_root_user,
+            secret_key=minio_root_password,
+            uri="localhost:9002",
+        )
 
     Feature(
         test=load("ice.tests.feature", "feature"),
