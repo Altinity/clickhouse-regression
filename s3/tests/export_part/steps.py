@@ -5,7 +5,63 @@ from testflows.asserts import error
 from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
-from s3.tests.common import temporary_bucket_path
+from s3.tests.common import temporary_bucket_path, s3_storage
+
+
+@TestStep(Given)
+def minio_storage_configuration(self, restart=True):
+    """Create storage configuration with jbod disks, MinIO S3 disk, and tiered storage policy."""
+    with Given(
+        "I configure storage with jbod disks, MinIO S3 disk, and tiered storage"
+    ):
+        disks = {
+            "jbod1": {"path": "/jbod1/"},
+            "jbod2": {"path": "/jbod2/"},
+            "jbod3": {"path": "/jbod3/"},
+            "jbod4": {"path": "/jbod4/"},
+            "external": {"path": "/external/"},
+            "external2": {"path": "/external2/"},
+            "minio": {
+                "type": "s3",
+                "endpoint": "http://minio1:9001/root/data/",
+                "access_key_id": "minio_user",
+                "secret_access_key": "minio123",
+            },
+            "s3_cache": {
+                "type": "cache",
+                "disk": "minio",
+                "path": "minio_cache/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+            },
+        }
+
+        policies = {
+            "jbod1": {"volumes": {"main": {"disk": "jbod1"}}},
+            "jbod2": {"volumes": {"main": {"disk": "jbod2"}}},
+            "jbod3": {"volumes": {"main": {"disk": "jbod3"}}},
+            "jbod4": {"volumes": {"main": {"disk": "jbod4"}}},
+            "external": {"volumes": {"main": {"disk": "external"}}},
+            "external2": {"volumes": {"main": {"disk": "external2"}}},
+            "tiered_storage": {
+                "volumes": {
+                    "hot": [
+                        {"disk": "jbod1"},
+                        {"disk": "jbod2"},
+                        {"max_data_part_size_bytes": "2048"},
+                    ],
+                    "cold": [
+                        {"disk": "external"},
+                        {"disk": "external2"},
+                    ],
+                },
+                "move_factor": "0.7",
+            },
+            "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
+            "minio_external_nocache": {"volumes": {"external": {"disk": "minio"}}},
+        }
+
+        s3_storage(disks=disks, policies=policies, restart=restart)
 
 
 def default_columns(simple=True, partition_key_type="UInt8"):
