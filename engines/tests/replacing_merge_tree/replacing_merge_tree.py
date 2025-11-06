@@ -533,7 +533,7 @@ def incorrect_data_insert_with_disabled_optimize_on_insert(self, node=None):
         ):
             node.query(f"SELECT * FROM {name} FORMAT JSONEachRow;")
 
-            with And("I optimize table"):
+            with By("optimizing a table"):
                 node.query(
                     f"OPTIMIZE TABLE {name} FINAL;",
                     message="DB::Exception:",
