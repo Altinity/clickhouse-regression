@@ -230,17 +230,12 @@ def get_part_log(self, node):
     """Get the part log from the system.part_log table of a given node."""
 
     output = node.query(
-        "SELECT name, value FROM system.part_log WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
+        "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart'",
         exitcode=0,
         steps=True,
-    ).output
+    ).output.splitlines()
 
-    events = {}
-    for line in output.strip().splitlines():
-        event = json.loads(line)
-        events[event["name"]] = int(event["value"])
-
-    return events
+    return output
 
 
 @TestStep(Then)

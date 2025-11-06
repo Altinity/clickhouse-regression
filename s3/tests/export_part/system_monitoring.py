@@ -17,29 +17,27 @@ def part_logging(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I read the initial logged number of part exports"):
+    with And("I read the initial logged export events"):
         initial_events = get_export_events(node=self.context.node)
-        initial_part_log = get_part_log(node=self.context.node)
-        note(f"Initial events: {initial_events}")
-        note(f"Initial part log: {initial_part_log}")
 
-    # with When("I export parts to the S3 table"):
-    #     export_parts(
-    #         source_table="source",
-    #         destination_table=s3_table_name,
-    #         node=self.context.node,
-    #     )
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
 
-    # with And("I read the final logged number of part exports"):
-    #     final_exports = get_export_events(node=self.context.node).get("PartsExports", 0)
+    with And("I read the final logged export events and part log"):
+        final_events = get_export_events(node=self.context.node)
+        part_log = get_part_log(node=self.context.node)
 
-    # with Then("I check that the number of part exports is correct"):
-
-    #     with By("Reading the number of parts for the source table"):
-    #         num_parts = len(get_parts(table_name="source", node=self.context.node))
-
-    #     with And("Checking that the before and after difference is correct"):
-    #         assert final_exports - initial_exports == num_parts, error()
+    with Then("I check that the number of part exports is correct"):
+        assert final_events["PartsExports"] - initial_events["PartsExports"] == 5, error()
+    
+    with And("I check that the part log contains the correct parts"):
+        parts = get_parts(table_name="source", node=self.context.node)
+        for part in parts:
+            assert part in part_log, error()
 
 
 @TestScenario
@@ -98,8 +96,6 @@ def feature(self):
     # some of system.events stuff wont appear unless i set this maybe? just a guess
     # system.events
     # Export row in system.metrics??
-    # partsexports incrementing correctly
-    # duplicates incrementing correctly
 
     Scenario(run=part_logging)
-    # Scenario(run=duplicate_logging)
+    Scenario(run=duplicate_logging)
