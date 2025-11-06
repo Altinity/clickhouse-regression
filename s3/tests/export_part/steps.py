@@ -7,7 +7,6 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path
 
-default_settings = [("allow_experimental_export_merge_tree_part", 1)]
 
 def default_columns(simple=True, partition_key_type="UInt8"):
     columns = [
@@ -125,7 +124,7 @@ def export_parts(
         parts = get_parts(table_name=source_table, node=node)
 
     if inline_settings is True:
-        inline_settings = default_settings
+        inline_settings = self.context.default_settings
     
     no_checks = exitcode != 0
     output = []

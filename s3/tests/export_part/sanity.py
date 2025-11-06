@@ -29,7 +29,7 @@ def export_setting(self):
             source_table="source",
             destination_table=s3_table_name1,
             node=self.context.node,
-            explicit_set=1,
+            inline_settings=True,
         )
 
     with And("I export parts to the second S3 table using the settings argument"):
@@ -37,7 +37,8 @@ def export_setting(self):
             source_table="source",
             destination_table=s3_table_name2,
             node=self.context.node,
-            explicit_set=0,
+            inline_settings=False,
+            settings=self.context.default_settings,
         )
 
     with And("I read data from all tables"):
@@ -243,7 +244,7 @@ def export_and_drop(self):
 
 
 @TestScenario
-def large_export(self):
+def large_part(self):
     """Test exporting a large part."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -252,7 +253,9 @@ def large_export(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            number_of_parts=100,
+            number_of_values=100000000,
+            number_of_parts=1,
+            number_of_partitions=1,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -282,5 +285,5 @@ def feature(self):
     Scenario(run=wide_and_compact_parts)
     Scenario(run=export_and_drop)
     if self.context.stress:
-        Scenario(run=large_export)
+        Scenario(run=large_part)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

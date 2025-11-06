@@ -408,6 +408,7 @@ def partitioned_merge_tree_table(
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
+    number_of_values=3,
     query_settings=None,
 ):
     """Create a MergeTree table partitioned by a specific column."""
@@ -427,6 +428,7 @@ def partitioned_merge_tree_table(
                 table_name=table_name,
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
+                number_of_values=number_of_values,
             )
 
 

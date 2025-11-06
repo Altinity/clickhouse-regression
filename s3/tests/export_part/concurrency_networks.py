@@ -475,17 +475,17 @@ def feature(self):
 
     # TODO corruption (bit flipping)
 
-    # Scenario(test=basic_concurrent_export)(threads=5)
-    # Scenario(test=packet_delay)(delay_ms=100)
-    # Scenario(test=packet_loss)(percent_loss=50)
-    # Scenario(test=packet_loss_gemodel)(
-    #     interruption_probability=40, recovery_probability=70
-    # )
-    # Scenario(test=packet_corruption)(percent_corrupt=50)
-    # Scenario(test=packet_duplication)(percent_duplicated=50)
-    # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
-    # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    # Scenario(run=concurrent_insert)
+    Scenario(test=basic_concurrent_export)(threads=5)
+    Scenario(test=packet_delay)(delay_ms=100)
+    Scenario(test=packet_loss)(percent_loss=50)
+    Scenario(test=packet_loss_gemodel)(
+        interruption_probability=40, recovery_probability=70
+    )
+    Scenario(test=packet_corruption)(percent_corrupt=50)
+    Scenario(test=packet_duplication)(percent_duplicated=50)
+    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
+    Scenario(run=concurrent_insert)
     Scenario(test=minio_network_interruption)(signal="TERM")
     Scenario(test=minio_network_interruption)(signal="KILL")
     Scenario(test=clickhouse_network_interruption)(safe=True)
