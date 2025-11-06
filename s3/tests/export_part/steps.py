@@ -116,7 +116,7 @@ def export_parts(
     parts=None,
     exitcode=0,
     settings=None,
-    inline_settings=True
+    inline_settings=True,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
@@ -125,10 +125,10 @@ def export_parts(
 
     if inline_settings is True:
         inline_settings = self.context.default_settings
-    
+
     no_checks = exitcode != 0
     output = []
- 
+
     for part in parts:
         output.append(
             node.query(
