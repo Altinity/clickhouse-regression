@@ -130,7 +130,7 @@ def volume_combos(self):
     combinations = product(volumes)
 
     with Pool(16) as executor:
-        for volume, in combinations:
+        for (volume,) in combinations:
             Combination(
                 name=f"volume={volume}",
                 test=configured_volume,
