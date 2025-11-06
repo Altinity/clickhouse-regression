@@ -123,7 +123,7 @@ def disable_export_setting(self):
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
-            explicit_set=-1,
+            inline_settings=[("allow_experimental_export_merge_tree_part", 0)],
         )
 
     with Then("I should see an error related to the export setting"):
