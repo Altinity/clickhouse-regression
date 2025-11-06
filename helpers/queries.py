@@ -148,3 +148,12 @@ def get_column_string(self, node: ClickHouseNode, table_name: str, timeout=30) -
         timeout=timeout,
     )
     return ",".join([l.strip() for l in r.output.splitlines()])
+
+
+@TestStep(When)
+def drop_column(self, node, table_name, column_name):
+    """Drop a column from a table."""
+
+    node.query(
+        f"ALTER TABLE {table_name} DROP COLUMN {column_name}", exitcode=0, steps=True
+    )
