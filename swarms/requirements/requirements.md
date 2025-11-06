@@ -67,16 +67,21 @@
             * 2.11.3.3 [RQ.SRS-044.Swarm.Joins.Any](#rqsrs-044swarmjoinsany)
             * 2.11.3.4 [RQ.SRS-044.Swarm.Joins.Asof](#rqsrs-044swarmjoinsasof)
             * 2.11.3.5 [RQ.SRS-044.Swarm.Joins.Paste](#rqsrs-044swarmjoinspaste)
-        * 2.11.4 [Join Settings](#join-settings)
-            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
-            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
-            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
-            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
-            * 2.11.4.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
-            * 2.11.4.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
-            * 2.11.4.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
-            * 2.11.4.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
-
+        * 2.11.4 [Swarm Join Settings](#swarm-join-settings)
+            * 2.11.4.1 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_mode)
+            * 2.11.4.2 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modeallow)
+            * 2.11.4.3 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modelocal)
+            * 2.11.4.4 [RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global](#rqsrs-044swarmjoinsswarmsettingsobject_storage_cluster_join_modeglobal)
+        * 2.11.5 [General Join Settings](#general-join-settings)
+            * 2.11.5.1 [RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness](#rqsrs-044swarmjoinssettingsdefaultstrictness)
+            * 2.11.5.2 [RQ.SRS-044.Swarm.Joins.Settings.AnyJoinDistinct](#rqsrs-044swarmjoinssettingsanyjoindistinct)
+            * 2.11.5.3 [RQ.SRS-044.Swarm.Joins.Settings.CrossToInnerRewrite](#rqsrs-044swarmjoinssettingscrosstoinnerrewrite)
+            * 2.11.5.4 [RQ.SRS-044.Swarm.Joins.Settings.Algorithm](#rqsrs-044swarmjoinssettingsalgorithm)
+            * 2.11.5.5 [RQ.SRS-044.Swarm.Joins.Settings.AnyTakeLastRow](#rqsrs-044swarmjoinssettingsanytakelastrow)
+            * 2.11.5.6 [RQ.SRS-044.Swarm.Joins.Settings.UseNulls](#rqsrs-044swarmjoinssettingsusenulls)
+            * 2.11.5.7 [RQ.SRS-044.Swarm.Joins.Settings.PartialMergeRows](#rqsrs-044swarmjoinssettingspartialmergerows)
+            * 2.11.5.8 [RQ.SRS-044.Swarm.Joins.Settings.OnDiskMaxFiles](#rqsrs-044swarmjoinssettingsondiskmaxfiles)
+            
 
 ## Introduction
 
@@ -332,6 +337,8 @@ Swarm nodes SHALL not cache the parquet metadata if node has no enough space to 
 
 ### Settings
 
+This section describes swarm-specific settings that control swarm cluster behavior.
+
 #### RQ.SRS-044.Swarm.Settings.object_storage_max_nodes
 version: 1.0  
 
@@ -443,7 +450,59 @@ version: 1.0
 
 [ClickHouse] SHALL support paste joins for swarm queries. Paste joins SHALL perform a horizontal concatenation of two tables.
 
-#### Join Settings
+#### Swarm Join Settings
+
+This section describes swarm-specific settings that control JOIN behavior when using object storage cluster functions. 
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode
+version: 1.0  
+
+[ClickHouse] SHALL support the `object_storage_cluster_join_mode` setting that controls the behavior of JOIN operations when using object storage cluster functions (such as `s3Cluster`) or iceberg tables.
+
+The setting SHALL ONLY apply when:
+- The query contains a JOIN operation
+- The FROM clause uses an object storage cluster function or table on the left side of the JOIN
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Allow
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='allow'` as the default mode.
+
+When this mode is enabled:
+- The entire query SHALL be sent to swarm nodes as-is
+- JOIN operations SHALL be executed on the remote swarm nodes
+- This SHALL preserve the behavior prior to the introduction of this setting
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Local
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='local'` mode.
+
+When this mode is enabled:
+- Only the left part of the JOIN SHALL be sent to swarm nodes
+- Swarm nodes SHALL execute the left part and return results to the initiator
+- The initiator node SHALL collect responses from swarm nodes
+- The initiator node SHALL execute the JOIN operation locally with the right table
+
+
+##### RQ.SRS-044.Swarm.Joins.SwarmSettings.object_storage_cluster_join_mode.Global
+version: 1.0  
+
+[ClickHouse] SHALL support `object_storage_cluster_join_mode='global'` mode.
+
+When this mode is implemented, it SHALL:
+- Execute the right part of the JOIN on the initiator node
+- Send the result of the right part along with the query to swarm nodes
+- Execute the JOIN operation with the left part on swarm nodes
+
+Note: This mode is NOT currently implemented and SHALL return an appropriate error or warning if used.
+
+#### General Join Settings
+
+This section describes general ClickHouse join settings that SHALL also work with swarm queries. 
+These are standard ClickHouse settings, not swarm-specific settings.
 
 ##### RQ.SRS-044.Swarm.Joins.Settings.DefaultStrictness
 version: 1.0  

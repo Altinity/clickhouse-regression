@@ -1,5 +1,12 @@
 from testflows.core import *
 
+import pyarrow as pa
+import numpy as np
+import iceberg.tests.steps.catalog as catalog_steps
+
+from datetime import datetime, timedelta, timezone, time, date
+from decimal import Decimal
+
 from helpers.common import (
     getuid,
     add_config,
@@ -8,8 +15,29 @@ from helpers.common import (
     create_xml_config_content_with_duplicate_tags,
 )
 
-import pyarrow as pa
-import iceberg.tests.steps.catalog as catalog_steps
+from pyiceberg.schema import Schema, NestedField
+from pyiceberg.types import (
+    BinaryType,
+    BooleanType,
+    DateType,
+    DecimalType,
+    DoubleType,
+    FixedType,
+    FloatType,
+    IntegerType,
+    ListType,
+    LongType,
+    MapType,
+    StringType,
+    StructType,
+    TimestampType,
+    TimestamptzType,
+    TimeType,
+    UUIDType,
+)
+from pyiceberg.partitioning import PartitionSpec, PartitionField
+from pyiceberg.table.sorting import SortOrder, SortField
+from pyiceberg.transforms import IdentityTransform, HourTransform, BucketTransform
 
 
 def create_swarm_cluster_entry(
@@ -23,7 +51,7 @@ def create_swarm_cluster_entry(
 
     Args:
         cluster_name: Name of the cluster
-        secret: Secret key for authentication
+        secret: Secret key for node authentication in the cluster
         path: Path for discovery
         observer: Whether the node is an observer
         allow_experimental_cluster_discovery: Whether to allow experimental cluster discovery
@@ -75,13 +103,15 @@ def add_node_to_swarm(
         node: Node to add to the cluster
         cluster_name: Name of the cluster
         config_name: Name of the config file to be created on the node
-        secret: Secret key for authentication
+        secret: Secret key for node authentication in the cluster
         path: Path for discovery
         observer: Whether the node is an observer
         allow_experimental_cluster_discovery: Whether to allow experimental cluster discovery
         restart: Whether to restart the node after adding the config
         modify: Whether to modify the existing config
-        entries: Configuration entries to be added, if None, entries will be created based on the parameters (cluster_name, secret, path, observer, allow_experimental_cluster_discovery)
+        entries: Configuration entries to be added, if None, entries will be created based on
+        the parameters (cluster_name, secret, path, observer, allow_experimental_cluster_discovery)
+        duplicate_tags: Whether to allow duplicate XML tags in config
     """
 
     with By(f"adding swarm configuration to node {node.name}"):
@@ -121,15 +151,15 @@ def change_clickhouse_config(
     Generate and apply a ClickHouse XML config file with the given entries.
 
     Args:
-        entries (dict): Configuration entries to be converted into XML
-        modify (bool): Whether to modify the existing config
-        restart (bool): Whether to restart the node after applying the config
-        user (str): ClickHouse user context for the config
-        config_file (str): Name of the config file to create
-        config_d_dir (str): Directory to place config in ClickHouse
-        preprocessed_name (str): Preprocessed config file name
-        node (Node): Target ClickHouse node
-        duplicate_tags (bool): Whether to allow duplicate XML tags in config
+        entries: Configuration entries to be converted into XML
+        modify: Whether to modify the existing config
+        restart: Whether to restart the node after applying the config
+        user: ClickHouse user context for the config
+        config_file: Name of the config file to create
+        config_d_dir: Directory to place config in ClickHouse
+        preprocessed_name: Preprocessed config file name
+        node: Target ClickHouse node
+        duplicate_tags: Whether to allow duplicate XML tags in config
     """
     with By("converting config file content to xml"):
         config_func = (
@@ -166,7 +196,7 @@ def remove_node_from_swarm(
         cluster_name: Name of the cluster
         node: Node to remove from the cluster
         config_name: Name of the config file to be removed from the node
-        secret: Secret key for authentication
+        secret: Secret key for node authentication in the cluster
         path: Path for discovery
         observer: Whether the node is an observer
         allow_experimental_cluster_discovery: Whether experimental cluster discovery is allowed
@@ -234,7 +264,7 @@ def check_cluster_hostnames(self, cluster_name, node=None):
 def get_cluster_info_from_system_clusters_table(
     self, cluster_name, columns="*", node=None, format="Vertical"
 ):
-    """Get information from system.clusters table.
+    """Get information about a cluster from the system.clusters table.
 
     Args:
         cluster_name: Name of the cluster
@@ -258,14 +288,15 @@ def setup_iceberg_table(
     self,
     minio_root_user,
     minio_root_password,
-    uri="http://localhost:5000/",
     s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
 ):
     """
     Create an Iceberg table with three columns and populate it with test data.
+    Table is partitioned by name with IdentityTransform and sorted by name.
 
     The table contains 14 rows and is stored in Parquet format at:
-    `s3://warehouse/data/data/**/**.parquet`
+    `s3://warehouse/data/**/**.parquet`
 
     Args:
         minio_root_user: MinIO root access key.
@@ -289,7 +320,10 @@ def setup_iceberg_table(
     with And(f"create namespace and create {namespace}.{table_name} table"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
         table = catalog_steps.create_iceberg_table_with_three_columns(
-            catalog=catalog, namespace=namespace, table_name=table_name
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            location=location,
         )
 
     with And(f"insert data into {namespace}.{table_name} table"):
@@ -312,9 +346,127 @@ def setup_iceberg_table(
             ]
         )
         table.append(df)
+        table.append(df)
 
     with And("scan and display data"):
         df = table.scan().to_pandas()
         note(df)
+
+    return table, table_name, namespace
+
+
+@TestStep(Given)
+def iceberg_table_with_all_basic_data_types(
+    self,
+    minio_root_user,
+    minio_root_password,
+    s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
+):
+    """
+    Create an Iceberg table with all basic data types and populate it with test data.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with By("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_endpoint=s3_endpoint,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create table"):
+        schema = Schema(
+            NestedField(
+                field_id=1, name="boolean_col", field_type=BooleanType(), required=False
+            ),
+            NestedField(
+                field_id=2, name="long_col", field_type=LongType(), required=False
+            ),
+            NestedField(
+                field_id=3, name="double_col", field_type=DoubleType(), required=False
+            ),
+            NestedField(
+                field_id=4, name="string_col", field_type=StringType(), required=False
+            ),
+            NestedField(
+                field_id=5,
+                name="timestamp_col",
+                field_type=TimestampType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=6, name="date_col", field_type=DateType(), required=False
+            ),
+            NestedField(
+                field_id=7, name="time_col", field_type=TimeType(), required=False
+            ),
+            NestedField(
+                field_id=8,
+                name="timestamptz_col",
+                field_type=TimestamptzType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=9, name="integer_col", field_type=IntegerType(), required=False
+            ),
+            NestedField(
+                field_id=10, name="float_col", field_type=FloatType(), required=False
+            ),
+            NestedField(
+                field_id=11,
+                name="decimal_col",
+                field_type=DecimalType(10, 2),
+                required=False,
+            ),
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location=location,
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("insert data into table"):
+        # Create PyArrow table with explicit decimal type to match Iceberg schema
+        data = pa.table(
+            {
+                "boolean_col": pa.array([True, False]),
+                "long_col": pa.array([1000, 2000], type=pa.int64()),
+                "double_col": pa.array([456.78, 456.78], type=pa.float64()),
+                "string_col": pa.array(["Alice", "Bob"], type=pa.string()),
+                "timestamp_col": pa.array(
+                    [datetime(2024, 1, 1, 12, 0, 0), datetime(2024, 1, 1, 12, 0, 0)],
+                    type=pa.timestamp("us"),
+                ),
+                "date_col": pa.array(
+                    [date(2024, 1, 1), date(2024, 1, 1)], type=pa.date32()
+                ),
+                "time_col": pa.array(
+                    [time(12, 0, 0), time(12, 0, 0)], type=pa.time64("us")
+                ),
+                "timestamptz_col": pa.array(
+                    [
+                        datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                        datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                    ],
+                    type=pa.timestamp("us", tz="UTC"),
+                ),
+                "integer_col": pa.array([1000, 2000], type=pa.int32()),
+                "float_col": pa.array([456.78, 456.78], type=pa.float32()),
+                "decimal_col": pa.array(
+                    [Decimal("456.78"), Decimal("456.78")], type=pa.decimal128(10, 2)
+                ),
+            }
+        )
+        table.append(data)
+        table.append(data)
+        table.append(data)
+        table.append(data)
 
     return table, table_name, namespace

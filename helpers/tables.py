@@ -651,3 +651,38 @@ def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     finally:
         with Finally(f"drop the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
+
+
+@TestStep(Given)
+def create_table_as_select(
+    self,
+    as_select_from,
+    engine="MergeTree",
+    table_name=None,
+    order_by="tuple()",
+    columns="*",
+    node=None,
+):
+    """Create a table using `AS SELECT` clause."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        table_name = f"table_{getuid()}"
+
+    try:
+        with By(f"creating table {table_name}"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name} 
+                ENGINE = {engine} 
+                ORDER BY {order_by}
+                AS SELECT {columns} 
+                FROM {as_select_from}
+                """
+            )
+            yield table_name
+
+    finally:
+        with Finally(f"drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name}")
