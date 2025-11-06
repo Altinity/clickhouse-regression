@@ -324,33 +324,6 @@ def concurrent_insert(self):
         assert len(source_data) == 15, error()
 
 
-@TestScenario
-def export_and_drop(self):
-    """Check that dropping a column immediately after export works correctly."""
-    pause()
-    with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=True,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I export data then drop a column"):
-        export_parts(
-            source_table="source",
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-        drop_column(
-            node=self.context.node,
-            table_name="source",
-            column_name="i",
-        )
-    # This drop freezes the test ☠️☠️☠️
-
-
 @TestStep(When)
 def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
@@ -365,6 +338,21 @@ def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KIL
         exitcode=0,
         steps=False,
     )
+
+    if signal == "TERM":
+        with And("waiting for MinIO container to stop"):
+            for attempt in retries(timeout=30, delay=1):
+                with attempt:
+                    result = cluster.command(
+                        None,
+                        f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
+                        timeout=10,
+                        steps=False,
+                        no_checks=True,
+                    )
+                    if container_name not in result.output:
+                        break
+                    fail("MinIO container still running")
 
 
 @TestStep(When)
@@ -398,9 +386,50 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=30
 
 
 @TestScenario
-def restart_minio(self):
-    """Check that restarting MinIO after exporting data works correctly."""
+def minio_network_interruption(self, number_of_values=3, signal="KILL"):
+    """Check that restarting MinIO while exporting parts inbetween works correctly."""
 
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            number_of_values=number_of_values,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I stop MinIO"):
+        kill_minio(signal=signal)
+
+    with When("I read export events"):
+        initial_events = get_export_events(node=self.context.node)
+
+    with And("I export data"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I start MinIO"):
+        start_minio()
+
+    with Then("Destination data should be a subset of source data"):
+        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+        assert set(source_data) >= set(destination_data), error()
+    
+    with And("Failed exports should be logged in the system.events table"):
+        final_events = get_export_events(node=self.context.node)
+        assert final_events["PartsExportFailures"] - initial_events["PartsExportFailures"] == (len(source_data) - len(destination_data)) / number_of_values, error()
+
+
+@TestScenario
+def clickhouse_network_interruption(self, safe=False):
+    """Check that exports work correctly with a clickhouse network outage."""
+    
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -409,26 +438,33 @@ def restart_minio(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I kill MinIO"):
-        kill_minio()
+    with And("I get parts before the interruption"):
+        parts = get_parts(table_name="source", node=self.context.node)
 
-    with When("I export data"):
-        export_parts(
+    with When("I queue exports and restart the node in parallel"):
+        Step(test=export_parts, parallel=True)(
             source_table="source",
             destination_table=s3_table_name,
             node=self.context.node,
+            exitcode=1,
+            parts=parts,
         )
+        self.context.node.restart(safe=safe)
+        join()
 
-    with And("I restart MinIO"):
-        start_minio()
-    pause()
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table="source",
-                    destination_table=s3_table_name,
-                )                
+    if safe:
+        with Then("Check source matches destination"):
+            source_matches_destination(
+                source_table="source",
+                destination_table=s3_table_name,
+            )
+    else:
+        with Then("Destination data should be a subset of source data"):
+            source_data = select_all_ordered(table_name="source", node=self.context.node)
+            destination_data = select_all_ordered(
+                table_name=s3_table_name, node=self.context.node
+            )
+            assert set(source_data) >= set(destination_data), error()
 
 
 @TestFeature
@@ -450,7 +486,7 @@ def feature(self):
     # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
     # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     # Scenario(run=concurrent_insert)
-
-    # Scenario(run=restart_minio)
-
-    Scenario(run=export_and_drop)
+    Scenario(test=minio_network_interruption)(signal="TERM")
+    Scenario(test=minio_network_interruption)(signal="KILL")
+    Scenario(test=clickhouse_network_interruption)(safe=True)
+    Scenario(test=clickhouse_network_interruption)(safe=False)

@@ -160,6 +160,13 @@ def get_export_events(self, node):
         event = json.loads(line)
         events[event["name"]] = int(event["value"])
 
+    if "PartsExportFailures" not in events:
+        events["PartsExportFailures"] = 0
+    if "PartsExports" not in events:
+        events["PartsExports"] = 0
+    if "PartsExportDuplicated" not in events:
+        events["PartsExportDuplicated"] = 0
+
     return events
 
 
