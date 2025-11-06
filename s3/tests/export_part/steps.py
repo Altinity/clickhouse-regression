@@ -104,7 +104,7 @@ def get_parts(self, table_name, node):
         exitcode=0,
         steps=True,
     ).output
-    return [row.strip() for row in output.splitlines()]
+    return sorted([row.strip() for row in output.splitlines()])
 
 
 @TestStep(When)
