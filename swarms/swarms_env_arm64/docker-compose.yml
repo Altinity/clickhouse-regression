@@ -119,7 +119,7 @@ services:
         condition: service_healthy
 
   keeper:
-    image: altinity/clickhouse-keeper:25.6.5.20363.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.9.20207.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:
