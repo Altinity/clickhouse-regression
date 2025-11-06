@@ -343,7 +343,7 @@ def generate_all_map_column_types():
 
 
 class Table:
-    def __init__(self, name, columns, partition_by, engine):
+    def __init__(self, name, columns, engine, partition_by=None):
         self.name = name
         self.columns = columns
         self.partition_by = partition_by
@@ -556,7 +556,7 @@ def create_temporary_table(
                 settings=settings,
             )
 
-            yield Table(name, columns, engine)
+            yield Table(name, columns, engine, partition_by=partition_by)
 
     finally:
         with Finally(f"drop the table {name}"):
@@ -648,7 +648,9 @@ def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
                     """
             )
 
-            yield Table(name, columns, engine)
+            yield Table(
+                name=name, columns=columns, partition_by=None, engine=engine
+            )
 
     finally:
         with Finally(f"drop the table {name}"):
