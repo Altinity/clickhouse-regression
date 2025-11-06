@@ -23,4 +23,4 @@ def minio(self, uri, bucket_prefix):
     Feature(run=load("s3.tests.export_part.engines_volumes", "feature"))
     Feature(run=load("s3.tests.export_part.datatypes", "feature"))
     Feature(run=load("s3.tests.export_part.concurrency_networks", "feature"))
-    # Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
+    Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))

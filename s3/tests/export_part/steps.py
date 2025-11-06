@@ -226,12 +226,21 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def drop_column(self, node, table_name, column_name):
-    """Drop a column from a table."""
+def get_part_log(self, node):
+    """Get the part log from the system.part_log table of a given node."""
+    
+    output = node.query(
+        "SELECT name, value FROM system.part_log WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
+        exitcode=0,
+        steps=True,
+    ).output
 
-    node.query(
-        f"ALTER TABLE {table_name} DROP COLUMN {column_name}", exitcode=0, steps=True
-    )
+    events = {}
+    for line in output.strip().splitlines():
+        event = json.loads(line)
+        events[event["name"]] = int(event["value"])
+
+    return events
 
 
 @TestStep(Then)

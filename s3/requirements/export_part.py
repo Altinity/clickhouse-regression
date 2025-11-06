@@ -713,6 +713,7 @@ RQ_ClickHouse_ExportPart_Events = Requirement(
         "* `PartsExports` - Number of successful part exports\n"
         "* `PartsExportFailures` - Number of failed part exports  \n"
         "* `PartsExportDuplicated` - Number of part exports that failed because target already exists\n"
+        "* `PartsExportTotalMilliseconds` - Length of total time taken for parts to export\n"
         "\n"
     ),
     link=None,
@@ -1416,6 +1417,7 @@ version: 1.0
 * `PartsExports` - Number of successful part exports
 * `PartsExportFailures` - Number of failed part exports  
 * `PartsExportDuplicated` - Number of part exports that failed because target already exists
+* `PartsExportTotalMilliseconds` - Length of total time taken for parts to export
 
 ### RQ.ClickHouse.ExportPart.Metrics.Export
 version: 1.0

@@ -480,6 +480,7 @@ version: 1.0
 * `PartsExports` - Number of successful part exports
 * `PartsExportFailures` - Number of failed part exports  
 * `PartsExportDuplicated` - Number of part exports that failed because target already exists
+* `PartsExportTotalMilliseconds` - Length of total time taken for parts to export
 
 ### RQ.ClickHouse.ExportPart.Metrics.Export
 version: 1.0
