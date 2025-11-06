@@ -431,6 +431,8 @@ def partitioned_merge_tree_table(
                 number_of_values=number_of_values,
             )
 
+    return table_name
+
 
 @TestStep(Given)
 def partitioned_replicated_merge_tree_table(
@@ -463,6 +465,8 @@ def partitioned_replicated_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
             )
+
+    return table_name
 
 
 @TestStep(Given)
@@ -497,6 +501,8 @@ def partitioned_replacing_merge_tree_table(
                 number_of_parts=number_of_parts,
             )
 
+    return table_name
+
 
 @TestStep(Given)
 def partitioned_summing_merge_tree_table(
@@ -529,6 +535,8 @@ def partitioned_summing_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
             )
+
+    return table_name
 
 
 @TestStep(Given)
@@ -563,6 +571,8 @@ def partitioned_collapsing_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
             )
+
+    return table_name
 
 
 @TestStep(Given)
@@ -599,6 +609,8 @@ def partitioned_versioned_collapsing_merge_tree_table(
                 number_of_parts=number_of_parts,
             )
 
+    return table_name
+
 
 @TestStep(Given)
 def partitioned_aggregating_merge_tree_table(
@@ -631,6 +643,8 @@ def partitioned_aggregating_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
             )
+
+    return table_name
 
 
 @TestStep(Given)
@@ -665,3 +679,5 @@ def partitioned_graphite_merge_tree_table(
                 number_of_partitions=number_of_partitions,
                 number_of_parts=number_of_parts,
             )
+
+    return table_name
