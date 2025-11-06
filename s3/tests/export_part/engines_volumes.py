@@ -5,9 +5,6 @@ from s3.requirements.export_part import *
 from helpers.queries import *
 
 
-# TODO replicated merge tree tables (all types)
-
-
 @TestCheck
 def configured_table(self, table_engine, number_of_partitions, number_of_parts):
     """Test a specific combination of table engine, number of partitions, and number of parts."""
@@ -111,6 +108,7 @@ def configured_volume(self, volume):
 
 @TestSketch(Scenario)
 @Flags(TE)
+@Requirements(RQ_ClickHouse_ExportPart_StoragePolicies("1.0"))
 def volume_combos(self):
     """Test exporting to various storage policies."""
 
@@ -137,6 +135,8 @@ def volume_combos(self):
 @Name("engines and volumes")
 def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
+
+    # TODO replicated merge tree tables (all types)
 
     Scenario(run=table_combos)
     Scenario(run=volume_combos)
