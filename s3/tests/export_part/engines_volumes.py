@@ -3,6 +3,8 @@ from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 from helpers.queries import *
+from helpers.common import getuid
+from testflows.combinatorics import product
 
 
 @TestCheck
@@ -10,8 +12,8 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
     """Test a specific combination of table engine, number of partitions, and number of parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        table_engine(
-            table_name="source",
+        source_table = table_engine(
+            table_name=f"source_{getuid()}",
             partition_by="p",
             stop_merges=True,
             number_of_partitions=number_of_partitions,
@@ -26,14 +28,14 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
     with Then("Source and destination tables should match"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
@@ -56,18 +58,21 @@ def table_combos(self):
     number_of_partitions = [5] if not self.context.stress else [1, 5, 10]
     number_of_parts = [1] if not self.context.stress else [1, 5, 10]
 
-    table_engine = either(*tables)
-    number_of_partitions = either(*number_of_partitions)
-    number_of_parts = either(*number_of_parts)
+    combinations = product(tables, number_of_partitions, number_of_parts)
 
-    Combination(
-        name=f"{table_engine.__name__} partitions={number_of_partitions} parts={number_of_parts}",
-        test=configured_table,
-    )(
-        table_engine=table_engine,
-        number_of_partitions=number_of_partitions,
-        number_of_parts=number_of_parts,
-    )
+    with Pool(16) as executor:
+        for (table_engine, number_of_partitions, number_of_parts) in combinations:
+            Combination(
+                name=f"{table_engine.__name__} partitions={number_of_partitions} parts={number_of_parts}",
+                test=configured_table,
+                executor=executor,
+                parallel=True,
+            )(
+                table_engine=table_engine,
+                number_of_partitions=number_of_partitions,
+                number_of_parts=number_of_parts,
+            )
+        join()
 
 
 @TestCheck
@@ -75,8 +80,8 @@ def configured_volume(self, volume):
     """Test a specific combination of volume."""
 
     with Given(f"I create an empty source table on volume {volume} and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        source_table = partitioned_merge_tree_table(
+            table_name=f"source_{getuid()}",
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -87,21 +92,21 @@ def configured_volume(self, volume):
 
     with And("I populate the source table with parts exceeding 2KB each"):
         create_partitions_with_random_uint64(
-            table_name="source",
+            table_name=source_table,
             node=self.context.node,
             number_of_values=500,
         )
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
     with Then("Source and destination tables should match"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
@@ -121,14 +126,19 @@ def volume_combos(self):
         "external2",
         "tiered_storage",
     ]
-    volume = either(*volumes)
+    combinations = product(volumes)
 
-    Combination(
-        name=f"volume={volume}",
-        test=configured_volume,
-    )(
-        volume=volume,
-    )
+    with Pool(16) as executor:
+        for (volume,) in combinations:
+            Combination(
+                name=f"volume={volume}",
+                test=configured_volume,
+                executor=executor,
+                parallel=True,
+            )(
+                volume=volume,
+            )
+        join()
 
 
 @TestFeature
