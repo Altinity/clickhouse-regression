@@ -4,6 +4,7 @@ from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from s3.requirements.export_part import *
 
 
 @TestScenario
@@ -53,6 +54,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
 
 
 @TestFeature
+@Requirements(RQ_ClickHouse_ExportPart_ClustersNodes("1.0"))
 @Name("clusters and nodes")
 def feature(self):
     """Check functionality of exporting data parts to S3 storage from different clusters and nodes."""

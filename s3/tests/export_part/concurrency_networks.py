@@ -7,6 +7,7 @@ from alter.stress.tests.tc_netem import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 def basic_concurrent_export(self, threads):
     """Check concurrent exports from different sources to the same S3 table."""
 
@@ -43,6 +44,7 @@ def basic_concurrent_export(self, threads):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_delay(self, delay_ms):
     """Check that exports work correctly with packet delay."""
 
@@ -75,6 +77,7 @@ def packet_delay(self, delay_ms):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_loss(self, percent_loss):
     """Check that exports work correctly with packet loss."""
 
@@ -107,6 +110,7 @@ def packet_loss(self, percent_loss):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_loss_gemodel(self, interruption_probability, recovery_probability):
     """Check that exports work correctly with packet loss using the GE model."""
 
@@ -143,6 +147,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_corruption(self, percent_corrupt):
     """Check that exports work correctly with packet corruption."""
 
@@ -177,6 +182,7 @@ def packet_corruption(self, percent_corrupt):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_duplication(self, percent_duplicated):
     """Check that exports work correctly with packet corruption."""
 
@@ -211,6 +217,7 @@ def packet_duplication(self, percent_duplicated):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_reordering(self, delay_ms, percent_reordered):
     """Check that exports work correctly with packet corruption."""
 
@@ -247,6 +254,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_rate_limit(self, rate_mbit):
     """Check that exports work correctly with packet corruption."""
 
@@ -279,6 +287,7 @@ def packet_rate_limit(self, rate_mbit):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 def concurrent_insert(self):
     """Check that exports work correctly with concurrent inserts of source data."""
 
@@ -386,6 +395,7 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=30
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
 def minio_network_interruption(self, number_of_values=3, signal="KILL"):
     """Check that restarting MinIO while exporting parts inbetween works correctly."""
 
@@ -427,6 +437,7 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption("1.0"))
 def clickhouse_network_interruption(self, safe=False):
     """Check that exports work correctly with a clickhouse network outage."""
     
@@ -468,7 +479,6 @@ def clickhouse_network_interruption(self, safe=False):
 
 
 @TestFeature
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 @Name("concurrency and networks")
 def feature(self):
     """Check that exports work correctly with concurrency and various network conditions."""

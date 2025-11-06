@@ -91,7 +91,6 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
 
 @TestSketch(Scenario)
 @Flags(TE)
-@Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
 def valid_partition_key_types_compact(self):
     """Check that all partition key data types are supported when exporting compact parts."""
 
