@@ -118,6 +118,7 @@ def basic_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_EmptyTable("1.0"))
 def empty_table(self):
     """Test exporting parts from an empty table."""
 
@@ -205,6 +206,7 @@ def wide_and_compact_parts(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"))
 def export_and_drop(self):
     """Check that dropping a column immediately after export doesn't affect exported data."""
     
@@ -244,6 +246,7 @@ def export_and_drop(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_LargeParts("1.0"))
 def large_part(self):
     """Test exporting a large part."""
 
