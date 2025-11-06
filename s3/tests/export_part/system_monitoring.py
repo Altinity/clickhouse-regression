@@ -32,8 +32,10 @@ def part_logging(self):
         part_log = get_part_log(node=self.context.node)
 
     with Then("I check that the number of part exports is correct"):
-        assert final_events["PartsExports"] - initial_events["PartsExports"] == 5, error()
-    
+        assert (
+            final_events["PartsExports"] - initial_events["PartsExports"] == 5
+        ), error()
+
     with And("I check that the part log contains the correct parts"):
         parts = get_parts(table_name="source", node=self.context.node)
         for part in parts:
