@@ -1081,8 +1081,12 @@ class ClickHouseNode(Node):
             query_settings += [("query_id", f"{query_id}")]
 
         if inline_settings:
-            sql = "; ".join([f"SET {name} = {value}" for name, value in inline_settings]) + "; " + sql
-    
+            sql = (
+                "; ".join([f"SET {name} = {value}" for name, value in inline_settings])
+                + "; "
+                + sql
+            )
+
         client = "clickhouse client -n"
         if secure:
             client += (
