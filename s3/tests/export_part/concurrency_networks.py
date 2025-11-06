@@ -336,10 +336,10 @@ def concurrent_insert(self):
 @TestStep(When)
 def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
-    
+
     if cluster is None:
         cluster = self.context.cluster
-    
+
     retry(cluster.command, 5)(
         None,
         f"docker kill --signal={signal} {container_name}",
@@ -367,10 +367,10 @@ def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KIL
 @TestStep(When)
 def start_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=300):
     """Start MinIO container and wait for it to be ready."""
-    
+
     if cluster is None:
         cluster = self.context.cluster
-    
+
     with By("starting MinIO container"):
         retry(cluster.command, 5)(
             None,
@@ -379,7 +379,7 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1", timeout=30
             exitcode=0,
             steps=True,
         )
-    
+
     with And("waiting for MinIO to be ready"):
         for attempt in retries(timeout=timeout, delay=1):
             with attempt:
@@ -430,17 +430,20 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
             table_name=s3_table_name, node=self.context.node
         )
         assert set(source_data) >= set(destination_data), error()
-    
+
     with And("Failed exports should be logged in the system.events table"):
         final_events = get_export_events(node=self.context.node)
-        assert final_events["PartsExportFailures"] - initial_events["PartsExportFailures"] == (len(source_data) - len(destination_data)) / number_of_values, error()
+        assert (
+            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
+            == (len(source_data) - len(destination_data)) / number_of_values
+        ), error()
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption("1.0"))
 def clickhouse_network_interruption(self, safe=False):
     """Check that exports work correctly with a clickhouse network outage."""
-    
+
     with Given("I create a populated source table and empty S3 table"):
         partitioned_merge_tree_table(
             table_name="source",
@@ -471,7 +474,9 @@ def clickhouse_network_interruption(self, safe=False):
             )
     else:
         with Then("Destination data should be a subset of source data"):
-            source_data = select_all_ordered(table_name="source", node=self.context.node)
+            source_data = select_all_ordered(
+                table_name="source", node=self.context.node
+            )
             destination_data = select_all_ordered(
                 table_name=s3_table_name, node=self.context.node
             )
