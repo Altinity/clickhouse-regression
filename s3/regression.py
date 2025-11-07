@@ -566,8 +566,8 @@ def minio_regression(
     # with And("I add all possible clusters for nodes"):
     #     add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
-    # with And("I get all possible clusters for nodes"):
-    #     self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
+    with And("I get all possible clusters for nodes"):
+        self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
 
     with Feature("part 1"):
         Feature(test=load("s3.tests.sanity", "minio"))(uri=uri_bucket_file)
