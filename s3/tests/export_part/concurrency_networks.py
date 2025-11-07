@@ -8,23 +8,25 @@ from alter.stress.tests.tc_netem import *
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def basic_concurrent_export(self, threads):
+def concurrent_export(self, num_tables):
     """Check concurrent exports from different sources to the same S3 table."""
 
-    with Given(f"I create {threads} populated source tables and an empty S3 table"):
-        for i in range(threads):
-            partitioned_merge_tree_table(
-                table_name=f"source{i}",
+    with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
+        source_tables = []
+        for i in range(num_tables):
+            source_tables.append(partitioned_merge_tree_table(
+                table_name=f"source_{getuid()}",
                 partition_by="p",
-                columns=default_columns(),
-                stop_merges=True,
+                    columns=default_columns(),
+                    stop_merges=True,
+                )
             )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export parts from all sources concurrently to the S3 table"):
-        for i in range(threads):
+        for i in range(num_tables):
             Step(test=export_parts, parallel=True)(
-                source_table=f"source{i}",
+                source_table=source_tables[i],
                 destination_table=s3_table_name,
                 node=self.context.node,
             )
@@ -32,8 +34,8 @@ def basic_concurrent_export(self, threads):
 
     with And("I read data from all tables"):
         source_data = []
-        for i in range(threads):
-            data = select_all_ordered(table_name=f"source{i}", node=self.context.node)
+        for i in range(num_tables):
+            data = select_all_ordered(table_name=source_tables[i], node=self.context.node)
             source_data.extend(data)
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
@@ -41,6 +43,9 @@ def basic_concurrent_export(self, threads):
 
     with Then("All data should be present in the S3 table"):
         assert set(source_data) == set(destination_data), error()
+
+    with And("Exports should have run concurrently"):
+        verify_export_concurrency(node=self.context.node, source_tables=source_tables)
 
 
 @TestScenario
@@ -431,7 +436,7 @@ def feature(self):
 
     # TODO corruption (bit flipping)
 
-    Scenario(test=basic_concurrent_export)(threads=5)
+    Scenario(test=concurrent_export)(num_tables=5)
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
     Scenario(test=packet_loss_gemodel)(
