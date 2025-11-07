@@ -152,6 +152,67 @@ def create_s3_table(
 
 
 @TestStep(When)
+def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
+    """Forcefully kill MinIO container to simulate network crash."""
+
+    if cluster is None:
+        cluster = self.context.cluster
+
+    retry(cluster.command, 5)(
+        None,
+        f"docker kill --signal={signal} {container_name}",
+        timeout=60,
+        exitcode=0,
+        steps=False,
+    )
+
+    if signal == "TERM":
+        with And("Waiting for MinIO container to stop"):
+            for attempt in retries(timeout=30, delay=1):
+                with attempt:
+                    result = cluster.command(
+                        None,
+                        f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
+                        timeout=10,
+                        steps=False,
+                        no_checks=True,
+                    )
+                    if container_name not in result.output:
+                        break
+                    fail("MinIO container still running")
+
+
+@TestStep(When)
+def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
+    """Start MinIO container and wait for it to be ready."""
+
+    if cluster is None:
+        cluster = self.context.cluster
+
+    with By("Starting MinIO container"):
+        retry(cluster.command, 5)(
+            None,
+            f"docker start {container_name}",
+            timeout=60,
+            exitcode=0,
+            steps=True,
+        )
+
+    with And("Waiting for MinIO to be ready"):
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                result = cluster.command(
+                    None,
+                    f"docker exec {container_name} curl -f http://localhost:9001/minio/health/live",
+                    timeout=10,
+                    steps=False,
+                    no_checks=True,
+                )
+                if result.exitcode != 0:
+                    fail("MinIO health check failed")
+
+
+@TestStep(When)
 def get_parts(self, table_name, node):
     """Get all parts for a table on a given node."""
 

@@ -85,6 +85,16 @@ def duplicate_logging(self):
         ), error()
 
 
+@TestScenario
+def background_move_pool_size(self):
+    pass
+
+
+@TestScenario
+def system_exports_logging(self):
+    pass
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
