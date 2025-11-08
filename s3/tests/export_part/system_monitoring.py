@@ -45,6 +45,7 @@ def part_logging(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Idempotency("1.0"))
 def duplicate_logging(self):
     """Check duplicate exports are logged correctly in system.events."""
 
@@ -88,6 +89,7 @@ def duplicate_logging(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"))
 def system_exports_logging(self):
     """Check that system.exports table tracks export operations before they complete."""
 

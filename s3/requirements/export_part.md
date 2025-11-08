@@ -351,10 +351,9 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL validate source part availability by:
-
 * Checking that the specified part exists in the source table
 * Verifying the part is in an active state (not detached or missing)
-* Throwing a `NO_SUCH_DATA_PART` exception with message "No such data part '{}' to export in table '{}'" when the part is not found
+* Throwing an exception with message containing "Unexpected part name" when the part is not found
 * Performing this validation before creating the export manifest
 
 ## Export operation concurrency
@@ -377,12 +376,11 @@ version: 1.0
 ### RQ.ClickHouse.ExportPart.Idempotency
 version: 1.0
 
-[ClickHouse] SHALL ensure export operations are idempotent by:
-
-* Allowing the same part to be exported multiple times safely without data corruption
-* Supporting file overwrite control through the `export_merge_tree_part_overwrite_file_if_exists` setting
-* Generating unique file names using part name and checksum to avoid conflicts
-* Maintaining export state consistency across retries
+[ClickHouse] SHALL handle duplicate export operations by:
+* Preventing duplicate data from being exported when the same part is exported multiple times to the same destination
+* Detecting when an export operation attempts to export a part that already exists in the destination
+* Logging duplicate export attempts in the `system.events` table with the `PartsExportDuplicated` counter
+* Ensuring that destination data matches source data without duplication when the same part is exported multiple times
 
 ## Export operation logging
 
@@ -391,34 +389,12 @@ version: 1.0
 
 [ClickHouse] SHALL provide detailed logging for export operations by:
 * Logging all export operations (both successful and failed) with timestamps and details
-* Recording the specific part name and destination for all operations
-* Including execution time and progress information for all operations
-* Writing operation information to the `system.part_log` table with the following columns:
-  * `hostname` - Hostname of the server where the export operation occurred
-  * `query_id` - Query ID of the export operation
-  * `event_type` - Set to `EXPORT_PART` for export operations
-  * `event_date` - Date when the export operation occurred
-  * `event_time` - Timestamp when the export operation occurred
-  * `event_time_microseconds` - Timestamp with microsecond precision
-  * `duration_ms` - Execution time in milliseconds
-  * `database` - Source database name
-  * `table` - Source table name
-  * `table_uuid` - UUID of the source table
-  * `part_name` - Name of the part being exported
-  * `partition_id` - Partition ID of the part being exported
-  * `partition` - Partition name of the part being exported
-  * `part_type` - Type of the part (e.g., Wide, Compact)
-  * `disk_name` - Name of the disk where the part is stored
-  * `path_on_disk` - Path to the part in source storage
-  * `rows` - Number of rows in the part
-  * `size_in_bytes` - Size of the part in bytes
-  * `bytes_uncompressed` - Uncompressed size of the part in bytes
-  * `read_rows` - Number of rows read during export
-  * `read_bytes` - Number of bytes read during export
-  * `peak_memory_usage` - Peak memory usage during the export operation
-  * `error` - Error message if the export failed (empty for successful exports)
-  * `exception` - Exception details if the export failed
-  * `ProfileEvents` - Profile events collected during the export operation
+* Recording the specific part name in the `system.part_log` table for all operations
+* Logging export events in the `system.events` table, including:
+  * `PartsExports` - Number of successful part exports
+  * `PartsExportFailures` - Number of failed part exports
+  * `PartsExportDuplicated` - Number of part exports that failed because target already exists
+* Writing operation information to the `system.part_log` table with `event_type` set to `EXPORT_PART`
 * Providing sufficient detail for monitoring and troubleshooting export operations
 
 ## Monitoring export operations
@@ -426,18 +402,11 @@ version: 1.0
 ### RQ.ClickHouse.ExportPart.SystemTables.Exports
 version: 1.0
 
-[ClickHouse] SHALL provide a `system.exports` table that allows users to monitor active and completed export operations, track progress metrics, performance statistics, and troubleshoot export issues with the following columns:
+[ClickHouse] SHALL provide a `system.exports` table that allows users to monitor active export operations with at least the following columns:
+* `source_table` - source table identifier
+* `destination_table` - destination table identifier
 
-* `source_database`, `source_table` - source table identifiers
-* `destination_database`, `destination_table` - destination table identifiers  
-* `create_time` - when export was submitted
-* `part_name` - name of the exported part
-* `destination_file_path` - path in destination storage
-* `elapsed` - execution time in seconds
-* `rows_read`, `total_rows_to_read` - progress metrics
-* `total_size_bytes_compressed`, `total_size_bytes_uncompressed` - size metrics
-* `bytes_read_uncompressed` - bytes processed
-* `memory_usage`, `peak_memory_usage` - memory consumption
+The table SHALL track export operations before they complete and SHALL be empty after all exports complete.
 
 ## Enabling export functionality
 
