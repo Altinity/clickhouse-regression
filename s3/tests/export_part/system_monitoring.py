@@ -2,9 +2,11 @@ from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
+from time import sleep
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
 def part_logging(self):
     """Check part exports are logged correctly in both system.events and system.part_log."""
 
@@ -86,12 +88,40 @@ def duplicate_logging(self):
 
 
 @TestScenario
-def background_move_pool_size(self):
-    pass
+def system_exports_logging(self):
+    """Check that system.exports table tracks export operations before they complete."""
+
+    with Given(
+        "I create a populated source table with large enough parts and empty S3 table"
+    ):
+        source_table = partitioned_merge_tree_table(
+            table_name=f"source_{getuid()}",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            number_of_values=1000000,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I check that system.exports contains some relevant parts"):
+        exports = get_system_exports(node=self.context.node)
+        assert len(exports) > 0, error()
+        assert [source_table, s3_table_name] in exports, error()
+
+    with And("I verify that system.exports empties after exports complete"):
+        sleep(5)
+        assert len(get_system_exports(node=self.context.node)) == 0, error()
 
 
 @TestScenario
-def system_exports_logging(self):
+def background_move_pool_size(self):
     pass
 
 
@@ -103,3 +133,4 @@ def feature(self):
 
     Scenario(run=part_logging)
     Scenario(run=duplicate_logging)
+    Scenario(run=system_exports_logging)
