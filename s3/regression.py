@@ -552,19 +552,19 @@ def minio_regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    # with And("I install tc-netem on all clickhouse nodes"):
-    #     for node in self.context.nodes:
-    #         node.command("apt install --yes iproute2 procps")
+    with And("I install tc-netem on all clickhouse nodes"):
+        for node in self.context.nodes:
+            node.command("apt install --yes iproute2 procps")
 
-    # with And("allow higher cpu_wait_ratio "):
-    #     if check_clickhouse_version(">=25.4")(self):
-    #         allow_higher_cpu_wait_ratio(
-    #             min_os_cpu_wait_time_ratio_to_throw=15,
-    #             max_os_cpu_wait_time_ratio_to_throw=25,
-    #         )
+    with And("allow higher cpu_wait_ratio "):
+        if check_clickhouse_version(">=25.4")(self):
+            allow_higher_cpu_wait_ratio(
+                min_os_cpu_wait_time_ratio_to_throw=15,
+                max_os_cpu_wait_time_ratio_to_throw=25,
+            )
 
-    # with And("I add all possible clusters for nodes"):
-    #     add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
+    with And("I add all possible clusters for nodes"):
+        add_clusters_for_nodes(nodes=nodes["clickhouse"], modify=True)
 
     with And("I get all possible clusters for nodes"):
         self.context.clusters = get_clusters_for_nodes(nodes=nodes["clickhouse"])
