@@ -299,6 +299,19 @@ def get_part_log(self, node):
     return output
 
 
+@TestStep(When)
+def get_system_exports(self, node):
+    """Get the system.exports source and destination table columns for all ongoing exports."""
+
+    exports = node.query(
+        "SELECT source_table, destination_table FROM system.exports",
+        exitcode=0,
+        steps=True,
+    ).output.splitlines()
+
+    return [line.strip().split("\t") for line in exports]
+
+
 @TestStep(Then)
 def source_matches_destination(
     self, source_table, destination_table, source_node=None, destination_node=None
@@ -320,13 +333,13 @@ def source_matches_destination(
 @TestStep(Then)
 def verify_export_concurrency(self, node, source_tables):
     """Verify exports from different tables ran concurrently by checking overlapping execution times.
-    
+
     Checks that for each table, there's at least one pair of consecutive exports from that table
     with an export from another table in between, confirming concurrent execution.
     """
 
     table_filter = " OR ".join([f"table = '{table}'" for table in source_tables])
-    
+
     query = f"""
     SELECT 
         table
@@ -335,17 +348,17 @@ def verify_export_concurrency(self, node, source_tables):
         AND ({table_filter})
     ORDER BY event_time_microseconds
     """
-    
+
     result = node.query(query, exitcode=0, steps=True)
-    
+
     exports = [line for line in result.output.strip().splitlines()]
-    
+
     tables_done = set()
-    
+
     for i in range(len(exports) - 1):
         current_table = exports[i]
         next_table = exports[i + 1]
-        
+
         if current_table != next_table and current_table not in tables_done:
             for j in range(i + 2, len(exports)):
                 if exports[j] == current_table:

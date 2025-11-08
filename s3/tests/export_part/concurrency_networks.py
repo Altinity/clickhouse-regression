@@ -14,9 +14,10 @@ def concurrent_export(self, num_tables):
     with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
         source_tables = []
         for i in range(num_tables):
-            source_tables.append(partitioned_merge_tree_table(
-                table_name=f"source_{getuid()}",
-                partition_by="p",
+            source_tables.append(
+                partitioned_merge_tree_table(
+                    table_name=f"source_{getuid()}",
+                    partition_by="p",
                     columns=default_columns(),
                     stop_merges=True,
                 )
@@ -35,7 +36,9 @@ def concurrent_export(self, num_tables):
     with And("I read data from all tables"):
         source_data = []
         for i in range(num_tables):
-            data = select_all_ordered(table_name=source_tables[i], node=self.context.node)
+            data = select_all_ordered(
+                table_name=source_tables[i], node=self.context.node
+            )
             source_data.extend(data)
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
