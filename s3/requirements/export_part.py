@@ -181,45 +181,6 @@ RQ_ClickHouse_ExportPart_DestinationEngines = Requirement(
     num="8.1",
 )
 
-RQ_ClickHouse_ExportPart_DestinationSetup = Requirement(
-    name="RQ.ClickHouse.ExportPart.DestinationSetup",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL handle destination setup and file management by:\n"
-        "* Creating appropriate import sinks for destination storage systems\n"
-        "* Generating unique file names in the format `{part_name}_{checksum_hex}` to avoid conflicts\n"
-        "* Allowing destination storage to determine the final file path based on Hive partitioning\n"
-        "* Creating files in the destination storage that users can observe and access\n"
-        "* Providing the final destination file path in the `system.part_log` table for monitoring\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="9.1",
-)
-
-RQ_ClickHouse_ExportPart_DataPreparation = Requirement(
-    name="RQ.ClickHouse.ExportPart.DataPreparation",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL prepare data for export by:\n"
-        "* Automatically selecting all physical columns from source table metadata\n"
-        "* Extracting partition key values for proper Hive partitioning in destination\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="10.1",
-)
-
 RQ_ClickHouse_ExportPart_SchemaCompatibility = Requirement(
     name="RQ.ClickHouse.ExportPart.SchemaCompatibility",
     version="1.0",
@@ -237,7 +198,7 @@ RQ_ClickHouse_ExportPart_SchemaCompatibility = Requirement(
     ),
     link=None,
     level=2,
-    num="11.1",
+    num="9.1",
 )
 
 RQ_ClickHouse_ExportPart_PartitionKeyTypes = Requirement(
@@ -264,7 +225,7 @@ RQ_ClickHouse_ExportPart_PartitionKeyTypes = Requirement(
     ),
     link=None,
     level=2,
-    num="12.1",
+    num="10.1",
 )
 
 RQ_ClickHouse_ExportPart_PartTypes = Requirement(
@@ -287,7 +248,7 @@ RQ_ClickHouse_ExportPart_PartTypes = Requirement(
     ),
     link=None,
     level=2,
-    num="13.1",
+    num="11.1",
 )
 
 RQ_ClickHouse_ExportPart_SchemaChangeIsolation = Requirement(
@@ -307,7 +268,7 @@ RQ_ClickHouse_ExportPart_SchemaChangeIsolation = Requirement(
     ),
     link=None,
     level=2,
-    num="13.2",
+    num="11.2",
 )
 
 RQ_ClickHouse_ExportPart_LargeParts = Requirement(
@@ -327,7 +288,7 @@ RQ_ClickHouse_ExportPart_LargeParts = Requirement(
     ),
     link=None,
     level=2,
-    num="13.3",
+    num="11.3",
 )
 
 RQ_ClickHouse_ExportPart_FailureHandling = Requirement(
@@ -348,7 +309,7 @@ RQ_ClickHouse_ExportPart_FailureHandling = Requirement(
     ),
     link=None,
     level=2,
-    num="14.1",
+    num="12.1",
 )
 
 RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues = Requirement(
@@ -371,7 +332,7 @@ RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues = Requirement(
     ),
     link=None,
     level=2,
-    num="15.1",
+    num="13.1",
 )
 
 RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption = Requirement(
@@ -392,7 +353,7 @@ RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption = Requirement
     ),
     link=None,
     level=2,
-    num="15.2",
+    num="13.2",
 )
 
 RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption = Requirement(
@@ -413,7 +374,7 @@ RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption = Requirement(
     ),
     link=None,
     level=2,
-    num="15.3",
+    num="13.3",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
@@ -432,7 +393,7 @@ RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
     ),
     link=None,
     level=3,
-    num="16.1.1",
+    num="14.1.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_DestinationSupport = Requirement(
@@ -453,7 +414,7 @@ RQ_ClickHouse_ExportPart_Restrictions_DestinationSupport = Requirement(
     ),
     link=None,
     level=3,
-    num="16.2.1",
+    num="14.2.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_LocalTable = Requirement(
@@ -472,7 +433,7 @@ RQ_ClickHouse_ExportPart_Restrictions_LocalTable = Requirement(
     ),
     link=None,
     level=3,
-    num="16.3.1",
+    num="14.3.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_PartitionKey = Requirement(
@@ -491,7 +452,7 @@ RQ_ClickHouse_ExportPart_Restrictions_PartitionKey = Requirement(
     ),
     link=None,
     level=3,
-    num="16.4.1",
+    num="14.4.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_SourcePart = Requirement(
@@ -511,7 +472,7 @@ RQ_ClickHouse_ExportPart_Restrictions_SourcePart = Requirement(
     ),
     link=None,
     level=3,
-    num="16.5.1",
+    num="14.5.1",
 )
 
 RQ_ClickHouse_ExportPart_Concurrency = Requirement(
@@ -535,7 +496,7 @@ RQ_ClickHouse_ExportPart_Concurrency = Requirement(
     ),
     link=None,
     level=2,
-    num="17.1",
+    num="15.1",
 )
 
 RQ_ClickHouse_ExportPart_Idempotency = Requirement(
@@ -555,7 +516,7 @@ RQ_ClickHouse_ExportPart_Idempotency = Requirement(
     ),
     link=None,
     level=2,
-    num="18.1",
+    num="16.1",
 )
 
 RQ_ClickHouse_ExportPart_Logging = Requirement(
@@ -579,7 +540,7 @@ RQ_ClickHouse_ExportPart_Logging = Requirement(
     ),
     link=None,
     level=2,
-    num="19.1",
+    num="17.1",
 )
 
 RQ_ClickHouse_ExportPart_SystemTables_Exports = Requirement(
@@ -599,7 +560,7 @@ RQ_ClickHouse_ExportPart_SystemTables_Exports = Requirement(
     ),
     link=None,
     level=2,
-    num="20.1",
+    num="18.1",
 )
 
 RQ_ClickHouse_ExportPart_Settings_AllowExperimental = Requirement(
@@ -615,7 +576,7 @@ RQ_ClickHouse_ExportPart_Settings_AllowExperimental = Requirement(
     ),
     link=None,
     level=2,
-    num="21.1",
+    num="19.1",
 )
 
 RQ_ClickHouse_ExportPart_Settings_OverwriteFile = Requirement(
@@ -631,7 +592,7 @@ RQ_ClickHouse_ExportPart_Settings_OverwriteFile = Requirement(
     ),
     link=None,
     level=2,
-    num="22.1",
+    num="20.1",
 )
 
 RQ_ClickHouse_ExportPart_ParallelFormatting = Requirement(
@@ -651,7 +612,7 @@ RQ_ClickHouse_ExportPart_ParallelFormatting = Requirement(
     ),
     link=None,
     level=2,
-    num="23.1",
+    num="21.1",
 )
 
 RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
@@ -667,27 +628,23 @@ RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
     ),
     link=None,
     level=2,
-    num="24.1",
+    num="22.1",
 )
 
-RQ_ClickHouse_ExportPart_Events = Requirement(
-    name="RQ.ClickHouse.ExportPart.Events",
+RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize = Requirement(
+    name="RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL provide the following export-related events in the `system.events` table:\n"
-        "* `PartsExports` - Number of successful part exports\n"
-        "* `PartsExportFailures` - Number of failed part exports  \n"
-        "* `PartsExportDuplicated` - Number of part exports that failed because target already exists\n"
-        "* `PartsExportTotalMilliseconds` - Length of total time taken for parts to export\n"
+        "[ClickHouse] SHALL support the `background_move_pool_size` server setting to control the maximum number of threads that will be used for executing export operations in the background. The default value SHALL be `8`. This is a server-level setting configured in the server configuration file.\n"
         "\n"
     ),
     link=None,
     level=2,
-    num="25.1",
+    num="22.2",
 )
 
 RQ_ClickHouse_ExportPart_Metrics_Export = Requirement(
@@ -703,7 +660,7 @@ RQ_ClickHouse_ExportPart_Metrics_Export = Requirement(
     ),
     link=None,
     level=2,
-    num="25.2",
+    num="22.3",
 )
 
 RQ_ClickHouse_ExportPart_Security = Requirement(
@@ -729,7 +686,7 @@ RQ_ClickHouse_ExportPart_Security = Requirement(
     ),
     link=None,
     level=2,
-    num="26.1",
+    num="23.1",
 )
 
 SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
@@ -765,106 +722,105 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         Heading(name="RQ.ClickHouse.ExportPart.StoragePolicies", level=2, num="7.1"),
         Heading(name="Supported destination table engines", level=1, num="8"),
         Heading(name="RQ.ClickHouse.ExportPart.DestinationEngines", level=2, num="8.1"),
-        Heading(name="Destination setup and file management", level=1, num="9"),
-        Heading(name="RQ.ClickHouse.ExportPart.DestinationSetup", level=2, num="9.1"),
-        Heading(name="Export data preparation", level=1, num="10"),
-        Heading(name="RQ.ClickHouse.ExportPart.DataPreparation", level=2, num="10.1"),
-        Heading(name="Schema compatibility", level=1, num="11"),
+        Heading(name="Schema compatibility", level=1, num="9"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.SchemaCompatibility", level=2, num="11.1"
+            name="RQ.ClickHouse.ExportPart.SchemaCompatibility", level=2, num="9.1"
         ),
-        Heading(name="Partition key types support", level=1, num="12"),
-        Heading(name="RQ.ClickHouse.ExportPart.PartitionKeyTypes", level=2, num="12.1"),
-        Heading(name="Part types and content support", level=1, num="13"),
-        Heading(name="RQ.ClickHouse.ExportPart.PartTypes", level=2, num="13.1"),
+        Heading(name="Partition key types support", level=1, num="10"),
+        Heading(name="RQ.ClickHouse.ExportPart.PartitionKeyTypes", level=2, num="10.1"),
+        Heading(name="Part types and content support", level=1, num="11"),
+        Heading(name="RQ.ClickHouse.ExportPart.PartTypes", level=2, num="11.1"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.SchemaChangeIsolation", level=2, num="13.2"
+            name="RQ.ClickHouse.ExportPart.SchemaChangeIsolation", level=2, num="11.2"
         ),
-        Heading(name="RQ.ClickHouse.ExportPart.LargeParts", level=2, num="13.3"),
-        Heading(name="Export operation failure handling", level=1, num="14"),
-        Heading(name="RQ.ClickHouse.ExportPart.FailureHandling", level=2, num="14.1"),
-        Heading(name="Network resilience", level=1, num="15"),
+        Heading(name="RQ.ClickHouse.ExportPart.LargeParts", level=2, num="11.3"),
+        Heading(name="Export operation failure handling", level=1, num="12"),
+        Heading(name="RQ.ClickHouse.ExportPart.FailureHandling", level=2, num="12.1"),
+        Heading(name="Network resilience", level=1, num="13"),
         Heading(
             name="RQ.ClickHouse.ExportPart.NetworkResilience.PacketIssues",
             level=2,
-            num="15.1",
+            num="13.1",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPart.NetworkResilience.DestinationInterruption",
             level=2,
-            num="15.2",
+            num="13.2",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPart.NetworkResilience.NodeInterruption",
             level=2,
-            num="15.3",
+            num="13.3",
         ),
-        Heading(name="Export operation restrictions", level=1, num="16"),
-        Heading(name="Preventing same table exports", level=2, num="16.1"),
+        Heading(name="Export operation restrictions", level=1, num="14"),
+        Heading(name="Preventing same table exports", level=2, num="14.1"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SameTable",
             level=3,
-            num="16.1.1",
+            num="14.1.1",
         ),
-        Heading(name="Destination table compatibility", level=2, num="16.2"),
+        Heading(name="Destination table compatibility", level=2, num="14.2"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport",
             level=3,
-            num="16.2.1",
+            num="14.2.1",
         ),
-        Heading(name="Local table restriction", level=2, num="16.3"),
+        Heading(name="Local table restriction", level=2, num="14.3"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.LocalTable",
             level=3,
-            num="16.3.1",
+            num="14.3.1",
         ),
-        Heading(name="Partition key compatibility", level=2, num="16.4"),
+        Heading(name="Partition key compatibility", level=2, num="14.4"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.PartitionKey",
             level=3,
-            num="16.4.1",
+            num="14.4.1",
         ),
-        Heading(name="Source part availability", level=2, num="16.5"),
+        Heading(name="Source part availability", level=2, num="14.5"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SourcePart",
             level=3,
-            num="16.5.1",
+            num="14.5.1",
         ),
-        Heading(name="Export operation concurrency", level=1, num="17"),
-        Heading(name="RQ.ClickHouse.ExportPart.Concurrency", level=2, num="17.1"),
-        Heading(name="Export operation idempotency", level=1, num="18"),
-        Heading(name="RQ.ClickHouse.ExportPart.Idempotency", level=2, num="18.1"),
-        Heading(name="Export operation logging", level=1, num="19"),
-        Heading(name="RQ.ClickHouse.ExportPart.Logging", level=2, num="19.1"),
-        Heading(name="Monitoring export operations", level=1, num="20"),
+        Heading(name="Export operation concurrency", level=1, num="15"),
+        Heading(name="RQ.ClickHouse.ExportPart.Concurrency", level=2, num="15.1"),
+        Heading(name="Export operation idempotency", level=1, num="16"),
+        Heading(name="RQ.ClickHouse.ExportPart.Idempotency", level=2, num="16.1"),
+        Heading(name="Export operation logging", level=1, num="17"),
+        Heading(name="RQ.ClickHouse.ExportPart.Logging", level=2, num="17.1"),
+        Heading(name="Monitoring export operations", level=1, num="18"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.SystemTables.Exports", level=2, num="20.1"
+            name="RQ.ClickHouse.ExportPart.SystemTables.Exports", level=2, num="18.1"
         ),
-        Heading(name="Enabling export functionality", level=1, num="21"),
+        Heading(name="Enabling export functionality", level=1, num="19"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Settings.AllowExperimental",
             level=2,
-            num="21.1",
+            num="19.1",
         ),
-        Heading(name="Handling file conflicts during export", level=1, num="22"),
+        Heading(name="Handling file conflicts during export", level=1, num="20"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.Settings.OverwriteFile", level=2, num="22.1"
+            name="RQ.ClickHouse.ExportPart.Settings.OverwriteFile", level=2, num="20.1"
         ),
-        Heading(name="Export operation configuration", level=1, num="23"),
+        Heading(name="Export operation configuration", level=1, num="21"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.ParallelFormatting", level=2, num="23.1"
+            name="RQ.ClickHouse.ExportPart.ParallelFormatting", level=2, num="21.1"
         ),
-        Heading(name="Controlling export performance", level=1, num="24"),
+        Heading(name="Controlling export performance", level=1, num="22"),
         Heading(
             name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
             level=2,
-            num="24.1",
+            num="22.1",
         ),
-        Heading(name="Monitoring export performance metrics", level=1, num="25"),
-        Heading(name="RQ.ClickHouse.ExportPart.Events", level=2, num="25.1"),
-        Heading(name="RQ.ClickHouse.ExportPart.Metrics.Export", level=2, num="25.2"),
-        Heading(name="Export operation security", level=1, num="26"),
-        Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="26.1"),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize",
+            level=2,
+            num="22.2",
+        ),
+        Heading(name="RQ.ClickHouse.ExportPart.Metrics.Export", level=2, num="22.3"),
+        Heading(name="Export operation security", level=1, num="23"),
+        Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="23.1"),
     ),
     requirements=(
         RQ_ClickHouse_ExportPart_S3,
@@ -875,8 +831,6 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_SourcePartStorage,
         RQ_ClickHouse_ExportPart_StoragePolicies,
         RQ_ClickHouse_ExportPart_DestinationEngines,
-        RQ_ClickHouse_ExportPart_DestinationSetup,
-        RQ_ClickHouse_ExportPart_DataPreparation,
         RQ_ClickHouse_ExportPart_SchemaCompatibility,
         RQ_ClickHouse_ExportPart_PartitionKeyTypes,
         RQ_ClickHouse_ExportPart_PartTypes,
@@ -899,7 +853,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_Settings_OverwriteFile,
         RQ_ClickHouse_ExportPart_ParallelFormatting,
         RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth,
-        RQ_ClickHouse_ExportPart_Events,
+        RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize,
         RQ_ClickHouse_ExportPart_Metrics_Export,
         RQ_ClickHouse_ExportPart_Security,
     ),
@@ -925,56 +879,51 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 7.1 [RQ.ClickHouse.ExportPart.StoragePolicies](#rqclickhouseexportpartstoragepolicies)
 * 8 [Supported destination table engines](#supported-destination-table-engines)
     * 8.1 [RQ.ClickHouse.ExportPart.DestinationEngines](#rqclickhouseexportpartdestinationengines)
-* 9 [Destination setup and file management](#destination-setup-and-file-management)
-    * 9.1 [RQ.ClickHouse.ExportPart.DestinationSetup](#rqclickhouseexportpartdestinationsetup)
-* 10 [Export data preparation](#export-data-preparation)
-    * 10.1 [RQ.ClickHouse.ExportPart.DataPreparation](#rqclickhouseexportpartdatapreparation)
-* 11 [Schema compatibility](#schema-compatibility)
-    * 11.1 [RQ.ClickHouse.ExportPart.SchemaCompatibility](#rqclickhouseexportpartschemacompatibility)
-* 12 [Partition key types support](#partition-key-types-support)
-    * 12.1 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
-* 13 [Part types and content support](#part-types-and-content-support)
-    * 13.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
-    * 13.2 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
-    * 13.3 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
-* 14 [Export operation failure handling](#export-operation-failure-handling)
-    * 14.1 [RQ.ClickHouse.ExportPart.FailureHandling](#rqclickhouseexportpartfailurehandling)
-* 15 [Network resilience](#network-resilience)
-    * 15.1 [RQ.ClickHouse.ExportPart.NetworkResilience.PacketIssues](#rqclickhouseexportpartnetworkresiliencepacketissues)
-    * 15.2 [RQ.ClickHouse.ExportPart.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartnetworkresiliencedestinationinterruption)
-    * 15.3 [RQ.ClickHouse.ExportPart.NetworkResilience.NodeInterruption](#rqclickhouseexportpartnetworkresiliencenodeinterruption)
-* 16 [Export operation restrictions](#export-operation-restrictions)
-    * 16.1 [Preventing same table exports](#preventing-same-table-exports)
-        * 16.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
-    * 16.2 [Destination table compatibility](#destination-table-compatibility)
-        * 16.2.1 [RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport](#rqclickhouseexportpartrestrictionsdestinationsupport)
-    * 16.3 [Local table restriction](#local-table-restriction)
-        * 16.3.1 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
-    * 16.4 [Partition key compatibility](#partition-key-compatibility)
-        * 16.4.1 [RQ.ClickHouse.ExportPart.Restrictions.PartitionKey](#rqclickhouseexportpartrestrictionspartitionkey)
-    * 16.5 [Source part availability](#source-part-availability)
-        * 16.5.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
-* 17 [Export operation concurrency](#export-operation-concurrency)
-    * 17.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
-* 18 [Export operation idempotency](#export-operation-idempotency)
-    * 18.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
-* 19 [Export operation logging](#export-operation-logging)
-    * 19.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
-* 20 [Monitoring export operations](#monitoring-export-operations)
-    * 20.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
-* 21 [Enabling export functionality](#enabling-export-functionality)
-    * 21.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
-* 22 [Handling file conflicts during export](#handling-file-conflicts-during-export)
-    * 22.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
-* 23 [Export operation configuration](#export-operation-configuration)
-    * 23.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
-* 24 [Controlling export performance](#controlling-export-performance)
-    * 24.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-* 25 [Monitoring export performance metrics](#monitoring-export-performance-metrics)
-    * 25.1 [RQ.ClickHouse.ExportPart.Events](#rqclickhouseexportpartevents)
-    * 25.2 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
-* 26 [Export operation security](#export-operation-security)
-    * 26.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+* 9 [Schema compatibility](#schema-compatibility)
+    * 9.1 [RQ.ClickHouse.ExportPart.SchemaCompatibility](#rqclickhouseexportpartschemacompatibility)
+* 10 [Partition key types support](#partition-key-types-support)
+    * 10.1 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
+* 11 [Part types and content support](#part-types-and-content-support)
+    * 11.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
+    * 11.2 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
+    * 11.3 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
+* 12 [Export operation failure handling](#export-operation-failure-handling)
+    * 12.1 [RQ.ClickHouse.ExportPart.FailureHandling](#rqclickhouseexportpartfailurehandling)
+* 13 [Network resilience](#network-resilience)
+    * 13.1 [RQ.ClickHouse.ExportPart.NetworkResilience.PacketIssues](#rqclickhouseexportpartnetworkresiliencepacketissues)
+    * 13.2 [RQ.ClickHouse.ExportPart.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartnetworkresiliencedestinationinterruption)
+    * 13.3 [RQ.ClickHouse.ExportPart.NetworkResilience.NodeInterruption](#rqclickhouseexportpartnetworkresiliencenodeinterruption)
+* 14 [Export operation restrictions](#export-operation-restrictions)
+    * 14.1 [Preventing same table exports](#preventing-same-table-exports)
+        * 14.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
+    * 14.2 [Destination table compatibility](#destination-table-compatibility)
+        * 14.2.1 [RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport](#rqclickhouseexportpartrestrictionsdestinationsupport)
+    * 14.3 [Local table restriction](#local-table-restriction)
+        * 14.3.1 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
+    * 14.4 [Partition key compatibility](#partition-key-compatibility)
+        * 14.4.1 [RQ.ClickHouse.ExportPart.Restrictions.PartitionKey](#rqclickhouseexportpartrestrictionspartitionkey)
+    * 14.5 [Source part availability](#source-part-availability)
+        * 14.5.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
+* 15 [Export operation concurrency](#export-operation-concurrency)
+    * 15.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
+* 16 [Export operation idempotency](#export-operation-idempotency)
+    * 16.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
+* 17 [Export operation logging](#export-operation-logging)
+    * 17.1 [RQ.ClickHouse.ExportPart.Logging](#rqclickhouseexportpartlogging)
+* 18 [Monitoring export operations](#monitoring-export-operations)
+    * 18.1 [RQ.ClickHouse.ExportPart.SystemTables.Exports](#rqclickhouseexportpartsystemtablesexports)
+* 19 [Enabling export functionality](#enabling-export-functionality)
+    * 19.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
+* 20 [Handling file conflicts during export](#handling-file-conflicts-during-export)
+    * 20.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
+* 21 [Export operation configuration](#export-operation-configuration)
+    * 21.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
+* 22 [Controlling export performance](#controlling-export-performance)
+    * 22.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+    * 22.2 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
+    * 22.3 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
+* 23 [Export operation security](#export-operation-security)
+    * 23.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
 
 ## Introduction
 
@@ -1078,27 +1027,6 @@ version: 1.0
   * `HDFS` - Hadoop Distributed File System (with Hive partitioning)
   * `Azure` - Microsoft Azure Blob Storage (with Hive partitioning)
   * `GCS` - Google Cloud Storage (with Hive partitioning)
-
-## Destination setup and file management
-
-### RQ.ClickHouse.ExportPart.DestinationSetup
-version: 1.0
-
-[ClickHouse] SHALL handle destination setup and file management by:
-* Creating appropriate import sinks for destination storage systems
-* Generating unique file names in the format `{part_name}_{checksum_hex}` to avoid conflicts
-* Allowing destination storage to determine the final file path based on Hive partitioning
-* Creating files in the destination storage that users can observe and access
-* Providing the final destination file path in the `system.part_log` table for monitoring
-
-## Export data preparation
-
-### RQ.ClickHouse.ExportPart.DataPreparation
-version: 1.0
-
-[ClickHouse] SHALL prepare data for export by:
-* Automatically selecting all physical columns from source table metadata
-* Extracting partition key values for proper Hive partitioning in destination
 
 ## Schema compatibility
 
@@ -1346,16 +1274,10 @@ version: 1.0
 
 [ClickHouse] SHALL support the `max_exports_bandwidth_for_server` server setting to limit the maximum read speed of all exports on the server in bytes per second, with `0` meaning unlimited bandwidth. The default value SHALL be `0`. This is a server-level setting configured in the server configuration file.
 
-## Monitoring export performance metrics
-
-### RQ.ClickHouse.ExportPart.Events
+### RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize
 version: 1.0
 
-[ClickHouse] SHALL provide the following export-related events in the `system.events` table:
-* `PartsExports` - Number of successful part exports
-* `PartsExportFailures` - Number of failed part exports  
-* `PartsExportDuplicated` - Number of part exports that failed because target already exists
-* `PartsExportTotalMilliseconds` - Length of total time taken for parts to export
+[ClickHouse] SHALL support the `background_move_pool_size` server setting to control the maximum number of threads that will be used for executing export operations in the background. The default value SHALL be `8`. This is a server-level setting configured in the server configuration file.
 
 ### RQ.ClickHouse.ExportPart.Metrics.Export
 version: 1.0
