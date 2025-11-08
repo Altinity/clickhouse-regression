@@ -123,6 +123,7 @@ def system_exports_logging(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize("1.0"))
 def background_move_pool_size(self):
     pass
 
