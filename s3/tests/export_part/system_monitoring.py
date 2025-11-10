@@ -1,8 +1,11 @@
+from time import sleep
+
 from testflows.core import *
 from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
-from time import sleep
+from alter.stress.tests.tc_netem import *
+
 
 
 @TestScenario
@@ -104,6 +107,9 @@ def system_exports_logging(self):
             number_of_values=1000000,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+    
+    with And("I slow down the network speed"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=250)
 
     with When("I export parts to the S3 table"):
         export_parts(
