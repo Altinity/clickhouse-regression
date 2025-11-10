@@ -240,6 +240,5 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
-    # if self.context.stress:
-    #    Scenario(run=large_export)
-    # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting
+    if self.context.stress:
+        Scenario(run=large_export)
