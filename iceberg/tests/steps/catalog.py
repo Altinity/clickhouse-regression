@@ -263,7 +263,9 @@ def create_iceberg_table(
 
 
 @TestStep(Given)
-def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name):
+def create_iceberg_table_with_three_columns(
+    self, catalog, namespace, table_name, location="s3://warehouse/data"
+):
     """Define schema, partition spec, sort order and create iceberg table with three columns."""
     schema = Schema(
         NestedField(field_id=1, name="name", field_type=StringType(), required=False),
@@ -284,7 +286,7 @@ def create_iceberg_table_with_three_columns(self, catalog, namespace, table_name
         namespace=namespace,
         table_name=table_name,
         schema=schema,
-        location="s3://warehouse/data",
+        location=location,
         partition_spec=partition_spec,
         sort_order=sort_order,
     )
