@@ -11,6 +11,7 @@ def minio(self, uri, bucket_prefix):
 
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
+    self.context.default_settings = [("allow_experimental_export_merge_tree_part", 1)]
 
     Feature(run=load("s3.tests.export_partition.sanity", "feature"))
     Feature(run=load("s3.tests.export_partition.error_handling", "feature"))
