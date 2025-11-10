@@ -2452,3 +2452,9 @@ write_through_distributed_cache = r"""'{"default":"0"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
 
+enable_scopes_for_with_statement = r"""'{"default":"1"}'"""
+
+output_format_parquet_date_as_uint16 = r"""'{"default":"0"}'"""
+
+show_data_lake_catalogs_in_system_tables = r"""'{"default":"1"}'"""
+
