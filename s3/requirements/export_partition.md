@@ -68,6 +68,7 @@
     * 19.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
 * 20 [Enabling export functionality](#enabling-export-functionality)
     * 20.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
+    * 20.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
 * 21 [Handling file conflicts during export](#handling-file-conflicts-during-export)
     * 21.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
 * 22 [Export operation configuration](#export-operation-configuration)
@@ -680,6 +681,19 @@ version: 1.0
 [ClickHouse] SHALL support the `allow_experimental_export_merge_tree_part` setting that SHALL gate the experimental export partition functionality, which SHALL be set to `1` to enable `ALTER TABLE ... EXPORT PARTITION ID ...` commands. The default value SHALL be `0` (turned off).
 
 This setting allows administrators to control access to experimental functionality and ensures users are aware they are using a feature that may change.
+
+### RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled
+version: 1.0
+
+[ClickHouse] SHALL prevent export partition operations when `allow_experimental_export_merge_tree_part` is set to `0` (turned off). When the setting is `0`, attempting to execute `ALTER TABLE ... EXPORT PARTITION ID ...` commands SHALL result in an error indicating that the experimental feature is not enabled.
+
+For example, the following command SHALL output an error when the setting is `0`:
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+```
 
 ## Handling file conflicts during export
 

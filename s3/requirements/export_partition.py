@@ -995,6 +995,30 @@ RQ_ClickHouse_ExportPartition_Settings_AllowExperimental = Requirement(
     num="20.1",
 )
 
+RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL prevent export partition operations when `allow_experimental_export_merge_tree_part` is set to `0` (turned off). When the setting is `0`, attempting to execute `ALTER TABLE ... EXPORT PARTITION ID ...` commands SHALL result in an error indicating that the experimental feature is not enabled.\n"
+        "\n"
+        "For example, the following command SHALL output an error when the setting is `0`:\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE source_table \n"
+        "EXPORT PARTITION ID '2020' \n"
+        "TO TABLE destination_table\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="20.2",
+)
+
 RQ_ClickHouse_ExportPartition_Settings_OverwriteFile = Requirement(
     name="RQ.ClickHouse.ExportPartition.Settings.OverwriteFile",
     version="1.0",
@@ -1345,6 +1369,11 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             level=2,
             num="20.1",
         ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled",
+            level=2,
+            num="20.2",
+        ),
         Heading(name="Handling file conflicts during export", level=1, num="21"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Settings.OverwriteFile",
@@ -1428,6 +1457,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Logging,
         RQ_ClickHouse_ExportPartition_SystemTables_Exports,
         RQ_ClickHouse_ExportPartition_Settings_AllowExperimental,
+        RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled,
         RQ_ClickHouse_ExportPartition_Settings_OverwriteFile,
         RQ_ClickHouse_ExportPartition_ParallelFormatting,
         RQ_ClickHouse_ExportPartition_ServerSettings_MaxBandwidth,
@@ -1509,6 +1539,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 19.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
 * 20 [Enabling export functionality](#enabling-export-functionality)
     * 20.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
+    * 20.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
 * 21 [Handling file conflicts during export](#handling-file-conflicts-during-export)
     * 21.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
 * 22 [Export operation configuration](#export-operation-configuration)
@@ -2121,6 +2152,19 @@ version: 1.0
 [ClickHouse] SHALL support the `allow_experimental_export_merge_tree_part` setting that SHALL gate the experimental export partition functionality, which SHALL be set to `1` to enable `ALTER TABLE ... EXPORT PARTITION ID ...` commands. The default value SHALL be `0` (turned off).
 
 This setting allows administrators to control access to experimental functionality and ensures users are aware they are using a feature that may change.
+
+### RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled
+version: 1.0
+
+[ClickHouse] SHALL prevent export partition operations when `allow_experimental_export_merge_tree_part` is set to `0` (turned off). When the setting is `0`, attempting to execute `ALTER TABLE ... EXPORT PARTITION ID ...` commands SHALL result in an error indicating that the experimental feature is not enabled.
+
+For example, the following command SHALL output an error when the setting is `0`:
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+```
 
 ## Handling file conflicts during export
 
