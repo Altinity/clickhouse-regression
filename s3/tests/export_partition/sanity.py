@@ -8,6 +8,7 @@ from s3.requirements.export_part import *
 from alter.table.replace_partition.partition_types import (
     table_with_compact_and_wide_parts,
 )
+from s3.tests.export_partition.steps import export_partitions
 
 
 @TestScenario
@@ -234,11 +235,11 @@ def large_export(self):
 def feature(self):
     """Check basic functionality of exporting data parts to S3 storage."""
 
-    # Scenario(run=empty_table)
+    Scenario(run=empty_table)
     Scenario(run=basic_table)
-    # Scenario(run=no_partition_by)
-    # Scenario(run=mismatched_columns)
-    # Scenario(run=wide_and_compact_parts)
+    Scenario(run=no_partition_by)
+    Scenario(run=mismatched_columns)
+    Scenario(run=wide_and_compact_parts)
     # if self.context.stress:
     #    Scenario(run=large_export)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting
