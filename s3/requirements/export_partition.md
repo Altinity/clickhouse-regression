@@ -9,70 +9,78 @@
     * 2.2 [RQ.ClickHouse.ExportPartition.EmptyPartition](#rqclickhouseexportpartitionemptypartition)
 * 3 [SQL command support](#sql-command-support)
     * 3.1 [RQ.ClickHouse.ExportPartition.SQLCommand](#rqclickhouseexportpartitionsqlcommand)
+    * 3.2 [RQ.ClickHouse.ExportPartition.IntoOutfile](#rqclickhouseexportpartitionintooutfile)
+    * 3.3 [RQ.ClickHouse.ExportPartition.Format](#rqclickhouseexportpartitionformat)
+    * 3.4 [RQ.ClickHouse.ExportPartition.SettingsClause](#rqclickhouseexportpartitionsettingsclause)
 * 4 [Supported source table engines](#supported-source-table-engines)
     * 4.1 [RQ.ClickHouse.ExportPartition.SourceEngines](#rqclickhouseexportpartitionsourceengines)
 * 5 [Cluster and node support](#cluster-and-node-support)
     * 5.1 [RQ.ClickHouse.ExportPartition.ClustersNodes](#rqclickhouseexportpartitionclustersnodes)
+    * 5.2 [RQ.ClickHouse.ExportPartition.Shards](#rqclickhouseexportpartitionshards)
+    * 5.3 [RQ.ClickHouse.ExportPartition.Versions](#rqclickhouseexportpartitionversions)
 * 6 [Supported source part storage types](#supported-source-part-storage-types)
     * 6.1 [RQ.ClickHouse.ExportPartition.SourcePartStorage](#rqclickhouseexportpartitionsourcepartstorage)
 * 7 [Storage policies and volumes](#storage-policies-and-volumes)
     * 7.1 [RQ.ClickHouse.ExportPartition.StoragePolicies](#rqclickhouseexportpartitionstoragepolicies)
 * 8 [Supported destination table engines](#supported-destination-table-engines)
     * 8.1 [RQ.ClickHouse.ExportPartition.DestinationEngines](#rqclickhouseexportpartitiondestinationengines)
-* 9 [Schema compatibility](#schema-compatibility)
-    * 9.1 [RQ.ClickHouse.ExportPartition.SchemaCompatibility](#rqclickhouseexportpartitionschemacompatibility)
-* 10 [Partition key types support](#partition-key-types-support)
-    * 10.1 [RQ.ClickHouse.ExportPartition.PartitionKeyTypes](#rqclickhouseexportpartitionpartitionkeytypes)
-* 11 [Partition content support](#partition-content-support)
-    * 11.1 [RQ.ClickHouse.ExportPartition.PartitionContent](#rqclickhouseexportpartitionpartitioncontent)
-    * 11.2 [RQ.ClickHouse.ExportPartition.SchemaChangeIsolation](#rqclickhouseexportpartitionschemachangeisolation)
-    * 11.3 [RQ.ClickHouse.ExportPartition.LargePartitions](#rqclickhouseexportpartitionlargepartitions)
-* 12 [Export operation failure handling](#export-operation-failure-handling)
-    * 12.1 [RQ.ClickHouse.ExportPartition.RetryMechanism](#rqclickhouseexportpartitionretrymechanism)
-    * 12.2 [RQ.ClickHouse.ExportPartition.Settings.MaxRetries](#rqclickhouseexportpartitionsettingsmaxretries)
-    * 12.3 [RQ.ClickHouse.ExportPartition.ResumeAfterFailure](#rqclickhouseexportpartitionresumeafterfailure)
-    * 12.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
-    * 12.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
-    * 12.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
-* 13 [Network resilience](#network-resilience)
-    * 13.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
-    * 13.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
-    * 13.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
-* 14 [Export operation restrictions](#export-operation-restrictions)
-    * 14.1 [Preventing same table exports](#preventing-same-table-exports)
-        * 14.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
-    * 14.2 [Destination table compatibility](#destination-table-compatibility)
-        * 14.2.1 [RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport](#rqclickhouseexportpartitionrestrictionsdestinationsupport)
-    * 14.3 [Local table restriction](#local-table-restriction)
-        * 14.3.1 [RQ.ClickHouse.ExportPartition.Restrictions.LocalTable](#rqclickhouseexportpartitionrestrictionslocaltable)
-    * 14.4 [Partition key compatibility](#partition-key-compatibility)
-        * 14.4.1 [RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey](#rqclickhouseexportpartitionrestrictionspartitionkey)
-    * 14.5 [Source partition availability](#source-partition-availability)
-        * 14.5.1 [RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition](#rqclickhouseexportpartitionrestrictionssourcepartition)
-* 15 [Export operation concurrency](#export-operation-concurrency)
-    * 15.1 [RQ.ClickHouse.ExportPartition.Concurrency](#rqclickhouseexportpartitionconcurrency)
-* 16 [Export operation idempotency](#export-operation-idempotency)
-    * 16.1 [RQ.ClickHouse.ExportPartition.Idempotency](#rqclickhouseexportpartitionidempotency)
-    * 16.2 [RQ.ClickHouse.ExportPartition.Settings.ForceExport](#rqclickhouseexportpartitionsettingsforceexport)
-* 17 [Export operation logging](#export-operation-logging)
-    * 17.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
-* 18 [Monitoring export operations](#monitoring-export-operations)
-    * 18.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
-* 19 [Enabling export functionality](#enabling-export-functionality)
-    * 19.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
-* 20 [Handling file conflicts during export](#handling-file-conflicts-during-export)
-    * 20.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
-* 21 [Export operation configuration](#export-operation-configuration)
-    * 21.1 [RQ.ClickHouse.ExportPartition.ParallelFormatting](#rqclickhouseexportpartitionparallelformatting)
-* 22 [Controlling export performance](#controlling-export-performance)
-    * 22.1 [RQ.ClickHouse.ExportPartition.ServerSettings.MaxBandwidth](#rqclickhouseexportpartitionserversettingsmaxbandwidth)
-    * 22.2 [RQ.ClickHouse.ExportPartition.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartitionserversettingsbackgroundmovepoolsize)
-    * 22.3 [RQ.ClickHouse.ExportPartition.Metrics.Export](#rqclickhouseexportpartitionmetricsexport)
-* 23 [Export operation security](#export-operation-security)
-    * 23.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
-    * 23.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
-    * 23.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
-    * 23.4 [RQ.ClickHouse.ExportPartition.Security.CredentialManagement](#rqclickhouseexportpartitionsecuritycredentialmanagement)
+* 9 [Temporary tables](#temporary-tables)
+    * 9.1 [RQ.ClickHouse.ExportPartition.TemporaryTable](#rqclickhouseexportpartitiontemporarytable)
+* 10 [Schema compatibility](#schema-compatibility)
+    * 10.1 [RQ.ClickHouse.ExportPartition.SchemaCompatibility](#rqclickhouseexportpartitionschemacompatibility)
+* 11 [Partition key types support](#partition-key-types-support)
+    * 11.1 [RQ.ClickHouse.ExportPartition.PartitionKeyTypes](#rqclickhouseexportpartitionpartitionkeytypes)
+* 12 [Partition content support](#partition-content-support)
+    * 12.1 [RQ.ClickHouse.ExportPartition.PartitionContent](#rqclickhouseexportpartitionpartitioncontent)
+    * 12.2 [RQ.ClickHouse.ExportPartition.SchemaChangeIsolation](#rqclickhouseexportpartitionschemachangeisolation)
+    * 12.3 [RQ.ClickHouse.ExportPartition.LargePartitions](#rqclickhouseexportpartitionlargepartitions)
+    * 12.4 [RQ.ClickHouse.ExportPartition.Corrupted](#rqclickhouseexportpartitioncorrupted)
+* 13 [Export operation failure handling](#export-operation-failure-handling)
+    * 13.1 [RQ.ClickHouse.ExportPartition.RetryMechanism](#rqclickhouseexportpartitionretrymechanism)
+    * 13.2 [RQ.ClickHouse.ExportPartition.Settings.MaxRetries](#rqclickhouseexportpartitionsettingsmaxretries)
+    * 13.3 [RQ.ClickHouse.ExportPartition.ResumeAfterFailure](#rqclickhouseexportpartitionresumeafterfailure)
+    * 13.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
+    * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
+    * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
+* 14 [Network resilience](#network-resilience)
+    * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
+    * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
+    * 14.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
+* 15 [Export operation restrictions](#export-operation-restrictions)
+    * 15.1 [Preventing same table exports](#preventing-same-table-exports)
+        * 15.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
+    * 15.2 [Destination table compatibility](#destination-table-compatibility)
+        * 15.2.1 [RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport](#rqclickhouseexportpartitionrestrictionsdestinationsupport)
+    * 15.3 [Local table restriction](#local-table-restriction)
+        * 15.3.1 [RQ.ClickHouse.ExportPartition.Restrictions.LocalTable](#rqclickhouseexportpartitionrestrictionslocaltable)
+    * 15.4 [Partition key compatibility](#partition-key-compatibility)
+        * 15.4.1 [RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey](#rqclickhouseexportpartitionrestrictionspartitionkey)
+    * 15.5 [Source partition availability](#source-partition-availability)
+        * 15.5.1 [RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition](#rqclickhouseexportpartitionrestrictionssourcepartition)
+* 16 [Export operation concurrency](#export-operation-concurrency)
+    * 16.1 [RQ.ClickHouse.ExportPartition.Concurrency](#rqclickhouseexportpartitionconcurrency)
+* 17 [Export operation idempotency](#export-operation-idempotency)
+    * 17.1 [RQ.ClickHouse.ExportPartition.Idempotency](#rqclickhouseexportpartitionidempotency)
+    * 17.2 [RQ.ClickHouse.ExportPartition.Settings.ForceExport](#rqclickhouseexportpartitionsettingsforceexport)
+* 18 [Export operation logging](#export-operation-logging)
+    * 18.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
+* 19 [Monitoring export operations](#monitoring-export-operations)
+    * 19.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
+* 20 [Enabling export functionality](#enabling-export-functionality)
+    * 20.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
+* 21 [Handling file conflicts during export](#handling-file-conflicts-during-export)
+    * 21.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
+* 22 [Export operation configuration](#export-operation-configuration)
+    * 22.1 [RQ.ClickHouse.ExportPartition.ParallelFormatting](#rqclickhouseexportpartitionparallelformatting)
+* 23 [Controlling export performance](#controlling-export-performance)
+    * 23.1 [RQ.ClickHouse.ExportPartition.ServerSettings.MaxBandwidth](#rqclickhouseexportpartitionserversettingsmaxbandwidth)
+    * 23.2 [RQ.ClickHouse.ExportPartition.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartitionserversettingsbackgroundmovepoolsize)
+    * 23.3 [RQ.ClickHouse.ExportPartition.Metrics.Export](#rqclickhouseexportpartitionmetricsexport)
+* 24 [Export operation security](#export-operation-security)
+    * 24.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
+    * 24.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
+    * 24.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
+    * 24.4 [RQ.ClickHouse.ExportPartition.Security.CredentialManagement](#rqclickhouseexportpartitionsecuritycredentialmanagement)
 
 ## Introduction
 
@@ -116,6 +124,51 @@ SETTINGS allow_experimental_export_merge_tree_part = 1
 
 This command allows users to export entire partitions in a single operation, which is more efficient than exporting individual parts and ensures all data for a partition is exported together.
 
+### RQ.ClickHouse.ExportPartition.IntoOutfile
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `INTO OUTFILE` clause with `EXPORT PARTITION` and SHALL not output any errors.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+INTO OUTFILE '/path/to/file'
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
+### RQ.ClickHouse.ExportPartition.Format
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `FORMAT` clause with `EXPORT PARTITION` and SHALL not output any errors.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+FORMAT JSON
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
+### RQ.ClickHouse.ExportPartition.SettingsClause
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `SETTINGS` clause with `EXPORT PARTITION` and SHALL not output any errors.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1, 
+         export_merge_tree_partition_max_retries = 5
+```
+
 ## Supported source table engines
 
 ### RQ.ClickHouse.ExportPartition.SourceEngines
@@ -145,6 +198,18 @@ version: 1.0
 * Export operations continue to make progress even if some replicas are temporarily unavailable
 
 In a replicated cluster, different parts of the same partition may exist on different replicas. The system must coordinate exports across all replicas to ensure complete partition export without duplication.
+
+### RQ.ClickHouse.ExportPartition.Shards
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions from source tables that are on different shards than the destination table.
+
+### RQ.ClickHouse.ExportPartition.Versions
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions from source tables that are stored on servers with different ClickHouse versions than the destination server.
+
+Users can export partitions from tables on servers with older ClickHouse versions to tables on servers with newer versions, enabling data migration and version upgrades.
 
 ## Supported source part storage types
 
@@ -191,6 +256,28 @@ version: 1.0
   * `GCS` - Google Cloud Storage (with Hive partitioning)
 
 Export partition is designed to move data from local or replicated storage to object storage systems for long-term storage, analytics, or data sharing purposes.
+
+## Temporary tables
+
+### RQ.ClickHouse.ExportPartition.TemporaryTable
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions from temporary ReplicatedMergeTree tables to destination object storage tables.
+
+For example,
+
+```sql
+CREATE TEMPORARY TABLE temp_table (p UInt64, k String, d UInt64) 
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/temp_table', '{replica}') 
+PARTITION BY p ORDER BY k;
+
+INSERT INTO temp_table VALUES (2020, 'key1', 100), (2020, 'key2', 200);
+
+ALTER TABLE temp_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
 
 ## Schema compatibility
 
@@ -265,6 +352,13 @@ version: 1.0
 
 Production systems often have partitions containing very large amounts of data, and the export must handle these efficiently without timeouts or memory issues.
 
+### RQ.ClickHouse.ExportPartition.Corrupted
+version: 1.0
+
+[ClickHouse] SHALL output an error and prevent export operations from proceeding when trying to export a partition that contains corrupted parts in the source table.
+
+The system SHALL detect corruption in partitions containing compact parts, wide parts, or mixed part types.
+
 ## Export operation failure handling
 
 ### RQ.ClickHouse.ExportPartition.RetryMechanism
@@ -281,6 +375,16 @@ version: 1.0
 
 This setting allows users to control how many times the system will retry exporting a part before marking it as failed.
 
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_partition_max_retries = 5
+```
+
 ### RQ.ClickHouse.ExportPartition.ResumeAfterFailure
 version: 1.0
 
@@ -290,6 +394,15 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL allow export operations to make partial progress, with successfully exported parts remaining in the destination even if other parts fail. Users SHALL be able to see which parts have been successfully exported and which parts have failed.
+
+For example, users can query the export status to see partial progress:
+
+```sql
+SELECT source_table, destination_table, partition_id, status,
+       parts_total, parts_processed, parts_failed
+FROM system.replicated_partition_exports
+WHERE partition_id = '2020'
+```
 
 ### RQ.ClickHouse.ExportPartition.Cleanup
 version: 1.0
@@ -302,6 +415,16 @@ version: 1.0
 [ClickHouse] SHALL support the `export_merge_tree_partition_manifest_ttl` setting that determines how long the export manifest will be retained. This setting prevents the same partition from being exported twice to the same destination within the TTL period. The default value SHALL be `180` seconds.
 
 This setting only affects completed export operations and does not delete in-progress tasks. It allows users to control how long export history is maintained to prevent duplicate exports.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_partition_manifest_ttl = 360
+```
 
 ## Network resilience
 
@@ -360,6 +483,15 @@ version: 1.0
 
 Exporting to the same table would be redundant and could cause data duplication or conflicts.
 
+For example, the following command SHALL output an error:
+
+```sql
+ALTER TABLE my_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE my_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
 ### Destination table compatibility
 
 #### RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport
@@ -386,6 +518,15 @@ version: 1.0
 
 Export partition is designed to move data to object storage, not to local MergeTree tables.
 
+For example, if `local_table` is a MergeTree table, the following command SHALL output an error:
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE local_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
+
 ### Partition key compatibility
 
 #### RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey
@@ -397,6 +538,15 @@ version: 1.0
 * Performing this validation during the initial export setup phase
 
 Matching partition keys ensure that exported data is organized correctly in the destination storage.
+
+For example, if `source_table` is partitioned by `toYYYYMM(date)` and `destination_table` is partitioned by `toYYYYMMDD(date)`, the following command SHALL output an error:
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
 
 ### Source partition availability
 
@@ -410,6 +560,15 @@ version: 1.0
 * Performing this validation before any export processing begins
 
 The system must verify that the partition exists and contains data before attempting to export it.
+
+For example, if partition ID '2025' does not exist in `source_table`, the following command SHALL output an error:
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2025' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1
+```
 
 ## Export operation concurrency
 
@@ -447,6 +606,16 @@ version: 1.0
 
 When set to `true`, this setting allows users to overwrite existing export entries and force re-export of a partition, even if a previous export operation exists for the same partition and destination.
 
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_partition_force_export = 1
+```
+
 ## Export operation logging
 
 ### RQ.ClickHouse.ExportPartition.Logging
@@ -464,6 +633,15 @@ version: 1.0
 * Logging per-part export status within partition exports
 
 Detailed logging helps users monitor export progress, troubleshoot issues, and audit export operations.
+
+For example, users can query export logs:
+
+```sql
+SELECT event_time, event_type, table, partition, rows, bytes_read, bytes_written
+FROM system.part_log
+WHERE event_type = 'EXPORT_PARTITION'
+ORDER BY event_time DESC
+```
 
 ## Monitoring export operations
 
@@ -485,6 +663,15 @@ The table SHALL track export operations before they complete and SHALL show comp
 
 Users need visibility into export operations to monitor progress, identify issues, and understand export status across the cluster.
 
+For example,
+
+```sql
+SELECT source_table, destination_table, partition_id, status, 
+       parts_total, parts_processed, parts_failed, create_time, update_time
+FROM system.replicated_partition_exports
+WHERE status = 'IN_PROGRESS'
+```
+
 ## Enabling export functionality
 
 ### RQ.ClickHouse.ExportPartition.Settings.AllowExperimental
@@ -502,6 +689,16 @@ version: 1.0
 [ClickHouse] SHALL support the `export_merge_tree_part_overwrite_file_if_exists` setting that controls whether to overwrite files if they already exist when exporting a partition. The default value SHALL be `0` (turned off), meaning exports will fail if files already exist in the destination.
 
 This setting allows users to control whether to overwrite existing data in the destination, providing safety by default while allowing overwrites when needed.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_part_overwrite_file_if_exists = 1
+```
 
 ## Export operation configuration
 
