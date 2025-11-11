@@ -1012,6 +1012,7 @@ class ClickHouseNode(Node):
         ignore_exception=False,
         step=By,
         settings=None,
+        inline_settings=None,
         retry_count=5,
         messages_to_retry=None,
         retry_delay=5,
@@ -1035,6 +1036,7 @@ class ClickHouseNode(Node):
         :param no_check: disable exitcode and message checks, default: False
         :param step: wrapping step class, default: By
         :param settings: list of settings to be used for the query in the form [(name, value),...], default: None
+        :param inline_settings: list of inline settings to be used for the query in the form [(name, value),...], default: None
         :param retry_count: number of retries, default: 5
         :param messages_to_retry: list of messages in the query output for
                which retry should be triggered, default: MESSAGES_TO_RETRY
@@ -1057,6 +1059,7 @@ class ClickHouseNode(Node):
         retry_count = max(0, int(retry_count))
         retry_delay = max(0, float(retry_delay))
         settings = list(settings or [])
+        inline_settings = list(inline_settings or [])
         query_settings = list(settings)
 
         if raise_on_exception:
@@ -1076,6 +1079,13 @@ class ClickHouseNode(Node):
 
         if query_id is not None:
             query_settings += [("query_id", f"{query_id}")]
+
+        if inline_settings:
+            sql = (
+                "; ".join([f"SET {name} = {value}" for name, value in inline_settings])
+                + "; "
+                + sql
+            )
 
         client = "clickhouse client -n"
         if secure:

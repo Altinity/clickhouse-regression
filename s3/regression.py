@@ -501,6 +501,16 @@ ffails = {
         "doesn't work <22.8",
         check_clickhouse_version("<22.8"),
     ),
+    "/:/:/part 3/export part/*": (
+        Skip,
+        "Export part introduced in Antalya build",
+        check_if_not_antalya_build,
+    ),
+    "/:/:/part 3/export partition/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        check_if_not_antalya_build,
+    ),
 }
 
 
@@ -539,6 +549,9 @@ def minio_regression(
 
     self.context.cluster = cluster
     self.context.node = cluster.node("clickhouse1")
+    self.context.node2 = cluster.node("clickhouse2")
+    self.context.node3 = cluster.node("clickhouse3")
+    self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
 
     with And("I have a minio client"):
         start_minio(access_key=root_user, secret_key=root_password)
@@ -548,6 +561,10 @@ def minio_regression(
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
+
+    # with And("I install tc-netem on all clickhouse nodes"):
+    #     for node in self.context.nodes:
+    #         node.command("apt install --yes iproute2 procps")
 
     with And("allow higher cpu_wait_ratio "):
         if check_clickhouse_version(">=25.4")(self):
@@ -601,6 +618,12 @@ def minio_regression(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
         Feature(test=load("s3.tests.remote_s3_function", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.export_part.feature", "minio"))(
+            uri=uri_bucket_file, bucket_prefix=bucket_prefix
+        )
+        Feature(test=load("s3.tests.export_partition.feature", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
 
