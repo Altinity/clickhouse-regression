@@ -624,6 +624,8 @@ enable_s3_requests_logging = r"""'{"default":"0"}'"""
 
 enable_scalar_subquery_optimization = r"""'{"default":"1"}'"""
 
+enable_scopes_for_with_statement = r"""'{"default":"1"}'"""
+
 enable_sharing_sets_for_mutations = r"""'{"default":"1"}'"""
 
 enable_software_prefetch_in_aggregation = r"""'{"default":"1"}'"""
@@ -1828,6 +1830,8 @@ output_format_parquet_compression_method = r"""'{"default":"zstd"}'"""
 
 output_format_parquet_data_page_size = r"""'{"default":"1048576"}'"""
 
+output_format_parquet_date_as_uint16 = r"""'{"default":"0"}'"""
+
 output_format_parquet_datetime_as_uint32 = r"""'{"default":"0"}'"""
 
 output_format_parquet_fixed_string_as_fixed_byte_array = r"""'{"default":"1"}'"""
@@ -2294,6 +2298,8 @@ show_create_query_identifier_quoting_rule = r"""'{"default":"when_necessary"}'""
 
 show_create_query_identifier_quoting_style = r"""'{"default":"Backticks"}'"""
 
+show_data_lake_catalogs_in_system_tables = r"""'{"default":"1"}'"""
+
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
 single_join_prefer_left_table = r"""'{"default":"1"}'"""
@@ -2451,10 +2457,4 @@ workload = r"""'{"default":"default"}'"""
 write_through_distributed_cache = r"""'{"default":"0"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
-
-enable_scopes_for_with_statement = r"""'{"default":"1"}'"""
-
-output_format_parquet_date_as_uint16 = r"""'{"default":"0"}'"""
-
-show_data_lake_catalogs_in_system_tables = r"""'{"default":"1"}'"""
 
