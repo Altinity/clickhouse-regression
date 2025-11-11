@@ -173,4 +173,6 @@ def feature(self):
     Scenario(run=part_logging)
     Scenario(run=duplicate_logging)
     Scenario(run=system_exports_logging)
+    Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
+    Scenario(test=background_move_pool_size)(background_move_pool_size=16)
