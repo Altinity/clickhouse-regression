@@ -297,8 +297,6 @@ def large_part(self):
         )
 
 
-# Are drop and rename supposed to create new parts?
-# When these new parts are exported, it appears like duplicates in the destination table
 @TestOutline(Scenario)
 @Examples(
     "alter_function, kwargs",
@@ -307,9 +305,12 @@ def large_part(self):
             alter_table_add_column,
             {"column_name": "new_column", "column_type": "UInt64"},
         ),
-        # (alter_table_drop_column, "Path", {}),
+        (alter_table_drop_column, {"column_name": "Path"}),
         (alter_table_modify_column, {"column_name": "i", "column_type": "String"}),
-        # (alter_table_rename_column, {"column_name_old": "Path", "column_name_new": "renamed_column"}),
+        (
+            alter_table_rename_column,
+            {"column_name_old": "Path", "column_name_new": "renamed_column"},
+        ),
     ],
 )
 def parts_with_different_columns(self, alter_function, kwargs):
@@ -322,7 +323,6 @@ def parts_with_different_columns(self, alter_function, kwargs):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(simple=False),
-            # stop_merges=True,
         )
 
     with When(f"I {alter_function.__name__} on the source table"):
@@ -352,8 +352,8 @@ def parts_with_different_columns(self, alter_function, kwargs):
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
+            latest_only=True,
         )
-        # pause()
 
     with Then("Check source matches destination"):
         source_matches_destination(
