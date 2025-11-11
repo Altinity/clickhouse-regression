@@ -49,6 +49,7 @@ def table_combos(self):
 
     tables = [
         partitioned_merge_tree_table,
+        partitioned_replicated_merge_tree_table,
         partitioned_replacing_merge_tree_table,
         partitioned_summing_merge_tree_table,
         partitioned_collapsing_merge_tree_table,
@@ -146,8 +147,6 @@ def volume_combos(self):
 @Name("engines and volumes")
 def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
-
-    # TODO replicated merge tree tables (all types)
 
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
