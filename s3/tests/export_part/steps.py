@@ -320,7 +320,23 @@ def insert_into_table(self, table_name, node=None):
         node = self.context.node
 
     node.query(
-        f"INSERT INTO {table_name} (p, i, new_column) SELECT {6}, rand64(), rand64() FROM numbers({3})",
+        f"""INSERT INTO {table_name}
+            SELECT *
+            FROM generateRandom((
+                SELECT arrayStringConcat(
+                        groupArray(concat(name, ' ', type)),
+                        ', '
+                    )
+                FROM
+                (
+                    SELECT name, type
+                    FROM system.columns
+                    WHERE database = currentDatabase()
+                    AND table = '{table_name}'
+                    ORDER BY position
+                )
+            ))
+            LIMIT 10;""",
         exitcode=0,
         steps=True,
     )
