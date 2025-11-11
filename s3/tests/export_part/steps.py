@@ -213,14 +213,25 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
 
 
 @TestStep(When)
-def get_parts(self, table_name, node):
+def get_parts(self, table_name, node, latest_only=False):
     """Get all parts for a table on a given node."""
 
+    if latest_only:
+        query = f"""
+            SELECT argMax(name, name) as name
+            FROM system.parts
+            WHERE table = '{table_name}'
+            GROUP BY partition_id, min_block_number, max_block_number, level
+        """
+    else:
+        query = f"SELECT name FROM system.parts WHERE table = '{table_name}'"
+
     output = node.query(
-        f"SELECT name FROM system.parts WHERE table = '{table_name}'",
+        query,
         exitcode=0,
         steps=True,
     ).output
+
     return sorted([row.strip() for row in output.splitlines()])
 
 
@@ -234,11 +245,12 @@ def export_parts(
     exitcode=0,
     settings=None,
     inline_settings=True,
+    latest_only=False,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
-        parts = get_parts(table_name=source_table, node=node)
+        parts = get_parts(table_name=source_table, node=node, latest_only=latest_only)
 
     if inline_settings is True:
         inline_settings = self.context.default_settings
