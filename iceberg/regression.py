@@ -95,6 +95,21 @@ xfails = {
             check_clickhouse_version(">=25.6"),
         )
     ],
+    "/iceberg/iceberg engine/rest catalog/feature/show databases queries": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/89189",
+            check_clickhouse_version(">=25.10"),
+        )
+    ],
+    "/iceberg/iceberg engine/rest catalog/feature/show tables queries": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/89189",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_clickhouse_version("<25.10")(test),
+        )
+    ],
 }
 
 ffails = {
@@ -127,6 +142,12 @@ ffails = {
         Skip,
         "Metadata caching was introduced in antalya build from 24.12",
         check_if_not_antalya_build,
+    ),
+    "/iceberg/iceberg engine/rest catalog/feature/show data lake catalogs in system tables": (
+        Skip,
+        "show_data_lake_catalogs_in_system_tables setting is not supported before 25.3 and on 25.4",
+        lambda test: check_clickhouse_version("<25.3")(test)
+        or check_clickhouse_version("==25.4")(test),
     ),
 }
 
