@@ -4,6 +4,7 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
+from helpers.alter import *
 from alter.table.replace_partition.partition_types import (
     table_with_compact_and_wide_parts,
 )
@@ -296,6 +297,54 @@ def large_part(self):
         )
 
 
+@TestScenario
+def parts_with_different_columns(self):
+    """Test exporting parts with different columns."""
+
+    with Given("I create a populated source table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+
+    with When("I add a column to the source table"):
+        alter_table_add_column(
+            table_name=source_table,
+            column_name="new_column",
+            column_type="UInt64",
+        )
+
+    with And("I populate the source table with new parts that have the new column"):
+        insert_into_table(
+            table_name=source_table,
+        )
+
+    with When("I create an empty S3 table and add the new column"):
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+        alter_table_add_column(
+            table_name=s3_table_name,
+            column_name="new_column",
+            column_type="UInt64",
+        )
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("sanity")
 def feature(self):
@@ -307,6 +356,7 @@ def feature(self):
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
     Scenario(run=export_and_drop)
+    Scenario(run=parts_with_different_columns)
     if self.context.stress:
         Scenario(run=large_part)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

@@ -312,6 +312,58 @@ def get_system_exports(self, node):
     return [line.strip().split("\t") for line in exports]
 
 
+@TestStep(When)
+def insert_into_table(self, table_name, node=None):
+    """Insert values into a table."""
+
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"INSERT INTO {table_name} (p, i, new_column) SELECT {6}, rand64(), rand64() FROM numbers({3})",
+        exitcode=0,
+        steps=True,
+    )
+
+
+@TestStep(When)
+def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_parts=1):
+    """Check concurrent exports from different sources to the same S3 table."""
+
+    with By(f"I create {num_tables} populated source tables"):
+        source_tables = []
+        for i in range(num_tables):
+            source_tables.append(
+                partitioned_merge_tree_table(
+                    table_name=f"source_{getuid()}",
+                    partition_by="p",
+                    columns=default_columns(),
+                    stop_merges=True,
+                    number_of_values=number_of_values,
+                    number_of_parts=number_of_parts,
+                )
+            )
+
+    with And(f"I create {num_tables} empty S3 tables"):
+        destination_tables = []
+        destination_tables.append(
+            create_s3_table(table_name=f"s3_{getuid()}", create_new_bucket=True)
+        )
+        for i in range(num_tables - 1):
+            destination_tables.append(create_s3_table(table_name=f"s3_{getuid()}"))
+
+    with And("I export parts from all sources concurrently to the S3 table"):
+        for i in range(num_tables):
+            Step(test=export_parts, parallel=True)(
+                source_table=source_tables[i],
+                destination_table=destination_tables[i],
+                node=self.context.node,
+            )
+        join()
+
+    return source_tables, destination_tables
+
+
 @TestStep(Then)
 def source_matches_destination(
     self, source_table, destination_table, source_node=None, destination_node=None
