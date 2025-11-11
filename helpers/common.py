@@ -1379,3 +1379,11 @@ def run_duckdb_query(self, connection=None, query=None):
 
     with By(f"running the query {query}"):
         return connection.execute(query).fetchall()
+
+
+@TestStep(Then)
+def compare_with_expected(self, expected, output):
+    """Compare the output with the expected."""
+    for retry in retries(count=10, delay=1):
+        with retry:
+            assert output.output.strip() == expected.strip(), error()
