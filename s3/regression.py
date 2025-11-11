@@ -501,6 +501,16 @@ ffails = {
         "doesn't work <22.8",
         check_clickhouse_version("<22.8"),
     ),
+    "/:/:/part 3/export part/*": (
+        Skip,
+        "Export part introduced in Antalya build",
+        check_if_not_antalya_build,
+    ),
+    "/:/:/part 3/export partition/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        check_if_not_antalya_build,
+    ),
 }
 
 
@@ -552,9 +562,9 @@ def minio_regression(
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
-    with And("I install tc-netem on all clickhouse nodes"):
-        for node in self.context.nodes:
-            node.command("apt install --yes iproute2 procps")
+    # with And("I install tc-netem on all clickhouse nodes"):
+    #     for node in self.context.nodes:
+    #         node.command("apt install --yes iproute2 procps")
 
     with And("allow higher cpu_wait_ratio "):
         if check_clickhouse_version(">=25.4")(self):
