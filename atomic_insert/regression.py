@@ -27,6 +27,11 @@ ffails = {
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/60406",
     ),
+    "/atomic insert/dependent_tables/:/materialized view live view": (
+        Skip,
+        "Live view feature was removed in 25.10 https://github.com/ClickHouse/ClickHouse/pull/88706",
+        check_clickhouse_version(">=25.10"),
+    ),
 }
 
 xfails = {

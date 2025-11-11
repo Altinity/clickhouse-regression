@@ -1,7 +1,13 @@
 from testflows.core import *
-from testflows.asserts import error
+from testflows.asserts import snapshot, values, error
 
-from helpers.common import getuid, check_clickhouse_version
+from helpers.common import (
+    getuid,
+    check_clickhouse_version,
+    get_snapshot_id,
+    get_settings_value,
+    compare_with_expected,
+)
 
 from decimal import Decimal
 from pyiceberg.schema import Schema
@@ -570,7 +576,6 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -582,12 +587,10 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
         )
 
     with And("check that `USE database` statement works"):
@@ -668,6 +671,192 @@ def array_join(self, minio_root_user, minio_root_password):
         ), error()
 
 
+@TestScenario
+def show_data_lake_catalogs_in_system_tables(
+    self, minio_root_user, minio_root_password, node=None
+):
+    """Check show_data_lake_catalogs_in_system_tables setting."""
+    node = self.context.node if node is None else node
+    namespace = f"iceberg_namespace"
+    table_name = f"table_name"
+    database_name = f"iceberg_database_name"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"define schema and create {namespace}.{table_name} table"):
+        catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
+        )
+
+    with When("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with Then(
+        "check that show_data_lake_catalogs_in_system_tables setting is enabled before 25.10"
+    ):
+        value = get_settings_value(
+            setting_name="show_data_lake_catalogs_in_system_tables"
+        )
+        if check_clickhouse_version("<=25.9")(self):
+            assert value == "1", error()
+        else:
+            assert value == "0", error()
+
+    with And("define snapshot id"):
+        versions = [">=25.6", ">=25.5"]
+        for version in versions:
+            if check_clickhouse_version(version)(self):
+                self.context.snapshot_id = get_snapshot_id(clickhouse_version=version)
+                break
+        else:
+            self.context.snapshot_id = get_snapshot_id()
+
+    with And("compare with snapshot"):
+        if value == "1":
+            snapshot_name = f"system.tables.{table_name}"
+            snapshot_value = node.query(
+                f"SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated"
+            )
+            with values() as that:
+                assert that(
+                    snapshot(
+                        snapshot_value.output.strip(),
+                        name=snapshot_name,
+                        id=self.context.snapshot_id,
+                        mode=snapshot.CHECK,
+                    )
+                ), error()
+
+    with And(
+        "set the setting to 0 and check that iceberg table is not visible in system.tables table"
+    ):
+        result = node.query(
+            f"""
+            SET show_data_lake_catalogs_in_system_tables = 0;
+            SELECT name FROM system.tables WHERE name = '{namespace}.{table_name}'
+        """
+        )
+        compare_with_expected(expected="", output=result)
+
+    with And("set the setting to 1 and compare with snapshot"):
+        snapshot_name = f"system.tables.{table_name}"
+        snapshot_value = node.query(
+            f"""
+            SET show_data_lake_catalogs_in_system_tables = 1; 
+            SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated
+            """
+        )
+        with values() as that:
+            assert that(
+                snapshot(
+                    snapshot_value.output.strip(),
+                    name=snapshot_name,
+                    id=self.context.snapshot_id,
+                    mode=snapshot.CHECK,
+                )
+            ), error()
+
+
+@TestScenario
+def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
+    """Check that SHOW TABLES query is not affected by show_data_lake_catalogs_in_system_tables setting."""
+    node = self.context.node if node is None else node
+    namespace = f"iceberg_namespace"
+    table_name = f"table_name"
+    database_name = f"iceberg_database_name"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"define schema and create {namespace}.{table_name} table"):
+        catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
+        )
+
+    with When("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And(
+        "get result of show table query when show_data_lake_catalogs_in_system_tables is enabled"
+    ):
+        result_with_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW TABLES FROM {database_name}"
+        ).output
+
+    with And(
+        "get result of show table query when show_data_lake_catalogs_in_system_tables is disabled"
+    ):
+        result_without_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW TABLES FROM {database_name}"
+        ).output
+
+    with Then("compare results"):
+        assert result_with_setting == result_without_setting, error()
+
+
+@TestScenario
+def show_databases_queries(self, minio_root_user, minio_root_password, node=None):
+    """Check that SHOW DATABASES query is not affected by show_data_lake_catalogs_in_system_tables setting."""
+    node = self.context.node if node is None else node
+    namespace = f"iceberg_namespace"
+    table_name = f"table_name"
+    database_name = f"iceberg_database_name"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"define schema and create {namespace}.{table_name} table"):
+        catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
+        )
+
+    with When("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And(
+        "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is enabled"
+    ):
+        result_with_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW DATABASES"
+        ).output
+
+    with And(
+        "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is disabled"
+    ):
+        result_without_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW DATABASES"
+        ).output
+
+    with And("compare results"):
+        assert result_with_setting == result_without_setting, error()
+
+
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for DataLakeCatalog database engine in ClickHouse."""
@@ -696,5 +885,14 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=array_join)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_data_lake_catalogs_in_system_tables)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_tables_queries)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_databases_queries)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

@@ -44,9 +44,25 @@ def ice_create_table_from_parquet(
 
 
 @TestStep(Given)
-def ice_insert_data_from_parquet(self, iceberg_table_name, parquet_path, ice_node=None):
+def ice_insert_data_from_parquet(
+    self,
+    iceberg_table_name,
+    parquet_path,
+    no_copy=False,
+    skip_duplicates=False,
+    ice_node=None,
+):
     """Insert parquet data into an iceberg table."""
     if ice_node is None:
         ice_node = self.context.ice_node
 
-    ice_node.command(f"ice insert default.{iceberg_table_name} -p {parquet_path}")
+    command = f"ice insert default.{iceberg_table_name}"
+
+    if no_copy:
+        command += " --no-copy"
+    if skip_duplicates:
+        command += " --skip-duplicates"
+
+    command += f" -p {parquet_path}"
+
+    ice_node.command(command)
