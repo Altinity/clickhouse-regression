@@ -570,7 +570,6 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -582,12 +581,10 @@ def use_database(self, minio_root_user, minio_root_password, node=None):
         )
 
     with Then("create database with Iceberg engine"):
-        database_name = f"iceberg_database_{getuid()}"
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
         )
 
     with And("check that `USE database` statement works"):
