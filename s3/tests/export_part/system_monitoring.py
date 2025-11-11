@@ -5,7 +5,7 @@ from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
-
+import helpers.config.config_d as config_d
 
 
 @TestScenario
@@ -96,20 +96,18 @@ def duplicate_logging(self):
 def system_exports_logging(self):
     """Check that system.exports table tracks export operations before they complete."""
 
-    with Given(
-        "I create a populated source table with large enough parts and empty S3 table"
-    ):
+    with Given("I create a populated source table and empty S3 table"):
         source_table = partitioned_merge_tree_table(
             table_name=f"source_{getuid()}",
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            number_of_values=1000000,
+            number_of_values=100000,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-    
+
     with And("I slow down the network speed"):
-        network_packet_rate_limit(node=self.context.node, rate_mbit=250)
+        network_packet_rate_limit(node=self.context.node, rate_mbit=20)
 
     with When("I export parts to the S3 table"):
         export_parts(
@@ -130,8 +128,40 @@ def system_exports_logging(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize("1.0"))
-def background_move_pool_size(self):
-    pass
+def background_move_pool_size(self, background_move_pool_size):
+    """Check that background_move_pool_size server setting controls the number of threads used for exporting parts."""
+
+    with Given(f"I set background_move_pool_size to {background_move_pool_size}"):
+        config_d.create_and_add(
+            entries={"background_move_pool_size": f"{background_move_pool_size}"},
+            config_file="background_move_pool_size.xml",
+            node=self.context.node,
+        )
+
+    with And("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            number_of_values=100000,
+            number_of_parts=4,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I slow down the network speed"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=20)
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I check that the number of threads used for exporting parts is correct"):
+        exports = get_system_exports(node=self.context.node)
+        assert len(exports) == background_move_pool_size, error()
 
 
 @TestFeature
@@ -143,3 +173,4 @@ def feature(self):
     Scenario(run=part_logging)
     Scenario(run=duplicate_logging)
     Scenario(run=system_exports_logging)
+    Scenario(test=background_move_pool_size)(background_move_pool_size=8)

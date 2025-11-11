@@ -18,6 +18,8 @@ def alter_table_add_column(
 
     if if_not_exists:
         if_not_exists = "IF NOT EXISTS "
+    else:
+        if_not_exists = ""
 
     with By("executing alter add column command on the table"):
         query = f"ALTER TABLE {table_name} ADD COLUMN {if_not_exists}{column_name} {column_type}"

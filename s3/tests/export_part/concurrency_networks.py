@@ -12,37 +12,22 @@ def concurrent_export(self, num_tables):
     """Check concurrent exports from different sources to the same S3 table."""
 
     with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
-        source_tables = []
-        for i in range(num_tables):
-            source_tables.append(
-                partitioned_merge_tree_table(
-                    table_name=f"source_{getuid()}",
-                    partition_by="p",
-                    columns=default_columns(),
-                    stop_merges=True,
-                )
-            )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I export parts from all sources concurrently to the S3 table"):
-        for i in range(num_tables):
-            Step(test=export_parts, parallel=True)(
-                source_table=source_tables[i],
-                destination_table=s3_table_name,
-                node=self.context.node,
-            )
-        join()
+        source_tables, destination_tables = concurrent_export_tables(
+            num_tables=num_tables
+        )
 
     with And("I read data from all tables"):
         source_data = []
+        destination_data = []
         for i in range(num_tables):
             data = select_all_ordered(
                 table_name=source_tables[i], node=self.context.node
             )
             source_data.extend(data)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+            data = select_all_ordered(
+                table_name=destination_tables[i], node=self.context.node
+            )
+            destination_data.extend(data)
 
     with Then("All data should be present in the S3 table"):
         assert set(source_data) == set(destination_data), error()
