@@ -264,7 +264,13 @@ def create_iceberg_table(
 
 @TestStep(Given)
 def create_iceberg_table_with_three_columns(
-    self, catalog, namespace, table_name, location="s3://warehouse/data"
+    self,
+    catalog,
+    namespace,
+    table_name,
+    location="s3://warehouse/data",
+    with_data=False,
+    number_of_rows=10,
 ):
     """Define schema, partition spec, sort order and create iceberg table with three columns."""
     schema = Schema(
@@ -290,6 +296,21 @@ def create_iceberg_table_with_three_columns(
         partition_spec=partition_spec,
         sort_order=sort_order,
     )
+
+    if with_data:
+        with By(f"insert random {number_of_rows} rows into Iceberg table"):
+            data = []
+            for _ in range(number_of_rows):
+                data.append(
+                    {
+                        "name": random_name(),
+                        "double": random.uniform(0, 100),
+                        "integer": random.randint(0, 10000),
+                    }
+                )
+            df = pa.Table.from_pylist(data)
+            table.append(df)
+
     return table
 
 
