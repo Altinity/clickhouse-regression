@@ -241,6 +241,74 @@ def overwrite_file(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth("1.0"))
+def max_bandwidth(self):
+    """Check that the max bandwidth setting limits the bandwidth used for exporting parts."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            number_of_values=100,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I record the duration of the export"):
+        initial_time = time.time()
+        while get_num_active_exports(node=self.context.node) > 0:
+            pass
+        duration_unlimited_bandwidth = time.time() - initial_time
+
+    with When("I set the max bandwidth to 1"):
+        config_d.create_and_add(
+            entries={"max_exports_bandwidth_for_server": "1024"},
+            config_file="max_bandwidth.xml",
+            node=self.context.node,
+        )
+
+    with And("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            number_of_values=100,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I record the duration of the export"):
+        initial_time = time.time()
+        while get_num_active_exports(node=self.context.node) > 0:
+            pass
+        duration_limited_bandwidth = time.time() - initial_time
+
+    with Then(
+        "I check that the duration of the export with restricted bandwidth is more than 10 times greater"
+    ):
+        assert duration_limited_bandwidth > duration_unlimited_bandwidth * 10, error()
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
@@ -254,3 +322,4 @@ def feature(self):
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
     Scenario(run=overwrite_file)
+    Scenario(run=max_bandwidth)

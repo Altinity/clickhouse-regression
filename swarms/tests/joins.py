@@ -466,6 +466,14 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         "t1.boolean_col = t2.boolean_col AND t1.string_col = t2.string_col",
         "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
         "t1.long_col < t2.long_col AND t1.string_col = t2.string_col",
+        "t1.integer_col = t2.integer_col",
+        "t1.double_col = t2.double_col",
+        "t1.float_col = t2.float_col",
+        "t1.decimal_col = t2.decimal_col",
+        "t1.date_col = t2.date_col",
+        "t1.timestamp_col = t2.timestamp_col",
+        "t1.timestamptz_col = t2.timestamptz_col",
+        "t1.timestamp_col < t2.timestamp_col AND t1.string_col = t2.string_col",
     ]
     object_storage_clusters = [
         None,
@@ -475,21 +483,21 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         "replicated_cluster",
     ]
     join_clauses = [
-        "INNER JOIN",  # ok
-        # "INNER ANY JOIN", # ok
-        # "CROSS JOIN",  # ok
-        # "ASOF JOIN",  # ok
-        # "RIGHT OUTER JOIN",  # ok
-        # "RIGHT SEMI JOIN",  # ok
-        # "RIGHT ANTI JOIN",  # ok
-        # "RIGHT ANY JOIN",  # ok
-        # "LEFT OUTER JOIN",  # ok
-        # "LEFT SEMI JOIN",  # ok
-        # "LEFT ANTI JOIN",  # ok
-        # "LEFT ANY JOIN", # ok
-        # "LEFT ASOF JOIN",  # ok
-        # "FULL OUTER JOIN", # problems
-        # "PASTE JOIN",  # problems
+        "INNER JOIN",
+        "INNER ANY JOIN",
+        "CROSS JOIN",
+        "ASOF JOIN",
+        "RIGHT OUTER JOIN",
+        "RIGHT SEMI JOIN",
+        "RIGHT ANTI JOIN",
+        "RIGHT ANY JOIN",
+        "LEFT OUTER JOIN",
+        "LEFT SEMI JOIN",
+        "LEFT ANTI JOIN",
+        "LEFT ANY JOIN",
+        "LEFT ASOF JOIN",
+        # "FULL OUTER JOIN",  # problems
+        "PASTE JOIN",
     ]
 
     length = len(
