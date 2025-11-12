@@ -1,5 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -131,25 +132,27 @@ def empty_table(self):
     """Test exporting parts from an empty table."""
 
     with Given("I create empty source and S3 tables"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="empty_source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
             populate=False,
         )
-        s3_table_name = create_s3_table(table_name="empty_s3", create_new_bucket=True)
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="empty_source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
     with And("I read data from both tables"):
         source_data = select_all_ordered(
-            table_name="empty_source", node=self.context.node
+            table_name=source_table, node=self.context.node
         )
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node

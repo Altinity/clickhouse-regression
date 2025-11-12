@@ -2,6 +2,7 @@ from time import sleep
 
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
@@ -14,8 +15,10 @@ def system_events_and_part_log(self):
     """Check part exports are logged correctly in both system.events and system.part_log."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -27,7 +30,7 @@ def system_events_and_part_log(self):
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -42,7 +45,7 @@ def system_events_and_part_log(self):
         ), error()
 
     with And("I check that the part log contains the correct parts"):
-        parts = get_parts(table_name="source", node=self.context.node)
+        parts = get_parts(table_name=source_table, node=self.context.node)
         for part in parts:
             assert part in part_log, error()
 
@@ -53,8 +56,10 @@ def duplicate_logging(self):
     """Check duplicate exports are logged correctly in system.events."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -66,19 +71,19 @@ def duplicate_logging(self):
 
     with When("I try to export the parts twice"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
     with Then("Check source matches destination"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
@@ -104,8 +109,10 @@ def system_exports_and_metrics(self):
     """Check that system.exports table tracks export operations before they complete."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = partitioned_merge_tree_table(
-            table_name=f"source_{getuid()}",
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -150,8 +157,10 @@ def background_move_pool_size(self, background_move_pool_size):
         )
 
     with And("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -165,7 +174,7 @@ def background_move_pool_size(self, background_move_pool_size):
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -181,8 +190,10 @@ def overwrite_file(self):
     """Check that overwrite file setting causes exports to overwrite existing files."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -191,7 +202,7 @@ def overwrite_file(self):
 
     with And("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -203,7 +214,7 @@ def overwrite_file(self):
         "I export parts to the S3 table again with overwrite file setting enabled"
     ):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             settings=[("export_merge_tree_part_overwrite_file_if_exists", "1")],
@@ -225,7 +236,7 @@ def overwrite_file(self):
 
     with And("I check that the destination table contains the correct data"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
