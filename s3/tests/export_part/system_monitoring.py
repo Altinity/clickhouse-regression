@@ -145,7 +145,7 @@ def background_move_pool_size(self, background_move_pool_size):
             columns=default_columns(),
             stop_merges=True,
             number_of_values=100000,
-            number_of_parts=4,
+            number_of_parts=10,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
