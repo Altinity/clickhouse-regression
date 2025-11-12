@@ -748,26 +748,26 @@ def engine(self):
 def function(self):
     """Check that `file` table function correctly reads and writes Parquet format."""
     with Pool(5) as executor:
-        # Scenario(
-        #     run=insert_into_function_manual_cast_types,
-        #     parallel=True,
-        #     executor=executor,
-        # )
-        # Scenario(
-        #     run=insert_into_function_auto_cast_types,
-        #     parallel=True,
-        #     executor=executor,
-        # )
-        # Scenario(
-        #     run=select_from_function_manual_cast_types,
-        #     parallel=True,
-        #     executor=executor,
-        # )
-        # Scenario(
-        #     run=select_from_function_auto_cast_types,
-        #     parallel=True,
-        #     executor=executor,
-        # )
+        Scenario(
+            run=insert_into_function_manual_cast_types,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=insert_into_function_auto_cast_types,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_function_manual_cast_types,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types,
+            parallel=True,
+            executor=executor,
+        )
         Scenario(
             run=date_as_uint16,
             parallel=True,
