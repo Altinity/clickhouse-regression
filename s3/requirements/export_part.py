@@ -396,27 +396,6 @@ RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
     num="14.1.1",
 )
 
-RQ_ClickHouse_ExportPart_Restrictions_DestinationSupport = Requirement(
-    name="RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL validate destination table compatibility by:\n"
-        "\n"
-        "* Checking that the destination storage supports importing MergeTree parts\n"
-        "* Verifying that the destination uses Hive partitioning strategy (`partition_strategy = 'hive'`)\n"
-        '* Throwing a `NOT_IMPLEMENTED` exception with message "Destination storage {} does not support MergeTree parts or uses unsupported partitioning" when requirements are not met\n'
-        "* Performing this validation during the initial export setup phase\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="14.2.1",
-)
-
 RQ_ClickHouse_ExportPart_Restrictions_LocalTable = Requirement(
     name="RQ.ClickHouse.ExportPart.Restrictions.LocalTable",
     version="1.0",
@@ -433,7 +412,7 @@ RQ_ClickHouse_ExportPart_Restrictions_LocalTable = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.1",
+    num="14.2.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_PartitionKey = Requirement(
@@ -452,7 +431,7 @@ RQ_ClickHouse_ExportPart_Restrictions_PartitionKey = Requirement(
     ),
     link=None,
     level=3,
-    num="14.4.1",
+    num="14.3.1",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_SourcePart = Requirement(
@@ -472,7 +451,7 @@ RQ_ClickHouse_ExportPart_Restrictions_SourcePart = Requirement(
     ),
     link=None,
     level=3,
-    num="14.5.1",
+    num="14.4.1",
 )
 
 RQ_ClickHouse_ExportPart_Concurrency = Requirement(
@@ -595,26 +574,6 @@ RQ_ClickHouse_ExportPart_Settings_OverwriteFile = Requirement(
     num="20.1",
 )
 
-RQ_ClickHouse_ExportPart_ParallelFormatting = Requirement(
-    name="RQ.ClickHouse.ExportPart.ParallelFormatting",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support parallel formatting for export operations by:\n"
-        "* Automatically enabling parallel formatting for large export operations to improve performance\n"
-        "* Using the `output_format_parallel_formatting` setting to control parallel formatting behavior\n"
-        "* Optimizing data processing based on export size and system resources\n"
-        "* Providing consistent formatting performance across different export scenarios\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="21.1",
-)
-
 RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
     name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
     version="1.0",
@@ -628,7 +587,7 @@ RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
     ),
     link=None,
     level=2,
-    num="22.1",
+    num="21.1",
 )
 
 RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize = Requirement(
@@ -644,7 +603,7 @@ RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize = Requirement(
     ),
     link=None,
     level=2,
-    num="22.2",
+    num="21.2",
 )
 
 RQ_ClickHouse_ExportPart_Metrics_Export = Requirement(
@@ -660,7 +619,7 @@ RQ_ClickHouse_ExportPart_Metrics_Export = Requirement(
     ),
     link=None,
     level=2,
-    num="22.3",
+    num="21.3",
 )
 
 RQ_ClickHouse_ExportPart_Security = Requirement(
@@ -686,7 +645,7 @@ RQ_ClickHouse_ExportPart_Security = Requirement(
     ),
     link=None,
     level=2,
-    num="23.1",
+    num="22.1",
 )
 
 SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
@@ -759,29 +718,23 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
             level=3,
             num="14.1.1",
         ),
-        Heading(name="Destination table compatibility", level=2, num="14.2"),
-        Heading(
-            name="RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport",
-            level=3,
-            num="14.2.1",
-        ),
-        Heading(name="Local table restriction", level=2, num="14.3"),
+        Heading(name="Local table restriction", level=2, num="14.2"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.LocalTable",
             level=3,
-            num="14.3.1",
+            num="14.2.1",
         ),
-        Heading(name="Partition key compatibility", level=2, num="14.4"),
+        Heading(name="Partition key compatibility", level=2, num="14.3"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.PartitionKey",
             level=3,
-            num="14.4.1",
+            num="14.3.1",
         ),
-        Heading(name="Source part availability", level=2, num="14.5"),
+        Heading(name="Source part availability", level=2, num="14.4"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SourcePart",
             level=3,
-            num="14.5.1",
+            num="14.4.1",
         ),
         Heading(name="Export operation concurrency", level=1, num="15"),
         Heading(name="RQ.ClickHouse.ExportPart.Concurrency", level=2, num="15.1"),
@@ -803,24 +756,20 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPart.Settings.OverwriteFile", level=2, num="20.1"
         ),
-        Heading(name="Export operation configuration", level=1, num="21"),
-        Heading(
-            name="RQ.ClickHouse.ExportPart.ParallelFormatting", level=2, num="21.1"
-        ),
-        Heading(name="Controlling export performance", level=1, num="22"),
+        Heading(name="Controlling export performance", level=1, num="21"),
         Heading(
             name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
             level=2,
-            num="22.1",
+            num="21.1",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize",
             level=2,
-            num="22.2",
+            num="21.2",
         ),
-        Heading(name="RQ.ClickHouse.ExportPart.Metrics.Export", level=2, num="22.3"),
-        Heading(name="Export operation security", level=1, num="23"),
-        Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="23.1"),
+        Heading(name="RQ.ClickHouse.ExportPart.Metrics.Export", level=2, num="21.3"),
+        Heading(name="Export operation security", level=1, num="22"),
+        Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="22.1"),
     ),
     requirements=(
         RQ_ClickHouse_ExportPart_S3,
@@ -841,7 +790,6 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption,
         RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption,
         RQ_ClickHouse_ExportPart_Restrictions_SameTable,
-        RQ_ClickHouse_ExportPart_Restrictions_DestinationSupport,
         RQ_ClickHouse_ExportPart_Restrictions_LocalTable,
         RQ_ClickHouse_ExportPart_Restrictions_PartitionKey,
         RQ_ClickHouse_ExportPart_Restrictions_SourcePart,
@@ -851,7 +799,6 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_SystemTables_Exports,
         RQ_ClickHouse_ExportPart_Settings_AllowExperimental,
         RQ_ClickHouse_ExportPart_Settings_OverwriteFile,
-        RQ_ClickHouse_ExportPart_ParallelFormatting,
         RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth,
         RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize,
         RQ_ClickHouse_ExportPart_Metrics_Export,
@@ -896,14 +843,12 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
 * 14 [Export operation restrictions](#export-operation-restrictions)
     * 14.1 [Preventing same table exports](#preventing-same-table-exports)
         * 14.1.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
-    * 14.2 [Destination table compatibility](#destination-table-compatibility)
-        * 14.2.1 [RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport](#rqclickhouseexportpartrestrictionsdestinationsupport)
-    * 14.3 [Local table restriction](#local-table-restriction)
-        * 14.3.1 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
-    * 14.4 [Partition key compatibility](#partition-key-compatibility)
-        * 14.4.1 [RQ.ClickHouse.ExportPart.Restrictions.PartitionKey](#rqclickhouseexportpartrestrictionspartitionkey)
-    * 14.5 [Source part availability](#source-part-availability)
-        * 14.5.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
+    * 14.2 [Local table restriction](#local-table-restriction)
+        * 14.2.1 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
+    * 14.3 [Partition key compatibility](#partition-key-compatibility)
+        * 14.3.1 [RQ.ClickHouse.ExportPart.Restrictions.PartitionKey](#rqclickhouseexportpartrestrictionspartitionkey)
+    * 14.4 [Source part availability](#source-part-availability)
+        * 14.4.1 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
 * 15 [Export operation concurrency](#export-operation-concurrency)
     * 15.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
 * 16 [Export operation idempotency](#export-operation-idempotency)
@@ -916,14 +861,12 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 19.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
 * 20 [Handling file conflicts during export](#handling-file-conflicts-during-export)
     * 20.1 [RQ.ClickHouse.ExportPart.Settings.OverwriteFile](#rqclickhouseexportpartsettingsoverwritefile)
-* 21 [Export operation configuration](#export-operation-configuration)
-    * 21.1 [RQ.ClickHouse.ExportPart.ParallelFormatting](#rqclickhouseexportpartparallelformatting)
-* 22 [Controlling export performance](#controlling-export-performance)
-    * 22.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-    * 22.2 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
-    * 22.3 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
-* 23 [Export operation security](#export-operation-security)
-    * 23.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+* 21 [Controlling export performance](#controlling-export-performance)
+    * 21.1 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+    * 21.2 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
+    * 21.3 [RQ.ClickHouse.ExportPart.Metrics.Export](#rqclickhouseexportpartmetricsexport)
+* 22 [Export operation security](#export-operation-security)
+    * 22.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
 
 ## Introduction
 
@@ -1147,18 +1090,6 @@ version: 1.0
 * Throwing a `BAD_ARGUMENTS` exception with message "Exporting to the same table is not allowed" when source and destination are identical
 * Performing this validation before any export processing begins
 
-### Destination table compatibility
-
-#### RQ.ClickHouse.ExportPart.Restrictions.DestinationSupport
-version: 1.0
-
-[ClickHouse] SHALL validate destination table compatibility by:
-
-* Checking that the destination storage supports importing MergeTree parts
-* Verifying that the destination uses Hive partitioning strategy (`partition_strategy = 'hive'`)
-* Throwing a `NOT_IMPLEMENTED` exception with message "Destination storage {} does not support MergeTree parts or uses unsupported partitioning" when requirements are not met
-* Performing this validation during the initial export setup phase
-
 ### Local table restriction
 
 #### RQ.ClickHouse.ExportPart.Restrictions.LocalTable
@@ -1255,17 +1186,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support the `export_merge_tree_part_overwrite_file_if_exists` setting that controls whether to overwrite files if they already exist when exporting a merge tree part. The default value SHALL be `0` (turned off).
-
-## Export operation configuration
-
-### RQ.ClickHouse.ExportPart.ParallelFormatting
-version: 1.0
-
-[ClickHouse] SHALL support parallel formatting for export operations by:
-* Automatically enabling parallel formatting for large export operations to improve performance
-* Using the `output_format_parallel_formatting` setting to control parallel formatting behavior
-* Optimizing data processing based on export size and system resources
-* Providing consistent formatting performance across different export scenarios
 
 ## Controlling export performance
 
