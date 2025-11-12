@@ -16,7 +16,7 @@ def basic_concurrent_export(self, threads):
         for i in range(threads):
             source_table = f"source_{getuid()}_{i}"
             source_tables.append(source_table)
-            partitioned_merge_tree_table(
+            partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
                 columns=default_columns(),
@@ -52,7 +52,7 @@ def packet_delay(self, delay_ms):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -85,7 +85,7 @@ def packet_loss(self, percent_loss):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -118,7 +118,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -155,7 +155,7 @@ def packet_corruption(self, percent_corrupt):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -190,7 +190,7 @@ def packet_duplication(self, percent_duplicated):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -225,7 +225,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -262,7 +262,7 @@ def packet_rate_limit(self, rate_mbit):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -295,7 +295,7 @@ def concurrent_insert(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create an empty source and S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -390,7 +390,7 @@ def restart_minio(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -456,19 +456,16 @@ def restart_keeper(self):
 def feature(self):
     """Check that exports work correctly with concurrency and various network conditions."""
 
-    # TODO corruption (bit flipping)
-
-    Scenario(test=basic_concurrent_export)(threads=5)
-    Scenario(test=packet_delay)(delay_ms=100)
-    Scenario(test=packet_loss)(percent_loss=50)
-    Scenario(test=packet_loss_gemodel)(
-        interruption_probability=40, recovery_probability=70
-    )
-    Scenario(test=packet_corruption)(percent_corrupt=50)
-    Scenario(test=packet_duplication)(percent_duplicated=50)
-    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
-    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(run=concurrent_insert)
-    Scenario(run=restart_minio)
-
-    # Scenario(run=export_and_drop)
+    # Scenario(test=basic_concurrent_export)(threads=5)
+    # Scenario(test=packet_delay)(delay_ms=100)
+    # Scenario(test=packet_loss)(percent_loss=50)
+    # Scenario(test=packet_loss_gemodel)(
+    #     interruption_probability=40, recovery_probability=70
+    # )
+    # Scenario(test=packet_corruption)(percent_corrupt=50)
+    # Scenario(test=packet_duplication)(percent_duplicated=50)
+    # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
+    # Scenario(run=concurrent_insert)
+    # Scenario(run=restart_minio)
+    Scenario(run=restart_keeper)
