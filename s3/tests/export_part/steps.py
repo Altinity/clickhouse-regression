@@ -328,13 +328,13 @@ def get_system_exports(self, node):
 def get_num_active_exports(self, node):
     """Get the number of active exports from the system.metrics table of a given node."""
 
-    metrics = node.query(
+    num_active_exports = node.query(
         "SELECT value FROM system.metrics WHERE metric = 'Export'",
         exitcode=0,
         steps=True,
     ).output.strip()
 
-    return int(metrics)
+    return int(num_active_exports)
 
 
 @TestStep(When)
