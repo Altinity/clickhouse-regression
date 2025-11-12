@@ -386,6 +386,11 @@ ffails = {
         Skip,
         "Trigger manually when needed, need to move to separate suite.",
     ),
+    "/parquet/file/function/date as uint16": (
+        Skip,
+        "Not implemented before 25.3",
+        check_clickhouse_version("<25.3"),
+    ),
 }
 
 

@@ -325,6 +325,19 @@ def get_system_exports(self, node):
 
 
 @TestStep(When)
+def get_num_active_exports(self, node):
+    """Get the number of active exports from the system.metrics table of a given node."""
+
+    metrics = node.query(
+        "SELECT value FROM system.metrics WHERE metric = 'Export'",
+        exitcode=0,
+        steps=True,
+    ).output.strip()
+
+    return int(metrics)
+
+
+@TestStep(When)
 def insert_into_table(self, table_name, node=None):
     """Insert values into a table."""
 

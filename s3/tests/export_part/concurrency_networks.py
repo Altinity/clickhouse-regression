@@ -1,4 +1,5 @@
 from testflows.core import *
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -42,8 +43,10 @@ def packet_delay(self, delay_ms):
     """Check that exports work correctly with packet delay."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -55,7 +58,7 @@ def packet_delay(self, delay_ms):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -64,7 +67,7 @@ def packet_delay(self, delay_ms):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -75,8 +78,10 @@ def packet_loss(self, percent_loss):
     """Check that exports work correctly with packet loss."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -88,7 +93,7 @@ def packet_loss(self, percent_loss):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -97,7 +102,7 @@ def packet_loss(self, percent_loss):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -108,8 +113,10 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
     """Check that exports work correctly with packet loss using the GE model."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -125,7 +132,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -134,7 +141,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -145,8 +152,10 @@ def packet_corruption(self, percent_corrupt):
     """Check that exports work correctly with packet corruption."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -160,7 +169,7 @@ def packet_corruption(self, percent_corrupt):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -169,7 +178,7 @@ def packet_corruption(self, percent_corrupt):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -180,8 +189,10 @@ def packet_duplication(self, percent_duplicated):
     """Check that exports work correctly with packet corruption."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -195,7 +206,7 @@ def packet_duplication(self, percent_duplicated):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -204,7 +215,7 @@ def packet_duplication(self, percent_duplicated):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -215,8 +226,10 @@ def packet_reordering(self, delay_ms, percent_reordered):
     """Check that exports work correctly with packet corruption."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -232,7 +245,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -241,7 +254,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -252,8 +265,10 @@ def packet_rate_limit(self, rate_mbit):
     """Check that exports work correctly with packet corruption."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -265,7 +280,7 @@ def packet_rate_limit(self, rate_mbit):
 
     with And("I export parts from the source table to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -274,7 +289,7 @@ def packet_rate_limit(self, rate_mbit):
         with retry:
             with Then("Check source matches destination"):
                 source_matches_destination(
-                    source_table="source",
+                    source_table=source_table,
                     destination_table=s3_table_name,
                 )
 
@@ -285,8 +300,10 @@ def concurrent_insert(self):
     """Check that exports work correctly with concurrent inserts of source data."""
 
     with Given("I create an empty source and S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -304,19 +321,21 @@ def concurrent_insert(self):
     """,
     ):
         Step(test=create_partitions_with_random_uint64, parallel=True)(
-            table_name="source",
+            table_name=source_table,
             number_of_partitions=5,
             number_of_parts=1,
         )
         Step(test=export_parts, parallel=True)(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
         join()
 
     with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        source_data = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -332,8 +351,10 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
     """Check that restarting MinIO while exporting parts inbetween works correctly."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             number_of_values=number_of_values,
@@ -349,7 +370,7 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
 
     with And("I export data"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -358,7 +379,9 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
         start_minio()
 
     with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(table_name="source", node=self.context.node)
+        source_data = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -378,8 +401,10 @@ def clickhouse_network_interruption(self, safe=False):
     """Check that exports work correctly with a clickhouse network outage."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -387,11 +412,11 @@ def clickhouse_network_interruption(self, safe=False):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get parts before the interruption"):
-        parts = get_parts(table_name="source", node=self.context.node)
+        parts = get_parts(table_name=source_table, node=self.context.node)
 
     with When("I queue exports and restart the node in parallel"):
         Step(test=export_parts, parallel=True)(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
@@ -403,13 +428,13 @@ def clickhouse_network_interruption(self, safe=False):
     if safe:
         with Then("Check source matches destination"):
             source_matches_destination(
-                source_table="source",
+                source_table=source_table,
                 destination_table=s3_table_name,
             )
     else:
         with Then("Destination data should be a subset of source data"):
             source_data = select_all_ordered(
-                table_name="source", node=self.context.node
+                table_name=source_table, node=self.context.node
             )
             destination_data = select_all_ordered(
                 table_name=s3_table_name, node=self.context.node

@@ -1,3 +1,4 @@
+import re
 from testflows.core import *
 from parquet.requirements import *
 from helpers.common import *
@@ -8,7 +9,8 @@ from parquet.tests.common import (
     check_source_file,
     execute_query_step,
 )
-from helpers.tables import create_table, attach_table
+from helpers.tables import create_table, attach_table, Column
+from helpers.datatypes import Date
 
 
 @TestScenario
@@ -476,6 +478,238 @@ def select_from_function_auto_cast_types(self):
             join()
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16(self):
+    """Check that when data is inserted into a `file` table function with `output_format_parquet_date_as_uint16` setting,
+    dates are written as UINT16 and can be read back correctly."""
+    node = self.context.node
+    file_name = f"date_as_uint16_{getuid()}.parquet"
+
+    with Given(
+        "I insert data into the `file` table function with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}') SELECT toDate('2025-08-12') as d",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the parquet file to verify the data"):
+        r = node.query(f"SELECT * FROM file('{file_name}')")
+        assert r.output.strip() == "20312", error()
+
+    with And("I describe the parquet file to check the schema"):
+        r = node.query(f"DESC file('{file_name}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_multiple_dates(self):
+    """Check that multiple dates are correctly written as UINT16 when using `output_format_parquet_date_as_uint16` setting."""
+    node = self.context.node
+    file_name = f"date_as_uint16_multiple_{getuid()}.parquet"
+
+    with Given(
+        "I insert multiple dates into the `file` table function with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}') SELECT d FROM (SELECT toDate('1970-01-01') as d UNION ALL SELECT toDate('2025-08-12') UNION ALL SELECT toDate('2100-12-31'))",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the parquet file to verify the data"):
+        r = node.query(f"SELECT * FROM file('{file_name}') ORDER BY d")
+        expected_dates = ["0", "20312", "47846"]
+        assert r.output.strip().split("\n") == expected_dates, error()
+
+    with And("I describe the parquet file to check the schema"):
+        r = node.query(f"DESC file('{file_name}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_nullable(self):
+    """Check that nullable dates are correctly written as UINT16 when using `output_format_parquet_date_as_uint16` setting."""
+    node = self.context.node
+    file_name = f"date_as_uint16_nullable_{getuid()}.parquet"
+    table_name = f"table_{getuid()}"
+
+    with Given("I create a table with nullable Date column"):
+        node.query(f"CREATE TABLE {table_name} (d Nullable(Date)) ENGINE = Memory")
+
+    with And("I insert data including NULL values"):
+        node.query(
+            f"INSERT INTO {table_name} VALUES (toDate('2025-08-12')), (NULL), (toDate('1970-01-01'))"
+        )
+
+    with When(
+        "I export data to parquet file with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"SELECT * FROM {table_name} INTO OUTFILE '/var/lib/clickhouse/user_files/{file_name}' FORMAT Parquet",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the parquet file to verify the data including NULLs"):
+        r = node.query(
+            f"SELECT * FROM file('/var/lib/clickhouse/user_files/{file_name}') ORDER BY d NULLS LAST"
+        )
+        lines = r.output.strip().split("\n")
+        assert len(lines) == 3, error()
+        assert lines[0] == "0", error()
+        assert lines[1] == "20312", error()
+        assert lines[2] == "\\N", error()
+
+    with And("I describe the parquet file to check the schema"):
+        r = node.query(f"DESC file('/var/lib/clickhouse/user_files/{file_name}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_round_trip(self):
+    """Check that dates written as UINT16 can be read back and written again correctly."""
+    node = self.context.node
+    file_name1 = f"date_as_uint16_roundtrip1_{getuid()}.parquet"
+    file_name2 = f"date_as_uint16_roundtrip2_{getuid()}.parquet"
+    table_name = f"table_{getuid()}"
+
+    with Given("I create a table with Date column"):
+        node.query(f"CREATE TABLE {table_name} (d Date) ENGINE = Memory")
+
+    with And("I insert test dates"):
+        node.query(
+            f"INSERT INTO {table_name} VALUES (toDate('1970-01-01')), (toDate('2025-08-12')), (toDate('2100-12-31'))"
+        )
+
+    with When(
+        "I export data to first parquet file with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"SELECT * FROM {table_name} INTO OUTFILE '/var/lib/clickhouse/user_files/{file_name1}' FORMAT Parquet",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with And(
+        "I read from the first parquet file and write to a second parquet file with the same setting"
+    ):
+        node.query(
+            f"SELECT * FROM file('/var/lib/clickhouse/user_files/{file_name1}') INTO OUTFILE '/var/lib/clickhouse/user_files/{file_name2}' FORMAT Parquet",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I verify both files contain the same data"):
+        r1 = node.query(
+            f"SELECT * FROM file('/var/lib/clickhouse/user_files/{file_name1}') ORDER BY d"
+        )
+        r2 = node.query(
+            f"SELECT * FROM file('/var/lib/clickhouse/user_files/{file_name2}') ORDER BY d"
+        )
+        assert r1.output.strip() == r2.output.strip(), error()
+
+    with And(
+        "I verify the original table data matches the round-trip data by converting UInt16 back to Date"
+    ):
+        r_original = node.query(f"SELECT * FROM {table_name} ORDER BY d")
+        r_final = node.query(
+            f"SELECT toDate('1970-01-01') + INTERVAL d DAY FROM file('/var/lib/clickhouse/user_files/{file_name2}') ORDER BY d"
+        )
+        assert r_original.output.strip() == r_final.output.strip(), error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_file_engine(self):
+    """Check that dates are correctly written as UINT16 when using `File(Parquet)` engine with `output_format_parquet_date_as_uint16` setting."""
+    node = self.context.node
+    table_name = f"table_{getuid()}"
+
+    with Given("I create a table with `File(Parquet)` engine"):
+        create_table(
+            name=table_name,
+            engine="File(Parquet)",
+            columns=[Column(name="d", datatype=Date())],
+        )
+
+    with When(
+        "I insert data into the table with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"INSERT INTO {table_name} VALUES (toDate('1970-01-01')), (toDate('2025-08-12')), (toDate('2100-12-31'))",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the table to verify the data"):
+        r = node.query(f"SELECT * FROM {table_name} ORDER BY d")
+        expected_dates = ["1970-01-01", "2025-08-12", "2100-12-31"]
+        assert r.output.strip().split("\n") == expected_dates, error()
+
+    with And("I check the parquet file schema"):
+        if check_clickhouse_version(">=24.10")(self):
+            symlink = node.command(
+                f"readlink -f /var/lib/clickhouse/data/default/{table_name}"
+            ).output.strip()
+            parquet_file = symlink
+        else:
+            parquet_file = f"/var/lib/clickhouse/data/default/{table_name}/data.Parquet"
+
+        r = node.query(f"DESC file('{parquet_file}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_edge_cases(self):
+    """Check that edge case dates (epoch, min/max valid dates) are correctly written as UINT16."""
+    node = self.context.node
+    file_name = f"date_as_uint16_edges_{getuid()}.parquet"
+
+    with Given(
+        "I insert edge case dates into the `file` table function with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}') SELECT d FROM (SELECT toDate('1970-01-01') as d UNION ALL SELECT toDate('1970-01-02') UNION ALL SELECT toDate('2149-06-05'))",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the parquet file to verify the edge case data"):
+        r = node.query(f"SELECT * FROM file('{file_name}') ORDER BY d")
+        expected_dates = ["0", "1", "65534"]
+        assert r.output.strip().split("\n") == expected_dates, error()
+
+    with And("I describe the parquet file to check the schema"):
+        r = node.query(f"DESC file('{file_name}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
+def date_as_uint16_with_other_columns(self):
+    """Check that dates are correctly written as UINT16 when mixed with other column types."""
+    node = self.context.node
+    file_name = f"date_as_uint16_mixed_{getuid()}.parquet"
+
+    with Given(
+        "I insert data with date and other columns into the `file` table function with `output_format_parquet_date_as_uint16` setting"
+    ):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}') SELECT toDate('2025-08-12') as d, 42 as i, 'test' as s",
+            settings=[("output_format_parquet_date_as_uint16", 1)],
+        )
+
+    with Then("I select from the parquet file to verify all columns"):
+        r = node.query(f"SELECT * FROM file('{file_name}')")
+        assert "20312" in r.output and "42" in r.output and "test" in r.output, error()
+
+    with And("I describe the parquet file to check the schema"):
+        r = node.query(f"DESC file('{file_name}')")
+        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        assert "i" in r.output, error()
+        assert "s" in r.output, error()
+
+
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine(self):
@@ -513,7 +747,7 @@ def engine(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def function(self):
     """Check that `file` table function correctly reads and writes Parquet format."""
-    with Pool(4) as executor:
+    with Pool(5) as executor:
         Scenario(
             run=insert_into_function_manual_cast_types,
             parallel=True,
@@ -531,6 +765,36 @@ def function(self):
         )
         Scenario(
             run=select_from_function_auto_cast_types,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16_multiple_dates,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16_nullable,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16_round_trip,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16_edge_cases,
+            parallel=True,
+            executor=executor,
+        )
+        Scenario(
+            run=date_as_uint16_with_other_columns,
             parallel=True,
             executor=executor,
         )
