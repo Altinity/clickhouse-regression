@@ -10,7 +10,7 @@ import helpers.config.config_d as config_d
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
-def part_logging(self):
+def system_events_and_part_log(self):
     """Check part exports are logged correctly in both system.events and system.part_log."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -96,8 +96,11 @@ def duplicate_logging(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"))
-def system_exports_logging(self):
+@Requirements(
+    RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"),
+    RQ_ClickHouse_ExportPart_Metrics_Export("1.0"),
+)
+def system_exports_and_metrics(self):
     """Check that system.exports table tracks export operations before they complete."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -120,14 +123,18 @@ def system_exports_logging(self):
             node=self.context.node,
         )
 
-    with Then("I check that system.exports contains some relevant parts"):
+    with Then("I check that system.exports and system.metrics contain some parts"):
         exports = get_system_exports(node=self.context.node)
+        assert get_num_active_exports(node=self.context.node) > 0, error()
         assert len(exports) > 0, error()
         assert [source_table, s3_table_name] in exports, error()
 
-    with And("I verify that system.exports empties after exports complete"):
+    with And(
+        "I verify that system.exports and system.metrics are empty after exports complete"
+    ):
         sleep(5)
         assert len(get_system_exports(node=self.context.node)) == 0, error()
+        assert get_num_active_exports(node=self.context.node) == 0, error()
 
 
 @TestScenario
@@ -229,9 +236,9 @@ def overwrite_file(self):
 def feature(self):
     """Check system monitoring of export events."""
 
-    Scenario(run=part_logging)
+    Scenario(run=system_events_and_part_log)
     Scenario(run=duplicate_logging)
-    Scenario(run=system_exports_logging)
+    Scenario(run=system_exports_and_metrics)
     Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
