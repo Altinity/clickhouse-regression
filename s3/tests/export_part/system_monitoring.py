@@ -82,11 +82,15 @@ def duplicate_logging(self):
             destination_table=s3_table_name,
         )
 
-    with And("Check logs for correct number of duplicate exports"):
+    with And("Check logs for correct number of duplicate and failed exports"):
         final_events = get_export_events(node=self.context.node)
         assert (
             final_events["PartsExportDuplicated"]
             - initial_events["PartsExportDuplicated"]
+            == 5
+        ), error()
+        assert (
+            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
             == 5
         ), error()
 
@@ -164,6 +168,61 @@ def background_move_pool_size(self, background_move_pool_size):
         assert len(exports) == background_move_pool_size, error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"))
+def overwrite_file(self):
+    """Check that overwrite file setting causes exports to overwrite existing files."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_merge_tree_table(
+            table_name="source",
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with When("I read the initial logged export events"):
+        initial_events = get_export_events(node=self.context.node)
+
+    with And(
+        "I export parts to the S3 table again with overwrite file setting enabled"
+    ):
+        export_parts(
+            source_table="source",
+            destination_table=s3_table_name,
+            node=self.context.node,
+            settings=[("export_merge_tree_part_overwrite_file_if_exists", "1")],
+        )
+
+    with And("I read the final logged export events"):
+        final_events = get_export_events(node=self.context.node)
+
+    with Then("I check no failed or duplicated exports occurred"):
+        assert (
+            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
+            == 0
+        ), error()
+        assert (
+            final_events["PartsExportDuplicated"]
+            - initial_events["PartsExportDuplicated"]
+            == 0
+        ), error()
+
+    with And("I check that the destination table contains the correct data"):
+        source_matches_destination(
+            source_table="source",
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
@@ -176,3 +235,4 @@ def feature(self):
     Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
+    Scenario(run=overwrite_file)
