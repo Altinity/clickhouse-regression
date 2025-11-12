@@ -3,6 +3,7 @@ from testflows.asserts import error
 from testflows.combinatorics import product
 
 from helpers.common import getuid
+from helpers.tables import create_table_as_select
 from swarms.requirements.requirements import *
 
 import swarms.tests.steps.swarm_steps as swarm_steps
@@ -109,33 +110,36 @@ def check_join(
     node=None,
     object_storage_cluster="replicated_cluster_two_nodes",
     format="Values",
+    order_by="tuple(*)",
 ):
     """Check join operation."""
     if node is None:
         node = self.context.node
 
     with Given("create merge tree tables as left and right tables"):
-        left_merge_tree_table = f"left_merge_tree_{getuid()}"
-        right_merge_tree_table = f"right_merge_tree_{getuid()}"
-
-        node.query(
-            f"CREATE TABLE {left_merge_tree_table} ENGINE = MergeTree ORDER BY tuple() AS SELECT * FROM {left_table}"
+        left_merge_tree_table = create_table_as_select(
+            as_select_from=left_table,
         )
-        node.query(
-            f"CREATE TABLE {right_merge_tree_table} ENGINE = MergeTree ORDER BY tuple() AS SELECT * FROM {right_table}"
+        right_merge_tree_table = create_table_as_select(
+            as_select_from=right_table,
         )
 
     with When("get expected result from joining merge tree tables"):
-        expected_result = node.query(
-            f"""
+        query = f"""
             SELECT *
             FROM {left_merge_tree_table} AS t1
             {join_clause} {right_merge_tree_table} AS t2
-            ON {join_condition}
-            ORDER BY tuple(*)
-            FORMAT Values
             """
-        )
+        if join_clause != "CROSS JOIN" and join_clause != "PASTE JOIN":
+            query += f" ON {join_condition}"
+
+        if order_by:
+            query += f" ORDER BY {order_by}"
+
+        if format:
+            query += f" FORMAT {format}"
+
+        expected_result = node.query(query)
 
     exitcode, message = None, None
 
@@ -144,16 +148,19 @@ def check_join(
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "iceberg_table"
             and right_table.table_type == "iceberg_table"
+            and object_storage_cluster
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "iceberg_table"
+            and object_storage_cluster
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table"
+            and object_storage_cluster
         )
         or (
             object_storage_cluster_join_mode == "allow"
@@ -171,44 +178,17 @@ def check_join(
             "DB::Exception:",
         )
 
-    if (
-        (
-            left_table.table_type == "icebergS3Cluster_table_function"
-            and right_table.table_type == "icebergS3Cluster_table_function"
-            and object_storage_cluster_join_mode == "local"
-            and left_table.location == right_table.location
-        )
-        or (
-            left_table.table_type == "iceberg_table_function"
-            and right_table.table_type == "iceberg_table_function"
-            and object_storage_cluster_join_mode == "local"
-            and left_table.location == right_table.location
-        )
-        or (
-            left_table.table_type == "s3_table_function"
-            and right_table.table_type == "s3_table_function"
-            and object_storage_cluster_join_mode == "local"
-            and left_table.location == right_table.location
-        )
-        or (
-            left_table.table_type == "s3Cluster_table_function"
-            and right_table.table_type == "s3Cluster_table_function"
-            and object_storage_cluster_join_mode == "local"
-            and left_table.location == right_table.location
-        )
-    ):
-        exitcode, message = (
-            10,
-            "DB::Exception:",
-        )
-
     query = f"""
         SELECT *
         FROM {left_table} AS t1
         {join_clause} {right_table} AS t2
-        ON {join_condition}
-        ORDER BY tuple(*)
         """
+
+    if join_clause != "CROSS JOIN" and join_clause != "PASTE JOIN":
+        query += f" ON {join_condition}"
+
+    if order_by:
+        query += f" ORDER BY {order_by}"
 
     settings = {}
 
@@ -228,106 +208,147 @@ def check_join(
 
     result = node.query(query, exitcode=exitcode, message=message)
 
+    exclude_join_clauses = [
+        "LEFT OUTER JOIN",
+        "LEFT SEMI JOIN",
+        "LEFT ANTI JOIN",
+        "LEFT ANY JOIN",
+        "LEFT ASOF JOIN",
+        "FULL OUTER JOIN",
+    ]
+
     if (
         (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause not in exclude_join_clauses
         )
     ):
         assert result.output == "", error()
@@ -377,71 +398,121 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
                 )
             )
 
-    with When("list all possible left and right tables for joins"):
-        JoinTable.set_default_credentials(minio_root_user, minio_root_password)
+    JoinTable.set_default_credentials(minio_root_user, minio_root_password)
 
-        s3_table_functions = [
-            JoinTable.create_s3_table_function(
-                url,
-                minio_root_user=minio_root_user,
-                minio_root_password=minio_root_password,
-            )
-            for url in urls
-        ]
-        iceberg_table_functions = [
-            JoinTable.create_iceberg_table_function(
-                url,
-                minio_root_user=minio_root_user,
-                minio_root_password=minio_root_password,
-            )
-            for url in urls
-        ]
-        iceberg_s3_cluster_table_functions = [
-            JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster")
-            for url in urls
-        ]
-        s3_cluster_table_functions = [
-            JoinTable.create_s3Cluster_table_function(url, "replicated_cluster")
-            for url in urls
-        ]
-
-        left_tables = (
-            iceberg_tables
-            + iceberg_table_functions
-            + s3_table_functions
-            + iceberg_s3_cluster_table_functions
-            + s3_cluster_table_functions
+    s3_table_functions = [
+        JoinTable.create_s3_table_function(
+            url,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
         )
-        right_tables = (
-            iceberg_tables
-            + iceberg_table_functions
-            + s3_table_functions
-            + iceberg_s3_cluster_table_functions
-            + s3_cluster_table_functions
+        for url in urls
+    ]
+    iceberg_table_functions = [
+        JoinTable.create_iceberg_table_function(
+            url,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
         )
-        modes = ["allow", "local"]
-        join_conditions = [
-            "t1.boolean_col = t2.boolean_col",
-            "t1.boolean_col = t2.boolean_col AND t1.string_col = t2.string_col",
-            "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
-        ]
+        for url in urls
+    ]
+    iceberg_s3_cluster_table_functions = [
+        JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster")
+        for url in urls
+    ]
+    s3_cluster_table_functions = [
+        JoinTable.create_s3Cluster_table_function(url, "replicated_cluster")
+        for url in urls
+    ]
 
-    length = len(list(product(left_tables, right_tables, modes, join_conditions)))
+    left_tables = (
+        iceberg_tables
+        + iceberg_table_functions
+        + s3_table_functions
+        + iceberg_s3_cluster_table_functions
+        + s3_cluster_table_functions
+    )
+    right_tables = (
+        iceberg_tables
+        + iceberg_table_functions
+        + s3_table_functions
+        + iceberg_s3_cluster_table_functions
+        + s3_cluster_table_functions
+    )
+    modes = ["allow", "local"]
+    join_conditions = [
+        "t1.boolean_col = t2.boolean_col",
+        "t1.boolean_col = t2.boolean_col AND t1.string_col = t2.string_col",
+        "t1.string_col = t2.string_col AND t1.long_col = t2.long_col",
+        "t1.long_col < t2.long_col AND t1.string_col = t2.string_col",
+    ]
+    object_storage_clusters = [
+        None,
+        "replicated_cluster_three_nodes",
+        "replicated_cluster_two_nodes",
+        "replicated_cluster_two_nodes_version_2",
+        "replicated_cluster",
+    ]
+    join_clauses = [
+        "INNER JOIN",  # ok
+        # "INNER ANY JOIN", # ok
+        # "CROSS JOIN",  # ok
+        # "ASOF JOIN",  # ok
+        # "RIGHT OUTER JOIN",  # ok
+        # "RIGHT SEMI JOIN",  # ok
+        # "RIGHT ANTI JOIN",  # ok
+        # "RIGHT ANY JOIN",  # ok
+        # "LEFT OUTER JOIN",  # ok
+        # "LEFT SEMI JOIN",  # ok
+        # "LEFT ANTI JOIN",  # ok
+        # "LEFT ANY JOIN", # ok
+        # "LEFT ASOF JOIN",  # ok
+        # "FULL OUTER JOIN", # problems
+        # "PASTE JOIN", # problems
+    ]
 
-    with Pool(5) as pool:
-        for num, (left_table, right_table, mode, join_condition) in enumerate(
-            product(left_tables, right_tables, modes, join_conditions)
+    length = len(
+        list(
+            product(
+                left_tables,
+                right_tables,
+                modes,
+                join_conditions,
+                object_storage_clusters,
+                join_clauses,
+            )
+        )
+    )
+
+    with Pool(10) as pool:
+        for num, (
+            left_table,
+            right_table,
+            mode,
+            join_condition,
+            object_storage_cluster,
+            join_clause,
+        ) in enumerate(
+            product(
+                left_tables,
+                right_tables,
+                modes,
+                join_conditions,
+                object_storage_clusters,
+                join_clauses,
+            )
         ):
-
+            name = f"join {num} of {length}: {left_table} with {right_table} in {mode} mode on {object_storage_cluster} cluster with {join_clause} clause"
             Scenario(
-                name=f"join {num} of {length}: {left_table} with {right_table} in {mode} mode",
+                name=f"join {num} of {length}: {name}",
                 test=check_join,
                 parallel=True,
                 executor=pool,
             )(
                 left_table=left_table,
                 right_table=right_table,
-                join_clause="JOIN",
+                object_storage_cluster=object_storage_cluster,
+                join_clause=join_clause,
                 join_condition=join_condition,
                 object_storage_cluster_join_mode=mode,
             )
@@ -462,7 +533,28 @@ def feature(self, minio_root_user, minio_root_password):
     # without object storage cluster
     # object storage cluster uses same nodes as cluster functions
     # object storage cluster join uses same nodes as cluster functions
-    # object storage cluster uses differentt nodes than cluster functions
+    # object storage cluster uses different nodes than cluster functions
+
+    # with Given("create cluster with observer initiator and one swarm nodes"):
+    #     cluster_name = "cluster_one_observer_one_swarm"
+    #     swarm_steps.add_node_to_swarm(
+    #         node=self.context.node, observer=True, cluster_name=cluster_name
+    #     )
+    #     swarm_steps.add_node_to_swarm(
+    #         node=self.context.node2, cluster_name=cluster_name
+    #     )
+
+    # with Given("create cluster with observer initiator and two swarm nodes"):
+    #     cluster_name = "cluster_one_observer_two_swarm"
+    #     swarm_steps.add_node_to_swarm(
+    #         node=self.context.node, observer=True, cluster_name=cluster_name
+    #     )
+    #     swarm_steps.add_node_to_swarm(
+    #         node=self.context.node2, cluster_name=cluster_name
+    #     )
+    #     swarm_steps.add_node_to_swarm(
+    #         node=self.context.node3, cluster_name=cluster_name
+    #     )
 
     Feature(test=join_clause)(
         minio_root_user=minio_root_user,
