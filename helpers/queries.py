@@ -16,6 +16,30 @@ from helpers.cluster import ClickHouseNode
 # The extra [0] could be avoided with TSV format, but that does not guarantee valid JSON.
 
 
+@TestStep(Given)
+def get_cluster_nodes(self, cluster, node=None):
+    """Get all nodes in a cluster."""
+
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"SELECT host_name FROM system.clusters WHERE cluster = '{cluster}'", exitcode=0
+    )
+
+    nodes = [line.strip() for line in result.output.splitlines() if line.strip()]
+    return nodes
+
+
+@TestStep(When)
+def select_all_ordered(self, table_name, node, order_by="p, i"):
+    """Select all data from a table ordered by partition and index columns."""
+
+    return node.query(
+        f"SELECT * FROM {table_name} ORDER BY {order_by}", exitcode=0
+    ).output.splitlines()
+
+
 @TestStep(When)
 def sync_replica(
     self, node: ClickHouseNode, table_name: str, raise_on_timeout=False, **kwargs
@@ -124,3 +148,12 @@ def get_column_string(self, node: ClickHouseNode, table_name: str, timeout=30) -
         timeout=timeout,
     )
     return ",".join([l.strip() for l in r.output.splitlines()])
+
+
+@TestStep(When)
+def drop_column(self, node, table_name, column_name):
+    """Drop a column from a table."""
+
+    node.query(
+        f"ALTER TABLE {table_name} DROP COLUMN {column_name}", exitcode=0, steps=True
+    )

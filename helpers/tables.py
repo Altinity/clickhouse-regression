@@ -343,9 +343,10 @@ def generate_all_map_column_types():
 
 
 class Table:
-    def __init__(self, name, columns, engine):
+    def __init__(self, name, columns, engine, partition_by=None):
         self.name = name
         self.columns = columns
+        self.partition_by = partition_by
         self.engine = engine
 
     def insert_test_data(
@@ -422,6 +423,7 @@ def create_table(
     node=None,
     cluster=None,
     order_by_all_columns=False,
+    stop_merges=False,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -479,12 +481,19 @@ def create_table(
             if query_settings is not None:
                 query += f"\nSETTINGS {query_settings}"
 
+            query += ";"
+
+            if stop_merges:
+                query += f" SYSTEM STOP MERGES {name};"
+
             node.query(
                 query,
                 settings=settings,
             )
 
-            yield Table(name, columns, engine)
+            yield Table(
+                name=name, columns=columns, partition_by=partition_by, engine=engine
+            )
 
     finally:
         with Finally(f"drop the table {name}"):
@@ -547,7 +556,7 @@ def create_temporary_table(
                 settings=settings,
             )
 
-            yield Table(name, columns, engine)
+            yield Table(name, columns, engine, partition_by=partition_by)
 
     finally:
         with Finally(f"drop the table {name}"):
@@ -561,19 +570,27 @@ def create_partitioned_table_with_compact_and_wide_parts(
     min_rows_for_wide_part=10,
     min_bytes_for_wide_part=100,
     engine="MergeTree",
+    columns=None,
+    partition_by="p",
+    cluster=None,
+    stop_merges=False,
 ):
     """Create a partitioned table that has specific settings in order
     to get both wide and compact parts."""
+    if columns is None:
+        columns = [
+            Column(name="p", datatype=UInt8()),
+            Column(name="i", datatype=UInt64()),
+        ]
     create_table(
         name=table_name,
         engine=engine,
-        partition_by="p",
+        partition_by=partition_by,
         order_by="tuple()",
-        columns=[
-            Column(name="p", datatype=UInt8()),
-            Column(name="i", datatype=UInt64()),
-        ],
+        columns=columns,
+        cluster=cluster,
         query_settings=f"min_rows_for_wide_part={min_rows_for_wide_part}, min_bytes_for_wide_part={min_bytes_for_wide_part}",
+        stop_merges=stop_merges,
     )
 
 
@@ -631,7 +648,9 @@ def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
                     """
             )
 
-            yield Table(name, columns, engine)
+            yield Table(
+                name=name, columns=columns, partition_by=None, engine=engine
+            )
 
     finally:
         with Finally(f"drop the table {name}"):

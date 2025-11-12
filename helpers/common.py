@@ -702,7 +702,7 @@ def add_config(
                     with And("I wait for config to be reloaded"):
                         wait_for_config_to_be_loaded(user=user)
 
-        yield
+        yield config
 
     finally:
         if not modify:
