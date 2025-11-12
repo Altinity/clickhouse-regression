@@ -149,28 +149,33 @@ def check_join(
             and left_table.table_type == "iceberg_table"
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
+            and join_clause != "PASTE JOIN"
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
+            and join_clause != "PASTE JOIN"
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table"
             and object_storage_cluster
+            and join_clause != "PASTE JOIN"
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table"
+            and join_clause != "PASTE JOIN"
         )
         or (
             object_storage_cluster_join_mode == "allow"
             and left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "iceberg_table"
+            and join_clause != "PASTE JOIN"
         )
     ):
         exitcode, message = (
@@ -184,8 +189,23 @@ def check_join(
         {join_clause} {right_table} AS t2
         """
 
-    if join_clause != "CROSS JOIN" and join_clause != "PASTE JOIN":
+    if join_clause != "CROSS JOIN":
         query += f" ON {join_condition}"
+
+    if join_clause == "PASTE JOIN":
+        query = f"""
+            SELECT *
+            FROM
+            (
+                SELECT *
+                FROM {left_table}
+            ) AS t1
+            PASTE JOIN
+            (
+                SELECT *
+                FROM {right_table}
+            ) AS t2
+        """
 
     if order_by:
         query += f" ORDER BY {order_by}"
@@ -215,6 +235,7 @@ def check_join(
         "LEFT ANY JOIN",
         "LEFT ASOF JOIN",
         "FULL OUTER JOIN",
+        "PASTE JOIN",
     ]
 
     if (
@@ -468,7 +489,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         # "LEFT ANY JOIN", # ok
         # "LEFT ASOF JOIN",  # ok
         # "FULL OUTER JOIN", # problems
-        # "PASTE JOIN", # problems
+        # "PASTE JOIN",  # problems
     ]
 
     length = len(
