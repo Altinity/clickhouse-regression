@@ -1,5 +1,6 @@
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from s3.requirements.export_part import *
@@ -11,8 +12,10 @@ def invalid_part_name(self):
     """Check that exporting a non-existent part returns the correct error."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -25,7 +28,7 @@ def invalid_part_name(self):
 
     with When("I try to export the invalid part"):
         results = export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             parts=[invalid_part_name],
@@ -45,8 +48,10 @@ def same_table(self):
     """Check exporting parts where source and destination tables are the same."""
 
     with Given("I create a populated source table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -54,8 +59,8 @@ def same_table(self):
 
     with When("I try to export parts to itself"):
         results = export_parts(
-            source_table="source",
-            destination_table="source",
+            source_table=source_table,
+            destination_table=source_table,
             node=self.context.node,
             exitcode=1,
         )
@@ -73,16 +78,20 @@ def local_table(self):
     """Test exporting parts to a local table."""
 
     with Given("I create a populated source table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
         )
 
     with And("I create an empty local table"):
+        destination_table = "destination_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="destination",
+            table_name=destination_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -91,8 +100,8 @@ def local_table(self):
 
     with When("I export parts to the local table"):
         results = export_parts(
-            source_table="source",
-            destination_table="destination",
+            source_table=source_table,
+            destination_table=destination_table,
             node=self.context.node,
             exitcode=1,
         )
@@ -111,8 +120,10 @@ def disable_export_setting(self):
     """Check that exporting parts without the export setting set returns the correct error."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -121,7 +132,7 @@ def disable_export_setting(self):
 
     with When("I try to export the parts with the export setting disabled"):
         results = export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
@@ -139,8 +150,10 @@ def different_partition_key(self):
     """Check exporting parts with a different partition key returns the correct error."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="i",
             columns=default_columns(),
             stop_merges=True,
@@ -149,7 +162,7 @@ def different_partition_key(self):
 
     with When("I try to export the parts"):
         results = export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,

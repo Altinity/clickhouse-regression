@@ -1,6 +1,7 @@
 from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
@@ -12,8 +13,10 @@ def different_nodes_same_destination(self, cluster, node1, node2):
     """Test export part from different nodes to same S3 destination in a given cluster."""
 
     with Given("I create an empty source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -25,24 +28,24 @@ def different_nodes_same_destination(self, cluster, node1, node2):
         )
 
     with And("I populate the source tables on both nodes"):
-        create_partitions_with_random_uint64(table_name="source", node=node1)
-        create_partitions_with_random_uint64(table_name="source", node=node2)
+        create_partitions_with_random_uint64(table_name=source_table, node=node1)
+        create_partitions_with_random_uint64(table_name=source_table, node=node2)
 
     with When("I export parts to the S3 table from both nodes"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=node1,
         )
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=node2,
         )
 
     with And("I read data from all tables on both nodes"):
-        source_data1 = select_all_ordered(table_name="source", node=node1)
-        source_data2 = select_all_ordered(table_name="source", node=node2)
+        source_data1 = select_all_ordered(table_name=source_table, node=node1)
+        source_data2 = select_all_ordered(table_name=source_table, node=node2)
         destination_data1 = select_all_ordered(table_name=s3_table_name, node=node1)
         destination_data2 = select_all_ordered(table_name=s3_table_name, node=node2)
 

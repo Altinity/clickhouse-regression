@@ -2,6 +2,7 @@ from time import sleep
 
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
@@ -10,12 +11,14 @@ import helpers.config.config_d as config_d
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
-def part_logging(self):
+def system_events_and_part_log(self):
     """Check part exports are logged correctly in both system.events and system.part_log."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -27,7 +30,7 @@ def part_logging(self):
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -42,7 +45,7 @@ def part_logging(self):
         ), error()
 
     with And("I check that the part log contains the correct parts"):
-        parts = get_parts(table_name="source", node=self.context.node)
+        parts = get_parts(table_name=source_table, node=self.context.node)
         for part in parts:
             assert part in part_log, error()
 
@@ -53,8 +56,10 @@ def duplicate_logging(self):
     """Check duplicate exports are logged correctly in system.events."""
 
     with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -66,39 +71,48 @@ def duplicate_logging(self):
 
     with When("I try to export the parts twice"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
     with Then("Check source matches destination"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
-    with And("Check logs for correct number of duplicate exports"):
+    with And("Check logs for correct number of duplicate and failed exports"):
         final_events = get_export_events(node=self.context.node)
         assert (
             final_events["PartsExportDuplicated"]
             - initial_events["PartsExportDuplicated"]
             == 5
         ), error()
+        assert (
+            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
+            == 5
+        ), error()
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"))
-def system_exports_logging(self):
+@Requirements(
+    RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"),
+    RQ_ClickHouse_ExportPart_Metrics_Export("1.0"),
+)
+def system_exports_and_metrics(self):
     """Check that system.exports table tracks export operations before they complete."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = partitioned_merge_tree_table(
-            table_name=f"source_{getuid()}",
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -116,14 +130,18 @@ def system_exports_logging(self):
             node=self.context.node,
         )
 
-    with Then("I check that system.exports contains some relevant parts"):
+    with Then("I check that system.exports and system.metrics contain some parts"):
         exports = get_system_exports(node=self.context.node)
+        assert get_num_active_exports(node=self.context.node) > 0, error()
         assert len(exports) > 0, error()
         assert [source_table, s3_table_name] in exports, error()
 
-    with And("I verify that system.exports empties after exports complete"):
+    with And(
+        "I verify that system.exports and system.metrics are empty after exports complete"
+    ):
         sleep(5)
         assert len(get_system_exports(node=self.context.node)) == 0, error()
+        assert get_num_active_exports(node=self.context.node) == 0, error()
 
 
 @TestScenario
@@ -139,8 +157,10 @@ def background_move_pool_size(self, background_move_pool_size):
         )
 
     with And("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
         partitioned_merge_tree_table(
-            table_name="source",
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -154,7 +174,7 @@ def background_move_pool_size(self, background_move_pool_size):
 
     with When("I export parts to the S3 table"):
         export_parts(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -164,15 +184,73 @@ def background_move_pool_size(self, background_move_pool_size):
         assert len(exports) == background_move_pool_size, error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"))
+def overwrite_file(self):
+    """Check that overwrite file setting causes exports to overwrite existing files."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with When("I read the initial logged export events"):
+        initial_events = get_export_events(node=self.context.node)
+
+    with And(
+        "I export parts to the S3 table again with overwrite file setting enabled"
+    ):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            settings=[("export_merge_tree_part_overwrite_file_if_exists", "1")],
+        )
+
+    with And("I read the final logged export events"):
+        final_events = get_export_events(node=self.context.node)
+
+    with Then("I check no failed or duplicated exports occurred"):
+        assert (
+            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
+            == 0
+        ), error()
+        assert (
+            final_events["PartsExportDuplicated"]
+            - initial_events["PartsExportDuplicated"]
+            == 0
+        ), error()
+
+    with And("I check that the destination table contains the correct data"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
 def feature(self):
     """Check system monitoring of export events."""
 
-    Scenario(run=part_logging)
+    Scenario(run=system_events_and_part_log)
     Scenario(run=duplicate_logging)
-    Scenario(run=system_exports_logging)
+    Scenario(run=system_exports_and_metrics)
     Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
+    Scenario(run=overwrite_file)
