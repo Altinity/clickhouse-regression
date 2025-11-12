@@ -1,6 +1,3 @@
-from testflows.core import *
-from testflows.asserts import error
-
 from alter.table.attach_partition.common import create_partitions_with_random_uint64
 from helpers.common import getuid
 from helpers.create import (
