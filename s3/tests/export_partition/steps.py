@@ -374,7 +374,7 @@ def export_partitions(
     for part in parts:
         output.append(
             node.query(
-                f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                f"ALTER TABLE {source_table} EXPORT PARTITION '{part}' TO TABLE {destination_table}",
                 exitcode=exitcode,
                 no_checks=no_checks,
                 steps=True,
