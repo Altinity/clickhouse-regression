@@ -1,0 +1,2 @@
+system_tables_table_name = r""""iceberg_database_name\ticeberg_namespace.table_name\t00000000-0000-0000-0000-000000000000\tIcebergS3\t0\t[]\t\t1970-01-01 01:00:00\t0\t[]\t[]\tCREATE TABLE iceberg_database_name.`iceberg_namespace.table_name` (`name` Nullable(String), `double` Nullable(Float64), `integer` Nullable(Int64)) ENGINE = Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')\tIceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')\t\t\t\t\t\t\t\\N\t\\N\t\\N\t\\N\t\\N\t\\N\t0\t0\t\\N\t\\N\t\t0\t[]\t[]\t[]\t[]""" + '"'
+
