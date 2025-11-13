@@ -12,6 +12,7 @@ from helpers.argparser import (
 )
 from helpers.common import (
     check_if_not_antalya_build,
+    check_clickhouse_version,
     experimental_analyzer,
 )
 
@@ -50,6 +51,8 @@ def regression(
             "clickhouse1",
             "clickhouse2",
             "clickhouse3",
+            "clickhouse4",
+            "clickhouse5",
         ),
     }
 
@@ -76,10 +79,14 @@ def regression(
         self.context.node = self.context.cluster.node("clickhouse1")
         self.context.node2 = self.context.cluster.node("clickhouse2")
         self.context.node3 = self.context.cluster.node("clickhouse3")
+        self.context.node4 = self.context.cluster.node("clickhouse4")
+        self.context.node5 = self.context.cluster.node("clickhouse5")
         self.context.nodes = [
             self.context.node,
             self.context.node2,
             self.context.node3,
+            self.context.node4,
+            self.context.node5,
         ]
         self.context.swarm_nodes = [self.context.node2, self.context.node3]
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]

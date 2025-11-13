@@ -6,6 +6,9 @@ def feature(self, minio_root_user, minio_root_password):
     """Check swarm cluster functionality."""
     self.context.catalog = "rest"
     Feature(
+        test=load("swarms.tests.joins", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+    Feature(
         test=load("swarms.tests.swarm_sanity", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
     Feature(
