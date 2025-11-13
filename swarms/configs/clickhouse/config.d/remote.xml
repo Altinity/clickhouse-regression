@@ -41,6 +41,62 @@
                 </replica>
             </shard>
         </replicated_cluster>
+        <replicated_cluster_three_nodes>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse4</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse5</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </replicated_cluster_three_nodes>
+        <replicated_cluster_two_nodes>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </replicated_cluster_two_nodes>
+        <replicated_cluster_two_nodes_version_2>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse4</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </replicated_cluster_two_nodes_version_2>
+        <replicated_cluster_two_nodes_version_3>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse3</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </replicated_cluster_two_nodes_version_3>
         <!--
         <replicated_cluster_readonly>
             <shard>
