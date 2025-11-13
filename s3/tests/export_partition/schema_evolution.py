@@ -1,7 +1,7 @@
 from alter.table.attach_partition.common import create_partitions_with_random_uint64
 from helpers.alter import alter_table_add_column
 from helpers.common import getuid
-from helpers.create import partitioned_merge_tree_table
+from helpers.create import partitioned_replicated_merge_tree_table
 from helpers.queries import *
 from s3.tests.export_partition.steps import (
     export_partitions,
@@ -25,7 +25,7 @@ def schema_evolution(
     new_column_name = f"new_col_{getuid()}"
 
     with Given("I create an empty source table and stop merges"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             stop_merges=True,
