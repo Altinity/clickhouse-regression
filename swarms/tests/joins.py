@@ -228,14 +228,15 @@ def check_join(
 
     result = node.query(query, exitcode=exitcode, message=message)
 
-    exclude_join_clauses = [
-        "LEFT OUTER JOIN",
-        "LEFT SEMI JOIN",
-        "LEFT ANTI JOIN",
-        "LEFT ANY JOIN",
-        "LEFT ASOF JOIN",
-        "FULL OUTER JOIN",
-        "PASTE JOIN",
+    non_stable_join_clauses = [
+        "INNER JOIN",
+        "INNER ANY JOIN",
+        "CROSS JOIN",
+        "ASOF JOIN",
+        "RIGHT OUTER JOIN",
+        "RIGHT SEMI JOIN",
+        "RIGHT ANTI JOIN",
+        "RIGHT ANY JOIN",
     ]
 
     if (
@@ -244,132 +245,132 @@ def check_join(
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "icebergS3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "iceberg_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "s3_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "iceberg_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
         or (
             left_table.table_type == "s3_table_function"
             and right_table.table_type == "s3Cluster_table_function"
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
-            and join_clause not in exclude_join_clauses
+            and join_clause in non_stable_join_clauses
         )
     ):
         assert result.output == "", error()
