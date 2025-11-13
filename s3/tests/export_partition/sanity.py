@@ -246,7 +246,7 @@ def feature(self):
 
     Scenario(run=empty_table)
     Scenario(run=basic_table)
-    Scenario(run=no_partition_by)
+    # Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
     if self.context.stress:

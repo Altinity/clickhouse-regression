@@ -1,6 +1,11 @@
 from testflows.core import *
 from testflows.asserts import error
+from s3.tests.export_partition.steps import (
+    export_partitions,
+    source_matches_destination,
+)
 from s3.tests.export_part.steps import *
+from helpers.common import getuid
 from s3.requirements.export_part import *
 
 
@@ -19,9 +24,10 @@ from s3.requirements.export_part import *
 def part_exports(self):
     """Check part exports are properly tracked in system.part_log."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
@@ -34,9 +40,9 @@ def part_exports(self):
         )  # .get("PartsExports", 0)
         note(f"Initial exports: {initial_exports}")
 
-    # with When("I export parts to the S3 table"):
-    #     export_parts(
-    #         source_table="source",
+    # with When("I export partitions to the S3 table"):
+    #     export_partitions(
+    #         source_table=source_table,
     #         destination_table=s3_table_name,
     #         node=self.context.node,
     #     )
@@ -57,23 +63,24 @@ def part_exports(self):
 def duplicate_exports(self):
     """Check duplicate exports are ignored and not exported again."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I try to export the parts twice"):
-        export_parts(
-            source_table="source",
+    with When("I try to export the partitions twice"):
+        export_partitions(
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        export_parts(
-            source_table="source",
+        export_partitions(
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
@@ -82,7 +89,7 @@ def duplicate_exports(self):
 
     with Then("Check source matches destination"):
         source_matches_destination(
-            source_table="source",
+            source_table=source_table,
             destination_table=s3_table_name,
         )
 
