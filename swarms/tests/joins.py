@@ -482,6 +482,8 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         "replicated_cluster_two_nodes",
         "replicated_cluster_two_nodes_version_2",
         "replicated_cluster",
+        "cluster_one_observer_one_swarm",
+        "cluster_one_observer_two_swarm",
     ]
     join_clauses = [
         "INNER JOIN",
@@ -559,32 +561,43 @@ def s3Cluster_stability(self, minio_root_user, minio_root_password, node=None):
 @Name("swarm joins")
 def feature(self, minio_root_user, minio_root_password):
     """Run swarm cluster joins checks."""
+    with Given("create cluster with observer initiator and one swarm nodes"):
+        cluster_name = "cluster_one_observer_one_swarm"
+        swarm_steps.add_node_to_swarm(
+            node=self.context.node,
+            observer=True,
+            cluster_name=cluster_name,
+            config_name="one_swarm_node.xml",
+            path="/clickhouse/discovery/swarm1",
+        )
+        swarm_steps.add_node_to_swarm(
+            node=self.context.node2,
+            cluster_name=cluster_name,
+            config_name="one_swarm_node.xml",
+            path="/clickhouse/discovery/swarm1",
+        )
 
-    # without object storage cluster
-    # object storage cluster uses same nodes as cluster functions
-    # object storage cluster join uses same nodes as cluster functions
-    # object storage cluster uses different nodes than cluster functions
-
-    # with Given("create cluster with observer initiator and one swarm nodes"):
-    #     cluster_name = "cluster_one_observer_one_swarm"
-    #     swarm_steps.add_node_to_swarm(
-    #         node=self.context.node, observer=True, cluster_name=cluster_name
-    #     )
-    #     swarm_steps.add_node_to_swarm(
-    #         node=self.context.node2, cluster_name=cluster_name
-    #     )
-
-    # with Given("create cluster with observer initiator and two swarm nodes"):
-    #     cluster_name = "cluster_one_observer_two_swarm"
-    #     swarm_steps.add_node_to_swarm(
-    #         node=self.context.node, observer=True, cluster_name=cluster_name
-    #     )
-    #     swarm_steps.add_node_to_swarm(
-    #         node=self.context.node2, cluster_name=cluster_name
-    #     )
-    #     swarm_steps.add_node_to_swarm(
-    #         node=self.context.node3, cluster_name=cluster_name
-    #     )
+    with And("create cluster with observer initiator and two swarm nodes"):
+        cluster_name = "cluster_one_observer_two_swarm"
+        swarm_steps.add_node_to_swarm(
+            node=self.context.node,
+            observer=True,
+            cluster_name=cluster_name,
+            config_name="two_swarm_nodes.xml",
+            path="/clickhouse/discovery/swarm2",
+        )
+        swarm_steps.add_node_to_swarm(
+            node=self.context.node2,
+            cluster_name=cluster_name,
+            config_name="two_swarm_nodes.xml",
+            path="/clickhouse/discovery/swarm2",
+        )
+        swarm_steps.add_node_to_swarm(
+            node=self.context.node3,
+            cluster_name=cluster_name,
+            config_name="two_swarm_nodes.xml",
+            path="/clickhouse/discovery/swarm2",
+        )
 
     Feature(test=join_clause)(
         minio_root_user=minio_root_user,
