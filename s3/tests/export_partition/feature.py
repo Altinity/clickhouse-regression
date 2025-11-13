@@ -25,3 +25,4 @@ def minio(self, uri, bucket_prefix):
     Feature(
         run=load("s3.tests.export_partition.alter_destination_during_export", "feature")
     )
+    Feature(run=load("s3.tests.export_partition.alter_source_timing", "feature"))
