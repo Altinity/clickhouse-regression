@@ -130,7 +130,9 @@ def check_join(
         node = self.context.node
 
     if join_clause == "FULL OUTER JOIN" and object_storage_cluster_join_mode == "allow":
-        xfail("FULL OUTER JOIN is not supported in allow mode")
+        xfail(
+            "FULL OUTER JOIN is not supported in allow mode https://github.com/ClickHouse/ClickHouse/issues/89996"
+        )
 
     with Given("create merge tree tables as left and right tables"):
         left_merge_tree_table = create_table_as_select(
@@ -158,6 +160,17 @@ def check_join(
         expected_result = node.query(query)
 
     exitcode, message = None, None
+
+    non_stable_join_clauses = [
+        "INNER JOIN",
+        "INNER ANY JOIN",
+        "CROSS JOIN",
+        "ASOF JOIN",
+        "RIGHT OUTER JOIN",
+        "RIGHT SEMI JOIN",
+        "RIGHT ANTI JOIN",
+        "RIGHT ANY JOIN",
+    ]
 
     if (
         (
@@ -196,6 +209,45 @@ def check_join(
     ):
         exitcode, message = (
             81,
+            "DB::Exception:",
+        )
+
+    if (
+        (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+        )
+    ):
+        exitcode, message = (
+            60,
             "DB::Exception:",
         )
 
@@ -242,68 +294,7 @@ def check_join(
     if format:
         query += f" FORMAT {format}"
 
-    non_stable_join_clauses = [
-        "INNER JOIN",
-        "INNER ANY JOIN",
-        "CROSS JOIN",
-        "ASOF JOIN",
-        "RIGHT OUTER JOIN",
-        "RIGHT SEMI JOIN",
-        "RIGHT ANTI JOIN",
-        "RIGHT ANY JOIN",
-    ]
-
-    if (
-        (
-            left_table.table_type == "iceberg_table"
-            and right_table.table_type == "merge_tree_table"
-            and object_storage_cluster_join_mode == "allow"
-            and object_storage_cluster
-            and join_clause in non_stable_join_clauses
-        )
-        or (
-            left_table.table_type == "iceberg_table_function"
-            and right_table.table_type == "merge_tree_table"
-            and object_storage_cluster_join_mode == "allow"
-            and object_storage_cluster
-            and join_clause in non_stable_join_clauses
-        )
-        or (
-            left_table.table_type == "s3_table_function"
-            and right_table.table_type == "merge_tree_table"
-            and object_storage_cluster_join_mode == "allow"
-            and object_storage_cluster
-            and join_clause in non_stable_join_clauses
-        )
-        or (
-            left_table.table_type == "icebergS3Cluster_table_function"
-            and right_table.table_type == "merge_tree_table"
-            and object_storage_cluster_join_mode == "allow"
-            and join_clause in non_stable_join_clauses
-        )
-        or (
-            left_table.table_type == "s3Cluster_table_function"
-            and right_table.table_type == "merge_tree_table"
-            and object_storage_cluster_join_mode == "allow"
-        )
-    ):
-        exitcode, message = (
-            60,
-            "DB::Exception:",
-        )
-
     result = node.query(query, exitcode=exitcode, message=message)
-
-    non_stable_join_clauses = [
-        "INNER JOIN",
-        "INNER ANY JOIN",
-        "CROSS JOIN",
-        "ASOF JOIN",
-        "RIGHT OUTER JOIN",
-        "RIGHT SEMI JOIN",
-        "RIGHT ANTI JOIN",
-        "RIGHT ANY JOIN",
-    ]
 
     if (
         (
