@@ -341,7 +341,7 @@ def get_partitions(self, table_name, node):
     """Get all partitions for a table on a given node."""
 
     output = node.query(
-        f"SELECT partition_id FROM system.parts WHERE table = '{table_name}'",
+        f"SELECT DISTINCT partition_id FROM system.parts WHERE table = '{table_name}'",
         exitcode=0,
         steps=True,
     ).output
