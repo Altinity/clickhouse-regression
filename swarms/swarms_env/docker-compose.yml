@@ -126,7 +126,37 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+  
+  clickhouse4:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse4
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse4/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-4:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-4:/var/log/clickhouse-server-limited
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
 
+  clickhouse5:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse5
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse5/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - var_lib_clickhouse-limited-5:/var/lib/clickhouse-limited
+      - var_log_clickhouse-limited-5:/var/log/clickhouse-server-limited
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+  
   keeper:
     image: altinity/clickhouse-keeper:25.8.9.20207.altinityantalya
     container_name: keeper
@@ -199,6 +229,33 @@ volumes:
       type: tmpfs
 
   var_log_clickhouse-limited-3:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_lib_clickhouse-limited-4:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_log_clickhouse-limited-4:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+
+  var_lib_clickhouse-limited-5:
+    driver: local
+    driver_opts:
+      o: "size=1G"
+      device: tmpfs
+      type: tmpfs
+  var_log_clickhouse-limited-5:
     driver: local
     driver_opts:
       o: "size=1G"
