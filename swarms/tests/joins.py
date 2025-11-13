@@ -81,9 +81,22 @@ class JoinTable:
             **kwargs,
         )
 
+    @classmethod
+    def create_merge_tree_table(cls, table_name, **kwargs):
+        """Create a merge tree table instance."""
+
+        return cls(
+            None,
+            "merge_tree_table",
+            table_name=table_name,
+            **kwargs,
+        )
+
     def __str__(self):
         if self.table_type == "iceberg_table":
             return f"{self.database_name}.\\`{self.namespace}.{self.table_name}\\`"
+        elif self.table_type == "merge_tree_table":
+            return self.table_name
         elif self.table_type == "iceberg_table_function":
             return f"iceberg('{self.location}', '{self.minio_root_user}', '{self.minio_root_password}')"
         elif self.table_type == "icebergS3Cluster_table_function":
@@ -115,6 +128,9 @@ def check_join(
     """Check join operation."""
     if node is None:
         node = self.context.node
+
+    if join_clause == "FULL OUTER JOIN" and object_storage_cluster_join_mode == "allow":
+        xfail("FULL OUTER JOIN is not supported in allow mode")
 
     with Given("create merge tree tables as left and right tables"):
         left_merge_tree_table = create_table_as_select(
@@ -225,6 +241,56 @@ def check_join(
 
     if format:
         query += f" FORMAT {format}"
+
+    non_stable_join_clauses = [
+        "INNER JOIN",
+        "INNER ANY JOIN",
+        "CROSS JOIN",
+        "ASOF JOIN",
+        "RIGHT OUTER JOIN",
+        "RIGHT SEMI JOIN",
+        "RIGHT ANTI JOIN",
+        "RIGHT ANY JOIN",
+    ]
+
+    if (
+        (
+            left_table.table_type == "iceberg_table"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "iceberg_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "s3_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and object_storage_cluster
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "icebergS3Cluster_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+            and join_clause in non_stable_join_clauses
+        )
+        or (
+            left_table.table_type == "s3Cluster_table_function"
+            and right_table.table_type == "merge_tree_table"
+            and object_storage_cluster_join_mode == "allow"
+        )
+    ):
+        exitcode, message = (
+            60,
+            "DB::Exception:",
+        )
 
     result = node.query(query, exitcode=exitcode, message=message)
 
@@ -447,12 +513,26 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         for url in urls
     ]
 
+    with Given(
+        "create merge tree tables from iceberg tables with same schema and data"
+    ):
+        merge_tree_tables = []
+        for iceberg_table in iceberg_tables:
+            merge_tree_table_name = f"merge_tree_table_{getuid()}"
+            create_table_as_select(
+                as_select_from=iceberg_table, table_name=merge_tree_table_name
+            )
+            merge_tree_tables.append(
+                JoinTable.create_merge_tree_table(table_name=merge_tree_table_name)
+            )
+
     left_tables = (
         iceberg_tables
         + iceberg_table_functions
         + s3_table_functions
         + iceberg_s3_cluster_table_functions
         + s3_cluster_table_functions
+        + merge_tree_tables
     )
     right_tables = (
         iceberg_tables
@@ -460,6 +540,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         + s3_table_functions
         + iceberg_s3_cluster_table_functions
         + s3_cluster_table_functions
+        + merge_tree_tables
     )
     modes = ["allow", "local"]
     join_conditions = [
@@ -499,8 +580,8 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         "LEFT ANTI JOIN",
         "LEFT ANY JOIN",
         "LEFT ASOF JOIN",
-        # "FULL OUTER JOIN",  # problems
         "PASTE JOIN",
+        "FULL OUTER JOIN",
     ]
 
     length = len(
@@ -536,7 +617,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         ):
             name = f"join {num} of {length}: {left_table} with {right_table} in {mode} mode on {object_storage_cluster} cluster with {join_clause} clause"
             Scenario(
-                name=f"join {num} of {length}: {name}",
+                name=name,
                 test=check_join,
                 parallel=True,
                 executor=pool,
