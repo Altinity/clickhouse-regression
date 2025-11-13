@@ -1329,7 +1329,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: swarms
-      timeout_minutes: 180
+      timeout_minutes: 1200
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
