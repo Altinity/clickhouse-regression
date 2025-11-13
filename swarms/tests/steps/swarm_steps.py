@@ -294,18 +294,6 @@ def setup_iceberg_table(
     """
     Create an Iceberg table with three columns and populate it with test data.
     Table is partitioned by name with IdentityTransform and sorted by name.
-
-    The table contains 14 rows and is stored in Parquet format at:
-    `s3://warehouse/data/**/**.parquet`
-
-    Args:
-        minio_root_user: MinIO root access key.
-        minio_root_password: MinIO root secret key.
-        uri: Iceberg REST catalog URI.
-        s3_endpoint: S3 endpoint for MinIO access.
-
-    Returns:
-        Tuple of (Iceberg table object, table name, namespace).
     """
     namespace = f"namespace_{getuid()}"
     table_name = f"table_{getuid()}"
@@ -433,7 +421,6 @@ def iceberg_table_with_all_basic_data_types(
         )
 
     with And("insert data into table"):
-        # Create PyArrow table with explicit decimal type to match Iceberg schema
         data = pa.table(
             {
                 "boolean_col": pa.array([True, False]),
