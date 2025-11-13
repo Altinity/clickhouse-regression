@@ -337,11 +337,11 @@ def start_zookeeper(self, cluster=None, container_name="s3_env-zookeeper1-1"):
 
 
 @TestStep(When)
-def get_parts(self, table_name, node):
-    """Get all parts for a table on a given node."""
+def get_partitions(self, table_name, node):
+    """Get all partitions for a table on a given node."""
 
     output = node.query(
-        f"SELECT name FROM system.parts WHERE table = '{table_name}'",
+        f"SELECT partition_id FROM system.parts WHERE table = '{table_name}'",
         exitcode=0,
         steps=True,
     ).output
@@ -362,7 +362,7 @@ def export_partitions(
     """Export partitions from a source table to a destination table on the same node. If partitions are not provided, all partitions will be exported."""
 
     if parts is None:
-        parts = get_parts(table_name=source_table, node=node)
+        parts = get_partitions(table_name=source_table, node=node)
 
     if inline_settings is True:
         inline_settings = self.context.default_settings
@@ -374,7 +374,7 @@ def export_partitions(
     for part in parts:
         output.append(
             node.query(
-                f"ALTER TABLE {source_table} EXPORT PARTITION '{part}' TO TABLE {destination_table}",
+                f"ALTER TABLE {source_table} EXPORT PARTITION ID '{part}' TO TABLE {destination_table}",
                 exitcode=exitcode,
                 no_checks=no_checks,
                 steps=True,

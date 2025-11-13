@@ -21,7 +21,7 @@ def export_setting(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and 2 empty S3 tables"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -67,7 +67,7 @@ def mismatched_columns(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a source table and S3 table with different columns"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -126,7 +126,7 @@ def empty_table(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create empty source and S3 tables"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
@@ -162,7 +162,7 @@ def no_partition_by(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="tuple()",
             columns=default_columns(),
@@ -216,7 +216,7 @@ def large_export(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
