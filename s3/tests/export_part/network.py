@@ -8,36 +8,6 @@ from alter.stress.tests.tc_netem import *
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_export(self, num_tables):
-    """Check concurrent exports from different sources to the same S3 table."""
-
-    with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
-        source_tables, destination_tables = concurrent_export_tables(
-            num_tables=num_tables
-        )
-
-    with And("I read data from all tables"):
-        source_data = []
-        destination_data = []
-        for i in range(num_tables):
-            data = select_all_ordered(
-                table_name=source_tables[i], node=self.context.node
-            )
-            source_data.extend(data)
-            data = select_all_ordered(
-                table_name=destination_tables[i], node=self.context.node
-            )
-            destination_data.extend(data)
-
-    with Then("All data should be present in the S3 table"):
-        assert set(source_data) == set(destination_data), error()
-
-    with And("Exports should have run concurrently"):
-        verify_export_concurrency(node=self.context.node, source_tables=source_tables)
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_delay(self, delay_ms):
     """Check that exports work correctly with packet delay."""
@@ -295,57 +265,6 @@ def packet_rate_limit(self, rate_mbit):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_insert(self):
-    """Check that exports work correctly with concurrent inserts of source data."""
-
-    with Given("I create an empty source and S3 table"):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=True,
-            populate=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
-        "I insert data and export it in parallel",
-        description="""
-        5 partitions with 1 part each are inserted.
-        The export is queued in parallel and usually behaves by exporting
-        a snapshot of the source data, often getting just the first partition
-        which means the export happens right after the first INSERT query completes.
-    """,
-    ):
-        Step(test=create_partitions_with_random_uint64, parallel=True)(
-            table_name=source_table,
-            number_of_partitions=5,
-            number_of_parts=1,
-        )
-        Step(test=export_parts, parallel=True)(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-        join()
-
-    with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert set(source_data) >= set(destination_data), error()
-
-    with And("Inserts should have completed successfully"):
-        assert len(source_data) == 15, error()
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
 def minio_network_interruption(self, number_of_values=3, signal="KILL"):
     """Check that restarting MinIO while exporting parts inbetween works correctly."""
@@ -443,13 +362,12 @@ def clickhouse_network_interruption(self, safe=False):
 
 
 @TestFeature
-@Name("concurrency and networks")
+@Name("network")
 def feature(self):
-    """Check that exports work correctly with concurrency and various network conditions."""
+    """Check that exports work correctly with various network conditions."""
 
     # TODO corruption (bit flipping)
 
-    Scenario(test=concurrent_export)(num_tables=5)
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
     Scenario(test=packet_loss_gemodel)(
@@ -459,7 +377,6 @@ def feature(self):
     Scenario(test=packet_duplication)(percent_duplicated=50)
     Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(run=concurrent_insert)
     Scenario(test=minio_network_interruption)(signal="TERM")
     Scenario(test=minio_network_interruption)(signal="KILL")
     Scenario(test=clickhouse_network_interruption)(safe=True)
