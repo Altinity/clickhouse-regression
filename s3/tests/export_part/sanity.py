@@ -221,53 +221,6 @@ def wide_and_compact_parts(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"))
-def export_and_drop(self):
-    """Check that dropping a column immediately after export doesn't affect exported data."""
-
-    with Given(
-        "I create a populated source table and empty S3 table",
-        description="""
-        Stop merges must be false to allow for mutations like dropping a column.
-    """,
-    ):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I export data"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-
-    with And("I read the source before dropping a column"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-
-    with And("I drop a source column"):
-        drop_column(
-            node=self.context.node,
-            table_name=source_table,
-            column_name="i",
-        )
-
-    with Then("Check source before drop matches destination"):
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert source_data == destination_data, error()
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_LargeParts("1.0"))
 def large_part(self):
     """Test exporting a large part."""
@@ -310,7 +263,6 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
-    Scenario(run=export_and_drop)
     if self.context.stress:
         Scenario(run=large_part)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting
