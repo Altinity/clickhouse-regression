@@ -413,9 +413,9 @@ def alter_during_export(self, alter_function, kwargs):
 
 
 @TestFeature
-@Name("concurrent actions")
+@Name("concurrent alter")
 def feature(self):
-    """Check concurrent actions of exporting data parts to S3 storage."""
+    """Check concurrent ALTER operations on the source table during exporting parts to S3 storage."""
 
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
