@@ -48,7 +48,6 @@ def minio_storage_configuration(self, restart=True):
                     "hot": [
                         {"disk": "jbod1"},
                         {"disk": "jbod2"},
-                        {"max_data_part_size_bytes": "2048"},
                     ],
                     "cold": [
                         {"disk": "external"},
@@ -213,18 +212,36 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
 
 
 @TestStep(When)
-def get_parts(self, table_name, node, latest_only=False):
+def get_column_info(self, node, table_name):
+    """Get column information in the same structure as default_columns.
+
+    Returns a list of dictionaries with 'name' and 'type' keys.
+    Example: [{"name": "p", "type": "UInt8"}, {"name": "i", "type": "UInt64"}]
+    """
+    r = node.query(
+        f"""
+        SELECT name, type
+        FROM system.columns 
+        WHERE table = '{table_name}' AND database = currentDatabase()
+        ORDER BY position
+        FORMAT JSONEachRow
+        """,
+        exitcode=0,
+        steps=True,
+    )
+
+    columns = []
+    for line in r.output.strip().splitlines():
+        col = json.loads(line)
+        columns.append({"name": col["name"], "type": col["type"]})
+    return columns
+
+
+@TestStep(When)
+def get_parts(self, table_name, node):
     """Get all parts for a table on a given node."""
 
-    if latest_only:
-        query = f"""
-            SELECT argMax(name, name) as name
-            FROM system.parts
-            WHERE table = '{table_name}'
-            GROUP BY partition_id, min_block_number, max_block_number, level
-        """
-    else:
-        query = f"SELECT name FROM system.parts WHERE table = '{table_name}'"
+    query = f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active = 1"
 
     output = node.query(
         query,
@@ -245,12 +262,11 @@ def export_parts(
     exitcode=0,
     settings=None,
     inline_settings=True,
-    latest_only=False,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
 
     if parts is None:
-        parts = get_parts(table_name=source_table, node=node, latest_only=latest_only)
+        parts = get_parts(table_name=source_table, node=node)
 
     if inline_settings is True:
         inline_settings = self.context.default_settings

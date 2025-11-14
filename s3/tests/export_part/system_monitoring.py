@@ -271,7 +271,7 @@ def max_bandwidth(self):
             pass
         duration_unlimited_bandwidth = time.time() - initial_time
 
-    with When("I set the max bandwidth to 1"):
+    with When("I set the max bandwidth to 1024 bytes per second"):
         config_d.create_and_add(
             entries={"max_exports_bandwidth_for_server": "1024"},
             config_file="max_bandwidth.xml",
