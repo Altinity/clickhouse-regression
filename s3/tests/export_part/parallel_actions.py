@@ -7,7 +7,7 @@ from s3.requirements.export_part import *
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_insert(self):
+def parallel_insert(self):
     """Check that exports work correctly with concurrent inserts of source data."""
 
     with Given("I create an empty source and S3 table"):
@@ -58,7 +58,7 @@ def concurrent_insert(self):
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_export(self, num_tables):
+def multiple_sources_same_destination(self, num_tables):
     """Check concurrent exports from different sources to the same S3 table."""
 
     with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
@@ -87,9 +87,9 @@ def concurrent_export(self, num_tables):
 
 
 @TestFeature
-@Name("concurrency")
+@Name("parallel actions")
 def feature(self):
-    """Check that exports work correctly with concurrency."""
+    """Check that exports work correctly with explicitly parallel tests."""
 
-    Scenario(test=concurrent_export)(num_tables=5)
-    Scenario(test=concurrent_insert)
+    Scenario(test=multiple_sources_same_destination)(num_tables=5)
+    Scenario(test=parallel_insert)
