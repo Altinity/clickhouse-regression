@@ -140,7 +140,7 @@ SETUP_FUNCTIONS = {
     get_alter_functions(),
 )
 def alter_before_export(self, alter_function, kwargs):
-    """Test exporting parts with different columns."""
+    """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
         source_table = "source_" + getuid()
@@ -200,7 +200,7 @@ def alter_before_export(self, alter_function, kwargs):
                 **kwargs,
             )
 
-    with And("I populate the source table with new parts that have the new column"):
+    with And("I populate the source table with new parts"):
         insert_into_table(
             table_name=source_table,
         )
@@ -226,6 +226,107 @@ def alter_before_export(self, alter_function, kwargs):
         )
 
 
+@TestOutline(Scenario)
+@Examples(
+    "alter_function, kwargs",
+    get_alter_functions(),
+)
+def alter_after_export(self, alter_function, kwargs):
+    """Test altering the source table after exporting parts."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        if alter_function == alter_table_fetch_partition:
+            partitioned_replicated_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                columns=default_columns(simple=False),
+                query_settings="storage_policy = 'tiered_storage'",
+            )
+        else:
+            partitioned_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                columns=default_columns(simple=False),
+                query_settings="storage_policy = 'tiered_storage'",
+            )
+        s3_table_name = create_s3_table(
+            table_name="s3",
+            create_new_bucket=True,
+            columns=default_columns(simple=False),
+        )
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I run setup if needed"):
+        if alter_function in SETUP_FUNCTIONS:
+            SETUP_FUNCTIONS[alter_function](
+                table_name=source_table, node=self.context.node
+            )
+            if (
+                alter_function == alter_table_attach_partition_from
+                or alter_function == alter_table_replace_partition
+            ):
+                kwargs["path_to_backup"] = f"{source_table}_temp"
+            elif alter_function == alter_table_move_partition_to_table:
+                kwargs["path_to_backup"] = source_table
+            elif alter_function == alter_table_fetch_partition:
+                kwargs["path_to_backup"] = (
+                    f"/clickhouse/tables/shard0/{source_table}_temp"
+                )
+
+    with When("I read data on the S3 table"):
+        initial_destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
+    with And(f"I {alter_function.__name__} on the source table"):
+        if alter_function == alter_table_move_partition:
+            moved = False
+            while not moved:
+                for volume in ["hot", "cold"]:
+                    try:
+                        kwargs["disk_name"] = volume
+                        alter_function(table_name=source_table, **kwargs)
+                        moved = True
+                        break
+                    except Exception as e:
+                        note(f"Failed to move to {volume}: {e}")
+                        pass
+        else:
+            alter_function(
+                table_name=(
+                    source_table
+                    if alter_function != alter_table_move_partition_to_table
+                    else f"{source_table}_temp"
+                ),
+                **kwargs,
+            )
+
+    with Then("Check destination is not affected by the alter"):
+        final_destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+        assert initial_destination_data == final_destination_data, error()
+
+
+@TestOutline(Scenario)
+@Examples(
+    "alter_function, kwargs",
+    get_alter_functions(),
+)
+def alter_during_export(self, alter_function, kwargs):
+    """Test altering the source table during exporting parts."""
+
+    # TODO
+
+
 @TestFeature
 @Name("concurrent actions")
 def feature(self):
@@ -235,5 +336,5 @@ def feature(self):
         minio_storage_configuration(restart=True)
 
     Scenario(run=alter_before_export)
-    # Scenario(run=alter_during_export)
-    # Scenario(run=alter_after_export)
+    Scenario(run=alter_during_export)
+    Scenario(run=alter_after_export)
