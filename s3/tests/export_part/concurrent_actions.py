@@ -81,6 +81,7 @@ def get_alter_functions():
             alter_table_fetch_partition,
             {"partition_name": "1", "path_to_backup": ""},
         ),
+        (create_partitions_with_random_uint64, {"number_of_partitions": 5, "number_of_parts": 1}),
     ]
 
 
@@ -413,9 +414,9 @@ def alter_during_export(self, alter_function, kwargs):
 
 
 @TestFeature
-@Name("concurrent alter")
+@Name("concurrent actions")
 def feature(self):
-    """Check concurrent ALTER operations on the source table during exporting parts to S3 storage."""
+    """Check concurrent actions on the source table during exporting parts to S3 storage."""
 
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
