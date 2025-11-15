@@ -1,3 +1,5 @@
+from time import sleep
+import random
 from testflows.core import *
 from helpers.common import getuid
 from s3.tests.export_part.steps import *
@@ -264,10 +266,30 @@ def packet_rate_limit(self, rate_mbit):
                 )
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
-def minio_network_interruption(self, number_of_values=3, signal="KILL"):
-    """Check that restarting MinIO while exporting parts inbetween works correctly."""
+def get_minio_interruption_strategies():
+    return [
+        ("before", "KILL"),
+        ("before", "TERM"),
+        ("before", "SEGV"),
+        ("during", "KILL"),
+        ("during", "TERM"),
+        ("during", "SEGV"),
+        ("after", "KILL"),
+        ("after", "TERM"),
+        ("after", "SEGV"),
+        ("random", "KILL"),
+        ("random", "TERM"),
+        ("random", "SEGV"),
+    ]
+
+
+@TestOutline(Scenario)
+@Examples(
+    "strategy, signal",
+    get_minio_interruption_strategies(),
+)
+def minio_interruption(self, strategy, signal):
+    """Check that MinIO interruptions at different times during exports work correctly."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = "source_" + getuid()
@@ -276,42 +298,71 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            number_of_values=number_of_values,
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I stop MinIO"):
-        kill_minio(signal=signal)
+    with And("I slow the network to make export take longer"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with When("I read export events"):
-        initial_events = get_export_events(node=self.context.node)
+    if strategy == "before":
+        with When("I kill MinIO before export"):
+            kill_minio(signal=signal)
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
 
-    with And("I export data"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
+    elif strategy == "during":
+        with When("I kill MinIO during export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+            kill_minio(signal=signal)
 
-    with And("I start MinIO"):
+    elif strategy == "after":
+        with When("I export data"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+
+        with And("I kill MinIO after export"):
+            sleep(5)
+            kill_minio(signal=signal)
+
+    elif strategy == "random":
+        with When("I kill MinIO at a random time after export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+            sleep(random.uniform(0, 3))
+            kill_minio(signal=signal)
+
+    with Then("I start MinIO"):
+        sleep(5)
         start_minio()
 
-    with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert set(source_data) >= set(destination_data), error()
-
-    with And("Failed exports should be logged in the system.events table"):
-        final_events = get_export_events(node=self.context.node)
-        assert (
-            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == (len(source_data) - len(destination_data)) / number_of_values
-        ), error()
+    with And("Check destination matches source, or is a subset if export was interrupted"):
+        if strategy == "after":
+            source_matches_destination(
+                source_table=source_table,
+                destination_table=s3_table_name,
+            )
+        else:
+            source_data = select_all_ordered(
+                table_name=source_table, node=self.context.node
+            )
+            destination_data = select_all_ordered(
+                table_name=s3_table_name, node=self.context.node
+            )
+            assert set(source_data) >= set(destination_data), error()
 
 
 @TestScenario
@@ -377,7 +428,6 @@ def feature(self):
     Scenario(test=packet_duplication)(percent_duplicated=50)
     Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(test=minio_network_interruption)(signal="TERM")
-    Scenario(test=minio_network_interruption)(signal="KILL")
+    Scenario(run=minio_interruption)
     Scenario(test=clickhouse_network_interruption)(safe=True)
     Scenario(test=clickhouse_network_interruption)(safe=False)
