@@ -151,6 +151,77 @@ def create_s3_table(
 
 
 @TestStep(When)
+def get_parts_per_partition(self, table_name, node=None):
+    """Get the number of parts per partition as a dictionary {partition: count}."""
+
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT partition, count() as part_count
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1
+        GROUP BY partition
+        ORDER BY partition
+        FORMAT JSONEachRow
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    
+    parts_per_partition = {}
+    for line in result.output.strip().splitlines():
+        if line.strip():
+            row = json.loads(line)
+            parts_per_partition[row["partition"]] = int(row["part_count"])
+    return parts_per_partition
+
+
+@TestStep(When)
+def optimize_partition(self, table_name, partition, node=None):
+    """Optimize a partition of a table."""
+
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
+        exitcode=0,
+        steps=True,
+    )
+
+
+@TestStep(When)
+def get_s3_parts_per_partition(self, table_name, node=None):
+    """Get the number of files (parts) per partition in an S3 table."""
+    if node is None:
+        node = self.context.node
+    
+    result = node.query(
+        f"""
+        SELECT 
+            p as partition,
+            uniqExact(_file) as part_count
+        FROM {table_name}
+        GROUP BY partition
+        ORDER BY partition
+        FORMAT JSONEachRow
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    
+    parts_per_partition = {}
+    for line in result.output.strip().splitlines():
+        if line.strip():
+            row = json.loads(line)
+            partition = str(row["partition"])
+            parts_per_partition[partition] = int(row["part_count"])
+    return parts_per_partition
+
+
+@TestStep(When)
 def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
 
