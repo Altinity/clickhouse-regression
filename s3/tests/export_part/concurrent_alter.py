@@ -85,6 +85,7 @@ def get_alter_functions():
             create_partitions_with_random_uint64,
             {"number_of_partitions": 5, "number_of_parts": 1},
         ),
+        (optimize, {"node": ""}),
     ]
 
 
@@ -155,6 +156,7 @@ def alter_before_export(self, alter_function, kwargs):
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -162,6 +164,7 @@ def alter_before_export(self, alter_function, kwargs):
             partitioned_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -182,6 +185,8 @@ def alter_before_export(self, alter_function, kwargs):
                 kwargs["path_to_backup"] = (
                     f"/clickhouse/tables/shard0/{source_table}_temp"
                 )
+        if alter_function == optimize:
+            kwargs["node"] = self.context.node
 
     with When(f"I {alter_function.__name__} on the source table"):
         if alter_function == alter_table_move_partition:
@@ -247,6 +252,7 @@ def alter_after_export(self, alter_function, kwargs):
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -254,6 +260,7 @@ def alter_after_export(self, alter_function, kwargs):
             partitioned_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -286,6 +293,8 @@ def alter_after_export(self, alter_function, kwargs):
                 kwargs["path_to_backup"] = (
                     f"/clickhouse/tables/shard0/{source_table}_temp"
                 )
+        if alter_function == optimize:
+            kwargs["node"] = self.context.node
 
     with When("I read data on the S3 table"):
         initial_destination_data = select_all_ordered(
@@ -337,6 +346,7 @@ def alter_during_export(self, alter_function, kwargs):
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -344,6 +354,7 @@ def alter_during_export(self, alter_function, kwargs):
             partitioned_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
+                number_of_parts=2,
                 columns=default_columns(simple=False),
                 query_settings="storage_policy = 'tiered_storage'",
             )
@@ -384,6 +395,8 @@ def alter_during_export(self, alter_function, kwargs):
                 kwargs["path_to_backup"] = (
                     f"/clickhouse/tables/shard0/{source_table}_temp"
                 )
+        if alter_function == optimize:
+            kwargs["node"] = self.context.node
 
     with And(f"I {alter_function.__name__} on the source table"):
         if alter_function == alter_table_move_partition:
@@ -416,63 +429,8 @@ def alter_during_export(self, alter_function, kwargs):
         assert initial_source_data == destination_data, error()
 
 
-@TestScenario
-def select_and_export(self):
-    """Test selecting from the source table before, during, and after exports."""
-
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(simple=False),
-            stop_merges=True,
-        )
-        s3_table_name = create_s3_table(
-            table_name="s3",
-            create_new_bucket=True,
-            columns=default_columns(simple=False),
-        )
-
-    with And("I select data from the source table before exporting parts"):
-        before_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-
-    with When("I slow the network"):
-        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
-
-    with And("I export parts to the S3 table"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-
-    with And("I select data from the source table during exporting parts"):
-        during_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-
-    with And("I select data from the source and destination after exporting parts"):
-        sleep(5)
-        after_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-
-    with Then("Check data is consistent before, during, and after exports"):
-        assert before_export_data == during_export_data, error()
-        assert during_export_data == after_export_data, error()
-        assert before_export_data == after_export_data, error()
-        assert before_export_data == destination_data, error()
-
-
 @TestFeature
-@Name("concurrent actions")
+@Name("concurrent alter")
 def feature(self):
     """Check concurrent actions on the source table during exporting parts to S3 storage."""
 
@@ -482,4 +440,3 @@ def feature(self):
     Scenario(run=alter_before_export)
     Scenario(run=alter_during_export)
     Scenario(run=alter_after_export)
-    Scenario(run=select_and_export)
