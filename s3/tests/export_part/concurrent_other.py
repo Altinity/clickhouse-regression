@@ -160,7 +160,7 @@ def merge_parts(self):
             create_new_bucket=True,
             columns=default_columns(simple=False),
         )
-    
+
     with And("I optimize partition 1 before export"):
         optimize_partition(
             table_name=source_table,
@@ -179,7 +179,7 @@ def merge_parts(self):
             destination_table=s3_table_name,
             node=self.context.node,
         )
-    
+
     with And("I optimize partition 2 during export"):
         optimize_partition(
             table_name=source_table,
@@ -194,7 +194,9 @@ def merge_parts(self):
         )
 
     with Then("I verify destination partition structure is correct"):
-        destination_parts_after_export = get_s3_parts_per_partition(table_name=s3_table_name)
+        destination_parts_after_export = get_s3_parts_per_partition(
+            table_name=s3_table_name
+        )
         assert destination_parts_after_export == source_parts_before_export, error()
 
     with And("Source matches destination"):
@@ -205,8 +207,20 @@ def merge_parts(self):
 
     with And("Final partition structure is correct"):
         source_parts_after_export = get_parts_per_partition(table_name=source_table)
-        assert source_parts_after_export == {"1": 1, "2": 1, "3": 1, "4": 2, "5": 2}, error()
-        assert destination_parts_after_export == {"1": 1, "2": 2, "3": 2, "4": 2, "5": 2}, error()
+        assert source_parts_after_export == {
+            "1": 1,
+            "2": 1,
+            "3": 1,
+            "4": 2,
+            "5": 2,
+        }, error()
+        assert destination_parts_after_export == {
+            "1": 1,
+            "2": 2,
+            "3": 2,
+            "4": 2,
+            "5": 2,
+        }, error()
 
 
 @TestFeature
