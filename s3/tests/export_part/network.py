@@ -349,7 +349,9 @@ def minio_interruption(self, strategy, signal):
         sleep(5)
         start_minio()
 
-    with And("Check destination matches source, or is a subset if export was interrupted"):
+    with And(
+        "Check destination matches source, or is a subset if export was interrupted"
+    ):
         if strategy == "after":
             source_matches_destination(
                 source_table=source_table,

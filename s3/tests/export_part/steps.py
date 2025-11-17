@@ -169,7 +169,7 @@ def get_parts_per_partition(self, table_name, node=None):
         exitcode=0,
         steps=True,
     )
-    
+
     parts_per_partition = {}
     for line in result.output.strip().splitlines():
         if line.strip():
@@ -197,7 +197,7 @@ def get_s3_parts_per_partition(self, table_name, node=None):
     """Get the number of files (parts) per partition in an S3 table."""
     if node is None:
         node = self.context.node
-    
+
     result = node.query(
         f"""
         SELECT 
@@ -211,7 +211,7 @@ def get_s3_parts_per_partition(self, table_name, node=None):
         exitcode=0,
         steps=True,
     )
-    
+
     parts_per_partition = {}
     for line in result.output.strip().splitlines():
         if line.strip():
