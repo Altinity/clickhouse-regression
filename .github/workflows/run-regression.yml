@@ -1179,7 +1179,7 @@ jobs:
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/export part/*"
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/export part/*" --as-binary
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
