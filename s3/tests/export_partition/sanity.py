@@ -103,6 +103,7 @@ def basic_table(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table = create_s3_table(table_name="s3", create_new_bucket=True)
 
