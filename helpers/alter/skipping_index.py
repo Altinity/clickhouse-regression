@@ -81,4 +81,3 @@ def alter_table_clear_index_in_partition(
     with By("clearing index in partition"):
         query = f"ALTER TABLE {table_name} CLEAR INDEX {index} IN PARTITION {partition_name}"
         node.query(query, **query_kwargs)
-

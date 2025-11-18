@@ -32,4 +32,3 @@ def alter_table_update_columns(
 
         query = f"ALTER TABLE {table_name} UPDATE {assignments_str} WHERE {condition}"
         node.query(query, **query_kwargs)
-

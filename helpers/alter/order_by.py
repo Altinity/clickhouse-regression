@@ -12,4 +12,3 @@ def alter_table_modify_order_by(
     with By("modifying ORDER BY expression of the table"):
         query = f"ALTER TABLE {table_name} MODIFY ORDER BY {order_by_expression}"
         node.query(query, **query_kwargs)
-

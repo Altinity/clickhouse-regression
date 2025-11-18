@@ -21,4 +21,3 @@ def alter_table_remove_ttl(self, table_name, node=None, **query_kwargs):
     with By("removing TTL from the table"):
         query = f"ALTER TABLE {table_name} REMOVE TTL"
         node.query(query, **query_kwargs)
-

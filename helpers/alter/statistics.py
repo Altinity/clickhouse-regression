@@ -31,4 +31,3 @@ def alter_table_collect_statistics(
         else:
             query = f"ALTER TABLE {table_name} COLLECT STATISTICS"
         node.query(query, **query_kwargs)
-
