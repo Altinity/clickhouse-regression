@@ -186,4 +186,3 @@ def alter_table_unfreeze_partition_with_name(
             f"ALTER TABLE {table_name} UNFREEZE {partition}WITH NAME '{backup_name}'"
         )
         node.query(query, **query_kwargs)
-

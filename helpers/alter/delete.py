@@ -11,3 +11,13 @@ def alter_table_delete_rows(self, table_name, condition, node=None, **query_kwar
         query = f"ALTER TABLE {table_name} DELETE WHERE {condition}"
         node.query(query, **query_kwargs)
 
+
+@TestStep(Given)
+def alter_table_apply_deleted_mask(self, table_name, node=None, **query_kwargs):
+    """Apply deleted mask to the table using alter."""
+    if node is None:
+        node = self.context.node
+
+    with By("applying deleted mask to the table"):
+        query = f"ALTER TABLE {table_name} APPLY DELETED MASK"
+        node.query(query, **query_kwargs)

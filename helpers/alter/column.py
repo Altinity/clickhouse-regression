@@ -166,9 +166,7 @@ def alter_table_comment_column(
 
 
 @TestStep(Given)
-def alter_table_clear_column(
-    self, table_name, column_name, node=None, **query_kwargs
-):
+def alter_table_clear_column(self, table_name, column_name, node=None, **query_kwargs):
     """Clear column values in the table using alter."""
     if node is None:
         node = self.context.node
@@ -214,4 +212,3 @@ def alter_table_materialize_column(
             query += f" IN PARTITION ID '{partition_id}'"
 
         node.query(query, **query_kwargs)
-

@@ -10,4 +10,3 @@ def alter_table_modify_comment(self, table_name, comment, node=None, **query_kwa
     with By("modifying table comment"):
         query = f"ALTER TABLE {table_name} MODIFY COMMENT '{comment}'"
         node.query(query, **query_kwargs)
-

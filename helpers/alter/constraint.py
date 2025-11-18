@@ -25,4 +25,3 @@ def alter_table_drop_constraint(
     with By("dropping constraint from the table"):
         query = f"ALTER TABLE {table_name} DROP CONSTRAINT {constraint_name}"
         node.query(query, **query_kwargs)
-
