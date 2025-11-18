@@ -1,4 +1,3 @@
-from time import sleep
 from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -89,58 +88,6 @@ def get_alter_functions():
     ]
 
 
-SETUP_FUNCTIONS = {
-    alter_table_drop_constraint: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} ADD CONSTRAINT new_constraint CHECK 1 = 1"
-    ),
-    alter_table_attach_partition: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} DETACH PARTITION 1"
-    ),
-    alter_table_attach_partition_from: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_move_partition_to_table: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_clear_index_in_partition: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} ADD INDEX idx_i i TYPE minmax GRANULARITY 1"
-    ),
-    alter_table_unfreeze_partition_with_name: lambda table_name, node: (
-        alter_table_freeze_partition_with_name(
-            table_name=table_name,
-            backup_name="frozen_partition",
-            partition_name="1",
-        )
-    ),
-    alter_table_replace_partition: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_fetch_partition: lambda table_name, node: (
-        partitioned_replicated_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-}
-
-
 @TestOutline(Scenario)
 @Examples(
     "alter_function, kwargs",
@@ -170,46 +117,20 @@ def alter_before_export(self, alter_function, kwargs):
             )
 
     with And("I run setup if needed"):
-        if alter_function in SETUP_FUNCTIONS:
-            SETUP_FUNCTIONS[alter_function](
-                table_name=source_table, node=self.context.node
-            )
-            if (
-                alter_function == alter_table_attach_partition_from
-                or alter_function == alter_table_replace_partition
-            ):
-                kwargs["path_to_backup"] = f"{source_table}_temp"
-            elif alter_function == alter_table_move_partition_to_table:
-                kwargs["path_to_backup"] = source_table
-            elif alter_function == alter_table_fetch_partition:
-                kwargs["path_to_backup"] = (
-                    f"/clickhouse/tables/shard0/{source_table}_temp"
-                )
-        if alter_function == optimize:
-            kwargs["node"] = self.context.node
+        kwargs = run_alter_setup_and_update_kwargs(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with When(f"I {alter_function.__name__} on the source table"):
-        if alter_function == alter_table_move_partition:
-            moved = False
-            while not moved:
-                for volume in ["hot", "cold"]:
-                    try:
-                        kwargs["disk_name"] = volume
-                        alter_function(table_name=source_table, **kwargs)
-                        moved = True
-                        break
-                    except Exception as e:
-                        note(f"Failed to move to {volume}: {e}")
-                        pass
-        else:
-            alter_function(
-                table_name=(
-                    source_table
-                    if alter_function != alter_table_move_partition_to_table
-                    else f"{source_table}_temp"
-                ),
-                **kwargs,
-            )
+        execute_alter_function(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with And("I populate the source table with new parts"):
         insert_into_table(
@@ -278,23 +199,12 @@ def alter_after_export(self, alter_function, kwargs):
         )
 
     with And("I run setup if needed"):
-        if alter_function in SETUP_FUNCTIONS:
-            SETUP_FUNCTIONS[alter_function](
-                table_name=source_table, node=self.context.node
-            )
-            if (
-                alter_function == alter_table_attach_partition_from
-                or alter_function == alter_table_replace_partition
-            ):
-                kwargs["path_to_backup"] = f"{source_table}_temp"
-            elif alter_function == alter_table_move_partition_to_table:
-                kwargs["path_to_backup"] = source_table
-            elif alter_function == alter_table_fetch_partition:
-                kwargs["path_to_backup"] = (
-                    f"/clickhouse/tables/shard0/{source_table}_temp"
-                )
-        if alter_function == optimize:
-            kwargs["node"] = self.context.node
+        kwargs = run_alter_setup_and_update_kwargs(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with When("I read data on the S3 table"):
         initial_destination_data = select_all_ordered(
@@ -302,27 +212,12 @@ def alter_after_export(self, alter_function, kwargs):
         )
 
     with And(f"I {alter_function.__name__} on the source table"):
-        if alter_function == alter_table_move_partition:
-            moved = False
-            while not moved:
-                for volume in ["hot", "cold"]:
-                    try:
-                        kwargs["disk_name"] = volume
-                        alter_function(table_name=source_table, **kwargs)
-                        moved = True
-                        break
-                    except Exception as e:
-                        note(f"Failed to move to {volume}: {e}")
-                        pass
-        else:
-            alter_function(
-                table_name=(
-                    source_table
-                    if alter_function != alter_table_move_partition_to_table
-                    else f"{source_table}_temp"
-                ),
-                **kwargs,
-            )
+        execute_alter_function(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with Then("Check destination is not affected by the alter"):
         final_destination_data = select_all_ordered(
@@ -380,46 +275,20 @@ def alter_during_export(self, alter_function, kwargs):
         )
 
     with And("I run setup if needed"):
-        if alter_function in SETUP_FUNCTIONS:
-            SETUP_FUNCTIONS[alter_function](
-                table_name=source_table, node=self.context.node
-            )
-            if (
-                alter_function == alter_table_attach_partition_from
-                or alter_function == alter_table_replace_partition
-            ):
-                kwargs["path_to_backup"] = f"{source_table}_temp"
-            elif alter_function == alter_table_move_partition_to_table:
-                kwargs["path_to_backup"] = source_table
-            elif alter_function == alter_table_fetch_partition:
-                kwargs["path_to_backup"] = (
-                    f"/clickhouse/tables/shard0/{source_table}_temp"
-                )
-        if alter_function == optimize:
-            kwargs["node"] = self.context.node
+        kwargs = run_alter_setup_and_update_kwargs(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with And(f"I {alter_function.__name__} on the source table"):
-        if alter_function == alter_table_move_partition:
-            moved = False
-            while not moved:
-                for volume in ["hot", "cold"]:
-                    try:
-                        kwargs["disk_name"] = volume
-                        alter_function(table_name=source_table, **kwargs)
-                        moved = True
-                        break
-                    except Exception as e:
-                        note(f"Failed to move to {volume}: {e}")
-                        pass
-        else:
-            alter_function(
-                table_name=(
-                    source_table
-                    if alter_function != alter_table_move_partition_to_table
-                    else f"{source_table}_temp"
-                ),
-                **kwargs,
-            )
+        execute_alter_function(
+            alter_function=alter_function,
+            source_table=source_table,
+            kwargs=kwargs,
+            node=self.context.node,
+        )
 
     with Then("Check destination matches original source data"):
         source_matches_destination(
