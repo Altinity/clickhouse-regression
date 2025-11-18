@@ -43,8 +43,8 @@ def export_partition_with_delay(
 
 
 @TestStep(When)
-def action_add_column(self, source_table, node):
-    """Add a column to the source table."""
+def add_column(self, source_table, destination_table, node):
+    """Add a column to the source table and update destination table schema."""
     new_column_name = f"new_col_{getuid()}"
     with By(f"adding column {new_column_name} to source table"):
         alter_table_add_column(
@@ -53,23 +53,40 @@ def action_add_column(self, source_table, node):
             column_type="String",
             node=node,
         )
-    return new_column_name
+    with And("I insert data with the new column"):
+        for i in range(1, 3):
+            node.query(
+                f"INSERT INTO {source_table} (p, i, {new_column_name}) SELECT {i}, rand64(), 'value_{i}' FROM numbers(100)"
+            )
+    with And("I update the destination table schema to match"):
+        alter_table_add_column(
+            table_name=destination_table,
+            column_name=new_column_name,
+            column_type="String",
+            node=node,
+        )
 
 
 @TestStep(When)
-def action_drop_column(self, source_table, node):
-    """Drop a column from the source table."""
+def drop_column(self, source_table, destination_table, node):
+    """Drop a column from the source table and update destination table schema."""
     with By("dropping column 'extra_col' from source table"):
         alter_table_drop_column(
             table_name=source_table,
             column_name="extra_col",
             node=node,
         )
+    with And("I drop the same column from the destination table"):
+        alter_table_drop_column(
+            table_name=destination_table,
+            column_name="extra_col",
+            node=node,
+        )
 
 
 @TestStep(When)
-def action_modify_column(self, source_table, node):
-    """Modify a column in the source table."""
+def modify_column(self, source_table, destination_table, node):
+    """Modify a column in the source table and update destination table schema."""
     with By("modifying column 'i' type in source table"):
         alter_table_modify_column(
             table_name=source_table,
@@ -77,10 +94,22 @@ def action_modify_column(self, source_table, node):
             column_type="String",
             node=node,
         )
+    with And("I modify the same column in the destination table"):
+        alter_table_modify_column(
+            table_name=destination_table,
+            column_name="i",
+            column_type="String",
+            node=node,
+        )
+    with And("I insert data with the new column type"):
+        for i in range(1, 3):
+            node.query(
+                f"INSERT INTO {source_table} (p, i) SELECT {i}, toString(rand64()) FROM numbers(100)"
+            )
 
 
 @TestStep(When)
-def action_rename_column(self, source_table, node):
+def rename_column(self, source_table, destination_table, node):
     """Rename a column in the source table."""
     with By("renaming column 'i' in source table"):
         alter_table_rename_column(
@@ -92,7 +121,7 @@ def action_rename_column(self, source_table, node):
 
 
 @TestStep(When)
-def action_delete_rows(self, source_table, node):
+def delete_rows(self, source_table, destination_table, node):
     """Delete rows from the source table."""
     with By("deleting rows from source table"):
         alter_table_delete_rows(
@@ -102,16 +131,21 @@ def action_delete_rows(self, source_table, node):
         )
 
 
+def get_initial_columns(action):
+    """Get initial columns for table creation based on the action."""
+    columns = default_columns(simple=True, partition_key_type="Int8")
+    if action == drop_column:
+        columns.append({"name": "extra_col", "type": "String"})
+    return columns
+
+
 @TestOutline
 def before_export(self, action):
     """Check exporting partitions after an alter action."""
     source_table = f"source_{getuid()}"
 
     with Given("I create a populated source table and empty S3 table"):
-        columns = default_columns(simple=True, partition_key_type="Int8")
-
-        if action == action_drop_column:
-            columns.append({"name": "extra_col", "type": "String"})
+        columns = get_initial_columns(action)
 
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
@@ -127,43 +161,12 @@ def before_export(self, action):
             columns=columns,
         )
 
-    with When("I perform an alter action on the source table"):
-        result = action(source_table=source_table, node=self.context.node)
-
-        if action == action_add_column:
-            new_column_name = result
-            with And("I insert data with the new column"):
-                for i in range(1, 3):
-                    self.context.node.query(
-                        f"INSERT INTO {source_table} (p, i, {new_column_name}) SELECT {i}, rand64(), 'value_{i}' FROM numbers(100)"
-                    )
-            with And("I update the destination table schema to match"):
-                alter_table_add_column(
-                    table_name=s3_table_name,
-                    column_name=new_column_name,
-                    column_type="String",
-                    node=self.context.node,
-                )
-        elif action == action_drop_column:
-            with And("I drop the same column from the destination table"):
-                alter_table_drop_column(
-                    table_name=s3_table_name,
-                    column_name="extra_col",
-                    node=self.context.node,
-                )
-        elif action == action_modify_column:
-            with And("I modify the same column in the destination table"):
-                alter_table_modify_column(
-                    table_name=s3_table_name,
-                    column_name="i",
-                    column_type="String",
-                    node=self.context.node,
-                )
-            with And("I insert data with the new column type"):
-                for i in range(1, 3):
-                    self.context.node.query(
-                        f"INSERT INTO {source_table} (p, i) SELECT {i}, toString(rand64()) FROM numbers(100)"
-                    )
+    with When("I perform an alter action"):
+        action(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
 
     with And("I check that clickhouse is alive"):
         check_clickhouse_is_alive()
@@ -188,10 +191,7 @@ def after_export(self, action):
     source_table = f"source_{getuid()}"
 
     with Given("I create a populated source table and empty S3 table"):
-        columns = default_columns(simple=True, partition_key_type="Int8")
-
-        if action == action_drop_column:
-            columns.append({"name": "extra_col", "type": "String"})
+        columns = get_initial_columns(action)
 
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
@@ -220,30 +220,12 @@ def after_export(self, action):
             destination_table=s3_table_name,
         )
 
-    with And("I perform an alter action on the source table"):
-        result = action(source_table=source_table, node=self.context.node)
-
-        if action == action_add_column:
-            new_column_name = result
-            with And("I insert data with the new column"):
-                for i in range(1, 3):
-                    self.context.node.query(
-                        f"INSERT INTO {source_table} (p, i, {new_column_name}) SELECT {i}, rand64(), 'value_{i}' FROM numbers(100)"
-                    )
-            with And("I update the destination table schema to match"):
-                alter_table_add_column(
-                    table_name=s3_table_name,
-                    column_name=new_column_name,
-                    column_type="String",
-                    node=self.context.node,
-                )
-        elif action == action_drop_column:
-            with And("I drop the same column from the destination table"):
-                alter_table_drop_column(
-                    table_name=s3_table_name,
-                    column_name="extra_col",
-                    node=self.context.node,
-                )
+    with And("I perform an alter action"):
+        action(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
 
     with And("I export partitions again"):
         export_partitions(
@@ -297,7 +279,11 @@ def during_export(self, actions, delay_ms=10000):
 
         with And("performing alter action while export runs in background"):
             for action in actions:
-                action(source_table=source_table, node=self.context.node)
+                action(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                    node=self.context.node,
+                )
 
     with Then("Remove the delay"):
         network_packet_delay(node=self.context.node, delay_ms=0)
@@ -310,12 +296,12 @@ def during_export(self, actions, delay_ms=10000):
 
 
 @TestScenario
-def alter_before_export_scenarios(self):
+def alter_before_export(self):
     """Check exporting partitions after alter actions on source table."""
     actions = [
-        action_add_column,
-        action_drop_column,
-        action_modify_column,
+        add_column,
+        drop_column,
+        modify_column,
     ]
 
     for action in actions:
@@ -326,12 +312,12 @@ def alter_before_export_scenarios(self):
 
 
 @TestScenario
-def alter_after_export_scenarios(self):
+def alter_after_export(self):
     """Check alter actions on source table after export completes."""
     actions = [
-        action_add_column,
-        action_drop_column,
-        action_delete_rows,
+        add_column,
+        drop_column,
+        delete_rows,
     ]
 
     for action in actions:
@@ -342,19 +328,19 @@ def alter_after_export_scenarios(self):
 
 
 @TestScenario
-def alter_during_export_scenarios(self):
+def alter_during_export(self):
     """Check what happens when we perform alter actions on source table during EXPORT PARTITION."""
     actions = [
-        action_add_column,
-        action_drop_column,
-        action_modify_column,
-        action_delete_rows,
+        add_column,
+        drop_column,
+        modify_column,
+        delete_rows,
     ]
 
     Scenario(
         name="alter during export",
         test=during_export,
-    )(action=actions)
+    )(actions=actions)
 
 
 @TestFeature
@@ -362,6 +348,6 @@ def alter_during_export_scenarios(self):
 def feature(self):
     """Check ALTER operations on source table before, during, and after EXPORT PARTITION."""
 
-    Scenario(run=alter_before_export_scenarios)
-    Scenario(run=alter_after_export_scenarios)
-    Scenario(run=alter_during_export_scenarios)
+    Scenario(run=alter_before_export)
+    Scenario(run=alter_after_export)
+    Scenario(run=alter_during_export)
