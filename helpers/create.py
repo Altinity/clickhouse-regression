@@ -375,7 +375,7 @@ def create_replicated_merge_tree_table(
     stop_merges: bool = False,
     query_settings: str = None,
 ):
-    """Create a table with the MergeTree engine."""
+    """Create a table with the ReplicatedMergeTree engine."""
     if columns is None:
         columns = [
             {"name": "p", "type": "Int8"},
@@ -383,10 +383,18 @@ def create_replicated_merge_tree_table(
             {"name": "extra", "type": "Int8"},
         ]
 
+    if cluster:
+        shard_path = "shard0"
+        engine = f"ReplicatedMergeTree('/clickhouse/tables/{shard_path}/{table_name}', '{{replica}}')"
+    else:
+        replica_name = "replica0"
+        shard_path = "shard0"
+        engine = f"ReplicatedMergeTree('/clickhouse/tables/{shard_path}/{table_name}', '{replica_name}')"
+
     create_table(
         table_name=table_name,
         columns=columns,
-        engine=f"ReplicatedMergeTree('/clickhouse/tables/shard0/{table_name}', 'replica0')",
+        engine=engine,
         order_by=order_by,
         primary_key=primary_key,
         if_not_exists=if_not_exists,
