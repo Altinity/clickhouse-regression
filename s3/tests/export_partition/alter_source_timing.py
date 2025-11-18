@@ -1,3 +1,4 @@
+from duckdb.duckdb import description
 from testflows.core import *
 from testflows.asserts import error
 from alter.stress.tests.tc_netem import *
@@ -7,6 +8,18 @@ from helpers.alter import (
     alter_table_modify_column,
     alter_table_rename_column,
     alter_table_delete_rows,
+    alter_table_comment_column,
+    alter_table_add_constraint,
+    alter_table_detach_partition,
+    alter_table_attach_partition,
+    alter_table_move_partition,
+    alter_table_clear_column,
+    alter_table_clear_column_in_partition,
+    alter_table_freeze_partition,
+    alter_table_freeze_partition_with_name,
+    alter_table_unfreeze_partition_with_name,
+    alter_table_drop_partition,
+    alter_table_clear_index_in_partition,
 )
 from helpers.common import getuid
 from helpers.create import partitioned_replicated_merge_tree_table
@@ -131,6 +144,142 @@ def delete_rows(self, source_table, destination_table, node):
         )
 
 
+@TestStep(When)
+def comment_column(self, source_table, destination_table, node):
+    """Comment a column in the source table."""
+    with By("commenting column 'i' in source table"):
+        alter_table_comment_column(
+            table_name=source_table,
+            column_name="i",
+            comment="test_comment",
+            node=node,
+        )
+
+
+@TestStep(When)
+def add_constraint(self, source_table, destination_table, node):
+    """Add a constraint to the source table."""
+    constraint_name = f"constraint_{getuid()}"
+    with By(f"adding constraint {constraint_name} to source table"):
+        alter_table_add_constraint(
+            table_name=source_table,
+            constraint_name=constraint_name,
+            expression="(i > 1)",
+            node=node,
+        )
+
+
+@TestStep(When)
+def detach_partition(self, source_table, destination_table, node):
+    """Detach a partition from the source table."""
+    partition_name = 1
+    with By(f"detaching partition {partition_name} from source table"):
+        alter_table_detach_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def attach_partition(self, source_table, destination_table, node):
+    """Attach a partition to the source table."""
+    partition_name = 1
+    with By(f"attaching partition {partition_name} to source table"):
+        alter_table_attach_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def move_partition(self, source_table, destination_table, node):
+    """Move a partition to another volume."""
+    partition_name = 1
+    with By(f"moving partition {partition_name} to external volume"):
+        alter_table_move_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            disk_name="external",
+            node=node,
+        )
+
+
+@TestStep(When)
+def clear_column(self, source_table, destination_table, node):
+    """Clear a column in a partition of the source table."""
+    partition_name = 1
+    with By(f"clearing column 'i' in partition {partition_name} of source table"):
+        alter_table_clear_column_in_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            column_name="i",
+            node=node,
+        )
+
+
+@TestStep(When)
+def freeze_partition(self, source_table, destination_table, node):
+    """Freeze a partition of the source table."""
+    partition_name = 1
+    with By(f"freezing partition {partition_name} of source table"):
+        alter_table_freeze_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def freeze_partition_with_name(self, source_table, destination_table, node):
+    """Freeze a partition with a name."""
+    backup_name = f"backup_{getuid()}"
+    with By(f"freezing partition with name {backup_name}"):
+        alter_table_freeze_partition_with_name(
+            table_name=source_table,
+            backup_name=backup_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def unfreeze_partition(self, source_table, destination_table, node):
+    """Unfreeze a partition with a name."""
+    backup_name = f"backup_{getuid()}"
+    with By(f"unfreezing partition with name {backup_name}"):
+        alter_table_unfreeze_partition_with_name(
+            table_name=source_table,
+            backup_name=backup_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def drop_partition(self, source_table, destination_table, node):
+    """Drop a partition from the source table."""
+    partition_name = 1
+    with By(f"dropping partition {partition_name} from source table"):
+        alter_table_drop_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            node=node,
+        )
+
+
+@TestStep(When)
+def clear_index(self, source_table, destination_table, node):
+    """Clear an index in a partition of the source table."""
+    partition_name = 1
+    with By(f"clearing index in partition {partition_name} of source table"):
+        alter_table_clear_index_in_partition(
+            table_name=source_table,
+            partition_name=partition_name,
+            index="index_name",
+            node=node,
+        )
+
+
 def get_initial_columns(action):
     """Get initial columns for table creation based on the action."""
     columns = default_columns(simple=True, partition_key_type="Int8")
@@ -154,6 +303,7 @@ def before_export(self, action):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
+            cluster="replicated_cluster"
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -200,6 +350,7 @@ def after_export(self, action):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
+            cluster="replicated_cluster"
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -242,11 +393,14 @@ def after_export(self, action):
 
 
 @TestOutline
-def during_export(self, actions, delay_ms=10000):
+def during_export(self, action, delay_ms=100000):
     """Check what happens when we perform an alter action on source table during EXPORT PARTITION."""
     source_table = f"source_{getuid()}"
 
-    with Given("I create a populated source table and empty S3 table"):
+    with Given(
+        "I create a populated source table and empty S3 table",
+        description=f"action: {action.__name__}, delay_ms: {delay_ms}, source_table: {source_table}",
+    ):
         columns = default_columns(simple=True, partition_key_type="Int8")
 
         partitioned_replicated_merge_tree_table(
@@ -256,6 +410,7 @@ def during_export(self, actions, delay_ms=10000):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
+            cluster="replicated_cluster"
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -278,15 +433,14 @@ def during_export(self, actions, delay_ms=10000):
             )
 
         with And("performing alter action while export runs in background"):
-            for action in actions:
-                action(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                    node=self.context.node,
-                )
+            action(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
 
     with Then("Remove the delay"):
-        network_packet_delay(node=self.context.node, delay_ms=0)
+        self.context.node.command(f"tc qdisc del dev eth0 root netem", exitcode=0)
 
     with Then("I check the result"):
         source_matches_destination(
@@ -302,6 +456,17 @@ def alter_before_export(self):
         add_column,
         drop_column,
         modify_column,
+        rename_column,
+        comment_column,
+        add_constraint,
+        detach_partition,
+        attach_partition,
+        move_partition,
+        clear_column,
+        freeze_partition,
+        freeze_partition_with_name,
+        drop_partition,
+        clear_index,
     ]
 
     for action in actions:
@@ -318,6 +483,18 @@ def alter_after_export(self):
         add_column,
         drop_column,
         delete_rows,
+        rename_column,
+        comment_column,
+        add_constraint,
+        detach_partition,
+        attach_partition,
+        move_partition,
+        clear_column,
+        freeze_partition,
+        freeze_partition_with_name,
+        unfreeze_partition,
+        drop_partition,
+        clear_index,
     ]
 
     for action in actions:
@@ -335,12 +512,24 @@ def alter_during_export(self):
         drop_column,
         modify_column,
         delete_rows,
+        rename_column,
+        comment_column,
+        add_constraint,
+        detach_partition,
+        attach_partition,
+        move_partition,
+        clear_column,
+        freeze_partition,
+        freeze_partition_with_name,
+        unfreeze_partition,
+        drop_partition,
+        clear_index,
     ]
-
-    Scenario(
-        name="alter during export",
-        test=during_export,
-    )(actions=actions)
+    for action in actions:
+        Scenario(
+            name=f"{action.__name__}".replace("_", " "),
+            test=during_export,
+        )(action=action)
 
 
 @TestFeature
