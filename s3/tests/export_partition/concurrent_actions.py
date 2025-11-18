@@ -845,5 +845,5 @@ def feature(
     self.context.delay_after = delay_after
     self.context.validate = validate
 
-    # Scenario(run=one_export_partition)
+    Scenario(run=one_export_partition)
     Scenario(run=export_partition_along_other_actions)
