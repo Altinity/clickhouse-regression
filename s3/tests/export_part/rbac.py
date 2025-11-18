@@ -122,7 +122,6 @@ def kill_privilege(self):
             )
 
         with And("I kill the query"):
-            # self.context.node.query(f"REVOKE KILL QUERY ON *.* FROM {user_name}")
             output = kill_query(
                 node=self.context.node,
                 query_id=query_id_1,

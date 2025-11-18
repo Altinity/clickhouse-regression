@@ -5,6 +5,7 @@ from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
+from helpers.alter import *
 
 
 @TestStep(Given)
@@ -147,6 +148,103 @@ def create_s3_table(
     )
 
     return table_name
+
+
+SETUP_FUNCTIONS = {
+    alter_table_drop_constraint: lambda table_name, node: node.query(
+        f"ALTER TABLE {table_name} ADD CONSTRAINT new_constraint CHECK 1 = 1"
+    ),
+    alter_table_attach_partition: lambda table_name, node: node.query(
+        f"ALTER TABLE {table_name} DETACH PARTITION 1"
+    ),
+    alter_table_attach_partition_from: lambda table_name, node: (
+        partitioned_merge_tree_table(
+            table_name=table_name + "_temp",
+            partition_by="p",
+            columns=get_column_info(node=node, table_name=table_name),
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    ),
+    alter_table_move_partition_to_table: lambda table_name, node: (
+        partitioned_merge_tree_table(
+            table_name=table_name + "_temp",
+            partition_by="p",
+            columns=get_column_info(node=node, table_name=table_name),
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    ),
+    alter_table_clear_index_in_partition: lambda table_name, node: node.query(
+        f"ALTER TABLE {table_name} ADD INDEX idx_i i TYPE minmax GRANULARITY 1"
+    ),
+    alter_table_unfreeze_partition_with_name: lambda table_name, node: (
+        alter_table_freeze_partition_with_name(
+            table_name=table_name,
+            backup_name="frozen_partition",
+            partition_name="1",
+        )
+    ),
+    alter_table_replace_partition: lambda table_name, node: (
+        partitioned_merge_tree_table(
+            table_name=table_name + "_temp",
+            partition_by="p",
+            columns=get_column_info(node=node, table_name=table_name),
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    ),
+    alter_table_fetch_partition: lambda table_name, node: (
+        partitioned_replicated_merge_tree_table(
+            table_name=table_name + "_temp",
+            partition_by="p",
+            columns=get_column_info(node=node, table_name=table_name),
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    ),
+}
+
+
+@TestStep(Given)
+def run_alter_setup_and_update_kwargs(self, alter_function, source_table, kwargs, node):
+    """Run setup functions if needed and update kwargs accordingly."""
+    if alter_function in SETUP_FUNCTIONS:
+        SETUP_FUNCTIONS[alter_function](table_name=source_table, node=node)
+        if (
+            alter_function == alter_table_attach_partition_from
+            or alter_function == alter_table_replace_partition
+        ):
+            kwargs["path_to_backup"] = f"{source_table}_temp"
+        elif alter_function == alter_table_move_partition_to_table:
+            kwargs["path_to_backup"] = source_table
+        elif alter_function == alter_table_fetch_partition:
+            kwargs["path_to_backup"] = f"/clickhouse/tables/shard0/{source_table}_temp"
+    if alter_function == optimize:
+        kwargs["node"] = node
+    return kwargs
+
+
+@TestStep(When)
+def execute_alter_function(self, alter_function, source_table, kwargs, node):
+    """Execute move partition with retry logic for hot/cold volumes."""
+    if alter_function == alter_table_move_partition:
+        moved = False
+        for volume in ["hot", "cold"]:
+            try:
+                kwargs["disk_name"] = volume
+                alter_function(table_name=source_table, **kwargs)
+                moved = True
+                break
+            except Exception as e:
+                note(f"Failed to move to {volume}: {e}")
+        if not moved:
+            raise Exception("Failed to move partition to any volume")
+    else:
+        alter_function(
+            table_name=(
+                source_table
+                if alter_function != alter_table_move_partition_to_table
+                else f"{source_table}_temp"
+            ),
+            **kwargs,
+        )
 
 
 @TestStep(When)
