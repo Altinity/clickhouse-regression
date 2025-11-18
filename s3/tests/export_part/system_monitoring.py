@@ -1,5 +1,3 @@
-from time import sleep
-
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
@@ -139,7 +137,7 @@ def system_exports_and_metrics(self):
     with And(
         "I verify that system.exports and system.metrics are empty after exports complete"
     ):
-        sleep(5)
+        wait_for_all_exports_to_complete()
         assert len(get_system_exports(node=self.context.node)) == 0, error()
         assert get_num_active_exports(node=self.context.node) == 0, error()
 

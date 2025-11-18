@@ -322,7 +322,7 @@ def minio_interruption(self, strategy, signal):
             )
 
         with And("I kill MinIO after export"):
-            sleep(5)
+            wait_for_all_exports_to_complete()
             kill_minio(signal=signal)
 
     elif strategy == "random":
@@ -336,7 +336,7 @@ def minio_interruption(self, strategy, signal):
             kill_minio(signal=signal)
 
     with Then("I start MinIO"):
-        sleep(5)
+        wait_for_all_exports_to_complete()
         start_minio()
 
     if strategy == "after":
@@ -420,7 +420,7 @@ def clickhouse_interruption(self, strategy, signal, safe):
             )
 
         with And("I stop ClickHouse after export"):
-            sleep(5)
+            wait_for_all_exports_to_complete()
             self.context.node.stop_clickhouse(safe=safe, signal=signal)
 
     elif strategy == "random":
@@ -435,7 +435,7 @@ def clickhouse_interruption(self, strategy, signal, safe):
             self.context.node.stop_clickhouse(safe=safe, signal=signal)
 
     with Then("I start ClickHouse"):
-        sleep(5)
+        wait_for_all_exports_to_complete()
         self.context.node.start_clickhouse(thread_fuzzer=True)
 
     with And("I get data from both tables"):

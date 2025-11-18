@@ -422,11 +422,11 @@ def alter_during_export(self, alter_function, kwargs):
             )
 
     with Then("Check destination matches original source data"):
-        sleep(5)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            source_data=initial_source_data,
         )
-        assert initial_source_data == destination_data, error()
 
 
 @TestFeature
