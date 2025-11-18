@@ -71,13 +71,14 @@ def add_column(self, source_table, destination_table, node):
             node.query(
                 f"INSERT INTO {source_table} (p, i, {new_column_name}) SELECT {i}, rand64(), 'value_{i}' FROM numbers(100)"
             )
-    with And("I update the destination table schema to match"):
-        alter_table_add_column(
-            table_name=destination_table,
-            column_name=new_column_name,
-            column_type="String",
-            node=node,
-        )
+    if self.context.before_export:
+        with And("I update the destination table schema to match"):
+            alter_table_add_column(
+                table_name=destination_table,
+                column_name=new_column_name,
+                column_type="String",
+                node=node,
+            )
 
 
 @TestStep(When)
@@ -89,12 +90,13 @@ def drop_column(self, source_table, destination_table, node):
             column_name="extra_col",
             node=node,
         )
-    with And("I drop the same column from the destination table"):
-        alter_table_drop_column(
-            table_name=destination_table,
-            column_name="extra_col",
-            node=node,
-        )
+    if self.context.before_export:
+        with And("I drop the same column from the destination table"):
+            alter_table_drop_column(
+                table_name=destination_table,
+                column_name="extra_col",
+                node=node,
+            )
 
 
 @TestStep(When)
@@ -107,13 +109,15 @@ def modify_column(self, source_table, destination_table, node):
             column_type="String",
             node=node,
         )
-    with And("I modify the same column in the destination table"):
-        alter_table_modify_column(
-            table_name=destination_table,
-            column_name="i",
-            column_type="String",
-            node=node,
-        )
+
+    if self.context.before_export:
+        with And("I modify the same column in the destination table"):
+            alter_table_modify_column(
+                table_name=destination_table,
+                column_name="i",
+                column_type="String",
+                node=node,
+            )
     with And("I insert data with the new column type"):
         for i in range(1, 3):
             node.query(
@@ -452,6 +456,9 @@ def during_export(self, action, delay_ms=100000):
 @TestScenario
 def alter_before_export(self):
     """Check exporting partitions after alter actions on source table."""
+
+    self.context.before_export = True
+
     actions = [
         add_column,
         drop_column,
@@ -536,6 +543,7 @@ def alter_during_export(self):
 @Name("alter source timing")
 def feature(self):
     """Check ALTER operations on source table before, during, and after EXPORT PARTITION."""
+    self.context.before_export = False
 
     Scenario(run=alter_before_export)
     Scenario(run=alter_after_export)
