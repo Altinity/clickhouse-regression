@@ -193,7 +193,9 @@ def wide_and_compact_parts(self):
 
     source_table = f"source_{getuid()}"
     with Given("I create a source table with wide and compact parts"):
-        table_with_compact_and_wide_parts(table_name=source_table)
+        create_replicated_partitioned_table_with_compact_and_wide_parts(
+            table_name=source_table
+        )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I export partitions to the S3 table"):
