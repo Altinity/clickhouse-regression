@@ -474,6 +474,48 @@ def partitioned_replicated_merge_tree_table(
 
 
 @TestStep(Given)
+def create_replicated_partitioned_table_with_compact_and_wide_parts(
+    self,
+    table_name: str,
+    min_rows_for_wide_part: int = 10,
+    min_bytes_for_wide_part: int = 100,
+    columns: list[dict] = None,
+    partition_by: str = "p",
+    cluster: str = None,
+    stop_merges: bool = False,
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+):
+    """Create a ReplicatedMergeTree table that has specific settings in order
+    to get both wide and compact parts."""
+    if columns is None:
+        columns = [
+            {"name": "p", "type": "Int8"},
+            {"name": "i", "type": "UInt64"},
+        ]
+
+    query_settings = f"min_rows_for_wide_part={min_rows_for_wide_part}, min_bytes_for_wide_part={min_bytes_for_wide_part}"
+
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine=f"ReplicatedMergeTree('/clickhouse/tables/shard0/{table_name}', 'replica0')",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+        cluster=cluster,
+        stop_merges=stop_merges,
+        query_settings=query_settings,
+    )
+
+
+@TestStep(Given)
 def partitioned_replacing_merge_tree_table(
     self,
     table_name,
