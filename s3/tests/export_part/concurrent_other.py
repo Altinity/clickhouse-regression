@@ -1,4 +1,3 @@
-from time import sleep
 from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -128,7 +127,7 @@ def select_parts(self):
         )
 
     with And("I select data from the source and destination after exporting parts"):
-        sleep(5)
+        wait_for_all_exports_to_complete()
         after_export_data = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
@@ -187,7 +186,7 @@ def merge_parts(self):
         )
 
     with And("I optimize partition 3 after export"):
-        sleep(5)
+        wait_for_all_exports_to_complete()
         optimize_partition(
             table_name=source_table,
             partition="3",

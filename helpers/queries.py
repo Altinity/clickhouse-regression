@@ -61,6 +61,12 @@ def optimize(
     return node.query(q, no_checks=no_checks, exitcode=0)
 
 
+@TestStep(When)
+def kill_query(self, node: ClickHouseNode, query_id: str, settings=None, exitcode=0) -> Command:
+    """Kill a query by its ID synchronously."""
+    return node.query(f"KILL QUERY WHERE query_id='{query_id}'", exitcode=exitcode, settings=settings)
+
+
 @TestStep(Given)
 def get_column_names(self, node: ClickHouseNode, table_name: str, timeout=30) -> list:
     """Get a list of a table's column names."""

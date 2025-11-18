@@ -1,5 +1,4 @@
 import json
-
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
@@ -492,9 +491,26 @@ def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_par
     return source_tables, destination_tables
 
 
+def wait_for_all_exports_to_complete(self, node=None):
+    """Wait for all exports to complete on a given node."""
+
+    if node is None:
+        node = self.context.node
+
+    for attempt in retries(timeout=30, delay=1):
+        with attempt:
+            assert get_num_active_exports(node=node) == 0, error()
+
+
 @TestStep(Then)
 def source_matches_destination(
-    self, source_table, destination_table, source_node=None, destination_node=None
+    self,
+    source_table,
+    destination_table,
+    source_node=None,
+    destination_node=None,
+    source_data=None,
+    destination_data=None,
 ):
     """Check that source and destination table data matches."""
 
@@ -503,10 +519,14 @@ def source_matches_destination(
     if destination_node is None:
         destination_node = self.context.node
 
-    source_data = select_all_ordered(table_name=source_table, node=source_node)
-    destination_data = select_all_ordered(
-        table_name=destination_table, node=destination_node
-    )
+    wait_for_all_exports_to_complete(node=source_node)
+
+    if source_data is None:
+        source_data = select_all_ordered(table_name=source_table, node=source_node)
+    if destination_data is None:
+        destination_data = select_all_ordered(
+            table_name=destination_table, node=destination_node
+        )
     assert source_data == destination_data, error()
 
 
