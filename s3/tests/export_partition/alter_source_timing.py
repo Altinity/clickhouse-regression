@@ -303,7 +303,7 @@ def before_export(self, action):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
-            cluster="replicated_cluster"
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -350,7 +350,7 @@ def after_export(self, action):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
-            cluster="replicated_cluster"
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -410,7 +410,7 @@ def during_export(self, action, delay_ms=100000):
             number_of_partitions=5,
             number_of_parts=2,
             columns=columns,
-            cluster="replicated_cluster"
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(
             table_name="s3",
