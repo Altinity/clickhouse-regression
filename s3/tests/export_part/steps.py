@@ -150,55 +150,79 @@ def create_s3_table(
     return table_name
 
 
+def setup_drop_constraint(table_name, node):
+    """Setup: Add constraint before testing drop constraint."""
+    node.query(f"ALTER TABLE {table_name} ADD CONSTRAINT new_constraint CHECK 1 = 1")
+
+
+def setup_attach_partition(table_name, node):
+    """Setup: Detach partition before testing attach partition."""
+    node.query(f"ALTER TABLE {table_name} DETACH PARTITION 1")
+
+
+def setup_attach_partition_from(table_name, node):
+    """Setup: Create temp table for attach partition from."""
+    partitioned_merge_tree_table(
+        table_name=table_name + "_temp",
+        partition_by="p",
+        columns=get_column_info(node=node, table_name=table_name),
+        query_settings="storage_policy = 'tiered_storage'",
+    )
+
+
+def setup_move_partition_to_table(table_name, node):
+    """Setup: Create temp table for move partition to table."""
+    partitioned_merge_tree_table(
+        table_name=table_name + "_temp",
+        partition_by="p",
+        columns=get_column_info(node=node, table_name=table_name),
+        query_settings="storage_policy = 'tiered_storage'",
+    )
+
+
+def setup_clear_index_in_partition(table_name, node):
+    """Setup: Add index before testing clear index."""
+    node.query(f"ALTER TABLE {table_name} ADD INDEX idx_i i TYPE minmax GRANULARITY 1")
+
+
+def setup_unfreeze_partition_with_name(table_name, node):
+    """Setup: Freeze partition before testing unfreeze."""
+    alter_table_freeze_partition_with_name(
+        table_name=table_name,
+        backup_name="frozen_partition",
+        partition_name="1",
+    )
+
+
+def setup_replace_partition(table_name, node):
+    """Setup: Create temp table for replace partition."""
+    partitioned_merge_tree_table(
+        table_name=table_name + "_temp",
+        partition_by="p",
+        columns=get_column_info(node=node, table_name=table_name),
+        query_settings="storage_policy = 'tiered_storage'",
+    )
+
+
+def setup_fetch_partition(table_name, node):
+    """Setup: Create temp replicated table for fetch partition."""
+    partitioned_replicated_merge_tree_table(
+        table_name=table_name + "_temp",
+        partition_by="p",
+        columns=get_column_info(node=node, table_name=table_name),
+        query_settings="storage_policy = 'tiered_storage'",
+    )
+
+
 SETUP_FUNCTIONS = {
-    alter_table_drop_constraint: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} ADD CONSTRAINT new_constraint CHECK 1 = 1"
-    ),
-    alter_table_attach_partition: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} DETACH PARTITION 1"
-    ),
-    alter_table_attach_partition_from: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_move_partition_to_table: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_clear_index_in_partition: lambda table_name, node: node.query(
-        f"ALTER TABLE {table_name} ADD INDEX idx_i i TYPE minmax GRANULARITY 1"
-    ),
-    alter_table_unfreeze_partition_with_name: lambda table_name, node: (
-        alter_table_freeze_partition_with_name(
-            table_name=table_name,
-            backup_name="frozen_partition",
-            partition_name="1",
-        )
-    ),
-    alter_table_replace_partition: lambda table_name, node: (
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
-    alter_table_fetch_partition: lambda table_name, node: (
-        partitioned_replicated_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-    ),
+    alter_table_drop_constraint: setup_drop_constraint,
+    alter_table_attach_partition: setup_attach_partition,
+    alter_table_attach_partition_from: setup_attach_partition_from,
+    alter_table_move_partition_to_table: setup_move_partition_to_table,
+    alter_table_clear_index_in_partition: setup_clear_index_in_partition,
+    alter_table_unfreeze_partition_with_name: setup_unfreeze_partition_with_name,
+    alter_table_replace_partition: setup_replace_partition,
+    alter_table_fetch_partition: setup_fetch_partition,
 }
 
 
