@@ -61,7 +61,6 @@ def regression(
             "feature",
         )
     )
-    # Feature(run=load("engines.tests.quorum_insert.quorum_insert", "feature"))
 
 
 if main():
