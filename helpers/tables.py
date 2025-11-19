@@ -648,9 +648,7 @@ def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
                     """
             )
 
-            yield Table(
-                name=name, columns=columns, partition_by=None, engine=engine
-            )
+            yield Table(name=name, columns=columns, partition_by=None, engine=engine)
 
     finally:
         with Finally(f"drop the table {name}"):
