@@ -408,6 +408,7 @@ version: 1.0
   * **Destination Table**: `INSERT` privilege on the destination table to write exported data
   * **Database Access**: `SHOW` privilege on both source and destination databases
   * **System Tables**: `SELECT` privilege on `system.tables` to validate table existence
+  * **Query Management**: `KILL QUERY` privilege to terminate export operations, allowing users to kill their own export queries and administrators to kill any export query
 * **Data Encryption**: All data in transit to destination storage must be encrypted using TLS/SSL
 * **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)
 * **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs

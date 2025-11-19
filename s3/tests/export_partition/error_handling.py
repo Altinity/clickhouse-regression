@@ -1,21 +1,23 @@
 from testflows.core import *
 from testflows.asserts import error
+from s3.tests.export_partition.steps import export_partitions
 from s3.tests.export_part.steps import *
 from helpers.queries import *
+from helpers.common import getuid
 from s3.requirements.export_part import *
 
 
 @TestScenario
 def invalid_part_name(self):
-    """Check that exporting a non-existent part returns the correct error."""
+    """Check that exporting a non-existent partition returns the correct error."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -23,8 +25,8 @@ def invalid_part_name(self):
         invalid_part_name = "in_va_lid_part"
 
     with When("I try to export the invalid part"):
-        results = export_parts(
-            source_table="source",
+        results = export_partitions(
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             parts=[invalid_part_name],
@@ -41,20 +43,21 @@ def invalid_part_name(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Restrictions_SameTable("1.0"))
 def same_table(self):
-    """Check exporting parts where source and destination tables are the same."""
+    """Check exporting partitions where source and destination tables are the same."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
         )
 
-    with When("I try to export parts to itself"):
-        results = export_parts(
-            source_table="source",
-            destination_table="source",
+    with When("I try to export partitions to itself"):
+        results = export_partitions(
+            source_table=source_table,
+            destination_table=source_table,
             node=self.context.node,
             exitcode=1,
         )
@@ -68,29 +71,31 @@ def same_table(self):
 
 @TestScenario
 def local_table(self):
-    """Test exporting parts to a local table."""
+    """Test exporting partitions to a local table."""
 
+    source_table = f"source_{getuid()}"
+    destination_table = f"destination_{getuid()}"
     with Given("I create a populated source table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
         )
 
     with And("I create an empty local table"):
-        partitioned_merge_tree_table(
-            table_name="destination",
+        partitioned_replicated_merge_tree_table(
+            table_name=destination_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
             populate=False,
         )
 
-    with When("I export parts to the local table"):
-        results = export_parts(
-            source_table="source",
-            destination_table="destination",
+    with When("I export partitions to the local table"):
+        results = export_partitions(
+            source_table=source_table,
+            destination_table=destination_table,
             node=self.context.node,
             exitcode=1,
         )
@@ -106,24 +111,25 @@ def local_table(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
 def disable_export_setting(self):
-    """Check that exporting parts without the export setting set returns the correct error."""
+    """Check that exporting partitions without the export setting set returns the correct error."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I try to export the parts with the export setting disabled"):
-        results = export_parts(
-            source_table="source",
+    with When("I try to export the partitions with the export setting disabled"):
+        results = export_partitions(
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
-            explicit_set=-1,
+            settings=[("allow_experimental_export_merge_tree_part", 0)],
         )
 
     with Then("I should see an error related to the export setting"):
@@ -133,20 +139,21 @@ def disable_export_setting(self):
 
 @TestScenario
 def different_partition_key(self):
-    """Check exporting parts with a different partition key returns the correct error."""
+    """Check exporting partitions with a different partition key returns the correct error."""
 
+    source_table = f"source_{getuid()}"
     with Given("I create a populated source table and empty S3 table"):
-        partitioned_merge_tree_table(
-            table_name="source",
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
             partition_by="i",
             columns=default_columns(),
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I try to export the parts"):
-        results = export_parts(
-            source_table="source",
+    with When("I try to export the partitions"):
+        results = export_partitions(
+            source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
@@ -161,7 +168,7 @@ def different_partition_key(self):
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
 def feature(self):
-    """Check correct error handling when exporting parts."""
+    """Check correct error handling when exporting partitions."""
 
     Scenario(run=invalid_part_name)
     Scenario(run=same_table)

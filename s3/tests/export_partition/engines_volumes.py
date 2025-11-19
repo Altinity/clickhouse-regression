@@ -1,7 +1,7 @@
 from alter.table.attach_partition.common import create_partitions_with_random_uint64
 from helpers.common import getuid
 from helpers.create import (
-    partitioned_merge_tree_table,
+    partitioned_replicated_merge_tree_table,
     partitioned_summing_merge_tree_table,
     partitioned_collapsing_merge_tree_table,
     partitioned_versioned_collapsing_merge_tree_table,
@@ -60,7 +60,7 @@ def table_combos(self):
     """Test various combinations of table engines, number of partitions, and number of parts."""
 
     tables = [
-        partitioned_merge_tree_table,
+        partitioned_replicated_merge_tree_table,
         partitioned_replacing_merge_tree_table,
         partitioned_summing_merge_tree_table,
         partitioned_collapsing_merge_tree_table,
@@ -92,7 +92,7 @@ def configured_volume(self, volume):
     source_table = f"source_{getuid()}"
 
     with Given(f"I create an empty source table on volume {volume} and empty S3 table"):
-        partitioned_merge_tree_table(
+        partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),

@@ -17,10 +17,17 @@ def minio(self, uri, bucket_prefix):
     self.context.bucket_prefix = bucket_prefix
     self.context.default_settings = [("allow_experimental_export_merge_tree_part", 1)]
 
+    self.context.node.enable_thread_fuzzer()
+    self.context.node2.enable_thread_fuzzer()
+    self.context.node3.enable_thread_fuzzer()
+
     Feature(run=load("s3.tests.export_part.sanity", "feature"))
     Feature(run=load("s3.tests.export_part.error_handling", "feature"))
     Feature(run=load("s3.tests.export_part.clusters_nodes", "feature"))
     Feature(run=load("s3.tests.export_part.engines_volumes", "feature"))
     Feature(run=load("s3.tests.export_part.datatypes", "feature"))
-    Feature(run=load("s3.tests.export_part.concurrency_networks", "feature"))
+    Feature(run=load("s3.tests.export_part.network", "feature"))
     Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
+    Feature(run=load("s3.tests.export_part.concurrent_alter", "feature"))
+    Feature(run=load("s3.tests.export_part.concurrent_other", "feature"))
+    Feature(run=load("s3.tests.export_part.rbac", "feature"))
