@@ -157,13 +157,13 @@ def alter_table_drop_constraint(self, table_name, constraint_name, **query_kwarg
     """Drop constraint with automatic setup (adds constraint first)."""
 
     with By("Adding constraint"):
-        self.context.node.query(f"ALTER TABLE {table_name} ADD CONSTRAINT {constraint_name} CHECK 1 = 1")
+        self.context.node.query(
+            f"ALTER TABLE {table_name} ADD CONSTRAINT {constraint_name} CHECK 1 = 1"
+        )
 
     with And("Dropping constraint"):
         helpers.alter.constraint.alter_table_drop_constraint(
-            table_name=table_name,
-            constraint_name=constraint_name,
-            **query_kwargs
+            table_name=table_name, constraint_name=constraint_name, **query_kwargs
         )
 
 
@@ -172,13 +172,13 @@ def alter_table_attach_partition(self, table_name, partition_name, **query_kwarg
     """Attach partition with automatic setup (detaches partition first)."""
 
     with By("Detaching partition"):
-        self.context.node.query(f"ALTER TABLE {table_name} DETACH PARTITION {partition_name}")
+        self.context.node.query(
+            f"ALTER TABLE {table_name} DETACH PARTITION {partition_name}"
+        )
 
     with And("Attaching partition"):
         helpers.alter.partition.alter_table_attach_partition(
-            table_name=table_name,
-            partition_name=partition_name,
-            **query_kwargs
+            table_name=table_name, partition_name=partition_name, **query_kwargs
         )
 
 
@@ -199,11 +199,14 @@ def alter_table_attach_partition_from(self, table_name, partition_name, **query_
             table_name=table_name,
             partition_name=partition_name,
             path_to_backup=f"{table_name}_temp",
-            **query_kwargs
+            **query_kwargs,
         )
 
+
 @TestStep(When)
-def alter_table_move_partition_to_table(self, table_name, partition_name, **query_kwargs):
+def alter_table_move_partition_to_table(
+    self, table_name, partition_name, **query_kwargs
+):
     """Move partition to table with automatic setup (creates temp table)."""
 
     with By("Creating temp table"):
@@ -212,35 +215,41 @@ def alter_table_move_partition_to_table(self, table_name, partition_name, **quer
             partition_by="p",
             columns=get_column_info(node=self.context.node, table_name=table_name),
             query_settings="storage_policy = 'tiered_storage'",
-            )
+        )
 
     with And("Moving partition to table"):
         helpers.alter.partition.alter_table_move_partition_to_table(
             table_name=f"{table_name}_temp",
             partition_name=partition_name,
             destination_table=table_name,
-            **query_kwargs
+            **query_kwargs,
         )
 
 
 @TestStep(When)
-def alter_table_clear_index_in_partition(self, table_name, partition_name, index, **query_kwargs):
+def alter_table_clear_index_in_partition(
+    self, table_name, partition_name, index, **query_kwargs
+):
     """Clear index in partition with automatic setup (adds index first)."""
 
     with By("Adding index"):
-        self.context.node.query(f"ALTER TABLE {table_name} ADD INDEX {index} i TYPE minmax GRANULARITY 1")
+        self.context.node.query(
+            f"ALTER TABLE {table_name} ADD INDEX {index} i TYPE minmax GRANULARITY 1"
+        )
 
     with And("Clearing index in partition"):
         helpers.alter.skipping_index.alter_table_clear_index_in_partition(
             table_name=table_name,
             partition_name=partition_name,
             index=index,
-            **query_kwargs
+            **query_kwargs,
         )
 
 
 @TestStep(When)
-def alter_table_unfreeze_partition_with_name(self, table_name, partition_name, backup_name, **query_kwargs):
+def alter_table_unfreeze_partition_with_name(
+    self, table_name, partition_name, backup_name, **query_kwargs
+):
     """Unfreeze partition with name with automatic setup (freezes partition first)."""
 
     with By("Freezing partition"):
@@ -255,7 +264,7 @@ def alter_table_unfreeze_partition_with_name(self, table_name, partition_name, b
             table_name=table_name,
             partition_name=partition_name,
             backup_name=backup_name,
-            **query_kwargs
+            **query_kwargs,
         )
 
 
@@ -276,7 +285,7 @@ def alter_table_replace_partition(self, table_name, partition_name, **query_kwar
             table_name=table_name,
             partition_name=partition_name,
             source_table=f"{table_name}_temp",
-            **query_kwargs
+            **query_kwargs,
         )
 
 
@@ -297,7 +306,7 @@ def alter_table_fetch_partition(self, table_name, partition_name, **query_kwargs
             table_name=table_name,
             partition_name=partition_name,
             path_to_backup=f"/clickhouse/tables/shard0/{table_name}_temp",
-            **query_kwargs
+            **query_kwargs,
         )
 
 
@@ -307,7 +316,12 @@ def alter_table_move_partition(self, table_name, partition_name, **query_kwargs)
     moved = False
     for volume in ["hot", "cold"]:
         try:
-            helpers.alter.partition.alter_table_move_partition(table_name=table_name, partition_name=partition_name, disk_name=volume, **query_kwargs)
+            helpers.alter.partition.alter_table_move_partition(
+                table_name=table_name,
+                partition_name=partition_name,
+                disk_name=volume,
+                **query_kwargs,
+            )
             moved = True
             break
         except Exception as e:
