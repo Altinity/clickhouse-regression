@@ -82,7 +82,10 @@ def get_alter_functions():
             {"column_name": "i", "expression": "0", "condition": "1 = 1"},
         ),
         (helpers.alter.delete.alter_table_delete_rows, {"condition": "p = 1"}),
-        (helpers.alter.table.alter_table_modify_comment, {"comment": "test table comment"}),
+        (
+            helpers.alter.table.alter_table_modify_comment,
+            {"comment": "test table comment"},
+        ),
         (
             steps.alter_table_fetch_partition,
             {"partition_name": "1"},
@@ -135,7 +138,9 @@ def alter_before_export(self, alter_function, kwargs):
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
-            columns=steps.get_column_info(node=self.context.node, table_name=source_table),
+            columns=steps.get_column_info(
+                node=self.context.node, table_name=source_table
+            ),
         )
 
     with And("I export parts to the S3 table"):
