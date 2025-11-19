@@ -408,28 +408,25 @@ def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KIL
     if cluster is None:
         cluster = self.context.cluster
 
-    retry(cluster.command, 5)(
-        None,
-        f"docker kill --signal={signal} {container_name}",
-        timeout=60,
-        exitcode=0,
-        steps=False,
-    )
+    with By("Killing MinIO container"):
+        retry(cluster.command, 5)(
+            None,
+            f"docker kill --signal={signal} {container_name}",
+            timeout=60,
+            exitcode=0,
+            steps=False,
+        )
 
-    if signal == "TERM":
-        with And("Waiting for MinIO container to stop"):
-            for attempt in retries(timeout=30, delay=1):
-                with attempt:
-                    result = cluster.command(
-                        None,
-                        f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
-                        timeout=10,
-                        steps=False,
-                        no_checks=True,
-                    )
-                    if container_name not in result.output:
-                        break
-                    fail("MinIO container still running")
+    with And("Waiting for MinIO container to stop"):
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                result = cluster.command(
+                    None,
+                    f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
+                    timeout=10,
+                )
+                assert result.exitcode == 0, error()
+                assert container_name not in result.output, error()
 
 
 @TestStep(When)
@@ -593,10 +590,10 @@ def get_system_exports(self, node):
 
 @TestStep(When)
 def get_num_active_exports(self, node):
-    """Get the number of active exports from the system.metrics table of a given node."""
+    """Get the number of active exports from the system.exports table of a given node."""
 
     num_active_exports = node.query(
-        "SELECT value FROM system.metrics WHERE metric = 'Export'",
+        "SELECT count() FROM system.exports",
         exitcode=0,
         steps=True,
     ).output.strip()

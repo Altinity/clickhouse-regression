@@ -198,6 +198,7 @@ def alter_after_export(self, alter_function, kwargs):
         )
 
     with When("I read data on the S3 table"):
+        steps.wait_for_all_exports_to_complete(node=self.context.node)
         initial_destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -263,12 +264,74 @@ def alter_during_export(self, alter_function, kwargs):
     with And(f"I {alter_function.__name__} on the source table"):
         alter_function(table_name=source_table, **kwargs)
 
-    with Then("Check destination matches original source data"):
-        steps.source_matches_destination(
+    with Then("Check source matches destination"):
+        steps.wait_for_all_exports_to_complete(node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+        assert initial_source_data == destination_data, error()
+
+
+@TestOutline(Scenario)
+@Examples(
+    "alter_function, kwargs",
+    get_alter_functions(),
+)
+def alter_during_minio_interruption(self, alter_function, kwargs):
+    """Test altering the source table during MinIO interruption."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
+        if alter_function == steps.alter_table_fetch_partition:
+            partitioned_replicated_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                number_of_parts=2,
+                columns=steps.default_columns(simple=False),
+                query_settings="storage_policy = 'tiered_storage'",
+            )
+        else:
+            partitioned_merge_tree_table(
+                table_name=source_table,
+                partition_by="p",
+                number_of_parts=2,
+                columns=steps.default_columns(simple=False),
+                query_settings="storage_policy = 'tiered_storage'",
+            )
+        s3_table_name = steps.create_s3_table(
+            table_name="s3",
+            create_new_bucket=True,
+            columns=steps.default_columns(simple=False),
+        )
+
+    with And("I get initial source data"):
+        initial_source_data = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+
+    with And("I stop MinIO"):
+        steps.kill_minio()
+
+    with And("I export parts to the S3 table"):
+        steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            source_data=initial_source_data,
+            node=self.context.node,
         )
+
+    with And(f"I {alter_function.__name__} on the source table"):
+        alter_function(table_name=source_table, **kwargs)
+
+    with And("I start MinIO"):
+        steps.start_minio()
+
+    with Then("Check source matches destination"):
+        steps.wait_for_all_exports_to_complete(node=self.context.node)
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+        assert initial_source_data == destination_data, error()
 
 
 @TestFeature
@@ -280,5 +343,6 @@ def feature(self):
         steps.minio_storage_configuration(restart=True)
 
     Scenario(run=alter_before_export)
-    # Scenario(run=alter_during_export)
+    Scenario(run=alter_during_export)
     Scenario(run=alter_after_export)
+    Scenario(run=alter_during_minio_interruption)
