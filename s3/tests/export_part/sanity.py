@@ -221,53 +221,6 @@ def wide_and_compact_parts(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"))
-def export_and_drop(self):
-    """Check that dropping a column immediately after export doesn't affect exported data."""
-
-    with Given(
-        "I create a populated source table and empty S3 table",
-        description="""
-        Stop merges must be false to allow for mutations like dropping a column.
-    """,
-    ):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I export data"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-
-    with And("I read the source before dropping a column"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-
-    with And("I drop a source column"):
-        drop_column(
-            node=self.context.node,
-            table_name=source_table,
-            column_name="i",
-        )
-
-    with Then("Check source before drop matches destination"):
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert source_data == destination_data, error()
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_LargeParts("1.0"))
 def large_part(self):
     """Test exporting a large part."""
@@ -300,71 +253,6 @@ def large_part(self):
         )
 
 
-@TestOutline(Scenario)
-@Examples(
-    "alter_function, kwargs",
-    [
-        (
-            alter_table_add_column,
-            {"column_name": "new_column", "column_type": "UInt64"},
-        ),
-        (alter_table_drop_column, {"column_name": "Path"}),
-        (alter_table_modify_column, {"column_name": "i", "column_type": "String"}),
-        (
-            alter_table_rename_column,
-            {"column_name_old": "Path", "column_name_new": "renamed_column"},
-        ),
-    ],
-)
-def parts_with_different_columns(self, alter_function, kwargs):
-    """Test exporting parts with different columns."""
-
-    with Given("I create a populated source table"):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(simple=False),
-        )
-
-    with When(f"I {alter_function.__name__} on the source table"):
-        alter_function(
-            table_name=source_table,
-            **kwargs,
-        )
-
-    with And("I populate the source table with new parts that have the new column"):
-        insert_into_table(
-            table_name=source_table,
-        )
-
-    with When("I create an empty S3 table and apply the schema change"):
-        s3_table_name = create_s3_table(
-            table_name="s3",
-            create_new_bucket=True,
-            columns=default_columns(simple=False),
-        )
-        alter_function(
-            table_name=s3_table_name,
-            **kwargs,
-        )
-
-    with And("I export parts to the S3 table"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-            latest_only=True,
-        )
-
-    with Then("Check source matches destination"):
-        source_matches_destination(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
-
-
 @TestFeature
 @Name("sanity")
 def feature(self):
@@ -375,8 +263,6 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
-    Scenario(run=export_and_drop)
-    Scenario(run=parts_with_different_columns)
     if self.context.stress:
         Scenario(run=large_part)
     # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting

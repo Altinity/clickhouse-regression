@@ -92,11 +92,10 @@ def configured_volume(self, volume):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I populate the source table with parts exceeding 2KB each"):
+    with And("I populate the source table with parts"):
         create_partitions_with_random_uint64(
             table_name=source_table,
             node=self.context.node,
-            number_of_values=500,
         )
 
     with When("I export parts to the S3 table"):

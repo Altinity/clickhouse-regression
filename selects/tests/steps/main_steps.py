@@ -881,20 +881,21 @@ def create_all_views(self):
                 )
             )
 
-            self.context.tables.append(
-                create_live_view(
-                    core_table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+            if check_clickhouse_version("<25.11")(self):
+                self.context.tables.append(
+                    create_live_view(
+                        core_table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                    )
                 )
-            )
 
-            self.context.tables.append(
-                create_live_view(
-                    core_table=table.name,
-                    final_modifier_available=table.final_modifier_available,
-                    final=True,
+                self.context.tables.append(
+                    create_live_view(
+                        core_table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                        final=True,
+                    )
                 )
-            )
 
             if not is_with_analyzer(node=self.context.node):
                 if table.final_modifier_available:

@@ -97,6 +97,8 @@ on:
           - s3_azure
           - s3_gcs
           - s3_minio
+          - export_part
+          - export_partition
           - selects
           - session_timezone
           - settings
@@ -1161,7 +1163,27 @@ jobs:
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
-    
+
+  export_part:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: export_part
+      timeout_minutes: 360
+      storage_path: /export_part
+      regression_args: '--storage minio'
+      artifact_name: export-part-artefacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }} --only "/s3/minio/part 3/export part/*" --as-binary
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   s3_minio_1:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     uses: ./.github/workflows/reusable-suite.yml

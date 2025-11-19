@@ -45,7 +45,7 @@ def argparser(parser):
         type=str,
         action="store",
         help="aws s3 key id",
-        default="AKIAV5SIHQUU636A6AVF",
+        default=None,
     )
 
     parser.add_argument(
@@ -53,7 +53,7 @@ def argparser(parser):
         type=str,
         action="store",
         help="aws s3 access key",
-        default="/tNEu7o+10aWBdedsIiysicmluW1nf/CwW+li+ph",
+        default=None,
     )
 
 

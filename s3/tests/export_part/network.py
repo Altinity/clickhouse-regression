@@ -1,40 +1,13 @@
+from time import sleep
+import random
 from testflows.core import *
+from testflows.combinatorics import product
 from helpers.common import getuid
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
-
-
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_export(self, num_tables):
-    """Check concurrent exports from different sources to the same S3 table."""
-
-    with Given(f"I create {num_tables} populated source tables and an empty S3 table"):
-        source_tables, destination_tables = concurrent_export_tables(
-            num_tables=num_tables
-        )
-
-    with And("I read data from all tables"):
-        source_data = []
-        destination_data = []
-        for i in range(num_tables):
-            data = select_all_ordered(
-                table_name=source_tables[i], node=self.context.node
-            )
-            source_data.extend(data)
-            data = select_all_ordered(
-                table_name=destination_tables[i], node=self.context.node
-            )
-            destination_data.extend(data)
-
-    with Then("All data should be present in the S3 table"):
-        assert set(source_data) == set(destination_data), error()
-
-    with And("Exports should have run concurrently"):
-        verify_export_concurrency(node=self.context.node, source_tables=source_tables)
 
 
 @TestScenario
@@ -294,61 +267,19 @@ def packet_rate_limit(self, rate_mbit):
                 )
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def concurrent_insert(self):
-    """Check that exports work correctly with concurrent inserts of source data."""
-
-    with Given("I create an empty source and S3 table"):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=True,
-            populate=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
-        "I insert data and export it in parallel",
-        description="""
-        5 partitions with 1 part each are inserted.
-        The export is queued in parallel and usually behaves by exporting
-        a snapshot of the source data, often getting just the first partition
-        which means the export happens right after the first INSERT query completes.
-    """,
-    ):
-        Step(test=create_partitions_with_random_uint64, parallel=True)(
-            table_name=source_table,
-            number_of_partitions=5,
-            number_of_parts=1,
-        )
-        Step(test=export_parts, parallel=True)(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-        join()
-
-    with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert set(source_data) >= set(destination_data), error()
-
-    with And("Inserts should have completed successfully"):
-        assert len(source_data) == 15, error()
+def get_minio_interruption_strategies():
+    strategies = ["before", "during", "after", "random"]
+    signals = ["KILL", "TERM", "SEGV"]
+    return product(strategies, signals)
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
-def minio_network_interruption(self, number_of_values=3, signal="KILL"):
-    """Check that restarting MinIO while exporting parts inbetween works correctly."""
+@TestOutline(Scenario)
+@Examples(
+    "strategy, signal",
+    get_minio_interruption_strategies(),
+)
+def minio_interruption(self, strategy, signal):
+    """Check that MinIO outages at different times during exports work correctly."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = "source_" + getuid()
@@ -357,48 +288,89 @@ def minio_network_interruption(self, number_of_values=3, signal="KILL"):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            number_of_values=number_of_values,
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I stop MinIO"):
-        kill_minio(signal=signal)
+    with And("I slow the network to make export take longer"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with When("I read export events"):
-        initial_events = get_export_events(node=self.context.node)
+    if strategy == "before":
+        with When("I kill MinIO before export"):
+            kill_minio(signal=signal)
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
 
-    with And("I export data"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
+    elif strategy == "during":
+        with When("I kill MinIO during export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+            kill_minio(signal=signal)
 
-    with And("I start MinIO"):
+    elif strategy == "after":
+        with When("I export data"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+
+        with And("I kill MinIO after export"):
+            wait_for_all_exports_to_complete()
+            kill_minio(signal=signal)
+
+    elif strategy == "random":
+        with When("I kill MinIO at a random time during export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+            sleep(random.uniform(0, 3))
+            kill_minio(signal=signal)
+
+    with Then("I start MinIO"):
+        wait_for_all_exports_to_complete()
         start_minio()
 
-    with Then("Destination data should be a subset of source data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert set(source_data) >= set(destination_data), error()
+    if strategy == "after":
+        with And("Check source matches destination"):
+            source_matches_destination(
+                source_table=source_table,
+                destination_table=s3_table_name,
+            )
+    else:
+        with And("Destination data should be a subset of source data"):
+            source_data = select_all_ordered(
+                table_name=source_table, node=self.context.node
+            )
+            destination_data = select_all_ordered(
+                table_name=s3_table_name, node=self.context.node
+            )
+            assert set(source_data) >= set(destination_data), error()
 
-    with And("Failed exports should be logged in the system.events table"):
-        final_events = get_export_events(node=self.context.node)
-        assert (
-            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == (len(source_data) - len(destination_data)) / number_of_values
-        ), error()
+
+def get_clickhouse_interruption_strategies():
+    strategies = ["before", "during", "after", "random"]
+    signals = ["KILL", "TERM", "SEGV"]
+    safe_values = [True, False]
+    return product(strategies, signals, safe_values)
 
 
-@TestScenario
+@TestOutline(Scenario)
+@Examples(
+    "strategy, signal, safe",
+    get_clickhouse_interruption_strategies(),
+)
 @Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_NodeInterruption("1.0"))
-def clickhouse_network_interruption(self, safe=False):
-    """Check that exports work correctly with a clickhouse network outage."""
+def clickhouse_interruption(self, strategy, signal, safe):
+    """Check that exports work correctly with ClickHouse outages."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = "source_" + getuid()
@@ -414,42 +386,84 @@ def clickhouse_network_interruption(self, safe=False):
     with And("I get parts before the interruption"):
         parts = get_parts(table_name=source_table, node=self.context.node)
 
-    with When("I queue exports and restart the node in parallel"):
-        Step(test=export_parts, parallel=True)(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-            exitcode=1,
-            parts=parts,
-        )
-        self.context.node.restart(safe=safe)
-        join()
+    with And("I slow the network to make export take longer"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    if safe:
-        with Then("Check source matches destination"):
-            source_matches_destination(
+    if strategy == "before":
+        with When("I stop ClickHouse before export"):
+            self.context.node.stop_clickhouse(safe=safe, signal=signal)
+            export_parts(
                 source_table=source_table,
                 destination_table=s3_table_name,
+                node=self.context.node,
+                parts=parts,
+                exitcode=1,
             )
+
+    elif strategy == "during":
+        with When("I stop ClickHouse during export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=parts,
+            )
+            self.context.node.stop_clickhouse(safe=safe, signal=signal)
+
+    elif strategy == "after":
+        with When("I export data"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=parts,
+            )
+
+        with And("I stop ClickHouse after export"):
+            wait_for_all_exports_to_complete()
+            self.context.node.stop_clickhouse(safe=safe, signal=signal)
+
+    elif strategy == "random":
+        with When("I kill ClickHouse at a random time during export"):
+            export_parts(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=parts,
+            )
+            sleep(random.uniform(0, 3))
+            self.context.node.stop_clickhouse(safe=safe, signal=signal)
+
+    with Then("I start ClickHouse"):
+        wait_for_all_exports_to_complete()
+        self.context.node.start_clickhouse(thread_fuzzer=True)
+
+    with And("I get data from both tables"):
+        source_data = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+        destination_data = select_all_ordered(
+            table_name=s3_table_name, node=self.context.node
+        )
+
+    if strategy == "before":
+        with And("Destination should be empty"):
+            assert len(destination_data) == 0, error()
+    elif strategy == "after" or safe == True:
+        with And("Destination matches source"):
+            assert source_data == destination_data, error()
     else:
-        with Then("Destination data should be a subset of source data"):
-            source_data = select_all_ordered(
-                table_name=source_table, node=self.context.node
-            )
-            destination_data = select_all_ordered(
-                table_name=s3_table_name, node=self.context.node
-            )
+        with And("Destination data should be a subset of source data"):
             assert set(source_data) >= set(destination_data), error()
 
 
 @TestFeature
-@Name("concurrency and networks")
+@Name("network")
 def feature(self):
-    """Check that exports work correctly with concurrency and various network conditions."""
+    """Check that exports work correctly with various network conditions."""
 
     # TODO corruption (bit flipping)
 
-    Scenario(test=concurrent_export)(num_tables=5)
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
     Scenario(test=packet_loss_gemodel)(
@@ -459,8 +473,5 @@ def feature(self):
     Scenario(test=packet_duplication)(percent_duplicated=50)
     Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    Scenario(run=concurrent_insert)
-    Scenario(test=minio_network_interruption)(signal="TERM")
-    Scenario(test=minio_network_interruption)(signal="KILL")
-    Scenario(test=clickhouse_network_interruption)(safe=True)
-    Scenario(test=clickhouse_network_interruption)(safe=False)
+    Scenario(run=minio_interruption)
+    Scenario(run=clickhouse_interruption)

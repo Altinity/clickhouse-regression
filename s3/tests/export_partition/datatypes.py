@@ -1,4 +1,5 @@
 from testflows.core import *
+from s3.tests.export_partition.steps import export_partitions
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -68,8 +69,8 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
             partition_by=partition_key_type,
         )
 
-    with When("I export parts to the S3 table"):
-        export_parts(
+    with When("I export partitions to the S3 table"):
+        export_partitions(
             source_table=table_name,
             destination_table=s3_table_name,
             node=self.context.node,
@@ -115,7 +116,7 @@ def valid_partition_key_types_wide(self):
     RQ_ClickHouse_ExportPart_PartTypes("1.0"),
 )
 def feature(self, num_parts=10):
-    """Check that all data types are supported when exporting parts."""
+    """Check that all data types are supported when exporting partitions."""
 
     self.context.num_parts = num_parts
 
