@@ -126,6 +126,10 @@ def volume_combos(self):
         "external",
         "external2",
         "tiered_storage",
+        "minio_cache",
+        "minio_nocache",
+        "local_encrypted",
+        "minio_encrypted",
     ]
     combinations = product(volumes)
 

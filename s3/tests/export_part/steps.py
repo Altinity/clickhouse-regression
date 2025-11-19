@@ -29,12 +29,24 @@ def minio_storage_configuration(self, restart=True):
                 "access_key_id": "minio_user",
                 "secret_access_key": "minio123",
             },
-            "s3_cache": {
+            "minio_cache": {
                 "type": "cache",
                 "disk": "minio",
                 "path": "minio_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
+            },
+            "local_encrypted": {
+                "type": "encrypted",
+                "disk": "jbod1",
+                "path": "encrypted/",
+                "key": "1234567812345678",
+            },
+            "minio_encrypted": {
+                "type": "encrypted",
+                "disk": "minio",
+                "path": "encrypted/",
+                "key": "1234567812345678",
             },
         }
 
@@ -58,8 +70,10 @@ def minio_storage_configuration(self, restart=True):
                 },
                 "move_factor": "0.7",
             },
-            "minio_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
+            "minio_cache": {"volumes": {"external": {"disk": "minio_cache"}}},
             "minio_nocache": {"volumes": {"external": {"disk": "minio"}}},
+            "local_encrypted": {"volumes": {"main": {"disk": "local_encrypted"}}},
+            "minio_encrypted": {"volumes": {"external": {"disk": "minio_encrypted"}}},
         }
 
         s3_storage(disks=disks, policies=policies, restart=restart)
