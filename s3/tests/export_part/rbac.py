@@ -78,7 +78,7 @@ def alter_insert_privilege(self):
 
 
 @TestScenario
-def kill_privilege(self):
+def kill_export(self):
     """Check that user need not have KILL QUERY privilege to kill their own query,
     but need to have KILL QUERY privilege to kill other user's query."""
 
@@ -112,11 +112,6 @@ def kill_privilege(self):
             )
             select_privileges(
                 node=self.context.node, user=user_name, table="system.processes"
-            )
-
-        with And("I freeze the partition to create lock contention"):
-            self.context.node.query(
-                f"ALTER TABLE {source_table} UPDATE i = 1 WHERE sleepEachRow(3)",
             )
 
         with And("I export parts"):
@@ -178,4 +173,4 @@ def feature(self):
     """Test RBAC for export part."""
 
     Scenario(run=alter_insert_privilege)
-    Scenario(run=kill_privilege)
+    Scenario(run=kill_export)
