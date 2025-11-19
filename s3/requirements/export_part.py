@@ -124,12 +124,9 @@ RQ_ClickHouse_ExportPart_SourcePartStorage = Requirement(
     description=(
         "[ClickHouse] SHALL support exporting data parts regardless of the underlying storage type where the source parts are stored, including:\n"
         "* **Local Disks**: Parts stored on local filesystem\n"
-        "* **S3/Object Storage**: Parts stored on S3 or S3-compatible object storage\n"
         "* **Encrypted Disks**: Parts stored on encrypted disks (disk-level encryption)\n"
         "* **Cached Disks**: Parts stored with filesystem cache enabled\n"
-        "* **Remote Disks**: Parts stored on HDFS, Azure Blob Storage, or Google Cloud Storage\n"
         "* **Tiered Storage**: Parts stored across multiple storage tiers (hot/cold)\n"
-        "* **Zero-Copy Replication Disks**: Parts stored with zero-copy replication enabled\n"
         "\n"
     ),
     link=None,
@@ -513,6 +510,7 @@ RQ_ClickHouse_ExportPart_Logging = Requirement(
         "  * `PartsExports` - Number of successful part exports\n"
         "  * `PartsExportFailures` - Number of failed part exports\n"
         "  * `PartsExportDuplicated` - Number of part exports that failed because target already exists\n"
+        "  * `PartsExportTotalMilliseconds` - Total time spent exporting\n"
         "* Writing operation information to the `system.part_log` table with `event_type` set to `EXPORT_PART`\n"
         "* Providing sufficient detail for monitoring and troubleshooting export operations\n"
         "\n"
@@ -939,12 +937,9 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting data parts regardless of the underlying storage type where the source parts are stored, including:
 * **Local Disks**: Parts stored on local filesystem
-* **S3/Object Storage**: Parts stored on S3 or S3-compatible object storage
 * **Encrypted Disks**: Parts stored on encrypted disks (disk-level encryption)
 * **Cached Disks**: Parts stored with filesystem cache enabled
-* **Remote Disks**: Parts stored on HDFS, Azure Blob Storage, or Google Cloud Storage
 * **Tiered Storage**: Parts stored across multiple storage tiers (hot/cold)
-* **Zero-Copy Replication Disks**: Parts stored with zero-copy replication enabled
 
 ## Storage policies and volumes
 
@@ -1160,6 +1155,7 @@ version: 1.0
   * `PartsExports` - Number of successful part exports
   * `PartsExportFailures` - Number of failed part exports
   * `PartsExportDuplicated` - Number of part exports that failed because target already exists
+  * `PartsExportTotalMilliseconds` - Total time spent exporting
 * Writing operation information to the `system.part_log` table with `event_type` set to `EXPORT_PART`
 * Providing sufficient detail for monitoring and troubleshooting export operations
 

@@ -131,12 +131,9 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting data parts regardless of the underlying storage type where the source parts are stored, including:
 * **Local Disks**: Parts stored on local filesystem
-* **S3/Object Storage**: Parts stored on S3 or S3-compatible object storage
 * **Encrypted Disks**: Parts stored on encrypted disks (disk-level encryption)
 * **Cached Disks**: Parts stored with filesystem cache enabled
-* **Remote Disks**: Parts stored on HDFS, Azure Blob Storage, or Google Cloud Storage
 * **Tiered Storage**: Parts stored across multiple storage tiers (hot/cold)
-* **Zero-Copy Replication Disks**: Parts stored with zero-copy replication enabled
 
 ## Storage policies and volumes
 
@@ -352,6 +349,7 @@ version: 1.0
   * `PartsExports` - Number of successful part exports
   * `PartsExportFailures` - Number of failed part exports
   * `PartsExportDuplicated` - Number of part exports that failed because target already exists
+  * `PartsExportTotalMilliseconds` - Total time spent exporting
 * Writing operation information to the `system.part_log` table with `event_type` set to `EXPORT_PART`
 * Providing sufficient detail for monitoring and troubleshooting export operations
 
