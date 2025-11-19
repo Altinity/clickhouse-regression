@@ -89,6 +89,7 @@ def kill_privilege(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            number_of_partitions=1,
         )
         s3_table_name_1 = create_s3_table(table_name="s3_1", create_new_bucket=True)
         s3_table_name_2 = create_s3_table(table_name="s3_2", create_new_bucket=True)
@@ -113,13 +114,19 @@ def kill_privilege(self):
                 node=self.context.node, user=user_name, table="system.processes"
             )
 
+        with And("I freeze the partition to create lock contention"):
+            self.context.node.query(
+                f"ALTER TABLE {source_table} UPDATE i = 1 WHERE sleepEachRow(3)",
+            )
+
         with And("I export parts"):
-            export_parts(
+            output = export_parts(
                 source_table=source_table,
                 destination_table=s3_table_name_1,
                 node=self.context.node,
                 settings=[("user", "default"), ("query_id", query_id_1)],
             )
+            note(output[0].output)
 
         with And("I kill the query"):
             output = kill_query(
