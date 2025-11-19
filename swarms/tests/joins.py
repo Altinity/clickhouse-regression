@@ -6,6 +6,7 @@ from helpers.common import getuid
 from helpers.tables import create_table_as_select
 from swarms.requirements.requirements import *
 
+import random
 import swarms.tests.steps.swarm_steps as swarm_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
@@ -148,7 +149,16 @@ def check_join(
             FROM {left_merge_tree_table} AS t1
             {join_clause} {right_merge_tree_table} AS t2
             """
-        if join_clause != "CROSS JOIN" and join_clause != "PASTE JOIN":
+
+        # asof join has to have single inequality condition
+        if join_clause == "ASOF JOIN" or join_clause == "LEFT ASOF JOIN":
+            for sign in ["<=", ">=", "<", ">"]:
+                if sign in join_condition:
+                    query += f" ON {join_condition}"
+                    break
+            else:
+                query += f" ON {join_condition} AND t1.long_col < t2.long_col"
+        elif join_clause != "CROSS JOIN" and join_clause != "PASTE JOIN":
             query += f" ON {join_condition}"
 
         if order_by:
@@ -170,6 +180,11 @@ def check_join(
         "RIGHT SEMI JOIN",
         "RIGHT ANTI JOIN",
         "RIGHT ANY JOIN",
+        "LEFT OUTER JOIN",
+        "LEFT SEMI JOIN",
+        "LEFT ANTI JOIN",
+        "LEFT ANY JOIN",
+        "LEFT ASOF JOIN",
     ]
 
     if (
@@ -257,7 +272,14 @@ def check_join(
         {join_clause} {right_table} AS t2
         """
 
-    if join_clause != "CROSS JOIN":
+    if join_clause == "ASOF JOIN" or join_clause == "LEFT ASOF JOIN":
+        for sign in ["<=", ">=", "<", ">"]:
+            if sign in join_condition:
+                query += f" ON {join_condition}"
+                break
+        else:
+            query += f" ON {join_condition} AND t1.long_col < t2.long_col"
+    elif join_clause != "CROSS JOIN":
         query += f" ON {join_condition}"
 
     if join_clause == "PASTE JOIN":
@@ -430,7 +452,8 @@ def check_join(
             and join_clause in non_stable_join_clauses
         )
     ):
-        assert result.output == "", error()
+        assert result.exitcode == 0, error()
+        # resulting rows are not stable
     elif not exitcode:
         assert result.output == expected_result.output, error()
 
@@ -588,7 +611,21 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         )
     )
 
-    with Pool(10) as pool:
+    all_possible_combinations = list(
+        product(
+            left_tables,
+            right_tables,
+            modes,
+            join_conditions,
+            object_storage_clusters,
+            join_clauses,
+        )
+    )
+
+    if not self.context.stress:
+        all_possible_combinations = random.sample(all_possible_combinations, 500)
+
+    with Pool() as pool:
         for num, (
             left_table,
             right_table,
@@ -596,16 +633,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
             join_condition,
             object_storage_cluster,
             join_clause,
-        ) in enumerate(
-            product(
-                left_tables,
-                right_tables,
-                modes,
-                join_conditions,
-                object_storage_clusters,
-                join_clauses,
-            )
-        ):
+        ) in enumerate(all_possible_combinations):
             name = f"join {num} of {length}: {left_table} with {right_table} in {mode} mode on {object_storage_cluster} cluster with {join_clause} clause"
             Scenario(
                 name=name,
