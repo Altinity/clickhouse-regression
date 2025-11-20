@@ -701,8 +701,11 @@ def get_part_log(self, node, table_name=None):
 
 
 @TestStep(When)
-def get_system_exports(self, node):
+def get_system_exports(self, node=None):
     """Get the system.exports source and destination table columns for all ongoing exports."""
+
+    if node is None:
+        node = self.context.node
 
     exports = node.query(
         "SELECT source_table, destination_table FROM system.exports",
@@ -714,8 +717,11 @@ def get_system_exports(self, node):
 
 
 @TestStep(When)
-def get_num_active_exports(self, node):
+def get_num_active_exports(self, node=None):
     """Get the number of active exports from the system.exports table of a given node."""
+
+    if node is None:
+        node = self.context.node
 
     num_active_exports = node.query(
         "SELECT count() FROM system.exports",
@@ -794,8 +800,13 @@ def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_par
     return source_tables, destination_tables
 
 
-def wait_for_all_exports_to_complete(node):
+@TestStep(When)
+def wait_for_all_exports_to_complete(self, node=None):
     """Wait for all exports to complete on a given node."""
+
+    if node is None:
+        node = self.context.node
+
     for attempt in retries(timeout=30, delay=1):
         with attempt:
             assert get_num_active_exports(node=node) == 0, error()
