@@ -45,6 +45,7 @@ def parallel_insert(self):
         join()
 
     with Then("Destination data should be a subset of source data"):
+        wait_for_all_exports_to_complete(node=self.context.node)
         source_data = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
@@ -222,6 +223,59 @@ def merge_parts(self):
         }, error()
 
 
+def get_actions():
+    return [
+        (optimize_partition, {"partition": ""}),
+        (select_all_ordered, {}),
+        (create_partitions_with_random_uint64, {}),
+    ]
+
+
+@TestOutline(Scenario)
+@Examples(
+    "action, kwargs",
+    get_actions(),
+)
+def stress(self, action, kwargs):
+    """Test a high volume of actions in parallel with exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=10,
+            number_of_partitions=10,
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I slow the network"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
+
+    with When(f"I export parts to the S3 table in parallel with {action.__name__}"):
+        for _ in range(100):
+            Step(test=export_parts, parallel=True)(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=[get_random_part(table_name=source_table)],
+            )
+            Step(test=action, parallel=True)(table_name=source_table, **kwargs)
+        join()
+
+    with And("I wait for all exports and merges to complete"):
+        wait_for_all_exports_to_complete(node=self.context.node)
+        wait_for_all_merges_to_complete(node=self.context.node, table_name=source_table)
+
+    with Then("Check successfully exported parts are present in destination"):
+        part_log = get_part_log(node=self.context.node, table_name=source_table)
+        destination_parts = get_s3_parts(table_name=s3_table_name)
+        assert part_log == destination_parts, error()
+
+
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -231,3 +285,4 @@ def feature(self):
     Scenario(run=parallel_insert)
     Scenario(run=select_parts)
     Scenario(run=merge_parts)
+    Scenario(run=stress)

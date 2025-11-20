@@ -345,6 +345,21 @@ def alter_table_move_partition(self, table_name, partition_name, **query_kwargs)
 
 
 @TestStep(When)
+def optimize_table(self, table_name):
+    """Optimize a table using alter."""
+
+    self.context.node.query(
+        f"SYSTEM START MERGES {table_name}",
+        exitcode=0,
+    )
+
+    with By(f"Optimizing {table_name}"):
+        helpers.queries.optimize(
+            node=self.context.node, table_name=table_name, final=True
+        )
+
+
+@TestStep(When)
 def get_parts_per_partition(self, table_name, node=None):
     """Get the number of parts per partition as a dictionary {partition: count}."""
 
@@ -373,11 +388,82 @@ def get_parts_per_partition(self, table_name, node=None):
 
 
 @TestStep(When)
+def get_random_partition(self, table_name, node=None):
+    """Get a random partition ID from a table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT partition
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1
+        GROUP BY partition
+        ORDER BY rand()
+        LIMIT 1
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    return result.output.strip()
+
+
+@TestStep(When)
+def get_random_part(self, table_name, node=None):
+    """Get a random part name from a table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT name
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1
+        ORDER BY rand()
+        LIMIT 1
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    return result.output.strip()
+
+
+@TestStep(When)
+def wait_for_all_merges_to_complete(self, node, table_name=None):
+    """Wait for all merges to complete on a given node."""
+
+    for attempt in retries(timeout=30, delay=1):
+        with attempt:
+            if table_name:
+                active_merges = node.query(
+                    f"SELECT count() FROM system.merges WHERE table = '{table_name}'",
+                    exitcode=0,
+                    steps=True,
+                ).output.strip()
+            else:
+                active_merges = node.query(
+                    "SELECT count() FROM system.merges",
+                    exitcode=0,
+                    steps=True,
+                ).output.strip()
+
+            assert int(active_merges) == 0, error()
+
+
+@TestStep(When)
 def optimize_partition(self, table_name, partition, node=None):
     """Optimize a partition of a table."""
 
     if node is None:
         node = self.context.node
+
+    if partition == "":
+        partition = get_random_partition(table_name=table_name, node=node)
+
+    node.query(
+        f"SYSTEM START MERGES {table_name}",
+        exitcode=0,
+    )
 
     node.query(
         f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
@@ -413,6 +499,26 @@ def get_s3_parts_per_partition(self, table_name, node=None):
             partition = str(row["partition"])
             parts_per_partition[partition] = int(row["part_count"])
     return parts_per_partition
+
+
+@TestStep(When)
+def get_s3_parts(self, table_name, node=None):
+    """Get all part names (filenames) from an S3 table."""
+    if node is None:
+        node = self.context.node
+
+    output = node.query(
+        f"""
+        SELECT DISTINCT 
+            replaceRegexpOne(_file, '_[A-F0-9]+\\.parquet$', '') as part_name
+        FROM {table_name}
+        ORDER BY part_name
+        """,
+        exitcode=0,
+        steps=True,
+    ).output
+
+    return sorted([row.strip() for row in output.splitlines()])
 
 
 @TestStep(When)
@@ -577,16 +683,21 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_part_log(self, node):
+def get_part_log(self, node, table_name=None):
     """Get the part log from the system.part_log table of a given node."""
 
+    if table_name is None:
+        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0"
+    else:
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0"
+
     output = node.query(
-        "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart'",
+        query,
         exitcode=0,
         steps=True,
-    ).output.splitlines()
+    ).output
 
-    return output
+    return sorted([row.strip() for row in output.splitlines()])
 
 
 @TestStep(When)
