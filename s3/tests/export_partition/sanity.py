@@ -5,9 +5,6 @@ from helpers.create import *
 from helpers.common import getuid
 from helpers.queries import *
 from s3.requirements.export_part import *
-from alter.table.replace_partition.partition_types import (
-    table_with_compact_and_wide_parts,
-)
 from s3.tests.export_partition.steps import (
     export_partitions,
     source_matches_destination,
