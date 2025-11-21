@@ -6,6 +6,23 @@ sidebar_label: 'Hybrid'
 sidebar_position: 11
 ---
 
+- [Hybrid table engine](#hybrid-table-engine)
+  - [How it works](#how-it-works)
+    - [Query Rewrite Example](#query-rewrite-example)
+  - [Enable the engine](#enable-the-engine)
+    - [Automatic Type Alignment](#automatic-type-alignment)
+  - [Engine definition](#engine-definition)
+    - [Arguments and behaviour](#arguments-and-behaviour)
+  - [Watermark and data lifecycle](#watermark-and-data-lifecycle)
+    - [Typical Pattern](#typical-pattern)
+    - [Data Migration Timeline](#data-migration-timeline)
+    - [How to update the watermark](#how-to-update-the-watermark)
+  - [INSERT behavior](#insert-behavior)
+  - [Example: local cluster plus S3 historical tier](#example-local-cluster-plus-s3-historical-tier)
+  - [Best practices](#best-practices)
+    - [Schema Design](#schema-design)
+
+
 # Hybrid table engine
 
 `Hybrid` builds on top of the [Distributed](./distributed.md) table engine. It lets you expose several data sources as one logical table and assign every source its own predicate.
