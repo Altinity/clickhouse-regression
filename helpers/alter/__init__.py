@@ -7,5 +7,4 @@ from helpers.alter.skipping_index import *
 from helpers.alter.constraint import *
 from helpers.alter.ttl import *
 from helpers.alter.statistics import *
-from helpers.alter.apply_deleted_mask import *
 from helpers.alter.table import *

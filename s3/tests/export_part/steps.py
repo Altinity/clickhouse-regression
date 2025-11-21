@@ -6,6 +6,8 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
+import helpers.alter.partition
+import helpers.alter.skipping_index
 
 
 @TestStep(Given)
@@ -27,12 +29,24 @@ def minio_storage_configuration(self, restart=True):
                 "access_key_id": "minio_user",
                 "secret_access_key": "minio123",
             },
-            "s3_cache": {
+            "minio_cache": {
                 "type": "cache",
                 "disk": "minio",
                 "path": "minio_cache/",
                 "max_size": "22548578304",
                 "cache_on_write_operations": "1",
+            },
+            "local_encrypted": {
+                "type": "encrypted",
+                "disk": "jbod1",
+                "path": "encrypted/",
+                "key": "1234567812345678",
+            },
+            "minio_encrypted": {
+                "type": "encrypted",
+                "disk": "minio",
+                "path": "encrypted/",
+                "key": "1234567812345678",
             },
         }
 
@@ -56,8 +70,10 @@ def minio_storage_configuration(self, restart=True):
                 },
                 "move_factor": "0.7",
             },
-            "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
-            "minio_external_nocache": {"volumes": {"external": {"disk": "minio"}}},
+            "minio_cache": {"volumes": {"external": {"disk": "minio_cache"}}},
+            "minio_nocache": {"volumes": {"external": {"disk": "minio"}}},
+            "local_encrypted": {"volumes": {"main": {"disk": "local_encrypted"}}},
+            "minio_encrypted": {"volumes": {"external": {"disk": "minio_encrypted"}}},
         }
 
         s3_storage(disks=disks, policies=policies, restart=restart)
@@ -150,125 +166,26 @@ def create_s3_table(
     return table_name
 
 
-def setup_drop_constraint(table_name, node):
-    """Setup: Add constraint before testing drop constraint."""
-    node.query(f"ALTER TABLE {table_name} ADD CONSTRAINT new_constraint CHECK 1 = 1")
-
-
-def setup_attach_partition(table_name, node):
-    """Setup: Detach partition before testing attach partition."""
-    node.query(f"ALTER TABLE {table_name} DETACH PARTITION 1")
-
-
-def setup_attach_partition_from(table_name, node):
-    """Setup: Create temp table for attach partition from."""
-    partitioned_merge_tree_table(
-        table_name=table_name + "_temp",
-        partition_by="p",
-        columns=get_column_info(node=node, table_name=table_name),
-        query_settings="storage_policy = 'tiered_storage'",
-    )
-
-
-def setup_move_partition_to_table(table_name, node):
-    """Setup: Create temp table for move partition to table."""
-    partitioned_merge_tree_table(
-        table_name=table_name + "_temp",
-        partition_by="p",
-        columns=get_column_info(node=node, table_name=table_name),
-        query_settings="storage_policy = 'tiered_storage'",
-    )
-
-
-def setup_clear_index_in_partition(table_name, node):
-    """Setup: Add index before testing clear index."""
-    node.query(f"ALTER TABLE {table_name} ADD INDEX idx_i i TYPE minmax GRANULARITY 1")
-
-
-def setup_unfreeze_partition_with_name(table_name, node):
-    """Setup: Freeze partition before testing unfreeze."""
-    alter_table_freeze_partition_with_name(
-        table_name=table_name,
-        backup_name="frozen_partition",
-        partition_name="1",
-    )
-
-
-def setup_replace_partition(table_name, node):
-    """Setup: Create temp table for replace partition."""
-    partitioned_merge_tree_table(
-        table_name=table_name + "_temp",
-        partition_by="p",
-        columns=get_column_info(node=node, table_name=table_name),
-        query_settings="storage_policy = 'tiered_storage'",
-    )
-
-
-def setup_fetch_partition(table_name, node):
-    """Setup: Create temp replicated table for fetch partition."""
-    partitioned_replicated_merge_tree_table(
-        table_name=table_name + "_temp",
-        partition_by="p",
-        columns=get_column_info(node=node, table_name=table_name),
-        query_settings="storage_policy = 'tiered_storage'",
-    )
-
-
-SETUP_FUNCTIONS = {
-    alter_table_drop_constraint: setup_drop_constraint,
-    alter_table_attach_partition: setup_attach_partition,
-    alter_table_attach_partition_from: setup_attach_partition_from,
-    alter_table_move_partition_to_table: setup_move_partition_to_table,
-    alter_table_clear_index_in_partition: setup_clear_index_in_partition,
-    alter_table_unfreeze_partition_with_name: setup_unfreeze_partition_with_name,
-    alter_table_replace_partition: setup_replace_partition,
-    alter_table_fetch_partition: setup_fetch_partition,
-}
-
-
-@TestStep(Given)
-def run_alter_setup_and_update_kwargs(self, alter_function, source_table, kwargs, node):
-    """Run setup functions if needed and update kwargs accordingly."""
-    if alter_function in SETUP_FUNCTIONS:
-        SETUP_FUNCTIONS[alter_function](table_name=source_table, node=node)
-        if (
-            alter_function == alter_table_attach_partition_from
-            or alter_function == alter_table_replace_partition
-        ):
-            kwargs["path_to_backup"] = f"{source_table}_temp"
-        elif alter_function == alter_table_move_partition_to_table:
-            kwargs["path_to_backup"] = source_table
-        elif alter_function == alter_table_fetch_partition:
-            kwargs["path_to_backup"] = f"/clickhouse/tables/shard0/{source_table}_temp"
-    if alter_function == optimize:
-        kwargs["node"] = node
-    return kwargs
-
-
 @TestStep(When)
-def execute_alter_function(self, alter_function, source_table, kwargs, node):
-    """Execute move partition with retry logic for hot/cold volumes."""
-    if alter_function == alter_table_move_partition:
-        moved = False
-        for volume in ["hot", "cold"]:
-            try:
-                kwargs["disk_name"] = volume
-                alter_function(table_name=source_table, **kwargs)
-                moved = True
-                break
-            except Exception as e:
-                note(f"Failed to move to {volume}: {e}")
-        if not moved:
-            raise Exception("Failed to move partition to any volume")
-    else:
-        alter_function(
-            table_name=(
-                source_table
-                if alter_function != alter_table_move_partition_to_table
-                else f"{source_table}_temp"
-            ),
-            **kwargs,
-        )
+def get_column_type(self, table_name, column_name, node=None):
+    """Get the type of a specific column from a table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT type
+        FROM system.columns
+        WHERE database = currentDatabase()
+          AND table = '{table_name}'
+          AND name = '{column_name}'
+        LIMIT 1
+        """,
+        exitcode=0,
+        steps=True,
+    )
+
+    return result.output.strip()
 
 
 @TestStep(When)
@@ -300,11 +217,88 @@ def get_parts_per_partition(self, table_name, node=None):
 
 
 @TestStep(When)
+def get_random_partition(self, table_name, node=None):
+    """Get a random partition ID from a table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT partition
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1
+        GROUP BY partition
+        ORDER BY rand()
+        LIMIT 1
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    return result.output.strip()
+
+
+@TestStep(When)
+def get_random_part(self, table_name, node=None):
+    """Get a random part name from a table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT name
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1
+        ORDER BY rand()
+        LIMIT 1
+        """,
+        exitcode=0,
+        steps=True,
+    )
+    return result.output.strip()
+
+
+@TestStep(When)
+def wait_for_all_merges_to_complete(self, node, table_name=None):
+    """Wait for all merges to complete on a given node."""
+
+    for attempt in retries(timeout=30, delay=1):
+        with attempt:
+            if table_name:
+                active_merges = node.query(
+                    f"SELECT count() FROM system.merges WHERE table = '{table_name}'",
+                    exitcode=0,
+                    steps=True,
+                ).output.strip()
+            else:
+                active_merges = node.query(
+                    "SELECT count() FROM system.merges",
+                    exitcode=0,
+                    steps=True,
+                ).output.strip()
+
+            assert int(active_merges) == 0, error()
+
+
+@TestStep(When)
+def start_merges(self, table_name, node=None):
+    """Start merges on a given table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"SYSTEM START MERGES {table_name}", exitcode=0)
+
+
+@TestStep(When)
 def optimize_partition(self, table_name, partition, node=None):
     """Optimize a partition of a table."""
 
     if node is None:
         node = self.context.node
+
+    if partition == "":
+        partition = get_random_partition(table_name=table_name, node=node)
+
+    start_merges(table_name=table_name, node=node)
 
     node.query(
         f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
@@ -343,34 +337,51 @@ def get_s3_parts_per_partition(self, table_name, node=None):
 
 
 @TestStep(When)
+def get_s3_parts(self, table_name, node=None):
+    """Get all part names (filenames) from an S3 table."""
+    if node is None:
+        node = self.context.node
+
+    output = node.query(
+        f"""
+        SELECT DISTINCT 
+            replaceRegexpOne(_file, '_[A-F0-9]+\\.parquet$', '') as part_name
+        FROM {table_name}
+        ORDER BY part_name
+        """,
+        exitcode=0,
+        steps=True,
+    ).output
+
+    return sorted([row.strip() for row in output.splitlines()])
+
+
+@TestStep(When)
 def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
 
     if cluster is None:
         cluster = self.context.cluster
 
-    retry(cluster.command, 5)(
-        None,
-        f"docker kill --signal={signal} {container_name}",
-        timeout=60,
-        exitcode=0,
-        steps=False,
-    )
+    with By("Killing MinIO container"):
+        retry(cluster.command, 5)(
+            None,
+            f"docker kill --signal={signal} {container_name}",
+            timeout=60,
+            exitcode=0,
+            steps=False,
+        )
 
-    if signal == "TERM":
-        with And("Waiting for MinIO container to stop"):
-            for attempt in retries(timeout=30, delay=1):
-                with attempt:
-                    result = cluster.command(
-                        None,
-                        f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
-                        timeout=10,
-                        steps=False,
-                        no_checks=True,
-                    )
-                    if container_name not in result.output:
-                        break
-                    fail("MinIO container still running")
+    with And("Waiting for MinIO container to stop"):
+        for attempt in retries(timeout=30, delay=1):
+            with attempt:
+                result = cluster.command(
+                    None,
+                    f"docker ps --filter name={container_name} --format '{{{{.Names}}}}'",
+                    timeout=10,
+                )
+                assert result.exitcode == 0, error()
+                assert container_name not in result.output, error()
 
 
 @TestStep(When)
@@ -507,21 +518,29 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_part_log(self, node):
+def get_part_log(self, node, table_name=None):
     """Get the part log from the system.part_log table of a given node."""
 
+    if table_name is None:
+        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0"
+    else:
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0"
+
     output = node.query(
-        "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart'",
+        query,
         exitcode=0,
         steps=True,
-    ).output.splitlines()
+    ).output
 
-    return output
+    return sorted([row.strip() for row in output.splitlines()])
 
 
 @TestStep(When)
-def get_system_exports(self, node):
+def get_system_exports(self, node=None):
     """Get the system.exports source and destination table columns for all ongoing exports."""
+
+    if node is None:
+        node = self.context.node
 
     exports = node.query(
         "SELECT source_table, destination_table FROM system.exports",
@@ -533,11 +552,14 @@ def get_system_exports(self, node):
 
 
 @TestStep(When)
-def get_num_active_exports(self, node):
-    """Get the number of active exports from the system.metrics table of a given node."""
+def get_num_active_exports(self, node=None):
+    """Get the number of active exports from the system.exports table of a given node."""
+
+    if node is None:
+        node = self.context.node
 
     num_active_exports = node.query(
-        "SELECT value FROM system.metrics WHERE metric = 'Export'",
+        "SELECT count() FROM system.exports",
         exitcode=0,
         steps=True,
     ).output.strip()
@@ -613,6 +635,7 @@ def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_par
     return source_tables, destination_tables
 
 
+@TestStep(When)
 def wait_for_all_exports_to_complete(self, node=None):
     """Wait for all exports to complete on a given node."""
 

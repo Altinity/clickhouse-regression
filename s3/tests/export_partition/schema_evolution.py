@@ -28,7 +28,7 @@ def schema_evolution(
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
-            stop_merges=True,
+            stop_merges=False,
             populate=False,
             columns=default_columns(simple=True, partition_key_type="Int8"),
         )

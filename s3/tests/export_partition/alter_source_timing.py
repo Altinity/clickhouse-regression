@@ -532,6 +532,7 @@ def alter_during_export(self):
         drop_partition,
         clear_index,
     ]
+
     for action in actions:
         Scenario(
             name=f"{action.__name__}".replace("_", " "),
