@@ -6,30 +6,9 @@ sidebar_label: 'Hybrid'
 sidebar_position: 11
 ---
 
-- [Hybrid table engine](#hybrid-table-engine)
-  - [How it works](#how-it-works)
-    - [Query Rewrite Example](#query-rewrite-example)
-  - [Enable the engine](#enable-the-engine)
-    - [Automatic Type Alignment](#automatic-type-alignment)
-  - [Engine definition](#engine-definition)
-    - [Arguments and behaviour](#arguments-and-behaviour)
-  - [Watermark and data lifecycle](#watermark-and-data-lifecycle)
-    - [Typical Pattern](#typical-pattern)
-    - [Data Migration Timeline](#data-migration-timeline)
-    - [How to update the watermark](#how-to-update-the-watermark)
-  - [INSERT behavior](#insert-behavior)
-  - [Example: local cluster plus S3 historical tier](#example-local-cluster-plus-s3-historical-tier)
-  - [Best practices](#best-practices)
-    - [Schema Design](#schema-design)
-
-
 # Hybrid table engine
 
-`Hybrid` builds on top of the [Distributed](./distributed.md) table engine. It lets you expose several data sources as one logical table and assign every source its own predicate.
-The engine rewrites incoming queries so that each segment receives the original query plus its predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`,
-global JOIN pushdown, and so on) while you duplicate or migrate data across clusters, storage types, or formats.
-
-It keeps the same execution pipeline as `engine=Distributed` but can read from multiple underlying sources simultaneously—similar to `engine=Merge`—while still pushing logic down to each source.
+The Hybrid table engine builds on top of the [Distributed](./distributed.md) table engine. It lets you expose several data sources as one logical table and assign every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while you duplicate or migrate data across clusters, storage types, or formats.
 
 Typical use cases include:
 
@@ -38,102 +17,6 @@ Typical use cases include:
 - Gradual roll-outs where only a subset of rows should be served from a new backend.
 
 By giving mutually exclusive predicates to the segments (for example, `date < watermark` and `date >= watermark`), you ensure that each row is read from exactly one source.
-
-## How it works
-
-The Hybrid engine extends the `Distributed` table engine to support multiple heterogeneous data sources (segments) with per-segment predicates. When a query is executed:
-
-1. **Query Rewrite**: The engine rewrites the incoming query once per segment, replacing the Hybrid table reference with the segment's underlying table function and adding the segment's predicate to the WHERE clause with an `AND` operator.
-
-2. **Parallel Execution**: Each rewritten query is executed independently, maintaining all Distributed optimizations:
-   - Remote aggregation (GROUP BY pushdown)
-   - ORDER BY pushdown
-   - `skip_unused_shards` optimization
-   - JOIN pushdown
-   - Global query optimizations
-
-3. **Result Union**: Results from all segments are combined (using a UnionStep), producing a single result set as if querying a single distributed table.
-
-### Query Rewrite Example
-
-Given a Hybrid table:
-```sql
-ENGINE = Hybrid(
-    remote('hot_cluster', 'db', 'table'), date >= '2025-01-01',
-    s3Cluster('cold_cluster', 's3://bucket/path'), date < '2025-01-01'
-)
-```
-
-A user query:
-```sql
-SELECT user_id, sum(bytes) FROM hybrid
-WHERE date >= '2025-02-01'
-GROUP BY user_id;
-```
-
-Is rewritten for each segment:
-
-**Segment 1 (hot):**
-```sql
-SELECT user_id, sum(bytes)
-FROM remote('hot_cluster', 'db', 'table')
-WHERE (date >= '2025-01-01') AND (date >= '2025-02-01')
-GROUP BY user_id;
-```
-
-**Segment 2 (cold):**
-```sql
-SELECT user_id, sum(bytes)
-FROM s3Cluster('cold_cluster', 's3://bucket/path')
-WHERE (date < '2025-01-01') AND (date >= '2025-02-01')
-GROUP BY user_id;
-```
-
-The second segment's query is automatically pruned because the WHERE clause contradicts the predicate (no rows can satisfy both `date < '2025-01-01'` and `date >= '2025-02-01'`).
-
-
-## Enable the engine
-
-The Hybrid engine is experimental. Enable it per session (or in the user profile) before creating tables:
-
-```sql
-SET allow_experimental_hybrid_table = 1;
-```
-
-### Automatic Type Alignment
-
-Hybrid segments can evolve independently, so the same logical column may use different physical types across segments. For example:
-- MergeTree segment: `UInt64`
-- Iceberg segment: `Decimal128`
-
-When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations into each rewritten query so every shard receives the schema defined by the Hybrid table. This prevents header mismatches without having to edit each query.
-
-**How it works:**
-1. The engine compares column types across all segments
-2. For mismatched columns, it identifies the target type from the Hybrid table definition
-3. It injects `CAST(column AS target_type)` into the query tree for each segment
-4. All segments return compatible types, allowing seamless UNION
-
-**Example:**
-```sql
--- Hybrid table defines: value UInt64
--- Segment 1 (MergeTree): value UInt64
--- Segment 2 (Iceberg): value Decimal128
-
--- With auto-cast enabled, Segment 2 query becomes:
-SELECT CAST(value AS UInt64) AS value FROM iceberg_segment ...
-```
-
-**Important Notes:**
-- Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
-- Casts are applied to both sides when types differ (even if one side already has the correct type)
-- For aggregate functions, casts must be applied before aggregation, not after
-- Manual casts in your SQL queries will still work but may result in double-casting
-
-**When to use:**
-- Enable when segments have different physical types but represent the same logical data
-- Disable if you prefer explicit casts in your queries or if analyzer is not available
-
 
 ## Engine definition
 
@@ -164,6 +47,31 @@ In this case, the engine will automatically detect the columns and types from th
 - The query planner picks the same processing stage for every segment as it does for the base `Distributed` plan, so remote aggregation, ORDER BY pushdown, `skip_unused_shards`, and the legacy/analyzer execution modes behave the same way.
 - Align schemas across the segments. ClickHouse builds a common header; if the physical types differ you may need to add casts on one side or in the query, just as you would when reading from heterogeneous replicas.
 
+## Enable the engine
+
+The Hybrid engine is experimental. Enable it per session (or in the user profile) before creating tables:
+
+```sql
+SET allow_experimental_hybrid_table = 1;
+```
+
+### Automatic Type Alignment
+
+Hybrid segments can evolve independently, so the same logical column may use different physical types across segments. For example:
+- MergeTree segment: `UInt64`
+- Iceberg segment: `Decimal128`
+
+When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents header mismatches without having to edit each query.
+
+**Important Notes:**
+- Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
+- Casts are applied to both sides when types differ (even if one side already has the correct type)
+- For aggregate functions, casts must be applied before aggregation, not after
+- Manual casts in your SQL queries will still work but may result in double-casting
+
+**When to use:**
+- Enable when segments have different physical types but represent the same logical data
+- Disable if you prefer explicit casts in your queries or if analyzer is not available
 
 ## Watermark and data lifecycle
 
@@ -194,7 +102,7 @@ keep ~5 days   export 5→7d     persistent archive
              watermark moves
 ```
 
-### How to update the watermark
+### Updating watermark
 
 Use `CREATE OR REPLACE TABLE` to update the watermark of the Hybrid table definition:
 
@@ -214,8 +122,6 @@ CREATE OR REPLACE TABLE hybrid_table ENGINE = Hybrid(
 
 The `CREATE OR REPLACE` operation is atomic—all queries immediately see the new watermark after the statement completes. There's no window where queries might see inconsistent routing or read from both segments for the same data range.
 
-
-
 ## INSERT behavior
 
 `INSERT` statements into a Hybrid table are **always forwarded to the first segment only**. This design choice:
@@ -233,12 +139,6 @@ INSERT INTO hybrid VALUES (...);
 INSERT INTO hot_table VALUES (...);
 INSERT INTO cold_table VALUES (...);
 ```
-
-**Best Practice**: Design your data pipeline so that:
-1. New data is inserted into the first (hot) segment
-2. A background process exports data from hot to cold storage
-3. After verification, update the Hybrid table watermark to route queries to cold storage for older data
-
 
 ## Example: local cluster plus S3 historical tier
 
@@ -303,6 +203,13 @@ Because the predicates are applied inside every segment, queries such as `ORDER 
 
 ## Best practices
 
+### Data Pipeline Design
+
+Design your data pipeline so that:
+1. New data is inserted into the first (hot) segment
+2. A background process exports data from hot to cold storage
+3. After verification, update the Hybrid table watermark to route queries to cold storage for older data
+
 ### Schema Design
 
 1. **Align schemas across segments**: While auto-casting can handle differences, matching schemas eliminates overhead and potential issues.
@@ -321,4 +228,3 @@ Because the predicates are applied inside every segment, queries such as `ORDER 
 3. **Choose appropriate watermark column**: Use a column that:
    - Exists in all segments
    - Represents a natural data boundary (date, timestamp, etc.)
-
