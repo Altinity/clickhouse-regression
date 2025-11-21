@@ -654,31 +654,20 @@ class ClickHouseNode(Node):
                 "fsanitize=undefined": "ubsan",
             }
             build_option = next(
-                (name for flag, name in sanitizers.items() if flag in output), None
+               (name for flag, name in sanitizers.items() if flag in output), {}
             )
             current().context.build_options = getattr(
                 current().context, "build_options", {}
             )
             current().context.build_options[self.name] = build_option
 
-            query = (
-                "SELECT * FROM system.build_options "
-                "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
-            )
-            output = self.query(query, no_checks=1, steps=False).output
-            sanitizers = {
-                "fsanitize=thread": "tsan",
-                "fsanitize=memory": "msan",
-                "fsanitize=address": "asan",
-                "fsanitize=undefined": "ubsan",
-            }
-            build_option = next(
-                (name for flag, name in sanitizers.items() if flag in output), None
-            )
-            current().context.build_options = getattr(
-                current().context, "build_options", {}
-            )
-            current().context.build_options[self.name] = build_option
+            git_branch = self.query(
+                "SELECT value FROM system.build_options WHERE name = 'GIT_BRANCH' FORMAT TabSeparated",
+                no_checks=1,
+                steps=False,
+            ).output.strip()
+
+            current().context.build_options[self.name]["git_branch"] = git_branch
 
     def clickhouse_pid(self):
         """
