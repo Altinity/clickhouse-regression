@@ -269,7 +269,7 @@ def insert_into_function(self):
 
     with When("I insert test data into `s3` table function in Parquet format"):
         node.query(
-            f"INSERT INTO FUNCTION s3('{self.context.uri}{file_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{func_def}', '{compression_type.lower()}') VALUES {','.join(total_values)}",
+            f"INSERT INTO FUNCTION s3(s3_credentials, url='{self.context.uri}{file_name}.Parquet', format='Parquet', structure='{func_def}', compression_method='{compression_type.lower()}') VALUES {','.join(total_values)}",
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
@@ -328,7 +328,7 @@ def select_from_function_manual_cast_types(self):
                     executor=executor,
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')",
+                    s3(s3_credentials, url='{self.context.uri}{table_name}.Parquet', format='Parquet', structure='{table_def}')",
                 )
             join()
 
@@ -373,7 +373,7 @@ def select_from_function_auto_cast_types(self):
                     executor=executor,
                 )(
                     sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')",
+                    s3(s3_credentials, url='{self.context.uri}{table_name}.Parquet', format='Parquet')",
                 )
             join()
 
@@ -441,6 +441,13 @@ def outline(self, compression_type):
     """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function."""
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
+
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
 
     Suite(run=engine)
     Suite(run=function)
