@@ -228,6 +228,4 @@ Design your data pipeline so that:
    2. date >= '2025-01-15' - second segment
    ```
 
-3. **Choose appropriate watermark column**: Use a column that:
-   - Exists in all segments
-   - Represents a natural data boundary (date, timestamp, etc.)
+3. **Choose appropriate watermark column**: Use a column that represents a natural data boundary (for example `date`, `timestamp`, etc.).
