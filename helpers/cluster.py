@@ -24,6 +24,8 @@ from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
 
+NONE = object()
+
 MESSAGES_TO_RETRY = [
     "DB::Exception: ZooKeeper session has been expired",
     "DB::Exception: Connection loss",
@@ -1786,12 +1788,12 @@ class Cluster(object):
         shell.timeout = timeout
         return shell
 
-    def bash(self, node, timeout=None, command="bash --noediting"):
+    def bash(self, node, timeout=NONE, command="bash --noediting"):
         """Returns thread-local bash terminal
         to a specific node.
         :param node: name of the service
         """
-        if timeout is None:
+        if timeout is NONE:
             timeout = 600 if self.cicd else 300
         
         test = current()

@@ -112,7 +112,7 @@ def argparser(parser):
         "--cicd",
         action="store_true",
         default=False,
-        help="Run tests in CI/CD mode. Timeout=600s.",
+        help="Run tests in CI/CD mode.",
     )
 
 def CaptureClusterArgs(func):
