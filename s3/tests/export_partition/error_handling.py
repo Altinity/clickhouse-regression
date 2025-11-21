@@ -17,7 +17,7 @@ def invalid_part_name(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -51,7 +51,7 @@ def same_table(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
 
     with When("I try to export partitions to itself"):
@@ -80,7 +80,7 @@ def local_table(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
 
     with And("I create an empty local table"):
@@ -88,7 +88,7 @@ def local_table(self):
             table_name=destination_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             populate=False,
         )
 
@@ -119,7 +119,7 @@ def disable_export_setting(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -147,7 +147,7 @@ def different_partition_key(self):
             table_name=source_table,
             partition_by="i",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 

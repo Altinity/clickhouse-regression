@@ -30,7 +30,7 @@ def part_exports(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -69,7 +69,7 @@ def duplicate_exports(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 

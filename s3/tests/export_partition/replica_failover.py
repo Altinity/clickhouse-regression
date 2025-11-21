@@ -21,7 +21,7 @@ def create_source_and_destination_tables(
             table_name=source_table_name,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             cluster=cluster,
         )
 
