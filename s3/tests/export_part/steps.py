@@ -167,196 +167,25 @@ def create_s3_table(
 
 
 @TestStep(When)
-def alter_table_drop_constraint(self, table_name, constraint_name, **query_kwargs):
-    """Drop constraint with automatic setup (adds constraint first)."""
+def get_column_type(self, table_name, column_name, node=None):
+    """Get the type of a specific column from a table."""
+    if node is None:
+        node = self.context.node
 
-    with By("Adding constraint"):
-        self.context.node.query(
-            f"ALTER TABLE {table_name} ADD CONSTRAINT {constraint_name} CHECK 1 = 1"
-        )
-
-    with And("Dropping constraint"):
-        helpers.alter.constraint.alter_table_drop_constraint(
-            table_name=table_name, constraint_name=constraint_name, **query_kwargs
-        )
-
-
-@TestStep(When)
-def alter_table_attach_partition(self, table_name, partition_name, **query_kwargs):
-    """Attach partition with automatic setup (detaches partition first)."""
-
-    with By("Detaching partition"):
-        self.context.node.query(
-            f"ALTER TABLE {table_name} DETACH PARTITION {partition_name}"
-        )
-
-    with And("Attaching partition"):
-        helpers.alter.partition.alter_table_attach_partition(
-            table_name=table_name, partition_name=partition_name, **query_kwargs
-        )
-
-
-@TestStep(When)
-def alter_table_attach_partition_from(self, table_name, partition_name, **query_kwargs):
-    """Attach partition from with automatic setup (creates temp table)."""
-
-    with By("Creating temp table"):
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=self.context.node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-
-    with And("Attaching partition from temp table"):
-        helpers.alter.partition.alter_table_attach_partition_from(
-            table_name=table_name,
-            partition_name=partition_name,
-            path_to_backup=f"{table_name}_temp",
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_move_partition_to_table(
-    self, table_name, partition_name, **query_kwargs
-):
-    """Move partition to table with automatic setup (creates temp table)."""
-
-    with By("Creating temp table"):
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=self.context.node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-
-    with And("Moving partition to table"):
-        helpers.alter.partition.alter_table_move_partition_to_table(
-            table_name=f"{table_name}_temp",
-            partition_name=partition_name,
-            destination_table=table_name,
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_clear_index_in_partition(
-    self, table_name, partition_name, index, **query_kwargs
-):
-    """Clear index in partition with automatic setup (adds index first)."""
-
-    with By("Adding index"):
-        self.context.node.query(
-            f"ALTER TABLE {table_name} ADD INDEX {index} i TYPE minmax GRANULARITY 1"
-        )
-
-    with And("Clearing index in partition"):
-        helpers.alter.skipping_index.alter_table_clear_index_in_partition(
-            table_name=table_name,
-            partition_name=partition_name,
-            index=index,
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_unfreeze_partition_with_name(
-    self, table_name, partition_name, backup_name, **query_kwargs
-):
-    """Unfreeze partition with name with automatic setup (freezes partition first)."""
-
-    with By("Freezing partition"):
-        helpers.alter.partition.alter_table_freeze_partition_with_name(
-            table_name=table_name,
-            backup_name=backup_name,
-            partition_name=partition_name,
-        )
-
-    with And("Unfreezing partition"):
-        helpers.alter.partition.alter_table_unfreeze_partition_with_name(
-            table_name=table_name,
-            partition_name=partition_name,
-            backup_name=backup_name,
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_replace_partition(self, table_name, partition_name, **query_kwargs):
-    """Replace partition with automatic setup (creates temp table)."""
-
-    with By("Creating temp table"):
-        partitioned_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=self.context.node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-
-    with And("Replacing partition"):
-        helpers.alter.partition.alter_table_replace_partition(
-            table_name=table_name,
-            partition_name=partition_name,
-            source_table=f"{table_name}_temp",
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_fetch_partition(self, table_name, partition_name, **query_kwargs):
-    """Fetch partition with automatic setup (creates temp replicated table)."""
-
-    with By("Creating temp replicated table"):
-        partitioned_replicated_merge_tree_table(
-            table_name=table_name + "_temp",
-            partition_by="p",
-            columns=get_column_info(node=self.context.node, table_name=table_name),
-            query_settings="storage_policy = 'tiered_storage'",
-        )
-
-    with And("Fetching partition"):
-        helpers.alter.partition.alter_table_fetch_partition(
-            table_name=table_name,
-            partition_name=partition_name,
-            path_to_backup=f"/clickhouse/tables/shard0/{table_name}_temp",
-            **query_kwargs,
-        )
-
-
-@TestStep(When)
-def alter_table_move_partition(self, table_name, partition_name, **query_kwargs):
-    """Move partition with automatic setup (creates temp table)."""
-    moved = False
-    for volume in ["hot", "cold"]:
-        try:
-            helpers.alter.partition.alter_table_move_partition(
-                table_name=table_name,
-                partition_name=partition_name,
-                disk_name=volume,
-                **query_kwargs,
-            )
-            moved = True
-            break
-        except Exception as e:
-            note(f"Failed to move to {volume}: {e}")
-    if not moved:
-        raise Exception("Failed to move partition to any volume")
-
-
-@TestStep(When)
-def optimize_table(self, table_name):
-    """Optimize a table using alter."""
-
-    self.context.node.query(
-        f"SYSTEM START MERGES {table_name}",
+    result = node.query(
+        f"""
+        SELECT type
+        FROM system.columns
+        WHERE database = currentDatabase()
+          AND table = '{table_name}'
+          AND name = '{column_name}'
+        LIMIT 1
+        """,
         exitcode=0,
+        steps=True,
     )
 
-    with By(f"Optimizing {table_name}"):
-        helpers.queries.optimize(
-            node=self.context.node, table_name=table_name, final=True
-        )
+    return result.output.strip()
 
 
 @TestStep(When)
@@ -451,6 +280,15 @@ def wait_for_all_merges_to_complete(self, node, table_name=None):
 
 
 @TestStep(When)
+def start_merges(self, table_name, node=None):
+    """Start merges on a given table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"SYSTEM START MERGES {table_name}", exitcode=0)
+
+
+@TestStep(When)
 def optimize_partition(self, table_name, partition, node=None):
     """Optimize a partition of a table."""
 
@@ -460,10 +298,7 @@ def optimize_partition(self, table_name, partition, node=None):
     if partition == "":
         partition = get_random_partition(table_name=table_name, node=node)
 
-    node.query(
-        f"SYSTEM START MERGES {table_name}",
-        exitcode=0,
-    )
+    start_merges(table_name=table_name, node=node)
 
     node.query(
         f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
