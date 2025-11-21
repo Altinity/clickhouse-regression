@@ -47,7 +47,7 @@ In this case, the engine will automatically detect the columns and types from th
 - `predicate_n` must be an expression that can be evaluated on the table columns. The engine adds it to the segment's query with an additional `AND`, so expressions like `event_date >= '2025-09-01'` or `id BETWEEN 10 AND 15` are typical.
 
 
-## Enable the engine
+### Enable the engine
 
 The Hybrid engine is experimental. Enable it per session (or in the user profile) before creating tables:
 
@@ -55,7 +55,7 @@ The Hybrid engine is experimental. Enable it per session (or in the user profile
 SET allow_experimental_hybrid_table = 1;
 ```
 
-### Automatic Type Alignment
+## Automatic Type Alignment
 
 Segments of tables with hybrid engine can evolve independently, so the same logical column may use different physical types across segments. For example:
 - MergeTree segment: `Decimal`
