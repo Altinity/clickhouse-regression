@@ -265,4 +265,4 @@ def feature(self):
     Scenario(run=wide_and_compact_parts)
     if self.context.stress:
         Scenario(run=large_part)
-    # Scenario(run=export_setting) # This test fails because of an actual bug in the export setting
+    Scenario(run=export_setting)

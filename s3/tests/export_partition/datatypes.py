@@ -21,7 +21,7 @@ def insert_all_datatypes(self, table_name, rows_per_part=1, num_parts=1, node=No
 
 
 @TestStep(Given)
-def create_merge_tree_all_valid_partition_key_types(
+def create_replicated_merge_tree_all_valid_partition_key_types(
     self, column_name, cluster=None, node=None, rows_per_part=1
 ):
     """Create a MergeTree table with all valid partition key types and both wide and compact parts."""
@@ -31,12 +31,12 @@ def create_merge_tree_all_valid_partition_key_types(
 
     with By("creating a MergeTree table with all data types"):
         table_name = f"table_{getuid()}"
-        create_merge_tree_table(
+        create_replicated_merge_tree_table(
             table_name=table_name,
             columns=valid_partition_key_types_columns(),
             partition_by=column_name,
             cluster=cluster,
-            stop_merges=True,
+            stop_merges=False,
             query_settings=f"min_rows_for_wide_part=10",
         )
 
@@ -58,7 +58,7 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
     with Given(
         f"I create a source table with valid partition key type {partition_key_type} and empty S3 table"
     ):
-        table_name = create_merge_tree_all_valid_partition_key_types(
+        table_name = create_replicated_merge_tree_all_valid_partition_key_types(
             column_name=partition_key_type,
             rows_per_part=rows_per_part,
         )
@@ -76,18 +76,21 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
             node=self.context.node,
         )
 
-    with And("I read data from both tables"):
-        source_data = select_all_ordered(
-            table_name=table_name, node=self.context.node, order_by=partition_key_type
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name,
-            node=self.context.node,
-            order_by=partition_key_type,
-        )
+    with Then("I compare the source and destination data"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    order_by=partition_key_type,
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    order_by=partition_key_type,
+                )
 
-    with Then("They should be the same"):
-        assert source_data == destination_data, error()
+                assert source_data == destination_data, error()
 
 
 @TestSketch(Scenario)

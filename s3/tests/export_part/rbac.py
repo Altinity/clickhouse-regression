@@ -78,28 +78,27 @@ def alter_insert_privilege(self):
 
 
 @TestScenario
-def kill_privilege(self):
-    """Check that user need not have KILL QUERY privilege to kill their own query,
-    but need to have KILL QUERY privilege to kill other user's query."""
+def kill_export(self):
+    """Check that KILL queries do not break exports."""
 
-    with Given("I create a populated source table and 2 empty S3 tables"):
-        source_table = "source_" + getuid()
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
         partitioned_merge_tree_table(
             table_name=source_table,
             partition_by="p",
+            number_of_parts=10,
+            number_of_partitions=10,
             columns=default_columns(),
             stop_merges=True,
         )
-        s3_table_name_1 = create_s3_table(table_name="s3_1", create_new_bucket=True)
-        s3_table_name_2 = create_s3_table(table_name="s3_2", create_new_bucket=True)
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I create a user and query id"):
         user_name = "user_" + getuid()
-        query_id_1 = str(uuid.uuid4())
-        query_id_2 = str(uuid.uuid4())
 
     with And("I slow the network"):
-        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with user(node=self.context.node, name=user_name):
         with When(
@@ -107,61 +106,39 @@ def kill_privilege(self):
         ):
             alter_privileges(node=self.context.node, user=user_name, table=source_table)
             insert_privileges(
-                node=self.context.node, user=user_name, table=s3_table_name_1
+                node=self.context.node, user=user_name, table=s3_table_name
             )
             select_privileges(
                 node=self.context.node, user=user_name, table="system.processes"
             )
 
-        with And("I export parts"):
-            export_parts(
-                source_table=source_table,
-                destination_table=s3_table_name_1,
-                node=self.context.node,
-                settings=[("user", "default"), ("query_id", query_id_1)],
+        with When(f"I export parts to the S3 table in parallel with kill queries"):
+            for _ in range(100):
+                query_id = str(uuid.uuid4())
+                Step(test=export_parts, parallel=True)(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                    node=self.context.node,
+                    parts=[get_random_part(table_name=source_table)],
+                    settings=[("user", user_name), ("query_id", query_id)],
+                )
+                Step(test=kill_query, parallel=True)(
+                    node=self.context.node,
+                    query_id=query_id,
+                    settings=[("user", user_name)],
+                )
+            join()
+
+        with And("I wait for all exports and merges to complete"):
+            wait_for_all_exports_to_complete(node=self.context.node)
+            wait_for_all_merges_to_complete(
+                node=self.context.node, table_name=source_table
             )
 
-        with And("I kill the query"):
-            output = kill_query(
-                node=self.context.node,
-                query_id=query_id_1,
-                settings=[("user", user_name)],
-            )
-            note(output.output)
-            pause()
-
-        # with And("I export parts from default user"):
-        #     export_parts(
-        #         source_table=source_table,
-        #         destination_table=s3_table_name_2,
-        #         node=self.context.node,
-        #         settings=[("user", "default"), ("query_id", query_id_2)],
-        #     )
-
-        # with And("I kill the query"):
-        #     kill_query(
-        #         node=self.context.node,
-        #         query_id=query_id_2,
-        #         settings=[("user", user_name)],
-        #     )
-
-        with Then("Destination 1 data should be a subset of source data"):
-            source_data = select_all_ordered(
-                table_name=source_table,
-                node=self.context.node,
-            )
-            destination_data = select_all_ordered(
-                table_name=s3_table_name_1,
-                node=self.context.node,
-            )
-            assert set(source_data) >= set(destination_data), error()
-            pause()
-
-        # with And("Destination 2 should match source"):
-        #     source_matches_destination(
-        #         source_table=source_table,
-        #         destination_table=s3_table_name_2,
-        #     )
+        with Then("Check successfully exported parts are present in destination"):
+            part_log = get_part_log(node=self.context.node, table_name=source_table)
+            destination_parts = get_s3_parts(table_name=s3_table_name)
+            assert part_log == destination_parts, error()
 
 
 @TestFeature
@@ -171,4 +148,4 @@ def feature(self):
     """Test RBAC for export part."""
 
     Scenario(run=alter_insert_privilege)
-    Scenario(run=kill_privilege)
+    Scenario(run=kill_export)
