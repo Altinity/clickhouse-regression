@@ -46,6 +46,23 @@ xfails = {
             check_clickhouse_version("<25.3"),
         ),
     ],
+    "/version/altinity/error message/": [
+        (
+            Fail,
+            "Not expected to pass on PR builds",
+            lambda test: test.context.build_options["clickhouse1"]["git_branch"]
+            == "HEAD",
+            ".*Expected message '\(altinity build\)' not found in log.*",
+        ),
+    ],
+    "/version/altinity/version format/": [
+        (
+            Fail,
+            "Not expected to pass on PR builds",
+            lambda test: test.context.build_options["clickhouse1"]["git_branch"]
+            == "HEAD",
+        ),
+    ],
 }
 
 
