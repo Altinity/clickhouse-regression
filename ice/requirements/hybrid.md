@@ -8,7 +8,7 @@ sidebar_position: 11
 
 # Hybrid table engine
 
-The Hybrid table engine builds on top of the [Distributed](./distributed.md) table engine. It lets you expose several data sources as one logical table and assign every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while you duplicate or migrate data across clusters, storage types, or formats.
+The Hybrid table engine builds on top of the [Distributed](./distributed.md) table engine. It allows exposing several data sources as one logical table and assigning every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while duplicating or migrating data across clusters, storage types, or formats.
 
 Typical use cases include:
 
@@ -61,7 +61,7 @@ Segments of tables with hybrid engine can evolve independently, so the same logi
 - MergeTree segment: `Decimal`
 - Iceberg segment: `Int`
 
-When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents CANNOT_CONVERT_TYPE errors.
+When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents `CANNOT_CONVERT_TYPE` errors.
 
 **Important Notes:**
 - Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
@@ -77,7 +77,7 @@ A **watermark** is a routing rule that determines which segments serve each row.
 
 **Important:** Predicates can overlap, meaning a single row may match multiple predicates and be served from multiple segments. If you want to ensure each row is read from exactly one source, use mutually exclusive predicates (for example, `date >= '2025-01-01'` and `date < '2025-01-01'`).
 
-**Predicate expression:** A SQL expression evaluated on table columns. For example: `date >= '2025-01-01'`, `id BETWEEN 10 AND 15`, `region = 'US'`. 
+**Predicate expression** is a SQL expression evaluated on table columns. For example: `date >= '2025-01-01'`, `id BETWEEN 10 AND 15`, `region = 'US'`. 
 
 
 ### Typical Pattern
@@ -94,16 +94,6 @@ ENGINE = Hybrid(
 - **Hot data** (`date >= '2025-01-01'`) → Served from MergeTree cluster for low-latency queries
 - **Cold data** (`date < '2025-01-01'`) → Served from object storage (S3/Iceberg) for cost efficiency
 
-### Data Migration Timeline
-
-```
-Time →
-MergeTree (hot)        Warm copy zone           Iceberg (cold)
-│───────────│──────────────│─────────────────────────────────
-keep ~5 days   export 5→7d     persistent archive
-                  ↑
-             watermark moves
-```
 
 ### Updating watermark
 
@@ -209,23 +199,25 @@ Because the predicates are applied inside every segment, queries such as `ORDER 
 ### Data Pipeline Design
 
 Design your data pipeline so that:
-1. New data is inserted into the first (hot) segment
-2. A background process exports data from hot to cold storage
-3. After verification, update the Hybrid table watermark to route queries to cold storage for older data
+1. New data is inserted into the first (hot) segment.
+2. A background process exports data from hot to cold storage.
+3. After verification, update the Hybrid table watermark to route queries to cold storage for older data.
 
 ### Schema Design
 
 1. **Align schemas across segments**: While auto-casting can handle differences, matching schemas eliminates overhead and potential issues.
 
 2. **Use mutually exclusive predicates**: Ensure predicates don't overlap to prevent reading the same row from multiple segments:
+   - Good: Mutually exclusive
+
    ```
-   -- Good: Mutually exclusive
-   1. date >= '2025-01-01' - first segment
-   2. date < '2025-01-01' - second segment
-   
-   -- Bad: Overlapping (may cause duplicates)
-   1. date >= '2025-01-01' - first segment
-   2. date >= '2025-01-15' - second segment
+   1. date >= '2025-01-01' - predicate for first segment
+   2. date < '2025-01-01' - predicate for second segment
+   ```
+   - Bad: Overlapping (may cause duplicates)
+   ```
+   1. date >= '2025-01-01' - predicate for first segment
+   2. date >= '2025-01-15' - predicate for second segment
    ```
 
 3. **Choose appropriate watermark column**: Use a column that represents a natural data boundary (for example `date`, `timestamp`, etc.).
