@@ -77,9 +77,7 @@ A **watermark** is a routing rule that determines which segments serve each row.
 
 **Important:** Predicates can overlap, meaning a single row may match multiple predicates and be served from multiple segments. If you want to ensure each row is read from exactly one source, use mutually exclusive predicates (for example, `date >= '2025-01-01'` and `date < '2025-01-01'`).
 
-**Predicate complexity:**
-- Simple predicates are recommended: `date >= '2025-01-01'`, `id BETWEEN 10 AND 15`, `region = 'US'`
-- Complex expressions with functions, operators, and column references are supported: `toYYYYMM(date) >= 202501 AND region IN ('US', 'EU')`, `timestamp >= now() - INTERVAL 7 DAY` 
+**Predicate expression:** A SQL expression evaluated on table columns. For example: `date >= '2025-01-01'`, `id BETWEEN 10 AND 15`, `region = 'US'`. 
 
 
 ### Typical Pattern
