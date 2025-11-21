@@ -24,6 +24,8 @@ from helpers.common import check_clickhouse_version, current_cpu
 
 MINIMUM_COMPOSE_VERSION = "2.23.1"
 
+NONE = object()
+
 MESSAGES_TO_RETRY = [
     "DB::Exception: ZooKeeper session has been expired",
     "DB::Exception: Connection loss",
@@ -1495,6 +1497,7 @@ class Cluster(object):
         use_specific_version=False,
         rm_instances_files=True,
         reuse_env=False,
+        cicd=False,
     ):
         self._bash = {}
         self._control_shell = None
@@ -1517,6 +1520,7 @@ class Cluster(object):
         self.use_zookeeper_nodes = use_zookeeper_nodes
         self.use_specific_version = use_specific_version
         self.reuse_env = reuse_env
+        self.cicd = cicd
         if frame is None:
             frame = inspect.currentframe().f_back
         caller_dir = current_dir(frame=frame)
@@ -1784,11 +1788,14 @@ class Cluster(object):
         shell.timeout = timeout
         return shell
 
-    def bash(self, node, timeout=300, command="bash --noediting"):
+    def bash(self, node, timeout=NONE, command="bash --noediting"):
         """Returns thread-local bash terminal
         to a specific node.
         :param node: name of the service
         """
+        if timeout is NONE:
+            timeout = 600 if self.cicd else 300
+        
         test = current()
 
         current_thread = threading.current_thread()
@@ -2322,6 +2329,7 @@ def create_cluster(
     use_zookeeper_nodes=False,
     use_specific_version=False,
     reuse_env=False,
+    cicd=False,
 ) -> Cluster:  # type: ignore
     """Create docker compose cluster."""
     with Cluster(
@@ -2344,5 +2352,6 @@ def create_cluster(
         use_zookeeper_nodes=use_zookeeper_nodes,
         use_specific_version=use_specific_version,
         reuse_env=reuse_env,
+        cicd=cicd,
     ) as cluster:
         yield cluster

@@ -370,3 +370,10 @@ def generate_bcrypt_hash(password):
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
     return hashed
+
+def user_exists(node, user_name):
+    """Check if a user exists in system.users and return True if found, False otherwise."""
+    result = node.query(
+        f"SELECT name FROM system.users WHERE name='{user_name}'",
+    ).output.strip()
+    return result == user_name
