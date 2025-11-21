@@ -73,7 +73,14 @@ When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experiment
 
 ## Watermark and data lifecycle
 
-Hybrid tables use a **watermark** pattern to determine which segment serves each row. The watermark is a deterministic rule encoded in the segment predicates.
+A **watermark** is a routing rule that determines which segments serve each row. In Hybrid tables, the watermark is encoded as predicates (SQL expressions) assigned to each segment. When a query executes, the engine evaluates each row against all segment predicates. A row that matches a predicate will be served from that segment's underlying storage.
+
+**Important:** Predicates can overlap, meaning a single row may match multiple predicates and be served from multiple segments. If you want to ensure each row is read from exactly one source, use mutually exclusive predicates (for example, `date >= '2025-01-01'` and `date < '2025-01-01'`).
+
+**Predicate complexity:**
+- Simple predicates are recommended: `date >= '2025-01-01'`, `id BETWEEN 10 AND 15`, `region = 'US'`
+- Complex expressions with functions, operators, and column references are supported: `toYYYYMM(date) >= 202501 AND region IN ('US', 'EU')`, `timestamp >= now() - INTERVAL 7 DAY` 
+
 
 ### Typical Pattern
 
