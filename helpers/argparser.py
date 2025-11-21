@@ -108,6 +108,12 @@ def argparser(parser):
         help="Do not tear down the environment after the test.",
     )
 
+    parser.add_argument(
+        "--cicd",
+        action="store_true",
+        default=False,
+        help="Run tests in CI/CD mode.",
+    )
 
 def CaptureClusterArgs(func):
     """
@@ -154,6 +160,7 @@ def CaptureClusterArgs(func):
         collect_service_logs,
         thread_fuzzer,
         reuse_env,
+        cicd,
         **kwargs
     ):
         cluster_args = {
@@ -167,6 +174,7 @@ def CaptureClusterArgs(func):
             "collect_service_logs": collect_service_logs,
             "thread_fuzzer": thread_fuzzer,
             "reuse_env": reuse_env,
+            "cicd": cicd,
         }
         return func(self, cluster_args=cluster_args, **kwargs)
 
