@@ -35,17 +35,17 @@ You must pass at least two arguments – the first table function and its predic
 You can also skip the column definition:
 ```sql
 CREATE TABLE [IF NOT EXISTS] [db.]table_name
-ENGINE = Hybrid(table_function_1, predicate_1 [, table_function_2, predicate_2 ...])
+ENGINE = Hybrid(table_function_1, predicate_1 [, table_function_n, predicate_n ...])
 ```
 
 In this case, the engine will automatically detect the columns and types from the first table function.
 
-### Arguments and behaviour
+### Arguments
 
-- `table_function_n` must be a valid table function (for example `remote`, `remoteSecure`, `cluster`, `clusterAllReplicas`, `s3Cluster`) or a fully qualified table name (`database.table`). The first argument must be a table function—such as `remote` or `cluster`—because it instantiates the underlying `Distributed` storage.
+- `table_function_1` must be a table function—such as `remote` or `cluster`—because it instantiates the underlying `Distributed` storage.
+- `table_function_n` must be a valid table function (for example `remote`, `remoteSecure`, `cluster`, `clusterAllReplicas`, `s3Cluster`) or a fully qualified table name (`database.table`).
 - `predicate_n` must be an expression that can be evaluated on the table columns. The engine adds it to the segment's query with an additional `AND`, so expressions like `event_date >= '2025-09-01'` or `id BETWEEN 10 AND 15` are typical.
-- The query planner picks the same processing stage for every segment as it does for the base `Distributed` plan, so remote aggregation, ORDER BY pushdown, `skip_unused_shards`, and the legacy/analyzer execution modes behave the same way.
-- Align schemas across the segments. ClickHouse builds a common header; if the physical types differ you may need to add casts on one side or in the query, just as you would when reading from heterogeneous replicas.
+
 
 ## Enable the engine
 
@@ -57,16 +57,14 @@ SET allow_experimental_hybrid_table = 1;
 
 ### Automatic Type Alignment
 
-Hybrid segments can evolve independently, so the same logical column may use different physical types across segments. For example:
-- MergeTree segment: `UInt64`
-- Iceberg segment: `Decimal128`
+Segments of tables with hybrid engine can evolve independently, so the same logical column may use different physical types across segments. For example:
+- MergeTree segment: `Decimal`
+- Iceberg segment: `Int`
 
 When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents header mismatches without having to edit each query.
 
 **Important Notes:**
 - Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
-- Casts are applied to both sides when types differ (even if one side already has the correct type)
-- For aggregate functions, casts must be applied before aggregation, not after
 - Manual casts in your SQL queries will still work but may result in double-casting
 
 **When to use:**
