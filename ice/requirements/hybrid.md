@@ -61,7 +61,7 @@ Segments of tables with hybrid engine can evolve independently, so the same logi
 - MergeTree segment: `Decimal`
 - Iceberg segment: `Int`
 
-When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents header mismatches without having to edit each query.
+When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents CANNOT_CONVERT_TYPE errors.
 
 **Important Notes:**
 - Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
