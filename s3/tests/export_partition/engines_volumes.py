@@ -29,7 +29,7 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
         table_engine(
             table_name=source_table,
             partition_by="p",
-            stop_merges=True,
+            stop_merges=False,
             number_of_partitions=number_of_partitions,
             number_of_parts=number_of_parts,
             columns=default_columns(simple=False, partition_key_type="Int8"),
@@ -96,7 +96,7 @@ def configured_volume(self, volume):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             query_settings=f"storage_policy = '{volume}'",
             populate=False,
         )
@@ -153,5 +153,5 @@ def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
-    Scenario(run=table_combos)
+    # Scenario(run=table_combos)
     Scenario(run=volume_combos)

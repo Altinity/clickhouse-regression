@@ -22,7 +22,7 @@ def export_setting(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name1 = create_s3_table(table_name="s3_1", create_new_bucket=True)
         s3_table_name2 = create_s3_table(table_name="s3_2", create_new_bucket=True)
@@ -68,7 +68,7 @@ def mismatched_columns(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(
             table_name="s3",
@@ -99,7 +99,7 @@ def basic_table(self):
             table_name=f"source_{getuid()}",
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             cluster="replicated_cluster",
         )
         s3_table = create_s3_table(table_name="s3", create_new_bucket=True)
@@ -164,7 +164,7 @@ def no_partition_by(self):
             table_name=source_table,
             partition_by="tuple()",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True, partition_by="tuple()"
@@ -220,7 +220,7 @@ def large_export(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             number_of_parts=100,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)

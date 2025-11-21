@@ -20,7 +20,7 @@ def basic_concurrent_export(self, threads):
                 table_name=source_table,
                 partition_by="p",
                 columns=default_columns(),
-                stop_merges=True,
+                stop_merges=False,
             )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -56,7 +56,7 @@ def packet_delay(self, delay_ms):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -89,7 +89,7 @@ def packet_loss(self, percent_loss):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -122,7 +122,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -159,7 +159,7 @@ def packet_corruption(self, percent_corrupt):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -194,7 +194,7 @@ def packet_duplication(self, percent_duplicated):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -229,7 +229,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -266,7 +266,7 @@ def packet_rate_limit(self, rate_mbit):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -299,7 +299,7 @@ def concurrent_insert(self):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             populate=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)

@@ -18,7 +18,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            stop_merges=True,
+            stop_merges=False,
             populate=False,
             cluster=cluster,
         )

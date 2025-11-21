@@ -733,7 +733,7 @@ def concurrent_export(
             table_name=source_table,
             partition_by="p",
             columns=columns_with_extras,
-            stop_merges=True,
+            stop_merges=False,
             number_of_partitions=number_of_partitions,
         )
 
