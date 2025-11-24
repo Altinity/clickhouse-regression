@@ -622,6 +622,26 @@ def get_num_active_exports(self, node=None, table_name=None):
 
 
 @TestStep(When)
+def get_average_export_duration(self, node=None, table_name=None):
+    """Get the average duration of the exports from the system.part_log table of a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT avg(duration_ms) FROM system.part_log WHERE event_type = 'ExportPart'"
+    else:
+        query = f"SELECT avg(duration_ms) FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}'"
+
+    average_duration = node.query(
+        query,
+        exitcode=0,
+        steps=True,
+    ).output.strip()
+
+    return float(average_duration)
+
+
+@TestStep(When)
 def insert_into_table(self, table_name, node=None):
     """Insert values into a table."""
 
