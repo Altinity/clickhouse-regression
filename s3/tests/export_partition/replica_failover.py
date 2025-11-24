@@ -179,6 +179,7 @@ def export_with_replica_failover(self):
 
 @TestFeature
 @Name("replica failover")
+@Requirements(RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption("1.0"))
 def feature(self):
     """Test export partition recovery when replica nodes fail during export."""
 

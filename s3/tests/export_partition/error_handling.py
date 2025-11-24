@@ -4,10 +4,11 @@ from s3.tests.export_partition.steps import export_partitions
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from helpers.common import getuid
-from s3.requirements.export_part import *
+from s3.requirements.export_partition import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition("1.0"))
 def invalid_part_name(self):
     """Check that exporting a non-existent partition returns the correct error."""
 
@@ -41,7 +42,7 @@ def invalid_part_name(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Restrictions_SameTable("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_SameTable("1.0"))
 def same_table(self):
     """Check exporting partitions where source and destination tables are the same."""
 
@@ -70,6 +71,7 @@ def same_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_LocalTable("1.0"))
 def local_table(self):
     """Test exporting partitions to a local table."""
 
@@ -109,7 +111,7 @@ def local_table(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled("1.0"))
 def disable_export_setting(self):
     """Check that exporting partitions without the export setting set returns the correct error."""
 
@@ -138,6 +140,7 @@ def disable_export_setting(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("1.0"))
 def different_partition_key(self):
     """Check exporting partitions with a different partition key returns the correct error."""
 
@@ -166,7 +169,12 @@ def different_partition_key(self):
 
 @TestFeature
 @Name("error handling")
-@Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Restrictions_SameTable("1.0"),
+    RQ_ClickHouse_ExportPartition_Restrictions_LocalTable("1.0"),
+    RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled("1.0"),
+)
 def feature(self):
     """Check correct error handling when exporting partitions."""
 

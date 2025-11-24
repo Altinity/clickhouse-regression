@@ -11,6 +11,7 @@ from helpers.alter import (
 from helpers.common import getuid
 from helpers.create import partitioned_replicated_merge_tree_table
 from helpers.queries import *
+from s3.requirements.export_partition import *
 from s3.tests.export_partition.steps import (
     export_partitions,
     create_s3_table,
@@ -287,6 +288,7 @@ def alter_rename_column_during_export(self, delay_ms=100):
 
 @TestFeature
 @Name("alter destination during export")
+@Requirements(RQ_ClickHouse_ExportPartition_SchemaChangeIsolation("1.0"))
 def feature(self):
     """Check what happens when we perform ALTER operations on destination table during EXPORT PARTITION."""
 
