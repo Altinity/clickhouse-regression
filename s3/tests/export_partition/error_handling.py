@@ -30,7 +30,7 @@ def invalid_part_name(self):
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
-            parts=[invalid_part_name],
+            partitions=[invalid_part_name],
             exitcode=1,
         )
 
