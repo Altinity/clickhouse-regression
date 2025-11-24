@@ -1,9 +1,11 @@
 import hashlib
 from contextlib import contextmanager
+from testflows.asserts import error
 
 from testflows.core import *
 
 import rbac.helper.errors as errors
+from rbac.helper.common import user_exists
 from rbac.requirements import *
 
 
@@ -119,6 +121,38 @@ def feature(self, node="clickhouse1"):
                         exitcode=exitcode,
                         message=message,
                     )
+            finally:
+                with Finally(f"I cleanup target name {new_user}"):
+                    node.query(f"DROP USER IF EXISTS {new_user}")
+            del new_user
+
+    with Scenario(
+        "I alter user to rename, target unavailable, verify users unchanged after exception",
+        requirements=[RQ_SRS_006_RBAC_User_Alter_Rename("1.0")],
+    ):
+        old_user = "user17"
+        new_user = "user18"
+        
+        with setup(old_user):
+            try:
+                with Given(f"Ensure target name {new_user} is NOT available"):
+                    node.query(f"CREATE USER IF NOT EXISTS {new_user}")
+                with And(f"Checking that {old_user} and {new_user} were created"):
+                    assert user_exists(node, old_user), error(f"The {old_user} was not created")
+                    assert user_exists(node, new_user), error(f"The {new_user} was not created")
+                
+                with When(f"I try to rename to {new_user}"):
+                    exitcode, message = errors.cannot_rename_user(
+                        name=old_user, name_new=new_user
+                    )
+                    node.query(
+                        f"ALTER USER {old_user} RENAME TO {new_user}",
+                        exitcode=exitcode,
+                        message=message,
+                    )
+                with Then(f"Checking that {old_user} and {new_user} were not renamed"):
+                    assert user_exists(node, old_user), error(f"The {old_user} was renamed when it should not have been")
+                    assert user_exists(node, new_user), error(f"The {new_user} was changed when it should not have been")
             finally:
                 with Finally(f"I cleanup target name {new_user}"):
                     node.query(f"DROP USER IF EXISTS {new_user}")
