@@ -1257,31 +1257,13 @@ RQ_ClickHouse_ExportPartition_Security_Network = Requirement(
         "\n"
         "Secure network connections prevent unauthorized access and ensure data integrity during export operations.\n"
         "\n"
-    ),
-    link=None,
-    level=2,
-    num="24.3",
-)
-
-RQ_ClickHouse_ExportPartition_Security_CredentialManagement = Requirement(
-    name="RQ.ClickHouse.ExportPartition.Security.CredentialManagement",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL use secure credential storage for export operations and SHALL avoid exposing credentials in logs or error messages.\n"
-        "\n"
-        "Proper credential management prevents unauthorized access to destination storage systems and protects sensitive authentication information.\n"
-        "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "\n"
     ),
     link=None,
     level=2,
-    num="24.4",
+    num="24.3",
 )
 
 SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
@@ -1500,11 +1482,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPartition.Security.Network", level=2, num="24.3"
         ),
-        Heading(
-            name="RQ.ClickHouse.ExportPartition.Security.CredentialManagement",
-            level=2,
-            num="24.4",
-        ),
     ),
     requirements=(
         RQ_ClickHouse_ExportPartition_S3,
@@ -1559,7 +1536,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Security_RBAC,
         RQ_ClickHouse_ExportPartition_Security_DataEncryption,
         RQ_ClickHouse_ExportPartition_Security_Network,
-        RQ_ClickHouse_ExportPartition_Security_CredentialManagement,
     ),
     content=r"""
 # SRS-016 ClickHouse Export Partition to S3
@@ -1648,7 +1624,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 24.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
     * 24.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
     * 24.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
-    * 24.4 [RQ.ClickHouse.ExportPartition.Security.CredentialManagement](#rqclickhouseexportpartitionsecuritycredentialmanagement)
 
 ## Introduction
 
@@ -2392,13 +2367,6 @@ version: 1.0
 [ClickHouse] SHALL use secure connections to destination storage during export operations. For S3-compatible storage, connections must use HTTPS. For other storage types, secure protocols appropriate to the storage system must be used.
 
 Secure network connections prevent unauthorized access and ensure data integrity during export operations.
-
-### RQ.ClickHouse.ExportPartition.Security.CredentialManagement
-version: 1.0
-
-[ClickHouse] SHALL use secure credential storage for export operations and SHALL avoid exposing credentials in logs or error messages.
-
-Proper credential management prevents unauthorized access to destination storage systems and protects sensitive authentication information.
 
 
 [ClickHouse]: https://clickhouse.com
