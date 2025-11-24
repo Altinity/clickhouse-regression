@@ -18,6 +18,7 @@
     * 5.1 [RQ.ClickHouse.ExportPartition.ClustersNodes](#rqclickhouseexportpartitionclustersnodes)
     * 5.2 [RQ.ClickHouse.ExportPartition.Shards](#rqclickhouseexportpartitionshards)
     * 5.3 [RQ.ClickHouse.ExportPartition.Versions](#rqclickhouseexportpartitionversions)
+    * 5.4 [RQ.ClickHouse.ExportPartition.LegacyTables](#rqclickhouseexportpartitionlegacytables)
 * 6 [Supported source part storage types](#supported-source-part-storage-types)
     * 6.1 [RQ.ClickHouse.ExportPartition.SourcePartStorage](#rqclickhouseexportpartitionsourcepartstorage)
 * 7 [Storage policies and volumes](#storage-policies-and-volumes)
@@ -42,10 +43,12 @@
     * 13.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
     * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
     * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
+    * 13.7 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
 * 14 [Network resilience](#network-resilience)
     * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
     * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
     * 14.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
+    * 14.4 [RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption](#rqclickhouseexportpartitionnetworkresiliencekeeperinterruption)
 * 15 [Export operation restrictions](#export-operation-restrictions)
     * 15.1 [Preventing same table exports](#preventing-same-table-exports)
         * 15.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
@@ -211,6 +214,19 @@ version: 1.0
 [ClickHouse] SHALL support exporting partitions from source tables that are stored on servers with different ClickHouse versions than the destination server.
 
 Users can export partitions from tables on servers with older ClickHouse versions to tables on servers with newer versions, enabling data migration and version upgrades.
+
+### RQ.ClickHouse.ExportPartition.LegacyTables
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions from ReplicatedMergeTree tables that were created in ClickHouse versions that did not have the export partition feature, where the ZooKeeper structure does not contain an exports directory.
+
+The system SHALL:
+* Automatically create the necessary ZooKeeper structure (including the exports directory) when attempting to export from legacy tables
+* Handle the absence of export-related metadata gracefully without errors
+* Support export operations on tables created before the export partition feature was introduced
+* Maintain backward compatibility with existing replicated tables regardless of when they were created
+
+This ensures that users can export partitions from existing production tables without requiring table recreation or migration, even if those tables were created before the export partition feature existed.
 
 ## Supported source part storage types
 
@@ -427,6 +443,34 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
          export_merge_tree_partition_manifest_ttl = 360
 ```
 
+### RQ.ClickHouse.ExportPartition.QueryCancellation
+version: 1.0
+
+[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.
+
+The system SHALL:
+* Allow users to abort export partition operations that are in progress using `KILL QUERY`
+* Stop exporting partitions that have not yet been exported when the query is cancelled
+* Clean up any partial export state when a query is cancelled
+* Return an appropriate error or cancellation message to the user
+* Not leave orphaned export operations in the system after query cancellation
+* Allow users to retry the export operation after cancellation if needed
+
+Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.
+
+For example,
+
+```sql
+-- Start export in one session
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1;
+
+-- Cancel the export in another session
+KILL QUERY WHERE query_id = '<query_id>';
+```
+
 ## Network resilience
 
 ### RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues
@@ -469,6 +513,13 @@ version: 1.0
 * Ensuring that parts already exported are not re-exported after node restart
 
 Node failures are common in distributed systems, and export operations must be able to recover and continue without data loss or duplication.
+
+### RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption
+version: 1.0
+
+[ClickHouse] SHALL handle ClickHouse Keeper interruptions during the initial execution of `EXPORT PARTITION` queries.
+
+The system must handle these interruptions gracefully to ensure export operations can complete successfully.
 
 ## Export operation restrictions
 
