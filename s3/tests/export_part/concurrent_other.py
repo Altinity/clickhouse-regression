@@ -4,6 +4,7 @@ from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
+from s3.tests.export_part import alter_wrappers
 
 
 @TestScenario
@@ -225,7 +226,7 @@ def merge_parts(self):
 
 def get_actions():
     return [
-        (optimize_partition, {"partition": ""}),
+        (alter_wrappers.optimize_partition, {}),
         (select_all_ordered, {}),
         (create_partitions_with_random_uint64, {}),
     ]
