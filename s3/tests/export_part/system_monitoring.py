@@ -266,7 +266,9 @@ def max_bandwidth(self):
     with And("I record the average duration of the exports"):
         wait_for_all_exports_to_complete(table_name=source_table)
         flush_log(table_name="system.part_log")
-        avg_duration_unlimited_bandwidth = get_average_export_duration(table_name=source_table)
+        avg_duration_unlimited_bandwidth = get_average_export_duration(
+            table_name=source_table
+        )
 
     with When("I set the max bandwidth to 1024 bytes per second"):
         config_d.create_and_add(
@@ -297,14 +299,16 @@ def max_bandwidth(self):
     with And("I record the duration of the export"):
         wait_for_all_exports_to_complete(table_name=source_table)
         flush_log(table_name="system.part_log")
-        avg_duration_limited_bandwidth = get_average_export_duration(table_name=source_table)
+        avg_duration_limited_bandwidth = get_average_export_duration(
+            table_name=source_table
+        )
 
     with Then(
         "I check that the duration of the export with restricted bandwidth is more than 10 times greater"
     ):
-        assert avg_duration_limited_bandwidth > avg_duration_unlimited_bandwidth * 10, error()
-        note(f"Average duration with unlimited bandwidth: {avg_duration_unlimited_bandwidth}")
-        note(f"Average duration with limited bandwidth: {avg_duration_limited_bandwidth}")
+        assert (
+            avg_duration_limited_bandwidth > avg_duration_unlimited_bandwidth * 10
+        ), error()
 
 
 @TestFeature

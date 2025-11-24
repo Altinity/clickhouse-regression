@@ -393,7 +393,9 @@ def stress(self, alter_function, kwargs):
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
                 )
-                Step(test=alter_function, parallel=True, executor=executor)(table_name=source_table, **kwargs)
+                Step(test=alter_function, parallel=True, executor=executor)(
+                    table_name=source_table, **kwargs
+                )
             join()
 
     with And("I wait for all background tasks to complete"):

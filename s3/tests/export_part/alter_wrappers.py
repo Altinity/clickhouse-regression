@@ -128,7 +128,10 @@ def alter_table_drop_partition(self, table_name, partition_name=None, **query_kw
 
     with By("Dropping partition"):
         partition.alter_table_drop_partition(
-            table_name=table_name, partition_name=partition_name, no_checks=True, **query_kwargs
+            table_name=table_name,
+            partition_name=partition_name,
+            no_checks=True,
+            **query_kwargs,
         )
 
 
@@ -140,7 +143,10 @@ def alter_table_detach_partition(self, table_name, partition_name=None, **query_
 
     with By("Detaching partition"):
         partition.alter_table_detach_partition(
-            table_name=table_name, partition_name=partition_name, no_checks=True, **query_kwargs
+            table_name=table_name,
+            partition_name=partition_name,
+            no_checks=True,
+            **query_kwargs,
         )
 
 
@@ -155,12 +161,17 @@ def alter_table_attach_partition(self, table_name, partition_name=None, **query_
 
     with By("Attaching partition"):
         partition.alter_table_attach_partition(
-            table_name=table_name, partition_name=partition_name, no_checks=True, **query_kwargs
+            table_name=table_name,
+            partition_name=partition_name,
+            no_checks=True,
+            **query_kwargs,
         )
 
 
 @TestStep(When)
-def alter_table_attach_partition_from(self, table_name, partition_name=None, path_to_backup=None, **query_kwargs):
+def alter_table_attach_partition_from(
+    self, table_name, partition_name=None, path_to_backup=None, **query_kwargs
+):
     """Attach partition from with automatic setup."""
 
     if path_to_backup is None:
@@ -216,7 +227,9 @@ def alter_table_move_partition_to_table(
 
 
 @TestStep(When)
-def alter_table_move_partition(self, table_name, partition_name=None, disk_name=None, **query_kwargs):
+def alter_table_move_partition(
+    self, table_name, partition_name=None, disk_name=None, **query_kwargs
+):
     """Move partition with automatic setup."""
     if partition_name is None:
         partition_name = create_new_partition(table_name=table_name)
@@ -234,7 +247,9 @@ def alter_table_move_partition(self, table_name, partition_name=None, disk_name=
 
 
 @TestStep(When)
-def alter_table_clear_column_in_partition(self, table_name, column_name, partition_name=None, **query_kwargs):
+def alter_table_clear_column_in_partition(
+    self, table_name, column_name, partition_name=None, **query_kwargs
+):
     """Clear column in partition with automatic setup."""
     if partition_name is None:
         partition_name = get_random_partition(table_name=table_name)
@@ -274,7 +289,7 @@ def alter_table_clear_index_in_partition(
             **query_kwargs,
         )
 
-    
+
 @TestStep(When)
 def alter_table_freeze_partition(self, table_name, partition_name=None, **query_kwargs):
     """Freeze partition with automatic setup."""
@@ -288,7 +303,9 @@ def alter_table_freeze_partition(self, table_name, partition_name=None, **query_
 
 
 @TestStep(When)
-def alter_table_freeze_partition_with_name(self, table_name, partition_name=None, backup_name=None, **query_kwargs):
+def alter_table_freeze_partition_with_name(
+    self, table_name, partition_name=None, backup_name=None, **query_kwargs
+):
     """Freeze partition with automatic setup."""
     if partition_name is None:
         partition_name = get_random_partition(table_name=table_name)
@@ -328,7 +345,9 @@ def alter_table_unfreeze_partition_with_name(
 
 
 @TestStep(When)
-def alter_table_replace_partition(self, table_name, partition_name=None, source_table=None, **query_kwargs):
+def alter_table_replace_partition(
+    self, table_name, partition_name=None, source_table=None, **query_kwargs
+):
     """Replace partition with automatic setup."""
 
     if source_table is None:
@@ -354,7 +373,14 @@ def alter_table_replace_partition(self, table_name, partition_name=None, source_
 
 
 @TestStep(When)
-def alter_table_fetch_partition(self, table_name, partition_name=None, path_to_backup=None, cleanup=False, **query_kwargs):
+def alter_table_fetch_partition(
+    self,
+    table_name,
+    partition_name=None,
+    path_to_backup=None,
+    cleanup=False,
+    **query_kwargs,
+):
     """Fetch partition with automatic setup."""
     if path_to_backup is None:
         path_to_backup = partitioned_replicated_merge_tree_table(
