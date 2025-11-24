@@ -270,9 +270,9 @@ def max_bandwidth(self):
             table_name=source_table
         )
 
-    with When("I set the max bandwidth to 1024 bytes per second"):
+    with When("I set the max bandwidth to 512 bytes per second"):
         config_d.create_and_add(
-            entries={"max_exports_bandwidth_for_server": "1024"},
+            entries={"max_exports_bandwidth_for_server": "512"},
             config_file="max_bandwidth.xml",
             node=self.context.node,
         )
