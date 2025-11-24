@@ -4,7 +4,7 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.common import getuid
 from helpers.queries import *
-from s3.requirements.export_part import *
+from s3.requirements.export_partition import *
 from s3.tests.export_partition.steps import (
     export_partitions,
     source_matches_destination,
@@ -12,7 +12,7 @@ from s3.tests.export_partition.steps import (
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Settings_AllowExperimental("1.0"))
 def export_setting(self):
     """Check that the export setting is settable when exporting partitions."""
 
@@ -58,7 +58,7 @@ def export_setting(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_SchemaCompatibility("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_SchemaCompatibility("1.0"))
 def mismatched_columns(self):
     """Test exporting partitions when source and destination tables have mismatched columns."""
 
@@ -90,7 +90,7 @@ def mismatched_columns(self):
 
 
 @TestScenario
-@Requirements()
+@Requirements(RQ_ClickHouse_ExportPartition_S3("1.0"))
 def basic_table(self):
     """Test exporting partitions of a basic table."""
 
@@ -119,6 +119,7 @@ def basic_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_EmptyPartition("1.0"))
 def empty_table(self):
     """Test exporting partitions from an empty table."""
 
@@ -154,7 +155,7 @@ def empty_table(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_PartitionKeyTypes("1.0"))
 def no_partition_by(self):
     """Test exporting partitions when the source table has no PARTITION BY type."""
 
@@ -185,7 +186,7 @@ def no_partition_by(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_PartTypes("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_PartitionContent("1.0"))
 def wide_and_compact_parts(self):
     """Check that exporting partitions with both wide and compact parts is supported."""
 
@@ -211,6 +212,7 @@ def wide_and_compact_parts(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_LargePartitions("1.0"))
 def large_export(self):
     """Test exporting partitions with many parts."""
 
@@ -241,6 +243,7 @@ def large_export(self):
 
 @TestFeature
 @Name("sanity")
+@Requirements(RQ_ClickHouse_ExportPartition_Settings_AllowExperimental("1.0"))
 def feature(self):
     """Check basic functionality of exporting data parts to S3 storage."""
 

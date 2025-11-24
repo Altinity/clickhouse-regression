@@ -1,7 +1,10 @@
 import random
+import time
 
 from testflows.core import *
 from testflows.asserts import error
+
+from alter.stress.tests.tc_netem import network_packet_rate_limit
 from s3.tests.export_partition.steps import *
 from helpers.common import getuid
 from helpers.create import *
@@ -640,7 +643,10 @@ def concurrent_export_with_multiple_actions(
     if number_of_iterations is None:
         number_of_iterations = self.context.number_of_iterations
 
-    with By(
+    with By("applying a delay on clickhouse queries"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
+
+    with And(
         "running the export partition number of times and each time run number of other actions in parallel"
     ):
         for i in range(number_of_iterations):
@@ -650,12 +656,13 @@ def concurrent_export_with_multiple_actions(
                     Check(
                         name=f"export partition on the source table #{i}",
                         test=export_partition_and_validate_data,
-                        parallel=True,
                     )(
                         source_table=source_table,
                         destination_table=destination_table,
                         partition_to_export=partition_to_export,
                     )
+
+            time.sleep(1)
 
             for action in get_n_random_items(actions, number_of_concurrent_queries):
                 for retry in retries(timeout=60):
@@ -663,7 +670,6 @@ def concurrent_export_with_multiple_actions(
                         Check(
                             name=f"{action.__name__} #{i}",
                             test=action,
-                            parallel=True,
                         )()
         join()
 
@@ -684,27 +690,31 @@ def export_partition_with_single_concurrent_action(
 
     partition_to_export = random.randrange(1, number_of_partitions)
 
-    for retry in retries(timeout=30):
-        with retry:
-            Check(
-                name=f"export partition on the source table",
-                test=export_partition_and_validate_data,
-                parallel=True,
-            )(
-                source_table=source_table,
-                destination_table=destination_table,
-                partition_to_export=partition_to_export,
-            )
+    with By("applying a delay on clickhouse queries"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-        for i in range(number_of_iterations):
-            for retry in retries(timeout=60):
-                with retry:
-                    Check(
-                        name=f"{actions.__name__} #{i}",
-                        test=actions,
-                        parallel=True,
-                    )()
-    join()
+    with And("running the export partition along with another action multiple times"):
+        for retry in retries(timeout=30):
+            with retry:
+                Check(
+                    name=f"export partition on the source table",
+                    test=export_partition_and_validate_data,
+                )(
+                    source_table=source_table,
+                    destination_table=destination_table,
+                    partition_to_export=partition_to_export,
+                )
+
+            time.sleep(1)
+
+            for i in range(number_of_iterations):
+                for retry in retries(timeout=60):
+                    with retry:
+                        Check(
+                            name=f"{actions.__name__} #{i}",
+                            test=actions,
+                        )()
+        join()
 
 
 @TestCheck
@@ -737,11 +747,10 @@ def concurrent_export(
             number_of_partitions=number_of_partitions,
         )
 
-        simple_columns = default_columns(simple=True)
         s3_table_name = create_s3_table(
             table_name=destination_table,
             create_new_bucket=True,
-            columns=simple_columns,
+            columns=columns_with_extras,
         )
         self.context.destination_table = s3_table_name
         self.context.source_table = source_table

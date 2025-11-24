@@ -17,6 +17,7 @@ from s3.tests.export_partition.steps import (
     source_matches_destination,
     minio_storage_configuration,
 )
+from s3.requirements.export_partition import *
 
 
 @TestCheck
@@ -149,6 +150,11 @@ def volume_combos(self):
 
 @TestFeature
 @Name("engines and volumes")
+@Requirements(
+    RQ_ClickHouse_ExportPartition_SourceEngines("1.0"),
+    RQ_ClickHouse_ExportPartition_StoragePolicies("1.0"),
+    RQ_ClickHouse_ExportPartition_SourcePartStorage("1.0"),
+)
 def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
     with Given("I set up MinIO storage configuration"):

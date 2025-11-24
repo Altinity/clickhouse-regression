@@ -6,6 +6,7 @@ from s3.tests.export_part.steps import *
 from helpers.queries import *
 from helpers.common import getuid
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from s3.requirements.export_partition import *
 
 
 @TestScenario
@@ -57,6 +58,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
 
 @TestFeature
 @Name("clusters and nodes")
+@Requirements(RQ_ClickHouse_ExportPartition_ClustersNodes("1.0"))
 def feature(self):
     """Check functionality of exporting partitions to S3 storage from different clusters and nodes."""
 

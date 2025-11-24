@@ -31,6 +31,7 @@ from s3.tests.export_partition.steps import (
     default_columns,
     source_matches_destination,
 )
+from s3.requirements.export_partition import *
 
 
 @TestStep(When)
@@ -542,6 +543,7 @@ def alter_during_export(self):
 
 @TestFeature
 @Name("alter source timing")
+@Requirements(RQ_ClickHouse_ExportPartition_SchemaChangeIsolation("1.0"))
 def feature(self):
     """Check ALTER operations on source table before, during, and after EXPORT PARTITION."""
     self.context.before_export = False
