@@ -297,6 +297,7 @@ def get_initial_columns(action):
 def before_export(self, action):
     """Check exporting partitions after an alter action."""
     source_table = f"source_{getuid()}"
+    destination_table = f"destination_{getuid()}"
 
     with Given("I create a populated source table and empty S3 table"):
         columns = get_initial_columns(action)
@@ -315,11 +316,24 @@ def before_export(self, action):
             create_new_bucket=True,
             columns=columns,
         )
-
+        partitioned_replicated_merge_tree_table(
+            table_name=destination_table,
+            partition_by="p",
+            stop_merges=False,
+            number_of_partitions=5,
+            number_of_parts=2,
+            columns=columns,
+            cluster="replicated_cluster",
+        )
     with When("I perform an alter action"):
         action(
             source_table=source_table,
-            destination_table=s3_table_name,
+            destination_table=destination_table,
+            node=self.context.node,
+        )
+        action(
+            source_table=s3_table_name,
+            destination_table=destination_table,
             node=self.context.node,
         )
 
@@ -398,7 +412,7 @@ def after_export(self, action):
 
 
 @TestOutline
-def during_export(self, action, delay_ms=100000):
+def during_export(self, action, delay_ms=0.05):
     """Check what happens when we perform an alter action on source table during EXPORT PARTITION."""
     source_table = f"source_{getuid()}"
 
@@ -428,7 +442,7 @@ def during_export(self, action, delay_ms=100000):
         description="Export is slowed down by network delay to allow ALTER to happen during export",
     ):
         with By("applying network delay to slow down export"):
-            network_packet_delay(node=self.context.node, delay_ms=delay_ms)
+            network_packet_rate_limit(node=self.context.node, delay_ms=delay_ms)
 
         with And("starting export partitions in background"):
             export_partitions(

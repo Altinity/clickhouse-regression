@@ -354,15 +354,16 @@ def export_partitions(
     source_table,
     destination_table,
     node,
-    parts=None,
+    partitions=None,
     exitcode=0,
     settings=None,
     inline_settings=True,
+    retry_times=0,
 ):
     """Export partitions from a source table to a destination table on the same node. If partitions are not provided, all partitions will be exported."""
 
-    if parts is None:
-        parts = get_partitions(table_name=source_table, node=node)
+    if partitions is None:
+        partitions = get_partitions(table_name=source_table, node=node)
 
     if inline_settings is True:
         inline_settings = self.context.default_settings
@@ -371,18 +372,20 @@ def export_partitions(
 
     output = []
 
-    for part in parts:
-        output.append(
-            node.query(
-                f"ALTER TABLE {source_table} EXPORT PARTITION ID '{part}' TO TABLE {destination_table}",
-                exitcode=exitcode,
-                no_checks=no_checks,
-                steps=True,
-                settings=settings,
-                inline_settings=inline_settings,
-            )
-        )
-
+    for partition in partitions:
+        if retry_times > 0:
+            for attempt in retries(count=retry_times, delay=5):
+                with attempt:
+                    output.append(
+                        node.query(
+                            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition}' TO TABLE {destination_table}",
+                            exitcode=exitcode,
+                            no_checks=no_checks,
+                            steps=True,
+                            settings=settings,
+                            inline_settings=inline_settings,
+                        )
+                    )
     return output
 
 
@@ -439,7 +442,12 @@ def get_system_exports(self, node):
 
 @TestStep(Then)
 def source_matches_destination(
-    self, source_table, destination_table, source_node=None, destination_node=None
+    self,
+    source_table,
+    destination_table,
+    source_node=None,
+    destination_node=None,
+    partition=None,
 ):
     """Check that source and destination table data matches."""
 
@@ -448,9 +456,11 @@ def source_matches_destination(
     if destination_node is None:
         destination_node = self.context.node
 
-    source_data = select_all_ordered(table_name=source_table, node=source_node)
+    source_data = select_all_ordered(
+        table_name=source_table, node=source_node, identifier=partition
+    )
     destination_data = select_all_ordered(
-        table_name=destination_table, node=destination_node
+        table_name=destination_table, node=destination_node, identifier=partition
     )
     assert source_data == destination_data, error()
 

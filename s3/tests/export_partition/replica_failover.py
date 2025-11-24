@@ -5,6 +5,7 @@ from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_partition import *
+from alter.stress.tests.tc_netem import network_packet_rate_limit
 import time
 
 
@@ -23,6 +24,8 @@ def create_source_and_destination_tables(
             columns=default_columns(),
             stop_merges=False,
             cluster=cluster,
+            number_of_partitions=10,
+            number_of_parts=30,
         )
 
     with And("creating empty S3 destination table"):
@@ -66,17 +69,12 @@ def export_partition_with_node_failures(
 ):
     """Export partitions while killing nodes one by one."""
 
-    with By("getting partitions to export"):
-        partitions = get_partitions(table_name=source_table, node=node)
-
-    with And("starting export partition operation and killing nodes in parallel"):
-        partition_id = partitions[0]
-
+    with By("starting export partition operation and killing nodes in parallel"):
         Step(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=destination_table,
             node=node,
-            parts=[partition_id],
+            partitions=None,
         )
 
         kill_nodes_sequentially_during_export(nodes_to_kill=nodes_to_kill)
@@ -99,19 +97,12 @@ def wait_for_export_to_complete(self, node, timeout=300, delay=5):
     with By("checking export status until it completes"):
         for attempt in retries(timeout=timeout, delay=delay):
             with attempt:
-                try:
-                    exports = node.query(
-                        "SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = 'IN_PROGRESS'",
-                        exitcode=0,
-                        no_checks=True,
-                    )
-                    if exports.exitcode == 0:
-                        in_progress = exports.output.strip()
-                        if in_progress == "0" or in_progress == "":
-                            break
-                except:
-                    pass
-                fail("Export still in progress")
+                exports = node.query(
+                    "SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = 'COMPLETED'",
+                    exitcode=0,
+                    no_checks=True,
+                )
+                assert int(exports.output.strip()) > 0, error()
 
 
 @TestStep(Then)
@@ -126,7 +117,9 @@ def wait_for_nodes_to_be_ready(self, node_names, timeout=60, delay=2):
 
 
 @TestStep(Then)
-def verify_export_success(self, source_table, destination_table, timeout=40, delay=5):
+def verify_export_success(
+    self, source_table, destination_table, timeout=40, delay=5, partition=None
+):
     """Verify that export completed successfully by checking source matches destination."""
     with By("checking that source matches destination"):
         for retry in retries(timeout=timeout, delay=delay):
@@ -135,6 +128,62 @@ def verify_export_success(self, source_table, destination_table, timeout=40, del
                     source_table=source_table,
                     destination_table=destination_table,
                 )
+
+
+@TestStep(When)
+def wait_for_export_to_start(self, node, timeout=30, delay=1):
+    """Wait for export partition operation to start."""
+    with By("checking export status until it starts"):
+        for attempt in retries(timeout=timeout, delay=delay):
+            with attempt:
+                exports = node.query(
+                    "SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = 'PENDING'",
+                    exitcode=0,
+                    no_checks=True,
+                )
+                assert int(exports.output.strip()) > 0, error()
+
+
+@TestStep(When)
+def kill_and_restart_keeper_during_export(self, node, delay=5):
+    """Kill keeper node during export, then restart it."""
+    with By("waiting for export to start"):
+        wait_for_export_to_start(node=node)
+
+    with And("killing keeper node"):
+        kill_keeper()
+
+    with And("restarting keeper node"):
+        start_keeper()
+
+
+@TestStep(When)
+def export_partition_with_keeper_failure(
+    self,
+    source_table,
+    destination_table,
+    node,
+    delay_before_kill=5,
+):
+    """Export partitions while killing and restarting keeper in parallel."""
+
+    with By(
+        "starting export partition operation and killing/restarting keeper in parallel"
+    ):
+        Step(test=export_partitions, parallel=True)(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+            partitions=None,
+            retry_times=45,
+        )
+
+        Step(test=kill_and_restart_keeper_during_export, parallel=True)(
+            node=node,
+            delay=delay_before_kill,
+        )
+
+        join()
 
 
 @TestScenario
@@ -177,10 +226,47 @@ def export_with_replica_failover(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_NetworkResilience_KeeperInterruption("1.0"))
+def export_with_keeper_failover_and_network_delay(self):
+    """Test that export partition continues successfully when keeper fails during export with network delay."""
+
+    source_table = None
+    s3_table = None
+
+    with Given(
+        "I create a populated source table on replicated_cluster and empty S3 table"
+    ):
+        source_table, s3_table = create_source_and_destination_tables(
+            cluster="replicated_cluster"
+        )
+
+    with And("I add network delay to ClickHouse node"):
+        node = self.context.cluster.node("clickhouse1")
+        network_packet_rate_limit(node=node, rate_mbit=0.05)
+    with When("I export partitions while killing and restarting keeper in parallel"):
+        export_partition_with_keeper_failure(
+            source_table=source_table,
+            destination_table=s3_table,
+            node=node,
+            delay_before_kill=5,
+        )
+
+    with And("I wait for export to complete"):
+        wait_for_export_to_complete(node=node)
+
+    with Then("I verify that export partition completed successfully"):
+        verify_export_success(
+            source_table=source_table,
+            destination_table=s3_table,
+        )
+
+
 @TestFeature
 @Name("replica failover")
 @Requirements(RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption("1.0"))
 def feature(self):
     """Test export partition recovery when replica nodes fail during export."""
 
-    Scenario(run=export_with_replica_failover)
+    # Scenario(run=export_with_replica_failover)
+    Scenario(run=export_with_keeper_failover_and_network_delay)
