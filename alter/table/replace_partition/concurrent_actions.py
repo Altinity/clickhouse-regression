@@ -8,7 +8,7 @@ from alter.table.replace_partition.requirements.requirements import *
 from helpers.alter import *
 from helpers.common import getuid, replace_partition
 from helpers.create import partitioned_replicated_merge_tree_table
-
+from helpers.alter.partition import alter_table_move_partition_to_table
 destination_table = "destination_" + getuid()
 source_table = "source_" + getuid()
 
@@ -566,7 +566,7 @@ def attach_partition_from_source_to_destination(self):
 @TestStep(When)
 def move_partition(self, table_name, source_table):
     alter_table_move_partition_to_table(
-        table_name=table_name, partition_name=2, path_to_backup=source_table
+        table_name=table_name, partition_name=2, destination_table=source_table
     )
 
 
