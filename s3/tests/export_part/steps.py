@@ -182,15 +182,17 @@ def get_storage_policy(self, table_name, node=None):
 
 
 @TestStep(When)
-def create_new_partition(self, table_name, node=None, number_of_values=3, number_of_parts=1):
+def create_new_partition(
+    self, table_name, node=None, number_of_values=3, number_of_parts=1
+):
     """Create a unique partition by inserting data with a unique partition key value.
     Returns the partition ID (as string) that was created.
     """
     if node is None:
         node = self.context.node
 
-    partition_id = str(random.randint(0,255))
-    
+    partition_id = str(random.randint(0, 255))
+
     with By(f"Creating unique partition {partition_id}"):
         for _ in range(number_of_parts):
             node.query(
@@ -198,7 +200,7 @@ def create_new_partition(self, table_name, node=None, number_of_values=3, number
                 exitcode=0,
                 steps=True,
             )
-    
+
     return partition_id
 
 
@@ -610,7 +612,9 @@ def get_num_active_exports(self, node=None, table_name=None):
     if table_name is None:
         query = "SELECT count() FROM system.exports"
     else:
-        query = f"SELECT count() FROM system.exports WHERE source_table = '{table_name}'"
+        query = (
+            f"SELECT count() FROM system.exports WHERE source_table = '{table_name}'"
+        )
 
     num_active_exports = node.query(
         query,
@@ -718,7 +722,9 @@ def wait_for_all_exports_to_complete(self, node=None, table_name=None):
 
     for attempt in retries(timeout=30, delay=1):
         with attempt:
-            assert get_num_active_exports(node=node, table_name=table_name) == 0, error()
+            assert (
+                get_num_active_exports(node=node, table_name=table_name) == 0
+            ), error()
 
 
 @TestStep(Then)
