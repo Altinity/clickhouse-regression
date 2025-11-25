@@ -728,6 +728,32 @@ def wait_for_all_exports_to_complete(self, node=None, table_name=None):
 
 
 @TestStep(Then)
+def select_hash(self, table_name, node=None):
+    """Select a hash of the data from a table."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"SELECT groupBitXor(cityHash64(*)) FROM {table_name}",
+        exitcode=0,
+    ).output.strip()
+
+
+@TestStep(Then)
+def source_matches_destination_hash(self, source_table, destination_table, source_node=None, destination_node=None):
+    """Check that source and destination table hash matches."""
+    if source_node is None:
+        source_node = self.context.node
+    if destination_node is None:
+        destination_node = self.context.node
+
+    source_hash = select_hash(table_name=source_table, node=source_node)
+    destination_hash = select_hash(table_name=destination_table, node=destination_node)
+
+    assert source_hash == destination_hash, error()
+
+
+@TestStep(Then)
 def source_matches_destination(
     self,
     source_table,
@@ -739,12 +765,39 @@ def source_matches_destination(
 ):
     """Check that source and destination table data matches."""
 
+    wait_for_all_exports_to_complete(node=source_node, table_name=source_table)
+    source_matches_destination_rows(
+        source_table=source_table,
+        destination_table=destination_table,
+        source_node=source_node,
+        destination_node=destination_node,
+        source_data=source_data,
+        destination_data=destination_data,
+    )
+    source_matches_destination_hash(
+        source_table=source_table,
+        destination_table=destination_table,
+        source_node=source_node,
+        destination_node=destination_node,
+    )
+
+
+@TestStep(Then)
+def source_matches_destination_rows(
+    self,
+    source_table,
+    destination_table,
+    source_node=None,
+    destination_node=None,
+    source_data=None,
+    destination_data=None,
+):
+    """Check that source and destination table rows matches."""
+
     if source_node is None:
         source_node = self.context.node
     if destination_node is None:
         destination_node = self.context.node
-
-    wait_for_all_exports_to_complete(node=source_node)
 
     if source_data is None:
         source_data = select_all_ordered(table_name=source_table, node=source_node)
@@ -752,6 +805,7 @@ def source_matches_destination(
         destination_data = select_all_ordered(
             table_name=destination_table, node=destination_node
         )
+    
     assert source_data == destination_data, error()
 
 
