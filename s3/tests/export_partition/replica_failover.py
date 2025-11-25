@@ -91,20 +91,6 @@ def restart_nodes(self, node_names):
             node.start_clickhouse()
 
 
-@TestStep(When)
-def wait_for_export_to_complete(self, node, timeout=300, delay=5):
-    """Wait for export partition operation to complete."""
-    with By("checking export status until it completes"):
-        for attempt in retries(timeout=timeout, delay=delay):
-            with attempt:
-                exports = node.query(
-                    "SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = 'COMPLETED'",
-                    exitcode=0,
-                    no_checks=True,
-                )
-                assert int(exports.output.strip()) > 0, error()
-
-
 @TestStep(Then)
 def wait_for_nodes_to_be_ready(self, node_names, timeout=60, delay=2):
     """Wait for multiple nodes to be ready and responsive."""
@@ -128,20 +114,6 @@ def verify_export_success(
                     source_table=source_table,
                     destination_table=destination_table,
                 )
-
-
-@TestStep(When)
-def wait_for_export_to_start(self, node, timeout=30, delay=1):
-    """Wait for export partition operation to start."""
-    with By("checking export status until it starts"):
-        for attempt in retries(timeout=timeout, delay=delay):
-            with attempt:
-                exports = node.query(
-                    "SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = 'PENDING'",
-                    exitcode=0,
-                    no_checks=True,
-                )
-                assert int(exports.output.strip()) > 0, error()
 
 
 @TestStep(When)
@@ -268,5 +240,5 @@ def export_with_keeper_failover_and_network_delay(self):
 def feature(self):
     """Test export partition recovery when replica nodes fail during export."""
 
-    # Scenario(run=export_with_replica_failover)
+    Scenario(run=export_with_replica_failover)
     Scenario(run=export_with_keeper_failover_and_network_delay)
