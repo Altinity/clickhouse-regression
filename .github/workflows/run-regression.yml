@@ -176,7 +176,7 @@ on:
         description: "Artifact S3 bucket"
         type: string
         required: false
-        default: public
+        default: internal
       output_format:
         description: "📜 Testflows output style."
         type: string
