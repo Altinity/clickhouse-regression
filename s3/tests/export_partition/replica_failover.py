@@ -117,10 +117,10 @@ def verify_export_success(
 
 
 @TestStep(When)
-def kill_and_restart_keeper_during_export(self, node, delay=5):
+def kill_and_restart_keeper_during_export(self, node, source_table):
     """Kill keeper node during export, then restart it."""
     with By("waiting for export to start"):
-        wait_for_export_to_start(node=node)
+        wait_for_export_to_start(source_table=source_table, node=node)
 
     with And("killing keeper node"):
         kill_keeper()
@@ -152,7 +152,7 @@ def export_partition_with_keeper_failure(
 
         Step(test=kill_and_restart_keeper_during_export, parallel=True)(
             node=node,
-            delay=delay_before_kill,
+            source_table=source_table
         )
 
         join()
@@ -188,7 +188,7 @@ def export_with_replica_failover(self):
 
     with And("I wait for export to complete after nodes restart"):
         any_node = self.context.cluster.node("clickhouse1")
-        wait_for_export_to_complete(node=any_node)
+        wait_for_export_to_complete(source_table=source_table, node=any_node)
 
     with Then("I verify that export partition completed successfully"):
         wait_for_nodes_to_be_ready(node_names=nodes_to_kill)
@@ -225,7 +225,7 @@ def export_with_keeper_failover_and_network_delay(self):
         )
 
     with And("I wait for export to complete"):
-        wait_for_export_to_complete(node=node)
+        wait_for_export_to_complete(source_table=source_table, node=node)
 
     with Then("I verify that export partition completed successfully"):
         verify_export_success(
