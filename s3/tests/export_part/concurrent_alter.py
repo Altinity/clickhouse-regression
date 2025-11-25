@@ -91,7 +91,7 @@ def get_alter_functions():
         ),
         (alter_wrappers.optimize_partition, {"partition": "1"}),
         (alter_wrappers.optimize_table, {}),
-        # (alter_wrappers.drop_table, {"recreate": True}),
+        (alter_wrappers.drop_table, {"recreate": True}),
     ]
 
 
