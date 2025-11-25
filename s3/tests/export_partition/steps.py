@@ -6,6 +6,7 @@ from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
+from s3.tests.export_part.steps import wait_for_all_exports_to_complete
 
 
 @TestStep(Given)
@@ -440,6 +441,52 @@ def get_system_exports(self, node):
     return [line.strip().split("\t") for line in exports]
 
 
+@TestStep
+def check_export_status(self, status, source_table, timeout=30, delay=3, node=None):
+    """Check the export status in system.replicated_partition_exports."""
+
+    if node is None:
+        node = self.context.node
+
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            exports = node.query(
+                f"SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = '{status}' AND source_table = {source_table}",
+                exitcode=0,
+                no_checks=True,
+            )
+
+    return exports
+
+
+@TestStep(When)
+def wait_for_export_to_start(self, source_table, node=None, assertion=None):
+    """Wait for export partition operation to start."""
+    with By("checking export status until it starts"):
+        exports = check_export_status(
+            status="PENDING", source_table=source_table, node=node
+        )
+
+        if assertion is None:
+            assert int(exports.output.strip()) > 0, error()
+        else:
+            assert assertion, error()
+
+
+@TestStep(When)
+def wait_for_export_to_complete(self, source_table, node=None, assertion=None):
+    """Wait for export partition operation to complete."""
+    with By("checking export status until it starts"):
+        exports = check_export_status(
+            status="COMPLETED", source_table=source_table, node=node
+        )
+
+        if assertion is None:
+            assert int(exports.output.strip()) > 0, error()
+        else:
+            assert assertion, error()
+
+
 @TestStep(Then)
 def source_matches_destination(
     self,
@@ -448,6 +495,8 @@ def source_matches_destination(
     source_node=None,
     destination_node=None,
     partition=None,
+    source_data=None,
+    destination_data=None,
 ):
     """Check that source and destination table data matches."""
 
@@ -456,12 +505,16 @@ def source_matches_destination(
     if destination_node is None:
         destination_node = self.context.node
 
-    source_data = select_all_ordered(
-        table_name=source_table, node=source_node, identifier=partition
-    )
-    destination_data = select_all_ordered(
-        table_name=destination_table, node=destination_node, identifier=partition
-    )
+    wait_for_export_to_complete(source_table=source_table, node=source_node)
+
+    if source_data is None:
+        source_data = select_all_ordered(
+            table_name=source_table, node=source_node, identifier=partition
+        )
+    if destination_data is None:
+        destination_data = select_all_ordered(
+            table_name=destination_table, node=destination_node, identifier=partition
+        )
     assert source_data == destination_data, error()
 
 
