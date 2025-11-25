@@ -445,3 +445,24 @@ def optimize_table(self, table_name, node=None):
 
     with And(f"Optimizing {table_name}"):
         optimize(node=self.context.node, table_name=table_name, final=True)
+
+
+@TestStep(When)
+def drop_table(self, table_name, node=None, recreate=False):
+    """Drop a table."""
+    if node is None:
+        node = self.context.node
+
+    with By(f"Dropping table {table_name}"):
+        node.query(f"DROP TABLE IF EXISTS {table_name}")
+
+    if recreate:
+        with And(f"Recreating table {table_name}"):
+            partitioned_merge_tree_table(
+                table_name=table_name,
+                partition_by="p",
+                populate=False,
+                columns=default_columns(simple=False),
+                stop_merges=True,
+                query_settings="storage_policy = 'tiered_storage'",
+            )
