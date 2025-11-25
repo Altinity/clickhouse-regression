@@ -91,6 +91,7 @@ def get_alter_functions():
         ),
         (alter_wrappers.optimize_partition, {"partition": "1"}),
         (alter_wrappers.optimize_table, {}),
+        # (alter_wrappers.drop_table, {"recreate": True}),
     ]
 
 
@@ -99,7 +100,7 @@ def get_alter_functions():
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_before_export(self, alter_function, kwargs):
+def before_export(self, alter_function, kwargs):
     """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
@@ -160,7 +161,7 @@ def alter_before_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_after_export(self, alter_function, kwargs):
+def after_export(self, alter_function, kwargs):
     """Test altering the source table after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -218,7 +219,7 @@ def alter_after_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_during_export(self, alter_function, kwargs):
+def during_export(self, alter_function, kwargs):
     """Test altering the source table during exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -279,7 +280,7 @@ def alter_during_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_during_minio_interruption(self, alter_function, kwargs):
+def during_minio_interruption(self, alter_function, kwargs):
     """Test altering the source table during MinIO interruption."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -385,7 +386,7 @@ def stress(self, alter_function, kwargs):
         f"I export parts to the S3 table in parallel with {alter_function.__name__}"
     ):
         with Pool(10) as executor:
-            for _ in range(25):
+            for _ in range(100):
                 Step(test=steps.export_parts, parallel=True, executor=executor)(
                     source_table=source_table,
                     destination_table=s3_table_name,
@@ -398,10 +399,8 @@ def stress(self, alter_function, kwargs):
                 )
             join()
 
-    with And("I wait for all background tasks to complete"):
+    with And("I wait for all background exports to complete"):
         steps.wait_for_all_exports_to_complete(table_name=source_table)
-        steps.wait_for_all_merges_to_complete(table_name=source_table)
-        steps.wait_for_all_mutations_to_complete(table_name=source_table)
 
     with And("I flush system.part_log"):
         steps.flush_log(table_name="system.part_log")
@@ -420,8 +419,8 @@ def feature(self):
     with Given("I set up MinIO storage configuration"):
         steps.minio_storage_configuration(restart=True)
 
-    Scenario(run=alter_before_export)
-    Scenario(run=alter_during_export)
-    Scenario(run=alter_after_export)
-    Scenario(run=alter_during_minio_interruption)
+    Scenario(run=before_export)
+    Scenario(run=during_export)
+    Scenario(run=after_export)
+    Scenario(run=during_minio_interruption)
     Scenario(run=stress)
