@@ -404,7 +404,7 @@ def get_s3_parts(self, table_name, node=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    return [row.strip() for row in output.splitlines()]
 
 
 @TestStep(When)
@@ -573,9 +573,9 @@ def get_part_log(self, node, table_name=None):
     """Get the part log from the system.part_log table of a given node."""
 
     if table_name is None:
-        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0"
+        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0 ORDER BY part_name"
     else:
-        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0"
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0 ORDER BY part_name"
 
     output = node.query(
         query,
@@ -583,7 +583,7 @@ def get_part_log(self, node, table_name=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    return [row.strip() for row in output.splitlines()]
 
 
 @TestStep(When)
@@ -740,7 +740,9 @@ def select_hash(self, table_name, node=None):
 
 
 @TestStep(Then)
-def source_matches_destination_hash(self, source_table, destination_table, source_node=None, destination_node=None):
+def source_matches_destination_hash(
+    self, source_table, destination_table, source_node=None, destination_node=None
+):
     """Check that source and destination table hash matches."""
     if source_node is None:
         source_node = self.context.node
@@ -805,8 +807,21 @@ def source_matches_destination_rows(
         destination_data = select_all_ordered(
             table_name=destination_table, node=destination_node
         )
-    
+
     assert source_data == destination_data, error()
+
+
+@TestStep(Then)
+def part_log_matches_destination(self, source_table, destination_table, node=None):
+    """Check that the part log matches the destination table."""
+    if node is None:
+        node = self.context.node
+
+    wait_for_all_exports_to_complete(node=node, table_name=source_table)
+    flush_log(node=node, table_name="system.part_log")
+    part_log = get_part_log(node=node, table_name=source_table)
+    destination_parts = get_s3_parts(table_name=destination_table)
+    assert part_log == destination_parts, error()
 
 
 @TestStep(Then)

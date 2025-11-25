@@ -163,7 +163,7 @@ def merge_parts(self):
         )
 
     with And("I optimize partition 1 before export"):
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="1",
         )
@@ -182,14 +182,14 @@ def merge_parts(self):
         )
 
     with And("I optimize partition 2 during export"):
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="2",
         )
 
     with And("I optimize partition 3 after export"):
         wait_for_all_exports_to_complete()
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="3",
         )
@@ -226,9 +226,8 @@ def merge_parts(self):
 
 def get_actions():
     return [
-        (alter_wrappers.optimize_partition, {}),
         (select_all_ordered, {}),
-        (create_partitions_with_random_uint64, {}),
+        (select_hash, {}),
     ]
 
 
@@ -237,7 +236,7 @@ def get_actions():
     "action, kwargs",
     get_actions(),
 )
-def stress(self, action, kwargs):
+def stress_select(self, action, kwargs):
     """Test a high volume of actions in parallel with exports."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -257,24 +256,25 @@ def stress(self, action, kwargs):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with When(f"I export parts to the S3 table in parallel with {action.__name__}"):
-        for _ in range(100):
-            Step(test=export_parts, parallel=True)(
-                source_table=source_table,
-                destination_table=s3_table_name,
-                node=self.context.node,
-                parts=[get_random_part(table_name=source_table)],
-            )
-            Step(test=action, parallel=True)(table_name=source_table, **kwargs)
-        join()
+        with Pool(10) as executor:
+            for _ in range(100):
+                Step(test=export_parts, parallel=True, executor=executor)(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                    node=self.context.node,
+                    parts=[get_random_part(table_name=source_table)],
+                    exitcode=1,
+                )
+                Step(test=action, parallel=True, executor=executor)(
+                    table_name=source_table, **kwargs
+                )
+            join()
 
-    with And("I wait for all exports and merges to complete"):
-        wait_for_all_exports_to_complete(node=self.context.node)
-        wait_for_all_merges_to_complete(node=self.context.node, table_name=source_table)
-
-    with Then("Check successfully exported parts are present in destination"):
-        part_log = get_part_log(node=self.context.node, table_name=source_table)
-        destination_parts = get_s3_parts(table_name=s3_table_name)
-        assert part_log == destination_parts, error()
+    with Then("Check part log matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestFeature
@@ -286,4 +286,4 @@ def feature(self):
     Scenario(run=parallel_insert)
     Scenario(run=select_parts)
     Scenario(run=merge_parts)
-    Scenario(run=stress)
+    Scenario(run=stress_select)
