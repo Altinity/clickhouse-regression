@@ -712,30 +712,11 @@ def show_data_lake_catalogs_in_system_tables(
         else:
             assert value == "0", error()
 
-    with And("define snapshot id"):
-        versions = [">=25.6", ">=25.5"]
-        for version in versions:
-            if check_clickhouse_version(version)(self):
-                self.context.snapshot_id = get_snapshot_id(clickhouse_version=version)
-                break
-        else:
-            self.context.snapshot_id = get_snapshot_id()
-
-    with And("compare with snapshot"):
+    with And("check that iceberg table is visible in system.tables table"):
         if value == "1":
-            snapshot_name = f"system.tables.{table_name}"
-            snapshot_value = node.query(
-                f"SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated"
+            iceberg_engine.check_values_in_system_tables(
+                table_name=f"{namespace}.{table_name}", database=database_name
             )
-            with values() as that:
-                assert that(
-                    snapshot(
-                        snapshot_value.output.strip(),
-                        name=snapshot_name,
-                        id=self.context.snapshot_id,
-                        mode=snapshot.CHECK,
-                    )
-                ), error()
 
     with And(
         "set the setting to 0 and check that iceberg table is not visible in system.tables table"
@@ -748,23 +729,16 @@ def show_data_lake_catalogs_in_system_tables(
         )
         compare_with_expected(expected="", output=result)
 
-    with And("set the setting to 1 and compare with snapshot"):
-        snapshot_name = f"system.tables.{table_name}"
-        snapshot_value = node.query(
+    with And(
+        "set the setting to 1 and check that iceberg table is visible in system.tables table"
+    ):
+        result = node.query(
             f"""
-            SET show_data_lake_catalogs_in_system_tables = 1; 
-            SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated
-            """
+            SET show_data_lake_catalogs_in_system_tables = 1;
+            SELECT name FROM system.tables WHERE name = '{namespace}.{table_name}'
+        """
         )
-        with values() as that:
-            assert that(
-                snapshot(
-                    snapshot_value.output.strip(),
-                    name=snapshot_name,
-                    id=self.context.snapshot_id,
-                    mode=snapshot.CHECK,
-                )
-            ), error()
+        compare_with_expected(expected=f"{namespace}.{table_name}", output=result)
 
 
 @TestScenario
