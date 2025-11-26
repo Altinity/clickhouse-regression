@@ -4,7 +4,7 @@ from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
 from helpers.common import getuid
-from s3.requirements.export_part import *
+from s3.requirements.export_partition import *
 
 
 @TestStep(When)
@@ -95,7 +95,7 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
 
 @TestSketch(Scenario)
 @Flags(TE)
-@Requirements(RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_PartitionKeyTypes("1.0"))
 def valid_partition_key_types_compact(self):
     """Check that all partition key data types are supported when exporting compact parts."""
 
@@ -115,8 +115,8 @@ def valid_partition_key_types_wide(self):
 @TestFeature
 @Name("datatypes")
 @Requirements(
-    RQ_ClickHouse_ExportPart_PartitionKeyTypes("1.0"),
-    RQ_ClickHouse_ExportPart_PartTypes("1.0"),
+    RQ_ClickHouse_ExportPartition_PartitionKeyTypes("1.0"),
+    RQ_ClickHouse_ExportPartition_PartitionContent("1.0"),
 )
 def feature(self, num_parts=10):
     """Check that all data types are supported when exporting partitions."""

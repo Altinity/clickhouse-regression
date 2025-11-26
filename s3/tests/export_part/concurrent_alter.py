@@ -3,7 +3,7 @@ import s3.tests.export_part.steps as steps
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
-from helpers.alter import partition, column, constraint, ttl, update, delete, table
+from helpers.alter import column, ttl, update, delete, table
 from alter.stress.tests.tc_netem import *
 from helpers.common import getuid
 from s3.tests.export_part import alter_wrappers
@@ -11,86 +11,87 @@ from s3.tests.export_part import alter_wrappers
 
 def get_alter_functions():
     return [
-        # (
-        #     alter_wrappers.alter_table_add_column,
-        #     {},
-        # ),
-        # (alter_wrappers.alter_table_drop_column, {}),
-        # (
-        #     alter_wrappers.alter_table_modify_column,
-        #     {"column_name": "i"},
-        # ),
-        # (
-        #     alter_wrappers.alter_table_rename_column,
-        #     {"column_name_old": "Path"},
-        # ),
-        # (
-        #     column.alter_table_comment_column,
-        #     {"column_name": "p", "comment": "test column comment"},
-        # ),
-        # (
-        #     alter_wrappers.alter_table_add_constraint,
-        #     {},
-        # ),
-        # (alter_wrappers.alter_table_drop_constraint, {}),
-        # (alter_wrappers.alter_table_drop_partition, {}),
-        # (
-        #     ttl.alter_table_modify_ttl,
-        #     {
-        #         "ttl_expression": "if(Time < toDateTime('2006-02-07'), Time + INTERVAL 100 YEAR, toDateTime('2106-02-07'))"
-        #     },
-        # ),
-        # (alter_wrappers.alter_table_detach_partition, {}),
+        (
+            alter_wrappers.alter_table_add_column,
+            {},
+        ),
+        (alter_wrappers.alter_table_drop_column, {}),
+        (
+            alter_wrappers.alter_table_modify_column,
+            {"column_name": "i"},
+        ),
+        (
+            alter_wrappers.alter_table_rename_column,
+            {"column_name_old": "Path"},
+        ),
+        (
+            column.alter_table_comment_column,
+            {"column_name": "p", "comment": "test column comment"},
+        ),
+        (
+            alter_wrappers.alter_table_add_constraint,
+            {},
+        ),
+        (alter_wrappers.alter_table_drop_constraint, {}),
+        (alter_wrappers.alter_table_drop_partition, {}),
+        (
+            ttl.alter_table_modify_ttl,
+            {
+                "ttl_expression": "if(Time < toDateTime('2006-02-07'), Time + INTERVAL 100 YEAR, toDateTime('2106-02-07'))"
+            },
+        ),
+        (alter_wrappers.alter_table_detach_partition, {}),
         (alter_wrappers.alter_table_attach_partition, {}),
-        # (
-        #     steps.alter_table_attach_partition_from,
-        #     {"partition_name": "1"},
-        # ),
-        # (
-        #     steps.alter_table_move_partition_to_table,
-        #     {"partition_name": "1"},
-        # ),
-        # (steps.alter_table_move_partition, {"partition_name": "1"}),
-        # (
-        #     helpers.alter.column.alter_table_clear_column_in_partition,
-        #     {"partition_name": "1", "column_name": "i"},
-        # ),
-        # (
-        #     steps.alter_table_clear_index_in_partition,
-        #     {"partition_name": "1", "index": "idx_i"},
-        # ),
-        # (helpers.alter.partition.alter_table_freeze_partition, {"partition_name": "1"}),
-        # (
-        #     helpers.alter.partition.alter_table_freeze_partition_with_name,
-        #     {"partition_name": "1", "backup_name": "frozen_partition"},
-        # ),
-        # (
-        #     steps.alter_table_unfreeze_partition_with_name,
-        #     {"partition_name": "1", "backup_name": "frozen_partition"},
-        # ),
-        # (
-        #     steps.alter_table_replace_partition,
-        #     {"partition_name": "1"},
-        # ),
-        # (
-        #     helpers.alter.update.alter_table_update_column,
-        #     {"column_name": "i", "expression": "0", "condition": "1 = 1"},
-        # ),
-        # (helpers.alter.delete.alter_table_delete_rows, {"condition": "p = 1"}),
-        # (
-        #     helpers.alter.table.alter_table_modify_comment,
-        #     {"comment": "test table comment"},
-        # ),
-        # (
-        #     steps.alter_table_fetch_partition,
-        #     {"partition_name": "1"},
-        # ),
-        # (
-        #     create_partitions_with_random_uint64,
-        #     {"number_of_partitions": 5, "number_of_parts": 1},
-        # ),
-        # (steps.optimize_partition, {"partition": "1"}),
-        # (steps.optimize_table, {}),
+        (
+            alter_wrappers.alter_table_attach_partition_from,
+            {},
+        ),
+        (
+            alter_wrappers.alter_table_move_partition_to_table,
+            {},
+        ),
+        (alter_wrappers.alter_table_move_partition, {}),
+        (
+            alter_wrappers.alter_table_clear_column_in_partition,
+            {"column_name": "i"},
+        ),
+        (
+            alter_wrappers.alter_table_clear_index_in_partition,
+            {},
+        ),
+        (alter_wrappers.alter_table_freeze_partition, {}),
+        (
+            alter_wrappers.alter_table_freeze_partition_with_name,
+            {},
+        ),
+        (
+            alter_wrappers.alter_table_unfreeze_partition_with_name,
+            {},
+        ),
+        (
+            alter_wrappers.alter_table_replace_partition,
+            {},
+        ),
+        (
+            update.alter_table_update_column,
+            {"column_name": "i", "expression": "0", "condition": "1 = 1"},
+        ),
+        (delete.alter_table_delete_rows, {"condition": "p = 1"}),
+        (
+            table.alter_table_modify_comment,
+            {"comment": "test table comment"},
+        ),
+        (
+            alter_wrappers.alter_table_fetch_partition,
+            {"cleanup": True},
+        ),
+        (
+            create_partitions_with_random_uint64,
+            {"number_of_partitions": 5, "number_of_parts": 1},
+        ),
+        (alter_wrappers.optimize_partition, {"partition": "1"}),
+        (alter_wrappers.optimize_table, {}),
+        (alter_wrappers.drop_table, {"recreate": True}),
     ]
 
 
@@ -99,18 +100,19 @@ def get_alter_functions():
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_before_export(self, alter_function, kwargs):
+def before_export(self, alter_function, kwargs):
     """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
         source_table = f"source_{getuid()}"
 
-        if alter_function == steps.alter_table_fetch_partition:
+        if alter_function == alter_wrappers.alter_table_fetch_partition:
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         else:
@@ -119,6 +121,7 @@ def alter_before_export(self, alter_function, kwargs):
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
 
@@ -158,18 +161,19 @@ def alter_before_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_after_export(self, alter_function, kwargs):
+def after_export(self, alter_function, kwargs):
     """Test altering the source table after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
 
-        if alter_function == steps.alter_table_fetch_partition:
+        if alter_function == alter_wrappers.alter_table_fetch_partition:
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         else:
@@ -178,6 +182,7 @@ def alter_after_export(self, alter_function, kwargs):
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         s3_table_name = steps.create_s3_table(
@@ -214,18 +219,19 @@ def alter_after_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_during_export(self, alter_function, kwargs):
+def during_export(self, alter_function, kwargs):
     """Test altering the source table during exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
 
-        if alter_function == steps.alter_table_fetch_partition:
+        if alter_function == alter_wrappers.alter_table_fetch_partition:
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         else:
@@ -234,6 +240,7 @@ def alter_during_export(self, alter_function, kwargs):
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         s3_table_name = steps.create_s3_table(
@@ -273,18 +280,19 @@ def alter_during_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
-def alter_during_minio_interruption(self, alter_function, kwargs):
+def during_minio_interruption(self, alter_function, kwargs):
     """Test altering the source table during MinIO interruption."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
 
-        if alter_function == steps.alter_table_fetch_partition:
+        if alter_function == alter_wrappers.alter_table_fetch_partition:
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         else:
@@ -293,6 +301,7 @@ def alter_during_minio_interruption(self, alter_function, kwargs):
                 partition_by="p",
                 number_of_parts=2,
                 columns=steps.default_columns(simple=False),
+                stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
             )
         s3_table_name = steps.create_s3_table(
@@ -341,7 +350,7 @@ def stress(self, alter_function, kwargs):
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
 
-        if alter_function == steps.alter_table_fetch_partition:
+        if alter_function == alter_wrappers.alter_table_fetch_partition:
             partitioned_replicated_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
@@ -349,17 +358,17 @@ def stress(self, alter_function, kwargs):
                 number_of_partitions=10,
                 columns=steps.default_columns(simple=False),
                 stop_merges=True,
-                # query_settings="storage_policy = 'tiered_storage'",
+                query_settings="storage_policy = 'tiered_storage'",
             )
         else:
             partitioned_merge_tree_table(
                 table_name=source_table,
                 partition_by="p",
-                number_of_parts=3,
-                number_of_partitions=3,
+                number_of_parts=10,
+                number_of_partitions=10,
                 columns=steps.default_columns(simple=False),
                 stop_merges=True,
-                # query_settings="storage_policy = 'tiered_storage'",
+                query_settings="storage_policy = 'tiered_storage'",
             )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
@@ -376,25 +385,27 @@ def stress(self, alter_function, kwargs):
     with When(
         f"I export parts to the S3 table in parallel with {alter_function.__name__}"
     ):
-        for _ in range(100):
-            Step(test=steps.export_parts, parallel=True)(
-                source_table=source_table,
-                destination_table=s3_table_name,
-                node=self.context.node,
-                parts=[steps.get_random_part(table_name=source_table)],
-                exitcode=1,
-            )
-            Step(test=alter_function, parallel=True)(table_name=source_table, **kwargs)
-        join()
+        with Pool(10) as executor:
+            for _ in range(100):
+                Step(test=steps.export_parts, parallel=True, executor=executor)(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                    node=self.context.node,
+                    parts=[steps.get_random_part(table_name=source_table)],
+                    exitcode=1,
+                )
+                Step(test=alter_function, parallel=True, executor=executor)(
+                    table_name=source_table, **kwargs
+                )
+            join()
 
-    with And("I wait for all exports and merges to complete"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
-        steps.wait_for_all_merges_to_complete(
-            node=self.context.node, table_name=source_table
-        )
+    with And("I wait for all background exports to complete"):
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
+
+    with And("I flush system.part_log"):
+        steps.flush_log(table_name="system.part_log")
 
     with Then("Check successfully exported parts are present in destination"):
-        pause()
         part_log = steps.get_part_log(node=self.context.node, table_name=source_table)
         destination_parts = steps.get_s3_parts(table_name=s3_table_name)
         assert part_log == destination_parts, error()
@@ -405,11 +416,11 @@ def stress(self, alter_function, kwargs):
 def feature(self):
     """Check concurrent actions on the source table during exporting parts to S3 storage."""
 
-    # with Given("I set up MinIO storage configuration"):
-    #     steps.minio_storage_configuration(restart=True)
+    with Given("I set up MinIO storage configuration"):
+        steps.minio_storage_configuration(restart=True)
 
-    Scenario(run=alter_before_export)
-    Scenario(run=alter_during_export)
-    Scenario(run=alter_after_export)
-    Scenario(run=alter_during_minio_interruption)
+    Scenario(run=before_export)
+    Scenario(run=during_export)
+    Scenario(run=after_export)
+    Scenario(run=during_minio_interruption)
     Scenario(run=stress)

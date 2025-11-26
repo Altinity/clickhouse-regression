@@ -1,11 +1,11 @@
 from itertools import combinations
 from testflows.core import *
 from testflows.asserts import error
-from s3.tests.export_partition.steps import export_partitions
-from s3.tests.export_part.steps import *
+from s3.tests.export_partition.steps import *
 from helpers.queries import *
 from helpers.common import getuid
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from s3.requirements.export_partition import *
 
 
 @TestScenario
@@ -40,6 +40,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
             source_table=source_table,
             destination_table=s3_table_name,
             node=node2,
+            force_export=True,
         )
 
     with And("I read data from all tables on both nodes"):
@@ -57,6 +58,7 @@ def different_nodes_same_destination(self, cluster, node1, node2):
 
 @TestFeature
 @Name("clusters and nodes")
+@Requirements(RQ_ClickHouse_ExportPartition_ClustersNodes("1.0"))
 def feature(self):
     """Check functionality of exporting partitions to S3 storage from different clusters and nodes."""
 
@@ -77,4 +79,7 @@ def feature(self):
         for node1_name, node2_name in combinations(node_names, 2):
             node1 = self.context.cluster.node(node1_name)
             node2 = self.context.cluster.node(node2_name)
-            different_nodes_same_destination(cluster=cluster, node1=node1, node2=node2)
+            Scenario(
+                test=different_nodes_same_destination,
+                name=f"different nodes same destination with {cluster} nodes {node1_name} and {node2_name}",
+            )(cluster=cluster, node1=node1, node2=node2)

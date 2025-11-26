@@ -4,11 +4,12 @@ from s3.tests.export_partition.steps import export_partitions
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from helpers.common import getuid
-from s3.requirements.export_part import *
+from s3.requirements.export_partition import *
 
 
 @TestScenario
-def invalid_part_name(self):
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition("1.0"))
+def partition_does_not_exist(self):
     """Check that exporting a non-existent partition returns the correct error."""
 
     source_table = f"source_{getuid()}"
@@ -22,26 +23,26 @@ def invalid_part_name(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I create an invalid part name"):
-        invalid_part_name = "in_va_lid_part"
+        invalid_partition = "999999"
 
     with When("I try to export the invalid part"):
         results = export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
-            parts=[invalid_part_name],
+            partitions=[invalid_partition],
             exitcode=1,
         )
 
     with Then("I should see an error related to the invalid part name"):
-        assert results[0].exitcode == 233, error()
+        assert results[0].exitcode == 36, error()
         assert (
-            f"Unexpected part name: {invalid_part_name}" in results[0].output
+            f"Partition {invalid_partition} doesn't exist." in results[0].output
         ), error()
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Restrictions_SameTable("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_SameTable("1.0"))
 def same_table(self):
     """Check exporting partitions where source and destination tables are the same."""
 
@@ -70,6 +71,7 @@ def same_table(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_LocalTable("1.0"))
 def local_table(self):
     """Test exporting partitions to a local table."""
 
@@ -103,41 +105,13 @@ def local_table(self):
     with Then("I should see an error related to local table exports"):
         assert results[0].exitcode == 48, error()
         assert (
-            "Destination storage MergeTree does not support MergeTree parts or uses unsupported partitioning"
+            "Destination storage ReplicatedMergeTree does not support MergeTree parts or uses unsupported partitioning."
             in results[0].output
         ), error()
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Settings_AllowExperimental("1.0"))
-def disable_export_setting(self):
-    """Check that exporting partitions without the export setting set returns the correct error."""
-
-    source_table = f"source_{getuid()}"
-    with Given("I create a populated source table and empty S3 table"):
-        partitioned_replicated_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I try to export the partitions with the export setting disabled"):
-        results = export_partitions(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-            exitcode=1,
-            settings=[("allow_experimental_export_merge_tree_part", 0)],
-        )
-
-    with Then("I should see an error related to the export setting"):
-        assert results[0].exitcode == 88, error()
-        assert "Exporting merge tree part is experimental" in results[0].output, error()
-
-
-@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("1.0"))
 def different_partition_key(self):
     """Check exporting partitions with a different partition key returns the correct error."""
 
@@ -166,12 +140,16 @@ def different_partition_key(self):
 
 @TestFeature
 @Name("error handling")
-@Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Restrictions_SameTable("1.0"),
+    RQ_ClickHouse_ExportPartition_Restrictions_LocalTable("1.0"),
+    RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled("1.0"),
+)
 def feature(self):
     """Check correct error handling when exporting partitions."""
 
-    Scenario(run=invalid_part_name)
+    Scenario(run=partition_does_not_exist)
     Scenario(run=same_table)
     Scenario(run=local_table)
-    Scenario(run=disable_export_setting)
     Scenario(run=different_partition_key)

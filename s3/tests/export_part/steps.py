@@ -1,4 +1,6 @@
 import json
+import random
+import os
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
@@ -167,6 +169,42 @@ def create_s3_table(
 
 
 @TestStep(When)
+def get_storage_policy(self, table_name, node=None):
+    """Get the storage policy of a table."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"SELECT storage_policy FROM system.tables WHERE name = '{table_name}'",
+        exitcode=0,
+        steps=True,
+    ).output.strip()
+
+
+@TestStep(When)
+def create_new_partition(
+    self, table_name, node=None, number_of_values=3, number_of_parts=1
+):
+    """Create a unique partition by inserting data with a unique partition key value.
+    Returns the partition ID (as string) that was created.
+    """
+    if node is None:
+        node = self.context.node
+
+    partition_id = str(random.randint(0, 255))
+
+    with By(f"Creating unique partition {partition_id}"):
+        for _ in range(number_of_parts):
+            node.query(
+                f"INSERT INTO {table_name} (p, i) SELECT {partition_id}, rand64() FROM numbers({number_of_values})",
+                exitcode=0,
+                steps=True,
+            )
+
+    return partition_id
+
+
+@TestStep(When)
 def get_column_type(self, table_name, column_name, node=None):
     """Get the type of a specific column from a table."""
     if node is None:
@@ -258,25 +296,45 @@ def get_random_part(self, table_name, node=None):
 
 
 @TestStep(When)
-def wait_for_all_merges_to_complete(self, node, table_name=None):
-    """Wait for all merges to complete on a given node."""
+def wait_for_all_mutations_to_complete(self, node=None, table_name=None):
+    """Wait for all mutations to complete on a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT count() FROM system.mutations WHERE is_done = 0"
+    else:
+        query = f"SELECT count() FROM system.mutations WHERE table = '{table_name}' AND is_done = 0"
 
     for attempt in retries(timeout=30, delay=1):
         with attempt:
-            if table_name:
-                active_merges = node.query(
-                    f"SELECT count() FROM system.merges WHERE table = '{table_name}'",
-                    exitcode=0,
-                    steps=True,
-                ).output.strip()
-            else:
-                active_merges = node.query(
-                    "SELECT count() FROM system.merges",
-                    exitcode=0,
-                    steps=True,
-                ).output.strip()
+            pending_mutations = node.query(
+                query,
+                exitcode=0,
+                steps=True,
+            ).output.strip()
+            assert int(pending_mutations) == 0, error()
 
-            assert int(active_merges) == 0, error()
+
+@TestStep(When)
+def wait_for_all_merges_to_complete(self, node=None, table_name=None):
+    """Wait for all merges to complete on a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT count() FROM system.merges"
+    else:
+        query = f"SELECT count() FROM system.merges WHERE table = '{table_name}'"
+
+    for attempt in retries(timeout=30, delay=1):
+        with attempt:
+            pending_merges = node.query(
+                query,
+                exitcode=0,
+                steps=True,
+            ).output.strip()
+            assert int(pending_merges) == 0, error()
 
 
 @TestStep(When)
@@ -289,22 +347,15 @@ def start_merges(self, table_name, node=None):
 
 
 @TestStep(When)
-def optimize_partition(self, table_name, partition, node=None):
-    """Optimize a partition of a table."""
-
+def flush_log(self, node=None, table_name=None):
+    """Flush the logs for the whole cluster or for a given table."""
     if node is None:
         node = self.context.node
 
-    if partition == "":
-        partition = get_random_partition(table_name=table_name, node=node)
-
-    start_merges(table_name=table_name, node=node)
-
-    node.query(
-        f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
-        exitcode=0,
-        steps=True,
-    )
+    if table_name is None:
+        node.query("SYSTEM FLUSH LOGS", exitcode=0)
+    else:
+        node.query(f"SYSTEM FLUSH LOGS {table_name}", exitcode=0)
 
 
 @TestStep(When)
@@ -353,7 +404,7 @@ def get_s3_parts(self, table_name, node=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    return [row.strip() for row in output.splitlines()]
 
 
 @TestStep(When)
@@ -522,9 +573,9 @@ def get_part_log(self, node, table_name=None):
     """Get the part log from the system.part_log table of a given node."""
 
     if table_name is None:
-        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0"
+        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0 ORDER BY part_name"
     else:
-        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0"
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0 ORDER BY part_name"
 
     output = node.query(
         query,
@@ -532,7 +583,7 @@ def get_part_log(self, node, table_name=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    return [row.strip() for row in output.splitlines()]
 
 
 @TestStep(When)
@@ -552,19 +603,46 @@ def get_system_exports(self, node=None):
 
 
 @TestStep(When)
-def get_num_active_exports(self, node=None):
+def get_num_active_exports(self, node=None, table_name=None):
     """Get the number of active exports from the system.exports table of a given node."""
 
     if node is None:
         node = self.context.node
 
+    if table_name is None:
+        query = "SELECT count() FROM system.exports"
+    else:
+        query = (
+            f"SELECT count() FROM system.exports WHERE source_table = '{table_name}'"
+        )
+
     num_active_exports = node.query(
-        "SELECT count() FROM system.exports",
+        query,
         exitcode=0,
         steps=True,
     ).output.strip()
 
     return int(num_active_exports)
+
+
+@TestStep(When)
+def get_average_export_duration(self, node=None, table_name=None):
+    """Get the average duration of the exports from the system.part_log table of a given node."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        query = "SELECT avg(duration_ms) FROM system.part_log WHERE event_type = 'ExportPart'"
+    else:
+        query = f"SELECT avg(duration_ms) FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}'"
+
+    average_duration = node.query(
+        query,
+        exitcode=0,
+        steps=True,
+    ).output.strip()
+
+    return float(average_duration)
 
 
 @TestStep(When)
@@ -636,7 +714,7 @@ def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_par
 
 
 @TestStep(When)
-def wait_for_all_exports_to_complete(self, node=None):
+def wait_for_all_exports_to_complete(self, node=None, table_name=None):
     """Wait for all exports to complete on a given node."""
 
     if node is None:
@@ -644,7 +722,37 @@ def wait_for_all_exports_to_complete(self, node=None):
 
     for attempt in retries(timeout=30, delay=1):
         with attempt:
-            assert get_num_active_exports(node=node) == 0, error()
+            assert (
+                get_num_active_exports(node=node, table_name=table_name) == 0
+            ), error()
+
+
+@TestStep(Then)
+def select_hash(self, table_name, node=None):
+    """Select a hash of the data from a table."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"SELECT groupBitXor(cityHash64(*)) FROM {table_name}",
+        exitcode=0,
+    ).output.strip()
+
+
+@TestStep(Then)
+def source_matches_destination_hash(
+    self, source_table, destination_table, source_node=None, destination_node=None
+):
+    """Check that source and destination table hash matches."""
+    if source_node is None:
+        source_node = self.context.node
+    if destination_node is None:
+        destination_node = self.context.node
+
+    source_hash = select_hash(table_name=source_table, node=source_node)
+    destination_hash = select_hash(table_name=destination_table, node=destination_node)
+
+    assert source_hash == destination_hash, error()
 
 
 @TestStep(Then)
@@ -659,12 +767,39 @@ def source_matches_destination(
 ):
     """Check that source and destination table data matches."""
 
+    wait_for_all_exports_to_complete(node=source_node, table_name=source_table)
+    source_matches_destination_rows(
+        source_table=source_table,
+        destination_table=destination_table,
+        source_node=source_node,
+        destination_node=destination_node,
+        source_data=source_data,
+        destination_data=destination_data,
+    )
+    source_matches_destination_hash(
+        source_table=source_table,
+        destination_table=destination_table,
+        source_node=source_node,
+        destination_node=destination_node,
+    )
+
+
+@TestStep(Then)
+def source_matches_destination_rows(
+    self,
+    source_table,
+    destination_table,
+    source_node=None,
+    destination_node=None,
+    source_data=None,
+    destination_data=None,
+):
+    """Check that source and destination table rows matches."""
+
     if source_node is None:
         source_node = self.context.node
     if destination_node is None:
         destination_node = self.context.node
-
-    wait_for_all_exports_to_complete(node=source_node)
 
     if source_data is None:
         source_data = select_all_ordered(table_name=source_table, node=source_node)
@@ -672,7 +807,21 @@ def source_matches_destination(
         destination_data = select_all_ordered(
             table_name=destination_table, node=destination_node
         )
+
     assert source_data == destination_data, error()
+
+
+@TestStep(Then)
+def part_log_matches_destination(self, source_table, destination_table, node=None):
+    """Check that the part log matches the destination table."""
+    if node is None:
+        node = self.context.node
+
+    wait_for_all_exports_to_complete(node=node, table_name=source_table)
+    flush_log(node=node, table_name="system.part_log")
+    part_log = get_part_log(node=node, table_name=source_table)
+    destination_parts = get_s3_parts(table_name=destination_table)
+    assert part_log == destination_parts, error()
 
 
 @TestStep(Then)

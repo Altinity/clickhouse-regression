@@ -235,6 +235,30 @@ RQ_ClickHouse_ExportPartition_Versions = Requirement(
     num="5.3",
 )
 
+RQ_ClickHouse_ExportPartition_LegacyTables = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LegacyTables",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions from ReplicatedMergeTree tables that were created in ClickHouse versions that did not have the export partition feature, where the ZooKeeper structure does not contain an exports directory.\n"
+        "\n"
+        "The system SHALL:\n"
+        "* Automatically create the necessary ZooKeeper structure (including the exports directory) when attempting to export from legacy tables\n"
+        "* Handle the absence of export-related metadata gracefully without errors\n"
+        "* Support export operations on tables created before the export partition feature was introduced\n"
+        "* Maintain backward compatibility with existing replicated tables regardless of when they were created\n"
+        "\n"
+        "This ensures that users can export partitions from existing production tables without requiring table recreation or migration, even if those tables were created before the export partition feature existed.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.4",
+)
+
 RQ_ClickHouse_ExportPartition_SourcePartStorage = Requirement(
     name="RQ.ClickHouse.ExportPartition.SourcePartStorage",
     version="1.0",
@@ -610,6 +634,45 @@ RQ_ClickHouse_ExportPartition_Settings_ManifestTTL = Requirement(
     num="13.6",
 )
 
+RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
+    name="RQ.ClickHouse.ExportPartition.QueryCancellation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.\n"
+        "\n"
+        "The system SHALL:\n"
+        "* Allow users to abort export partition operations that are in progress using `KILL QUERY`\n"
+        "* Stop exporting partitions that have not yet been exported when the query is cancelled\n"
+        "* Clean up any partial export state when a query is cancelled\n"
+        "* Return an appropriate error or cancellation message to the user\n"
+        "* Not leave orphaned export operations in the system after query cancellation\n"
+        "* Allow users to retry the export operation after cancellation if needed\n"
+        "\n"
+        "Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "-- Start export in one session\n"
+        "ALTER TABLE source_table \n"
+        "EXPORT PARTITION ID '2020' \n"
+        "TO TABLE destination_table\n"
+        "SETTINGS allow_experimental_export_merge_tree_part = 1;\n"
+        "\n"
+        "-- Cancel the export in another session\n"
+        "KILL QUERY WHERE query_id = '<query_id>';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.7",
+)
+
 RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues = Requirement(
     name="RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues",
     version="1.0",
@@ -682,6 +745,24 @@ RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption = Requirement(
     link=None,
     level=2,
     num="14.3",
+)
+
+RQ_ClickHouse_ExportPartition_NetworkResilience_KeeperInterruption = Requirement(
+    name="RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL handle ClickHouse Keeper interruptions during the initial execution of `EXPORT PARTITION` queries.\n"
+        "\n"
+        "The system must handle these interruptions gracefully to ensure export operations can complete successfully.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.4",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_SameTable = Requirement(
@@ -1176,31 +1257,13 @@ RQ_ClickHouse_ExportPartition_Security_Network = Requirement(
         "\n"
         "Secure network connections prevent unauthorized access and ensure data integrity during export operations.\n"
         "\n"
-    ),
-    link=None,
-    level=2,
-    num="24.3",
-)
-
-RQ_ClickHouse_ExportPartition_Security_CredentialManagement = Requirement(
-    name="RQ.ClickHouse.ExportPartition.Security.CredentialManagement",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL use secure credential storage for export operations and SHALL avoid exposing credentials in logs or error messages.\n"
-        "\n"
-        "Proper credential management prevents unauthorized access to destination storage systems and protects sensitive authentication information.\n"
-        "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "\n"
     ),
     link=None,
     level=2,
-    num="24.4",
+    num="24.3",
 )
 
 SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
@@ -1239,6 +1302,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         Heading(name="RQ.ClickHouse.ExportPartition.ClustersNodes", level=2, num="5.1"),
         Heading(name="RQ.ClickHouse.ExportPartition.Shards", level=2, num="5.2"),
         Heading(name="RQ.ClickHouse.ExportPartition.Versions", level=2, num="5.3"),
+        Heading(name="RQ.ClickHouse.ExportPartition.LegacyTables", level=2, num="5.4"),
         Heading(name="Supported source part storage types", level=1, num="6"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.SourcePartStorage", level=2, num="6.1"
@@ -1299,6 +1363,9 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             level=2,
             num="13.6",
         ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation", level=2, num="13.7"
+        ),
         Heading(name="Network resilience", level=1, num="14"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues",
@@ -1314,6 +1381,11 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             name="RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption",
             level=2,
             num="14.3",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption",
+            level=2,
+            num="14.4",
         ),
         Heading(name="Export operation restrictions", level=1, num="15"),
         Heading(name="Preventing same table exports", level=2, num="15.1"),
@@ -1410,11 +1482,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPartition.Security.Network", level=2, num="24.3"
         ),
-        Heading(
-            name="RQ.ClickHouse.ExportPartition.Security.CredentialManagement",
-            level=2,
-            num="24.4",
-        ),
     ),
     requirements=(
         RQ_ClickHouse_ExportPartition_S3,
@@ -1427,6 +1494,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_ClustersNodes,
         RQ_ClickHouse_ExportPartition_Shards,
         RQ_ClickHouse_ExportPartition_Versions,
+        RQ_ClickHouse_ExportPartition_LegacyTables,
         RQ_ClickHouse_ExportPartition_SourcePartStorage,
         RQ_ClickHouse_ExportPartition_StoragePolicies,
         RQ_ClickHouse_ExportPartition_DestinationEngines,
@@ -1443,9 +1511,11 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_PartialProgress,
         RQ_ClickHouse_ExportPartition_Cleanup,
         RQ_ClickHouse_ExportPartition_Settings_ManifestTTL,
+        RQ_ClickHouse_ExportPartition_QueryCancellation,
         RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues,
         RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption,
         RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption,
+        RQ_ClickHouse_ExportPartition_NetworkResilience_KeeperInterruption,
         RQ_ClickHouse_ExportPartition_Restrictions_SameTable,
         RQ_ClickHouse_ExportPartition_Restrictions_DestinationSupport,
         RQ_ClickHouse_ExportPartition_Restrictions_LocalTable,
@@ -1466,7 +1536,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Security_RBAC,
         RQ_ClickHouse_ExportPartition_Security_DataEncryption,
         RQ_ClickHouse_ExportPartition_Security_Network,
-        RQ_ClickHouse_ExportPartition_Security_CredentialManagement,
     ),
     content=r"""
 # SRS-016 ClickHouse Export Partition to S3
@@ -1489,6 +1558,7 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 5.1 [RQ.ClickHouse.ExportPartition.ClustersNodes](#rqclickhouseexportpartitionclustersnodes)
     * 5.2 [RQ.ClickHouse.ExportPartition.Shards](#rqclickhouseexportpartitionshards)
     * 5.3 [RQ.ClickHouse.ExportPartition.Versions](#rqclickhouseexportpartitionversions)
+    * 5.4 [RQ.ClickHouse.ExportPartition.LegacyTables](#rqclickhouseexportpartitionlegacytables)
 * 6 [Supported source part storage types](#supported-source-part-storage-types)
     * 6.1 [RQ.ClickHouse.ExportPartition.SourcePartStorage](#rqclickhouseexportpartitionsourcepartstorage)
 * 7 [Storage policies and volumes](#storage-policies-and-volumes)
@@ -1513,10 +1583,12 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 13.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
     * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
     * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
+    * 13.7 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
 * 14 [Network resilience](#network-resilience)
     * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
     * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
     * 14.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
+    * 14.4 [RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption](#rqclickhouseexportpartitionnetworkresiliencekeeperinterruption)
 * 15 [Export operation restrictions](#export-operation-restrictions)
     * 15.1 [Preventing same table exports](#preventing-same-table-exports)
         * 15.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
@@ -1552,7 +1624,6 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 24.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
     * 24.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
     * 24.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
-    * 24.4 [RQ.ClickHouse.ExportPartition.Security.CredentialManagement](#rqclickhouseexportpartitionsecuritycredentialmanagement)
 
 ## Introduction
 
@@ -1682,6 +1753,19 @@ version: 1.0
 [ClickHouse] SHALL support exporting partitions from source tables that are stored on servers with different ClickHouse versions than the destination server.
 
 Users can export partitions from tables on servers with older ClickHouse versions to tables on servers with newer versions, enabling data migration and version upgrades.
+
+### RQ.ClickHouse.ExportPartition.LegacyTables
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions from ReplicatedMergeTree tables that were created in ClickHouse versions that did not have the export partition feature, where the ZooKeeper structure does not contain an exports directory.
+
+The system SHALL:
+* Automatically create the necessary ZooKeeper structure (including the exports directory) when attempting to export from legacy tables
+* Handle the absence of export-related metadata gracefully without errors
+* Support export operations on tables created before the export partition feature was introduced
+* Maintain backward compatibility with existing replicated tables regardless of when they were created
+
+This ensures that users can export partitions from existing production tables without requiring table recreation or migration, even if those tables were created before the export partition feature existed.
 
 ## Supported source part storage types
 
@@ -1898,6 +1982,34 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
          export_merge_tree_partition_manifest_ttl = 360
 ```
 
+### RQ.ClickHouse.ExportPartition.QueryCancellation
+version: 1.0
+
+[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.
+
+The system SHALL:
+* Allow users to abort export partition operations that are in progress using `KILL QUERY`
+* Stop exporting partitions that have not yet been exported when the query is cancelled
+* Clean up any partial export state when a query is cancelled
+* Return an appropriate error or cancellation message to the user
+* Not leave orphaned export operations in the system after query cancellation
+* Allow users to retry the export operation after cancellation if needed
+
+Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.
+
+For example,
+
+```sql
+-- Start export in one session
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1;
+
+-- Cancel the export in another session
+KILL QUERY WHERE query_id = '<query_id>';
+```
+
 ## Network resilience
 
 ### RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues
@@ -1940,6 +2052,13 @@ version: 1.0
 * Ensuring that parts already exported are not re-exported after node restart
 
 Node failures are common in distributed systems, and export operations must be able to recover and continue without data loss or duplication.
+
+### RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption
+version: 1.0
+
+[ClickHouse] SHALL handle ClickHouse Keeper interruptions during the initial execution of `EXPORT PARTITION` queries.
+
+The system must handle these interruptions gracefully to ensure export operations can complete successfully.
 
 ## Export operation restrictions
 
@@ -2248,13 +2367,6 @@ version: 1.0
 [ClickHouse] SHALL use secure connections to destination storage during export operations. For S3-compatible storage, connections must use HTTPS. For other storage types, secure protocols appropriate to the storage system must be used.
 
 Secure network connections prevent unauthorized access and ensure data integrity during export operations.
-
-### RQ.ClickHouse.ExportPartition.Security.CredentialManagement
-version: 1.0
-
-[ClickHouse] SHALL use secure credential storage for export operations and SHALL avoid exposing credentials in logs or error messages.
-
-Proper credential management prevents unauthorized access to destination storage systems and protects sensitive authentication information.
 
 
 [ClickHouse]: https://clickhouse.com
