@@ -42,7 +42,10 @@ xfails = {
     "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),
     ],
-    "/iceberg/iceberg cache/iceberg table engine/*": [
+    "/iceberg/iceberg cache/rest catalog/iceberg table engine/*": [
+        (Fail, "Need to investigate"),
+    ],
+    "/iceberg/iceberg cache/glue catalog/iceberg table engine/*": [
         (Fail, "Need to investigate"),
     ],
     "/iceberg/iceberg engine/* catalog/predicate push down/issue with decimal column": [
