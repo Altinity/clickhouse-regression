@@ -125,6 +125,9 @@ def before_export(self, alter_function, kwargs):
                 query_settings="storage_policy = 'tiered_storage'",
             )
 
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
+
     with When(f"I {alter_function.__name__} on the source table"):
         alter_function(table_name=source_table, **kwargs)
 
@@ -133,7 +136,7 @@ def before_export(self, alter_function, kwargs):
             table_name=source_table,
         )
 
-    with When("I create an empty S3 table"):
+    with And("I create an empty S3 table"):
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -191,18 +194,21 @@ def after_export(self, alter_function, kwargs):
             columns=steps.default_columns(simple=False),
         )
 
-    with And("I export parts to the S3 table"):
+    with When("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with When("I read data on the S3 table"):
+    with And("I read data on the S3 table"):
         steps.wait_for_all_exports_to_complete(node=self.context.node)
         initial_destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
+
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
 
     with And(f"I {alter_function.__name__} on the source table"):
         alter_function(table_name=source_table, **kwargs)
@@ -257,12 +263,15 @@ def during_export(self, alter_function, kwargs):
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with And("I export parts to the S3 table"):
+    with When("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
+
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
 
     with And(f"I {alter_function.__name__} on the source table"):
         alter_function(table_name=source_table, **kwargs)
@@ -324,6 +333,9 @@ def during_minio_interruption(self, alter_function, kwargs):
             destination_table=s3_table_name,
             node=self.context.node,
         )
+
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
 
     with And(f"I {alter_function.__name__} on the source table"):
         alter_function(table_name=source_table, **kwargs)

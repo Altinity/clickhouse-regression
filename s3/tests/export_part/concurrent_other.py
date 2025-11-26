@@ -226,17 +226,27 @@ def merge_parts(self):
 
 def get_actions():
     return [
-        (select_all_ordered, {}),
-        (select_hash, {}),
+        (select_all_ordered,),
+        (select_hash,),
     ]
+
+
+@TestStep(When)
+def select_and_collect(self, table_name, select_action, results_list, node=None):
+    """Wrapper to collect select results."""
+    if node is None:
+        node = self.context.node
+    result = select_action(table_name=table_name, node=node)
+    results_list.append(result)
+    return result
 
 
 @TestOutline(Scenario)
 @Examples(
-    "action, kwargs",
+    "select_action",
     get_actions(),
 )
-def stress_select(self, action, kwargs):
+def stress_select(self, select_action):
     """Test a high volume of actions in parallel with exports."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -252,10 +262,15 @@ def stress_select(self, action, kwargs):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
+    with And("I get starting data"):
+        source_data = select_action(table_name=source_table)
+
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
-    with When(f"I export parts to the S3 table in parallel with {action.__name__}"):
+    with When(f"I export parts to the S3 table in parallel with {select_action.__name__}"):
+        select_results = []
+        
         with Pool(10) as executor:
             for _ in range(100):
                 Step(test=export_parts, parallel=True, executor=executor)(
@@ -265,12 +280,18 @@ def stress_select(self, action, kwargs):
                     parts=[get_random_part(table_name=source_table)],
                     exitcode=1,
                 )
-                Step(test=action, parallel=True, executor=executor)(
-                    table_name=source_table, **kwargs
+                Step(test=select_and_collect, parallel=True, executor=executor)(
+                    table_name=source_table,
+                    select_action=select_action,
+                    results_list=select_results,
                 )
             join()
 
-    with Then("Check part log matches destination"):
+    with Then("Check data is consistent"):
+        assert len(select_results) == 100, error()
+        assert all(result == source_data for result in select_results), error()
+
+    with And("Check part log matches destination"):
         part_log_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
