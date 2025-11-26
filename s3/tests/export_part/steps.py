@@ -564,6 +564,8 @@ def get_export_events(self, node):
         events["PartsExports"] = 0
     if "PartsExportDuplicated" not in events:
         events["PartsExportDuplicated"] = 0
+    if "PartsExportTotalMilliseconds" not in events:
+        events["PartsExportTotalMilliseconds"] = 0
 
     return events
 
@@ -767,7 +769,7 @@ def source_matches_destination(
 ):
     """Check that source and destination table data matches."""
 
-    wait_for_all_exports_to_complete(node=source_node, table_name=source_table)
+    wait_for_all_exports_to_complete(node=source_node)
     source_matches_destination_rows(
         source_table=source_table,
         destination_table=destination_table,
