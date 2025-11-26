@@ -2,6 +2,7 @@ import os
 import iceberg.tests.steps.catalog as catalog_steps
 
 from testflows.core import *
+from testflows.asserts import error
 from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 
 CATALOG_TYPE = "rest"
@@ -374,3 +375,48 @@ def get_iceberg_table_name(
         )
 
     return f"{database_name}.\\`{namespace}.{table_name}\\`"
+
+
+@TestStep(Then)
+def check_values_in_system_tables(self, table_name, database):
+    """Check that values are present in system.tables table."""
+    node = self.context.node
+
+    with By("check that database is correct"):
+        database_name = node.query(
+            f"SELECT database FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert database_name == database, error()
+
+    with By("check that engine is correct"):
+        engine = node.query(
+            f"SELECT engine FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert engine == "IcebergS3", error()
+
+    with By("check that full engine is correct"):
+        full_engine = node.query(
+            f"SELECT engine_full FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert (
+            full_engine
+            == "Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')"
+        ), error()
+
+    with By("check that total rows is correct"):
+        total_rows = node.query(
+            f"SELECT total_rows FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert total_rows == "10", error()
+
+    with By("check that total bytes is correct"):
+        total_bytes = node.query(
+            f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert total_bytes == "12990", error()
+
+    with By("check metdata path"):
+        metadata_path = node.query(
+            f"SELECT metadata_path FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert metadata_path == "", error()
