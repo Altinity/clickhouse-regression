@@ -37,14 +37,80 @@ from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
 from iceberg.tests.steps.catalog import create_iceberg_table, random_name
+from swarms.tests.feature import feature
 
 
-@TestScenario
-def sanity(self, minio_root_user, minio_root_password):
-    """Test Iceberg table creation and reading data from ClickHouse using
-    icebergS3 table function."""
-    namespace = f"icebergS3_{getuid()}"
-    number_of_tables = 4
+@TestCheck
+@Name("read iceberg table with icebergS3 table function")
+def read_iceberg_table_with_icebergS3_table_function(
+    self,
+    table_uuid,
+    expected_result,
+    minio_root_user,
+    minio_root_password,
+):
+    with Then("read data with icebergS3 table function"):
+        result = icebergS3.read_data_with_icebergS3_table_function(
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            order_by="tuple(*)",
+            iceberg_metadata_table_uuid=table_uuid,
+        )
+        assert result.output.strip() == expected_result.strip(), error()
+
+
+@TestCheck
+@Name("read iceberg table with icebergS3Cluster table function")
+def read_iceberg_table_with_icebergS3Cluster_table_function(
+    self,
+    table_uuid,
+    expected_result,
+    minio_root_user,
+    minio_root_password,
+    cluster_name="replicated_cluster",
+):
+    with Then("read data with icebergS3Cluster table function"):
+        result = icebergS3.read_data_with_icebergS3Cluster_table_function(
+            cluster_name=cluster_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            order_by="tuple(*)",
+            iceberg_metadata_table_uuid=table_uuid,
+        )
+        assert result.output.strip() == expected_result.strip(), error()
+
+
+@TestCheck
+@Name("read with DataLakeCatalog database")
+def read_iceberg_table_with_DataLakeCatalog_database(
+    self,
+    database_name,
+    namespace,
+    table_name,
+    expected_result,
+):
+    with Then("read data with DataLakeCatalog database"):
+        result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
+            database_name=database_name,
+            namespace=namespace,
+            table_name=table_name,
+            order_by="tuple(*)",
+        )
+        assert result.output.strip() == expected_result.strip(), error()
+
+
+@TestFeature
+def check_several_iceberg_tables_in_one_dir(
+    self, minio_root_user, minio_root_password, with_partitioning=False
+):
+    """Check that several iceberg tables in one directory can be read correctly using icebergS3,
+    icebergS3Cluster table functions and DataLakeCatalog database."""
+
+    database_name = f"database_{getuid()}"
+    namespace = f"namespace_{getuid()}"
+
+    number_of_rows = 10
+    number_of_tables = 20
     table_names = [f"table_{getuid()}_{i}" for i in range(number_of_tables)]
     number_of_rows = 10
 
@@ -56,21 +122,23 @@ def sanity(self, minio_root_user, minio_root_password):
         )
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 
-    with When(f"define schema for tables"):
+    with And(f"define schema and partition spec for tables"):
         schema = Schema(
             NestedField(
                 field_id=1, name="name", field_type=StringType(), required=False
             ),
         )
-        sort_order = SortOrder(SortField(source_id=1, transform=IdentityTransform()))
-        partition_spec = PartitionSpec(
-            PartitionField(
-                source_id=1,
-                field_id=1001,
-                transform=IdentityTransform(),
-                name="name",
-            ),
-        )
+        if with_partitioning:
+            partition_spec = PartitionSpec(
+                PartitionField(
+                    source_id=1,
+                    field_id=1001,
+                    transform=IdentityTransform(),
+                    name="name",
+                ),
+            )
+        else:
+            partition_spec = PartitionSpec()
 
     with And(f"create {number_of_tables} tables and populate them with data"):
         tables = []
@@ -82,8 +150,9 @@ def sanity(self, minio_root_user, minio_root_password):
                 schema=schema,
                 location="s3://warehouse/data",
                 partition_spec=partition_spec,
-                sort_order=sort_order,
+                sort_order=SortOrder(),
             )
+
             data = []
             for i in range(number_of_rows):
                 data.append(
@@ -93,47 +162,88 @@ def sanity(self, minio_root_user, minio_root_password):
                 )
             df = pa.Table.from_pylist(data)
             table.append(df)
+            table.append(df)
+
             tables.append(table)
 
-    with And("constract expected result"):
+    with And("create DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with When("construct expected result"):
         expected_results = []
         for table_number in range(number_of_tables):
-            for i in range(number_of_rows):
-                expected_result_list = [
-                    f"table_number_{table_number}_row_{i}"
-                    for i in range(number_of_rows)
-                ]
-                expected_result = "\n".join(expected_result_list)
-                expected_results.append(expected_result)
+            expected_result_list = [
+                f"table_number_{table_number}_row_{i}" for i in range(number_of_rows)
+            ] * 2
+            expected_result_list.sort()
+            expected_result = "\n".join(expected_result_list)
+            expected_results.append(expected_result)
 
-    with And(
-        "read data in clickhouse using icebergS3 table function and check if it's correct"
-    ):
-        note(table_names)
+    # read with icebergS3 table function
+    with Pool(5) as pool:
         for table_number, (table_name, table) in enumerate(zip(table_names, tables)):
-            with By(f"read data from table number {table_number}"):
-                # Retrieve the table UUID from the PyIceberg table metadata
-                table_uuid = table.metadata.table_uuid
-                note(f"Table {table_number} UUID: {table_uuid}")
-                
-                result = icebergS3.read_data_with_icebergS3_table_function(
-                    storage_endpoint="http://minio:9000/warehouse/data",
-                    s3_access_key_id=minio_root_user,
-                    s3_secret_access_key=minio_root_password,
-                    format="TabSeparated",
-                    order_by="tuple(*)",
-                    iceberg_metadata_table_uuid=table_uuid,
-                )
-                note(f"table number {table_number}")
-                note("expected results")
-                note(expected_results[table_number])
-                assert result.output.strip() == expected_results[table_number], error()
+            table_uuid = table.metadata.table_uuid
+            Check(
+                name=f"read data from table #{table_number}/{number_of_tables} with icebergS3",
+                test=read_iceberg_table_with_icebergS3_table_function,
+                parallel=True,
+                executor=pool,
+            )(
+                table_uuid=table_uuid,
+                expected_result=expected_results[table_number],
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+        join()
+
+    # read with icebergS3Cluster table function
+    with Pool(5) as pool:
+        for table_number, (table_name, table) in enumerate(zip(table_names, tables)):
+            table_uuid = table.metadata.table_uuid
+            Check(
+                name=f"read data from table #{table_number}/{number_of_tables} with icebergS3Cluster",
+                test=read_iceberg_table_with_icebergS3Cluster_table_function,
+                parallel=True,
+                executor=pool,
+            )(
+                table_uuid=table_uuid,
+                cluster_name="replicated_cluster",
+                expected_result=expected_results[table_number],
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+        join()
+
+    # read with DataLakeCatalog database
+    with Pool(5) as pool:
+        for table_number, (table_name, table) in enumerate(zip(table_names, tables)):
+            table_uuid = table.metadata.table_uuid
+            Check(
+                name=f"read data from table #{table_number}/{number_of_tables} with DataLakeCatalog",
+                test=read_iceberg_table_with_DataLakeCatalog_database,
+                parallel=True,
+                executor=pool,
+            )(
+                database_name=database_name,
+                namespace=namespace,
+                table_name=table_name,
+                expected_result=expected_results[table_number],
+            )
+        join()
 
 
 @TestFeature
 @Name("several iceberg tables in one dir")
 def several_iceberg_tables_in_one_dir(self, minio_root_user, minio_root_password):
-    self.context.catalog = "rest"
-    Scenario(test=sanity)(
+    Feature(name="without partitioning", test=check_several_iceberg_tables_in_one_dir)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(name="with partitioning", test=check_several_iceberg_tables_in_one_dir)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        with_partitioning=True,
     )
