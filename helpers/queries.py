@@ -32,14 +32,17 @@ def get_cluster_nodes(self, cluster, node=None):
 
 
 @TestStep(When)
-def select_all_ordered(self, table_name, node=None, order_by="p, i"):
+def select_all_ordered(self, table_name, node=None, order_by="p, i", identifier=None):
     """Select all data from a table ordered by partition and index columns."""
+
+    if identifier is None:
+        identifier = "*"
 
     if node is None:
         node = self.context.node
 
     return node.query(
-        f"SELECT * FROM {table_name} ORDER BY {order_by}", exitcode=0
+        f"SELECT {identifier} FROM {table_name} ORDER BY {order_by}", exitcode=0
     ).output.splitlines()
 
 

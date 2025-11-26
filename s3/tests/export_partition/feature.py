@@ -27,3 +27,4 @@ def minio(self, uri, bucket_prefix):
     )
     Feature(run=load("s3.tests.export_partition.alter_source_timing", "feature"))
     Feature(run=load("s3.tests.export_partition.replica_failover", "feature"))
+    Feature(run=load("s3.tests.export_partition.versions", "feature"))

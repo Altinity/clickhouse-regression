@@ -6,7 +6,7 @@ from s3.tests.export_partition.steps import (
 )
 from s3.tests.export_part.steps import *
 from helpers.common import getuid
-from s3.requirements.export_part import *
+from s3.requirements.export_partition import *
 
 
 # TODO
@@ -21,6 +21,7 @@ from s3.requirements.export_part import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Logging("1.0"))
 def part_exports(self):
     """Check part exports are properly tracked in system.part_log."""
 
@@ -60,6 +61,7 @@ def part_exports(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_Idempotency("1.0"))
 def duplicate_exports(self):
     """Check duplicate exports are ignored and not exported again."""
 
@@ -100,7 +102,11 @@ def duplicate_exports(self):
 
 @TestFeature
 @Name("system monitoring")
-@Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Logging("1.0"),
+    RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"),
+    RQ_ClickHouse_ExportPartition_Idempotency("1.0"),
+)
 def feature(self):
     """Check system monitoring of export events."""
 

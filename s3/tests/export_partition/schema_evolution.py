@@ -9,6 +9,7 @@ from s3.tests.export_partition.steps import (
     default_columns,
     source_matches_destination,
 )
+from s3.requirements.export_partition import *
 
 
 @TestCheck
@@ -110,6 +111,7 @@ def schema_evolution_combos(self):
 
 @TestFeature
 @Name("schema evolution")
+@Requirements(RQ_ClickHouse_ExportPartition_SchemaChangeIsolation("1.0"))
 def feature(self):
     """Check exporting parts to S3 storage when source table has parts with both old and new schema."""
 

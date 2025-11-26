@@ -263,15 +263,16 @@ def max_bandwidth(self):
             node=self.context.node,
         )
 
-    with And("I record the duration of the export"):
-        initial_time = time.time()
-        while get_num_active_exports(node=self.context.node) > 0:
-            pass
-        duration_unlimited_bandwidth = time.time() - initial_time
+    with And("I record the average duration of the exports"):
+        wait_for_all_exports_to_complete(table_name=source_table)
+        flush_log(table_name="system.part_log")
+        avg_duration_unlimited_bandwidth = get_average_export_duration(
+            table_name=source_table
+        )
 
-    with When("I set the max bandwidth to 1024 bytes per second"):
+    with When("I set the max bandwidth to 512 bytes per second"):
         config_d.create_and_add(
-            entries={"max_exports_bandwidth_for_server": "1024"},
+            entries={"max_exports_bandwidth_for_server": "512"},
             config_file="max_bandwidth.xml",
             node=self.context.node,
         )
@@ -296,15 +297,18 @@ def max_bandwidth(self):
         )
 
     with And("I record the duration of the export"):
-        initial_time = time.time()
-        while get_num_active_exports(node=self.context.node) > 0:
-            pass
-        duration_limited_bandwidth = time.time() - initial_time
+        wait_for_all_exports_to_complete(table_name=source_table)
+        flush_log(table_name="system.part_log")
+        avg_duration_limited_bandwidth = get_average_export_duration(
+            table_name=source_table
+        )
 
     with Then(
         "I check that the duration of the export with restricted bandwidth is more than 10 times greater"
     ):
-        assert duration_limited_bandwidth > duration_unlimited_bandwidth * 10, error()
+        assert (
+            avg_duration_limited_bandwidth > avg_duration_unlimited_bandwidth * 10
+        ), error()
 
 
 @TestFeature

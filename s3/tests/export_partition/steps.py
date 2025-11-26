@@ -6,6 +6,7 @@ from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
+from s3.tests.export_part.steps import wait_for_all_exports_to_complete
 
 
 @TestStep(Given)
@@ -354,35 +355,41 @@ def export_partitions(
     source_table,
     destination_table,
     node,
-    parts=None,
+    partitions=None,
     exitcode=0,
     settings=None,
     inline_settings=True,
+    retry_times=0,
+    force_export=False,
 ):
     """Export partitions from a source table to a destination table on the same node. If partitions are not provided, all partitions will be exported."""
 
-    if parts is None:
-        parts = get_partitions(table_name=source_table, node=node)
+    if partitions is None:
+        partitions = get_partitions(table_name=source_table, node=node)
 
-    if inline_settings is True:
+    if inline_settings:
         inline_settings = self.context.default_settings
+
+    if force_export:
+        inline_settings.append(("export_merge_tree_partition_force_export", 1))
 
     no_checks = exitcode != 0
 
     output = []
-
-    for part in parts:
-        output.append(
-            node.query(
-                f"ALTER TABLE {source_table} EXPORT PARTITION ID '{part}' TO TABLE {destination_table}",
-                exitcode=exitcode,
-                no_checks=no_checks,
-                steps=True,
-                settings=settings,
-                inline_settings=inline_settings,
-            )
-        )
-
+    with By(f"running EXPORT PARTITION for {source_table} partitions"):
+        for partition in partitions:
+            for attempt in retries(count=retry_times, delay=5):
+                with attempt:
+                    output.append(
+                        node.query(
+                            f"ALTER TABLE {source_table} EXPORT PARTITION ID '{partition}' TO TABLE {destination_table}",
+                            exitcode=exitcode,
+                            no_checks=no_checks,
+                            steps=True,
+                            settings=settings,
+                            inline_settings=inline_settings,
+                        )
+                    )
     return output
 
 
@@ -437,9 +444,285 @@ def get_system_exports(self, node):
     return [line.strip().split("\t") for line in exports]
 
 
+@TestStep
+def check_export_status(self, status, source_table, node=None):
+    """Check the export status in system.replicated_partition_exports."""
+
+    if node is None:
+        node = self.context.node
+
+    exports = node.query(
+        f"SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = '{status}' AND source_table = '{source_table}'",
+        exitcode=0,
+        no_checks=True,
+    )
+
+    return exports
+
+
+@TestStep(When)
+def wait_for_export_to_start(self, source_table, node=None, assertion=None):
+    """Wait for export partition operation to start."""
+    with By("checking export status until it starts"):
+
+        for attempt in retries(timeout=35, delay=3):
+            with attempt:
+                exports = check_export_status(
+                    status="PENDING", source_table=source_table, node=node
+                )
+
+                if assertion is None:
+                    assert int(exports.output.strip()) > 0, error()
+                else:
+                    assert assertion, error()
+
+
+@TestStep(When)
+def wait_for_export_to_complete(self, source_table, node=None, assertion=None):
+    """Wait for export partition operation to complete."""
+    with By("checking export status until it starts"):
+        for attempt in retries(timeout=35, delay=3):
+            with attempt:
+                exports = check_export_status(
+                    status="COMPLETED", source_table=source_table, node=node
+                )
+
+                if assertion is None:
+                    assert int(exports.output.strip()) > 0, error()
+                else:
+                    assert assertion, error()
+
+
+@TestStep(When)
+def check_error_export_status(self, source_table, node=None, assertion=None):
+    """Check error export status."""
+    with By("checking export status until it starts"):
+        exports = check_export_status(
+            status="ERROR", source_table=source_table, node=node
+        )
+
+        if assertion is None:
+            assert int(exports.output.strip()) > 0, error()
+        else:
+            assert assertion, error()
+
+
+@TestStep
+def get_export_field(
+    self,
+    field_name,
+    source_table,
+    timeout=30,
+    delay=3,
+    node=None,
+    where_clause=None,
+    select_clause=None,
+):
+    """Get a field value from system.replicated_partition_exports table."""
+
+    if node is None:
+        node = self.context.node
+
+    if select_clause is None:
+        select_clause = field_name
+
+    base_where = f"source_table = '{source_table}'"
+    if where_clause:
+        where_clause = f"{base_where} AND {where_clause}"
+    else:
+        where_clause = base_where
+
+    query = f"SELECT {select_clause} FROM system.replicated_partition_exports WHERE {where_clause}"
+
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            result = node.query(
+                query,
+                exitcode=0,
+                no_checks=True,
+            )
+
+    return result
+
+
+@TestStep
+def get_source_database(self, source_table, timeout=30, delay=3, node=None):
+    """Get source_database from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="source_database",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_destination_database(self, source_table, timeout=30, delay=3, node=None):
+    """Get destination_database from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="destination_database",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_destination_table(self, source_table, timeout=30, delay=3, node=None):
+    """Get destination_table from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="destination_table",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_create_time(self, source_table, timeout=30, delay=3, node=None):
+    """Get create_time from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="create_time",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_partition_id(self, source_table, timeout=30, delay=3, node=None):
+    """Get partition_id from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="partition_id",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_transaction_id(self, source_table, timeout=30, delay=3, node=None):
+    """Get transaction_id from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="transaction_id",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_source_replica(self, source_table, timeout=30, delay=3, node=None):
+    """Get source_replica from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="source_replica",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_parts(self, source_table, timeout=30, delay=3, node=None):
+    """Get parts array from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="parts",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_parts_count(self, source_table, timeout=30, delay=3, node=None):
+    """Get parts_count from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="parts_count",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_parts_to_do(self, source_table, timeout=30, delay=3, node=None):
+    """Get parts_to_do from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="parts_to_do",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_exception_replica(self, source_table, timeout=30, delay=3, node=None):
+    """Get exception_replica from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="exception_replica",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_last_exception(self, source_table, timeout=30, delay=3, node=None):
+    """Get last_exception from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="last_exception",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_exception_part(self, source_table, timeout=30, delay=3, node=None):
+    """Get exception_part from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="exception_part",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
+@TestStep
+def get_exception_count(self, source_table, timeout=30, delay=3, node=None):
+    """Get exception_count from system.replicated_partition_exports."""
+    return get_export_field(
+        field_name="exception_count",
+        source_table=source_table,
+        timeout=timeout,
+        delay=delay,
+        node=node,
+    )
+
+
 @TestStep(Then)
 def source_matches_destination(
-    self, source_table, destination_table, source_node=None, destination_node=None
+    self,
+    source_table,
+    destination_table,
+    source_node=None,
+    destination_node=None,
+    partition=None,
+    source_data=None,
+    destination_data=None,
 ):
     """Check that source and destination table data matches."""
 
@@ -448,11 +731,21 @@ def source_matches_destination(
     if destination_node is None:
         destination_node = self.context.node
 
-    source_data = select_all_ordered(table_name=source_table, node=source_node)
-    destination_data = select_all_ordered(
-        table_name=destination_table, node=destination_node
-    )
-    assert source_data == destination_data, error()
+    # wait_for_export_to_complete(source_table=source_table, node=source_node)
+
+    for attempt in retries(timeout=35, delay=3):
+        with attempt:
+            if source_data is None:
+                source_data = select_all_ordered(
+                    table_name=source_table, node=source_node, identifier=partition
+                )
+            if destination_data is None:
+                destination_data = select_all_ordered(
+                    table_name=destination_table,
+                    node=destination_node,
+                    identifier=partition,
+                )
+            assert source_data == destination_data, error()
 
 
 @TestStep(Then)
