@@ -16,6 +16,51 @@ from helpers.cluster import ClickHouseNode
 # The extra [0] could be avoided with TSV format, but that does not guarantee valid JSON.
 
 
+@TestStep(Then)
+def select_hash(self, table_name, node=None):
+    """Select a hash of the data from a table."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"SELECT groupBitXor(cityHash64(*)) FROM {table_name}",
+        exitcode=0,
+    ).output.strip()
+
+
+@TestStep(Then)
+def table_hashes_match(
+    self, table_name1, table_name2, node=None
+):
+    """Check that two table hashes match, returning mismatched rows."""
+    if node is None:
+        node = self.context.node
+
+    hash1 = select_hash(table_name=table_name1, node=node)
+    hash2 = select_hash(table_name=table_name2, node=node)
+
+    msg = "Table hashes match."
+
+    if hash1 != hash2:
+        msg = "Table hashes do not match."
+        
+        table_data1 = select_all_ordered(table_name=table_name1, node=node)
+        table_data2 = select_all_ordered(table_name=table_name2, node=node)
+        table_set1 = set(table_data1)
+        table_set2 = set(table_data2)
+
+        missing = table_set1 - table_set2
+        extra = table_set2 - table_set1
+        if missing:
+            msg += f"\nMissing in {table_name2} ({len(missing)} rows): {sorted(list(missing))}"
+        if extra:
+            msg += f"\nExtra in {table_name2} ({len(extra)} rows): {sorted(list(extra))}"
+
+        return False, msg
+
+    return True, msg
+
+
 @TestStep(Given)
 def get_cluster_nodes(self, cluster, node=None):
     """Get all nodes in a cluster."""
