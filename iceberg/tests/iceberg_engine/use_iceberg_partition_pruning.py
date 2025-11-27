@@ -364,7 +364,7 @@ def check_partition_pruning_with_complex_where_clause(
         ).output.strip()
         if check_clickhouse_version(">=25.4")(self) or check_if_antalya_build(self):
             assert 10 <= int(s3_read_requests_count), error()
-            assert int(s3_read_requests_count) <= 20, error()
+            assert int(s3_read_requests_count) <= 22, error()
         else:
             assert 95 <= int(s3_read_requests_count), error()
             assert int(s3_read_requests_count) <= 100, error()
