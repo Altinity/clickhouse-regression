@@ -932,6 +932,76 @@ RQ_ClickHouse_ExportPartition_Concurrency = Requirement(
     num="16.1",
 )
 
+RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations while parallel INSERT operations are executing on the source table by:\n"
+        "* Allowing INSERT operations to continue executing while export partition is in progress\n"
+        "* Exporting a consistent snapshot of partition data that existed at the time export started, or capturing data that is inserted during export depending on the export implementation\n"
+        "* Handling exports correctly when merges are stopped (`SYSTEM STOP MERGES`) and parts are not merged during export\n"
+        "* Handling exports correctly when merges are enabled and parts may be merged during export\n"
+        "* Maintaining data integrity in both source and destination tables during concurrent inserts and exports\n"
+        "* Ensuring that exported data accurately represents the partition state, whether merges are enabled or disabled\n"
+        "\n"
+        "Production systems often have continuous data ingestion, and export operations must work correctly even when new data is being inserted into the source table during export.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="16.2",
+)
+
+RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations while `OPTIMIZE TABLE` operations are executing in parallel on the source table by:\n"
+        "* Allowing `OPTIMIZE TABLE` operations to run concurrently with export partition operations\n"
+        "* Handling merge operations that occur during export without data corruption or loss\n"
+        "* Ensuring that exported data accurately represents the partition state during concurrent optimize and export operations\n"
+        "* Maintaining data integrity in both source and destination tables when parts are being merged during export\n"
+        "* Coordinating merge and export operations to prevent conflicts or race conditions\n"
+        "\n"
+        "Users may need to optimize tables for performance while export operations are in progress, and the system must handle these concurrent operations correctly.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="16.3",
+)
+
+RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support parallel SELECT queries on the source table while export partition operations are executing by:\n"
+        "* Allowing multiple SELECT queries to execute concurrently with export partition operations\n"
+        "* Ensuring that SELECT queries can read data from the source table during export without blocking or errors\n"
+        "* Maintaining read consistency during export operations\n"
+        "* Not interfering with export operations when SELECT queries are executing\n"
+        "* Allowing users to query exported data from the destination table while export is in progress (for already exported partitions)\n"
+        "\n"
+        "Users need to be able to query data during export operations for monitoring, validation, or other operational purposes, and the system must support concurrent reads and exports.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="16.4",
+)
+
 RQ_ClickHouse_ExportPartition_Idempotency = Requirement(
     name="RQ.ClickHouse.ExportPartition.Idempotency",
     version="1.0",
@@ -1420,6 +1490,21 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         ),
         Heading(name="Export operation concurrency", level=1, num="16"),
         Heading(name="RQ.ClickHouse.ExportPartition.Concurrency", level=2, num="16.1"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts",
+            level=2,
+            num="16.2",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable",
+            level=2,
+            num="16.3",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects",
+            level=2,
+            num="16.4",
+        ),
         Heading(name="Export operation idempotency", level=1, num="17"),
         Heading(name="RQ.ClickHouse.ExportPartition.Idempotency", level=2, num="17.1"),
         Heading(
@@ -1522,6 +1607,9 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey,
         RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition,
         RQ_ClickHouse_ExportPartition_Concurrency,
+        RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts,
+        RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable,
+        RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects,
         RQ_ClickHouse_ExportPartition_Idempotency,
         RQ_ClickHouse_ExportPartition_Settings_ForceExport,
         RQ_ClickHouse_ExportPartition_Logging,
@@ -1602,6 +1690,9 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         * 15.5.1 [RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition](#rqclickhouseexportpartitionrestrictionssourcepartition)
 * 16 [Export operation concurrency](#export-operation-concurrency)
     * 16.1 [RQ.ClickHouse.ExportPartition.Concurrency](#rqclickhouseexportpartitionconcurrency)
+    * 16.2 [RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts](#rqclickhouseexportpartitionconcurrencyparallelinserts)
+    * 16.3 [RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable](#rqclickhouseexportpartitionconcurrencyoptimizetable)
+    * 16.4 [RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects](#rqclickhouseexportpartitionconcurrencyparallelselects)
 * 17 [Export operation idempotency](#export-operation-idempotency)
     * 17.1 [RQ.ClickHouse.ExportPartition.Idempotency](#rqclickhouseexportpartitionidempotency)
     * 17.2 [RQ.ClickHouse.ExportPartition.Settings.ForceExport](#rqclickhouseexportpartitionsettingsforceexport)
@@ -2174,6 +2265,43 @@ version: 1.0
 * Maintaining separate progress tracking for each concurrent operation
 
 Multiple users may want to export different partitions simultaneously, and the system must coordinate these operations to prevent conflicts while maximizing parallelism.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts
+version: 1.0
+
+[ClickHouse] SHALL support export operations while parallel INSERT operations are executing on the source table by:
+* Allowing INSERT operations to continue executing while export partition is in progress
+* Exporting a consistent snapshot of partition data that existed at the time export started, or capturing data that is inserted during export depending on the export implementation
+* Handling exports correctly when merges are stopped (`SYSTEM STOP MERGES`) and parts are not merged during export
+* Handling exports correctly when merges are enabled and parts may be merged during export
+* Maintaining data integrity in both source and destination tables during concurrent inserts and exports
+* Ensuring that exported data accurately represents the partition state, whether merges are enabled or disabled
+
+Production systems often have continuous data ingestion, and export operations must work correctly even when new data is being inserted into the source table during export.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable
+version: 1.0
+
+[ClickHouse] SHALL support export operations while `OPTIMIZE TABLE` operations are executing in parallel on the source table by:
+* Allowing `OPTIMIZE TABLE` operations to run concurrently with export partition operations
+* Handling merge operations that occur during export without data corruption or loss
+* Ensuring that exported data accurately represents the partition state during concurrent optimize and export operations
+* Maintaining data integrity in both source and destination tables when parts are being merged during export
+* Coordinating merge and export operations to prevent conflicts or race conditions
+
+Users may need to optimize tables for performance while export operations are in progress, and the system must handle these concurrent operations correctly.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects
+version: 1.0
+
+[ClickHouse] SHALL support parallel SELECT queries on the source table while export partition operations are executing by:
+* Allowing multiple SELECT queries to execute concurrently with export partition operations
+* Ensuring that SELECT queries can read data from the source table during export without blocking or errors
+* Maintaining read consistency during export operations
+* Not interfering with export operations when SELECT queries are executing
+* Allowing users to query exported data from the destination table while export is in progress (for already exported partitions)
+
+Users need to be able to query data during export operations for monitoring, validation, or other operational purposes, and the system must support concurrent reads and exports.
 
 ## Export operation idempotency
 
