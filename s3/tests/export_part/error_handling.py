@@ -5,6 +5,7 @@ from s3.tests.export_part.steps import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.table.replace_partition.corrupted_partitions import *
+from helpers.common import detach_part
 
 
 @TestScenario
@@ -233,6 +234,39 @@ def part_corruption(self):
             assert part in successful_exports, error()
 
 
+@TestScenario
+def detached_part(self):
+    """Check that exporting a detached part returns the correct error."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I detach a part"):
+        partition_name = get_random_part(table_name=source_table)
+        detach_part(table=source_table, part=partition_name)
+
+    with When("I try to export the detached part"):
+        results = export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            parts=[partition_name],
+            exitcode=1,
+        )
+
+    with Then("I should see an error related to the detached part"):
+        assert results[0].exitcode == 232, error()
+        assert f"No such data part '{partition_name}'" in results[0].output, error()
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
@@ -245,3 +279,4 @@ def feature(self):
     Scenario(run=disable_export_setting)
     Scenario(run=different_partition_key)
     Scenario(run=part_corruption)
+    Scenario(run=detached_part)
