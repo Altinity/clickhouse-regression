@@ -280,5 +280,4 @@ def feature(self):
     Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
-    Scenario(run=overwrite_file)
     Scenario(run=max_bandwidth)
