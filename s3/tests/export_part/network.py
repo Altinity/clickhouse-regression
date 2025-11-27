@@ -8,6 +8,7 @@ from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
+from alter.table.replace_partition.corrupted_partitions import *
 
 
 @TestScenario
@@ -456,12 +457,63 @@ def clickhouse_interruption(self, strategy, signal, safe):
             assert set(source_data) >= set(destination_data), error()
 
 
+@TestScenario
+def part_corruption(self):
+    """Check that exports work correctly with corrupted parts."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+        
+    with And("I get all parts before corruption"):
+        all_parts = get_parts(table_name=source_table, node=self.context.node)
+        corrupted_part = "1_1_1_0"
+        non_corrupted_parts = [p for p in all_parts if p != corrupted_part]
+
+    with When("I apply part corruption"):
+        corrupt_parts_on_table_partition(table_name=source_table, parts=[corrupted_part], bits_to_corrupt=1500000)
+
+    with And("I attempt to export the corrupted part and expect it to fail"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            parts=[corrupted_part],
+            exitcode=1,
+        )
+
+    with And("I export the non-corrupted parts and expect them to succeed"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            parts=non_corrupted_parts,
+        )
+
+    with Then("I verify that the corrupted part export failure is logged in part_log"):
+        wait_for_all_exports_to_complete()
+        flush_log(table_name="system.part_log")
+
+        successful_exports = get_part_log(node=self.context.node, table_name=source_table)
+        failed_exports = get_failed_part_log(node=self.context.node, table_name=source_table)
+        
+        assert corrupted_part not in successful_exports, error()
+        assert corrupted_part in failed_exports, error()
+        for part in non_corrupted_parts:
+            assert part in successful_exports, error()
+
+
 @TestFeature
 @Name("network")
 def feature(self):
     """Check that exports work correctly with various network conditions."""
-
-    # TODO corruption (bit flipping)
 
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
@@ -474,3 +526,4 @@ def feature(self):
     Scenario(test=packet_rate_limit)(rate_mbit=0.05)
     Scenario(run=minio_interruption)
     Scenario(run=clickhouse_interruption)
+    Scenario(run=part_corruption)

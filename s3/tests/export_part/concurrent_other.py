@@ -224,13 +224,6 @@ def merge_parts(self):
         }, error()
 
 
-def get_actions():
-    return [
-        (select_all_ordered,),
-        (select_hash,),
-    ]
-
-
 @TestStep(When)
 def select_and_collect(self, table_name, select_action, results_list, node=None):
     """Wrapper to collect select results."""
@@ -244,7 +237,10 @@ def select_and_collect(self, table_name, select_action, results_list, node=None)
 @TestOutline(Scenario)
 @Examples(
     "select_action",
-    get_actions(),
+    [
+        (select_all_ordered,),
+        (select_hash,),
+    ],
 )
 def stress_select(self, select_action):
     """Test a high volume of actions in parallel with exports."""
