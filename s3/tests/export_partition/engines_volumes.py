@@ -159,5 +159,5 @@ def feature(self):
     """Check exporting parts to S3 storage with different table engines and volumes."""
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
-    # Scenario(run=table_combos)
+
     Scenario(run=volume_combos)

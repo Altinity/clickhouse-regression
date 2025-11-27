@@ -151,8 +151,7 @@ def export_partition_with_keeper_failure(
         )
 
         Step(test=kill_and_restart_keeper_during_export, parallel=True)(
-            node=node,
-            source_table=source_table
+            node=node, source_table=source_table
         )
 
         join()
