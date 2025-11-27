@@ -336,7 +336,6 @@ def minio_interruption(self, strategy, signal):
             kill_minio(signal=signal)
 
     with Then("I start MinIO"):
-        wait_for_all_exports_to_complete()
         start_minio()
 
     if strategy == "after":
@@ -435,10 +434,10 @@ def clickhouse_interruption(self, strategy, signal, safe):
             self.context.node.stop_clickhouse(safe=safe, signal=signal)
 
     with Then("I start ClickHouse"):
-        wait_for_all_exports_to_complete()
         self.context.node.start_clickhouse(thread_fuzzer=True)
 
     with And("I get data from both tables"):
+        wait_for_all_exports_to_complete()
         source_data = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
