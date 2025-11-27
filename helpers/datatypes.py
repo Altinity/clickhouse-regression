@@ -742,3 +742,24 @@ def common_basic_datatypes():
         Float64(),
         Decimal128(scale=38),
     ]
+
+
+def poc_datatypes():
+    return [
+        Date(),
+        UInt32(),
+        LowCardinality(String()),
+        String(),
+        UInt64(),
+        Array(UInt64()),
+        Array(UInt32()),
+        String(),
+        Array(String()),
+        UInt8(),
+        UInt16(),
+        UInt32(),
+        UInt64(),
+        Nullable(UInt64()),
+        Array(String()),
+        Nullable(Enum8([("CSA", 1), ("UMBRELLA", 2)])),
+    ]

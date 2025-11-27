@@ -15,20 +15,26 @@ from helpers.common import check_clickhouse_version, check_if_not_antalya_build
 
 
 xfails = {
-    "/iceberg/icebergS3 table function/recreate table/*": [
+    "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
+    ],
+    "/iceberg/icebergS3 table function/rest catalog/icebergS3 table function/recreate table/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
+    "/iceberg/icebergS3 table function/glue catalog/icebergS3 table function/recreate table/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
     ],
-    "/iceberg/icebergS3 table function/recreate table and insert new data multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    "/iceberg/icebergS3 table function/rest catalog/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
-    "/iceberg/iceberg engine/* catalog/feature/recreate table/verify that ClickHouse reads the new data （one row）/try #10": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    "/iceberg/icebergS3 table function/glue catalog/icebergS3 table function/recreate table and insert new data/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
-    "/iceberg/iceberg engine/* catalog/feature/recreate table multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/75187")
+    "/iceberg/icebergS3 table function/rest catalog/icebergS3 table function/recreate table and insert new data multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
+    ],
+    "/iceberg/icebergS3 table function/glue catalog/icebergS3 table function/recreate table and insert new data multiple times/verify that ClickHouse reads the new data （one row）/try #10": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
     "/iceberg/icebergS3 table function/*": [
         (Fail, "Need to investigate", check_clickhouse_version("<=24")),
@@ -36,7 +42,10 @@ xfails = {
     "/iceberg/iceberg engine/* catalog/swarm/*": [
         (Fail, "Only works with antalya build", check_if_not_antalya_build),
     ],
-    "/iceberg/iceberg cache/iceberg table engine/*": [
+    "/iceberg/iceberg cache/rest catalog/iceberg table engine/*": [
+        (Fail, "Need to investigate"),
+    ],
+    "/iceberg/iceberg cache/glue catalog/iceberg table engine/*": [
         (Fail, "Need to investigate"),
     ],
     "/iceberg/iceberg engine/* catalog/predicate push down/issue with decimal column": [
@@ -213,12 +222,11 @@ def regression(
     Feature(
         test=load("iceberg.tests.s3_table_function.s3_table_function", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
     Feature(
-        test=load(
-            "iceberg.tests.icebergS3_table_function.icebergS3_table_function",
-            "icebergS3_table_function",
-        ),
+        test=load("iceberg.tests.icebergS3_table_function.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
     Feature(
         test=load("iceberg.tests.cache.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)

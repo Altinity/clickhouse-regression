@@ -121,6 +121,7 @@ def kill_export(self):
                     node=self.context.node,
                     parts=[get_random_part(table_name=source_table)],
                     settings=[("user", user_name), ("query_id", query_id)],
+                    exitcode=1,
                 )
                 Step(test=kill_query, parallel=True)(
                     node=self.context.node,

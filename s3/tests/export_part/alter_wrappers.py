@@ -465,4 +465,5 @@ def drop_table(self, table_name, node=None, recreate=False):
                 columns=default_columns(simple=False),
                 stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
+                if_not_exists=True,
             )

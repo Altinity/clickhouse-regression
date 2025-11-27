@@ -246,8 +246,9 @@ def large_part(self):
             node=self.context.node,
         )
 
-    with Then("Check source matches destination"):
-        source_matches_destination(
+    with Then("Check source matches destination (hash)"):
+        wait_for_all_exports_to_complete(table_name=source_table)
+        source_matches_destination_hash(
             source_table=source_table,
             destination_table=s3_table_name,
         )
@@ -263,6 +264,5 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
-    if self.context.stress:
-        Scenario(run=large_part)
+    Scenario(run=large_part)
     Scenario(run=export_setting)
