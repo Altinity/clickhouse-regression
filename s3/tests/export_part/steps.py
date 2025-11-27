@@ -564,6 +564,8 @@ def get_export_events(self, node):
         events["PartsExports"] = 0
     if "PartsExportDuplicated" not in events:
         events["PartsExportDuplicated"] = 0
+    if "PartsExportTotalMilliseconds" not in events:
+        events["PartsExportTotalMilliseconds"] = 0
 
     return events
 
@@ -762,19 +764,15 @@ def source_matches_destination(
     destination_table,
     source_node=None,
     destination_node=None,
-    source_data=None,
-    destination_data=None,
 ):
     """Check that source and destination table data matches."""
 
-    wait_for_all_exports_to_complete(node=source_node, table_name=source_table)
+    wait_for_all_exports_to_complete(node=source_node)
     source_matches_destination_rows(
         source_table=source_table,
         destination_table=destination_table,
         source_node=source_node,
         destination_node=destination_node,
-        source_data=source_data,
-        destination_data=destination_data,
     )
     source_matches_destination_hash(
         source_table=source_table,
@@ -791,8 +789,6 @@ def source_matches_destination_rows(
     destination_table,
     source_node=None,
     destination_node=None,
-    source_data=None,
-    destination_data=None,
 ):
     """Check that source and destination table rows matches."""
 
@@ -801,14 +797,24 @@ def source_matches_destination_rows(
     if destination_node is None:
         destination_node = self.context.node
 
-    if source_data is None:
-        source_data = select_all_ordered(table_name=source_table, node=source_node)
-    if destination_data is None:
-        destination_data = select_all_ordered(
-            table_name=destination_table, node=destination_node
-        )
+    source_data = select_all_ordered(table_name=source_table, node=source_node)
+    destination_data = select_all_ordered(
+        table_name=destination_table, node=destination_node
+    )
 
-    assert source_data == destination_data, error()
+    err_msg = "SOURCE != DESTINATION"
+
+    if source_data != destination_data:
+        source_set = set(source_data)
+        destination_set = set(destination_data)
+        missing = source_set - destination_set
+        extra = destination_set - source_set
+        if missing:
+            err_msg += f"\nMissing in destination ({len(missing)} rows): {sorted(list(missing))}"
+        if extra:
+            err_msg += f"\nExtra in destination ({len(extra)} rows): {sorted(list(extra))}"
+
+    assert source_data == destination_data, error(err_msg)
 
 
 @TestStep(Then)
