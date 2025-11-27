@@ -227,7 +227,7 @@ def read_data_with_icebergS3Cluster_table_function(
                     '{cluster_name}',
                     '{storage_endpoint}',
                     '{s3_access_key_id}',
-                    '{s3_secret_access_key}',
+                    '{s3_secret_access_key}'
                 )
             """
 
