@@ -747,56 +747,37 @@ def wait_for_all_exports_to_complete(self, node=None, table_name=None):
 
 
 @TestStep(Then)
-def select_hash(self, table_name, node=None):
-    """Select a hash of the data from a table."""
-    if node is None:
-        node = self.context.node
-
-    return node.query(
-        f"SELECT groupBitXor(cityHash64(*)) FROM {table_name}",
-        exitcode=0,
-    ).output.strip()
-
-
-@TestStep(Then)
-def source_matches_destination_hash(
-    self, source_table, destination_table, source_node=None, destination_node=None
-):
-    """Check that source and destination table hash matches."""
-    if source_node is None:
-        source_node = self.context.node
-    if destination_node is None:
-        destination_node = self.context.node
-
-    source_hash = select_hash(table_name=source_table, node=source_node)
-    destination_hash = select_hash(table_name=destination_table, node=destination_node)
-
-    assert source_hash == destination_hash, error()
-
-
-@TestStep(Then)
 def source_matches_destination(
     self,
     source_table,
     destination_table,
-    source_node=None,
-    destination_node=None,
+    node=None,
 ):
     """Check that source and destination table data matches."""
 
-    wait_for_all_exports_to_complete(node=source_node)
-    source_matches_destination_rows(
-        source_table=source_table,
-        destination_table=destination_table,
-        source_node=source_node,
-        destination_node=destination_node,
-    )
+    wait_for_all_exports_to_complete(node=node)
     source_matches_destination_hash(
         source_table=source_table,
         destination_table=destination_table,
-        source_node=source_node,
-        destination_node=destination_node,
+        node=node,
     )
+    source_matches_destination_rows(
+        source_table=source_table,
+        destination_table=destination_table,
+        node=node,
+    )
+
+
+@TestStep(Then)
+def source_matches_destination_hash(
+    self, source_table, destination_table, node=None
+):
+    """Check that source and destination table hash matches."""
+    if node is None:
+        node = self.context.node
+
+    match, msg = table_hashes_match(table_name1=source_table, table_name2=destination_table, node=node)
+    assert match, error(msg)
 
 
 @TestStep(Then)
@@ -804,19 +785,16 @@ def source_matches_destination_rows(
     self,
     source_table,
     destination_table,
-    source_node=None,
-    destination_node=None,
+    node=None,
 ):
     """Check that source and destination table rows matches."""
 
-    if source_node is None:
-        source_node = self.context.node
-    if destination_node is None:
-        destination_node = self.context.node
+    if node is None:
+        node = self.context.node
 
-    source_data = select_all_ordered(table_name=source_table, node=source_node)
+    source_data = select_all_ordered(table_name=source_table, node=node)
     destination_data = select_all_ordered(
-        table_name=destination_table, node=destination_node
+        table_name=destination_table, node=node
     )
 
     err_msg = "SOURCE != DESTINATION"
