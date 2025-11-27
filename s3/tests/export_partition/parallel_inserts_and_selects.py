@@ -38,7 +38,7 @@ def run_parallel_selects(self, table_name, num_selects=5, node=None):
 
     with By(f"running {num_selects} parallel SELECT queries"):
         for i in range(num_selects):
-            Step(test=run_single_select, parallel=True)(
+            Check(test=run_single_select, parallel=True)(
                 table_name=table_name,
                 node=node,
             )
@@ -56,7 +56,7 @@ def run_optimize_table(self, table_name, node=None):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts("1.0"))
 def parallel_inserts_with_merge_stop(self):
     """Check that exports work correctly with parallel inserts when merges are stopped."""
 
@@ -80,13 +80,13 @@ def parallel_inserts_with_merge_stop(self):
         Multiple partitions are inserted in parallel while export partition
         is running.""",
     ):
-        Step(test=export_partitions, parallel=True)(
+        Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
         time.sleep(0.01)
-        Step(test=create_partitions_with_random_uint64, parallel=True)(
+        Check(test=create_partitions_with_random_uint64, parallel=True)(
             table_name=source_table,
             number_of_partitions=10,
             number_of_parts=2,
@@ -112,7 +112,7 @@ def parallel_inserts_with_merge_stop(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts("1.0"))
 def parallel_inserts_with_merge_enabled(self):
     """Check that exports work correctly with parallel inserts when merges are enabled."""
 
@@ -137,14 +137,14 @@ def parallel_inserts_with_merge_enabled(self):
         is running. Since merges are enabled, parts may be merged during export.
     """,
     ):
-        Step(test=export_partitions, parallel=True)(
+        Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
         time.sleep(0.01)
 
-        Step(test=create_partitions_with_random_uint64, parallel=True)(
+        Check(test=create_partitions_with_random_uint64, parallel=True)(
             table_name=source_table,
             number_of_partitions=10,
             number_of_parts=2,
@@ -170,7 +170,7 @@ def parallel_inserts_with_merge_enabled(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable("1.0"))
 def export_with_optimize_table_parallel(self):
     """Check that exports work correctly when OPTIMIZE TABLE runs in parallel."""
 
@@ -191,12 +191,12 @@ def export_with_optimize_table_parallel(self):
         This tests that export can handle concurrent merge operations.
     """,
     ):
-        Step(test=export_partitions, parallel=True)(
+        Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        Step(test=run_optimize_table, parallel=True)(
+        Check(test=run_optimize_table, parallel=True)(
             table_name=source_table,
             node=self.context.node,
         )
@@ -213,7 +213,7 @@ def export_with_optimize_table_parallel(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
+@Requirements(RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects("1.0"))
 def parallel_selects_during_export(self):
     """Check that parallel SELECT queries work correctly while export partition is happening."""
 
@@ -234,12 +234,12 @@ def parallel_selects_during_export(self):
         This tests that reads can happen concurrently with export operations.
     """,
     ):
-        Step(test=export_partitions, parallel=True)(
+        Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        Step(test=run_parallel_selects, parallel=True)(
+        Check(test=run_parallel_selects, parallel=True)(
             table_name=source_table,
             num_selects=10,
             node=self.context.node,
@@ -262,8 +262,75 @@ def parallel_selects_during_export(self):
         assert len(source_data) > 0, error()
 
 
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts("1.0"),
+    RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable("1.0"),
+)
+def parallel_inserts_export_and_optimize(self):
+    """Check that exports work correctly with parallel inserts, export partition, and OPTIMIZE TABLE all running concurrently with merges enabled."""
+
+    source_table = f"source_{getuid()}"
+    with Given(
+        "I create a populated source table with merges enabled and an empty S3 table"
+    ):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=False,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When(
+        "I insert data in parallel, export partitions, and run OPTIMIZE TABLE all concurrently",
+        description="""
+        Multiple operations run in parallel:
+        - INSERT operations adding new partitions
+        - EXPORT PARTITION exporting existing partitions
+        - OPTIMIZE TABLE merging parts
+        All with merges enabled, testing complex concurrent scenarios.
+    """,
+    ):
+        Check(test=export_partitions, parallel=True)(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+        Check(test=create_partitions_with_random_uint64, parallel=True)(
+            table_name=source_table,
+            number_of_partitions=10,
+            number_of_parts=2,
+            number_of_values=100,
+        )
+        Check(test=run_optimize_table, parallel=True)(
+            table_name=source_table,
+            node=self.context.node,
+        )
+        join()
+
+    with Then("I wait for export to complete"):
+        wait_for_export_to_complete(source_table=source_table)
+
+    with And("Source and destination tables should match"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+    with And("Source table should have all inserted data"):
+        source_data = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+        assert len(source_data) > 0, error()
+
+
 @TestFeature
-@Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
+@Requirements(
+    RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts("1.0"),
+    RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable("1.0"),
+    RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects("1.0"),
+)
 @Name("parallel inserts and selects")
 def feature(self):
     """Test export partition with various parallel operations including inserts, OPTIMIZE TABLE, and SELECT queries."""
@@ -272,3 +339,4 @@ def feature(self):
     Scenario(run=parallel_inserts_with_merge_enabled)
     Scenario(run=export_with_optimize_table_parallel)
     Scenario(run=parallel_selects_during_export)
+    Scenario(run=parallel_inserts_export_and_optimize)
