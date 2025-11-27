@@ -69,7 +69,8 @@ def parallel_inserts_with_merge_stop(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            populate=False,
+            number_of_partitions=10,
+            number_of_parts=5,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -263,7 +264,7 @@ def parallel_selects_during_export(self):
 
 @TestFeature
 @Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
-@Name("parallel operations")
+@Name("parallel inserts and selects")
 def feature(self):
     """Test export partition with various parallel operations including inserts, OPTIMIZE TABLE, and SELECT queries."""
 
