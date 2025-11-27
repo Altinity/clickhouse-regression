@@ -214,3 +214,29 @@ def drop_column(self, node, table_name, column_name):
     node.query(
         f"ALTER TABLE {table_name} DROP COLUMN {column_name}", exitcode=0, steps=True
     )
+
+
+@TestStep(When)
+def drop_part(self, table_name, part_name, node=None):
+    """Drop a specific part from a table."""
+    if node is None:
+        node = self.context.node
+    
+    node.query(
+        f"ALTER TABLE {table_name} DROP PART '{part_name}'", 
+        exitcode=0, 
+        steps=True
+    )
+
+
+@TestStep(When)
+def detach_part(self, table_name, part_name, node=None):
+    """Detach a specific part from a table."""
+    if node is None:
+        node = self.context.node
+    
+    node.query(
+        f"ALTER TABLE {table_name} DETACH PART '{part_name}'", 
+        exitcode=0, 
+        steps=True
+    )

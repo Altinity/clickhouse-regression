@@ -274,19 +274,29 @@ def get_random_partition(self, table_name, node=None):
 
 
 @TestStep(When)
-def get_random_part(self, table_name, node=None):
+def get_random_part(self, table_name, node=None, partition=None):
     """Get a random part name from a table."""
     if node is None:
         node = self.context.node
 
-    result = node.query(
-        f"""
+    if partition is not None:
+        query = f"""
+        SELECT name
+        FROM system.parts
+        WHERE table = '{table_name}' AND active = 1 AND partition = '{partition}'
+        ORDER BY rand()
+        LIMIT 1
+        """
+    else:
+        query = f"""
         SELECT name
         FROM system.parts
         WHERE table = '{table_name}' AND active = 1
         ORDER BY rand()
         LIMIT 1
-        """,
+        """
+    result = node.query(
+        query,
         exitcode=0,
         steps=True,
     )

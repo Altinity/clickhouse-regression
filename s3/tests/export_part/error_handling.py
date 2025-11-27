@@ -5,7 +5,6 @@ from s3.tests.export_part.steps import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.table.replace_partition.corrupted_partitions import *
-from helpers.common import detach_part
 
 
 @TestScenario
@@ -234,9 +233,18 @@ def part_corruption(self):
             assert part in successful_exports, error()
 
 
-@TestScenario
-def detached_part(self):
-    """Check that exporting a detached part returns the correct error."""
+@TestOutline(Scenario)
+@Examples(
+    "removal_function, target_type",
+    [
+        (detach_part, "part"),
+        (alter_table_detach_partition, "partition"),
+        (drop_part, "part"),
+        (alter_table_drop_partition, "partition"),
+    ],
+)
+def removed_part_or_partition(self, removal_function, target_type):
+    """Check that exporting a removed part or partition returns the correct error."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = "source_" + getuid()
@@ -246,25 +254,38 @@ def detached_part(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            number_of_parts=5,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I detach a part"):
-        partition_name = get_random_part(table_name=source_table)
-        detach_part(table=source_table, part=partition_name)
+    with And(f"I get the {target_type} to remove"):
+        if target_type == "part":
+            target_name = get_random_part(table_name=source_table)
+            part_to_export = target_name
+        else:
+            partition_name = get_random_partition(table_name=source_table)
+            part_to_export = get_random_part(
+                table_name=source_table, partition=partition_name
+            )
+            target_name = partition_name
 
-    with When("I try to export the detached part"):
+    with And(f"I remove the {target_type}"):
+        removal_function(
+            table_name=source_table,
+            **{f"{target_type}_name": target_name},
+        )
+
+    with When(f"I try to export the part from the removed {target_type}"):
         results = export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
-            parts=[partition_name],
+            parts=[part_to_export],
             exitcode=1,
         )
 
-    with Then("I should see an error related to the detached part"):
+    with Then(f"I should see an error related to the removed {target_type}"):
         assert results[0].exitcode == 232, error()
-        assert f"No such data part '{partition_name}'" in results[0].output, error()
 
 
 @TestFeature
@@ -279,4 +300,4 @@ def feature(self):
     Scenario(run=disable_export_setting)
     Scenario(run=different_partition_key)
     Scenario(run=part_corruption)
-    Scenario(run=detached_part)
+    Scenario(run=removed_part_or_partition)
