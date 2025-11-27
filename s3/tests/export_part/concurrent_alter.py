@@ -95,6 +95,37 @@ def get_alter_functions():
     ]
 
 
+@TestStep(Given)
+def create_source_table(
+    self, alter_function, number_of_parts=2, number_of_partitions=5
+):
+    """Create a source table in preparation for the given alter function."""
+    source_table = f"source_{getuid()}"
+
+    if alter_function == alter_wrappers.alter_table_fetch_partition:
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=number_of_parts,
+            number_of_partitions=number_of_partitions,
+            columns=steps.default_columns(simple=False),
+            stop_merges=True,
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    else:
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=number_of_parts,
+            number_of_partitions=number_of_partitions,
+            columns=steps.default_columns(simple=False),
+            stop_merges=True,
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+
+    return source_table
+
+
 @TestOutline(Scenario)
 @Examples(
     "alter_function, kwargs",
@@ -104,26 +135,7 @@ def before_export(self, alter_function, kwargs):
     """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=alter_function)
 
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
@@ -168,26 +180,7 @@ def after_export(self, alter_function, kwargs):
     """Test altering the source table after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -229,26 +222,7 @@ def during_export(self, alter_function, kwargs):
     """Test altering the source table during exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -293,26 +267,7 @@ def during_minio_interruption(self, alter_function, kwargs):
     """Test altering the source table during MinIO interruption."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -360,28 +315,9 @@ def stress(self, alter_function, kwargs):
     """Test a high volume of alters in parallel with exports."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=10,
-                number_of_partitions=10,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=10,
-                number_of_partitions=10,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(
+            alter_function=alter_function, number_of_parts=10, number_of_partitions=10
+        )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,

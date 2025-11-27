@@ -94,7 +94,7 @@ def duplicate_logging(self):
         ), error()
         assert (
             final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == 0 # TODO is this supposed to be 5?
+            == 0  # TODO is this supposed to be 5?
         ), error()
 
 
@@ -224,12 +224,12 @@ def overwrite_file(self):
     with Then("I check no failed or duplicated exports occurred"):
         assert (
             final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == 0 # TODO is this supposed to be 5 or 0?
+            == 0  # TODO is this supposed to be 5 or 0?
         ), error()
         assert (
             final_events["PartsExportDuplicated"]
             - initial_events["PartsExportDuplicated"]
-            == 5 # TODO is this supposed to be 5 or 0?
+            == 5  # TODO is this supposed to be 5 or 0?
         ), error()
 
     with And("I check that the destination table contains the correct data"):
