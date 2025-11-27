@@ -3,36 +3,29 @@
 from testflows.core import *
 from testflows.asserts import error
 
-import pyarrow as pa
+from helpers.common import getuid
 
+import pyarrow as pa
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.icebergS3 as icebergS3
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
 
 @TestScenario
 def sanity(self, minio_root_user, minio_root_password):
     """Test Iceberg table creation and reading data from ClickHouse using
     icebergS3 table function."""
-    namespace = "icebergS3"
-    table_name = "sanity"
+    namespace = f"icebergS3_{getuid()}"
+    table_name = f"table_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
 
     with When(f"create {namespace}.{table_name} table with three columns"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
@@ -79,20 +72,24 @@ def sanity(self, minio_root_user, minio_root_password):
 @TestScenario
 def recreate_table(self, minio_root_user, minio_root_password):
     """Verify that when an iceberg table is recreated, ClickHouse sees empty table."""
-    namespace = "icebergS3"
-    table_name = "recreate"
+    namespace = f"icebergS3_{getuid()}"
+    table_name = f"table_{getuid()}"
+    database_name = f"database_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
 
     with And(f"delete table {namespace}.{table_name} if already exists"):
         catalog_steps.drop_iceberg_table(
@@ -150,25 +147,15 @@ def recreate_table(self, minio_root_user, minio_root_password):
 @TestScenario
 def recreate_table_and_insert_new_data(self, minio_root_user, minio_root_password):
     """Verify that when a table is recreated, ClickHouse reads data from the new table."""
-    namespace = "icebergS3"
-    table_name = "new_data"
+    namespace = f"icebergS3_{getuid()}"
+    table_name = f"table_{getuid()}"
 
-    with Given("create catalog"):
+    with Given("create catalog and namespace"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-
-    with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
-
-    with And(f"delete table {namespace}.{table_name} if already exists"):
-        catalog_steps.drop_iceberg_table(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
 
     with When(f"create {namespace}.{table_name} table with three columns"):
         table = catalog_steps.create_iceberg_table_with_three_columns(
@@ -215,20 +202,9 @@ def recreate_table_and_insert_new_data(self, minio_root_user, minio_root_passwor
         )
         table.append(df)
 
-    with And("display table information"):
-        note(f"Table Name: {table.name()}")
-        note(f"Location: {table.location()}")
-
     with And("scan and display data with pyiceberg"):
         df = table.scan().to_pandas()
         note(df)
-
-    with And("read data in clickhouse using icebergS3 table function"):
-        result = icebergS3.read_data_with_icebergS3_table_function(
-            storage_endpoint="http://minio:9000/warehouse/data",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
 
     with Then("verify that ClickHouse reads the new data (one row)"):
         for retry in retries(count=11, delay=2):
@@ -246,14 +222,19 @@ def recreate_table_and_insert_new_data_multiple_times(
     self, minio_root_user, minio_root_password
 ):
     """Verify that when a table is recreated, ClickHouse reads data from the new table."""
-    namespace = "icebergS3"
-    table_name = "new_data"
+    namespace = f"icebergS3_{getuid()}"
+    table_name = f"new_data_{getuid()}"
+    database_name = f"database_new_data_{getuid()}"
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
-            uri="http://localhost:5000/",
-            catalog_type=catalog_steps.CATALOG_TYPE,
-            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("create DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
@@ -310,6 +291,10 @@ def recreate_table_and_insert_new_data_multiple_times(
             ]
         )
         table.append(df)
+
+    with And("scan and display data with pyiceberg, expect one row"):
+        df = table.scan().to_pandas()
+        note(df)
 
     with Then("verify that ClickHouse reads the new data (one row)"):
         for retry in retries(count=11, delay=2):

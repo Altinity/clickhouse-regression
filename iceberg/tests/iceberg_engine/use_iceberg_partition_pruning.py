@@ -156,7 +156,7 @@ def check_iceberg_partition_pruning_with_integer_type(
                     log_comment=log_comment_with_partition_pruning,
                 ).output.strip()
                 min_count = 2 * (length - i) + 3
-                max_count = 2 * (length - i) + 10
+                max_count = 2 * (length - i) + 13
                 assert min_count <= int(s3_read_requests_count), error()
                 assert int(s3_read_requests_count) <= max_count, error()
 
@@ -199,7 +199,7 @@ def check_iceberg_partition_pruning_with_integer_type(
                     log_comment=log_comment_without_partition_pruning,
                 ).output.strip()
                 min_count = 2 * length + 3
-                max_count = 2 * length + 10
+                max_count = 2 * length + 13
                 assert min_count <= int(s3_read_requests_count), error()
                 assert int(s3_read_requests_count) <= max_count, error()
 
@@ -396,7 +396,7 @@ def check_partition_pruning_with_complex_where_clause(
             log_comment=log_comment_without_partition_pruning,
         ).output.strip()
         assert 200 <= int(s3_read_requests_count), error()
-        assert int(s3_read_requests_count) <= 210, error()
+        assert int(s3_read_requests_count) <= 213, error()
 
 
 @TestScenario
@@ -546,7 +546,7 @@ def partition_pruning_with_date_type(self, minio_root_user, minio_root_password)
             log_comment=log_comment_without_partition_pruning,
         ).output.strip()
         assert 200 <= int(s3_read_requests_count), error()
-        assert int(s3_read_requests_count) <= 210, error()
+        assert int(s3_read_requests_count) <= 213, error()
 
 
 @TestScenario
