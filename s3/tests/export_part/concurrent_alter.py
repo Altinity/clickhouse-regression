@@ -195,7 +195,7 @@ def after_export(self, alter_function, kwargs):
         )
 
     with And("I read data on the S3 table"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
         initial_destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -251,7 +251,7 @@ def during_export(self, alter_function, kwargs):
         alter_function(table_name=source_table, **kwargs)
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -299,7 +299,7 @@ def during_minio_interruption(self, alter_function, kwargs):
         steps.start_minio()
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
