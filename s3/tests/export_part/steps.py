@@ -1,6 +1,6 @@
 import json
 import random
-import os
+from time import sleep
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
@@ -8,8 +8,6 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
-import helpers.alter.partition
-import helpers.alter.skipping_index
 
 
 @TestStep(Given)
@@ -356,6 +354,7 @@ def flush_log(self, node=None, table_name=None):
         node.query("SYSTEM FLUSH LOGS", exitcode=0)
     else:
         node.query(f"SYSTEM FLUSH LOGS {table_name}", exitcode=0)
+    sleep(1)
 
 
 @TestStep(When)
@@ -589,6 +588,24 @@ def get_part_log(self, node, table_name=None):
 
 
 @TestStep(When)
+def get_failed_part_log(self, node, table_name=None):
+    """Get failed export operations from the system.part_log table of a given node."""
+
+    if table_name is None:
+        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND error != 0 ORDER BY part_name"
+    else:
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND error != 0 ORDER BY part_name"
+
+    output = node.query(
+        query,
+        exitcode=0,
+        steps=True,
+    ).output
+
+    return [row.strip() for row in output.splitlines() if row.strip()]
+
+
+@TestStep(When)
 def get_system_exports(self, node=None):
     """Get the system.exports source and destination table columns for all ongoing exports."""
 
@@ -812,7 +829,9 @@ def source_matches_destination_rows(
         if missing:
             err_msg += f"\nMissing in destination ({len(missing)} rows): {sorted(list(missing))}"
         if extra:
-            err_msg += f"\nExtra in destination ({len(extra)} rows): {sorted(list(extra))}"
+            err_msg += (
+                f"\nExtra in destination ({len(extra)} rows): {sorted(list(extra))}"
+            )
 
     assert source_data == destination_data, error(err_msg)
 
