@@ -268,9 +268,11 @@ def stress_select(self, select_action):
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
-    with When(f"I export parts to the S3 table in parallel with {select_action.__name__}"):
+    with When(
+        f"I export parts to the S3 table in parallel with {select_action.__name__}"
+    ):
         select_results = []
-        
+
         with Pool(10) as executor:
             for _ in range(100):
                 Step(test=export_parts, parallel=True, executor=executor)(
