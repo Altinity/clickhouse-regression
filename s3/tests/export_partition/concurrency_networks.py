@@ -451,6 +451,7 @@ def restart_keeper(self):
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
+            exitcode=242,
         )
 
     with And("I restart Keeper"):
