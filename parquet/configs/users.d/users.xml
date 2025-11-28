@@ -88,11 +88,6 @@
             <!-- Allow access management -->
             <access_management>1</access_management>
 
-            <!-- Allow access to named collections -->
-            <named_collection_control>1</named_collection_control>
-            <show_named_collections>1</show_named_collections>
-            <show_named_collections_secrets>1</show_named_collections_secrets>
-
             <!-- Example of row level security policy. -->
             <!-- <databases>
                 <test>

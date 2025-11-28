@@ -442,13 +442,6 @@ def outline(self, compression_type):
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
 
-    with Given("I add S3 credentials configuration"):
-        named_s3_credentials(
-            access_key_id=self.context.access_key_id,
-            secret_access_key=self.context.secret_access_key,
-            restart=True,
-        )
-
     Suite(run=engine)
     Suite(run=function)
 
@@ -482,6 +475,13 @@ def lz4(self):
 def feature(self):
     """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function
     using different compression types."""
+
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
 
     with Feature("compression type"):
         with Pool(3) as executor:
