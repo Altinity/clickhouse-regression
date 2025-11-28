@@ -59,7 +59,7 @@ def system_events_and_part_log(self):
 )
 @Requirements(
     RQ_ClickHouse_ExportPart_Idempotency("1.0"),
-    RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"),
+    RQ_ClickHouse_ExportPart_Settings_FileAlreadyExistsPolicy("1.0"),
 )
 def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
     """Check duplicate exports are logged correctly in system.events."""

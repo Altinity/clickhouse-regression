@@ -255,6 +255,7 @@ def large_part(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_SchemaCompatibility("1.0"))
 def schema_to_compliant(self):
     """Test exporting parts when changing the schema of the source table to be compliant with the destination table."""
 
