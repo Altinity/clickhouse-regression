@@ -364,7 +364,6 @@ def flush_log(self, node=None, table_name=None):
         node.query("SYSTEM FLUSH LOGS", exitcode=0)
     else:
         node.query(f"SYSTEM FLUSH LOGS {table_name}", exitcode=0)
-    sleep(1)
 
 
 @TestStep(When)
@@ -580,13 +579,13 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_part_log(self, node, table_name=None):
+def get_part_log(self, node, table_name=None, event_type="ExportPart"):
     """Get the part log from the system.part_log table of a given node."""
 
     if table_name is None:
-        query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' and read_rows > 0 ORDER BY part_name"
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = '{event_type}' and read_rows > 0 ORDER BY part_name"
     else:
-        query = f"SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND table = '{table_name}' AND read_rows > 0 ORDER BY part_name"
+        query = f"SELECT part_name FROM system.part_log WHERE event_type = '{event_type}' AND table = '{table_name}' AND read_rows > 0 ORDER BY part_name"
 
     output = node.query(
         query,
