@@ -116,7 +116,6 @@ on:
         description: "🏺 Artifact S3 bucket"
         type: choice
         options:
-          - public
           - internal
       output_format:
         description: "📜 Testflows output style."
