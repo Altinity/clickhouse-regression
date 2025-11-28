@@ -90,6 +90,7 @@ def multiple_sources_same_destination(self, num_tables):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def select_parts(self):
     """Test selecting from the source table before, during, and after exports."""
 
@@ -145,6 +146,7 @@ def select_parts(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def merge_parts(self):
     """Test merging parts from the source table before, during, and after exporting parts."""
 
@@ -242,6 +244,7 @@ def select_and_collect(self, table_name, select_action, results_list, node=None)
         (select_hash,),
     ],
 )
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def stress_select(self, select_action):
     """Test a high volume of actions in parallel with exports."""
 
@@ -297,6 +300,7 @@ def stress_select(self, select_action):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def inserts_and_selects_not_blocked(self):
     """Test non-blocking inserts and selects during exports."""
 
@@ -311,9 +315,7 @@ def inserts_and_selects_not_blocked(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get initial source data"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I stop MinIO"):
         kill_minio()
@@ -344,9 +346,7 @@ def inserts_and_selects_not_blocked(self):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
