@@ -59,7 +59,7 @@ def system_events_and_part_log(self):
 )
 @Requirements(
     RQ_ClickHouse_ExportPart_Idempotency("1.0"),
-    RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"),
+    RQ_ClickHouse_ExportPart_Settings_FileAlreadyExistsPolicy("1.0"),
 )
 def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
     """Check duplicate exports are logged correctly in system.events."""
@@ -192,8 +192,10 @@ def background_move_pool_size(self, background_move_pool_size):
         )
 
     with Then("I check that the number of threads used for exporting parts is correct"):
-        exports = get_system_exports(node=self.context.node)
-        assert len(exports) == background_move_pool_size, error()
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                exports = get_system_exports(node=self.context.node)
+                assert len(exports) == background_move_pool_size, error()
 
 
 @TestScenario

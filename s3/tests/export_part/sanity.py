@@ -254,6 +254,43 @@ def large_part(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_SchemaCompatibility("1.0"))
+def schema_to_compliant(self):
+    """Test exporting parts when changing the schema of the source table to be compliant with the destination table."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(simple=False),
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I drop columns from the source table"):
+        columns_to_drop = ["Path", "Time", "Value", "Timestamp"]
+        for column in columns_to_drop:
+            alter_table_drop_column(
+                table_name=source_table,
+                column_name=column,
+            )
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("sanity")
 def feature(self):
@@ -266,3 +303,4 @@ def feature(self):
     Scenario(run=wide_and_compact_parts)
     Scenario(run=large_part)
     Scenario(run=export_setting)
+    Scenario(run=schema_to_compliant)
