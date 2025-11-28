@@ -12,6 +12,7 @@ from s3.tests.export_partition.steps import (
     default_columns,
     source_matches_destination,
     wait_for_export_to_complete,
+    get_partitions,
 )
 from s3.requirements.export_partition import *
 
@@ -73,8 +74,11 @@ def parallel_inserts_with_merge_stop(self):
             number_of_parts=5,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
+    with When("I get all the partitions before the export"):
+        source_before_export = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+    with And(
         "I insert data in parallel and export partitions in parallel with merges stopped",
         description="""
         Multiple partitions are inserted in parallel while export partition
@@ -101,6 +105,7 @@ def parallel_inserts_with_merge_stop(self):
     with And("Source and destination tables should match"):
         source_matches_destination(
             source_table=source_table,
+            source_data=source_before_export,
             destination_table=s3_table_name,
         )
 
@@ -129,8 +134,11 @@ def parallel_inserts_with_merge_enabled(self):
             number_of_parts=5,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
+    with When("I get all the partitions before the export"):
+        source_before_export = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+    with And(
         "I insert data in parallel and export partitions in parallel with merges enabled",
         description="""
         Multiple partitions are inserted in parallel while export partition
@@ -156,16 +164,17 @@ def parallel_inserts_with_merge_enabled(self):
     with Then("I wait for export to complete"):
         wait_for_export_to_complete(source_table=source_table)
 
-    with And("Destination data should be a subset of source data"):
+    with And("Source and destination tables should match"):
+        source_matches_destination(
+            source_table=source_table,
+            source_data=source_before_export,
+            destination_table=s3_table_name,
+        )
+
+    with And("Source table should have all inserted data"):
         source_data = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
-        assert set(source_data) >= set(destination_data), error()
-
-    with And("Source table should have all inserted data"):
         assert len(source_data) > 0, error()
 
 
@@ -183,8 +192,11 @@ def export_with_optimize_table_parallel(self):
             stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
+    with When("I get all the partitions before the export"):
+        source_before_export = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+    with And(
         "I export partitions and run OPTIMIZE TABLE in parallel",
         description="""
         Export partition runs while OPTIMIZE TABLE is executing in parallel.
@@ -208,6 +220,7 @@ def export_with_optimize_table_parallel(self):
     with And("Source and destination tables should match"):
         source_matches_destination(
             source_table=source_table,
+            source_data=source_before_export,
             destination_table=s3_table_name,
         )
 
@@ -226,8 +239,11 @@ def parallel_selects_during_export(self):
             stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
+    with When("I get all the partitions before the export"):
+        source_before_export = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+    with And(
         "I export partitions and run parallel SELECT queries",
         description="""
         Multiple SELECT queries run in parallel while export partition is executing.
@@ -252,6 +268,7 @@ def parallel_selects_during_export(self):
     with And("Source and destination tables should match"):
         source_matches_destination(
             source_table=source_table,
+            source_data=source_before_export,
             destination_table=s3_table_name,
         )
 
@@ -281,8 +298,11 @@ def parallel_inserts_export_and_optimize(self):
             stop_merges=False,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When(
+    with When("I get all the partitions before the export"):
+        source_before_export = select_all_ordered(
+            table_name=source_table, node=self.context.node
+        )
+    with And(
         "I insert data in parallel, export partitions, and run OPTIMIZE TABLE all concurrently",
         description="""
         Multiple operations run in parallel:
@@ -315,6 +335,7 @@ def parallel_inserts_export_and_optimize(self):
     with And("Source and destination tables should match"):
         source_matches_destination(
             source_table=source_table,
+            source_data=source_before_export,
             destination_table=s3_table_name,
         )
 

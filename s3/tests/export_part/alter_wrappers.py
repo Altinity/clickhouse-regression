@@ -422,10 +422,7 @@ def optimize_partition(self, table_name, partition=None, node=None):
     if partition is None:
         partition = get_random_partition(table_name=table_name, node=node)
 
-    with By(f"Starting merges for table {table_name} and partition {partition}"):
-        start_merges(table_name=table_name, node=node)
-
-    with And(f"Optimizing partition {partition}"):
+    with By(f"Optimizing partition {partition}"):
         node.query(
             f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
             exitcode=0,
@@ -440,11 +437,8 @@ def optimize_table(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    with By(f"Starting merges for table {table_name}"):
-        start_merges(table_name=table_name, node=node)
-
-    with And(f"Optimizing {table_name}"):
-        optimize(node=self.context.node, table_name=table_name, final=True)
+    with By(f"Optimizing {table_name}"):
+        optimize(node=node, table_name=table_name, final=True)
 
 
 @TestStep(When)

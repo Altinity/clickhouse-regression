@@ -296,6 +296,60 @@ def stress_select(self, select_action):
         )
 
 
+@TestScenario
+def inserts_and_selects_not_blocked(self):
+    """Test non-blocking inserts and selects during exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I get initial source data"):
+        initial_source_data = select_all_ordered(
+            table_name=source_table
+        )
+
+    with And("I stop MinIO"):
+        kill_minio()
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with And("I run inserts and selects on the source table"):
+        for _ in range(10):
+            before_insert_data = select_all_ordered(
+                table_name=source_table,
+            )
+            insert_into_table(table_name=source_table)
+            after_insert_data = select_all_ordered(
+                table_name=source_table,
+            )
+            assert after_insert_data != before_insert_data, error()
+
+    with And("I start MinIO"):
+        start_minio()
+
+    with Then("Check source matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+        destination_data = select_all_ordered(
+            table_name=s3_table_name
+        )
+        assert initial_source_data == destination_data, error()
+
+
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -306,3 +360,4 @@ def feature(self):
     Scenario(run=select_parts)
     Scenario(run=merge_parts)
     Scenario(run=stress_select)
+    Scenario(run=inserts_and_selects_not_blocked)
