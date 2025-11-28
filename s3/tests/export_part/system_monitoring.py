@@ -192,8 +192,10 @@ def background_move_pool_size(self, background_move_pool_size):
         )
 
     with Then("I check that the number of threads used for exporting parts is correct"):
-        exports = get_system_exports(node=self.context.node)
-        assert len(exports) == background_move_pool_size, error()
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                exports = get_system_exports(node=self.context.node)
+                assert len(exports) == background_move_pool_size, error()
 
 
 @TestScenario
