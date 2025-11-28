@@ -2,6 +2,7 @@ from testflows.core import *
 
 import pyarrow as pa
 import numpy as np
+import random
 import iceberg.tests.steps.catalog as catalog_steps
 
 from datetime import datetime, timedelta, timezone, time, date
@@ -38,6 +39,8 @@ from pyiceberg.types import (
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform, HourTransform, BucketTransform
+
+random.seed(42)
 
 
 def create_swarm_cluster_entry(
@@ -334,11 +337,75 @@ def setup_iceberg_table(
             ]
         )
         table.append(df)
-        table.append(df)
 
     with And("scan and display data"):
         df = table.scan().to_pandas()
         note(df)
+
+    return table, table_name, namespace
+
+
+@TestStep(Given)
+def setup_performance_iceberg_table(
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
+):
+    """
+    Create an Iceberg table with three columns and populate it with test data in batches.
+    Table is partitioned by name with IdentityTransform and sorted by name.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with By("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_endpoint=s3_endpoint,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And(f"create namespace and create {namespace}.{table_name} table"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            location=location,
+        )
+
+    with And(
+        f"insert {row_count} rows in batches of {batch_size} into {namespace}.{table_name} table"
+    ):
+        remaining_rows = row_count
+        batch_num = 0
+
+        while remaining_rows > 0:
+            current_batch_size = min(batch_size, remaining_rows)
+            batch_num += 1
+
+            with By(f"inserted {batch_num*batch_size}/{row_count} rows"):
+                data = []
+                for _ in range(current_batch_size):
+                    data.append(
+                        {
+                            "name": catalog_steps.random_name(),
+                            "double": random.uniform(0, 100),
+                            "integer": random.randint(0, 10000),
+                        }
+                    )
+                df = pa.Table.from_pylist(data)
+                table.append(df)
+
+            remaining_rows -= current_batch_size
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(f"Total rows inserted: {len(df)}")
 
     return table, table_name, namespace
 
