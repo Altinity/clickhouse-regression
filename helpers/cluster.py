@@ -724,6 +724,40 @@ class ClickHouseNode(Node):
                     ):
                         fail("pid still alive")
 
+        with And("killing any remaining ClickHouse child processes"):
+            for attempt in retries(timeout=10, delay=1):
+                with attempt:
+                    result = self.command(
+                        "pgrep -f 'clickhouse.*server' || true",
+                        steps=False,
+                        no_checks=True,
+                    )
+                    if not result.output.strip():
+                        break
+                    
+                    self.command(
+                        f"pkill -{signal} -f 'clickhouse.*server' || true",
+                        steps=False,
+                        no_checks=True,
+                    )
+                    time.sleep(1)
+                    
+                    result = self.command(
+                        "pgrep -f 'clickhouse.*server' || true",
+                        steps=False,
+                        no_checks=True,
+                    )
+                    if not result.output.strip():
+                        break
+                    
+                    if attempt.iteration >= 5:
+                        self.command(
+                            "pkill -KILL -f 'clickhouse.*server' || true",
+                            steps=False,
+                            no_checks=True,
+                        )
+                        time.sleep(1)
+
         with And("deleting ClickHouse server pid file"):
             self.command("rm -rf /tmp/clickhouse-server.pid", exitcode=0, steps=False)
 
