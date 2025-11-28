@@ -311,9 +311,7 @@ def inserts_and_selects_not_blocked(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get initial source data"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I stop MinIO"):
         kill_minio()
@@ -344,9 +342,7 @@ def inserts_and_selects_not_blocked(self):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 

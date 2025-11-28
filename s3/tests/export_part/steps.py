@@ -779,14 +779,14 @@ def source_matches_destination(
 
 
 @TestStep(Then)
-def source_matches_destination_hash(
-    self, source_table, destination_table, node=None
-):
+def source_matches_destination_hash(self, source_table, destination_table, node=None):
     """Check that source and destination table hash matches."""
     if node is None:
         node = self.context.node
 
-    match, msg = table_hashes_match(table_name1=source_table, table_name2=destination_table, node=node)
+    match, msg = table_hashes_match(
+        table_name1=source_table, table_name2=destination_table, node=node
+    )
     assert match, error(msg)
 
 
@@ -803,9 +803,7 @@ def source_matches_destination_rows(
         node = self.context.node
 
     source_data = select_all_ordered(table_name=source_table, node=node)
-    destination_data = select_all_ordered(
-        table_name=destination_table, node=node
-    )
+    destination_data = select_all_ordered(table_name=destination_table, node=node)
 
     err_msg = "SOURCE != DESTINATION"
 
