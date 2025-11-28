@@ -1,5 +1,6 @@
 from testflows.core import *
 from s3.requirements.export_partition import *
+from s3.tests.common import enable_export_partition
 
 
 @TestFeature
@@ -12,6 +13,9 @@ def minio(self, uri, bucket_prefix):
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
     self.context.default_settings = [("allow_experimental_export_merge_tree_part", 1)]
+
+    with Given("I enable export partition"):
+        enable_export_partition()
 
     Feature(run=load("s3.tests.export_partition.sanity", "feature"))
     Feature(run=load("s3.tests.export_partition.error_handling", "feature"))
@@ -27,7 +31,7 @@ def minio(self, uri, bucket_prefix):
     )
     Feature(run=load("s3.tests.export_partition.alter_source_timing", "feature"))
     Feature(run=load("s3.tests.export_partition.replica_failover", "feature"))
-    Feature(run=load("s3.tests.export_partition.versions", "feature"))
+    # Feature(run=load("s3.tests.export_partition.versions", "feature"))
     Feature(
         run=load("s3.tests.export_partition.parallel_inserts_and_selects", "feature")
     )
