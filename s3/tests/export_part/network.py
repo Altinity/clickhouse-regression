@@ -278,6 +278,7 @@ def get_minio_interruption_strategies():
     "strategy, signal",
     get_minio_interruption_strategies(),
 )
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
 def minio_interruption(self, strategy, signal):
     """Check that MinIO outages at different times during exports work correctly."""
 

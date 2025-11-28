@@ -131,6 +131,7 @@ def create_source_table(
     "alter_function, kwargs",
     get_alter_functions(),
 )
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
 def before_export(self, alter_function, kwargs):
     """Test altering the source table before exporting parts."""
 
@@ -176,6 +177,10 @@ def before_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
+@Requirements(
+    RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
+    RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"),
+)
 def after_export(self, alter_function, kwargs):
     """Test altering the source table after exporting parts."""
 
@@ -218,6 +223,7 @@ def after_export(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
 def during_export(self, alter_function, kwargs):
     """Test altering the source table during exporting parts."""
 
@@ -262,6 +268,10 @@ def during_export(self, alter_function, kwargs):
 @Examples(
     "alter_function, kwargs",
     get_alter_functions(),
+)
+@Requirements(
+    RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
+    RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"),
 )
 def during_minio_interruption(self, alter_function, kwargs):
     """Test altering the source table during MinIO interruption."""
@@ -315,6 +325,7 @@ def during_minio_interruption(self, alter_function, kwargs):
     "alter_function, kwargs",
     get_alter_functions(),
 )
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 def stress(self, alter_function, kwargs):
     """Test a high volume of alters in parallel with exports."""
 

@@ -175,6 +175,7 @@ def different_partition_key(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_FailureHandling_PartCorruption("1.0"))
 def part_corruption(self):
     """Check that exports work correctly with corrupted parts."""
 
@@ -243,6 +244,7 @@ def part_corruption(self):
         (alter_table_drop_partition, "partition"),
     ],
 )
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_RemovedPart("1.0"))
 def removed_part_or_partition(self, removal_function, target_type):
     """Check that exporting a removed part or partition returns the correct error."""
 
