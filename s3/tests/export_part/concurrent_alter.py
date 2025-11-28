@@ -293,13 +293,17 @@ def during_minio_interruption(self, alter_function, kwargs):
         steps.start_merges(table_name=source_table)
 
     with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+        if alter_function != alter_wrappers.drop_table:
+            alter_function(table_name=source_table, **kwargs)
 
     with And("I start MinIO"):
         steps.start_minio()
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(table_name=source_table)
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -347,16 +351,11 @@ def stress(self, alter_function, kwargs):
                 )
             join()
 
-    with And("I wait for all background exports to complete"):
-        steps.wait_for_all_exports_to_complete(table_name=source_table)
-
-    with And("I flush system.part_log"):
-        steps.flush_log(table_name="system.part_log")
-
     with Then("Check successfully exported parts are present in destination"):
-        part_log = steps.get_part_log(node=self.context.node, table_name=source_table)
-        destination_parts = steps.get_s3_parts(table_name=s3_table_name)
-        assert part_log == destination_parts, error()
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestFeature
