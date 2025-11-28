@@ -364,6 +364,7 @@ def flush_log(self, node=None, table_name=None):
         node.query("SYSTEM FLUSH LOGS", exitcode=0)
     else:
         node.query(f"SYSTEM FLUSH LOGS {table_name}", exitcode=0)
+    sleep(1)
 
 
 @TestStep(When)
