@@ -48,9 +48,20 @@ def system_events_and_part_log(self):
             assert part in part_log, error()
 
 
-@TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Idempotency("1.0"))
-def duplicate_logging(self):
+@TestOutline(Scenario)
+@Examples(
+    "duplicate_policy, duplicate_count, failure_count",
+    [
+        ("overwrite", 0, 0),
+        ("error", 5, 5),
+        ("skip", 5, 0),
+    ],
+)
+@Requirements(
+    RQ_ClickHouse_ExportPart_Idempotency("1.0"),
+    RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"),
+)
+def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
     """Check duplicate exports are logged correctly in system.events."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -77,6 +88,9 @@ def duplicate_logging(self):
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
+            settings=[
+                ("export_merge_tree_part_file_already_exists_policy", duplicate_policy)
+            ],
         )
 
     with Then("Check source matches destination"):
@@ -90,11 +104,11 @@ def duplicate_logging(self):
         assert (
             final_events["PartsExportDuplicated"]
             - initial_events["PartsExportDuplicated"]
-            == 5
+            == duplicate_count
         ), error()
         assert (
             final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == 0  # TODO is this supposed to be 5?
+            == failure_count
         ), error()
 
 
@@ -183,63 +197,6 @@ def background_move_pool_size(self, background_move_pool_size):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Settings_OverwriteFile("1.0"))
-def overwrite_file(self):
-    """Check that overwrite file setting causes exports to overwrite existing files."""
-
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
-
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=True,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with And("I export parts to the S3 table"):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-        )
-
-    with When("I read the initial logged export events"):
-        initial_events = get_export_events(node=self.context.node)
-
-    with And(
-        "I export parts to the S3 table again with overwrite file setting enabled"
-    ):
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            node=self.context.node,
-            settings=[("export_merge_tree_part_overwrite_file_if_exists", "1")],
-        )
-
-    with And("I read the final logged export events"):
-        final_events = get_export_events(node=self.context.node)
-
-    with Then("I check no failed or duplicated exports occurred"):
-        assert (
-            final_events["PartsExportFailures"] - initial_events["PartsExportFailures"]
-            == 0  # TODO is this supposed to be 5 or 0?
-        ), error()
-        assert (
-            final_events["PartsExportDuplicated"]
-            - initial_events["PartsExportDuplicated"]
-            == 5  # TODO is this supposed to be 5 or 0?
-        ), error()
-
-    with And("I check that the destination table contains the correct data"):
-        source_matches_destination(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth("1.0"))
 def max_bandwidth(self):
     """Check that the max bandwidth setting limits the bandwidth used for exporting parts."""
@@ -323,5 +280,4 @@ def feature(self):
     Scenario(test=background_move_pool_size)(background_move_pool_size=1)
     Scenario(test=background_move_pool_size)(background_move_pool_size=8)
     Scenario(test=background_move_pool_size)(background_move_pool_size=16)
-    Scenario(run=overwrite_file)
     Scenario(run=max_bandwidth)

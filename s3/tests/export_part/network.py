@@ -461,8 +461,6 @@ def clickhouse_interruption(self, strategy, signal, safe):
 def feature(self):
     """Check that exports work correctly with various network conditions."""
 
-    # TODO corruption (bit flipping)
-
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)
     Scenario(test=packet_loss_gemodel)(
