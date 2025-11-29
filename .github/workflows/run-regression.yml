@@ -1163,6 +1163,26 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
+  export_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: export_partition
+      timeout_minutes: 360
+      storage_path: /export_partition
+      regression_args: '--storage minio'
+      artifact_name: export-partition-artefacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/part 3/export partition/*" --as-binary ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
   export_part:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
     uses: ./.github/workflows/reusable-suite.yml
