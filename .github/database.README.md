@@ -1,4 +1,4 @@
-# Github Actions Configuration and Utilities
+# Github Actions Utilities and Database
 
 ## Scripts
 
