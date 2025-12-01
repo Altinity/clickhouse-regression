@@ -470,16 +470,13 @@ def credentials_s3Cluster(self):
 @Requirements(RQ_SRS_015_S3_Settings_PartitionBy("1.0"))
 def partition(self):
     """Check that ClickHouse can export partitioned data."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
 
     with When("I export the data to S3 using the table function"):
         sql = (
-            f"INSERT INTO FUNCTION s3('{uri}_partition_export_"
-            + "{_partition_id}.csv'"
-            + f", '{access_key_id}','{secret_access_key}', 'CSV', 'a String') PARTITION BY a VALUES ('x'),('y'),('z')"
+            f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}_partition_export_"
+            + "{_partition_id}.csv', format='CSV', structure='a String') PARTITION BY a VALUES ('x'),('y'),('z')"
         )
         node.query(sql)
 
@@ -487,7 +484,7 @@ def partition(self):
         with Then(f"I check the data in the {partition_id} partition"):
             output = node.query(
                 f"""SELECT * FROM
-                s3('{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
+                s3(s3_credentials, url='{uri}_partition_export_{partition_id}.csv', format='CSV', structure='a String') FORMAT TabSeparated"""
             ).output
             assert output == partition_id, error()
 
@@ -496,8 +493,6 @@ def partition(self):
 @Requirements(RQ_SRS_015_S3_Settings_PartitionBy("1.0"))
 def partition_s3Cluster(self):
     """Check that ClickHouse can export partitioned data using s3Cluster table function."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
 
@@ -505,9 +500,8 @@ def partition_s3Cluster(self):
         with Combination(f"cluster_name = {cluster_name}"):
             with When("I export the data to S3 using the table function"):
                 sql = (
-                    f"INSERT INTO FUNCTION s3('{uri}_partition_export_"
-                    + "{_partition_id}.csv'"
-                    + f", '{access_key_id}','{secret_access_key}', 'CSV', 'a String') PARTITION BY a VALUES ('x'),('y'),('z')"
+                    f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}_partition_export_"
+                    + "{_partition_id}.csv', format='CSV', structure='a String') PARTITION BY a VALUES ('x'),('y'),('z')"
                 )
                 node.query(sql)
 
@@ -519,7 +513,7 @@ def partition_s3Cluster(self):
                                 self.context.cluster.node("clickhouse1")
                                 .query(
                                     f"""SELECT * FROM
-                                s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{access_key_id}','{secret_access_key}', 'CSV', 'a String') FORMAT TabSeparated"""
+                                s3Cluster('{cluster_name}', s3_credentials, url='{uri}_partition_export_{partition_id}.csv', format='CSV', structure='a String') FORMAT TabSeparated"""
                                 )
                                 .output
                             )
@@ -690,8 +684,6 @@ def remote_host_filter(self):
     """
     table1_name = "table_" + getuid()
     table2_name = "table_" + getuid()
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = self.context.uri
     node = current().context.node
     expected = "427"
@@ -717,7 +709,7 @@ def remote_host_filter(self):
             node.query(
                 f"""
                 INSERT INTO FUNCTION
-                s3('{uri}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', 'd UInt64')
+                s3(s3_credentials, url='{uri}', format='CSVWithNames', structure='d UInt64')
                 SELECT * FROM {table1_name}""",
                 message=f'DB::Exception: URL "{uri}" is not allowed',
             )
@@ -727,8 +719,6 @@ def remote_host_filter(self):
 @Requirements(RQ_SRS_015_S3_TableFunction_MeasureFileSize("1.0"))
 def measure_file_size(self):
 
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     table1_name = "table_" + getuid()
     uri = self.context.uri + "measure-file-size/"
     bucket_path = self.context.bucket_path + "/measure-file-size"
@@ -756,7 +746,7 @@ def measure_file_size(self):
 
     with Then("I compare the size that clickhouse reports"):
         r = node.query(
-            f"SELECT sum(_size) FROM s3('{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+            f"SELECT sum(_size) FROM s3(s3_credentials, url='{uri}**', format='One') FORMAT TSV"
         )
 
         for retry in retries(timeout=30, delay=5):
@@ -769,8 +759,6 @@ def measure_file_size(self):
 @Requirements(RQ_SRS_015_S3_TableFunction_MeasureFileSize("1.0"))
 def measure_file_size_s3Cluster(self):
     """Check that ClickHouse can measure file size using s3Cluster table function."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     table1_name = "table_" + getuid()
     uri = self.context.uri + "measure-file-size/"
     bucket_path = self.context.bucket_path + "/measure-file-size"
@@ -804,7 +792,7 @@ def measure_file_size_s3Cluster(self):
                 for attempt in retries(timeout=10, delay=1):
                     with attempt:
                         r = node.query(
-                            f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', '{uri}**', '{access_key_id}','{secret_access_key}', 'One') FORMAT TSV"
+                            f"SELECT sum(_size) FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}**', format='One') FORMAT TSV"
                         )
                         size_clickhouse = int(r.output.strip())
                         debug(
@@ -819,6 +807,13 @@ def measure_file_size_s3Cluster(self):
 )
 def outline(self):
     """Test S3 and S3 compatible storage through storage disks."""
+
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):
@@ -867,7 +862,7 @@ def ssec_encryption_check(self):
                         node.query(
                             f"""
                                 INSERT INTO FUNCTION
-                                s3('{self.context.uri}encrypted.csv', '{self.context.access_key_id}','{self.context.secret_access_key}', 'CSV', 'd UInt64')
+                                s3(s3_credentials, url='{self.context.uri}encrypted.csv', format='CSV', structure='d UInt64')
                                 SELECT * FROM {name}"""
                         )
 

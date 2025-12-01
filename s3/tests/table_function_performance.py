@@ -17,8 +17,6 @@ def s3_create_many_files(self):
     num_files_per_folder = 5
 
     node = current().context.node
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     table_name = "table_" + getuid()
     my_random = random.Random("many_files")
 
@@ -28,7 +26,7 @@ def s3_create_many_files(self):
     with Then("I check if the files already exist"):
         with By(f"checking if the last folder exists"):
             r = node.query(
-                f"""SELECT _path FROM s3('{self.context.many_files_uri}id={folder_ids[-1]}/*', '{access_key_id}','{secret_access_key}', 'One') FORMAT TabSeparated"""
+                f"""SELECT _path FROM s3(s3_credentials, url='{self.context.many_files_uri}id={folder_ids[-1]}/*', format='One') FORMAT TabSeparated"""
             )
 
     if r.output:
@@ -41,7 +39,7 @@ def s3_create_many_files(self):
             with attempt:
                 node.query(
                     f"""INSERT INTO TABLE FUNCTION 
-                    s3('{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv','{access_key_id}','{secret_access_key}','CSV','d UInt64') 
+                    s3(s3_credentials, url='{self.context.many_files_uri}id={folder_id}/file_{{_partition_id}}.csv', format='CSV', structure='d UInt64') 
                     PARTITION BY (d % {num_files_per_folder}) SELECT * FROM {table_name} 
                     -- {iteration}/{num_folders}"""
                 )
@@ -87,14 +85,12 @@ def wildcard(self, wildcard, expected_time, expect_result):
     """Check the performance of using wildcards in s3 paths."""
 
     node = current().context.node
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
 
     for i in range(1, 3):
         with Then(f"""I query S3 using the wildcard '{wildcard}'"""):
             t_start = time.time()
             r = node.query(
-                f"""SELECT median(d) FROM s3('{self.context.many_files_uri}id={wildcard}/*', '{access_key_id}','{secret_access_key}', 'CSV', 'd UInt64') FORMAT TabSeparated""",
+                f"""SELECT median(d) FROM s3(s3_credentials, url='{self.context.many_files_uri}id={wildcard}/*', format='CSV', structure='d UInt64') FORMAT TabSeparated""",
                 timeout=expected_time,
             )
             t_elapsed = time.time() - t_start
@@ -113,6 +109,13 @@ def outline(self, uri):
 
     self.context.uri = uri
     self.context.many_files_uri = self.context.uri + "many_files_benchmark/"
+
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
 
     with allow_s3_truncate(self.context.node):
         Scenario(run=s3_create_many_files)
