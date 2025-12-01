@@ -68,7 +68,7 @@ def check_restart_swarm_node(
                 cluster_name=cluster_name,
             )
             Step(
-                "stop node",
+                "restart random swarm node",
                 test=actions.restart_random_swarm_node,
                 parallel=True,
                 executor=pool,
@@ -84,7 +84,9 @@ def check_restart_clickhouse_on_swarm_node(
     if node is None:
         node = self.context.node
 
-    with Then("run long select from iceberg table and restart random swarm node"):
+    with Then(
+        "run long select from iceberg table and restart clickhouse on random swarm node"
+    ):
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
@@ -94,7 +96,7 @@ def check_restart_clickhouse_on_swarm_node(
                 cluster_name=cluster_name,
             )
             Step(
-                "stop node",
+                "restart clickhouse on random swarm node",
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
@@ -113,7 +115,9 @@ def network_failure(
     if node is None:
         node = self.context.node
 
-    with Then("run long select from iceberg table and restart random swarm node"):
+    with Then(
+        "run long select from iceberg table and restart network of random swarm node"
+    ):
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
@@ -123,7 +127,7 @@ def network_failure(
                 message="DB::Exception: Query was cancelled.",
             )
             Step(
-                "stop node",
+                "restart network of random swarm node",
                 test=actions.restart_network_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
@@ -135,11 +139,11 @@ def network_failure(
 def swarm_out_of_disk_space(
     self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
 ):
-    """Check that swarm query fails if one of the swarm nodes is out of disk space."""
+    """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
     if node is None:
         node = self.context.node
 
-    with Given("fill random swarm node clickhouse disks"):
+    with Given("fill up disks of random swarm node"):
         swarm_node = random.choice(self.context.swarm_nodes)
         actions.fill_clickhouse_disks(node=swarm_node)
 
@@ -161,11 +165,11 @@ def initiator_out_of_disk_space(
     cluster_name="static_swarm_cluster",
     node=None,
 ):
-    """Check that swarm query fails if one of the swarm nodes is out of disk space."""
+    """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
     if node is None:
         node = self.context.node
 
-    with Given("fill up initiator clickhouse disks"):
+    with Given("fill up disks of initiator node"):
         actions.fill_clickhouse_disks(
             node=node,
             minio_root_user=minio_root_user,
@@ -189,13 +193,15 @@ def cpu_overload(
     node=None,
     row_count=100,
 ):
-    """Check that swarm query fails if one of the swarm nodes is under CPU overload."""
+    """Check that swarm query does not fail if one of the swarm nodes is
+    under CPU overload. Query expected to be executed successfully on other swarm nodes.
+    """
     if node is None:
         node = self.context.node
 
     overload_node = self.context.node3
 
-    with Then("run long select from iceberg table and restart random swarm node"):
+    with Then("run long select from iceberg table and overload one swarm node"):
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
@@ -204,11 +210,9 @@ def cpu_overload(
                 delay_before_execution=1,
                 sleep_each_row=0.5,
                 expected_result=f"{row_count}\tclickhouse2",
-                # exitcode=138,
-                # message="DB::Exception: Query was cancelled.",
             )
             Step(
-                "stop node",
+                "overload swarm node",
                 test=actions.swarm_cpu_load_by_stop_clickhouse,
                 parallel=True,
                 executor=pool,
@@ -220,11 +224,11 @@ def cpu_overload(
 def cpu_overload_all_swarm_nodes(
     self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
 ):
-    """Check that swarm query fails if one of the swarm nodes is under CPU overload."""
+    """Check that swarm query fails if all swarm nodes are under CPU overload."""
     if node is None:
         node = self.context.node
 
-    with Then("run long select from iceberg table and restart random swarm node"):
+    with Then("run long select from iceberg table and overload all swarm nodes"):
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
@@ -236,13 +240,13 @@ def cpu_overload_all_swarm_nodes(
                 message="DB::Exception: Cannot connect to any replica for query execution.",
             )
             Step(
-                "stop node",
+                "overload swarm node 1",
                 test=actions.swarm_cpu_load_by_stop_clickhouse,
                 parallel=True,
                 executor=pool,
             )(node=self.context.swarm_nodes[0])
             Step(
-                "stop node",
+                "overload swarm node 2",
                 test=actions.swarm_cpu_load_by_stop_clickhouse,
                 parallel=True,
                 executor=pool,
@@ -254,11 +258,11 @@ def cpu_overload_all_swarm_nodes(
 def cpu_overload_initiator_nodes(
     self, clickhouse_iceberg_table_name, cluster_name="static_swarm_cluster", node=None
 ):
-    """Check that swarm query fails if one of the swarm nodes is under CPU overload."""
+    """Check that swarm query fails if initiator node is under CPU overload."""
     if node is None:
         node = self.context.node
 
-    with Then("run long select from iceberg table and restart random swarm node"):
+    with Then("run long select from iceberg table and overload initiator node"):
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
@@ -270,7 +274,7 @@ def cpu_overload_initiator_nodes(
                 message="DB::Exception: Cannot connect to any replica for query execution.",
             )
             Step(
-                "stop node",
+                "overload initiator node",
                 test=actions.swarm_cpu_load_by_stop_clickhouse,
                 parallel=True,
                 executor=pool,
