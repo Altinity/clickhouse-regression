@@ -748,7 +748,7 @@ def wait_for_all_exports_to_complete(self, node=None, table_name=None):
     if node is None:
         node = self.context.node
 
-    for attempt in retries(timeout=30, delay=1):
+    for attempt in retries(timeout=10, delay=1):
         with attempt:
             assert (
                 get_num_active_exports(node=node, table_name=table_name) == 0
@@ -827,7 +827,7 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
     if node is None:
         node = self.context.node
 
-    for attempt in retries(timeout=10, delay=1):
+    for attempt in retries(timeout=30, delay=1):
         with attempt:
             wait_for_all_exports_to_complete(node=node, table_name=source_table)
             flush_log(node=node, table_name="system.part_log")
