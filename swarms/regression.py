@@ -92,7 +92,7 @@ def regression(
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
 
     with And("enable or disable experimental analyzer if needed"):
-        for node in self.context.swarm_nodes:
+        for node in self.context.nodes:
             experimental_analyzer(node=node, with_analyzer=with_analyzer)
 
     Feature(test=load("swarms.tests.feature", "feature"))(

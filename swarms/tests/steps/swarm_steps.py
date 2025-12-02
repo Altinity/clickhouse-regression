@@ -49,6 +49,7 @@ def create_swarm_cluster_entry(
     path="/clickhouse/discovery/swarm",
     observer=None,
     allow_experimental_cluster_discovery=True,
+    user=None,
 ):
     """Create swarm cluster configuration entry.
 
@@ -66,6 +67,9 @@ def create_swarm_cluster_entry(
 
     if path is not None:
         discovery["path"] = path
+
+    if user is not None:
+        discovery["user"] = user
 
     if secret is not None:
         discovery["secret"] = secret
@@ -99,6 +103,7 @@ def add_node_to_swarm(
     modify=False,
     entries=None,
     duplicate_tags=False,
+    user=None,
 ):
     """Add a node to the swarm cluster.
 
@@ -125,6 +130,7 @@ def add_node_to_swarm(
                 path=path,
                 observer=observer,
                 allow_experimental_cluster_discovery=allow_experimental_cluster_discovery,
+                user=user,
             )
 
         change_clickhouse_config(
