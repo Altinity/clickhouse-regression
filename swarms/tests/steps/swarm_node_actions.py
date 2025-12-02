@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import time
+import math
 import random
 
 from testflows.core import *
@@ -184,49 +185,24 @@ def clickhouse_limited_disk_config(self, node):
 
 
 @TestStep(Given)
-def swarm_cpu_load(self, node=None, seconds=60 * 3):
-    """
-    Create CPU contention by spawning many tight busy-loop processes inside a node.
-    - node: target ClickHouse node (defaults to a random swarm node)
-    - seconds: how long to keep the overload
-    - factor: processes per core (e.g., 1.0 ~= 1 per core, 2.0 ~= 2 per core)
-    """
-    if node is None:
-        node = random.choice(self.context.swarm_nodes)
-
-    with By("give yes higher priority than clickhouse"):
-        node.command("pgrep -x yes | xargs -r renice -n -5")
-        node.command("pgrep -x clickhouse-server | xargs -r renice -n +10")
-
-    try:
-        start = "yes > /dev/null"
-        node.command(start)
-        with By(f"I keep CPU saturated for {seconds:.1f}s"):
-            time.sleep(seconds)
-        yield
-    finally:
-        with Finally("I stop CPU hogs"):
-            stop = "pkill -9 yes"
-            node.command(stop)
-
-
-@TestStep(Given)
 def swarm_cpu_load(self, node=None, seconds=60 * 3, factor=3.0):
     """
     Create CPU contention by starting `yes` workers.
+    - node: target ClickHouse node (defaults to a random swarm node)
     - seconds: duration to keep the load
     - factor: workers per core (1.0 ≈ 1 per core, 2.0 ≈ 2 per core)
     """
-    import random, time, math
 
     if node is None:
         node = random.choice(self.context.swarm_nodes)
 
-    # How many logical CPUs?
-    cores = int(node.command("nproc").output.strip())
-    procs = max(1, math.ceil(cores * float(factor)))
+    with By("get number of cores"):
+        cores = int(node.command("nproc").output.strip())
 
-    with By("give yes higher priority than clickhouse"):
+    with And("calculate number of processes"):
+        procs = max(1, math.ceil(cores * float(factor)))
+
+    with And("give yes higher priority than clickhouse"):
         node.command("pgrep -x yes | xargs -r renice -n -10")
         node.command("pgrep -x clickhouse-server | xargs -r renice -n +20")
 
@@ -246,11 +222,11 @@ def swarm_cpu_load(self, node=None, seconds=60 * 3, factor=3.0):
 
 
 @TestStep(Given)
-def swarm_cpu_load_by_stop_clickhouse(self, node=None, seconds=60 * 1, factor=3.0):
+def swarm_cpu_load_by_stop_clickhouse(self, node=None, seconds=60 * 1):
     """
-    Create CPU contention by starting `yes` workers.
-    - seconds: duration to keep the load
-    - factor: workers per core (1.0 ≈ 1 per core, 2.0 ≈ 2 per core)
+    Stop clickhouse processes to simulate CPU contention.
+    - node: target ClickHouse node (defaults to a random swarm node)
+    - seconds: duration to keep clickhouse stopped
     """
 
     if node is None:
@@ -262,7 +238,9 @@ def swarm_cpu_load_by_stop_clickhouse(self, node=None, seconds=60 * 1, factor=3.
 
         with By(f"sleep {seconds}s with clickhouse stopped"):
             time.sleep(seconds)
+
         yield
+
     finally:
         with Finally("start clickhouse"):
             node.command("pgrep -x clickhouse | xargs -r kill -CONT")
