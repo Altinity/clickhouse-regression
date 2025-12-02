@@ -12,6 +12,9 @@ from alter.stress.tests.steps import (
     interrupt_network,
 )
 
+import iceberg.tests.steps.iceberg_engine as iceberg_engine
+
+
 # There's an important tradeoff between these two sets of timeouts.
 # If the query runs for longer than the step timeout, the step will not
 # get retried using a different node and table.
@@ -22,8 +25,7 @@ step_retry_delay = 30
 @TestStep(Given)
 def restart_random_swarm_node(self, delay=None):
     """
-    Send a kill signal to a random clickhouse swarm instance, wait, and restart.
-    This simulates a short outage.
+    Stop selected swarm node container, wait, and restart.
     """
     clickhouse_node = random.choice(self.context.swarm_nodes)
 
@@ -39,7 +41,6 @@ def restart_random_swarm_node(self, delay=None):
 def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
-    This simulates a short outage.
     """
     clickhouse_node = random.choice(self.context.swarm_nodes)
 
@@ -77,10 +78,13 @@ def restart_network_on_random_swarm_node(
 
 
 @TestStep(Given)
-def fill_clickhouse_disks(self):
-    """Force clickhouse to run on a full disk."""
+def fill_clickhouse_disks(
+    self, node=None, database_name=None, minio_root_user=None, minio_root_password=None
+):
+    """Force clickhouse to run out of disk space."""
+    if node is None:
+        node = self.context.node
 
-    node = random.choice(self.context.swarm_nodes)
     clickhouse_disk_mounts = [
         "/var/log/clickhouse-server-limited",
         "/var/lib/clickhouse-limited",
@@ -90,6 +94,13 @@ def fill_clickhouse_disks(self):
 
     with Given("apply limited disk config"):
         clickhouse_limited_disk_config(node=node)
+
+    if database_name is not None:
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
 
     try:
         for disk_mount in clickhouse_disk_mounts:
@@ -129,7 +140,6 @@ def fill_clickhouse_disks(self):
 @TestStep(Given)
 def clickhouse_limited_disk_config(self, node):
     """Install a config file overriding clickhouse storage locations"""
-
     config_override = {
         "logger": {
             KeyWithAttributes(
@@ -174,41 +184,85 @@ def clickhouse_limited_disk_config(self, node):
 
 
 @TestStep(Given)
-def limit_clickhouse_disks(self, node):
+def swarm_cpu_load(self, node=None, seconds=60 * 3):
     """
-    Restart clickhouse using small disks.
+    Create CPU contention by spawning many tight busy-loop processes inside a node.
+    - node: target ClickHouse node (defaults to a random swarm node)
+    - seconds: how long to keep the overload
+    - factor: processes per core (e.g., 1.0 ~= 1 per core, 2.0 ~= 2 per core)
     """
+    if node is None:
+        node = random.choice(self.context.swarm_nodes)
 
-    migrate_dirs = {
-        "/var/lib/clickhouse": "/var/lib/clickhouse-limited",
-        "/var/log/clickhouse-server": "/var/log/clickhouse-server-limited",
-    }
+    with By("give yes higher priority than clickhouse"):
+        node.command("pgrep -x yes | xargs -r renice -n -5")
+        node.command("pgrep -x clickhouse-server | xargs -r renice -n +10")
 
     try:
-        with Given("I stop clickhouse"):
-            node.stop_clickhouse()
-
-        with And("I move clickhouse files to small disks"):
-            node.command("apt update && apt install rsync -y")
-
-            for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {normal_dir}/ {limited_dir}")
-
-        with And("I write an override config for clickhouse"):
-            clickhouse_limited_disk_config(node=node)
-
-        with And("I restart clickhouse on those disks"):
-            node.start_clickhouse(log_dir="/var/log/clickhouse-server-limited")
-
+        start = "yes > /dev/null"
+        node.command(start)
+        with By(f"I keep CPU saturated for {seconds:.1f}s"):
+            time.sleep(seconds)
         yield
-
     finally:
-        with Finally("I stop clickhouse"):
-            node.stop_clickhouse()
+        with Finally("I stop CPU hogs"):
+            stop = "pkill -9 yes"
+            node.command(stop)
 
-        with And("I move clickhouse files from the small disks"):
-            for normal_dir, limited_dir in migrate_dirs.items():
-                node.command(f"rsync -a -H --delete {limited_dir}/ {normal_dir}")
 
-        with And("I restart clickhouse on those disks"):
-            node.start_clickhouse()
+@TestStep(Given)
+def swarm_cpu_load(self, node=None, seconds=60 * 3, factor=3.0):
+    """
+    Create CPU contention by starting `yes` workers.
+    - seconds: duration to keep the load
+    - factor: workers per core (1.0 ≈ 1 per core, 2.0 ≈ 2 per core)
+    """
+    import random, time, math
+
+    if node is None:
+        node = random.choice(self.context.swarm_nodes)
+
+    # How many logical CPUs?
+    cores = int(node.command("nproc").output.strip())
+    procs = max(1, math.ceil(cores * float(factor)))
+
+    with By("give yes higher priority than clickhouse"):
+        node.command("pgrep -x yes | xargs -r renice -n -10")
+        node.command("pgrep -x clickhouse-server | xargs -r renice -n +20")
+
+    try:
+        # Start one `yes` per worker in background
+        start = f"sh -c 'for i in $(seq 1 {procs}); do yes > /dev/null & done'"
+        node.command(start)
+
+        with By(
+            f"CPU load: {procs} workers (~{cores} cores × factor {factor}) for {seconds}s"
+        ):
+            time.sleep(seconds)
+        yield
+    finally:
+        with Finally("stop cpu hogs"):
+            node.command("sh -c 'pkill -9 yes 2>/dev/null || true'")
+
+
+@TestStep(Given)
+def swarm_cpu_load_by_stop_clickhouse(self, node=None, seconds=60 * 1, factor=3.0):
+    """
+    Create CPU contention by starting `yes` workers.
+    - seconds: duration to keep the load
+    - factor: workers per core (1.0 ≈ 1 per core, 2.0 ≈ 2 per core)
+    """
+
+    if node is None:
+        node = random.choice(self.context.swarm_nodes)
+
+    try:
+        start = f"pgrep -x clickhouse | xargs -r kill -STOP"
+        node.command(start)
+
+        with By(f"sleep {seconds}s with clickhouse stopped"):
+            time.sleep(seconds)
+        yield
+    finally:
+        with Finally("start clickhouse"):
+            node.command("pgrep -x clickhouse | xargs -r kill -CONT")
