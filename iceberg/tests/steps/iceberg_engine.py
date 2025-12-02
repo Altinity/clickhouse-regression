@@ -28,6 +28,7 @@ def create_experimental_iceberg_database_with_rest_catalog(
     catalog_type=CATALOG_TYPE,
     storage_endpoint="http://minio:9000/warehouse",
     auth_header="Authorization: Bearer foo",
+    cluster_name=None,
     exitcode=None,
     message=None,
     node=None,
@@ -74,7 +75,12 @@ def create_experimental_iceberg_database_with_rest_catalog(
         settings_str = f"SETTINGS {settings_str}"
 
     query = f"SET allow_experimental_database_iceberg=true; "
+
     query += f"CREATE DATABASE {database_name} "
+
+    if cluster_name:
+        query += f"ON CLUSTER {cluster_name} "
+
     query += f"ENGINE = {database_engine_name}('{rest_catalog_url}', '{s3_access_key_id}', '{s3_secret_access_key}') "
 
     if settings:
@@ -99,6 +105,7 @@ def create_experimental_iceberg_database_with_glue_catalog(
     database_name=None,
     endpoint_url="http://localstack:4566",
     storage_endpoint="http://minio:9000/warehouse",
+    cluster_name=None,
     exitcode=None,
     message=None,
     node=None,
@@ -147,7 +154,13 @@ def create_experimental_iceberg_database_with_glue_catalog(
         settings_str = f"SETTINGS {settings_str}"
 
     query = f"SET allow_experimental_database_glue_catalog=1; "
-    query += f"CREATE DATABASE {database_name} ENGINE = {database_engine_name}('{endpoint_url}') "
+
+    query += f"CREATE DATABASE {database_name} "
+
+    if cluster_name:
+        query += f"ON CLUSTER {cluster_name} "
+
+    query += f"ENGINE = {database_engine_name}('{endpoint_url}') "
 
     if settings:
         query += f"{settings_str}"
@@ -398,10 +411,23 @@ def check_values_in_system_tables(self, table_name, database):
         full_engine = node.query(
             f"SELECT engine_full FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
-        assert (
-            full_engine
-            == "Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')"
-        ), error()
+        if self.context.catalog == "rest":
+            assert (
+                full_engine
+                == "Iceberg(\\'http://minio:9000/warehouse/data/\\', \\'admin\\', \\'[HIDDEN]\\')"
+            ), error()
+        elif self.context.catalog == "glue":
+            assert (
+                full_engine == "Iceberg(\\'http://minio:9000/warehouse/data/\\')"
+            ), error()
+        else:
+            assert False, f"Unsupported catalog type: {self.context.catalog}"
+
+    with By("check metdata path"):
+        metadata_path = node.query(
+            f"SELECT metadata_path FROM system.tables WHERE name = '{table_name}'"
+        ).output.strip()
+        assert metadata_path == "", error()
 
     with By("check that total rows is correct"):
         total_rows = node.query(
@@ -414,9 +440,3 @@ def check_values_in_system_tables(self, table_name, database):
             f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
         assert total_bytes == "12990", error()
-
-    with By("check metdata path"):
-        metadata_path = node.query(
-            f"SELECT metadata_path FROM system.tables WHERE name = '{table_name}'"
-        ).output.strip()
-        assert metadata_path == "", error()
