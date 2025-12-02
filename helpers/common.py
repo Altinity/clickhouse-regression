@@ -119,14 +119,12 @@ def check_msan_in_binary_link(test):
 
 def check_if_antalya_build(test):
     """True if build is Antalya build."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
-    return "antalya" in binary_path
+    return "antalya" in current().context.clickhouse_version
 
 
 def check_if_not_antalya_build(test):
     """True if build is not Antalya build."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
-    return "antalya" not in binary_path
+    return "antalya" not in current().context.clickhouse_version
 
 
 def check_if_head(test):
