@@ -351,6 +351,7 @@ def inserts_and_selects_not_blocked(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def inserts_and_optimize(self):
     """Test exports work correctly with concurrent inserts and optimizes."""
 
