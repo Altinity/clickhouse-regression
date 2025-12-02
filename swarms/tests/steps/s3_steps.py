@@ -48,7 +48,7 @@ def read_data_with_s3_table_function(
                 object_storage_cluster,
             )
         )
-    if use_hive_partitioning:
+    if use_hive_partitioning is not None:
         settings.append(
             (
                 "use_hive_partitioning",
