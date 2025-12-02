@@ -259,6 +259,7 @@ def check_join(
             left_table.table_type == "s3Cluster_table_function"
             and right_table.table_type == "merge_tree_table"
             and object_storage_cluster_join_mode == "allow"
+            and join_clause != "PASTE JOIN"
         )
     ):
         exitcode, message = (
@@ -452,8 +453,8 @@ def check_join(
             and join_clause in non_stable_join_clauses
         )
     ):
-        assert result.exitcode == 0, error()
         # resulting rows are not stable
+        assert result.exitcode == 0, error()
     elif not exitcode:
         assert result.output == expected_result.output, error()
 
@@ -623,7 +624,7 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
     )
 
     if not self.context.stress:
-        all_possible_combinations = random.sample(all_possible_combinations, 500)
+        all_possible_combinations = random.sample(all_possible_combinations, 1000)
 
     with Pool() as pool:
         for num, (
