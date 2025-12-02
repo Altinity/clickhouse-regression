@@ -33,6 +33,9 @@ def system_events_and_part_log(self):
             node=self.context.node,
         )
 
+    with And("I wait for all exports to complete"):
+        wait_for_all_exports_to_complete(table_name=source_table)
+
     with And("I read the final logged export events and part log"):
         final_events = get_export_events(node=self.context.node)
         part_log = get_part_log(node=self.context.node)
