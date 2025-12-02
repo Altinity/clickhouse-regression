@@ -12,22 +12,18 @@ def insert_to_s3_function_invalid(
     columns="d UInt64",
     compression=None,
     file_format="CSVWithNames",
-    access_key_id=None,
-    secret_access_key=None,
     message=None,
     exitcode=None,
     timeout=60,
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 
-    access_key_id = access_key_id or self.context.access_key_id
-    secret_access_key = secret_access_key or self.context.secret_access_key
     node = current().context.node
 
-    query = f"INSERT INTO FUNCTION s3('{path}', '{access_key_id}','{secret_access_key}', '{file_format}', '{columns}'"
+    query = f"INSERT INTO FUNCTION s3(s3_credentials, url='{path}', format='{file_format}', structure='{columns}'"
 
     if compression:
-        query += f", '{compression}'"
+        query += f", compression_method='{compression}'"
 
     query += f") SELECT * FROM {table_name}"
 
@@ -48,15 +44,13 @@ def insert_from_s3_function_invalid(
     timeout=60,
 ):
     """Import data from a file in s3 to a table and catch fail."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = uri or self.context.uri
     node = current().context.node
 
-    query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+    query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
     if compression:
-        query += f", '{compression}'"
+        query += f", compression_method='{compression}'"
 
     query += ")"
 
@@ -373,14 +367,8 @@ def invalid_credentials(self):
         """I export the data to S3 using the table function with invalid
                credentials, expecting failure"""
     ):
-        insert_to_s3_function_invalid(
-            table_name=name_table1,
-            path=f"{uri}invalid.csv",
-            access_key_id=access_key_id,
-            secret_access_key=secret_access_key,
-            message=expected,
-            exitcode=243,
-        )
+        query = f"INSERT INTO FUNCTION s3('{uri}invalid.csv', '{access_key_id}', '{secret_access_key}', 'CSV', 'd UInt64') SELECT * FROM {name_table1}"
+        node.query(query, message=expected, exitcode=243)
 
 
 @TestOutline(Feature)
@@ -389,6 +377,13 @@ def outline(self, uri):
     """Test S3 and S3 compatible storage through storage disks."""
 
     self.context.uri = uri
+
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
 
     for scenario in loads(current_module(), Scenario):
         with allow_s3_truncate(self.context.node):

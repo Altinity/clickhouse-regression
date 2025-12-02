@@ -110,6 +110,13 @@ def minio(self, uri, bucket_prefix):
         self.context.uri = f"{uri}table_function/{temp_s3_path}/"
         self.context.bucket_path = f"{bucket_prefix}/table_function/{temp_s3_path}"
 
+    with Given("I add S3 credentials configuration"):
+        named_s3_credentials(
+            access_key_id=self.context.access_key_id,
+            secret_access_key=self.context.secret_access_key,
+            restart=True,
+        )
+
     with allow_s3_truncate(self.context.node):
         cluster_names = {None}.union(self.context.clusters)
         debug(cluster_names)

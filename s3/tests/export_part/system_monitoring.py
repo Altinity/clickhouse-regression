@@ -156,7 +156,15 @@ def system_exports_and_metrics(self):
         assert get_num_active_exports(node=self.context.node) == 0, error()
 
 
-@TestScenario
+@TestOutline(Scenario)
+@Examples(
+    "background_move_pool_size",
+    [
+        (1,),
+        (8,),
+        (16,),
+    ],
+)
 @Requirements(RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize("1.0"))
 def background_move_pool_size(self, background_move_pool_size):
     """Check that background_move_pool_size server setting controls the number of threads used for exporting parts."""
@@ -182,7 +190,7 @@ def background_move_pool_size(self, background_move_pool_size):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I slow down the network speed"):
-        network_packet_rate_limit(node=self.context.node, rate_mbit=20)
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with When("I export parts to the S3 table"):
         export_parts(
@@ -279,7 +287,5 @@ def feature(self):
     Scenario(run=system_events_and_part_log)
     Scenario(run=duplicate_logging)
     Scenario(run=system_exports_and_metrics)
-    Scenario(test=background_move_pool_size)(background_move_pool_size=1)
-    Scenario(test=background_move_pool_size)(background_move_pool_size=8)
-    Scenario(test=background_move_pool_size)(background_move_pool_size=16)
+    Scenario(run=background_move_pool_size)
     Scenario(run=max_bandwidth)

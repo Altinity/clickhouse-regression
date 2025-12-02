@@ -238,6 +238,25 @@ def s3_storage(
     return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
 
 
+@TestStep(Given)
+def named_s3_credentials(
+    self, access_key_id, secret_access_key, restart=False, nodes=None, timeout=60
+):
+    """Add S3 connection configuration as a named collection."""
+    config = create_xml_config_content(
+        entries={
+            "named_collections": {
+                "s3_credentials": {
+                    "access_key_id": access_key_id,
+                    "secret_access_key": secret_access_key,
+                }
+            }
+        },
+        config_file="s3_credentials.xml",
+    )
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
+
+
 @contextmanager
 def s3_endpoints(
     endpoints,
@@ -1876,16 +1895,14 @@ def insert_to_s3_function(
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = uri or self.context.uri
     node = current().context.node
 
     try:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
         if compression:
-            query += f", '{compression}'"
+            query += f", compression_method='{compression}'"
 
         query += f") SELECT * FROM {table_name}"
 
@@ -1897,7 +1914,7 @@ def insert_to_s3_function(
         yield
 
     finally:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSV', '{columns}'"
+        query = f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}{filename}', format='CSV', structure='{columns}'"
         query += f") SELECT * FROM null('{columns}')"
 
         node.query(query)
@@ -1916,18 +1933,16 @@ def insert_from_s3_function(
     no_checks=False,
 ):
     """Import data from a file in s3 to a table."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = uri or self.context.uri
     node = current().context.node
 
     if cluster_name is None:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
     else:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', '{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
     if compression:
-        query += f", '{compression}'"
+        query += f", compression_method='{compression}'"
 
     query += ")"
 
