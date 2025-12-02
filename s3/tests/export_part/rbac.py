@@ -130,16 +130,11 @@ def kill_export(self):
                 )
             join()
 
-        with And("I wait for all exports and merges to complete"):
-            wait_for_all_exports_to_complete(node=self.context.node)
-            wait_for_all_merges_to_complete(
-                node=self.context.node, table_name=source_table
+        with Then("Check part log matches destination"):
+            part_log_matches_destination(
+                source_table=source_table,
+                destination_table=s3_table_name,
             )
-
-        with Then("Check successfully exported parts are present in destination"):
-            part_log = get_part_log(node=self.context.node, table_name=source_table)
-            destination_parts = get_s3_parts(table_name=s3_table_name)
-            assert part_log == destination_parts, error()
 
 
 @TestFeature
