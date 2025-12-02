@@ -394,6 +394,45 @@ def export_partitions(
 
 
 @TestStep(When)
+def kill_export_partition(
+    self,
+    partition_id,
+    source_table,
+    destination_table,
+    node=None,
+    exitcode=0,
+):
+    """Kill an export partition operation.
+
+    Args:
+        partition_id: The partition ID to kill the export for
+        source_table: The source table name
+        destination_table: The destination table name
+        node: The node to execute the query on (defaults to context.node)
+        exitcode: Expected exit code (default: 0)
+    """
+    if node is None:
+        node = self.context.node
+
+    no_checks = exitcode != 0
+
+    with By(
+        f"killing EXPORT PARTITION for partition_id='{partition_id}', "
+        f"source_table='{source_table}', destination_table='{destination_table}'"
+    ):
+        result = node.query(
+            f"KILL EXPORT PARTITION WHERE partition_id = '{partition_id}' "
+            f"AND source_table = '{source_table}' "
+            f"AND destination_table = '{destination_table}'",
+            exitcode=exitcode,
+            no_checks=no_checks,
+            steps=True,
+        )
+
+    return result
+
+
+@TestStep(When)
 def get_export_events(self, node):
     """Get the export data from the system.events table of a given node."""
 
@@ -416,6 +455,95 @@ def get_export_events(self, node):
         events["PartsExportDuplicated"] = 0
 
     return events
+
+
+@TestStep(When)
+def get_export_partition_zookeeper_events(self, node):
+    """Get the export partition ZooKeeper/Keeper profile events from the system.events table of a given node.
+
+    Returns a dictionary with all ExportPartitionZooKeeper* profile events.
+    Events are initialized to 0 if they don't exist in the system.events table.
+    """
+
+    output = node.query(
+        "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
+        exitcode=0,
+        steps=True,
+    ).output
+
+    events = {}
+    for line in output.strip().splitlines():
+        event = json.loads(line)
+        events[event["name"]] = int(event["value"])
+
+    expected_events = [
+        "ExportPartitionZooKeeperRequests",
+        "ExportPartitionZooKeeperGet",
+        "ExportPartitionZooKeeperGetChildren",
+        "ExportPartitionZooKeeperGetChildrenWatch",
+        "ExportPartitionZooKeeperGetWatch",
+        "ExportPartitionZooKeeperCreate",
+        "ExportPartitionZooKeeperSet",
+        "ExportPartitionZooKeeperRemove",
+        "ExportPartitionZooKeeperRemoveRecursive",
+        "ExportPartitionZooKeeperMulti",
+        "ExportPartitionZooKeeperExists",
+    ]
+
+    for event_name in expected_events:
+        if event_name not in events:
+            events[event_name] = 0
+
+    return events
+
+
+@TestStep(Then)
+def verify_zookeeper_events_increased(
+    self, initial_events, final_events, min_total_requests=1
+):
+    """Verify that ZooKeeper/Keeper events increased after an export partition operation.
+
+    Args:
+        initial_events: Dictionary of events before the operation
+        final_events: Dictionary of events after the operation
+        min_total_requests: Minimum number of total ZooKeeper requests expected (default: 1)
+    """
+    with By("checking that total ZooKeeper requests increased"):
+        total_requests_before = initial_events.get(
+            "ExportPartitionZooKeeperRequests", 0
+        )
+        total_requests_after = final_events.get("ExportPartitionZooKeeperRequests", 0)
+        total_requests_diff = total_requests_after - total_requests_before
+
+        assert total_requests_diff >= min_total_requests, error(
+            f"Expected at least {min_total_requests} ZooKeeper requests, but got {total_requests_diff}"
+        )
+
+    with And("checking individual ZooKeeper operation types"):
+        operation_types = [
+            "ExportPartitionZooKeeperGet",
+            "ExportPartitionZooKeeperGetChildren",
+            "ExportPartitionZooKeeperGetChildrenWatch",
+            "ExportPartitionZooKeeperGetWatch",
+            "ExportPartitionZooKeeperCreate",
+            "ExportPartitionZooKeeperSet",
+            "ExportPartitionZooKeeperRemove",
+            "ExportPartitionZooKeeperRemoveRecursive",
+            "ExportPartitionZooKeeperMulti",
+            "ExportPartitionZooKeeperExists",
+        ]
+
+        operations_occurred = []
+        for op_type in operation_types:
+            before = initial_events.get(op_type, 0)
+            after = final_events.get(op_type, 0)
+            diff = after - before
+            if diff > 0:
+                operations_occurred.append((op_type, diff))
+
+        assert len(operations_occurred) > 0, error(
+            f"No ZooKeeper operations detected. Total requests: {total_requests_diff}"
+        )
 
 
 @TestStep(When)
@@ -730,8 +858,6 @@ def source_matches_destination(
         source_node = self.context.node
     if destination_node is None:
         destination_node = self.context.node
-
-    # wait_for_export_to_complete(source_table=source_table, node=source_node)
 
     for attempt in retries(timeout=35, delay=3):
         with attempt:
