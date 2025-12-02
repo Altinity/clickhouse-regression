@@ -119,6 +119,12 @@ xfails = {
             and check_clickhouse_version("<25.10")(test),
         )
     ],
+    "/iceberg/iceberg engine/glue catalog/feature/show data lake catalogs in system tables/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/91363",
+        )
+    ],
 }
 
 ffails = {
