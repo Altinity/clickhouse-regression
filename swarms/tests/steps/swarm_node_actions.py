@@ -233,8 +233,8 @@ def swarm_cpu_load_by_stop_clickhouse(self, node=None, seconds=60 * 1):
         node = random.choice(self.context.swarm_nodes)
 
     try:
-        start = f"pgrep -x clickhouse | xargs -r kill -STOP"
-        node.command(start)
+        stop_command = f"pgrep -x clickhouse | xargs -r kill -STOP"
+        node.command(stop_command)
 
         with By(f"sleep {seconds}s with clickhouse stopped"):
             time.sleep(seconds)
