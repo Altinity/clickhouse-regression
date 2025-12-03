@@ -412,9 +412,9 @@ def inserts_and_optimize(self):
         ("ALTER DELETE", "p = 1", "all rows"),
     ],
 )
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+@Requirements(RQ_ClickHouse_ExportPart_DeletedRows("1.0"))
 def delete_rows(self, delete_method, delete_condition, description):
-    """Test exports work correctly with lightweight deletes."""
+    """Test that exports correctly exclude deleted rows."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
