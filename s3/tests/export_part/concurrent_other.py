@@ -1,3 +1,4 @@
+import uuid
 from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -400,6 +401,54 @@ def inserts_and_optimize(self):
         assert initial_source_data == destination_data, error()
 
 
+@TestScenario
+def kill_export(self):
+    """Check that KILL queries do not break exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=10,
+            number_of_partitions=10,
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I create a user and query id"):
+        user_name = "user_" + getuid()
+
+    with And("I slow the network"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
+
+    with When(f"I export parts to the S3 table in parallel with kill queries"):
+        for _ in range(100):
+            query_id = str(uuid.uuid4())
+            Step(test=export_parts, parallel=True)(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=[get_random_part(table_name=source_table)],
+                settings=[("user", user_name), ("query_id", query_id)],
+                exitcode=1,
+            )
+            Step(test=kill_query, parallel=True)(
+                node=self.context.node,
+                query_id=query_id,
+                settings=[("user", user_name)],
+            )
+        join()
+
+    with Then("Check part log matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestOutline(Scenario)
 @Examples(
     "delete_method, delete_condition, description",
@@ -470,3 +519,4 @@ def feature(self):
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=inserts_and_optimize)
     Scenario(run=delete_rows)
+    Scenario(run=kill_export)
