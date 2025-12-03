@@ -712,7 +712,6 @@ RQ_ClickHouse_ExportPart_Security = Requirement(
         "* **RBAC**: Users must have the following privileges:\n"
         "  * **Source Table**: `ALTER` privilege on the source table to initiate export operations\n"
         "  * **Destination Table**: `INSERT` privilege on the destination table to write exported data\n"
-        "  * **Query Management**: `KILL QUERY` privilege to terminate export operations, allowing users to kill their own export queries and administrators to kill any export query\n"
         "* **Data Encryption**: All data in transit to destination storage must be encrypted using TLS/SSL\n"
         "* **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)\n"
         "* **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs\n"
@@ -1308,7 +1307,6 @@ version: 1.0
 * **RBAC**: Users must have the following privileges:
   * **Source Table**: `ALTER` privilege on the source table to initiate export operations
   * **Destination Table**: `INSERT` privilege on the destination table to write exported data
-  * **Query Management**: `KILL QUERY` privilege to terminate export operations, allowing users to kill their own export queries and administrators to kill any export query
 * **Data Encryption**: All data in transit to destination storage must be encrypted using TLS/SSL
 * **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)
 * **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs
