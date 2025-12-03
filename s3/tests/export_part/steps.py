@@ -872,3 +872,33 @@ def verify_export_concurrency(self, node, source_tables):
                     break
 
     assert len(tables_done) == len(source_tables), error()
+
+
+@TestStep(Given)
+def create_partitions_with_sequential_uint64(
+    self,
+    table_name,
+    number_of_values=3,
+    number_of_partitions=5,
+    number_of_parts=1,
+    node=None,
+    start_value=1,
+):
+    """Insert sequential UInt64 values into a column to create multiple partitions with predictable values.
+
+    This is useful for testing deletion scenarios where you need to target specific rows.
+    Values start from start_value and increment sequentially.
+    """
+    if node is None:
+        node = self.context.node
+
+    with By("Inserting sequential values into a column with uint64 datatype"):
+        current_value = start_value
+        for i in range(1, number_of_partitions + 1):
+            for parts in range(1, number_of_parts + 1):
+                node.query(
+                    f"INSERT INTO {table_name} (p, i) SELECT {i}, {current_value} + number FROM numbers({number_of_values})",
+                    exitcode=0,
+                    steps=True,
+                )
+                current_value += number_of_values

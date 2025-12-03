@@ -5,6 +5,7 @@ from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
 from s3.tests.export_part import alter_wrappers
+from helpers.alter import delete
 
 
 @TestScenario
@@ -399,6 +400,64 @@ def inserts_and_optimize(self):
         assert initial_source_data == destination_data, error()
 
 
+@TestOutline(Scenario)
+@Examples(
+    "delete_method, delete_condition, description",
+    [
+        ("DELETE FROM", "i = 1", "one row"),
+        ("DELETE FROM", "i IN (1, 3)", "multiple rows"),
+        ("DELETE FROM", "p = 1", "all rows"),
+        ("ALTER DELETE", "i = 1", "one row"),
+        ("ALTER DELETE", "i IN (1, 3)", "multiple rows"),
+        ("ALTER DELETE", "p = 1", "all rows"),
+    ],
+)
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+def delete_rows(self, delete_method, delete_condition, description):
+    """Test exports work correctly with lightweight deletes."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            populate=False,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I create partitions with sequential uint64 values"):
+        create_partitions_with_sequential_uint64(
+            table_name=source_table,
+        )
+
+    with When(f"I delete rows using {delete_method} ({description})"):
+        if delete_method == "DELETE FROM":
+            delete_from(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+        else:
+            alter_table_delete_rows(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+        pause()
+
+
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -411,3 +470,4 @@ def feature(self):
     Scenario(run=stress_select)
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=inserts_and_optimize)
+    Scenario(run=delete_rows)
