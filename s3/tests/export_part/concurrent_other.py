@@ -375,7 +375,11 @@ def inserts_and_optimize(self):
                 destination_table=s3_table_name,
                 node=self.context.node,
             )
-            Step(test=create_partitions_with_random_uint64, parallel=True, executor=executor)(
+            Step(
+                test=create_partitions_with_random_uint64,
+                parallel=True,
+                executor=executor,
+            )(
                 table_name=source_table,
                 number_of_partitions=10,
                 number_of_parts=2,

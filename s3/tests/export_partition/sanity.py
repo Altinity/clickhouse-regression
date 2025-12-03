@@ -8,6 +8,7 @@ from s3.requirements.export_partition import *
 from s3.tests.export_partition.steps import (
     export_partitions,
     source_matches_destination,
+    wait_for_export_to_complete,
 )
 
 
