@@ -402,6 +402,7 @@ def inserts_and_optimize(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_QueryCancellation("1.0"))
 def kill_export(self):
     """Check that KILL queries do not break exports."""
 
