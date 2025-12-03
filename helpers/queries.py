@@ -240,3 +240,16 @@ def detach_part(self, table_name, part_name, node=None):
         exitcode=0, 
         steps=True
     )
+
+@TestStep(When)
+def delete_from(self, table_name, condition, node=None, **query_kwargs):
+    """Delete rows from a table using lightweight DELETE FROM statement."""
+    if node is None:
+        node = self.context.node
+    
+    node.query(
+        f"DELETE FROM {table_name} WHERE {condition}",
+        exitcode=0,
+        steps=True,
+        **query_kwargs
+    )
