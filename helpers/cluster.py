@@ -653,9 +653,12 @@ class ClickHouseNode(Node):
                 "fsanitize=address": "asan",
                 "fsanitize=undefined": "ubsan",
             }
-            build_option = next(
-               (name for flag, name in sanitizers.items() if flag in output), {}
+            sanitizer_name = next(
+               (name for flag, name in sanitizers.items() if flag in output), None
             )
+            build_option = {}
+            if sanitizer_name:
+                build_option["sanitizer"] = sanitizer_name
             current().context.build_options = getattr(
                 current().context, "build_options", {}
             )
