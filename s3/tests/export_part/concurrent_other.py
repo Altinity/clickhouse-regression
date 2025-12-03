@@ -455,7 +455,6 @@ def delete_rows(self, delete_method, delete_condition, description):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        pause()
 
 
 @TestFeature
