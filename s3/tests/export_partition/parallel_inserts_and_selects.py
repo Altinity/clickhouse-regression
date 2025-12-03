@@ -5,7 +5,7 @@ from testflows.asserts import error
 from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
-from alter.table.attach_partition.common import create_partitions_with_random_uint64
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 from s3.tests.export_partition.steps import (
     export_partitions,
     create_s3_table,
@@ -15,6 +15,42 @@ from s3.tests.export_partition.steps import (
     get_partitions,
 )
 from s3.requirements.export_partition import *
+
+
+@TestStep(Then)
+def check_source_not_empty(self, table_name, node=None):
+    """Check that the source table is not empty."""
+    if node is None:
+        node = self.context.node
+
+    with By(f"checking that source table {table_name} is not empty"):
+        source_data = select_all_ordered(table_name=table_name, node=node)
+        assert len(source_data) > 0, error()
+
+
+@TestStep
+def validate_export_completion(
+    self,
+    source_table,
+    destination_table,
+    source_data=None,
+    destination_data=None,
+    node=None,
+):
+    """Validate that the export operation has completed successfully."""
+    if node is None:
+        node = self.context.node
+
+    with By("validate data export completion"):
+        source_matches_destination(
+            source_table=source_table,
+            source_data=source_data,
+            destination_data=destination_data,
+            destination_table=destination_table,
+            node=node,
+        )
+
+        check_source_not_empty(source_table=source_table)
 
 
 @TestStep(When)
@@ -78,6 +114,8 @@ def parallel_inserts_with_merge_stop(self):
         source_before_export = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
+        partitions = get_partitions(table_name=source_table, node=self.context.node)
+
     with And(
         "I insert data in parallel and export partitions in parallel with merges stopped",
         description="""
@@ -87,33 +125,26 @@ def parallel_inserts_with_merge_stop(self):
         Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
+            partitions=partitions,
             node=self.context.node,
         )
-        time.sleep(0.01)
+
         Check(test=create_partitions_with_random_uint64, parallel=True)(
             table_name=source_table,
             number_of_partitions=10,
             number_of_parts=2,
             number_of_values=100,
+            from_partition=15,
         )
 
         join()
 
-    with Then("I wait for export to complete"):
-        wait_for_export_to_complete(source_table=source_table)
-
-    with And("Source and destination tables should match"):
-        source_matches_destination(
+    with Then("Source and destination tables should match"):
+        validate_export_completion(
             source_table=source_table,
             source_data=source_before_export,
             destination_table=s3_table_name,
         )
-
-    with And("Source table should have all inserted data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        assert len(source_data) > 0, error()
 
 
 @TestScenario
@@ -138,6 +169,7 @@ def parallel_inserts_with_merge_enabled(self):
         source_before_export = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
+        partitions = get_partitions(table_name=source_table, node=self.context.node)
     with And(
         "I insert data in parallel and export partitions in parallel with merges enabled",
         description="""
@@ -148,6 +180,7 @@ def parallel_inserts_with_merge_enabled(self):
         Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
+            partitions=partitions,
             node=self.context.node,
         )
         time.sleep(0.01)
@@ -157,25 +190,17 @@ def parallel_inserts_with_merge_enabled(self):
             number_of_partitions=10,
             number_of_parts=2,
             number_of_values=100,
+            from_partition=15,
         )
 
         join()
 
-    with Then("I wait for export to complete"):
-        wait_for_export_to_complete(source_table=source_table)
-
-    with And("Source and destination tables should match"):
-        source_matches_destination(
+    with Then("Source and destination tables should match"):
+        validate_export_completion(
             source_table=source_table,
             source_data=source_before_export,
             destination_table=s3_table_name,
         )
-
-    with And("Source table should have all inserted data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        assert len(source_data) > 0, error()
 
 
 @TestScenario
@@ -196,6 +221,7 @@ def export_with_optimize_table_parallel(self):
         source_before_export = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
+        partitions = get_partitions(table_name=source_table, node=self.context.node)
     with And(
         "I export partitions and run OPTIMIZE TABLE in parallel",
         description="""
@@ -206,6 +232,7 @@ def export_with_optimize_table_parallel(self):
         Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
+            partitions=partitions,
             node=self.context.node,
         )
         Check(test=run_optimize_table, parallel=True)(
@@ -213,12 +240,8 @@ def export_with_optimize_table_parallel(self):
             node=self.context.node,
         )
         join()
-
-    with Then("I wait for export to complete"):
-        wait_for_export_to_complete(source_table=source_table)
-
-    with And("Source and destination tables should match"):
-        source_matches_destination(
+    with Then("Source and destination tables should match"):
+        validate_export_completion(
             source_table=source_table,
             source_data=source_before_export,
             destination_table=s3_table_name,
@@ -243,6 +266,7 @@ def parallel_selects_during_export(self):
         source_before_export = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
+        partitions = get_partitions(table_name=source_table, node=self.context.node)
     with And(
         "I export partitions and run parallel SELECT queries",
         description="""
@@ -253,6 +277,7 @@ def parallel_selects_during_export(self):
         Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
+            partitions=partitions,
             node=self.context.node,
         )
         Check(test=run_parallel_selects, parallel=True)(
@@ -262,21 +287,12 @@ def parallel_selects_during_export(self):
         )
         join()
 
-    with Then("I wait for export to complete"):
-        wait_for_export_to_complete(source_table=source_table)
-
-    with And("Source and destination tables should match"):
-        source_matches_destination(
+    with Then("Source and destination tables should match"):
+        validate_export_completion(
             source_table=source_table,
             source_data=source_before_export,
             destination_table=s3_table_name,
         )
-
-    with And("Source table data should still be accessible"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        assert len(source_data) > 0, error()
 
 
 @TestScenario
@@ -302,6 +318,7 @@ def parallel_inserts_export_and_optimize(self):
         source_before_export = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
+        partitions = get_partitions(table_name=source_table, node=self.context.node)
     with And(
         "I insert data in parallel, export partitions, and run OPTIMIZE TABLE all concurrently",
         description="""
@@ -315,6 +332,7 @@ def parallel_inserts_export_and_optimize(self):
         Check(test=export_partitions, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
+            partitions=partitions,
             node=self.context.node,
         )
         Check(test=create_partitions_with_random_uint64, parallel=True)(
@@ -322,6 +340,7 @@ def parallel_inserts_export_and_optimize(self):
             number_of_partitions=10,
             number_of_parts=2,
             number_of_values=100,
+            from_partition=15,
         )
         Check(test=run_optimize_table, parallel=True)(
             table_name=source_table,
@@ -329,21 +348,12 @@ def parallel_inserts_export_and_optimize(self):
         )
         join()
 
-    with Then("I wait for export to complete"):
-        wait_for_export_to_complete(source_table=source_table)
-
-    with And("Source and destination tables should match"):
-        source_matches_destination(
+    with Then("Source and destination tables should match"):
+        validate_export_completion(
             source_table=source_table,
             source_data=source_before_export,
             destination_table=s3_table_name,
         )
-
-    with And("Source table should have all inserted data"):
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        assert len(source_data) > 0, error()
 
 
 @TestFeature
