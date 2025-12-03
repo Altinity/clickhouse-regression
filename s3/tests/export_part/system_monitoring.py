@@ -131,7 +131,7 @@ def system_exports_and_metrics(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            number_of_values=100000,
+            number_of_values=20000,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
