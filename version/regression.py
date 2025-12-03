@@ -39,13 +39,6 @@ xfails = {
             check_clickhouse_version("<25.3"),
         ),
     ],
-    "/version/altinity/error message/*": [
-        (
-            Fail,
-            "https://github.com/Altinity/ClickHouse/pull/899",
-            check_clickhouse_version("<25.3"),
-        ),
-    ],
     "/version/altinity/error message/": [
         (
             Fail,
