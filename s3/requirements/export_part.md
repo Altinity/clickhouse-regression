@@ -52,6 +52,7 @@
     * 14.4 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
 * 15 [Export Operation Security](#export-operation-security)
     * 15.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+    * 15.2 [RQ.ClickHouse.ExportPart.QueryCancellation](#rqclickhouseexportpartquerycancellation)
 
 ## Introduction
 
@@ -425,5 +426,13 @@ version: 1.0
 * **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)
 * **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs
 
+### RQ.ClickHouse.ExportPart.QueryCancellation
+version: 1.0
+
+[ClickHouse] SHALL support cancellation of `EXPORT PART` queries using the `KILL QUERY` command before the query returns.
+
+The system SHALL:
+* Stop exporting parts that have not yet begun exporting when the query is killed
+* Handle query cancellation gracefully without breaking the system or corrupting data
 
 [ClickHouse]: https://clickhouse.com

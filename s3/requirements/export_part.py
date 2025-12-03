@@ -716,12 +716,31 @@ RQ_ClickHouse_ExportPart_Security = Requirement(
         "* **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)\n"
         "* **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs\n"
         "\n"
+    ),
+    link=None,
+    level=2,
+    num="15.1",
+)
+
+RQ_ClickHouse_ExportPart_QueryCancellation = Requirement(
+    name="RQ.ClickHouse.ExportPart.QueryCancellation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support cancellation of `EXPORT PART` queries using the `KILL QUERY` command before the query returns.\n"
+        "\n"
+        "The system SHALL:\n"
+        "* Stop exporting parts that have not yet begun exporting when the query is killed\n"
+        "* Handle query cancellation gracefully without breaking the system or corrupting data\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
     ),
     link=None,
     level=2,
-    num="15.1",
+    num="15.2",
 )
 
 SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
@@ -846,6 +865,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         ),
         Heading(name="Export Operation Security", level=1, num="15"),
         Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="15.1"),
+        Heading(name="RQ.ClickHouse.ExportPart.QueryCancellation", level=2, num="15.2"),
     ),
     requirements=(
         RQ_ClickHouse_ExportPart_S3,
@@ -882,6 +902,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth,
         RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize,
         RQ_ClickHouse_ExportPart_Security,
+        RQ_ClickHouse_ExportPart_QueryCancellation,
     ),
     content=r"""
 # SRS-015 ClickHouse Export Part to S3
@@ -938,6 +959,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 14.4 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
 * 15 [Export Operation Security](#export-operation-security)
     * 15.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+    * 15.2 [RQ.ClickHouse.ExportPart.QueryCancellation](#rqclickhouseexportpartquerycancellation)
 
 ## Introduction
 
@@ -1311,6 +1333,14 @@ version: 1.0
 * **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)
 * **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs
 
+### RQ.ClickHouse.ExportPart.QueryCancellation
+version: 1.0
+
+[ClickHouse] SHALL support cancellation of `EXPORT PART` queries using the `KILL QUERY` command before the query returns.
+
+The system SHALL:
+* Stop exporting parts that have not yet begun exporting when the query is killed
+* Handle query cancellation gracefully without breaking the system or corrupting data
 
 [ClickHouse]: https://clickhouse.com
 """,
