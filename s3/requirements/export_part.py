@@ -182,12 +182,31 @@ RQ_ClickHouse_ExportPart_PartTypes = Requirement(
         "| **Wide Parts** | ✅ Yes | Data of each column stored in separate files with marks | Standard format for most parts |\n"
         "| **Compact Parts** | ✅ Yes | All column data stored in single file with single marks file | Optimized for small parts |\n"
         "\n"
-        "[ClickHouse] SHALL automatically apply lightweight delete masks during export to ensure only non-deleted rows are exported, and SHALL handle all part metadata including checksums, compression information, serialization details, mutation history, schema changes, and structural modifications to maintain data integrity in the destination storage.\n"
-        "\n"
     ),
     link=None,
     level=2,
     num="5.1",
+)
+
+RQ_ClickHouse_ExportPart_DeletedRows = Requirement(
+    name="RQ.ClickHouse.ExportPart.DeletedRows",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly handle parts containing deleted rows during export operations by:\n"
+        "\n"
+        "* Automatically applying delete masks (`_row_exists` column) when exporting parts that contain rows marked as deleted via lightweight DELETE (`DELETE FROM ... WHERE ...`)\n"
+        "* Excluding rows marked as deleted from exported data, ensuring only visible rows (`_row_exists = 1`) are exported\n"
+        "* Supporting export of parts where rows have been physically removed via ALTER DELETE (`ALTER TABLE ... DELETE WHERE ...`)\n"
+        "* Maintaining data consistency between source and destination tables after export, where destination contains only non-deleted rows from source\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.2",
 )
 
 RQ_ClickHouse_ExportPart_SchemaChangeIsolation = Requirement(
@@ -207,7 +226,7 @@ RQ_ClickHouse_ExportPart_SchemaChangeIsolation = Requirement(
     ),
     link=None,
     level=2,
-    num="5.2",
+    num="5.3",
 )
 
 RQ_ClickHouse_ExportPart_LargeParts = Requirement(
@@ -227,7 +246,7 @@ RQ_ClickHouse_ExportPart_LargeParts = Requirement(
     ),
     link=None,
     level=2,
-    num="5.3",
+    num="5.4",
 )
 
 RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
@@ -738,10 +757,11 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         Heading(name="RQ.ClickHouse.ExportPart.PartitionKeyTypes", level=2, num="4.2"),
         Heading(name="Part Types and Content", level=1, num="5"),
         Heading(name="RQ.ClickHouse.ExportPart.PartTypes", level=2, num="5.1"),
+        Heading(name="RQ.ClickHouse.ExportPart.DeletedRows", level=2, num="5.2"),
         Heading(
-            name="RQ.ClickHouse.ExportPart.SchemaChangeIsolation", level=2, num="5.2"
+            name="RQ.ClickHouse.ExportPart.SchemaChangeIsolation", level=2, num="5.3"
         ),
-        Heading(name="RQ.ClickHouse.ExportPart.LargeParts", level=2, num="5.3"),
+        Heading(name="RQ.ClickHouse.ExportPart.LargeParts", level=2, num="5.4"),
         Heading(name="Export Operation Restrictions", level=1, num="6"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SameTable", level=2, num="6.1"
@@ -837,6 +857,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_SchemaCompatibility,
         RQ_ClickHouse_ExportPart_PartitionKeyTypes,
         RQ_ClickHouse_ExportPart_PartTypes,
+        RQ_ClickHouse_ExportPart_DeletedRows,
         RQ_ClickHouse_ExportPart_SchemaChangeIsolation,
         RQ_ClickHouse_ExportPart_LargeParts,
         RQ_ClickHouse_ExportPart_Restrictions_SameTable,
@@ -882,8 +903,9 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 4.2 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
 * 5 [Part Types and Content](#part-types-and-content)
     * 5.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
-    * 5.2 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
-    * 5.3 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
+    * 5.2 [RQ.ClickHouse.ExportPart.DeletedRows](#rqclickhouseexportpartdeletedrows)
+    * 5.3 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
+    * 5.4 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
 * 6 [Export Operation Restrictions](#export-operation-restrictions)
     * 6.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
     * 6.2 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
@@ -1022,7 +1044,15 @@ version: 1.0
 | **Wide Parts** | ✅ Yes | Data of each column stored in separate files with marks | Standard format for most parts |
 | **Compact Parts** | ✅ Yes | All column data stored in single file with single marks file | Optimized for small parts |
 
-[ClickHouse] SHALL automatically apply lightweight delete masks during export to ensure only non-deleted rows are exported, and SHALL handle all part metadata including checksums, compression information, serialization details, mutation history, schema changes, and structural modifications to maintain data integrity in the destination storage.
+### RQ.ClickHouse.ExportPart.DeletedRows
+version: 1.0
+
+[ClickHouse] SHALL correctly handle parts containing deleted rows during export operations by:
+
+* Automatically applying delete masks (`_row_exists` column) when exporting parts that contain rows marked as deleted via lightweight DELETE (`DELETE FROM ... WHERE ...`)
+* Excluding rows marked as deleted from exported data, ensuring only visible rows (`_row_exists = 1`) are exported
+* Supporting export of parts where rows have been physically removed via ALTER DELETE (`ALTER TABLE ... DELETE WHERE ...`)
+* Maintaining data consistency between source and destination tables after export, where destination contains only non-deleted rows from source
 
 ### RQ.ClickHouse.ExportPart.SchemaChangeIsolation
 version: 1.0
