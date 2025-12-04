@@ -12,9 +12,6 @@ from helpers.queries import *
 from helpers.alter import *
 from s3.requirements.export_partition import *
 
-source_table = "source_" + getuid()
-destination_table = "destination_" + getuid()
-
 
 def get_n_random_items(lst, n):
     """Get n random elements from the list."""
@@ -154,49 +151,9 @@ def add_column(self, table_name):
 
 
 @TestStep(When)
-def add_column_to_source_table(self):
-    """Alter add column to the source table."""
+def add_column_to_source(self, source_table):
+    """Add column to the source table."""
     add_column(table_name=source_table)
-
-
-@TestStep(When)
-def add_column_to_destination_table(self):
-    """Alter add column to the destination table."""
-    add_column(table_name=destination_table)
-
-
-@TestStep(When)
-def add_column_to_source_and_destination(self):
-    """Add column with the same name to both source and destination tables."""
-    column_name = "column_" + getuid()
-
-    alter_table_add_column(
-        table_name=source_table,
-        column_name=column_name,
-        column_type="String",
-    )
-
-    alter_table_add_column(
-        table_name=destination_table,
-        column_name=column_name,
-        column_type="String",
-    )
-
-
-@TestStep(When)
-def export_partition_from_source_table(self):
-    """Export partition from the source table to the destination table."""
-    number_of_partitions = self.context.number_of_partitions
-
-    with By(
-        f"exporting a partition from the {source_table} table to the {destination_table} table"
-    ):
-        partition_to_export = random.randrange(1, number_of_partitions)
-        export_partition_by_id(
-            source_table=source_table,
-            destination_table=destination_table,
-            partition_id=partition_to_export,
-        )
 
 
 @TestStep(When)
@@ -212,16 +169,9 @@ def drop_column_on_source_table(self):
 
 
 @TestStep(When)
-def drop_column_on_destination_table(self):
-    """Drop column on the destination table."""
-    drop_column(table_name=destination_table)
-
-
-@TestStep(When)
-def drop_column_on_source_and_destination(self):
-    """Drop the same column on source and destination tables."""
+def drop_column_on_source(self):
+    """Drop column on the source table."""
     drop_column_on_source_table()
-    drop_column_on_destination_table()
 
 
 @TestStep(Given)
@@ -235,19 +185,6 @@ def drop_partition(self, table_name):
 def drop_partition_on_source(self):
     """Drop partition on the source table."""
     drop_partition(table_name=source_table)
-
-
-@TestStep(Given)
-def drop_partition_on_destination(self):
-    """Drop partition on the destination table."""
-    drop_partition(table_name=destination_table)
-
-
-@TestStep(Given)
-def drop_partition_on_source_and_destination(self):
-    """Drop partition on the source and destination tables."""
-    drop_partition_on_source()
-    drop_partition_on_destination()
 
 
 @TestStep(Given)
@@ -266,16 +203,9 @@ def unfreeze_source_partition(self):
 
 
 @TestStep(Given)
-def unfreeze_destination_partition(self):
-    """Unfreeze partition on the destination table."""
-    unfreeze_partition(table_name=destination_table)
-
-
-@TestStep(Given)
-def unfreeze_source_and_destination_partition(self):
-    """Unfreeze partition on the source and destination tables."""
+def unfreeze_partition_on_source(self):
+    """Unfreeze partition on the source table."""
     unfreeze_source_partition()
-    unfreeze_destination_partition()
 
 
 @TestStep(Given)
@@ -291,16 +221,9 @@ def delete_in_source_partition(self):
 
 
 @TestStep(Given)
-def delete_in_destination_partition(self):
-    """Delete rows in the destination partition."""
-    delete_in_partition(table_name=destination_table)
-
-
-@TestStep(Given)
-def delete_in_source_and_destination_partition(self):
-    """Delete rows in the source and destination partitions."""
+def delete_in_partition_on_source(self):
+    """Delete rows in the source partition."""
     delete_in_source_partition()
-    delete_in_destination_partition()
 
 
 @TestStep(When)
@@ -318,16 +241,9 @@ def modify_source_table_column(self):
 
 
 @TestStep(When)
-def modify_destination_table_column(self):
-    """Modify column on the destination table."""
-    modify_column(table_name=destination_table)
-
-
-@TestStep(When)
-def modify_column_source_and_destination(self):
-    """Modify column on source and destination tables."""
+def modify_column_on_source(self):
+    """Modify column on the source table."""
     modify_source_table_column()
-    modify_destination_table_column()
 
 
 @TestStep(When)
@@ -344,17 +260,10 @@ def rename_source_table_column(self):
     rename_column(table_name=source_table)
 
 
-@TestStep(When)
-def rename_destination_table_column(self):
-    """Rename the column on the destination table."""
-    rename_column(table_name=destination_table)
-
-
 @TestStep
-def rename_column_source_and_destination(self):
-    """Rename column on source and destination tables."""
+def rename_column_on_source(self):
+    """Rename column on the source table."""
     rename_source_table_column()
-    rename_destination_table_column()
 
 
 @TestStep(When)
@@ -372,16 +281,9 @@ def comment_source_table_column(self):
 
 
 @TestStep(When)
-def comment_destination_table_column(self):
-    """Comment column on the destination table."""
-    comment_column(table_name=destination_table)
-
-
-@TestStep(When)
-def comment_source_and_destination_column(self):
-    """Comment columns on source and destination tables."""
+def comment_column_on_source(self):
+    """Comment column on the source table."""
     comment_source_table_column()
-    comment_destination_table_column()
 
 
 @TestStep(When)
@@ -401,16 +303,9 @@ def add_constraint_to_the_source_table(self):
 
 
 @TestStep(When)
-def add_constraint_to_the_destination_table(self):
-    """Add constraint to the destination table."""
-    add_constraint(table_name=destination_table)
-
-
-@TestStep(When)
-def add_constraint_to_source_and_destination(self):
-    """Add constraint to source and destination tables."""
+def add_constraint_to_source(self):
+    """Add constraint to the source table."""
     add_constraint_to_the_source_table()
-    add_constraint_to_the_destination_table()
 
 
 @TestStep(When)
@@ -427,16 +322,9 @@ def detach_partition_from_source_table(self):
 
 
 @TestStep(When)
-def detach_partition_from_destination_table(self):
-    """Detach partition from the destination table."""
-    detach_partition(table_name=destination_table)
-
-
-@TestStep(When)
-def detach_partition_from_source_and_destination(self):
-    """Detach partition from source and destination tables."""
+def detach_partition_from_source(self):
+    """Detach partition from the source table."""
     detach_partition_from_source_table()
-    detach_partition_from_destination_table()
 
 
 @TestStep(When)
@@ -452,16 +340,9 @@ def attach_partition_to_source_table(self):
 
 
 @TestStep(When)
-def attach_partition_to_destination_table(self):
-    """Attach partition to the destination table."""
-    attach_partition(table_name=destination_table)
-
-
-@TestStep(When)
-def attach_partition_to_source_and_destination(self):
-    """Attach partition to source and destination tables."""
+def attach_partition_to_source(self):
+    """Attach partition to the source table."""
     attach_partition_to_source_table()
-    attach_partition_to_destination_table()
 
 
 @TestStep(When)
@@ -489,21 +370,9 @@ def move_source_partition(self):
 
 
 @TestStep(When)
-def move_destination_partition(self):
-    """Move the partition from the destination table to external volume."""
-    move_partition_to_volume(table_name=destination_table)
-
-
-@TestStep(When)
-def move_source_and_destination_partition(self):
-    """Move partition to external volume from source and destination tables."""
-    number_of_partitions = self.context.number_of_partitions
-
-    partition_name = random.randrange(5, number_of_partitions)
-    move_partition_to_volume(table_name=source_table, partition_name=partition_name)
-    move_partition_to_volume(
-        table_name=destination_table, partition_name=partition_name
-    )
+def move_partition_on_source(self):
+    """Move partition to external volume from the source table."""
+    move_source_partition()
 
 
 @TestStep(When)
@@ -525,16 +394,9 @@ def clear_index_source(self):
 
 
 @TestStep(When)
-def clear_index_destination(self):
-    """Clear index on the destination table."""
-    clear_index(table_name=destination_table)
-
-
-@TestStep(When)
-def clear_index_source_and_destination(self):
-    """Clear index on source and destination tables."""
+def clear_index_on_source(self):
+    """Clear index on the source table."""
     clear_index_source()
-    clear_index_destination()
 
 
 @TestStep(When)
@@ -556,16 +418,9 @@ def clear_source_table_column(self):
 
 
 @TestStep(When)
-def clear_destination_table_column(self):
-    """Clear column on the destination table."""
-    clear_column(table_name=destination_table)
-
-
-@TestStep(When)
-def clear_column_on_source_and_destination(self):
-    """Clear column on source and destination columns."""
+def clear_column_on_source(self):
+    """Clear column on the source table."""
     clear_source_table_column()
-    clear_destination_table_column()
 
 
 @TestStep(When)
@@ -585,16 +440,9 @@ def freeze_source_partition(self):
 
 
 @TestStep(When)
-def freeze_destination_partition(self):
-    """Freeze partition on the destination table."""
-    freeze_partition(table_name=destination_table)
-
-
-@TestStep(When)
-def freeze_partition_on_source_and_destination(self):
-    """Freeze partition on source and destination tables."""
+def freeze_partition_on_source(self):
+    """Freeze partition on the source table."""
     freeze_source_partition()
-    freeze_destination_partition()
 
 
 @TestStep(When)
@@ -613,16 +461,9 @@ def freeze_source_partition_with_name(self):
 
 
 @TestStep(When)
-def freeze_destination_partition_with_name(self):
-    """Freeze partition on the destination table using name of the partition."""
-    freeze_partition_with_name(table_name=destination_table)
-
-
-@TestStep(When)
-def freeze_source_and_destination_partition_with_name(self):
-    """Freeze partitions on source and destination tables with name."""
+def freeze_partition_on_source_with_name(self):
+    """Freeze partition on the source table with name."""
     freeze_source_partition_with_name()
-    freeze_destination_partition_with_name()
 
 
 @TestStep(When)
@@ -674,7 +515,7 @@ def concurrent_export_with_multiple_actions(
         join()
 
 
-@TestStep(When)
+@TestCheck
 def export_partition_with_single_concurrent_action(
     self,
     actions,
@@ -688,32 +529,37 @@ def export_partition_with_single_concurrent_action(
     if number_of_iterations is None:
         number_of_iterations = self.context.number_of_iterations
 
-    partition_to_export = random.randrange(1, number_of_partitions)
-
-    with By("applying a delay on clickhouse queries"):
+    source_table = f"source_{getuid()}"
+    with Given("I create source and destination tables"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=False,
+            number_of_partitions=10,
+            number_of_parts=20,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+    with And("I apply a delay on clickhouse queries"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
     with And("running the export partition along with another action multiple times"):
         for retry in retries(timeout=30):
             with retry:
-                Check(
-                    name=f"export partition on the source table",
-                    test=export_partition_and_validate_data,
-                )(
+                Check(test=export_partitions, parallel=True)(
                     source_table=source_table,
-                    destination_table=destination_table,
-                    partition_to_export=partition_to_export,
+                    destination_table=s3_table_name,
+                    node=self.context.node,
                 )
-
-            time.sleep(1)
-
             for i in range(number_of_iterations):
                 for retry in retries(timeout=60):
                     with retry:
                         Check(
                             name=f"{actions.__name__} #{i}",
                             test=actions,
-                        )()
+                        )(
+                            source_table=source_table,
+                        )
         join()
 
 
@@ -763,30 +609,17 @@ def concurrent_export(
 def one_export_partition(self):
     """Check that it is possible to execute a single export partition while the number of other actions is being executed."""
     actions = [
-        add_column_to_source_table,
-        add_column_to_destination_table,
-        export_partition_from_source_table,
+        add_column_to_source,
         drop_column_on_source_table,
-        drop_column_on_destination_table,
         modify_source_table_column,
-        modify_destination_table_column,
         rename_source_table_column,
-        rename_destination_table_column,
         comment_source_table_column,
-        comment_destination_table_column,
         add_constraint_to_the_source_table,
-        add_constraint_to_the_destination_table,
         detach_partition_from_source_table,
-        detach_partition_from_destination_table,
         attach_partition_to_source_table,
-        attach_partition_to_destination_table,
         move_source_partition,
-        move_destination_partition,
-        clear_destination_table_column,
         clear_source_table_column,
         freeze_source_partition,
-        freeze_destination_partition,
-        freeze_destination_partition_with_name,
         freeze_source_partition_with_name,
     ]
 
@@ -805,23 +638,22 @@ def export_partition_along_other_actions(self):
     """Check that when we run multiple export partitions in a loop along with other actions, export partitions
     executes successfully."""
     actions = [
-        add_column_to_source_and_destination,
-        drop_column_on_source_and_destination,
-        modify_column_source_and_destination,
-        rename_column_source_and_destination,
-        comment_source_and_destination_column,
-        add_constraint_to_source_and_destination,
-        detach_partition_from_source_and_destination,
-        attach_partition_to_source_and_destination,
-        move_source_and_destination_partition,
-        clear_column_on_source_and_destination,
-        freeze_partition_on_source_and_destination,
-        freeze_source_and_destination_partition_with_name,
-        export_partition_from_source_table,
-        drop_partition_on_source_and_destination,
-        unfreeze_source_and_destination_partition,
-        delete_in_source_and_destination_partition,
-        clear_index_source_and_destination,
+        add_column_to_source,
+        drop_column_on_source,
+        modify_column_on_source,
+        rename_column_on_source,
+        comment_column_on_source,
+        add_constraint_to_source,
+        detach_partition_from_source,
+        attach_partition_to_source,
+        move_partition_on_source,
+        clear_column_on_source,
+        freeze_partition_on_source,
+        freeze_partition_on_source_with_name,
+        drop_partition_on_source,
+        unfreeze_partition_on_source,
+        delete_in_partition_on_source,
+        clear_index_on_source,
     ]
 
     Scenario(test=concurrent_export)(
