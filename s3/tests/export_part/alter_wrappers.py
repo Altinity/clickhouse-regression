@@ -401,6 +401,7 @@ def alter_table_fetch_partition(
             table_name=table_name,
             partition_name=partition_name,
             path_to_backup=f"/clickhouse/tables/shard0/{path_to_backup}",
+            no_checks=True,
             **query_kwargs,
         )
 
