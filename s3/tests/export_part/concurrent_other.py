@@ -419,9 +419,6 @@ def kill_export(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I create a user and query id"):
-        user_name = "user_" + getuid()
-
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
@@ -433,13 +430,12 @@ def kill_export(self):
                 destination_table=s3_table_name,
                 node=self.context.node,
                 parts=[get_random_part(table_name=source_table)],
-                settings=[("user", user_name), ("query_id", query_id)],
+                settings=[("query_id", query_id)],
                 exitcode=1,
             )
             Step(test=kill_query, parallel=True)(
                 node=self.context.node,
                 query_id=query_id,
-                settings=[("user", user_name)],
             )
         join()
 
@@ -492,6 +488,9 @@ def delete_rows(self, delete_method, delete_condition, description):
                 table_name=source_table,
                 condition=delete_condition,
             )
+
+    with And("I wait for mutations to complete"):
+        wait_for_all_mutations_to_complete(table_name=source_table)
 
     with And("I export parts to the S3 table"):
         export_parts(
