@@ -524,6 +524,28 @@ RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters = Requirement(
     num="9.3",
 )
 
+RQ_ClickHouse_ExportPart_Concurrency_PendingMutations = Requirement(
+    name="RQ.ClickHouse.ExportPart.Concurrency.PendingMutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL apply pending mutations on the fly during export operations by:\n"
+        "* Capturing a snapshot of pending mutations when the export task executes (not when queued)\n"
+        "* Applying pending mutations during the export read operation, ensuring exported data reflects the mutation state\n"
+        "* Supporting all mutation types that can be applied on the fly: ALTER DELETE, ALTER UPDATE, and lightweight DELETE masks\n"
+        "* Maintaining data consistency where exported data reflects the source table state after pending mutations are applied\n"
+        "\n"
+        "For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL exclude the rows that would be deleted by the mutation, even if the mutation has not yet physically removed those rows from disk.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="9.4",
+)
+
 RQ_ClickHouse_ExportPart_ClustersNodes = Requirement(
     name="RQ.ClickHouse.ExportPart.ClustersNodes",
     version="1.0",
@@ -831,6 +853,11 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
             level=2,
             num="9.3",
         ),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.Concurrency.PendingMutations",
+            level=2,
+            num="9.4",
+        ),
         Heading(name="Cluster and Node Support", level=1, num="10"),
         Heading(name="RQ.ClickHouse.ExportPart.ClustersNodes", level=2, num="10.1"),
         Heading(name="Export Operation Idempotency", level=1, num="11"),
@@ -892,6 +919,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_Concurrency,
         RQ_ClickHouse_ExportPart_Concurrency_NonBlocking,
         RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters,
+        RQ_ClickHouse_ExportPart_Concurrency_PendingMutations,
         RQ_ClickHouse_ExportPart_ClustersNodes,
         RQ_ClickHouse_ExportPart_Idempotency,
         RQ_ClickHouse_ExportPart_Logging,
@@ -943,6 +971,7 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 9.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
     * 9.2 [RQ.ClickHouse.ExportPart.Concurrency.NonBlocking](#rqclickhouseexportpartconcurrencynonblocking)
     * 9.3 [RQ.ClickHouse.ExportPart.Concurrency.ConcurrentAlters](#rqclickhouseexportpartconcurrencyconcurrentalters)
+    * 9.4 [RQ.ClickHouse.ExportPart.Concurrency.PendingMutations](#rqclickhouseexportpartconcurrencypendingmutations)
 * 10 [Cluster and Node Support](#cluster-and-node-support)
     * 10.1 [RQ.ClickHouse.ExportPart.ClustersNodes](#rqclickhouseexportpartclustersnodes)
 * 11 [Export Operation Idempotency](#export-operation-idempotency)
@@ -1232,6 +1261,17 @@ version: 1.0
 * Supporting ALTER operations during export (export uses pre-ALTER schema snapshot)
 * Maintaining data integrity when ALTER operations occur concurrently with exports
 * Handling various ALTER operations: add/drop columns, modify columns, rename columns, add/drop constraints, TTL modifications, partition operations, mutations, etc.
+
+### RQ.ClickHouse.ExportPart.Concurrency.PendingMutations
+version: 1.0
+
+[ClickHouse] SHALL apply pending mutations on the fly during export operations by:
+* Capturing a snapshot of pending mutations when the export task executes (not when queued)
+* Applying pending mutations during the export read operation, ensuring exported data reflects the mutation state
+* Supporting all mutation types that can be applied on the fly: ALTER DELETE, ALTER UPDATE, and lightweight DELETE masks
+* Maintaining data consistency where exported data reflects the source table state after pending mutations are applied
+
+For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL exclude the rows that would be deleted by the mutation, even if the mutation has not yet physically removed those rows from disk.
 
 ## Cluster and Node Support
 
