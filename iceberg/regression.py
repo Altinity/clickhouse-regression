@@ -164,6 +164,11 @@ ffails = {
         lambda test: check_clickhouse_version("<25.3")(test)
         or check_clickhouse_version("==25.4")(test),
     ),
+    "/iceberg/icebergS3 table function/: catalog/several iceberg tables in one dir": (
+        Skip,
+        "Iceberg engine was introduced in 24.12",
+        check_clickhouse_version("<24.12"),
+    ),
 }
 
 
