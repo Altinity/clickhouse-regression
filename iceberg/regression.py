@@ -166,8 +166,8 @@ ffails = {
     ),
     "/iceberg/icebergS3 table function/: catalog/several iceberg tables in one dir": (
         Skip,
-        "Iceberg engine was introduced in 24.12",
-        check_clickhouse_version("<24.12"),
+        "setting used for test introduced in 25.8",
+        check_clickhouse_version("<25.8"),
     ),
 }
 
