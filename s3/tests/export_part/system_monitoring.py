@@ -131,12 +131,12 @@ def system_exports_and_metrics(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            number_of_values=100000,
+            number_of_values=10000,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I slow down the network speed"):
-        network_packet_rate_limit(node=self.context.node, rate_mbit=20)
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with When("I export parts to the S3 table"):
         export_parts(

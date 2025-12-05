@@ -717,38 +717,35 @@ class ClickHouseNode(Node):
                         fail("pid still alive")
 
         with And("killing any remaining ClickHouse child processes"):
-            for attempt in retries(timeout=10, delay=1):
+            for i, attempt in enumerate(retries(timeout=100, delay=3)):
                 with attempt:
                     result = self.command(
-                        "pgrep -f 'clickhouse.*server' || true",
-                        steps=False,
-                        no_checks=True,
+                         "pgrep -f 'clickhouse.*server'",
+                         steps=False,
+                         no_checks=True,
                     )
-                    if not result.output.strip():
+                    if result.exitcode == 1:
                         break
-                    
-                    self.command(
-                        f"pkill -{signal} -f 'clickhouse.*server' || true",
-                        steps=False,
-                        no_checks=True,
-                    )
-                    time.sleep(1)
-                    
-                    result = self.command(
-                        "pgrep -f 'clickhouse.*server' || true",
-                        steps=False,
-                        no_checks=True,
-                    )
-                    if not result.output.strip():
-                        break
-                    
-                    if attempt.iteration >= 5:
+
+                    if i > 0 and i % 10 == 0:    
                         self.command(
-                            "pkill -KILL -f 'clickhouse.*server' || true",
+                            f"pkill -KILL -f 'clickhouse.*server'",
                             steps=False,
                             no_checks=True,
                         )
-                        time.sleep(1)
+                    else:
+                        self.command(
+                            f"pkill -{signal} -f 'clickhouse.*server'",
+                            steps=False,
+                            no_checks=True,
+                        )
+
+                    result = self.command(
+                        "pgrep -f 'clickhouse.*server'",
+                        steps=False,
+                        no_checks=True,
+                    )
+                    if result.exitcode != 1: fail("ClickHouse server process still alive")
 
         with And("deleting ClickHouse server pid file"):
             self.command("rm -rf /tmp/clickhouse-server.pid", exitcode=0, steps=False)

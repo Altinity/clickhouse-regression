@@ -1,3 +1,4 @@
+import uuid
 from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -5,6 +6,7 @@ from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
 from s3.tests.export_part import alter_wrappers
+from helpers.alter import delete
 
 
 @TestScenario
@@ -375,7 +377,11 @@ def inserts_and_optimize(self):
                 destination_table=s3_table_name,
                 node=self.context.node,
             )
-            Step(test=create_partitions_with_random_uint64, parallel=True, executor=executor)(
+            Step(
+                test=create_partitions_with_random_uint64,
+                parallel=True,
+                executor=executor,
+            )(
                 table_name=source_table,
                 number_of_partitions=10,
                 number_of_parts=2,
@@ -395,6 +401,111 @@ def inserts_and_optimize(self):
         assert initial_source_data == destination_data, error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_QueryCancellation("1.0"))
+def kill_export(self):
+    """Check that KILL queries do not break exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=10,
+            number_of_partitions=10,
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I slow the network"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
+
+    with When(f"I export parts to the S3 table in parallel with kill queries"):
+        for _ in range(100):
+            query_id = str(uuid.uuid4())
+            Step(test=export_parts, parallel=True)(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+                parts=[get_random_part(table_name=source_table)],
+                settings=[("query_id", query_id)],
+                exitcode=1,
+            )
+            Step(test=kill_query, parallel=True)(
+                node=self.context.node,
+                query_id=query_id,
+            )
+        join()
+
+    with Then("Check part log matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
+@TestOutline(Scenario)
+@Examples(
+    "delete_method, delete_condition, description",
+    [
+        ("DELETE FROM", "i = 1", "one row"),
+        ("DELETE FROM", "i IN (1, 3)", "multiple rows"),
+        ("DELETE FROM", "p = 1", "all rows"),
+        ("ALTER DELETE", "i = 1", "one row"),
+        ("ALTER DELETE", "i IN (1, 3)", "multiple rows"),
+        ("ALTER DELETE", "p = 1", "all rows"),
+    ],
+)
+@Requirements(RQ_ClickHouse_ExportPart_DeletedRows("1.0"))
+def delete_rows(self, delete_method, delete_condition, description):
+    """Test that exports correctly exclude deleted rows."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            populate=False,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I create partitions with sequential uint64 values"):
+        create_partitions_with_sequential_uint64(
+            table_name=source_table,
+        )
+
+    with When(f"I delete rows using {delete_method} ({description})"):
+        if delete_method == "DELETE FROM":
+            delete_from(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+        else:
+            alter_table_delete_rows(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+
+    with And("I wait for mutations to complete"):
+        wait_for_all_mutations_to_complete(table_name=source_table)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -407,3 +518,5 @@ def feature(self):
     Scenario(run=stress_select)
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=inserts_and_optimize)
+    Scenario(run=delete_rows)
+    Scenario(run=kill_export)
