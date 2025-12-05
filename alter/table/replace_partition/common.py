@@ -37,13 +37,14 @@ def create_partitions_with_random_uint64(
     number_of_partitions=5,
     number_of_parts=1,
     node=None,
+    from_partition=1
 ):
     """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
     if node is None:
         node = self.context.node
 
     with By("Inserting random values into a column with uint64 datatype"):
-        for i in range(1, number_of_partitions + 1):
+        for i in range(from_partition, from_partition + number_of_partitions):
             for parts in range(1, number_of_parts + 1):
                 node.query(
                     f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"

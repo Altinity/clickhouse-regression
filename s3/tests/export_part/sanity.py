@@ -301,6 +301,7 @@ def feature(self):
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
     Scenario(run=wide_and_compact_parts)
-    Scenario(run=large_part)
     Scenario(run=export_setting)
     Scenario(run=schema_to_compliant)
+    if self.context.stress:
+        Scenario(run=large_part)

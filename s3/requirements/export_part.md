@@ -16,8 +16,9 @@
     * 4.2 [RQ.ClickHouse.ExportPart.PartitionKeyTypes](#rqclickhouseexportpartpartitionkeytypes)
 * 5 [Part Types and Content](#part-types-and-content)
     * 5.1 [RQ.ClickHouse.ExportPart.PartTypes](#rqclickhouseexportpartparttypes)
-    * 5.2 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
-    * 5.3 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
+    * 5.2 [RQ.ClickHouse.ExportPart.DeletedRows](#rqclickhouseexportpartdeletedrows)
+    * 5.3 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
+    * 5.4 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
 * 6 [Export Operation Restrictions](#export-operation-restrictions)
     * 6.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
     * 6.2 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
@@ -51,6 +52,7 @@
     * 14.4 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
 * 15 [Export Operation Security](#export-operation-security)
     * 15.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
+    * 15.2 [RQ.ClickHouse.ExportPart.QueryCancellation](#rqclickhouseexportpartquerycancellation)
 
 ## Introduction
 
@@ -156,7 +158,15 @@ version: 1.0
 | **Wide Parts** | ✅ Yes | Data of each column stored in separate files with marks | Standard format for most parts |
 | **Compact Parts** | ✅ Yes | All column data stored in single file with single marks file | Optimized for small parts |
 
-[ClickHouse] SHALL automatically apply lightweight delete masks during export to ensure only non-deleted rows are exported, and SHALL handle all part metadata including checksums, compression information, serialization details, mutation history, schema changes, and structural modifications to maintain data integrity in the destination storage.
+### RQ.ClickHouse.ExportPart.DeletedRows
+version: 1.0
+
+[ClickHouse] SHALL correctly handle parts containing deleted rows during export operations by:
+
+* Automatically applying delete masks (`_row_exists` column) when exporting parts that contain rows marked as deleted via lightweight DELETE (`DELETE FROM ... WHERE ...`)
+* Excluding rows marked as deleted from exported data, ensuring only visible rows (`_row_exists = 1`) are exported
+* Supporting export of parts where rows have been physically removed via ALTER DELETE (`ALTER TABLE ... DELETE WHERE ...`)
+* Maintaining data consistency between source and destination tables after export, where destination contains only non-deleted rows from source
 
 ### RQ.ClickHouse.ExportPart.SchemaChangeIsolation
 version: 1.0
@@ -412,10 +422,17 @@ version: 1.0
 * **RBAC**: Users must have the following privileges:
   * **Source Table**: `ALTER` privilege on the source table to initiate export operations
   * **Destination Table**: `INSERT` privilege on the destination table to write exported data
-  * **Query Management**: `KILL QUERY` privilege to terminate export operations, allowing users to kill their own export queries and administrators to kill any export query
 * **Data Encryption**: All data in transit to destination storage must be encrypted using TLS/SSL
 * **Network Security**: Export operations must use secure connections to destination storage (HTTPS for S3, secure protocols for other storage)
 * **Credential Management**: Export operations must use secure credential storage and avoid exposing credentials in logs
 
+### RQ.ClickHouse.ExportPart.QueryCancellation
+version: 1.0
+
+[ClickHouse] SHALL support cancellation of `EXPORT PART` queries using the `KILL QUERY` command before the query returns.
+
+The system SHALL:
+* Stop exporting parts that have not yet begun exporting when the query is killed
+* Handle query cancellation gracefully without breaking the system or corrupting data
 
 [ClickHouse]: https://clickhouse.com
