@@ -80,7 +80,7 @@ allow_experimental_delta_lake_writes = r"""'{"default":"0"}'"""
 
 allow_experimental_dynamic_type = r"""'{"default":"1"}'"""
 
-allow_experimental_export_merge_tree_part = r"""'{"default":"1"}\n{"default":"1"}'"""
+allow_experimental_export_merge_tree_part = r"""'{"default":"1"}'"""
 
 allow_experimental_full_text_index = r"""'{"default":"0"}'"""
 
@@ -2757,4 +2757,18 @@ write_through_distributed_cache = r"""'{"default":"0"}'"""
 write_through_distributed_cache_buffer_size = r"""'{"default":"0"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
+
+allow_experimental_hybrid_table = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
+
+export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
+
+export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
+
+hybrid_table_auto_cast_columns = r"""'{"default":"1"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
