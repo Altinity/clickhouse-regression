@@ -626,8 +626,6 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
     if not self.context.stress:
         all_possible_combinations = random.sample(all_possible_combinations, 1000)
 
-    pause()
-
     with Pool() as pool:
         for num, (
             left_table,
