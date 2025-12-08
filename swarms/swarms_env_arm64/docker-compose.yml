@@ -96,6 +96,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      keeper1:
+        condition: service_healthy
 
   clickhouse2:
     extends:
@@ -110,6 +112,8 @@ services:
       - var_log_clickhouse-limited-2:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
+        condition: service_healthy
+      keeper1:
         condition: service_healthy
 
   clickhouse3:
@@ -126,6 +130,8 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      keeper1:
+        condition: service_healthy
   
   clickhouse4:
     extends:
@@ -140,6 +146,8 @@ services:
       - var_log_clickhouse-limited-4:/var/log/clickhouse-server-limited
     depends_on:
       zookeeper1:
+        condition: service_healthy
+      keeper1:
         condition: service_healthy
 
   clickhouse5:
@@ -156,16 +164,15 @@ services:
     depends_on:
       zookeeper1:
         condition: service_healthy
+      keeper1:
+        condition: service_healthy
   
-  keeper:
-    image: altinity/clickhouse-keeper:25.8.9.20496.altinityantalya
-    container_name: keeper
-    hostname: keeper
-    ports:
-      - 2181:2181
+  keeper1:
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper1
     volumes:
-      # Note special location of Keeper config overrides. 
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
 
   # dummy service which does nothing, but allows to postpone
@@ -187,7 +194,8 @@ services:
       #   condition: service_healthy
       mc:
         condition: service_healthy
-
+      keeper1:
+        condition: service_healthy
 volumes:
   localstack_data:
 
