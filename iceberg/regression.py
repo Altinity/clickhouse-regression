@@ -125,6 +125,13 @@ xfails = {
             "https://github.com/ClickHouse/ClickHouse/issues/91363",
         )
     ],
+    "/iceberg/iceberg engine/glue catalog/feature/show tables queries/*": [
+        (
+            Fail,
+            "/iceberg/iceberg engine/glue catalog/feature/show tables queries",
+            check_clickhouse_version("<25.10"),
+        )
+    ],
 }
 
 ffails = {
