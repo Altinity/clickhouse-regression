@@ -463,11 +463,7 @@ def get_export_events(self, node):
 
 @TestStep(When)
 def get_export_partition_zookeeper_events(self, node=None):
-    """Get the export partition ZooKeeper/Keeper profile events from the system.events table of a given node.
-
-    Returns a dictionary with all ExportPartitionZooKeeper* profile events.
-    Events are initialized to 0 if they don't exist in the system.events table.
-    """
+    """Get the export partition ZooKeeper/Keeper profile events from the system.events table of a given node."""
 
     if node is None:
         node = self.context.node
@@ -477,29 +473,6 @@ def get_export_partition_zookeeper_events(self, node=None):
         exitcode=0,
         steps=True,
     ).output
-
-    # events = {}
-    # for line in output.strip().splitlines():
-    #     event = json.loads(line)
-    #     events[event["name"]] = int(event["value"])
-    #
-    # expected_events = [
-    #     "ExportPartitionZooKeeperRequests",
-    #     "ExportPartitionZooKeeperGet",
-    #     "ExportPartitionZooKeeperGetChildren",
-    #     "ExportPartitionZooKeeperGetChildrenWatch",
-    #     "ExportPartitionZooKeeperGetWatch",
-    #     "ExportPartitionZooKeeperCreate",
-    #     "ExportPartitionZooKeeperSet",
-    #     "ExportPartitionZooKeeperRemove",
-    #     "ExportPartitionZooKeeperRemoveRecursive",
-    #     "ExportPartitionZooKeeperMulti",
-    #     "ExportPartitionZooKeeperExists",
-    # ]
-    #
-    # for event_name in expected_events:
-    #     if event_name not in events:
-    #         events[event_name] = 0
 
     return output
 
