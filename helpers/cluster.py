@@ -656,7 +656,7 @@ class ClickHouseNode(Node):
                 "fsanitize=undefined": "ubsan",
             }
             sanitizer_name = next(
-               (name for flag, name in sanitizers.items() if flag in output), None
+                (name for flag, name in sanitizers.items() if flag in output), None
             )
             build_option = {}
             if sanitizer_name:
@@ -673,6 +673,11 @@ class ClickHouseNode(Node):
             ).output.strip()
 
             current().context.build_options[self.name]["git_branch"] = git_branch
+
+            full_clickhouse_version = self.query(
+                "SELECT version() FORMAT TabSeparated", no_checks=1, steps=False
+            ).output.strip()
+            current().context.full_clickhouse_version = full_clickhouse_version
 
     def clickhouse_pid(self):
         """
@@ -722,14 +727,14 @@ class ClickHouseNode(Node):
             for i, attempt in enumerate(retries(timeout=100, delay=3)):
                 with attempt:
                     result = self.command(
-                         "pgrep -f 'clickhouse.*server'",
-                         steps=False,
-                         no_checks=True,
+                        "pgrep -f 'clickhouse.*server'",
+                        steps=False,
+                        no_checks=True,
                     )
                     if result.exitcode == 1:
                         break
 
-                    if i > 0 and i % 10 == 0:    
+                    if i > 0 and i % 10 == 0:
                         self.command(
                             f"pkill -KILL -f 'clickhouse.*server'",
                             steps=False,
@@ -747,7 +752,8 @@ class ClickHouseNode(Node):
                         steps=False,
                         no_checks=True,
                     )
-                    if result.exitcode != 1: fail("ClickHouse server process still alive")
+                    if result.exitcode != 1:
+                        fail("ClickHouse server process still alive")
 
         with And("deleting ClickHouse server pid file"):
             self.command("rm -rf /tmp/clickhouse-server.pid", exitcode=0, steps=False)
@@ -1820,7 +1826,7 @@ class Cluster(object):
         """
         if timeout is NONE:
             timeout = 600 if self.cicd else 300
-        
+
         test = current()
 
         current_thread = threading.current_thread()

@@ -119,12 +119,12 @@ def check_msan_in_binary_link(test):
 
 def check_if_antalya_build(test):
     """True if build is Antalya build."""
-    return "antalya" in current().context.clickhouse_version
+    return "antalya" in current().context.full_clickhouse_version
 
 
 def check_if_not_antalya_build(test):
     """True if build is not Antalya build."""
-    return "antalya" not in current().context.clickhouse_version
+    return "antalya" not in current().context.full_clickhouse_version
 
 
 def check_if_head(test):
