@@ -166,6 +166,10 @@ def before_export(self, alter_function, kwargs):
         )
 
     with Then("Check source matches destination"):
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
         steps.source_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
@@ -212,6 +216,10 @@ def after_export(self, alter_function, kwargs):
         alter_function(table_name=source_table, **kwargs)
 
     with Then("Check destination is not affected by the alter"):
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
         final_destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
@@ -257,7 +265,10 @@ def during_export(self, alter_function, kwargs):
         alter_function(table_name=source_table, **kwargs)
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(table_name=source_table)
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
         destination_data = select_all_ordered(
             table_name=s3_table_name, node=self.context.node
         )
