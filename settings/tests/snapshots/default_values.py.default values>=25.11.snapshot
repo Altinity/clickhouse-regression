@@ -212,7 +212,7 @@ allow_simdjson = r"""'{"default":"1"}'"""
 
 allow_special_bool_values_inside_variant = r"""'{"default":"0"}'"""
 
-allow_special_serialization_kinds_in_output_formats = r"""'{"default":"0"}'"""
+allow_special_serialization_kinds_in_output_formats = r"""'{"default":"1"}'"""
 
 allow_statistic_optimize = r"""'{"default":"0"}'"""
 
@@ -265,6 +265,8 @@ apply_patch_parts = r"""'{"default":"1"}'"""
 apply_patch_parts_join_cache_buckets = r"""'{"default":"8"}'"""
 
 apply_settings_from_server = r"""'{"default":"1"}'"""
+
+arrow_flight_request_descriptor_type = r"""'{"default":"path"}'"""
 
 asterisk_include_alias_columns = r"""'{"default":"0"}'"""
 
@@ -456,6 +458,10 @@ cluster_for_parallel_replicas = r"""'{"default":""}'"""
 
 cluster_function_process_archive_on_multiple_nodes = r"""'{"default":"1"}'"""
 
+cluster_table_function_buckets_batch_size = r"""'{"default":"0"}'"""
+
+cluster_table_function_split_granularity = r"""'{"default":"file"}'"""
+
 collect_hash_table_stats_during_aggregation = r"""'{"default":"1"}'"""
 
 collect_hash_table_stats_during_joins = r"""'{"default":"1"}'"""
@@ -502,7 +508,7 @@ create_index_ignore_unique = r"""'{"default":"0"}'"""
 
 create_replicated_merge_tree_fault_injection_probability = r"""'{"default":"0"}'"""
 
-create_table_empty_primary_key_by_default = r"""'{"default":"0"}'"""
+create_table_empty_primary_key_by_default = r"""'{"default":"1"}'"""
 
 cross_join_min_bytes_to_compress = r"""'{"default":"1073741824"}'"""
 
@@ -529,6 +535,8 @@ database_replicated_ddl_output = r"""'{"default":"1"}'"""
 database_replicated_enforce_synchronous_settings = r"""'{"default":"0"}'"""
 
 database_replicated_initial_query_timeout_sec = r"""'{"default":"300"}'"""
+
+database_shared_drop_table_delay_seconds = r"""'{"default":"28800"}'"""
 
 date_time_64_output_format_cut_trailing_zeros_align_to_groups_of_thousands = r"""'{"default":"0"}'"""
 
@@ -740,7 +748,7 @@ enable_join_runtime_filters = r"""'{"default":"0"}'"""
 
 enable_json_type = r"""'{"default":"1"}'"""
 
-enable_lazy_columns_replication = r"""'{"default":"0"}'"""
+enable_lazy_columns_replication = r"""'{"default":"1"}'"""
 
 enable_lightweight_delete = r"""'{"default":"1"}'"""
 
@@ -841,6 +849,8 @@ extract_kvp_max_pairs_per_row = r"""'{"default":"1000"}'"""
 extremes = r"""'{"default":"0"}'"""
 
 fallback_to_stale_replicas_for_distributed_queries = r"""'{"default":"1"}'"""
+
+filesystem_cache_allow_background_download = r"""'{"default":"1"}'"""
 
 filesystem_cache_boundary_alignment = r"""'{"default":"0"}'"""
 
@@ -1068,7 +1078,7 @@ http_skip_not_found_url_for_globs = r"""'{"default":"1"}'"""
 
 http_wait_end_of_query = r"""'{"default":"0"}'"""
 
-http_write_exception_in_output_format = r"""'{"default":"1"}'"""
+http_write_exception_in_output_format = r"""'{"default":"0"}'"""
 
 http_zlib_compression_level = r"""'{"default":"3"}'"""
 
@@ -1288,6 +1298,8 @@ input_format_parquet_import_nested = r"""'{"default":"0"}'"""
 
 input_format_parquet_local_file_min_bytes_for_seek = r"""'{"default":"8192"}'"""
 
+input_format_parquet_local_time_as_utc = r"""'{"default":"1"}'"""
+
 input_format_parquet_max_block_size = r"""'{"default":"65409"}'"""
 
 input_format_parquet_memory_high_watermark = r"""'{"default":"4294967296"}'"""
@@ -1304,9 +1316,11 @@ input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference = r
 
 input_format_parquet_use_native_reader = r"""'{"default":"0"}'"""
 
-input_format_parquet_use_native_reader_v3 = r"""'{"default":"0"}'"""
+input_format_parquet_use_native_reader_v3 = r"""'{"default":"1"}'"""
 
 input_format_parquet_use_offset_index = r"""'{"default":"1"}'"""
+
+input_format_parquet_verify_checksums = r"""'{"default":"1"}'"""
 
 input_format_protobuf_flatten_google_wrappers = r"""'{"default":"0"}'"""
 
@@ -1393,6 +1407,8 @@ interactive_delay = r"""'{"default":"100000"}'"""
 intersect_default_mode = r"""'{"default":"ALL"}'"""
 
 interval_output_format = r"""'{"default":"numeric"}'"""
+
+into_outfile_create_parent_directories = r"""'{"default":"0"}'"""
 
 jemalloc_collect_profile_samples_in_trace_log = r"""'{"default":"0"}'"""
 
@@ -1510,7 +1526,7 @@ materialized_views_ignore_errors = r"""'{"default":"0"}'"""
 
 materialized_views_squash_parallel_inserts = r"""'{"default":"1"}'"""
 
-max_alter_threads = r"""'{"default":"\'auto(7)\'"}'"""
+max_alter_threads = r"""'{"default":"\'auto(12)\'"}'"""
 
 max_analyze_depth = r"""'{"default":"5000"}'"""
 
@@ -1580,7 +1596,7 @@ max_expanded_ast_elements = r"""'{"default":"500000"}'"""
 
 max_fetch_partition_retries_count = r"""'{"default":"5"}'"""
 
-max_final_threads = r"""'{"default":"\'auto(7)\'"}'"""
+max_final_threads = r"""'{"default":"\'auto(12)\'"}'"""
 
 max_http_get_redirects = r"""'{"default":"0"}'"""
 
@@ -1632,7 +1648,7 @@ max_parser_backtracks = r"""'{"default":"1000000"}'"""
 
 max_parser_depth = r"""'{"default":"1000"}'"""
 
-max_parsing_threads = r"""'{"default":"\'auto(7)\'"}'"""
+max_parsing_threads = r"""'{"default":"\'auto(12)\'"}'"""
 
 max_partition_size_to_drop = r"""'{"default":"50000000000"}'"""
 
@@ -1643,6 +1659,8 @@ max_partitions_to_read = r"""'{"default":"-1"}'"""
 max_parts_to_move = r"""'{"default":"1000"}'"""
 
 max_pipeline_depth = r"""'{"default":"0"}'"""
+
+max_projection_rows_to_use_projection_index = r"""'{"default":"1000000"}'"""
 
 max_query_size = r"""'{"default":"262144"}'"""
 
@@ -1714,7 +1732,7 @@ max_temporary_data_on_disk_size_for_user = r"""'{"default":"0"}'"""
 
 max_temporary_non_const_columns = r"""'{"default":"0"}'"""
 
-max_threads = r"""'{"default":"\'auto(7)\'"}'"""
+max_threads = r"""'{"default":"\'auto(12)\'"}'"""
 
 max_threads_for_annoy_index_creation = r"""'{"default":"4"}'"""
 
@@ -1834,6 +1852,8 @@ min_os_cpu_wait_time_ratio_to_throw = r"""'{"default":"0"}'"""
 
 min_outstreams_per_resize_after_split = r"""'{"default":"24"}'"""
 
+min_table_rows_to_use_projection_index = r"""'{"default":"1000000"}'"""
+
 mongodb_throw_on_unsupported_query = r"""'{"default":"1"}'"""
 
 move_all_conditions_to_prewhere = r"""'{"default":"1"}'"""
@@ -1893,6 +1913,8 @@ optimize_and_compare_chain = r"""'{"default":"1"}'"""
 optimize_append_index = r"""'{"default":"0"}'"""
 
 optimize_arithmetic_operations_in_aggregate_functions = r"""'{"default":"1"}'"""
+
+optimize_const_name_size = r"""'{"default":"256"}'"""
 
 optimize_count_from_files = r"""'{"default":"1"}'"""
 
@@ -2125,6 +2147,8 @@ output_format_parquet_use_custom_encoder = r"""'{"default":"1"}'"""
 output_format_parquet_version = r"""'{"default":"2.latest"}'"""
 
 output_format_parquet_write_bloom_filter = r"""'{"default":"1"}'"""
+
+output_format_parquet_write_checksums = r"""'{"default":"1"}'"""
 
 output_format_parquet_write_page_index = r"""'{"default":"1"}'"""
 
@@ -2370,7 +2394,7 @@ query_plan_lift_up_array_join = r"""'{"default":"1"}'"""
 
 query_plan_lift_up_union = r"""'{"default":"1"}'"""
 
-query_plan_max_limit_for_lazy_materialization = r"""'{"default":"10"}'"""
+query_plan_max_limit_for_lazy_materialization = r"""'{"default":"100"}'"""
 
 query_plan_max_optimizations_to_apply = r"""'{"default":"10000"}'"""
 
@@ -2552,7 +2576,7 @@ s3_min_upload_part_size = r"""'{"default":"16777216"}'"""
 
 s3_request_timeout_ms = r"""'{"default":"30000"}'"""
 
-s3_retry_attempts = r"""'{"default":"100"}'"""
+s3_retry_attempts = r"""'{"default":"500"}'"""
 
 s3_skip_empty_files = r"""'{"default":"1"}'"""
 
@@ -2612,6 +2636,8 @@ send_logs_level = r"""'{"default":"fatal"}'"""
 
 send_logs_source_regexp = r"""'{"default":""}'"""
 
+send_profile_events = r"""'{"default":"1"}'"""
+
 send_progress_in_http_headers = r"""'{"default":"0"}'"""
 
 send_timeout = r"""'{"default":"300"}'"""
@@ -2635,6 +2661,8 @@ show_create_query_identifier_quoting_rule = r"""'{"default":"when_necessary"}'""
 show_create_query_identifier_quoting_style = r"""'{"default":"Backticks"}'"""
 
 show_data_lake_catalogs_in_system_tables = r"""'{"default":"0"}'"""
+
+show_processlist_include_internal = r"""'{"default":"1"}'"""
 
 show_table_uuid_in_table_create_query_if_not_nil = r"""'{"default":"0"}'"""
 
@@ -2782,7 +2810,15 @@ use_skip_indexes_if_final_exact_mode = r"""'{"default":"1"}'"""
 
 use_skip_indexes_on_data_read = r"""'{"default":"0"}'"""
 
+use_statistics_cache = r"""'{"default":"0"}'"""
+
 use_structure_from_insertion_table_in_table_functions = r"""'{"default":"2"}'"""
+
+use_text_index_dictionary_cache = r"""'{"default":"0"}'"""
+
+use_text_index_header_cache = r"""'{"default":"0"}'"""
+
+use_text_index_postings_cache = r"""'{"default":"0"}'"""
 
 use_uncompressed_cache = r"""'{"default":"0"}'"""
 
