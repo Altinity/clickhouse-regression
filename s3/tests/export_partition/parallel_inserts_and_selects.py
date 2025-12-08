@@ -47,10 +47,9 @@ def validate_export_completion(
             source_data=source_data,
             destination_data=destination_data,
             destination_table=destination_table,
-            node=node,
         )
 
-        check_source_not_empty(source_table=source_table)
+        check_source_not_empty(table_name=source_table)
 
 
 @TestStep(When)
@@ -107,7 +106,7 @@ def parallel_inserts_with_merge_stop(self):
             columns=default_columns(),
             stop_merges=True,
             number_of_partitions=10,
-            number_of_parts=5,
+            number_of_parts=20,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
@@ -162,7 +161,7 @@ def parallel_inserts_with_merge_enabled(self):
             columns=default_columns(),
             stop_merges=False,
             number_of_partitions=10,
-            number_of_parts=5,
+            number_of_parts=20,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
