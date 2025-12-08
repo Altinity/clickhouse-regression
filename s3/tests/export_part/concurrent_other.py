@@ -459,7 +459,7 @@ def kill_export(self):
     ],
 )
 @Requirements(RQ_ClickHouse_ExportPart_DeletedRows("1.0"))
-def delete_rows(self, delete_method, delete_condition, description):
+def after_delete_rows(self, delete_method, delete_condition, description):
     """Test that exports correctly exclude deleted rows."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -506,6 +506,49 @@ def delete_rows(self, delete_method, delete_condition, description):
         )
 
 
+#TODO eventually move this to a new file and expand to cover relevant mutations
+#TODO give it a better name
+#TODO uncomment the requirement
+@TestScenario
+# @Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
+def during_delete_rows(self):
+    """Test that exports apply pending mutations on the fly."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            number_of_parts=1,
+            number_of_partitions=2,
+            number_of_values=10000,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I delete rows and export parts in parallel"):
+        with Pool(2) as executor:
+            Step(test=alter_table_delete_rows, parallel=True, executor=executor)(
+                table_name=source_table,
+                condition="p = 1",
+            )
+            Step(test=export_parts, parallel=True, executor=executor)(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+            join()
+
+    with And("I wait for mutations to complete"):
+        wait_for_all_mutations_to_complete(table_name=source_table)
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -518,5 +561,6 @@ def feature(self):
     Scenario(run=stress_select)
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=inserts_and_optimize)
-    Scenario(run=delete_rows)
+    Scenario(run=after_delete_rows)
+    Scenario(run=during_delete_rows)
     Scenario(run=kill_export)

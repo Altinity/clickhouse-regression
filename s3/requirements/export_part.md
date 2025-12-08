@@ -36,6 +36,7 @@
     * 9.1 [RQ.ClickHouse.ExportPart.Concurrency](#rqclickhouseexportpartconcurrency)
     * 9.2 [RQ.ClickHouse.ExportPart.Concurrency.NonBlocking](#rqclickhouseexportpartconcurrencynonblocking)
     * 9.3 [RQ.ClickHouse.ExportPart.Concurrency.ConcurrentAlters](#rqclickhouseexportpartconcurrencyconcurrentalters)
+    * 9.4 [RQ.ClickHouse.ExportPart.Concurrency.PendingMutations](#rqclickhouseexportpartconcurrencypendingmutations)
 * 10 [Cluster and Node Support](#cluster-and-node-support)
     * 10.1 [RQ.ClickHouse.ExportPart.ClustersNodes](#rqclickhouseexportpartclustersnodes)
 * 11 [Export Operation Idempotency](#export-operation-idempotency)
@@ -325,6 +326,17 @@ version: 1.0
 * Supporting ALTER operations during export (export uses pre-ALTER schema snapshot)
 * Maintaining data integrity when ALTER operations occur concurrently with exports
 * Handling various ALTER operations: add/drop columns, modify columns, rename columns, add/drop constraints, TTL modifications, partition operations, mutations, etc.
+
+### RQ.ClickHouse.ExportPart.Concurrency.PendingMutations
+version: 1.0
+
+[ClickHouse] SHALL apply pending mutations on the fly during export operations by:
+* Capturing a snapshot of pending mutations when the export task executes (not when queued)
+* Applying pending mutations during the export read operation, ensuring exported data reflects the mutation state
+* Supporting all mutation types that can be applied on the fly: ALTER DELETE, ALTER UPDATE, and lightweight DELETE masks
+* Maintaining data consistency where exported data reflects the source table state after pending mutations are applied
+
+For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL exclude the rows that would be deleted by the mutation, even if the mutation has not yet physically removed those rows from disk.
 
 ## Cluster and Node Support
 
