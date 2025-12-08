@@ -90,6 +90,8 @@ allow_experimental_geo_types = r"""'{"default":"1"}'"""
 
 allow_experimental_hash_functions = r"""'{"default":"0"}'"""
 
+allow_experimental_hybrid_table = r"""'{"default":"0"}'"""
+
 allow_experimental_iceberg_compaction = r"""'{"default":"0"}'"""
 
 allow_experimental_iceberg_read_optimization = r"""'{"default":"1"}'"""
@@ -798,7 +800,15 @@ except_default_mode = r"""'{"default":"ALL"}'"""
 
 execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
+export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
+
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
+
+export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
@@ -1050,6 +1060,8 @@ http_write_exception_in_output_format = r"""'{"default":"1"}'"""
 
 http_zlib_compression_level = r"""'{"default":"3"}'"""
 
+hybrid_table_auto_cast_columns = r"""'{"default":"1"}'"""
+
 iceberg_engine_ignore_schema_evolution = r"""'{"default":"0"}'"""
 
 iceberg_metadata_compression_method = r"""'{"default":""}'"""
@@ -1059,6 +1071,8 @@ iceberg_metadata_log_level = r"""'{"default":"none"}'"""
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -2757,18 +2771,4 @@ write_through_distributed_cache = r"""'{"default":"0"}'"""
 write_through_distributed_cache_buffer_size = r"""'{"default":"0"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
-
-allow_experimental_hybrid_table = r"""'{"default":"0"}'"""
-
-export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
-
-export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
-
-export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
-
-export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
-
-hybrid_table_auto_cast_columns = r"""'{"default":"1"}'"""
-
-iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
