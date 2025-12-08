@@ -232,13 +232,6 @@ def recreate_table_and_insert_new_data_multiple_times(
             s3_secret_access_key=minio_root_password,
         )
 
-    with And("create DataLakeCatalog database"):
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
     with And("create namespace"):
         catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
 

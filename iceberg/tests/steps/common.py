@@ -184,6 +184,7 @@ def get_select_query_result(
     enable_filesystem_cache=True,
     filesystem_cache_name="cache_for_s3",
     format="TabSeparated",
+    object_storage_cluster=None,
 ):
     """Helper function to execute query and return result."""
 
@@ -199,6 +200,9 @@ def get_select_query_result(
     if user_name is not None:
         settings.append(("user", user_name))
 
+    if object_storage_cluster:
+        settings.append(("object_storage_cluster", object_storage_cluster))
+
     query = (
         f"SELECT {select_columns} FROM {table_name} ORDER BY {order_by} FORMAT {format}"
     )
@@ -212,14 +216,25 @@ def get_select_query_result(
 
 @TestStep(Then)
 def compare_data_in_two_tables(
-    self, table_name1, table_name2, select_columns="*", order_by="tuple(*)"
+    self,
+    table_name1,
+    table_name2,
+    select_columns="*",
+    order_by="tuple(*)",
+    object_storage_cluster=None,
 ):
     """Compare data in two tables, ensuring floats are compared with math.isclose()."""
     table_name1_result = get_select_query_result(
-        table_name=table_name1, select_columns=select_columns, order_by=order_by
+        table_name=table_name1,
+        select_columns=select_columns,
+        order_by=order_by,
+        object_storage_cluster=object_storage_cluster,
     ).output
     table_name2_result = get_select_query_result(
-        table_name=table_name2, select_columns=select_columns, order_by=order_by
+        table_name=table_name2,
+        select_columns=select_columns,
+        order_by=order_by,
+        object_storage_cluster=object_storage_cluster,
     ).output
     assert compare_select_outputs(
         table_name1_result, table_name2_result, table_name1
