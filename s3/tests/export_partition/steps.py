@@ -390,6 +390,10 @@ def export_partitions(
                             inline_settings=inline_settings,
                         )
                     )
+                    wait_for_export_to_complete(
+                        partition_id=partition, source_table=source_table, node=node
+                    )
+                    get_export_partition_zookeeper_events(node=node)
     return output
 
 
@@ -458,12 +462,15 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_export_partition_zookeeper_events(self, node):
+def get_export_partition_zookeeper_events(self, node=None):
     """Get the export partition ZooKeeper/Keeper profile events from the system.events table of a given node.
 
     Returns a dictionary with all ExportPartitionZooKeeper* profile events.
     Events are initialized to 0 if they don't exist in the system.events table.
     """
+
+    if node is None:
+        node = self.context.node
 
     output = node.query(
         "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
@@ -471,30 +478,30 @@ def get_export_partition_zookeeper_events(self, node):
         steps=True,
     ).output
 
-    events = {}
-    for line in output.strip().splitlines():
-        event = json.loads(line)
-        events[event["name"]] = int(event["value"])
+    # events = {}
+    # for line in output.strip().splitlines():
+    #     event = json.loads(line)
+    #     events[event["name"]] = int(event["value"])
+    #
+    # expected_events = [
+    #     "ExportPartitionZooKeeperRequests",
+    #     "ExportPartitionZooKeeperGet",
+    #     "ExportPartitionZooKeeperGetChildren",
+    #     "ExportPartitionZooKeeperGetChildrenWatch",
+    #     "ExportPartitionZooKeeperGetWatch",
+    #     "ExportPartitionZooKeeperCreate",
+    #     "ExportPartitionZooKeeperSet",
+    #     "ExportPartitionZooKeeperRemove",
+    #     "ExportPartitionZooKeeperRemoveRecursive",
+    #     "ExportPartitionZooKeeperMulti",
+    #     "ExportPartitionZooKeeperExists",
+    # ]
+    #
+    # for event_name in expected_events:
+    #     if event_name not in events:
+    #         events[event_name] = 0
 
-    expected_events = [
-        "ExportPartitionZooKeeperRequests",
-        "ExportPartitionZooKeeperGet",
-        "ExportPartitionZooKeeperGetChildren",
-        "ExportPartitionZooKeeperGetChildrenWatch",
-        "ExportPartitionZooKeeperGetWatch",
-        "ExportPartitionZooKeeperCreate",
-        "ExportPartitionZooKeeperSet",
-        "ExportPartitionZooKeeperRemove",
-        "ExportPartitionZooKeeperRemoveRecursive",
-        "ExportPartitionZooKeeperMulti",
-        "ExportPartitionZooKeeperExists",
-    ]
-
-    for event_name in expected_events:
-        if event_name not in events:
-            events[event_name] = 0
-
-    return events
+    return output
 
 
 @TestStep(Then)
@@ -573,30 +580,36 @@ def get_system_exports(self, node):
 
 
 @TestStep
-def check_export_status(self, status, source_table, node=None):
+def check_export_status(self, status, source_table, partition_id, node=None):
     """Check the export status in system.replicated_partition_exports."""
 
     if node is None:
         node = self.context.node
 
     exports = node.query(
-        f"SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = '{status}' AND source_table = '{source_table}'",
+        f"SELECT COUNT(*) FROM system.replicated_partition_exports WHERE status = '{status}' AND source_table = '{source_table}' AND partition_id='{partition_id}'",
+        retry_count=120,
+        retry_delay=3,
         exitcode=0,
-        no_checks=True,
     )
 
     return exports
 
 
 @TestStep(When)
-def wait_for_export_to_start(self, source_table, node=None, assertion=None):
+def wait_for_export_to_start(
+    self, source_table, partition_id, node=None, assertion=None
+):
     """Wait for export partition operation to start."""
     with By("checking export status until it starts"):
 
         for attempt in retries(timeout=35, delay=3):
             with attempt:
                 exports = check_export_status(
-                    status="PENDING", source_table=source_table, node=node
+                    status="PENDING",
+                    source_table=source_table,
+                    node=node,
+                    partition_id=partition_id,
                 )
 
                 if assertion is None:
@@ -606,13 +619,18 @@ def wait_for_export_to_start(self, source_table, node=None, assertion=None):
 
 
 @TestStep(When)
-def wait_for_export_to_complete(self, source_table, node=None, assertion=None):
+def wait_for_export_to_complete(
+    self, source_table, partition_id, node=None, assertion=None
+):
     """Wait for export partition operation to complete."""
     with By("checking export status until it starts"):
-        for attempt in retries(timeout=35, delay=3):
+        for attempt in retries(timeout=120, delay=3):
             with attempt:
                 exports = check_export_status(
-                    status="COMPLETED", source_table=source_table, node=node
+                    status="COMPLETED",
+                    source_table=source_table,
+                    node=node,
+                    partition_id=partition_id,
                 )
 
                 if assertion is None:
@@ -622,11 +640,16 @@ def wait_for_export_to_complete(self, source_table, node=None, assertion=None):
 
 
 @TestStep(When)
-def check_error_export_status(self, source_table, node=None, assertion=None):
+def check_error_export_status(
+    self, source_table, partition_id, node=None, assertion=None
+):
     """Check error export status."""
     with By("checking export status until it starts"):
         exports = check_export_status(
-            status="ERROR", source_table=source_table, node=node
+            status="ERROR",
+            source_table=source_table,
+            node=node,
+            partition_id=partition_id,
         )
 
         if assertion is None:

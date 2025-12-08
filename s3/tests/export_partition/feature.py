@@ -12,7 +12,7 @@ def minio(self, uri, bucket_prefix):
 
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
-    self.context.default_settings = [("allow_experimental_export_merge_tree_part", 1)]
+    self.context.default_settings = [("allow_experimental_export_merge_tree_part", "1")]
 
     with Given("I enable export partition"):
         enable_export_partition()
@@ -22,7 +22,7 @@ def minio(self, uri, bucket_prefix):
     Feature(run=load("s3.tests.export_partition.clusters_nodes", "feature"))
     Feature(run=load("s3.tests.export_partition.engines_volumes", "feature"))
     Feature(run=load("s3.tests.export_partition.datatypes", "feature"))
-    Feature(run=load("s3.tests.export_partition.concurrency_networks", "feature"))
+    Feature(run=load("s3.tests.export_partition.network", "feature"))
     Feature(run=load("s3.tests.export_partition.concurrent_actions", "feature"))
     Feature(run=load("s3.tests.export_partition.system_monitoring", "feature"))
     Feature(run=load("s3.tests.export_partition.schema_evolution", "feature"))
