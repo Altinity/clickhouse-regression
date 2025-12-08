@@ -492,7 +492,7 @@ def concurrent_export_with_multiple_actions(
     ):
         source_table = self.context.source_table
         destination_table = self.context.destination_table
-        
+
         for i in range(number_of_iterations):
             partition_to_export = random.randrange(1, number_of_partitions)
             for retry in retries(timeout=60):
@@ -582,7 +582,7 @@ def concurrent_export(
     ):
         source_table = f"source_{getuid()}"
         destination_table = f"destination_{getuid()}"
-        
+
         columns_with_extras = [
             {"name": "p", "type": "UInt16"},
             {"name": "i", "type": "UInt64"},

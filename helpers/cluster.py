@@ -29,11 +29,13 @@ NONE = object()
 MESSAGES_TO_RETRY = [
     "DB::Exception: ZooKeeper session has been expired",
     "DB::Exception: Connection loss",
+    "DB::Exception: Table is in readonly mode",
     "Coordination::Exception: Session expired",
     "Coordination::Exception: Connection loss",
     "Coordination::Exception: Coordination error: Connection loss.",
     "Coordination::Exception: Operation timeout",
     "DB::Exception: Operation timeout",
+    "Coordination::Exception: Coordination error: Operation timeout",
     "Operation timed out",
     "ConnectionPoolWithFailover: Connection failed at try",
     "DB::Exception: New table appeared in database being dropped or detached. Try again",
