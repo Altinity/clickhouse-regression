@@ -100,6 +100,12 @@ def aggregate_funcs_over_rows_frame(self, func):
     ):
         snapshot_name += "/version>=24.3"
 
+    if (
+        (func.startswith("topK"))
+        and check_clickhouse_version(">=25.12")(self)
+    ):
+        snapshot_name += "/version>=25.12"
+
     execute_query(
         f"""
         SELECT {func} OVER (ORDER BY salary, empno ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS func
