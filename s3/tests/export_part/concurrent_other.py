@@ -6,7 +6,7 @@ from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
 from s3.tests.export_part import alter_wrappers
-from helpers.alter import delete
+from helpers.alter import delete, update
 
 
 @TestScenario
@@ -506,12 +506,35 @@ def after_delete_rows(self, delete_method, delete_condition, description):
         )
 
 
-#TODO eventually move this to a new file and expand to cover relevant mutations
-#TODO give it a better name
-#TODO uncomment the requirement
-@TestScenario
-# @Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
-def during_delete_rows(self):
+def get_mutation_functions():
+    """Return list of mutation functions with their kwargs for testing pending mutations."""
+    return [
+        (
+            delete_from,
+            {"condition": "p = 1"},
+        ),
+        (
+            delete.alter_table_delete_rows,
+            {"condition": "p = 1"},
+        ),
+        (
+            update.alter_table_update_column,
+            {"column_name": "i", "expression": "i + 1000", "condition": "p = 1"},
+        ),
+        (
+            alter_wrappers.alter_table_clear_column_in_partition,
+            {"column_name": "i", "partition_name": "1"},
+        ),
+    ]
+
+
+@TestOutline(Scenario)
+@Examples(
+    "mutation_function, kwargs",
+    get_mutation_functions(),
+)
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
+def during_pending_mutation(self, mutation_function, kwargs):
     """Test that exports apply pending mutations on the fly."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -526,11 +549,10 @@ def during_delete_rows(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I delete rows and export parts in parallel"):
+    with When("I apply mutation and export parts in parallel"):
         with Pool(2) as executor:
-            Step(test=alter_table_delete_rows, parallel=True, executor=executor)(
-                table_name=source_table,
-                condition="p = 1",
+            Step(test=mutation_function, parallel=True, executor=executor)(
+                table_name=source_table, **kwargs
             )
             Step(test=export_parts, parallel=True, executor=executor)(
                 source_table=source_table,
@@ -562,5 +584,5 @@ def feature(self):
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=inserts_and_optimize)
     Scenario(run=after_delete_rows)
-    Scenario(run=during_delete_rows)
     Scenario(run=kill_export)
+    Scenario(run=during_pending_mutation)
