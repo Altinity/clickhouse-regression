@@ -18,7 +18,7 @@ services:
     environment:
       - KEEPER_SERVER_ID=1
     healthcheck:
-      test: "echo 1"
+      test: ["CMD-SHELL", "curl -f http://localhost:9182/ready || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
