@@ -642,18 +642,61 @@ RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.\n"
+        "[ClickHouse] SHALL support cancellation of `EXPORT PARTITION`.\n" "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.7",
+)
+
+RQ_ClickHouse_ExportPartition_QueryCancellation_KillExportPartition = Requirement(
+    name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support cancellation of in-progress `EXPORT PARTITION` operations with `KILL EXPORT PARTITION` command.\n"
         "\n"
-        "The system SHALL:\n"
-        "* Allow users to abort export partition operations that are in progress using `KILL QUERY`\n"
-        "* Stop exporting partitions that have not yet been exported when the query is cancelled\n"
-        "* Clean up any partial export state when a query is cancelled\n"
-        "* Return an appropriate error or cancellation message to the user\n"
-        "* Not leave orphaned export operations in the system after query cancellation\n"
-        "* Allow users to retry the export operation after cancellation if needed\n"
+        "For example,\n"
         "\n"
-        "Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.\n"
+        "```sql\n"
+        "CREATE TABLE rmt_table (id UInt64, year UInt16) \n"
+        "ENGINE = ReplicatedMergeTree('/clickhouse/tables/{database}/rmt_table', 'replica1') \n"
+        "PARTITION BY year ORDER BY tuple();\n"
         "\n"
+        "CREATE TABLE s3_table (id UInt64, year UInt16) \n"
+        "ENGINE = S3(s3_conn, filename='data', format=Parquet, partition_strategy='hive') \n"
+        "PARTITION BY year;\n"
+        "\n"
+        "INSERT INTO rmt_table VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021);\n"
+        "\n"
+        "ALTER TABLE rmt_table EXPORT PARTITION ID '2020' TO TABLE s3_table;\n"
+        "\n"
+        "KILL EXPORT PARTITION \n"
+        "WHERE partition_id = '2020' \n"
+        "  AND source_table = 'rmt_table' \n"
+        "  AND destination_table = 's3_table'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="13.7.1.1",
+)
+
+RQ_ClickHouse_ExportPartition_QueryCancellation_KillQuery = Requirement(
+    name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.\n"
+        "\n"
+        "``\n"
         "For example,\n"
         "\n"
         "```sql\n"
@@ -663,14 +706,14 @@ RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
         "TO TABLE destination_table\n"
         "SETTINGS allow_experimental_export_merge_tree_part = 1;\n"
         "\n"
-        "-- Cancel the export in another session\n"
+        "-- Try to cancel the export in another session\n"
         "KILL QUERY WHERE query_id = '<query_id>';\n"
         "```\n"
         "\n"
     ),
     link=None,
-    level=2,
-    num="13.7",
+    level=4,
+    num="13.7.2.1",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues = Requirement(
@@ -1436,6 +1479,18 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPartition.QueryCancellation", level=2, num="13.7"
         ),
+        Heading(name="Kill Export Partition", level=3, num="13.7.1"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition",
+            level=4,
+            num="13.7.1.1",
+        ),
+        Heading(name="Kill Query Cancellation", level=3, num="13.7.2"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery",
+            level=4,
+            num="13.7.2.1",
+        ),
         Heading(name="Network resilience", level=1, num="14"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues",
@@ -1597,6 +1652,8 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Cleanup,
         RQ_ClickHouse_ExportPartition_Settings_ManifestTTL,
         RQ_ClickHouse_ExportPartition_QueryCancellation,
+        RQ_ClickHouse_ExportPartition_QueryCancellation_KillExportPartition,
+        RQ_ClickHouse_ExportPartition_QueryCancellation_KillQuery,
         RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues,
         RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption,
         RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption,
@@ -1672,6 +1729,10 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
     * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
     * 13.7 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
+        * 13.7.1 [Kill Export Partition](#kill-export-partition)
+            * 13.7.1.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition](#rqclickhouseexportpartitionquerycancellationkillexportpartition)
+        * 13.7.2 [Kill Query Cancellation](#kill-query-cancellation)
+            * 13.7.2.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery](#rqclickhouseexportpartitionquerycancellationkillquery)
 * 14 [Network resilience](#network-resilience)
     * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
     * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
@@ -2076,18 +2137,44 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
 ### RQ.ClickHouse.ExportPartition.QueryCancellation
 version: 1.0
 
-[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.
+[ClickHouse] SHALL support cancellation of `EXPORT PARTITION`.
 
-The system SHALL:
-* Allow users to abort export partition operations that are in progress using `KILL QUERY`
-* Stop exporting partitions that have not yet been exported when the query is cancelled
-* Clean up any partial export state when a query is cancelled
-* Return an appropriate error or cancellation message to the user
-* Not leave orphaned export operations in the system after query cancellation
-* Allow users to retry the export operation after cancellation if needed
+#### Kill Export Partition
 
-Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition
+version: 1.0
 
+[ClickHouse] SHALL support cancellation of in-progress `EXPORT PARTITION` operations with `KILL EXPORT PARTITION` command.
+
+For example,
+
+```sql
+CREATE TABLE rmt_table (id UInt64, year UInt16) 
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/{database}/rmt_table', 'replica1') 
+PARTITION BY year ORDER BY tuple();
+
+CREATE TABLE s3_table (id UInt64, year UInt16) 
+ENGINE = S3(s3_conn, filename='data', format=Parquet, partition_strategy='hive') 
+PARTITION BY year;
+
+INSERT INTO rmt_table VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021);
+
+ALTER TABLE rmt_table EXPORT PARTITION ID '2020' TO TABLE s3_table;
+
+KILL EXPORT PARTITION 
+WHERE partition_id = '2020' 
+  AND source_table = 'rmt_table' 
+  AND destination_table = 's3_table'
+```
+
+#### Kill Query Cancellation
+
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery
+version: 1.0
+
+[ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.
+
+``
 For example,
 
 ```sql
@@ -2097,7 +2184,7 @@ EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1;
 
--- Cancel the export in another session
+-- Try to cancel the export in another session
 KILL QUERY WHERE query_id = '<query_id>';
 ```
 

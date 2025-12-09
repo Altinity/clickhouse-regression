@@ -361,7 +361,7 @@ def export_partitions(
     inline_settings=True,
     retry_times=0,
     force_export=False,
-    check_export=True
+    check_export=True,
 ):
     """Export partitions from a source table to a destination table on the same node. If partitions are not provided, all partitions will be exported."""
 
@@ -631,6 +631,25 @@ def check_error_export_status(
             assert int(exports.output.strip()) > 0, error()
         else:
             assert assertion, error()
+
+
+@TestStep(When)
+def check_killed_export_status(
+    self, source_table, partition_id, node=None, populated=True
+):
+    """Check error export status is killed."""
+    with By("checking export status until it starts"):
+        exports = check_export_status(
+            status="KILLED",
+            source_table=source_table,
+            node=node,
+            partition_id=partition_id,
+        )
+
+        if populated is None:
+            assert int(exports.output.strip()) > 0, error()
+        else:
+            assert int(exports.output.strip()) == 0, error()
 
 
 @TestStep
