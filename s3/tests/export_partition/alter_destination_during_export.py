@@ -105,6 +105,7 @@ def alter_add_column_during_export(self, delay_ms=100):
             number_of_partitions=5,
             number_of_parts=2,
             columns=default_columns(simple=True, partition_key_type="Int8"),
+            cluster="replicated_cluster",
         )
         destination_table = create_s3_table(
             table_name="s3",
@@ -154,6 +155,7 @@ def alter_drop_column_during_export(self, delay_ms=100):
             number_of_partitions=5,
             number_of_parts=2,
             columns=default_columns(simple=True, partition_key_type="Int8"),
+            cluster="replicated_cluster",
         )
         destination_table = create_s3_table(
             table_name="s3",
@@ -203,6 +205,7 @@ def alter_modify_column_during_export(self, delay_ms=100):
             number_of_partitions=5,
             number_of_parts=2,
             columns=default_columns(simple=True, partition_key_type="Int8"),
+            cluster="replicated_cluster",
         )
         destination_table = create_s3_table(
             table_name="s3",
@@ -252,6 +255,7 @@ def alter_rename_column_during_export(self, delay_ms=100):
             number_of_partitions=5,
             number_of_parts=2,
             columns=default_columns(simple=True, partition_key_type="Int8"),
+            cluster="replicated_cluster",
         )
         destination_table = create_s3_table(
             table_name="s3",
