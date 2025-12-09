@@ -83,6 +83,7 @@ def mismatched_columns(self):
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
+            check_export=False
         )
 
     with Then("I should see an error related to mismatched columns"):
