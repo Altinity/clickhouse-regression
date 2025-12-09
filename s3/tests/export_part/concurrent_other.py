@@ -9,6 +9,20 @@ from s3.tests.export_part import alter_wrappers
 from helpers.alter import delete, update
 
 
+class MutationExample:
+    """Wrapper class to control how example names appear in coverage reports."""
+    def __init__(self, mutation_function, kwargs, name):
+        self.mutation_function = mutation_function
+        self.kwargs = kwargs
+        self.name = name
+    
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return self.name
+
+
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
 def insert_parts(self):
@@ -509,32 +523,36 @@ def after_delete_rows(self, delete_method, delete_condition, description):
 def get_mutation_functions():
     """Return list of mutation functions with their kwargs for testing pending mutations."""
     return [
-        (
+        MutationExample(
             delete_from,
             {"condition": "p = 1"},
+            "delete from",
         ),
-        (
+        MutationExample(
             delete.alter_table_delete_rows,
             {"condition": "p = 1"},
+            "alter delete",
         ),
-        (
+        MutationExample(
             update.alter_table_update_column,
             {"column_name": "i", "expression": "i + 1000", "condition": "p = 1"},
+            "alter update",
         ),
-        (
+        MutationExample(
             alter_wrappers.alter_table_clear_column_in_partition,
             {"column_name": "i", "partition_name": "1"},
+            "clear column in partition",
         ),
     ]
 
 
 @TestOutline(Scenario)
 @Examples(
-    "mutation_function, kwargs",
-    get_mutation_functions(),
+    "example",
+    [(example,) for example in get_mutation_functions()],
 )
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
-def during_pending_mutation(self, mutation_function, kwargs):
+def during_pending_mutation(self, example):
     """Test that exports apply pending mutations on the fly."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -551,8 +569,8 @@ def during_pending_mutation(self, mutation_function, kwargs):
 
     with When("I apply mutation and export parts in parallel"):
         with Pool(2) as executor:
-            Step(test=mutation_function, parallel=True, executor=executor)(
-                table_name=source_table, **kwargs
+            Step(test=example.mutation_function, parallel=True, executor=executor)(
+                table_name=source_table, **example.kwargs
             )
             Step(test=export_parts, parallel=True, executor=executor)(
                 source_table=source_table,
