@@ -541,6 +541,7 @@ def export_partition_with_single_concurrent_action(
             stop_merges=False,
             number_of_partitions=10,
             number_of_parts=20,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with And("I apply a delay on clickhouse queries"):
@@ -597,6 +598,7 @@ def concurrent_export(
             columns=columns_with_extras,
             stop_merges=False,
             number_of_partitions=number_of_partitions,
+            cluster="replicated_cluster",
         )
 
         s3_table_name = create_s3_table(

@@ -107,6 +107,7 @@ def parallel_inserts_with_merge_stop(self):
             stop_merges=True,
             number_of_partitions=10,
             number_of_parts=20,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
@@ -162,6 +163,7 @@ def parallel_inserts_with_merge_enabled(self):
             stop_merges=False,
             number_of_partitions=10,
             number_of_parts=20,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
@@ -214,6 +216,7 @@ def export_with_optimize_table_parallel(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
@@ -259,6 +262,7 @@ def parallel_selects_during_export(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):
@@ -311,6 +315,7 @@ def parallel_inserts_export_and_optimize(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
     with When("I get all the partitions before the export"):

@@ -19,6 +19,7 @@ def partition_does_not_exist(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -32,7 +33,7 @@ def partition_does_not_exist(self):
             node=self.context.node,
             partitions=[invalid_partition],
             exitcode=1,
-            check_export=False
+            check_export=False,
         )
 
     with Then("I should see an error related to the invalid part name"):
@@ -54,6 +55,7 @@ def same_table(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
 
     with When("I try to export partitions to itself"):
@@ -62,7 +64,7 @@ def same_table(self):
             destination_table=source_table,
             node=self.context.node,
             exitcode=1,
-            check_export=False
+            check_export=False,
         )
 
     with Then("I should see an error related to same table exports"):
@@ -85,6 +87,7 @@ def local_table(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
 
     with And("I create an empty local table"):
@@ -94,6 +97,7 @@ def local_table(self):
             columns=default_columns(),
             stop_merges=False,
             populate=False,
+            cluster="replicated_cluster",
         )
 
     with When("I export partitions to the local table"):
@@ -102,7 +106,7 @@ def local_table(self):
             destination_table=destination_table,
             node=self.context.node,
             exitcode=1,
-            check_export=False
+            check_export=False,
         )
 
     with Then("I should see an error related to local table exports"):
@@ -125,6 +129,7 @@ def different_partition_key(self):
             partition_by="i",
             columns=default_columns(),
             stop_merges=False,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -134,7 +139,7 @@ def different_partition_key(self):
             destination_table=s3_table_name,
             node=self.context.node,
             exitcode=1,
-            check_export=False
+            check_export=False,
         )
 
     with Then("I should see an error related to the different partition key"):

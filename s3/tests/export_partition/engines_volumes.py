@@ -100,6 +100,7 @@ def configured_volume(self, volume):
             stop_merges=False,
             query_settings=f"storage_policy = '{volume}'",
             populate=False,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 

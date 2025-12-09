@@ -40,6 +40,7 @@ def export_appears_in_table(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -68,6 +69,7 @@ def export_fields_populated(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -123,6 +125,7 @@ def export_status_transitions(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -160,6 +163,7 @@ def parts_to_do_decreases(self):
             columns=default_columns(),
             stop_merges=True,
             number_of_values=100000,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -207,6 +211,7 @@ def concurrent_exports_tracking(self):
                 partition_by="p",
                 columns=default_columns(),
                 stop_merges=True,
+                cluster="replicated_cluster",
             )
             s3_table_name = create_s3_table(
                 table_name=f"s3_{i}", create_new_bucket=(i == 0)
@@ -245,6 +250,7 @@ def partition_id_matches_exported(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -293,6 +299,7 @@ def parts_array_matches_table_parts(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -354,6 +361,7 @@ def transaction_id_populated(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -397,6 +405,7 @@ def concurrent_exports_limit(self, background_move_pool_size):
             stop_merges=True,
             number_of_values=100000,
             number_of_parts=10,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
