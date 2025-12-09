@@ -23,6 +23,7 @@ def packet_delay(self, delay_ms):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -58,6 +59,7 @@ def packet_loss(self, percent_loss):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -93,6 +95,7 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -132,6 +135,7 @@ def packet_corruption(self, percent_corrupt):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -169,6 +173,7 @@ def packet_duplication(self, percent_duplicated):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -206,6 +211,7 @@ def packet_reordering(self, delay_ms, percent_reordered):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -245,6 +251,7 @@ def packet_rate_limit(self, rate_mbit):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -292,6 +299,7 @@ def minio_interruption(self, strategy, signal):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
@@ -389,6 +397,7 @@ def clickhouse_interruption(self, strategy, signal, safe):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 

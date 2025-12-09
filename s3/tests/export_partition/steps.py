@@ -361,6 +361,7 @@ def export_partitions(
     inline_settings=True,
     retry_times=0,
     force_export=False,
+    check_export=True
 ):
     """Export partitions from a source table to a destination table on the same node. If partitions are not provided, all partitions will be exported."""
 
@@ -390,10 +391,11 @@ def export_partitions(
                             inline_settings=inline_settings,
                         )
                     )
-                    wait_for_export_to_complete(
-                        partition_id=partition, source_table=source_table, node=node
-                    )
-                    get_export_partition_zookeeper_events(node=node)
+                    if check_export:
+                        wait_for_export_to_complete(
+                            partition_id=partition, source_table=source_table, node=node
+                        )
+                        get_export_partition_zookeeper_events(node=node)
     return output
 
 
