@@ -185,6 +185,7 @@ def check_join(
         "LEFT ANTI JOIN",
         "LEFT ANY JOIN",
         "LEFT ASOF JOIN",
+        "PASTE JOIN",
     ]
 
     if (
