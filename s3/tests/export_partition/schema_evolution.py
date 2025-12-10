@@ -32,6 +32,7 @@ def schema_evolution(
             stop_merges=False,
             populate=False,
             columns=default_columns(simple=True, partition_key_type="Int8"),
+            cluster="replicated_cluster",
         )
 
     with And("I insert data that creates multiple parts/partitions with old schema"):

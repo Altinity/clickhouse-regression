@@ -21,7 +21,8 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/34130")
     ],
     "user dn detection/mapping/add new role not present": [
-        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380",check_clickhouse_version("<=23.3")),
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380",check_clickhouse_version("<=23.3")),
     ],
     "user dn detection/mapping/map role when ldap user belongs to large number of groups": [
         (
@@ -31,7 +32,8 @@ xfails = {
         )
     ],
     "mapping/add new role not present": [
-        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380",check_clickhouse_version("<=23.3")),
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380",check_clickhouse_version("<=23.3")),
     ],
     "mapping/map role when ldap user belongs to large number of groups": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/42276")

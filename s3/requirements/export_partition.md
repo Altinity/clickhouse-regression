@@ -44,6 +44,10 @@
     * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
     * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
     * 13.7 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
+        * 13.7.1 [Kill Export Partition](#kill-export-partition)
+            * 13.7.1.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition](#rqclickhouseexportpartitionquerycancellationkillexportpartition)
+        * 13.7.2 [Kill Query Cancellation](#kill-query-cancellation)
+            * 13.7.2.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery](#rqclickhouseexportpartitionquerycancellationkillquery)
 * 14 [Network resilience](#network-resilience)
     * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
     * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
@@ -448,18 +452,44 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
 ### RQ.ClickHouse.ExportPartition.QueryCancellation
 version: 1.0
 
-[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.
+[ClickHouse] SHALL support cancellation of `EXPORT PARTITION`.
 
-The system SHALL:
-* Allow users to abort export partition operations that are in progress using `KILL QUERY`
-* Stop exporting partitions that have not yet been exported when the query is cancelled
-* Clean up any partial export state when a query is cancelled
-* Return an appropriate error or cancellation message to the user
-* Not leave orphaned export operations in the system after query cancellation
-* Allow users to retry the export operation after cancellation if needed
+#### Kill Export Partition
 
-Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition
+version: 1.0
 
+[ClickHouse] SHALL support cancellation of in-progress `EXPORT PARTITION` operations with `KILL EXPORT PARTITION` command.
+
+For example,
+
+```sql
+CREATE TABLE rmt_table (id UInt64, year UInt16) 
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/{database}/rmt_table', 'replica1') 
+PARTITION BY year ORDER BY tuple();
+
+CREATE TABLE s3_table (id UInt64, year UInt16) 
+ENGINE = S3(s3_conn, filename='data', format=Parquet, partition_strategy='hive') 
+PARTITION BY year;
+
+INSERT INTO rmt_table VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021);
+
+ALTER TABLE rmt_table EXPORT PARTITION ID '2020' TO TABLE s3_table;
+
+KILL EXPORT PARTITION 
+WHERE partition_id = '2020' 
+  AND source_table = 'rmt_table' 
+  AND destination_table = 's3_table'
+```
+
+#### Kill Query Cancellation
+
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery
+version: 1.0
+
+[ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.
+
+``
 For example,
 
 ```sql
@@ -469,7 +499,7 @@ EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1;
 
--- Cancel the export in another session
+-- Try to cancel the export in another session
 KILL QUERY WHERE query_id = '<query_id>';
 ```
 

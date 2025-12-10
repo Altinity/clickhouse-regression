@@ -9,89 +9,164 @@ from helpers.common import getuid
 from s3.tests.export_part import alter_wrappers
 
 
+class AlterExample:
+    """Wrapper class to control how example names appear in coverage reports."""
+    def __init__(self, alter_function, kwargs, name):
+        self.alter_function = alter_function
+        self.kwargs = kwargs
+        self.name = name
+    
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return self.name
+
+
 def get_alter_functions():
     return [
-        (
+        AlterExample(
             alter_wrappers.alter_table_add_column,
             {},
+            "add column",
         ),
-        (alter_wrappers.alter_table_drop_column, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_drop_column,
+            {},
+            "drop column",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_modify_column,
             {"column_name": "i"},
+            "modify column",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_rename_column,
             {"column_name_old": "Path"},
+            "rename column",
         ),
-        (
+        AlterExample(
             column.alter_table_comment_column,
             {"column_name": "p", "comment": "test column comment"},
+            "comment column",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_add_constraint,
             {},
+            "add constraint",
         ),
-        (alter_wrappers.alter_table_drop_constraint, {}),
-        (alter_wrappers.alter_table_drop_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_drop_constraint,
+            {},
+            "drop constraint",
+        ),
+        AlterExample(
+            alter_wrappers.alter_table_drop_partition,
+            {},
+            "drop partition",
+        ),
+        AlterExample(
             ttl.alter_table_modify_ttl,
             {
                 "ttl_expression": "if(Time < toDateTime('2006-02-07'), Time + INTERVAL 100 YEAR, toDateTime('2106-02-07'))"
             },
+            "modify ttl",
         ),
-        (alter_wrappers.alter_table_detach_partition, {}),
-        (alter_wrappers.alter_table_attach_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_detach_partition,
+            {},
+            "detach partition",
+        ),
+        AlterExample(
+            alter_wrappers.alter_table_attach_partition,
+            {},
+            "attach partition",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_attach_partition_from,
             {},
+            "attach partition from",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_move_partition_to_table,
             {},
+            "move partition to table",
         ),
-        (alter_wrappers.alter_table_move_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_move_partition,
+            {},
+            "move partition",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_clear_column_in_partition,
             {"column_name": "i"},
+            "clear column in partition",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_clear_index_in_partition,
             {},
+            "clear index in partition",
         ),
-        (alter_wrappers.alter_table_freeze_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_freeze_partition,
+            {},
+            "freeze partition",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_freeze_partition_with_name,
             {},
+            "freeze partition with name",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_unfreeze_partition_with_name,
             {},
+            "unfreeze partition with name",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_replace_partition,
             {},
+            "replace partition",
         ),
-        (
+        AlterExample(
             update.alter_table_update_column,
             {"column_name": "i", "expression": "0", "condition": "1 = 1"},
+            "update column",
         ),
-        (delete.alter_table_delete_rows, {"condition": "p = 1"}),
-        (
+        AlterExample(
+            delete.alter_table_delete_rows,
+            {"condition": "p = 1"},
+            "delete rows",
+        ),
+        AlterExample(
             table.alter_table_modify_comment,
             {"comment": "test table comment"},
+            "modify table comment",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_fetch_partition,
             {"cleanup": True},
+            "fetch partition",
         ),
-        (
+        AlterExample(
             create_partitions_with_random_uint64,
             {"number_of_partitions": 5, "number_of_parts": 1},
+            "create partitions",
         ),
-        (alter_wrappers.optimize_partition, {"partition": "1"}),
-        (alter_wrappers.optimize_table, {}),
-        (alter_wrappers.drop_table, {"recreate": True}),
+        AlterExample(
+            alter_wrappers.optimize_partition,
+            {"partition": "1"},
+            "optimize partition",
+        ),
+        AlterExample(
+            alter_wrappers.optimize_table,
+            {},
+            "optimize table",
+        ),
+        AlterExample(
+            alter_wrappers.drop_table,
+            {"recreate": True},
+            "drop table",
+        ),
     ]
 
 
@@ -128,21 +203,21 @@ def create_source_table(
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
-def before_export(self, alter_function, kwargs):
+def before_export(self, example):
     """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
-        source_table = create_source_table(alter_function=alter_function)
+        source_table = create_source_table(alter_function=example.alter_function)
 
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
 
-    with When(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with When(f"I {example.alter_function.__name__} on the source table"):
+        example.alter_function(table_name=source_table, **example.kwargs)
 
     with And("I populate the source table with new parts"):
         steps.insert_into_table(
@@ -178,18 +253,18 @@ def before_export(self, alter_function, kwargs):
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
 @Requirements(
     RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
     RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"),
 )
-def after_export(self, alter_function, kwargs):
+def after_export(self, example):
     """Test altering the source table after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = create_source_table(alter_function=alter_function)
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -212,8 +287,8 @@ def after_export(self, alter_function, kwargs):
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check destination is not affected by the alter"):
         steps.part_log_matches_destination(
@@ -228,15 +303,15 @@ def after_export(self, alter_function, kwargs):
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
-def during_export(self, alter_function, kwargs):
+def during_export(self, example):
     """Test altering the source table during exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = create_source_table(alter_function=alter_function)
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -261,8 +336,8 @@ def during_export(self, alter_function, kwargs):
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check source matches destination"):
         steps.part_log_matches_destination(
@@ -277,18 +352,18 @@ def during_export(self, alter_function, kwargs):
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
 @Requirements(
     RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
     RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"),
 )
-def during_minio_interruption(self, alter_function, kwargs):
+def during_minio_interruption(self, example):
     """Test altering the source table during MinIO interruption."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = create_source_table(alter_function=alter_function)
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -313,9 +388,9 @@ def during_minio_interruption(self, alter_function, kwargs):
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        if alter_function != alter_wrappers.drop_table:
-            alter_function(table_name=source_table, **kwargs)
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        if example.alter_function != alter_wrappers.drop_table:
+            example.alter_function(table_name=source_table, **example.kwargs)
 
     with And("I start MinIO"):
         steps.start_minio()
@@ -333,16 +408,16 @@ def during_minio_interruption(self, alter_function, kwargs):
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def stress(self, alter_function, kwargs):
+def stress(self, example):
     """Test a high volume of alters in parallel with exports."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = create_source_table(
-            alter_function=alter_function, number_of_parts=10, number_of_partitions=10
+            alter_function=example.alter_function, number_of_parts=10, number_of_partitions=10
         )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
@@ -357,7 +432,7 @@ def stress(self, alter_function, kwargs):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with When(
-        f"I export parts to the S3 table in parallel with {alter_function.__name__}"
+        f"I export parts to the S3 table in parallel with {example.alter_function.__name__}"
     ):
         with Pool(10) as executor:
             for _ in range(100):
@@ -368,8 +443,8 @@ def stress(self, alter_function, kwargs):
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
                 )
-                Step(test=alter_function, parallel=True, executor=executor)(
-                    table_name=source_table, **kwargs
+                Step(test=example.alter_function, parallel=True, executor=executor)(
+                    table_name=source_table, **example.kwargs
                 )
             join()
 
