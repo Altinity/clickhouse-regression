@@ -11,14 +11,15 @@ from helpers.alter import delete, update
 
 class MutationExample:
     """Wrapper class to control how example names appear in coverage reports."""
+
     def __init__(self, mutation_function, kwargs, name):
         self.mutation_function = mutation_function
         self.kwargs = kwargs
         self.name = name
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
         return self.name
 
