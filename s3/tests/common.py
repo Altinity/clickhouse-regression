@@ -1939,9 +1939,10 @@ def insert_from_s3_function(
     if cluster_name is None:
         query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
     else:
-        column_names = [col.split()[0] for col in columns.split(',')]
-        columns_list = ', '.join(column_names)
-        query = f"INSERT INTO {table_name} SELECT {columns_list} FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        # column_names = [col.split()[0] for col in columns.split(',')]
+        # columns_list = ', '.join(column_names)
+        # query = f"INSERT INTO {table_name} SELECT {columns_list} FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
     if compression:
         query += f", compression_method='{compression}'"
