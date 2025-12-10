@@ -11,14 +11,15 @@ from s3.tests.export_part import alter_wrappers
 
 class AlterExample:
     """Wrapper class to control how example names appear in coverage reports."""
+
     def __init__(self, alter_function, kwargs, name):
         self.alter_function = alter_function
         self.kwargs = kwargs
         self.name = name
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
         return self.name
 
@@ -417,7 +418,9 @@ def stress(self, example):
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = create_source_table(
-            alter_function=example.alter_function, number_of_parts=10, number_of_partitions=10
+            alter_function=example.alter_function,
+            number_of_parts=10,
+            number_of_partitions=10,
         )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
