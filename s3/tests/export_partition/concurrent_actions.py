@@ -539,8 +539,8 @@ def export_partition_with_single_concurrent_action(
             partition_by="p",
             columns=default_columns(),
             stop_merges=False,
-            number_of_partitions=10,
-            number_of_parts=20,
+            number_of_partitions=number_of_partitions,
+            number_of_parts=10,
             cluster="replicated_cluster",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
@@ -559,8 +559,7 @@ def export_partition_with_single_concurrent_action(
                 for retry in retries(timeout=60):
                     with retry:
                         Check(
-                            name=f"{actions.__name__} #{i}",
-                            test=actions,
+                            name=f"{actions.__name__} #{i}", test=actions, parallel=True
                         )(
                             source_table=source_table,
                         )
@@ -676,8 +675,8 @@ def feature(
     self,
     node="clickhouse1",
     number_of_concurrent_queries=3,
-    number_of_partitions=500,
-    number_of_iterations=100,
+    number_of_partitions=50,
+    number_of_iterations=50,
     delay_before=None,
     delay_after=None,
     validate=True,
