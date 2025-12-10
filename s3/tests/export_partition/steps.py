@@ -470,6 +470,8 @@ def get_export_partition_zookeeper_events(self, node=None):
     if node is None:
         node = self.context.node
 
+    # FIXME: Need to aggregate all events from all nodes in the cluster
+
     output = node.query(
         "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
         exitcode=0,
