@@ -1939,13 +1939,16 @@ def insert_from_s3_function(
     if cluster_name is None:
         query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
     else:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
-        # column_names = [col.split()[0] for col in columns.split(',')]
-        # columns_list = ', '.join(column_names)
-        # query = f"INSERT INTO {table_name} SELECT {columns_list} FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        if check_clickhouse_version("<24.0")(self):
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster({cluster_name}, '{uri}{filename}', '{self.context.access_key_id}','{self.context.secret_access_key}', 'CSVWithNames', '{columns}'"
+        else:
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
     if compression:
-        query += f", compression_method='{compression}'"
+        if check_clickhouse_version("<24.0")(self):
+            query += f", '{compression}'"
+        else:
+            query += f", compression_method='{compression}'"
 
     query += ")"
 
