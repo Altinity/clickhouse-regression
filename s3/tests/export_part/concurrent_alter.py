@@ -229,16 +229,13 @@ def before_export(self, example):
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
-            columns=steps.get_column_info(
-                node=self.context.node, table_name=source_table
-            ),
+            columns=steps.get_column_info(table_name=source_table),
         )
 
     with And("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -276,14 +273,11 @@ def after_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I read data on the S3 table"):
         steps.wait_for_all_exports_to_complete(table_name=source_table)
-        initial_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        initial_destination_data = select_all_ordered(table_name=s3_table_name)
 
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
@@ -296,9 +290,7 @@ def after_export(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        final_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        final_destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_destination_data == final_destination_data, error()
 
 
@@ -320,9 +312,7 @@ def during_export(self, example):
         )
 
     with And("I read data on the source table"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
@@ -331,7 +321,6 @@ def during_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I start merges"):
@@ -345,9 +334,7 @@ def during_export(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
@@ -372,9 +359,7 @@ def during_minio_interruption(self, example):
         )
 
     with And("I get initial source data"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I stop MinIO"):
         steps.kill_minio()
@@ -383,7 +368,6 @@ def during_minio_interruption(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I start merges"):
@@ -401,9 +385,7 @@ def during_minio_interruption(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
@@ -442,7 +424,6 @@ def stress(self, example):
                 Step(test=steps.export_parts, parallel=True, executor=executor)(
                     source_table=source_table,
                     destination_table=s3_table_name,
-                    node=self.context.node,
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
                 )

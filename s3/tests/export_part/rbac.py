@@ -32,7 +32,6 @@ def alter_insert_privilege(self):
             results_1 = export_parts(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
                 settings=[("user", user_name)],
                 exitcode=1,
             )
@@ -48,7 +47,6 @@ def alter_insert_privilege(self):
             results_2 = export_parts(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
                 settings=[("user", user_name)],
                 exitcode=1,
             )
@@ -66,7 +64,6 @@ def alter_insert_privilege(self):
             export_parts(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
                 settings=[("user", user_name)],
             )
 

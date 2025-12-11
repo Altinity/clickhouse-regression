@@ -31,7 +31,6 @@ def invalid_part_name(self):
         results = export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             parts=[invalid_part_name],
             exitcode=1,
         )
@@ -62,7 +61,6 @@ def same_table(self):
         results = export_parts(
             source_table=source_table,
             destination_table=source_table,
-            node=self.context.node,
             exitcode=1,
         )
 
@@ -103,7 +101,6 @@ def local_table(self):
         results = export_parts(
             source_table=source_table,
             destination_table=destination_table,
-            node=self.context.node,
             exitcode=1,
         )
 
@@ -135,7 +132,6 @@ def disable_export_setting(self):
         results = export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             exitcode=1,
             inline_settings=[("allow_experimental_export_merge_tree_part", 0)],
         )
@@ -165,7 +161,6 @@ def different_partition_key(self):
         results = export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             exitcode=1,
         )
 
@@ -191,7 +186,7 @@ def part_corruption(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get all parts before corruption"):
-        all_parts = get_parts(table_name=source_table, node=self.context.node)
+        all_parts = get_parts(table_name=source_table)
         corrupted_part = get_random_part(table_name=source_table)
         non_corrupted_parts = [p for p in all_parts if p != corrupted_part]
 
@@ -204,7 +199,6 @@ def part_corruption(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             parts=[corrupted_part],
             exitcode=1,
         )
@@ -213,7 +207,6 @@ def part_corruption(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             parts=non_corrupted_parts,
         )
 
@@ -221,12 +214,8 @@ def part_corruption(self):
         wait_for_all_exports_to_complete()
         flush_log(table_name="system.part_log")
 
-        successful_exports = get_part_log(
-            node=self.context.node, table_name=source_table
-        )
-        failed_exports = get_failed_part_log(
-            node=self.context.node, table_name=source_table
-        )
+        successful_exports = get_part_log(table_name=source_table)
+        failed_exports = get_failed_part_log(table_name=source_table)
 
         assert corrupted_part not in successful_exports, error()
         assert corrupted_part in failed_exports, error()
@@ -281,7 +270,6 @@ def removed_part_or_partition(self, removal_function, target_type):
         results = export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             parts=[part_to_export],
             exitcode=1,
         )
