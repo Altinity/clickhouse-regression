@@ -116,7 +116,6 @@ def basic_table(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -147,7 +146,6 @@ def empty_table(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I read data from both tables"):
@@ -185,7 +183,6 @@ def no_partition_by(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -210,7 +207,6 @@ def wide_and_compact_parts(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -243,7 +239,6 @@ def large_part(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination (hash)"):
@@ -281,7 +276,6 @@ def schema_to_compliant(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):

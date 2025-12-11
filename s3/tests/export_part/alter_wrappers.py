@@ -180,7 +180,7 @@ def alter_table_attach_partition_from(
             partition_by="p",
             stop_merges=True,
             populate=False,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
         partition_name = create_new_partition(table_name=path_to_backup)
@@ -209,7 +209,7 @@ def alter_table_move_partition_to_table(
             partition_by="p",
             stop_merges=True,
             populate=False,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
 
@@ -356,7 +356,7 @@ def alter_table_replace_partition(
             partition_by="p",
             stop_merges=True,
             number_of_partitions=1,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
 
@@ -388,7 +388,7 @@ def alter_table_fetch_partition(
             partition_by="p",
             populate=False,
             stop_merges=True,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
         partition_name = create_new_partition(table_name=path_to_backup)
