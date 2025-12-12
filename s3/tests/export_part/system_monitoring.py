@@ -24,21 +24,20 @@ def system_events_and_part_log(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I read the initial logged export events"):
-        initial_events = get_export_events(node=self.context.node)
+        initial_events = get_export_events()
 
     with When("I export parts to the S3 table"):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I wait for all exports to complete"):
         wait_for_all_exports_to_complete(table_name=source_table)
 
     with And("I read the final logged export events and part log"):
-        final_events = get_export_events(node=self.context.node)
-        part_log = get_part_log(node=self.context.node)
+        final_events = get_export_events()
+        part_log = get_part_log()
 
     with Then("I check that the number of part exports is correct"):
         assert (
@@ -46,7 +45,7 @@ def system_events_and_part_log(self):
         ), error()
 
     with And("I check that the part log contains the correct parts"):
-        parts = get_parts(table_name=source_table, node=self.context.node)
+        parts = get_parts(table_name=source_table)
         for part in parts:
             assert part in part_log, error()
 
@@ -79,18 +78,16 @@ def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I read the initial export events"):
-        initial_events = get_export_events(node=self.context.node)
+        initial_events = get_export_events()
 
     with When("I try to export the parts twice"):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
             settings=[
                 ("export_merge_tree_part_file_already_exists_policy", duplicate_policy)
             ],
@@ -103,7 +100,7 @@ def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
         )
 
     with And("Check logs for correct number of duplicate and failed exports"):
-        final_events = get_export_events(node=self.context.node)
+        final_events = get_export_events()
         assert (
             final_events["PartsExportDuplicated"]
             - initial_events["PartsExportDuplicated"]
@@ -142,12 +139,11 @@ def system_exports_and_metrics(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("I check that system.exports and system.metrics contain some parts"):
-        exports = get_system_exports(node=self.context.node)
-        assert get_num_active_exports(node=self.context.node) > 0, error()
+        exports = get_system_exports()
+        assert get_num_active_exports() > 0, error()
         assert len(exports) > 0, error()
         assert [source_table, s3_table_name] in exports, error()
 
@@ -155,8 +151,8 @@ def system_exports_and_metrics(self):
         "I verify that system.exports and system.metrics are empty after exports complete"
     ):
         wait_for_all_exports_to_complete()
-        assert len(get_system_exports(node=self.context.node)) == 0, error()
-        assert get_num_active_exports(node=self.context.node) == 0, error()
+        assert len(get_system_exports()) == 0, error()
+        assert get_num_active_exports() == 0, error()
 
 
 @TestOutline(Scenario)
@@ -199,13 +195,12 @@ def background_move_pool_size(self, background_move_pool_size):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("I check that the number of threads used for exporting parts is correct"):
         for attempt in retries(timeout=10, delay=1):
             with attempt:
-                exports = get_system_exports(node=self.context.node)
+                exports = get_system_exports()
                 assert len(exports) == background_move_pool_size, error()
 
 
@@ -230,7 +225,6 @@ def max_bandwidth(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I record the average duration of the exports"):
@@ -263,7 +257,6 @@ def max_bandwidth(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I record the duration of the export"):

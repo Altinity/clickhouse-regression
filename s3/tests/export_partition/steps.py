@@ -73,6 +73,7 @@ def default_columns(simple=True, partition_key_type="UInt8"):
         {"name": "Time", "type": "DateTime"},
         {"name": "Value", "type": "Float64"},
         {"name": "Timestamp", "type": "Int64"},
+        {"name": "extra", "type": "Int64"},
     ]
 
     if simple:
@@ -395,7 +396,11 @@ def export_partitions(
                         wait_for_export_to_complete(
                             partition_id=partition, source_table=source_table, node=node
                         )
-                        get_export_partition_zookeeper_events(node=node)
+                        note(
+                            get_export_partition_zookeeper_events(
+                                node=node, cluster="replicated_cluster"
+                            )
+                        )
     return output
 
 
@@ -464,19 +469,56 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_export_partition_zookeeper_events(self, node=None):
-    """Get the export partition ZooKeeper/Keeper profile events from the system.events table of a given node."""
+def get_export_partition_zookeeper_events(self, node=None, cluster=None):
+    """Get the export partition ZooKeeper/Keeper profile events from the system.events table, aggregated across all nodes in the cluster."""
 
-    if node is None:
-        node = self.context.node
+    if cluster is not None:
+        node_names = get_cluster_nodes(cluster=cluster)
+    elif node is not None:
+        node_names = None
+    else:
+        node_names = ["clickhouse1"]
 
-    output = node.query(
-        "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
-        exitcode=0,
-        steps=True,
-    ).output
+    aggregated_events = {}
 
-    return output
+    if node_names is None:
+        if node is None:
+            node = self.context.node
+        output = node.query(
+            "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
+            exitcode=0,
+            steps=True,
+        ).output
+
+        for line in output.strip().splitlines():
+            if line.strip():
+                event = json.loads(line)
+                event_name = event["name"]
+                event_value = int(event["value"])
+                aggregated_events[event_name] = event_value
+    else:
+        for node_name in node_names:
+            cluster_node = self.context.cluster.node(node_name)
+            output = cluster_node.query(
+                "SELECT name, value FROM system.events WHERE name LIKE '%%ExportPartitionZooKeeper%%' FORMAT JSONEachRow",
+                exitcode=0,
+                steps=True,
+            ).output
+
+            for line in output.strip().splitlines():
+                if line.strip():
+                    event = json.loads(line)
+                    event_name = event["name"]
+                    event_value = int(event["value"])
+                    aggregated_events[event_name] = (
+                        aggregated_events.get(event_name, 0) + event_value
+                    )
+
+    output_lines = []
+    for event_name, event_value in sorted(aggregated_events.items()):
+        output_lines.append(json.dumps({"name": event_name, "value": str(event_value)}))
+
+    return "\n".join(output_lines)
 
 
 @TestStep(Then)

@@ -1935,16 +1935,20 @@ def insert_from_s3_function(
     """Import data from a file in s3 to a table."""
     uri = uri or self.context.uri
     node = current().context.node
+    use_old_syntax = check_clickhouse_version("<24.0")(self) and cluster_name is not None
 
     if cluster_name is None:
         query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        compression_param = f", compression_method='{compression}'" if compression else ""
     else:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        if use_old_syntax:
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster({cluster_name}, '{uri}{filename}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'CSVWithNames', '{columns}'"
+            compression_param = f", '{compression}'" if compression else ""
+        else:
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+            compression_param = f", compression_method='{compression}'" if compression else ""
 
-    if compression:
-        query += f", compression_method='{compression}'"
-
-    query += ")"
+    query += compression_param + ")"
 
     if fmt:
         query += f" FORMAT {fmt}"

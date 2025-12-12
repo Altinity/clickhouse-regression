@@ -11,14 +11,15 @@ from helpers.alter import delete, update
 
 class MutationExample:
     """Wrapper class to control how example names appear in coverage reports."""
+
     def __init__(self, mutation_function, kwargs, name):
         self.mutation_function = mutation_function
         self.kwargs = kwargs
         self.name = name
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
         return self.name
 
@@ -57,18 +58,13 @@ def insert_parts(self):
         Step(test=export_parts, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
         join()
 
     with Then("Destination data should be a subset of source data"):
-        wait_for_all_exports_to_complete(node=self.context.node)
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        wait_for_all_exports_to_complete()
+        source_data = select_all_ordered(table_name=source_table)
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert set(source_data) >= set(destination_data), error()
 
     with And("Inserts should have completed successfully"):
@@ -89,20 +85,16 @@ def multiple_sources_same_destination(self, num_tables):
         source_data = []
         destination_data = []
         for i in range(num_tables):
-            data = select_all_ordered(
-                table_name=source_tables[i], node=self.context.node
-            )
+            data = select_all_ordered(table_name=source_tables[i])
             source_data.extend(data)
-            data = select_all_ordered(
-                table_name=destination_tables[i], node=self.context.node
-            )
+            data = select_all_ordered(table_name=destination_tables[i])
             destination_data.extend(data)
 
     with Then("All data should be present in the S3 table"):
         assert set(source_data) == set(destination_data), error()
 
     with And("Exports should have run concurrently"):
-        verify_export_concurrency(node=self.context.node, source_tables=source_tables)
+        verify_export_concurrency(source_tables=source_tables)
 
 
 @TestScenario
@@ -126,9 +118,7 @@ def select_parts(self):
         )
 
     with And("I select data from the source table before exporting parts"):
-        before_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        before_export_data = select_all_ordered(table_name=source_table)
 
     with When("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
@@ -137,22 +127,15 @@ def select_parts(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I select data from the source table during exporting parts"):
-        during_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        during_export_data = select_all_ordered(table_name=source_table)
 
     with And("I select data from the source and destination after exporting parts"):
         wait_for_all_exports_to_complete()
-        after_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        after_export_data = select_all_ordered(table_name=source_table)
+        destination_data = select_all_ordered(table_name=s3_table_name)
 
     with Then("Check data is consistent before, during, and after exports"):
         assert before_export_data == during_export_data, error()
@@ -196,7 +179,6 @@ def optimize_parts(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I optimize partition 2 during export"):
@@ -293,7 +275,6 @@ def stress_select(self, select_action):
                 Step(test=export_parts, parallel=True, executor=executor)(
                     source_table=source_table,
                     destination_table=s3_table_name,
-                    node=self.context.node,
                     parts=[get_random_part(table_name=source_table)],
                     exitcode=1,
                 )
@@ -340,7 +321,6 @@ def inserts_and_selects_not_blocked(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I run inserts and selects on the source table"):
@@ -389,7 +369,6 @@ def inserts_and_optimize(self):
             Step(test=export_parts, parallel=True, executor=executor)(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
             )
             Step(
                 test=create_partitions_with_random_uint64,
@@ -442,7 +421,6 @@ def kill_export(self):
             Step(test=export_parts, parallel=True)(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
                 parts=[get_random_part(table_name=source_table)],
                 settings=[("query_id", query_id)],
                 exitcode=1,
@@ -510,7 +488,6 @@ def after_delete_rows(self, delete_method, delete_condition, description):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -575,7 +552,6 @@ def during_pending_mutation(self, example):
             Step(test=export_parts, parallel=True, executor=executor)(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
             )
             join()
 
