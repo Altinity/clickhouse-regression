@@ -664,6 +664,7 @@ def create_table_as_select(
     order_by="tuple()",
     columns="*",
     node=None,
+    partition_by=None,
 ):
     """Create a table using `AS SELECT` clause."""
     if node is None:
@@ -672,17 +673,22 @@ def create_table_as_select(
     if table_name is None:
         table_name = f"table_{getuid()}"
 
+    query = f"""
+        CREATE TABLE {table_name} 
+        ENGINE = {engine} 
+        """
+
+    if partition_by is not None:
+        query += f" PARTITION BY {partition_by}"
+
+    if order_by is not None:
+        query += f" ORDER BY {order_by}"
+
+    query += f" AS SELECT {columns} FROM {as_select_from}"
+
     try:
         with By(f"creating table {table_name}"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name} 
-                ENGINE = {engine} 
-                ORDER BY {order_by}
-                AS SELECT {columns} 
-                FROM {as_select_from}
-                """
-            )
+            node.query(query)
             yield table_name
 
     finally:
