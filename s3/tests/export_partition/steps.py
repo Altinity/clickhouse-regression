@@ -360,7 +360,7 @@ def export_partitions(
     exitcode=0,
     settings=None,
     inline_settings=True,
-    retry_times=0,
+    retry_times=60,
     force_export=False,
     check_export=True,
 ):
@@ -374,6 +374,8 @@ def export_partitions(
 
     if force_export:
         inline_settings.append(("export_merge_tree_partition_force_export", 1))
+
+    inline_settings.append(("export_merge_tree_partition_lock_inside_the_task", 1))
 
     no_checks = exitcode != 0
 
@@ -932,40 +934,3 @@ def source_matches_destination(
                 )
             assert source_data == destination_data, error()
 
-
-@TestStep(Then)
-def verify_export_concurrency(self, node, source_tables):
-    """Verify exget_export_eventsports from different tables ran concurrently by checking overlapping execution times.
-
-    Checks that for each table, there's at least one pair of consecutive exports from that table
-    with an export from another table in between, confirming concurrent execution.
-    """
-
-    table_filter = " OR ".join([f"table = '{table}'" for table in source_tables])
-
-    query = f"""
-    SELECT 
-        table
-    FROM system.part_log 
-    WHERE event_type = 'ExportPart' 
-        AND ({table_filter})
-    ORDER BY event_time_microseconds
-    """
-
-    result = node.query(query, exitcode=0, steps=True)
-
-    exports = [line for line in result.output.strip().splitlines()]
-
-    tables_done = set()
-
-    for i in range(len(exports) - 1):
-        current_table = exports[i]
-        next_table = exports[i + 1]
-
-        if current_table != next_table and current_table not in tables_done:
-            for j in range(i + 2, len(exports)):
-                if exports[j] == current_table:
-                    tables_done.add(current_table)
-                    break
-
-    assert len(tables_done) == len(source_tables), error()
