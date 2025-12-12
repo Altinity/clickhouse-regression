@@ -11,14 +11,15 @@ from s3.tests.export_part import alter_wrappers
 
 class AlterExample:
     """Wrapper class to control how example names appear in coverage reports."""
+
     def __init__(self, alter_function, kwargs, name):
         self.alter_function = alter_function
         self.kwargs = kwargs
         self.name = name
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
         return self.name
 
@@ -228,16 +229,13 @@ def before_export(self, example):
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
-            columns=steps.get_column_info(
-                node=self.context.node, table_name=source_table
-            ),
+            columns=steps.get_column_info(table_name=source_table),
         )
 
     with And("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Check source matches destination"):
@@ -275,14 +273,11 @@ def after_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I read data on the S3 table"):
         steps.wait_for_all_exports_to_complete(table_name=source_table)
-        initial_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        initial_destination_data = select_all_ordered(table_name=s3_table_name)
 
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
@@ -295,9 +290,7 @@ def after_export(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        final_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        final_destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_destination_data == final_destination_data, error()
 
 
@@ -319,9 +312,7 @@ def during_export(self, example):
         )
 
     with And("I read data on the source table"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
@@ -330,7 +321,6 @@ def during_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I start merges"):
@@ -344,9 +334,7 @@ def during_export(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
@@ -371,9 +359,7 @@ def during_minio_interruption(self, example):
         )
 
     with And("I get initial source data"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I stop MinIO"):
         steps.kill_minio()
@@ -382,7 +368,6 @@ def during_minio_interruption(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I start merges"):
@@ -400,9 +385,7 @@ def during_minio_interruption(self, example):
             source_table=source_table,
             destination_table=s3_table_name,
         )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
@@ -417,7 +400,9 @@ def stress(self, example):
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = create_source_table(
-            alter_function=example.alter_function, number_of_parts=10, number_of_partitions=10
+            alter_function=example.alter_function,
+            number_of_parts=10,
+            number_of_partitions=10,
         )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
@@ -439,7 +424,6 @@ def stress(self, example):
                 Step(test=steps.export_parts, parallel=True, executor=executor)(
                     source_table=source_table,
                     destination_table=s3_table_name,
-                    node=self.context.node,
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
                 )

@@ -509,11 +509,14 @@ def partition_s3Cluster(self):
                 with Then(f"I check the data in the {partition_id} partition"):
                     for attempt in retries(timeout=30, delay=5):
                         with attempt:
+                            if check_clickhouse_version("<24.0")(self):
+                                s3_cluster_query = f"s3Cluster('{cluster_name}', '{uri}_partition_export_{partition_id}.csv', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'CSV', 'a String')"
+                            else:
+                                s3_cluster_query = f"s3Cluster('{cluster_name}', s3_credentials, url='{uri}_partition_export_{partition_id}.csv', format='CSV', structure='a String')"
                             output = (
                                 self.context.cluster.node("clickhouse1")
                                 .query(
-                                    f"""SELECT * FROM
-                                s3Cluster('{cluster_name}', s3_credentials, url='{uri}_partition_export_{partition_id}.csv', format='CSV', structure='a String') FORMAT TabSeparated"""
+                                    f"SELECT * FROM {s3_cluster_query} FORMAT TabSeparated"
                                 )
                                 .output
                             )

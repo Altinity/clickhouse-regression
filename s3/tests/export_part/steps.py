@@ -474,12 +474,15 @@ def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
 
 
 @TestStep(When)
-def get_column_info(self, node, table_name):
+def get_column_info(self, table_name, node=None):
     """Get column information in the same structure as default_columns.
 
     Returns a list of dictionaries with 'name' and 'type' keys.
     Example: [{"name": "p", "type": "UInt8"}, {"name": "i", "type": "UInt64"}]
     """
+    if node is None:
+        node = self.context.node
+
     r = node.query(
         f"""
         SELECT name, type
@@ -500,8 +503,10 @@ def get_column_info(self, node, table_name):
 
 
 @TestStep(When)
-def get_parts(self, table_name, node):
+def get_parts(self, table_name, node=None):
     """Get all parts for a table on a given node."""
+    if node is None:
+        node = self.context.node
 
     query = f"SELECT name FROM system.parts WHERE table = '{table_name}' AND active = 1"
 
@@ -519,13 +524,15 @@ def export_parts(
     self,
     source_table,
     destination_table,
-    node,
+    node=None,
     parts=None,
     exitcode=0,
     settings=None,
     inline_settings=True,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
+    if node is None:
+        node = self.context.node
 
     if parts is None:
         parts = get_parts(table_name=source_table, node=node)
@@ -552,8 +559,10 @@ def export_parts(
 
 
 @TestStep(When)
-def get_export_events(self, node):
+def get_export_events(self, node=None):
     """Get the export data from the system.events table of a given node."""
+    if node is None:
+        node = self.context.node
 
     output = node.query(
         "SELECT name, value FROM system.events WHERE name LIKE '%%Export%%' FORMAT JSONEachRow",
@@ -579,8 +588,10 @@ def get_export_events(self, node):
 
 
 @TestStep(When)
-def get_part_log(self, node, table_name=None, event_type="ExportPart"):
+def get_part_log(self, table_name=None, event_type="ExportPart", node=None):
     """Get the part log from the system.part_log table of a given node."""
+    if node is None:
+        node = self.context.node
 
     if table_name is None:
         query = f"SELECT part_name FROM system.part_log WHERE event_type = '{event_type}' and read_rows > 0 ORDER BY part_name"
@@ -597,8 +608,10 @@ def get_part_log(self, node, table_name=None, event_type="ExportPart"):
 
 
 @TestStep(When)
-def get_failed_part_log(self, node, table_name=None):
+def get_failed_part_log(self, table_name=None, node=None):
     """Get failed export operations from the system.part_log table of a given node."""
+    if node is None:
+        node = self.context.node
 
     if table_name is None:
         query = "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart' AND error != 0 ORDER BY part_name"
@@ -734,7 +747,6 @@ def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_par
             Step(test=export_parts, parallel=True)(
                 source_table=source_tables[i],
                 destination_table=destination_tables[i],
-                node=self.context.node,
             )
         join()
 
@@ -831,18 +843,20 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
         with attempt:
             wait_for_all_exports_to_complete(node=node, table_name=source_table)
             flush_log(node=node, table_name="system.part_log")
-            part_log = get_part_log(node=node, table_name=source_table)
+            part_log = get_part_log(table_name=source_table, node=node)
             destination_parts = get_s3_parts(table_name=destination_table)
             assert part_log == destination_parts, error()
 
 
 @TestStep(Then)
-def verify_export_concurrency(self, node, source_tables):
+def verify_export_concurrency(self, source_tables, node=None):
     """Verify exports from different tables ran concurrently by checking overlapping execution times.
 
     Checks that for each table, there's at least one pair of consecutive exports from that table
     with an export from another table in between, confirming concurrent execution.
     """
+    if node is None:
+        node = self.context.node
 
     table_filter = " OR ".join([f"table = '{table}'" for table in source_tables])
 

@@ -33,7 +33,6 @@ def packet_delay(self, delay_ms):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -68,7 +67,6 @@ def packet_loss(self, percent_loss):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -107,7 +105,6 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -144,7 +141,6 @@ def packet_corruption(self, percent_corrupt):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -181,7 +177,6 @@ def packet_duplication(self, percent_duplicated):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -220,7 +215,6 @@ def packet_reordering(self, delay_ms, percent_reordered):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -255,7 +249,6 @@ def packet_rate_limit(self, rate_mbit):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -384,7 +377,7 @@ def clickhouse_interruption(self, strategy, signal, safe):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get parts before the interruption"):
-        parts = get_parts(table_name=source_table, node=self.context.node)
+        parts = get_parts(table_name=source_table)
 
     with And("I slow the network to make export take longer"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)

@@ -31,7 +31,6 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Source and destination tables should match"):
@@ -95,14 +94,12 @@ def configured_volume(self, volume):
     with And("I populate the source table with parts"):
         create_partitions_with_random_uint64(
             table_name=source_table,
-            node=self.context.node,
         )
 
     with When("I export parts to the S3 table"):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with Then("Source and destination tables should match"):
