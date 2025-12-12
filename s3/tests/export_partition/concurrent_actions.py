@@ -95,9 +95,6 @@ def drop_partition(self, table_name, partitions=None, node=None):
     if partitions is None:
         partitions = get_partitions(table_name=table_name, node=node)
 
-    # Use partition IDs that don't exist to avoid conflicts with EXPORT PARTITION
-    # DROP PARTITION doesn't throw error on non-existent partitions
-    # Use high partition IDs that are outside the existing range
     non_existent_partitions = [str(1000 + i) for i in range(len(partitions))]
     for partition_id in non_existent_partitions:
         alter_table_drop_partition(table_name=table_name, partition_name=partition_id)
