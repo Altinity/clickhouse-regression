@@ -1,16 +1,11 @@
 import random
-import time
 
-from testflows.core import *
-from testflows.asserts import error
-
-from alter.stress.tests.tc_netem import network_packet_rate_limit
-from s3.tests.export_partition.steps import *
+from helpers.alter import *
 from helpers.common import getuid
 from helpers.create import *
 from helpers.queries import *
-from helpers.alter import *
 from s3.requirements.export_partition import *
+from s3.tests.export_partition.steps import *
 
 
 def get_n_random_items(lst, n):
