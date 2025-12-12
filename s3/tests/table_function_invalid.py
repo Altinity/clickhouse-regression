@@ -79,10 +79,15 @@ def empty_path(self):
         """When I export the data to S3 using the table function with
                 empty path parameter it should fail"""
     ):
+        if check_clickhouse_version("<23")(self):
+            message = "DB::Exception: Storage requires url"
+        else:
+            message = "DB::Exception: Host is empty in S3 URI"
+
         insert_to_s3_function_invalid(
             table_name=name,
             path="",
-            message="DB::Exception: Host is empty in S3 URI",
+            message=message,
             exitcode=36,
         )
 
@@ -240,12 +245,19 @@ def invalid_format(self, invalid_format):
         """When I export the data to S3 using the table function with
                 invalid format parameter it should fail"""
     ):
+        if check_clickhouse_version("<23")(self) and invalid_format == "":
+            message = "DB::Exception: Storage requires format"
+            exitcode = 36
+        else:
+            message = "DB::Exception: Unknown format"
+            exitcode = 73
+
         insert_to_s3_function_invalid(
             table_name=name,
             path=f"{uri}invalid.csv",
             file_format=invalid_format,
-            message="DB::Exception: Unknown format",
-            exitcode=73,
+            message=message,
+            exitcode=exitcode,
         )
 
 
