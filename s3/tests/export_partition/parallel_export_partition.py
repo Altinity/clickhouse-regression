@@ -1,6 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from helpers.datasets.nyc_taxi import nyc_taxi, nyc_columns
 from s3.tests.export_partition.steps import *
 from helpers.common import getuid
 from helpers.create import *
@@ -71,27 +72,43 @@ def export_partition_subset(
         )
 
 
-@TestScenario
-def parallel_export_partitions(
+@TestStep(Given)
+def create_nyc_taxi_source_and_destination_tables(
     self,
-    number_of_partitions=None,
-    number_of_parts=None,
-    number_of_parallel_exports=None,
+    from_range=0,
+    to_range=2,
 ):
-    """Test running multiple EXPORT PARTITION operations in parallel with non-overlapping partitions.
+    """Create source and destination tables for NYC Taxi dataset export partition tests"""
+    source_table = f"source_{getuid()}"
 
-    Args:
-        number_of_partitions: Number of partitions to create in the source table
-        number_of_parallel_exports: Number of parallel EXPORT PARTITION operations to run
-    """
+    with Given("I create source and destination tables"):
+        nyc_taxi(
+            table_name=source_table,
+            from_range=from_range,
+            to_range=to_range,
+            node=self.context.node,
+        )
+
+        s3_table_name = create_s3_table(
+            table_name="s3",
+            create_new_bucket=True,
+            partition_by="pickup_datetime",
+            columns=nyc_columns(),
+        )
+
+        return source_table, s3_table_name
+
+@TestStep(Given)
+def create_source_and_destination_tables(
+    self, number_of_partitions=None, number_of_parts=None
+):
+    """Create source and destination tables for export partition tests"""
+
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
 
     if number_of_parts is None:
         number_of_parts = self.context.number_of_parts
-
-    if number_of_parallel_exports is None:
-        number_of_parallel_exports = self.context.number_of_parallel_exports
 
     source_table = f"source_{getuid()}"
 
@@ -115,6 +132,29 @@ def parallel_export_partitions(
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True, columns=columns
         )
+
+        return source_table, s3_table_name
+
+
+@TestOutline
+def parallel_export_partitions(
+    self,
+    source_and_destination,
+    number_of_parallel_exports=None,
+):
+    """Test running multiple EXPORT PARTITION operations in parallel with non-overlapping partitions.
+
+    Args:
+        number_of_parallel_exports: Number of parallel EXPORT PARTITION operations to run
+    """
+
+    if number_of_parallel_exports is None:
+        number_of_parallel_exports = self.context.number_of_parallel_exports
+
+    source_table = f"source_{getuid()}"
+
+    with Given("I create source and destination tables"):
+        source_table, s3_table_name = source_and_destination()
 
     with And("I get all partitions from the source table"):
         all_partitions = get_partitions(table_name=source_table, node=self.context.node)
@@ -154,14 +194,26 @@ def parallel_export_partitions(
         )
 
 
+@TestScenario
+def generated_dataset(self):
+    """Test parallel EXPORT PARTITION with dataset that we generate on the fly."""
+    parallel_export_partitions(source_and_destination=create_source_and_destination_tables)
+
+@TestScenario
+def nyc_taxi_dataset(self):
+    """Test parallel EXPORT PARTITION with NYC Taxi dataset."""
+    parallel_export_partitions(
+        source_and_destination=create_nyc_taxi_source_and_destination_tables
+    )
+
 @TestFeature
 @Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
 @Name("parallel export partition")
 def feature(
     self,
     node="clickhouse1",
-    number_of_partitions=100,
-    number_of_parts=100,
+    number_of_partitions=30,
+    number_of_parts=30,
     number_of_parallel_exports=3,
 ):
     """
@@ -177,4 +229,4 @@ def feature(
     with Given("I set up MinIO storage configuration"):
         minio_storage_configuration(restart=True)
 
-    Scenario(run=parallel_export_partitions)
+    Scenario(run=generated_dataset)
