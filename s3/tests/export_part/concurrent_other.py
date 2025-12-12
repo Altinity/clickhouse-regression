@@ -540,9 +540,7 @@ def during_pending_mutation(self, example):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with When("I apply mutation (blocked) and export parts"):
-        example.mutation_function(
-            table_name=source_table, **example.kwargs
-        )
+        example.mutation_function(table_name=source_table, **example.kwargs)
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,

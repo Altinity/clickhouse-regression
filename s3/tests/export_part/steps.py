@@ -802,7 +802,9 @@ def source_matches_destination_hash(self, source_table, destination_table, node=
 
 
 @TestStep(Then)
-def source_does_not_match_destination_hash(self, source_table, destination_table, node=None):
+def source_does_not_match_destination_hash(
+    self, source_table, destination_table, node=None
+):
     """Check that source and destination table hashes do not match."""
     if node is None:
         node = self.context.node
