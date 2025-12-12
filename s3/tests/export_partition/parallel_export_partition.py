@@ -98,6 +98,7 @@ def create_nyc_taxi_source_and_destination_tables(
 
         return source_table, s3_table_name
 
+
 @TestStep(Given)
 def create_source_and_destination_tables(
     self, number_of_partitions=None, number_of_parts=None
@@ -197,7 +198,10 @@ def parallel_export_partitions(
 @TestScenario
 def generated_dataset(self):
     """Test parallel EXPORT PARTITION with dataset that we generate on the fly."""
-    parallel_export_partitions(source_and_destination=create_source_and_destination_tables)
+    parallel_export_partitions(
+        source_and_destination=create_source_and_destination_tables
+    )
+
 
 @TestScenario
 def nyc_taxi_dataset(self):
@@ -205,6 +209,7 @@ def nyc_taxi_dataset(self):
     parallel_export_partitions(
         source_and_destination=create_nyc_taxi_source_and_destination_tables
     )
+
 
 @TestFeature
 @Requirements(RQ_ClickHouse_ExportPartition_Concurrency("1.0"))
