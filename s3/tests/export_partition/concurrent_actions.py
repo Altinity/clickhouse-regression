@@ -469,7 +469,7 @@ def freeze_partition_on_source_with_name(self, source_table):
     freeze_source_partition_with_name(source_table=source_table)
 
 
-@TestStep(When)
+@TestCheck
 def concurrent_export_with_multiple_actions(
     self,
     actions,
@@ -488,6 +488,7 @@ def concurrent_export_with_multiple_actions(
         number_of_iterations = self.context.number_of_iterations
 
     source_table = f"source_{getuid()}"
+    table_for_actions = f"source_actions_{getuid()}"
     with Given("I create source and destination tables"):
         columns_with_extras = [
             {"name": "p", "type": "UInt16"},
@@ -511,28 +512,33 @@ def concurrent_export_with_multiple_actions(
             table_name="s3", create_new_bucket=True, columns=columns_with_extras
         )
 
+    with And("I create another table to run actions on"):
+        partitioned_replicated_merge_tree_table(
+            table_name=table_for_actions,
+            partition_by="p",
+            columns=columns_with_extras,
+            stop_merges=False,
+            number_of_partitions=number_of_partitions,
+            number_of_parts=10,
+            query_settings=f"storage_policy = 'tiered_storage'",
+            cluster="replicated_cluster",
+        )
+
     with And(
         "running the export partition number of times and each time run number of other actions in parallel"
     ):
-
-        for i in range(number_of_iterations):
-            partition_to_export = random.randrange(1, number_of_partitions)
-            for retry in retries(timeout=60):
-                with retry:
-                    Check(test=export_partitions, parallel=True)(
-                        source_table=source_table,
-                        destination_table=s3_table_name,
-                        node=self.context.node,
-                    )
+        with Pool(2) as pool:
+            Check(test=export_partitions, parallel=True, executor=pool)(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
 
             for action in get_n_random_items(actions, number_of_concurrent_queries):
-                for retry in retries(timeout=60):
-                    with retry:
-                        Check(
-                            name=f"{action.__name__} #{i}",
-                            test=action,
-                        )(source_table=source_table)
-        join()
+                Check(name=f"{action.__name__}", test=action, executor=pool)(
+                    source_table=table_for_actions
+                )
+            join()
 
 
 @TestCheck
