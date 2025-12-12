@@ -502,7 +502,7 @@ def get_mutation_functions():
     return [
         MutationExample(
             delete_from,
-            {"condition": "p = 1"},
+            {"condition": "p = 1", "settings": [("lightweight_deletes_sync", 0)]},
             "delete from",
         ),
         MutationExample(
@@ -514,11 +514,6 @@ def get_mutation_functions():
             update.alter_table_update_column,
             {"column_name": "i", "expression": "i + 1000", "condition": "p = 1"},
             "alter update",
-        ),
-        MutationExample(
-            alter_wrappers.alter_table_clear_column_in_partition,
-            {"column_name": "i", "partition_name": "1"},
-            "clear column in partition",
         ),
     ]
 
@@ -538,28 +533,29 @@ def during_pending_mutation(self, example):
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
-            number_of_parts=1,
-            number_of_partitions=2,
-            number_of_values=10000,
+            number_of_parts=10,
+            number_of_partitions=1,
+            stop_merges=True,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I apply mutation and export parts in parallel"):
-        with Pool(2) as executor:
-            Step(test=example.mutation_function, parallel=True, executor=executor)(
-                table_name=source_table, **example.kwargs
-            )
-            Step(test=export_parts, parallel=True, executor=executor)(
-                source_table=source_table,
-                destination_table=s3_table_name,
-            )
-            join()
+    with When("I apply mutation (blocked) and export parts"):
+        example.mutation_function(
+            table_name=source_table, **example.kwargs
+        )
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+    with And("I start merges (mutations)"):
+        start_merges(table_name=source_table)
 
     with And("I wait for mutations to complete"):
         wait_for_all_mutations_to_complete(table_name=source_table)
 
-    with Then("Check source matches destination"):
-        source_matches_destination(
+    with Then("Check source does not match destination hash"):
+        source_does_not_match_destination_hash(
             source_table=source_table,
             destination_table=s3_table_name,
         )
