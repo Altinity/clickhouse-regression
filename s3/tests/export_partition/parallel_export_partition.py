@@ -72,26 +72,16 @@ def export_partition_subset(
 
 
 @TestScenario
-def parallel_export_partitions(
-    self,
-    number_of_partitions=None,
-    number_of_parts=None,
-    number_of_parallel_exports=None,
+def create_source_and_destination_tables(
+    self, number_of_partitions=None, number_of_parts=None
 ):
-    """Test running multiple EXPORT PARTITION operations in parallel with non-overlapping partitions.
+    """Create source and destination tables for export partition tests"""
 
-    Args:
-        number_of_partitions: Number of partitions to create in the source table
-        number_of_parallel_exports: Number of parallel EXPORT PARTITION operations to run
-    """
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
 
     if number_of_parts is None:
         number_of_parts = self.context.number_of_parts
-
-    if number_of_parallel_exports is None:
-        number_of_parallel_exports = self.context.number_of_parallel_exports
 
     source_table = f"source_{getuid()}"
 
@@ -114,6 +104,32 @@ def parallel_export_partitions(
         )
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True, columns=columns
+        )
+
+        return source_table, s3_table_name
+
+
+@TestScenario
+def parallel_export_partitions(
+    self,
+    number_of_parallel_exports=None,
+    number_of_partitions=None,
+    number_of_parts=None,
+):
+    """Test running multiple EXPORT PARTITION operations in parallel with non-overlapping partitions.
+
+    Args:
+        number_of_parallel_exports: Number of parallel EXPORT PARTITION operations to run
+    """
+
+    if number_of_parallel_exports is None:
+        number_of_parallel_exports = self.context.number_of_parallel_exports
+
+    source_table = f"source_{getuid()}"
+
+    with Given("I create source and destination tables"):
+        source_table, s3_table_name = create_source_and_destination_tables(
+            number_of_partitions=number_of_partitions, number_of_parts=number_of_parts
         )
 
     with And("I get all partitions from the source table"):
