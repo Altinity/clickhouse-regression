@@ -230,4 +230,3 @@ def feature(
         minio_storage_configuration(restart=True)
 
     Scenario(run=generated_dataset)
-    Scenario(run=nyc_taxi_dataset)
