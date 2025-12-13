@@ -1168,7 +1168,7 @@ jobs:
     secrets: inherit
 
   export_partition:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition' }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1188,7 +1188,7 @@ jobs:
     secrets: inherit
 
   export_part:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
