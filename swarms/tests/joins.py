@@ -235,6 +235,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
+            and join_clause != "PASTE JOIN"
         )
         or (
             left_table.table_type == "iceberg_table_function"
@@ -242,6 +243,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
+            and join_clause != "PASTE JOIN"
         )
         or (
             left_table.table_type == "s3_table_function"
@@ -249,6 +251,7 @@ def check_join(
             and object_storage_cluster_join_mode == "allow"
             and object_storage_cluster
             and join_clause in non_stable_join_clauses
+            and join_clause != "PASTE JOIN"
         )
         or (
             left_table.table_type == "icebergS3Cluster_table_function"
