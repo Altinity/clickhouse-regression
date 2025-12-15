@@ -2192,3 +2192,5 @@ workload = r"""'{"default":"default"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
 
+allow_materialized_view_with_bad_select = r"""'{"default":"1"}'"""
+
