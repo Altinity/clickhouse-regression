@@ -134,7 +134,7 @@ xfails = {
             Fail,
             "show_data_lake_catalogs_in_system_tables setting is not supported before 25.8 and on 25.4",
             lambda test: check_clickhouse_version("<25.8")(test)
-            or check_is_altinity_build()(test),
+            or check_is_altinity_build(),
         )
     ],
     "/iceberg/iceberg engine/glue catalog/feature/show tables queries/*": [
