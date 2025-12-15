@@ -1172,11 +1172,11 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
-      job_name: export_part
+      job_name: S3_minio_export_tests
       timeout_minutes: 360
-      storage_path: /export_part
+      storage_path: /minio
       regression_args: '--storage minio'
-      artifact_name: export-part-artefacts
+      artifact_name: S3-minio-export-tests-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
