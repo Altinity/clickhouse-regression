@@ -15,6 +15,7 @@ from helpers.common import (
     check_clickhouse_version,
     check_if_not_antalya_build,
     check_is_altinity_build,
+    check_if_antalya_build,
 )
 
 
@@ -142,6 +143,14 @@ xfails = {
             Fail,
             "/iceberg/iceberg engine/glue catalog/feature/show tables queries",
             check_clickhouse_version("<25.10"),
+        )
+    ],
+    "/iceberg/iceberg table engine/feature/iceberg writes minmax/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/91363",
+            lambda test: (check_if_not_antalya_build(test) and check_clickhouse_version("<26.1")(test))
+            or (check_if_antalya_build(test) and check_clickhouse_version("<=25.8.9")(test)),
         )
     ],
 }
