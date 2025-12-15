@@ -791,7 +791,7 @@ def source_matches_destination(
 
 @TestStep(Then)
 def source_matches_destination_hash(self, source_table, destination_table, node=None):
-    """Check that source and destination table hash matches."""
+    """Check that source and destination table hashes match."""
     if node is None:
         node = self.context.node
 
@@ -799,6 +799,20 @@ def source_matches_destination_hash(self, source_table, destination_table, node=
         table_name1=source_table, table_name2=destination_table, node=node
     )
     assert match, error(msg)
+
+
+@TestStep(Then)
+def source_does_not_match_destination_hash(
+    self, source_table, destination_table, node=None
+):
+    """Check that source and destination table hashes do not match."""
+    if node is None:
+        node = self.context.node
+
+    match, _ = table_hashes_match(
+        table_name1=source_table, table_name2=destination_table, node=node
+    )
+    assert not match, error()
 
 
 @TestStep(Then)

@@ -933,4 +933,3 @@ def source_matches_destination(
                     identifier=partition,
                 )
             assert source_data == destination_data, error()
-
