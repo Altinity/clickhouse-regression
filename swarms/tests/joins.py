@@ -255,6 +255,7 @@ def check_join(
             and right_table.table_type == "merge_tree_table"
             and object_storage_cluster_join_mode == "allow"
             and join_clause in non_stable_join_clauses
+            and join_clause != "PASTE JOIN"
         )
         or (
             left_table.table_type == "s3Cluster_table_function"
