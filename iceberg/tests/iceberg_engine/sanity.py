@@ -833,39 +833,39 @@ def show_databases_queries(self, minio_root_user, minio_root_password, node=None
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for DataLakeCatalog database engine in ClickHouse."""
-    # Scenario(test=sanity)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=sort_order)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=recreate_table)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=multiple_tables)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=recreate_table_and_database)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=rename_database)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=rename_table_from_iceberg_database)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=use_database)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=array_join)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=show_data_lake_catalogs_in_system_tables)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=show_tables_queries)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
-    # Scenario(test=show_databases_queries)(
-    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    # )
+    Scenario(test=sanity)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=sort_order)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=recreate_table)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=multiple_tables)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=recreate_table_and_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=rename_table_from_iceberg_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=use_database)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=array_join)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_data_lake_catalogs_in_system_tables)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_tables_queries)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=show_databases_queries)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
