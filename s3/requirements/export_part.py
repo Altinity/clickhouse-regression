@@ -532,13 +532,13 @@ RQ_ClickHouse_ExportPart_Concurrency_PendingMutations = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL apply pending mutations on the fly during export operations by:\n"
-        "* Capturing a snapshot of pending mutations when the export task executes (not when queued)\n"
-        "* Applying pending mutations during the export read operation, ensuring exported data reflects the mutation state\n"
-        "* Supporting all mutation types that can be applied on the fly: ALTER DELETE, ALTER UPDATE, and lightweight DELETE masks\n"
-        "* Maintaining data consistency where exported data reflects the source table state after pending mutations are applied\n"
+        "[ClickHouse] SHALL ignore pending mutations during export operations by:\n"
         "\n"
-        "For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL exclude the rows that would be deleted by the mutation, even if the mutation has not yet physically removed those rows from disk.\n"
+        "* Capturing a snapshot of the part at the time of export execution\n"
+        "* Exporting the part data as it exists at the time of execution, without applying pending mutations on the fly\n"
+        "* Maintaining data consistency where exported data reflects the source table state at the moment the export reads the part\n"
+        "\n"
+        "For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL reflect the part state at the time the export reads it. Pending mutations are not applied during the export operation - the export takes a snapshot of the part as it currently exists.\n"
         "\n"
     ),
     link=None,
@@ -1265,13 +1265,13 @@ version: 1.0
 ### RQ.ClickHouse.ExportPart.Concurrency.PendingMutations
 version: 1.0
 
-[ClickHouse] SHALL apply pending mutations on the fly during export operations by:
-* Capturing a snapshot of pending mutations when the export task executes (not when queued)
-* Applying pending mutations during the export read operation, ensuring exported data reflects the mutation state
-* Supporting all mutation types that can be applied on the fly: ALTER DELETE, ALTER UPDATE, and lightweight DELETE masks
-* Maintaining data consistency where exported data reflects the source table state after pending mutations are applied
+[ClickHouse] SHALL ignore pending mutations during export operations by:
 
-For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL exclude the rows that would be deleted by the mutation, even if the mutation has not yet physically removed those rows from disk.
+* Capturing a snapshot of the part at the time of export execution
+* Exporting the part data as it exists at the time of execution, without applying pending mutations on the fly
+* Maintaining data consistency where exported data reflects the source table state at the moment the export reads the part
+
+For example, if an `ALTER TABLE ... DELETE WHERE ...` mutation is pending when an export starts, the exported data SHALL reflect the part state at the time the export reads it. Pending mutations are not applied during the export operation - the export takes a snapshot of the part as it currently exists.
 
 ## Cluster and Node Support
 

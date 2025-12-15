@@ -203,6 +203,10 @@ on:
         description: "Whether to run Parquet Native V3 suites"
         type: boolean
         default: false
+      is_workflow_call:
+          description: "True when this workflow is executed via workflow_call"
+          type: boolean
+          default: true
 
 jobs:
   aes_encryption:
@@ -408,7 +412,7 @@ jobs:
     secrets: inherit
 
   benchmark_aws:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     name: benchmark_aws
     with:
@@ -431,7 +435,7 @@ jobs:
     secrets: inherit
 
   benchmark_gcs:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     name: benchmark_gcs
     with:
@@ -890,7 +894,7 @@ jobs:
     secrets: inherit
 
   parquet_aws_s3:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
@@ -950,7 +954,7 @@ jobs:
     secrets: inherit
 
   parquet_aws_s3_native_v3:
-    if: ${{ inputs.parquet_native_v3 == true && (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ inputs.parquet_native_v3 == true && (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
@@ -1037,7 +1041,7 @@ jobs:
     secrets: inherit
 
   s3_aws_1:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1058,7 +1062,7 @@ jobs:
     secrets: inherit
 
   s3_aws_2:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1079,7 +1083,7 @@ jobs:
     secrets: inherit
 
   s3_azure_1:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1101,7 +1105,7 @@ jobs:
 
   
   s3_azure_2:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1122,7 +1126,7 @@ jobs:
     secrets: inherit
 
   s3_gcs_1:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1143,7 +1147,7 @@ jobs:
     secrets: inherit
 
   s3_gcs_2:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1164,7 +1168,7 @@ jobs:
     secrets: inherit
 
   export_partition:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition' }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1184,7 +1188,7 @@ jobs:
     secrets: inherit
 
   export_part:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
@@ -1382,7 +1386,7 @@ jobs:
     secrets: inherit
     
   tiered_storage_aws:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
@@ -1402,7 +1406,7 @@ jobs:
     secrets: inherit
 
   tiered_storage_gcs:
-    if: ${{ (github.event_name == 'workflow_dispatch' || inputs.run_s3_suites) && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: tiered_storage
