@@ -18,7 +18,9 @@ import iceberg.tests.steps.catalog as catalog_steps
 
 @TestScenario
 def write_min_max_pruning(self, minio_root_user, minio_root_password):
-    """Test that ClickHouse correctly writes data to Iceberg table with min/max pruning."""
+    """Test that ClickHouse correctly writes data to Iceberg table with min/max pruning.
+    Verifies PR: https://github.com/Altinity/ClickHouse/pull/1192
+    """
     namespace = f"iceberg_{getuid()}"
     table_name = f"name_{getuid()}"
 
