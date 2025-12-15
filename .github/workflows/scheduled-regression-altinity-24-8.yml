@@ -10,8 +10,8 @@ jobs:
   altinitystable-24-8-x86-with-analyzer-zookeeper:
     uses: ./.github/workflows/run-regression.yml
     with:
-      package: docker://altinity/clickhouse-server:24.8.14.10501.altinitystable
-      version: '24.8.14.10501'
+      package: docker://altinity/clickhouse-server:24.8.14.10544.altinitystable
+      version: '24.8.14.10544'
       extra_args: '--with-analyzer'
       arch: x86
     secrets: inherit
@@ -19,8 +19,8 @@ jobs:
   altinitystable-24-8-arm-with-analyzer-zookeeper:
     uses: ./.github/workflows/run-regression.yml
     with:
-      package: docker://altinity/clickhouse-server:24.8.14.10501.altinitystable
-      version: '24.8.14.10501'
+      package: docker://altinity/clickhouse-server:24.8.14.10544.altinitystable
+      version: '24.8.14.10544'
       extra_args: '--with-analyzer'
       arch: arm64
     secrets: inherit
