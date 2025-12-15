@@ -1167,42 +1167,22 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  export_partition:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition') }}
+  S3_minio_export_tests:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: s3
-      job_name: export_partition
+      job_name: S3_minio_export_tests
       timeout_minutes: 360
-      storage_path: /export_partition
+      storage_path: /minio
       regression_args: '--storage minio'
-      artifact_name: export-partition-artefacts
+      artifact_name: S3-minio-export-tests-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 3/export partition/*" --as-binary ${{ inputs.extra_args }}
-      artifacts: ${{ inputs.artifacts }}
-      runner_arch: ${{ inputs.arch }}
-    secrets: inherit
-
-  export_part:
-    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part') }}
-    uses: ./.github/workflows/reusable-suite.yml
-    with:
-      suite_name: s3
-      job_name: export_part
-      timeout_minutes: 360
-      storage_path: /export_part
-      regression_args: '--storage minio'
-      artifact_name: export-part-artefacts
-      ref: ${{ inputs.ref }}
-      package: ${{ inputs.package }}
-      version: ${{ inputs.version }}
-      flags: ${{ inputs.flags }}
-      output_format: ${{ inputs.output_format }}
-      extra_args: --only "/s3/minio/part 3/export part/*" --as-binary ${{ inputs.extra_args }}
+      extra_args: --only "/s3/minio/export tests/*" --as-binary ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
