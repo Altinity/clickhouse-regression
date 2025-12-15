@@ -265,7 +265,7 @@ jobs:
     with:
       suite_name: aggregate_functions
       part: 3
-      timeout_minutes: 180
+      timeout_minutes: 240
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
