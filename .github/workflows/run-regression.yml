@@ -1167,7 +1167,7 @@ jobs:
       runner_arch: ${{ inputs.arch }}
     secrets: inherit
 
-  S3_minio_export_tests:
+  s3_minio_export_tests:
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
     uses: ./.github/workflows/reusable-suite.yml
     with:
