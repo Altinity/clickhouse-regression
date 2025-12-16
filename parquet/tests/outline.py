@@ -29,7 +29,8 @@ def import_export(
 
     with Given("I save file structure"):
         import_column_structure = node.query(
-            f"DESCRIBE TABLE file('{import_file}', Parquet) FORMAT TabSeparated"
+            f"DESCRIBE TABLE file('{import_file}', Parquet) FORMAT TabSeparated",
+            settings=settings,
         )
 
     with And("I try to import the binary Parquet file into the table"):
@@ -41,6 +42,7 @@ def import_export(
             """,
             file_output="output" + getuid(),
             use_file=True,
+            settings=settings,
         )
 
     with And("I read the contents of the created table"):
@@ -91,7 +93,8 @@ def import_export(
                 skip("datetime column structure is different in Parquet and ClickHouse")
 
             export_columns_structure = node.query(
-                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated"
+                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated",
+                settings=settings,
             )
             assert (
                 import_column_structure.output.strip()
