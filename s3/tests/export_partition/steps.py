@@ -686,7 +686,7 @@ def check_killed_export_status(
             partition_id=partition_id,
         )
 
-        if populated is None:
+        if populated:
             assert int(exports.output.strip()) > 0, error()
         else:
             assert int(exports.output.strip()) == 0, error()
