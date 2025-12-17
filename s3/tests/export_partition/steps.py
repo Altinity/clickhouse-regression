@@ -398,11 +398,7 @@ def export_partitions(
                         wait_for_export_to_complete(
                             partition_id=partition, source_table=source_table, node=node
                         )
-                        note(
-                            get_export_partition_zookeeper_events(
-                                node=node, cluster="replicated_cluster"
-                            )
-                        )
+
     return output
 
 
