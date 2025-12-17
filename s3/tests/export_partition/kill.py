@@ -56,7 +56,7 @@ def kill_export_partition_command(self):
             check_export=False,
         )
 
-        time.sleep(0.5)
+        time.sleep(0.001)
 
         Step(test=kill_export_partition, parallel=True)(
             partition_id=partition_to_export,
