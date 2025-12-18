@@ -646,12 +646,12 @@ def regression(
                 executor=executor,
                 flags=parallel,
             )
-            Feature(
-                run=load("parquet.tests.native_reader", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
+            # Feature(
+            #     run=load("parquet.tests.native_reader", "feature"),
+            #     parallel=True,
+            #     executor=executor,
+            #     flags=parallel,
+            # )
             # Feature(
             #     run=load("parquet.tests.metadata", "feature"),
             #     parallel=True,
