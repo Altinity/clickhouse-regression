@@ -504,17 +504,12 @@ ffails = {
     "/:/:/export tests/export part/*": (
         Skip,
         "Export part introduced in Antalya build",
-        check_if_not_antalya_build,
-    ),
-    "/:/:/export tests/export part/*": (
-        Skip,
-        "Export part tests not supported for Antalya version <25.8",
-        check_clickhouse_version("<25.8"),
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
     "/:/:/export tests/export partition/*": (
         Skip,
         "Export partition introduced in Antalya build",
-        check_if_not_antalya_build,
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
 }
 
