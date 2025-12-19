@@ -415,6 +415,9 @@ def regression(
         "parquetify": ("parquetify",),
     }
 
+    native_v3_implemented = True
+    native_v2_implemented = True
+
     self.context.clickhouse_version = clickhouse_version
     self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
     self.context.json_files = "/json_files"
@@ -432,9 +435,11 @@ def regression(
         self.context.cluster = cluster
 
     if check_clickhouse_version("<25.8")(self) and reader_type == "native_v3":
+        native_v3_implemented = False
         skip("native_v3 reader is not implemented before ClickHouse version 25.8")
 
     if check_clickhouse_version("<24.6")(self) and reader_type == "native_v2":
+        native_v2_implemented = False
         skip("native_v2 reader is not implemented before ClickHouse version 24.6")
 
     if check_clickhouse_version("<23.3")(self):
@@ -460,15 +465,25 @@ def regression(
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
-            default_query_settings.append(("input_format_parquet_use_native_reader", 0))
-            default_query_settings.append(
-                ("input_format_parquet_use_native_reader_v3", 0)
-            )
+
+            if native_v2_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader", 0)
+                )
+            if native_v3_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader_v3", 0)
+                )
 
         if reader_type == "native_v2":
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
+            if native_v3_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader_v3", 0)
+                )
+
             default_query_settings.append(("input_format_parquet_use_native_reader", 1))
         if reader_type == "native_v3":
             default_query_settings = getsattr(
@@ -477,6 +492,10 @@ def regression(
             default_query_settings.append(
                 ("input_format_parquet_use_native_reader_v3", 1)
             )
+            if native_v2_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader", 0)
+                )
 
     with And("I have a Parquet table definition"):
         columns = (
