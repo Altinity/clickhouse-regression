@@ -406,8 +406,6 @@ def regression(
     clickhouse_version: str,
     node="clickhouse1",
     with_analyzer=False,
-    native_parquet_reader_v2=False,
-    native_parquet_reader_v3=False,
     reader_type="arrow",
     stress_bloom=False,
 ):
@@ -422,13 +420,6 @@ def regression(
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
 
-    if check_clickhouse_version("<23.3")(self):
-        pool = 2
-        parallel = NO_PARALLEL
-    else:
-        pool = 1
-        parallel = PARALLEL
-
     if stress is not None:
         self.context.stress = stress
 
@@ -439,6 +430,19 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    if check_clickhouse_version("<25.8")(self) and reader_type == "native_v3":
+        skip("native_v3 reader is not implemented before ClickHouse version 25.8")
+
+    if check_clickhouse_version("<24.6")(self) and reader_type == "native_v2":
+        skip("native_v2 reader is not implemented before ClickHouse version 24.6")
+
+    if check_clickhouse_version("<23.3")(self):
+        pool = 2
+        parallel = NO_PARALLEL
+    else:
+        pool = 1
+        parallel = PARALLEL
 
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
