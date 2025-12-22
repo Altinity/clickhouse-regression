@@ -542,159 +542,159 @@ def regression(
             assert datatype in datatypes, fail(
                 f"Common code did not provide {datatype}"
             )
-    with Feature(f"{reader_type}"):
-        with Pool(pool) as executor:
-            Feature(
-                run=load("parquet.tests.file", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.query", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.int_list_multiple_chunks", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.url", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.mysql", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.postgresql", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.remote", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.chunked_array", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.broken", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.encoding", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.compression", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.datatypes", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.complex_datatypes", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            # Feature(
-            #     run=load("parquet.tests.indexing", "feature"),
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=parallel,
-            # )
-            Feature(
-                run=load("parquet.tests.cache", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.glob", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.rowgroups", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.encrypted", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.fastparquet", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.read_and_write", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            Feature(
-                run=load("parquet.tests.columns", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            # Feature(
-            #     run=load("parquet.tests.native_reader", "feature"),
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=parallel,
-            # )
-            # Feature(
-            #     run=load("parquet.tests.metadata", "feature"),
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=parallel,
-            # )
-            # Feature(
-            #     run=load("parquet.tests.data_conversion", "feature"),
-            #     parallel=True,
-            #     executor=executor,
-            #     flags=parallel,
-            # )
-            Feature(
-                run=load("parquet.tests.multi_chunk_upload", "feature"),
-                parallel=True,
-                executor=executor,
-                flags=parallel,
-            )
-            join()
+
+    with Pool(pool) as executor:
+        Feature(
+            run=load("parquet.tests.file", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.query", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.int_list_multiple_chunks", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.url", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.mysql", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.postgresql", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.remote", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.chunked_array", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.broken", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.encoding", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.compression", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.datatypes", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.complex_datatypes", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        # Feature(
+        #     run=load("parquet.tests.indexing", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        Feature(
+            run=load("parquet.tests.cache", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.glob", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.rowgroups", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.encrypted", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.fastparquet", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.read_and_write", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        Feature(
+            run=load("parquet.tests.columns", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        # Feature(
+        #     run=load("parquet.tests.native_reader", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.metadata", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        # Feature(
+        #     run=load("parquet.tests.data_conversion", "feature"),
+        #     parallel=True,
+        #     executor=executor,
+        #     flags=parallel,
+        # )
+        Feature(
+            run=load("parquet.tests.multi_chunk_upload", "feature"),
+            parallel=True,
+            executor=executor,
+            flags=parallel,
+        )
+        join()
 
     storages = s3_args.pop("storages", None)
     if storages is None:
