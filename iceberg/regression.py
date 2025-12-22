@@ -15,6 +15,7 @@ from helpers.common import (
     check_clickhouse_version,
     check_if_not_antalya_build,
     check_is_altinity_build,
+    experimental_analyzer,
     check_if_antalya_build,
 )
 
@@ -145,12 +146,18 @@ xfails = {
             check_clickhouse_version("<25.10"),
         )
     ],
-    "/iceberg/iceberg table engine/feature/iceberg writes minmax/*": [
+    "/iceberg/iceberg table engine/feature/iceberg writes minmax pruning/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/91363",
-            lambda test: (check_if_not_antalya_build(test) and check_clickhouse_version("<26.1")(test))
-            or (check_if_antalya_build(test) and check_clickhouse_version("<=25.8.9")(test)),
+            lambda test: (
+                check_if_not_antalya_build(test)
+                and check_clickhouse_version("<26.1")(test)
+            )
+            or (
+                check_if_antalya_build(test)
+                and check_clickhouse_version("<=25.8.9")(test)
+            ),
         )
     ],
 }
@@ -196,6 +203,12 @@ ffails = {
         Skip,
         "setting used for test introduced in 25.8",
         check_clickhouse_version("<25.8"),
+    ),
+    "/iceberg/iceberg engine/rest catalog/iceberg iterator race condition/iceberg iterator race condition": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/92120",
+        lambda test: check_clickhouse_version(">=25.8.12")(test)
+        and check_if_not_antalya_build(test),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
@@ -259,6 +272,10 @@ def regression(
     self.context.node2 = self.context.cluster.node("clickhouse2")
     self.context.node3 = self.context.cluster.node("clickhouse3")
     self.context.nodes = [self.context.node, self.context.node2, self.context.node3]
+
+    with And("enable or disable experimental analyzer if needed"):
+        for node in self.context.nodes:
+            experimental_analyzer(node=node, with_analyzer=with_analyzer)
 
     Feature(
         test=load("iceberg.tests.iceberg_engine.feature", "feature"),
