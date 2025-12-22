@@ -146,7 +146,7 @@ xfails = {
             check_clickhouse_version("<25.10"),
         )
     ],
-    "/iceberg/iceberg table engine/feature/iceberg writes minmax pruning/*": [
+    "/iceberg/iceberg table engine/write min max pruning/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/91363",
