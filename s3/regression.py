@@ -501,20 +501,15 @@ ffails = {
         "doesn't work <22.8",
         check_clickhouse_version("<22.8"),
     ),
-    "/:/:/part 3/export part/*": (
+    "/:/:/export tests/export part/*": (
         Skip,
         "Export part introduced in Antalya build",
-        check_if_not_antalya_build,
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
-    "/:/:/part 3/export part/*": (
-        Skip,
-        "Export part tests not supported for Antalya version <25.8",
-        check_clickhouse_version("<25.8"),
-    ),
-    "/:/:/part 3/export partition/*": (
+    "/:/:/export tests/export partition/*": (
         Skip,
         "Export partition introduced in Antalya build",
-        check_if_not_antalya_build,
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
 }
 
@@ -621,6 +616,7 @@ def minio_regression(
         Feature(test=load("s3.tests.remote_s3_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
+    with Feature("export tests"):    
         Feature(test=load("s3.tests.export_part.feature", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )

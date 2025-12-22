@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 
 from helpers.common import (
     getuid,
@@ -14,6 +15,7 @@ from pyiceberg.table.sorting import SortOrder
 from pyiceberg.transforms import IdentityTransform
 
 import iceberg.tests.steps.catalog as catalog_steps
+import iceberg.tests.steps.iceberg_table_engine as iceberg_table_engine
 
 
 @TestScenario
@@ -56,3 +58,27 @@ def write_min_max_pruning(self, minio_root_user, minio_root_password):
             partition_spec=partition_spec,
             sort_order=SortOrder(),
         )
+
+    with And("create table with Iceberg engine"):
+        iceberg_table_engine.create_table_with_iceberg_engine(
+            table_name=table_name,
+            url="http://minio:9000/warehouse/data",
+            access_key_id=minio_root_user,
+            secret_access_key=minio_root_password,
+        )
+
+    with And("write data to table"):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (x, y) VALUES (1, 1), (1, 2)",
+            settings=[("allow_experimental_insert_into_iceberg", 1)],
+        )
+
+    with Then("check data in table"):
+        result1 = self.context.node.query(
+            f"SELECT * FROM {table_name} WHERE y = 1",
+        )
+        assert result1.output.strip() == "1\t1", error()
+        result2 = self.context.node.query(
+            f"SELECT * FROM {table_name} WHERE y = 2",
+        )
+        assert result2.output.strip() == "1\t2", error()

@@ -398,11 +398,7 @@ def export_partitions(
                         wait_for_export_to_complete(
                             partition_id=partition, source_table=source_table, node=node
                         )
-                        note(
-                            get_export_partition_zookeeper_events(
-                                node=node, cluster="replicated_cluster"
-                            )
-                        )
+
     return output
 
 
@@ -690,7 +686,7 @@ def check_killed_export_status(
             partition_id=partition_id,
         )
 
-        if populated is None:
+        if populated:
             assert int(exports.output.strip()) > 0, error()
         else:
             assert int(exports.output.strip()) == 0, error()
