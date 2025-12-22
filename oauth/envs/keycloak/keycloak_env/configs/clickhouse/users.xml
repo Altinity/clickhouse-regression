@@ -29,6 +29,12 @@
 
     <!-- Users and ACL. -->
     <users>
+        <jwt_user>
+            <jwt>
+            </jwt>
+            <profile>default</profile>
+            <quota>default</quota>
+        </jwt_user>
         <!-- If user name was not specified, 'default' user is used. -->
         <default>
             <!-- Password could be specified in plaintext or in SHA256 (in hex format).
