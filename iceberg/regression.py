@@ -204,11 +204,11 @@ ffails = {
         "setting used for test introduced in 25.8",
         check_clickhouse_version("<25.8"),
     ),
-    "/iceberg/iceberg engine/rest catalog/iceberg iterator race condition/iceberg iterator race condition": (
+    "/iceberg/iceberg engine/: catalog/iceberg iterator race condition/iceberg iterator race condition": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/92120",
-        lambda test: check_clickhouse_version(">=25.8.12")(test)
-        and check_if_not_antalya_build(test),
+        lambda test: check_clickhouse_version("<=25.8.12")(test)
+        or check_if_not_antalya_build(test),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
