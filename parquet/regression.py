@@ -21,6 +21,7 @@ from helpers.common import (
     experimental_analyzer,
     check_current_cpu,
     allow_higher_cpu_wait_ratio,
+    check_if_not_antalya_build,
 )
 from parquet.tests.common import start_minio, parquet_test_columns
 
@@ -29,16 +30,9 @@ def parquet_argparser(parser):
     argparser_s3(parser)
 
     parser.add_argument(
-        "--native-parquet-reader-v2",
-        action="store_true",
-        default=False,
-        help="Use native parquet reader v2.",
-    )
-    parser.add_argument(
-        "--native-parquet-reader-v3",
-        action="store_true",
-        default=False,
-        help="Use native parquet reader v3.",
+        "--reader-type",
+        default="arrow",
+        help="Reader type to use for parquet tests. Options: arrow, native_v2, native_v3",
     )
     parser.add_argument(
         "--stress-bloom",
@@ -49,133 +43,133 @@ def parquet_argparser(parser):
 
 
 xfails = {
-    "/parquet/bloom/native reader array bloom": [
+    "/parquet/:/bloom/native reader array bloom": [
         (Fail, "Array not supported by native reader yet")
     ],
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
-    "/parquet/encoding/dictionary/*": [
+    "/parquet/:/encoding/dictionary/*": [
         (Fail, "datetime different on export and import, that needs to be investigated")
     ],
-    "/parquet/encoding/plain/*": [
+    "/parquet/:/encoding/plain/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/complex/nestedstruct/*": [
+    "/parquet/:/complex/nestedstruct/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/complex/largestruct3/*": [
+    "/parquet/:/complex/largestruct3/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/compression/snappyplain/*": [
+    "/parquet/:/compression/snappyplain/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/float16": [
+    "/parquet/:/datatypes/float16": [
         (Fail, "ClickHouse does not import FLOAT16 properly")
     ],
-    "/parquet/datatypes/manydatatypes/*": [
+    "/parquet/:/datatypes/manydatatypes/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/timestamp?/*": [
+    "/parquet/:/datatypes/timestamp?/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/json/*": [
+    "/parquet/:/datatypes/json/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/arrowtimestamp/*": [
+    "/parquet/:/datatypes/arrowtimestamp/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/arrowtimestampms/*": [
+    "/parquet/:/datatypes/arrowtimestampms/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/stringtypes/*": [
+    "/parquet/:/datatypes/stringtypes/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/encoding/plainrlesnappy/*": [
+    "/parquet/:/encoding/plainrlesnappy/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/negativeint64/*": [
+    "/parquet/:/datatypes/negativeint64/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
-    "/parquet/datatypes/nameswithemoji/*": [
+    "/parquet/:/datatypes/nameswithemoji/*": [
         (
             Fail,
             "DB::Exception: Expected not empty name: While processing ``: While processing SELECT `önë`, ``, `🦆` FROM file",
         )
     ],
-    "/parquet/compression/snappyrle/*": [
+    "/parquet/:/compression/snappyrle/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. Probably error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
-    "/parquet/complex/largestruct/*": [
+    "/parquet/:/complex/largestruct/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. Probably error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
-    "/parquet/datatypes/decimalwithfilter2/*": [
+    "/parquet/:/datatypes/decimalwithfilter2/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
-    "/parquet/datatypes/sparkv2?/*": [
+    "/parquet/:/datatypes/sparkv2?/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
-    "/parquet/datatypes/h2oai/*": [
+    "/parquet/:/datatypes/h2oai/*": [
         (
             Fail,
             "Nullable(String) turns into LowCardinality(Nullable(String)) after import -> export process",
         )
     ],
-    "/parquet/complex/tuplewithdatetime/*": [
+    "/parquet/:/complex/tuplewithdatetime/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
-    "/parquet/encoding/deltabytearray?/*": [
+    "/parquet/:/encoding/deltabytearray?/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of DELTA_BYTE_ARRAY encoding",
         )
     ],
-    "/parquet/encoding/deltalengthbytearray/*": [
+    "/parquet/:/encoding/deltalengthbytearray/*": [
         (
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of DELTA_LENGTH_BYTE_ARRAY encoding",
         )
     ],
-    "/parquet/encoding/rleboolean/*": [
+    "/parquet/:/encoding/rleboolean/*": [
         (
             Fail,
             "Getting an error that encoding is not supported.",
         )
     ],
-    "/parquet/datatypes/large string map": [
+    "/parquet/:/datatypes/large string map": [
         (
             Fail,
             "Will fail until the, https://github.com/apache/arrow/pull/35825, gets merged.",
         )
     ],
-    "/parquet/rowgroups/*": [
+    "/parquet/:/rowgroups/*": [
         (
             Fail,
             "Needs Investigation. The issue seems to be from the tests side, not a bug.",
         )
     ],
-    "/parquet/postgresql/compression type/*/postgresql engine to parquet file to postgresql engine": [
+    "/parquet/:/postgresql/compression type/*/postgresql engine to parquet file to postgresql engine": [
         (
             Fail,
             "This fails because of the difference in snapshot values. We used to capture the datetime value `0` be "
@@ -183,19 +177,19 @@ xfails = {
             "repeated manually, we can not reproduce it",
         )
     ],
-    "/parquet/read and write/read and write parquet file/*": [
+    "/parquet/:/read and write/read and write parquet file/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/59330",
         )
     ],
-    "/parquet/column related errors/check error with 500 columns": [
+    "/parquet/:/column related errors/check error with 500 columns": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/63701",
         )
     ],
-    "/parquet/metadata/extra metadata": [
+    "/parquet/:/metadata/extra metadata": [
         (
             Fail,
             "Currently not supported",
@@ -207,186 +201,186 @@ xfails = {
 xflags = {}
 
 ffails = {
-    "/parquet/compression/brotli": (
+    "/parquet/:/compression/brotli": (
         Skip,
         "Not implemented before 23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/*/*/insert into function auto cast types/*": (
+    "/parquet/:/*/*/insert into function auto cast types/*": (
         Skip,
         "Datatype issues before 23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/*/*/select from function auto cast types/*": (
+    "/parquet/:/*/*/select from function auto cast types/*": (
         Skip,
         "Datatype issues before 23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/*/*/select from function manual cast types/*": (
+    "/parquet/:/*/*/select from function manual cast types/*": (
         Skip,
         "Datatype issues before 23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/aws s3/s3/*/function/select from function manual cast types/*": (
+    "/parquet/:/aws s3/s3/*/function/select from function manual cast types/*": (
         Skip,
         "Datatype issues before 23.3",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/broken/*": (
+    "/parquet/:/broken/*": (
         Skip,
         "Different error messages on 23.6 and above",
         check_clickhouse_version(">=23.6"),
     ),
-    "/parquet/encrypted/": (
+    "/parquet/:/encrypted/": (
         Skip,
         "Different error message on 23.8 and above",
         check_clickhouse_version(">=23.8"),
     ),
-    "/parquet/compression/*": (
+    "/parquet/:/compression/*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/boolean": (
+    "/parquet/:/datatypes/boolean": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/float16": (
+    "/parquet/:/datatypes/float16": (
         Skip,
         "Requires ClickHouse 24.11 or higher",
         check_clickhouse_version("<24.11"),
     ),
-    "/parquet/datatypes/columnwithnull*": (
+    "/parquet/:/datatypes/columnwithnull*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/date": (
+    "/parquet/:/datatypes/date": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/largedouble": (
+    "/parquet/:/datatypes/largedouble": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/maps": (
+    "/parquet/:/datatypes/maps": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/nullsinid": (
+    "/parquet/:/datatypes/nullsinid": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/pandasdecimal": (
+    "/parquet/:/datatypes/pandasdecimal": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/selectdatewithfilter": (
+    "/parquet/:/datatypes/selectdatewithfilter": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/singlenull": (
+    "/parquet/:/datatypes/singlenull": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/unsupportednull": (
+    "/parquet/:/datatypes/unsupportednull": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/complex/*": (
+    "/parquet/:/complex/*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/enum*": (
+    "/parquet/:/datatypes/enum*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/nameswithemoji": (
+    "/parquet/:/datatypes/nameswithemoji": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/nandouble": (
+    "/parquet/:/datatypes/nandouble": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/manydatatypes*": (
+    "/parquet/:/datatypes/manydatatypes*": (
         Skip,
         "Different on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/fixedstring": (
+    "/parquet/:/datatypes/fixedstring": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/supporteduuid": (
+    "/parquet/:/datatypes/supporteduuid": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/int32": (
+    "/parquet/:/datatypes/int32": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/struct": (
+    "/parquet/:/datatypes/struct": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/*/s3/compression type/*/engine/engine to file to engine/": (
+    "/parquet/:/*/s3/compression type/*/engine/engine to file to engine/": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/*/s3/compression type/*/function/insert into function/": (
+    "/parquet/:/*/s3/compression type/*/function/insert into function/": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/datatypes/string int list inconsistent offset multiple batches": (
+    "/parquet/:/datatypes/string int list inconsistent offset multiple batches": (
         Skip,
         "The fix not implemented yet",
         check_clickhouse_version("<23.13"),
     ),
-    "/parquet/aws s3/s3/compression type/=NONE /engine/insert into engine": (
+    "/parquet/:/aws s3/s3/compression type/=NONE /engine/insert into engine": (
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
-    "/parquet/glob/glob with multiple elements": (
+    "/parquet/:/glob/glob with multiple elements": (
         Skip,
         "Multi directory globs are not introduced for these versions",
         check_clickhouse_version("<23.8"),
     ),
-    "/parquet/*/s3/compression type/*/outline/engine/*": (
+    "/parquet/:/*/s3/compression type/*/outline/engine/*": (
         Skip,
         "Unsupported compression type",
     ),
-    "/parquet/fastparquet/*": (Skip, "Unsupported"),
-    "/parquet/bloom/": (
+    "/parquet/:/fastparquet/*": (Skip, "Unsupported"),
+    "/parquet/:/bloom/": (
         Skip,
         "Not implemented before 24.10.1",
         check_clickhouse_version("<24.10.1"),
     ),
-    "/parquet/multi chunk upload/": (
+    "/parquet/:/multi chunk upload/": (
         Skip,
         "Trigger manually when needed, need to move to separate suite.",
     ),
-    "/parquet/file/function/date as uint16*": (
+    "/parquet/:/file/function/date as uint16*": (
         Skip,
         "Not implemented before 25.3",
         check_clickhouse_version("<25.3"),
@@ -412,8 +406,7 @@ def regression(
     clickhouse_version: str,
     node="clickhouse1",
     with_analyzer=False,
-    native_parquet_reader_v2=False,
-    native_parquet_reader_v3=False,
+    reader_type="arrow",
     stress_bloom=False,
 ):
     """Parquet regression."""
@@ -422,17 +415,13 @@ def regression(
         "parquetify": ("parquetify",),
     }
 
+    native_v3_implemented = True
+    native_v2_implemented = True
+
     self.context.clickhouse_version = clickhouse_version
     self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
-
-    if check_clickhouse_version("<23.3")(self):
-        pool = 2
-        parallel = NO_PARALLEL
-    else:
-        pool = 1
-        parallel = PARALLEL
 
     if stress is not None:
         self.context.stress = stress
@@ -444,6 +433,21 @@ def regression(
             configs_dir=current_dir(),
         )
         self.context.cluster = cluster
+
+    if check_clickhouse_version("<25.8")(self) and reader_type == "native_v3":
+        native_v3_implemented = False
+        skip("native_v3 reader is not implemented before ClickHouse version 25.8")
+
+    if check_clickhouse_version("<24.6")(self) and reader_type == "native_v2":
+        native_v2_implemented = False
+        skip("native_v2 reader is not implemented before ClickHouse version 24.6")
+
+    if check_clickhouse_version("<23.3")(self):
+        pool = 2
+        parallel = NO_PARALLEL
+    else:
+        pool = 1
+        parallel = PARALLEL
 
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
@@ -457,18 +461,41 @@ def regression(
             )
 
     with And("I enable or disable the native parquet reader"):
-        if native_parquet_reader_v2:
+        if reader_type == "arrow":
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
+
+            if native_v2_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader", 0)
+                )
+            if native_v3_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader_v3", 0)
+                )
+
+        if reader_type == "native_v2":
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            if native_v3_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader_v3", 0)
+                )
+
             default_query_settings.append(("input_format_parquet_use_native_reader", 1))
-        if native_parquet_reader_v3:
+        if reader_type == "native_v3":
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
             default_query_settings.append(
                 ("input_format_parquet_use_native_reader_v3", 1)
             )
+            if native_v2_implemented:
+                default_query_settings.append(
+                    ("input_format_parquet_use_native_reader", 0)
+                )
 
     with And("I have a Parquet table definition"):
         columns = (
@@ -514,159 +541,159 @@ def regression(
             assert datatype in datatypes, fail(
                 f"Common code did not provide {datatype}"
             )
-
-    with Pool(pool) as executor:
-        Feature(
-            run=load("parquet.tests.file", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.query", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.int_list_multiple_chunks", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.url", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.mysql", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.postgresql", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.remote", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.chunked_array", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.broken", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.encoding", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.compression", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.datatypes", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.complex_datatypes", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        # Feature(
-        #     run=load("parquet.tests.indexing", "feature"),
-        #     parallel=True,
-        #     executor=executor,
-        #     flags=parallel,
-        # )
-        Feature(
-            run=load("parquet.tests.cache", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.glob", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.rowgroups", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.encrypted", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.fastparquet", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.read_and_write", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        Feature(
-            run=load("parquet.tests.columns", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        # Feature(
-        #     run=load("parquet.tests.native_reader", "feature"),
-        #     parallel=True,
-        #     executor=executor,
-        #     flags=parallel,
-        # )
-        # Feature(
-        #     run=load("parquet.tests.metadata", "feature"),
-        #     parallel=True,
-        #     executor=executor,
-        #     flags=parallel,
-        # )
-        # Feature(
-        #     run=load("parquet.tests.data_conversion", "feature"),
-        #     parallel=True,
-        #     executor=executor,
-        #     flags=parallel,
-        # )
-        Feature(
-            run=load("parquet.tests.multi_chunk_upload", "feature"),
-            parallel=True,
-            executor=executor,
-            flags=parallel,
-        )
-        join()
+    with Feature(f"{reader_type}"):
+        with Pool(pool) as executor:
+            Feature(
+                run=load("parquet.tests.file", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.query", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.int_list_multiple_chunks", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.url", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.mysql", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.postgresql", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.remote", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.chunked_array", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.broken", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.encoding", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.compression", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.datatypes", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.complex_datatypes", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            # Feature(
+            #     run=load("parquet.tests.indexing", "feature"),
+            #     parallel=True,
+            #     executor=executor,
+            #     flags=parallel,
+            # )
+            Feature(
+                run=load("parquet.tests.cache", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.glob", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.rowgroups", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.encrypted", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.fastparquet", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.read_and_write", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            Feature(
+                run=load("parquet.tests.columns", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            # Feature(
+            #     run=load("parquet.tests.native_reader", "feature"),
+            #     parallel=True,
+            #     executor=executor,
+            #     flags=parallel,
+            # )
+            # Feature(
+            #     run=load("parquet.tests.metadata", "feature"),
+            #     parallel=True,
+            #     executor=executor,
+            #     flags=parallel,
+            # )
+            # Feature(
+            #     run=load("parquet.tests.data_conversion", "feature"),
+            #     parallel=True,
+            #     executor=executor,
+            #     flags=parallel,
+            # )
+            Feature(
+                run=load("parquet.tests.multi_chunk_upload", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
+            join()
 
     storages = s3_args.pop("storages", None)
     if storages is None:
