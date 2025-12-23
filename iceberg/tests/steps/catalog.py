@@ -271,6 +271,7 @@ def create_iceberg_table_with_three_columns(
     location="s3://warehouse/data",
     with_data=False,
     number_of_rows=10,
+    table_properties={},
 ):
     """Define schema, partition spec, sort order and create iceberg table with three columns."""
     schema = Schema(
@@ -295,6 +296,7 @@ def create_iceberg_table_with_three_columns(
         location=location,
         partition_spec=partition_spec,
         sort_order=sort_order,
+        table_properties=table_properties,
     )
 
     if with_data:
