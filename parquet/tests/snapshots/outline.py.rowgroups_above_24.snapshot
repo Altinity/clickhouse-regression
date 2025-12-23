@@ -2,11 +2,3 @@ many_row_groups_2_structure = r"""'42\tNullable(Int32)'"""
 
 many_row_groups_structure = r"""'42\tNullable(Int32)'"""
 
-many_row_groups_structure = r"""'Code: 210. DB::NetException: Connection refused (localhost:9000). (NETWORK_ERROR)'"""
-
-many_row_groups_2_structure = r"""'Code: 210. DB::NetException: Connection refused (localhost:9000). (NETWORK_ERROR)'"""
-
-many_row_groups_structure = r"""'42\tNullable(Int32)'"""
-
-many_row_groups_2_structure = r"""'42\tNullable(Int32)'"""
-
