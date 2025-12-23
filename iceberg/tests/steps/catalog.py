@@ -69,6 +69,7 @@ def create_rest_catalog(
     s3_endpoint="http://localhost:9002",
     catalog_type=CATALOG_TYPE,
     auth_header="foo",
+    clean_up_minio_bucket=True,
 ):
     if name is None:
         name = f"catalog_{getuid()}"
@@ -93,12 +94,13 @@ def create_rest_catalog(
 
     finally:
         with Finally("drop catalog"):
-            clean_minio_bucket(
-                bucket_name="warehouse",
-                s3_endpoint=s3_endpoint,
-                s3_access_key_id=s3_access_key_id,
-                s3_secret_access_key=s3_secret_access_key,
-            )
+            if clean_up_minio_bucket:
+                clean_minio_bucket(
+                    bucket_name="warehouse",
+                    s3_endpoint=s3_endpoint,
+                    s3_access_key_id=s3_access_key_id,
+                    s3_secret_access_key=s3_secret_access_key,
+                )
 
 
 @TestStep(Given)
@@ -112,6 +114,7 @@ def create_glue_catalog(
     glue_access_key_id="test",
     glue_secret_access_key="test",
     s3_endpoint="http://localhost:9002",
+    clean_up_minio_bucket=True,
 ):
     if name is None:
         name = f"glue_catalog_{getuid()}"
@@ -133,12 +136,13 @@ def create_glue_catalog(
 
     finally:
         with Finally("drop catalog"):
-            clean_minio_bucket(
-                bucket_name="warehouse",
-                s3_endpoint=s3_endpoint,
-                s3_access_key_id=s3_access_key_id,
-                s3_secret_access_key=s3_secret_access_key,
-            )
+            if clean_up_minio_bucket:
+                clean_minio_bucket(
+                    bucket_name="warehouse",
+                    s3_endpoint=s3_endpoint,
+                    s3_access_key_id=s3_access_key_id,
+                    s3_secret_access_key=s3_secret_access_key,
+                )
 
 
 @TestStep(Given)
@@ -149,15 +153,6 @@ def create_catalog(self, **kwargs):
         return create_glue_catalog(**kwargs)
     else:
         raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
-
-
-# @TestStep(Given)
-# def create_aws_glue_catalog(self, warehouse, name=None):
-#     if name is None:
-#         name = f"glue_catalog_{getuid()}"
-
-#     catalog = GlueCatalog(name=name, warehouse=warehouse)
-#     yield catalog
 
 
 # @TestStep(Given)
@@ -240,6 +235,7 @@ def create_iceberg_table(
     sort_order=None,
     format_version="2",
     table_properties={},
+    drop_table=True,
 ):
     """Create iceberg table."""
     table_properties["format-version"] = format_version
@@ -257,9 +253,10 @@ def create_iceberg_table(
 
     finally:
         with Finally("drop table"):
-            drop_iceberg_table(
-                catalog=catalog, namespace=namespace, table_name=table_name
-            )
+            if drop_table:
+                drop_iceberg_table(
+                    catalog=catalog, namespace=namespace, table_name=table_name
+                )
 
 
 @TestStep(Given)
