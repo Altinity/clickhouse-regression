@@ -23,6 +23,8 @@ def run_long_query(
     message=None,
     delay_before_execution=None,
     expected_result=None,
+    max_threads=1,
+    lock_object_storage_task_distribution_ms=None,
 ):
     """Run a long select from an iceberg table."""
     if delay_before_execution:
@@ -35,7 +37,8 @@ def run_long_query(
             GROUP BY hostName()
             SETTINGS 
                 object_storage_cluster='{cluster_name}', 
-                max_threads=1
+                max_threads={max_threads}
+                {f", lock_object_storage_task_distribution_ms={lock_object_storage_task_distribution_ms}" if lock_object_storage_task_distribution_ms else ""}
         """,
         exitcode=exitcode,
         message=message,
@@ -325,9 +328,8 @@ def feature(self, minio_root_user, minio_root_password, node=None):
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
         )
-        clickhouse_iceberg_table_name = (
-            f"{database_name}.\\`{namespace}.{table_name}\\`"
-        )
+
+    clickhouse_iceberg_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
 
     Scenario(test=check_restart_swarm_node)(
         clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
