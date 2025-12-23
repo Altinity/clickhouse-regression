@@ -170,5 +170,3 @@ unsigned_structure_22_4 = r"""'a\tUInt8\t\t\t\t\t\nb\tUInt16\t\t\t\t\t\nc\tInt64
 
 unsigned_stats_structure_22_4 = r"""'utiny\tUInt8\t\t\t\t\t\nusmall\tUInt16\t\t\t\t\t\nuint\tInt64\t\t\t\t\t\nubig\tUInt64'"""
 
-int32_2_structure = r""""linkback_length\tNullable(Int64)\t\t\t\t\t\nagent_call_sid\tNullable(Int64)\t\t\t\t\t\nclient_sid\tNullable(Int64)\t\t\t\t\t\nagent_sid\tNullable(Int64)\t\t\t\t\t\ncall_date\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\ncall_type\tNullable(String)\t\t\t\t\t\ncall_sid\tNullable(Int64)\t\t\t\t\t\nskills\tNullable(String)\t\t\t\t\t\nresult\tNullable(Int64)\t\t\t\t\t\ncall_wait_duration\tNullable(Int64)\t\t\t\t\t\ntransfer_duration\tNullable(Int64)\t\t\t\t\t\nwrap_up_duration\tNullable(Int64)\t\t\t\t\t\ntalk_duration\tNullable(Int64)\t\t\t\t\t\nhold_duration\tNullable(Int64)\t\t\t\t\t\ncall_month_epoch\tNullable(Int64)\t\t\t\t\t\ncall_date_epoch\tNullable(Int64)\t\t\t\t\t\n_version\tNullable(Int32)""" + '"'
-
