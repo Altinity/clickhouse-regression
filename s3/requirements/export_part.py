@@ -690,6 +690,50 @@ RQ_ClickHouse_ExportPart_Settings_FileAlreadyExistsPolicy = Requirement(
     num="14.2",
 )
 
+RQ_ClickHouse_ExportPart_Settings_MaxBytesPerFile = Requirement(
+    name="RQ.ClickHouse.ExportPart.Settings.MaxBytesPerFile",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the `export_merge_tree_part_max_bytes_per_file` setting that controls the maximum size of individual files created during export operations. When a part export exceeds this size limit, [ClickHouse] SHALL automatically split the exported data into multiple files, each not exceeding the specified byte limit.\n"
+        "\n"
+        "[ClickHouse] SHALL:\n"
+        "* Split exported parts into multiple files when the export size exceeds `export_merge_tree_part_max_bytes_per_file`\n"
+        "* Name split files with numeric suffixes (e.g., `part_name.1.parquet`, `part_name.2.parquet`) to distinguish them\n"
+        "* Ensure all split files are readable by the destination S3 table engine\n"
+        "* Maintain data integrity across all split files, ensuring the sum of rows in all split files equals the total rows in the source part\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.3",
+)
+
+RQ_ClickHouse_ExportPart_Settings_MaxRowsPerFile = Requirement(
+    name="RQ.ClickHouse.ExportPart.Settings.MaxRowsPerFile",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the `export_merge_tree_part_max_rows_per_file` setting that controls the maximum number of rows in individual files created during export operations. When a part export exceeds this row limit, [ClickHouse] SHALL automatically split the exported data into multiple files, each containing no more than the specified number of rows.\n"
+        "\n"
+        "[ClickHouse] SHALL:\n"
+        "* Split exported parts into multiple files when the export row count exceeds `export_merge_tree_part_max_rows_per_file`\n"
+        "* Name split files with numeric suffixes (e.g., `part_name.1.parquet`, `part_name.2.parquet`) to distinguish them\n"
+        "* Ensure all split files are readable by the destination S3 table engine\n"
+        "* Maintain data integrity across all split files, ensuring the sum of rows in all split files equals the total rows in the source part\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.4",
+)
+
 RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
     name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
     version="1.0",
@@ -703,7 +747,7 @@ RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth = Requirement(
     ),
     link=None,
     level=2,
-    num="14.3",
+    num="14.5",
 )
 
 RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize = Requirement(
@@ -719,7 +763,7 @@ RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize = Requirement(
     ),
     link=None,
     level=2,
-    num="14.4",
+    num="14.6",
 )
 
 RQ_ClickHouse_ExportPart_Security = Requirement(
@@ -881,14 +925,22 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
             num="14.2",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
+            name="RQ.ClickHouse.ExportPart.Settings.MaxBytesPerFile",
             level=2,
             num="14.3",
         ),
         Heading(
+            name="RQ.ClickHouse.ExportPart.Settings.MaxRowsPerFile", level=2, num="14.4"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth",
+            level=2,
+            num="14.5",
+        ),
+        Heading(
             name="RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize",
             level=2,
-            num="14.4",
+            num="14.6",
         ),
         Heading(name="Export Operation Security", level=1, num="15"),
         Heading(name="RQ.ClickHouse.ExportPart.Security", level=2, num="15.1"),
@@ -927,6 +979,8 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_Metrics_Export,
         RQ_ClickHouse_ExportPart_Settings_AllowExperimental,
         RQ_ClickHouse_ExportPart_Settings_FileAlreadyExistsPolicy,
+        RQ_ClickHouse_ExportPart_Settings_MaxBytesPerFile,
+        RQ_ClickHouse_ExportPart_Settings_MaxRowsPerFile,
         RQ_ClickHouse_ExportPart_ServerSettings_MaxBandwidth,
         RQ_ClickHouse_ExportPart_ServerSettings_BackgroundMovePoolSize,
         RQ_ClickHouse_ExportPart_Security,
@@ -984,8 +1038,10 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
 * 14 [Settings and Configuration](#settings-and-configuration)
     * 14.1 [RQ.ClickHouse.ExportPart.Settings.AllowExperimental](#rqclickhouseexportpartsettingsallowexperimental)
     * 14.2 [RQ.ClickHouse.ExportPart.Settings.FileAlreadyExistsPolicy](#rqclickhouseexportpartsettingsfilealreadyexistspolicy)
-    * 14.3 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-    * 14.4 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
+    * 14.3 [RQ.ClickHouse.ExportPart.Settings.MaxBytesPerFile](#rqclickhouseexportpartsettingsmaxbytesperfile)
+    * 14.4 [RQ.ClickHouse.ExportPart.Settings.MaxRowsPerFile](#rqclickhouseexportpartsettingsmaxrowsperfile)
+    * 14.5 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+    * 14.6 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
 * 15 [Export Operation Security](#export-operation-security)
     * 15.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
     * 15.2 [RQ.ClickHouse.ExportPart.QueryCancellation](#rqclickhouseexportpartquerycancellation)
@@ -1349,6 +1405,28 @@ version: 1.0
 * `skip` (default) - Skip the export if file already exists, log as duplicate, treat as success
 * `error` - Fail the export if file already exists, log as duplicate and failure
 * `overwrite` - Overwrite existing file, proceed with export
+
+### RQ.ClickHouse.ExportPart.Settings.MaxBytesPerFile
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_max_bytes_per_file` setting that controls the maximum size of individual files created during export operations. When a part export exceeds this size limit, [ClickHouse] SHALL automatically split the exported data into multiple files, each not exceeding the specified byte limit.
+
+[ClickHouse] SHALL:
+* Split exported parts into multiple files when the export size exceeds `export_merge_tree_part_max_bytes_per_file`
+* Name split files with numeric suffixes (e.g., `part_name.1.parquet`, `part_name.2.parquet`) to distinguish them
+* Ensure all split files are readable by the destination S3 table engine
+* Maintain data integrity across all split files, ensuring the sum of rows in all split files equals the total rows in the source part
+
+### RQ.ClickHouse.ExportPart.Settings.MaxRowsPerFile
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_max_rows_per_file` setting that controls the maximum number of rows in individual files created during export operations. When a part export exceeds this row limit, [ClickHouse] SHALL automatically split the exported data into multiple files, each containing no more than the specified number of rows.
+
+[ClickHouse] SHALL:
+* Split exported parts into multiple files when the export row count exceeds `export_merge_tree_part_max_rows_per_file`
+* Name split files with numeric suffixes (e.g., `part_name.1.parquet`, `part_name.2.parquet`) to distinguish them
+* Ensure all split files are readable by the destination S3 table engine
+* Maintain data integrity across all split files, ensuring the sum of rows in all split files equals the total rows in the source part
 
 ### RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth
 version: 1.0
