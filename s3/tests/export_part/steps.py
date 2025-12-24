@@ -367,6 +367,24 @@ def flush_log(self, node=None, table_name=None):
 
 
 @TestStep(When)
+def count_s3_files(self, table_name, node=None):
+    """Count the number of distinct files in an S3 table."""
+    if node is None:
+        node = self.context.node
+
+    result = node.query(
+        f"""
+        SELECT count(DISTINCT _file) as file_count
+        FROM {table_name}
+        """,
+        exitcode=0,
+        steps=True,
+    ).output.strip()
+
+    return int(result)
+
+
+@TestStep(When)
 def get_s3_parts_per_partition(self, table_name, node=None):
     """Get the number of files (parts) per partition in an S3 table."""
     if node is None:
