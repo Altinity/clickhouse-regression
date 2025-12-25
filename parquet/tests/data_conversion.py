@@ -119,7 +119,7 @@ def data_conversion(
                     snapshot(
                         snapshot_value,
                         name=snapshot_name,
-                        # mode=snapshot.CHECK,
+                        mode=snapshot.UPDATE,
                     )
                 ), error()
 

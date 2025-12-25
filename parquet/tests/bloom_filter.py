@@ -428,7 +428,7 @@ def verify_rows_read(
         f"condition: {condition}",
         name=f"{snapshot_name}_{conversion}",
         id="bloom_filter",
-        mode=snapshot.CHECK,
+        mode=snapshot.UPDATE,
     )
 
 
