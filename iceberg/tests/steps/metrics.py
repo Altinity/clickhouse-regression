@@ -217,7 +217,9 @@ def get_read_rows(self, log_comment, node=None, format="TabSeparated"):
 
 
 @TestStep(Then)
-def get_S3ReadRequestsCount(self, log_comment, node=None, format="TabSeparated"):
+def get_S3ReadRequestsCount(
+    self, log_comment, node=None, format="TabSeparated", is_initial_query=False
+):
     """Get the number of S3 read requests."""
     if node is None:
         node = self.context.node
@@ -225,15 +227,54 @@ def get_S3ReadRequestsCount(self, log_comment, node=None, format="TabSeparated")
     with By("wait for metrics to be collected"):
         wait_for_metrics(log_comment, node)
 
-    result = node.query(
-        f"""
+    query = f"""
             SELECT ProfileEvents['S3ReadRequestsCount'] 
             FROM system.query_log 
             WHERE log_comment = '{log_comment}' 
             AND type = 'QueryFinish'
-            FORMAT {format}
         """
-    )
+
+    if is_initial_query is not None:
+        if is_initial_query:
+            query += f" AND is_initial_query= 1"
+        else:
+            query += f" AND is_initial_query = 0"
+
+    if format is not None:
+        query += f" FORMAT {format}"
+
+    result = node.query(query)
+    return result
+
+
+@TestStep(Then)
+def get_S3GetObject(
+    self, log_comment, node=None, format="TabSeparated", is_initial_query=False
+):
+    """Get the number of S3 get object requests."""
+    if node is None:
+        node = self.context.node
+
+    with By("wait for metrics to be collected"):
+        wait_for_metrics(log_comment, node)
+
+    query = f"""
+            SELECT ProfileEvents['S3GetObject'] 
+            FROM system.query_log 
+            WHERE log_comment = '{log_comment}' 
+            AND type = 'QueryFinish'
+        """
+
+    if is_initial_query is not None:
+        if is_initial_query:
+            query += f" AND is_initial_query= 1"
+        else:
+            query += f" AND is_initial_query = 0"
+
+    if format is not None:
+        query += f" FORMAT {format}"
+
+    result = node.query(query)
     return result
 
 
