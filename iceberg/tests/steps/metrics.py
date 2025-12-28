@@ -218,7 +218,7 @@ def get_read_rows(self, log_comment, node=None, format="TabSeparated"):
 
 @TestStep(Then)
 def get_S3ReadRequestsCount(
-    self, log_comment, node=None, format="TabSeparated", is_initial_query=False
+    self, log_comment, node=None, format="TabSeparated", is_initial_query=None
 ):
     """Get the number of S3 read requests."""
     if node is None:
