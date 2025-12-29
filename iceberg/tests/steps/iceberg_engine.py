@@ -451,10 +451,12 @@ def check_values_in_system_tables(self, table_name, database):
         total_rows = node.query(
             f"SELECT total_rows FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
-        assert total_rows == "10", error()
+        if check_clickhouse_version(">=25.5")(self):
+            assert total_rows == "10", error()
 
     with By("check that total bytes is correct"):
         total_bytes = node.query(
             f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
-        assert total_bytes == "12990", error()
+        if check_clickhouse_version(">=25.6")(self):
+            assert total_bytes == "12990", error()
