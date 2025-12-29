@@ -6,7 +6,7 @@ from helpers.common import (
     check_clickhouse_version,
     get_settings_value,
     compare_with_expected,
-    check_if_not_antalya_build,
+    check_if_antalya_build,
 )
 
 from decimal import Decimal
@@ -783,7 +783,7 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
         ).output
 
     with Then("compare results"):
-        if check_clickhouse_version(">=25.10")(self) and check_if_not_antalya_build():
+        if check_clickhouse_version(">=25.10")(self) or check_if_antalya_build():
             assert f"{namespace}.{table_name}" in result_with_setting, error()
             assert result_with_setting == result_without_setting, error()
         else:
