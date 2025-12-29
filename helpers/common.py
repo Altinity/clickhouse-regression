@@ -117,12 +117,12 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
-def check_if_antalya_build(test):
+def check_if_antalya_build(test=None):
     """True if build is Antalya build."""
     return "antalya" in current().context.full_clickhouse_version
 
 
-def check_if_not_antalya_build(test):
+def check_if_not_antalya_build(test=None):
     """True if build is not Antalya build."""
     return "antalya" not in current().context.full_clickhouse_version
 
@@ -228,7 +228,9 @@ def check_is_altinity_build(node=None):
     if node is None:
         node = current().context.node
 
-    res = node.command("grep -i -a altinity /usr/bin/clickhouse", no_checks=True)
+    res = node.command(
+        "grep -q -i -a altinity /usr/bin/clickhouse", no_checks=True, steps=False
+    )
     return res.exitcode == 0
 
 
