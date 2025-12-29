@@ -6,6 +6,7 @@ from helpers.common import (
     check_clickhouse_version,
     get_settings_value,
     compare_with_expected,
+    check_if_not_antalya_build,
 )
 
 from decimal import Decimal
@@ -693,7 +694,7 @@ def show_data_lake_catalogs_in_system_tables(
             catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
         )
 
-    with When("create database with Iceberg engine"):
+    with When("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -782,7 +783,12 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
         ).output
 
     with Then("compare results"):
-        assert result_with_setting == result_without_setting, error()
+        if check_clickhouse_version(">=25.10")(self) and check_if_not_antalya_build():
+            assert f"{namespace}.{table_name}" in result_with_setting, error()
+            assert result_with_setting == result_without_setting, error()
+        else:
+            assert f"{namespace}.{table_name}" in result_with_setting, error()
+            assert result_without_setting == "", error()
 
 
 @TestScenario
@@ -812,21 +818,26 @@ def show_databases_queries(self, minio_root_user, minio_root_password, node=None
             s3_secret_access_key=minio_root_password,
         )
 
-    with And(
+    with Then(
         "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is enabled"
     ):
         result_with_setting = node.query(
-            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW DATABASES"
+            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW DATABASES;"
         ).output
+
+    with And("assert that database is visible"):
+        assert f"{database_name}" in result_with_setting, error()
 
     with And(
         "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is disabled"
     ):
         result_without_setting = node.query(
-            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW DATABASES"
+            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW DATABASES;"
         ).output
 
-    with And("compare results"):
+    with And(
+        "compare results, assert that show data_lake_catalogs_in_system_tables setting does not affect SHOW DATABASES query"
+    ):
         assert result_with_setting == result_without_setting, error()
 
 
