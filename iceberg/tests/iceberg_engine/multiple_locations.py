@@ -8,12 +8,23 @@ from helpers.common import (
 import os
 import shutil
 import subprocess
+import time
+import uuid
 import pyarrow as pa
 import pyarrow.parquet as pq
 from pyiceberg.io.pyarrow import _pyarrow_to_schema_without_ids
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
+
+
+from pyiceberg.catalog import load_catalog
+from pyiceberg.schema import Schema
+from pyiceberg.types import (
+    NestedField,
+    LongType,
+    StringType,
+)
 
 
 @TestScenario
@@ -153,10 +164,82 @@ def local_file_path_issue(self, minio_root_user, minio_root_password):
         pause()
 
 
+@TestScenario
+def local_metadata_and_data(self, minio_root_user, minio_root_password):
+    """Test that ClickHouse correctly handles Iceberg tables with both metadata and data stored locally."""
+    import os
+
+    note(f"Warehouse path: {os.path.abspath('./warehouse')}")
+    pause()
+    catalog = load_catalog(
+        "local_rest",
+        type="rest",
+        uri="http://localhost:8183",
+        warehouse=os.path.abspath("./warehouse"),
+    )
+
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    identifier = f"{namespace}.{table_name}"
+
+    # Create namespace if it does not exist
+    existing_namespaces = [ns[0] for ns in catalog.list_namespaces()]
+    if namespace not in existing_namespaces:
+        catalog.create_namespace(namespace)
+
+    # Define Iceberg schema
+    schema = Schema(
+        NestedField(1, "id", LongType(), required=False),
+        NestedField(2, "name", StringType(), required=False),
+    )
+
+    table_location = os.path.abspath(f"./warehouse/{namespace}/{table_name}")
+
+    if identifier not in [t[1] for t in catalog.list_tables(namespace)]:
+        table = catalog.create_table(
+            identifier=identifier,
+            schema=schema,
+            location=f"file:{table_location}",
+        )
+    else:
+        table = catalog.load_table(identifier)
+
+    note(f"Table name: {table.name()}")
+    note(f"Location: {table.location}")
+
+    # ----------------------------
+    # Append data
+    # ----------------------------
+    arrow_table = pa.table(
+        {
+            "id": [1, 2, 3],
+            "name": ["Alice", "Bob", "Charlie"],
+        }
+    )
+
+    table.append(arrow_table)
+
+    note("Data appended")
+
+    # ----------------------------
+    # Scan data
+    # ----------------------------
+    scan = table.scan()
+    result = scan.to_arrow()
+
+    note("Scan result:")
+    note(result.to_pandas())
+    pause()
+
+
 @TestFeature
 @Name("multiple locations")
 def feature(self, minio_root_user, minio_root_password):
     """Test that ClickHouse correctly handles Iceberg tables with files in different locations."""
-    Scenario(test=local_file_path_issue)(
+    # Scenario(test=local_file_path_issue)(
+    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    # )
+    # pause()
+    Scenario(test=local_metadata_and_data)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

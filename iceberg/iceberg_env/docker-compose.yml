@@ -21,6 +21,23 @@ services:
       timeout: 5s
       retries: 5
 
+  # warehouse-init:
+  #   image: busybox
+  #   volumes:
+  #     - iceberg_warehouse:/warehouse
+  #   command: ["sh", "-c", "mkdir -p /warehouse && chmod -R 777 /warehouse"]
+
+  local-rest:
+    image: tabulario/iceberg-rest
+    user: root
+    ports:
+      - 8183:8181
+    volumes:
+      - ./warehouse:/warehouse
+    environment:
+      - CATALOG_WAREHOUSE=file:///warehouse
+      - CATALOG_IO__IMPL=org.apache.iceberg.hadoop.HadoopFileIO
+
   rest:
     image: tabulario/iceberg-rest
     ports:
@@ -88,6 +105,7 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
+      - ./warehouse:/warehouse:ro
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     depends_on:
