@@ -198,12 +198,12 @@ def local_metadata_and_data(self, minio_root_user, minio_root_password):
         NestedField(2, "name", StringType(), required=False),
     )
 
-    # IMPORTANT: Use container path (/warehouse) for table location
-    # This ensures metadata JSON files contain paths that ClickHouse can access
-    # If we use host absolute path, ClickHouse will try to access host paths inside container
-    # Container path: /warehouse/... (visible to both ClickHouse and REST catalog container)
-    # Host path: /home/alsu/.../warehouse/... (only visible on host, not in container)
-    table_location = f"/warehouse/{namespace}/{table_name}"
+    # IMPORTANT: Use host absolute path for pyiceberg (running on host)
+    # PyIceberg needs to write files, so it must use the host filesystem path
+    # The REST catalog container will handle path translation internally
+    # Host path: /home/alsu/.../warehouse/... (pyiceberg can write here)
+    # Container path: /warehouse/... (mounted from host, visible to ClickHouse)
+    table_location = os.path.abspath(f"{warehouse}/{namespace}/{table_name}")
 
     if identifier not in [t[1] for t in catalog.list_tables(namespace)]:
         # Use file:/// format (three slashes) for absolute paths
