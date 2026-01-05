@@ -171,7 +171,6 @@ def local_metadata_and_data(self, minio_root_user, minio_root_password):
 
     # Use iceberg_env/warehouse which is mounted in ClickHouse container at /warehouse
     warehouse = os.path.abspath("./iceberg_env/warehouse")
-    # Ensure warehouse directory exists and is writable
     os.makedirs(warehouse, exist_ok=True)
     note(f"Warehouse path: {warehouse}")
     note("Note: This path is mounted in ClickHouse container at /warehouse")
