@@ -240,13 +240,6 @@ xfails = {
             check_clickhouse_version(">=25.1"),
         ),
     ],
-    "/rbac/part 1/privileges/attach temporary table": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/pull/89450",
-            check_clickhouse_version(">=25.11"),
-        ),
-    ],
 }
 
 xflags = {
@@ -380,6 +373,11 @@ ffails = {
         Skip,
         "before 25.8, definer user can be dropped when mv depends on it",
         check_clickhouse_version("<25.8"),
+    ),
+    "/rbac/part 1/privileges/attach temporary table": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/pull/89450",
+        check_clickhouse_version(">=25.11"),
     ),
 }
 
