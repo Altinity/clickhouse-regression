@@ -503,6 +503,142 @@ RQ_ClickHouse_ExportPartition_Corrupted = Requirement(
     num="12.4",
 )
 
+RQ_ClickHouse_ExportPartition_LightweightUpdate = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that contain patch parts created by lightweight UPDATE operations by:\n"
+        "* Allowing export operations to succeed even when patch parts exist in the source partition\n"
+        "* Exporting partition data successfully regardless of the presence of patch parts\n"
+        "* Not requiring patch parts to be materialized before export operations can proceed\n"
+        "* Handling partitions with multiple patch parts correctly during export\n"
+        "* Maintaining export operation stability when lightweight updates occur before or during export\n"
+        "\n"
+        "Lightweight updates create patch parts that contain only updated columns and rows. The export operation SHALL succeed even in the presence of these patch parts, though the patches might not be applied to the exported data. This ensures that export operations are not blocked by lightweight update operations and can proceed independently.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.5",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightUpdate_MultiplePatches = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that have multiple patch parts from multiple lightweight UPDATE operations by:\n"
+        "* Handling partitions with multiple patch parts created by different UPDATE operations\n"
+        "* Exporting partition data correctly when patch parts exist for the same partition\n"
+        "* Not failing export operations due to the presence of multiple patch parts\n"
+        "* Maintaining data integrity during export when multiple lightweight updates have been applied\n"
+        "\n"
+        "Users may perform multiple lightweight UPDATE operations on the same partition, creating multiple patch parts. The export operation must handle these correctly without errors.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.6",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightUpdate_Concurrent = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations when lightweight UPDATE operations occur concurrently or sequentially on partitions being exported by:\n"
+        "* Allowing export operations to proceed when lightweight updates are performed before export starts\n"
+        "* Not blocking lightweight UPDATE operations when export operations are in progress\n"
+        "* Handling the presence of patch parts created during or before export operations\n"
+        "* Ensuring export operations complete successfully regardless of when lightweight updates occur relative to the export operation\n"
+        "\n"
+        "Export operations and lightweight updates may occur at different times, and the system must handle both operations correctly without interference.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.7",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that contain rows marked as deleted by lightweight DELETE operations by:\n"
+        "* Allowing export operations to succeed even when deleted rows exist in the source partition\n"
+        "* Automatically applying the `_row_exists` mask during export to ensure only non-deleted rows are exported\n"
+        "* Exporting partition data successfully regardless of the presence of deleted rows\n"
+        "* Not requiring deleted rows to be physically removed before export operations can proceed\n"
+        "* Maintaining export operation stability when lightweight deletes occur before or during export\n"
+        "\n"
+        "Lightweight deletes mark rows as deleted using a hidden `_row_exists` system column. The export operation SHALL automatically apply this mask to ensure only visible (non-deleted) rows are exported to the destination, maintaining data consistency between source and destination tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.8",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete_MultipleDeletes = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that have multiple lightweight DELETE operations applied by:\n"
+        "* Handling partitions with multiple delete mutations on the same partition\n"
+        "* Exporting partition data correctly when multiple deletes have been applied\n"
+        "* Not failing export operations due to the presence of multiple delete mutations\n"
+        "* Maintaining data integrity during export when multiple lightweight deletes have been applied\n"
+        "* Ensuring that only non-deleted rows are exported even when multiple delete operations affect overlapping rows\n"
+        "\n"
+        "Users may perform multiple lightweight DELETE operations on the same partition, creating multiple delete mutations. The export operation must handle these correctly and ensure that all deleted rows are excluded from the export.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.9",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete_Concurrent = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations when lightweight DELETE operations occur concurrently or sequentially on partitions being exported by:\n"
+        "* Allowing export operations to proceed when lightweight deletes are performed before export starts\n"
+        "* Not blocking lightweight DELETE operations when export operations are in progress\n"
+        "* Handling the presence of delete masks (`_row_exists` column) created during or before export operations\n"
+        "* Ensuring export operations complete successfully regardless of when lightweight deletes occur relative to the export operation\n"
+        "* Applying delete masks correctly to ensure deleted rows are not exported\n"
+        "\n"
+        "Export operations and lightweight deletes may occur at different times, and the system must handle both operations correctly without interference, ensuring that deleted rows are always excluded from exports.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="12.10",
+)
+
 RQ_ClickHouse_ExportPartition_RetryMechanism = Requirement(
     name="RQ.ClickHouse.ExportPartition.RetryMechanism",
     version="1.0",
@@ -1455,6 +1591,32 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
             name="RQ.ClickHouse.ExportPartition.LargePartitions", level=2, num="12.3"
         ),
         Heading(name="RQ.ClickHouse.ExportPartition.Corrupted", level=2, num="12.4"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate", level=2, num="12.5"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches",
+            level=2,
+            num="12.6",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent",
+            level=2,
+            num="12.7",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete", level=2, num="12.8"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes",
+            level=2,
+            num="12.9",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent",
+            level=2,
+            num="12.10",
+        ),
         Heading(name="Export operation failure handling", level=1, num="13"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.RetryMechanism", level=2, num="13.1"
@@ -1645,6 +1807,12 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_SchemaChangeIsolation,
         RQ_ClickHouse_ExportPartition_LargePartitions,
         RQ_ClickHouse_ExportPartition_Corrupted,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate_MultiplePatches,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate_Concurrent,
+        RQ_ClickHouse_ExportPartition_LightweightDelete,
+        RQ_ClickHouse_ExportPartition_LightweightDelete_MultipleDeletes,
+        RQ_ClickHouse_ExportPartition_LightweightDelete_Concurrent,
         RQ_ClickHouse_ExportPartition_RetryMechanism,
         RQ_ClickHouse_ExportPartition_Settings_MaxRetries,
         RQ_ClickHouse_ExportPartition_ResumeAfterFailure,
@@ -1721,6 +1889,12 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 12.2 [RQ.ClickHouse.ExportPartition.SchemaChangeIsolation](#rqclickhouseexportpartitionschemachangeisolation)
     * 12.3 [RQ.ClickHouse.ExportPartition.LargePartitions](#rqclickhouseexportpartitionlargepartitions)
     * 12.4 [RQ.ClickHouse.ExportPartition.Corrupted](#rqclickhouseexportpartitioncorrupted)
+    * 12.5 [RQ.ClickHouse.ExportPartition.LightweightUpdate](#rqclickhouseexportpartitionlightweightupdate)
+    * 12.6 [RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches](#rqclickhouseexportpartitionlightweightupdatemultiplepatches)
+    * 12.7 [RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent](#rqclickhouseexportpartitionlightweightupdateconcurrent)
+    * 12.8 [RQ.ClickHouse.ExportPartition.LightweightDelete](#rqclickhouseexportpartitionlightweightdelete)
+    * 12.9 [RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes](#rqclickhouseexportpartitionlightweightdeletemultipledeletes)
+    * 12.10 [RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent](#rqclickhouseexportpartitionlightweightdeleteconcurrent)
 * 13 [Export operation failure handling](#export-operation-failure-handling)
     * 13.1 [RQ.ClickHouse.ExportPartition.RetryMechanism](#rqclickhouseexportpartitionretrymechanism)
     * 13.2 [RQ.ClickHouse.ExportPartition.Settings.MaxRetries](#rqclickhouseexportpartitionsettingsmaxretries)
@@ -2066,6 +2240,76 @@ version: 1.0
 [ClickHouse] SHALL output an error and prevent export operations from proceeding when trying to export a partition that contains corrupted parts in the source table.
 
 The system SHALL detect corruption in partitions containing compact parts, wide parts, or mixed part types.
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that contain patch parts created by lightweight UPDATE operations by:
+* Allowing export operations to succeed even when patch parts exist in the source partition
+* Exporting partition data successfully regardless of the presence of patch parts
+* Not requiring patch parts to be materialized before export operations can proceed
+* Handling partitions with multiple patch parts correctly during export
+* Maintaining export operation stability when lightweight updates occur before or during export
+
+Lightweight updates create patch parts that contain only updated columns and rows. The export operation SHALL succeed even in the presence of these patch parts, though the patches might not be applied to the exported data. This ensures that export operations are not blocked by lightweight update operations and can proceed independently.
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that have multiple patch parts from multiple lightweight UPDATE operations by:
+* Handling partitions with multiple patch parts created by different UPDATE operations
+* Exporting partition data correctly when patch parts exist for the same partition
+* Not failing export operations due to the presence of multiple patch parts
+* Maintaining data integrity during export when multiple lightweight updates have been applied
+
+Users may perform multiple lightweight UPDATE operations on the same partition, creating multiple patch parts. The export operation must handle these correctly without errors.
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support export operations when lightweight UPDATE operations occur concurrently or sequentially on partitions being exported by:
+* Allowing export operations to proceed when lightweight updates are performed before export starts
+* Not blocking lightweight UPDATE operations when export operations are in progress
+* Handling the presence of patch parts created during or before export operations
+* Ensuring export operations complete successfully regardless of when lightweight updates occur relative to the export operation
+
+Export operations and lightweight updates may occur at different times, and the system must handle both operations correctly without interference.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that contain rows marked as deleted by lightweight DELETE operations by:
+* Allowing export operations to succeed even when deleted rows exist in the source partition
+* Automatically applying the `_row_exists` mask during export to ensure only non-deleted rows are exported
+* Exporting partition data successfully regardless of the presence of deleted rows
+* Not requiring deleted rows to be physically removed before export operations can proceed
+* Maintaining export operation stability when lightweight deletes occur before or during export
+
+Lightweight deletes mark rows as deleted using a hidden `_row_exists` system column. The export operation SHALL automatically apply this mask to ensure only visible (non-deleted) rows are exported to the destination, maintaining data consistency between source and destination tables.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that have multiple lightweight DELETE operations applied by:
+* Handling partitions with multiple delete mutations on the same partition
+* Exporting partition data correctly when multiple deletes have been applied
+* Not failing export operations due to the presence of multiple delete mutations
+* Maintaining data integrity during export when multiple lightweight deletes have been applied
+* Ensuring that only non-deleted rows are exported even when multiple delete operations affect overlapping rows
+
+Users may perform multiple lightweight DELETE operations on the same partition, creating multiple delete mutations. The export operation must handle these correctly and ensure that all deleted rows are excluded from the export.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support export operations when lightweight DELETE operations occur concurrently or sequentially on partitions being exported by:
+* Allowing export operations to proceed when lightweight deletes are performed before export starts
+* Not blocking lightweight DELETE operations when export operations are in progress
+* Handling the presence of delete masks (`_row_exists` column) created during or before export operations
+* Ensuring export operations complete successfully regardless of when lightweight deletes occur relative to the export operation
+* Applying delete masks correctly to ensure deleted rows are not exported
+
+Export operations and lightweight deletes may occur at different times, and the system must handle both operations correctly without interference, ensuring that deleted rows are always excluded from exports.
 
 ## Export operation failure handling
 
