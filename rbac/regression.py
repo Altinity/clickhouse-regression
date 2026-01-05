@@ -240,6 +240,13 @@ xfails = {
             check_clickhouse_version(">=25.1"),
         ),
     ],
+    "/rbac/part 1/privileges/attach temporary table": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/pull/89450",
+            check_clickhouse_version(">=25.11"),
+        ),
+    ],
 }
 
 xflags = {
