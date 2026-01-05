@@ -1081,10 +1081,32 @@ def create_as_another_table(self, node=None):
                     node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")
 
                 with Then("I try to create a table as another table"):
-                    node.query(
-                        f"CREATE TABLE {table_name} AS {source_table_name}",
-                        settings=[("user", f"{user_name}")],
-                    )
+                    if check_clickhouse_version(">=25.11")(self):
+                        with By(
+                            "check that user can not create table as another table without SHOW TABLES privilege on source table"
+                        ):
+                            node.query(
+                                f"CREATE TABLE {table_name} AS {source_table_name}",
+                                settings=[("user", f"{user_name}")],
+                                message=message,
+                                exitcode=exitcode,
+                            )
+
+                        with And(
+                            "grant SHOW TABLES privilege on source table to the user"
+                        ):
+                            node.query(
+                                f"GRANT SHOW TABLES ON {source_table_name} TO {user_name}"
+                            )
+                            node.query(
+                                f"CREATE TABLE {table_name} AS {source_table_name}",
+                                settings=[("user", f"{user_name}")],
+                            )
+                    else:
+                        node.query(
+                            f"CREATE TABLE {table_name} AS {source_table_name}",
+                            settings=[("user", f"{user_name}")],
+                        )
 
             finally:
                 with Finally("I drop the tables"):
