@@ -302,7 +302,7 @@ jobs:
       storage_path: /replace_partition
       regression_args: '--only "/alter/replace partition/*"'
       artifact_name: alter-replace-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -324,7 +324,7 @@ jobs:
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 1/*"'
       artifact_name: alter-attach-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -346,7 +346,7 @@ jobs:
       storage_path: /attach_partition
       regression_args: '--only "/alter/attach partition/part 2/*"'
       artifact_name: alter-attach-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -367,7 +367,7 @@ jobs:
       storage_path: /move_partition
       regression_args: '--only "/alter/move partition/*"'
       artifact_name: alter-move-partition-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -423,7 +423,7 @@ jobs:
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: benchmark-aws-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -446,7 +446,7 @@ jobs:
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: benchmark-gcs-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -467,7 +467,7 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: benchmark-minio-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx52-cpx51' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
