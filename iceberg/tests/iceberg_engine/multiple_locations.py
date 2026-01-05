@@ -169,13 +169,18 @@ def local_metadata_and_data(self, minio_root_user, minio_root_password):
     """Test that ClickHouse correctly handles Iceberg tables with both metadata and data stored locally."""
     import os
 
-    note(f"Warehouse path: {os.path.abspath('./warehouse')}")
+    # Use iceberg_env/warehouse which is mounted in ClickHouse container at /warehouse
+    warehouse = os.path.abspath("./iceberg_env/warehouse")
+    # Ensure warehouse directory exists and is writable
+    os.makedirs(warehouse, exist_ok=True)
+    note(f"Warehouse path: {warehouse}")
+    note("Note: This path is mounted in ClickHouse container at /warehouse")
     pause()
     catalog = load_catalog(
         "local_rest",
         type="rest",
         uri="http://localhost:8183",
-        warehouse=os.path.abspath("./warehouse"),
+        warehouse=warehouse,
     )
 
     namespace = f"namespace_{getuid()}"
@@ -193,13 +198,22 @@ def local_metadata_and_data(self, minio_root_user, minio_root_password):
         NestedField(2, "name", StringType(), required=False),
     )
 
-    table_location = os.path.abspath(f"./warehouse/{namespace}/{table_name}")
+    # IMPORTANT: Use container path (/warehouse) for table location
+    # This ensures metadata JSON files contain paths that ClickHouse can access
+    # If we use host absolute path, ClickHouse will try to access host paths inside container
+    # Container path: /warehouse/... (visible to both ClickHouse and REST catalog container)
+    # Host path: /home/alsu/.../warehouse/... (only visible on host, not in container)
+    table_location = f"/warehouse/{namespace}/{table_name}"
 
     if identifier not in [t[1] for t in catalog.list_tables(namespace)]:
+        # Use file:/// format (three slashes) for absolute paths
+        # file:///path creates: file:///path (correct format for ClickHouse)
+        # file:/path creates: file:/path (incorrect - only two slashes)
+        # Use /warehouse (container path) so files are created in the mounted directory
         table = catalog.create_table(
             identifier=identifier,
             schema=schema,
-            location=f"file:{table_location}",
+            location=f"file://{table_location}",
         )
     else:
         table = catalog.load_table(identifier)
@@ -220,6 +234,43 @@ def local_metadata_and_data(self, minio_root_user, minio_root_password):
     table.append(arrow_table)
 
     note("Data appended")
+
+    # ----------------------------
+    # Check metadata JSON location
+    # ----------------------------
+    note("=== METADATA JSON LOCATION ===")
+    note(f"Table UUID: {table.metadata.table_uuid}")
+    note(f"Table location: {table.location()}")
+
+    # Check metadata_log for referenced metadata files
+    if table.metadata.metadata_log:
+        note("\nMetadata files referenced in metadata_log:")
+        for entry in table.metadata.metadata_log:
+            metadata_file = entry.metadata_file
+            note(f"  {metadata_file}")
+            # Convert file:// URL to local path
+            if metadata_file.startswith("file:"):
+                local_path = metadata_file[5:]  # Remove 'file:' prefix
+                note(f"  Local path: {local_path}")
+                note(f"  Exists on filesystem: {os.path.exists(local_path)}")
+                if os.path.exists(local_path):
+                    note(f"  Size: {os.path.getsize(local_path)} bytes")
+
+    note("\n=== IMPORTANT ===")
+    note("When using a REST catalog, the metadata JSON is stored by the")
+    note("REST catalog server internally, NOT in the warehouse directory.")
+    note("The warehouse directory only contains:")
+    note("  - Data files (parquet)")
+    note("  - Manifest files (avro)")
+    note("  - Manifest list files (avro)")
+    note("\nTo access metadata JSON, use pyiceberg API:")
+    note("  table.metadata.model_dump_json()")
+
+    # Show metadata JSON (first 500 chars)
+    import json
+
+    metadata_json = table.metadata.model_dump_json()
+    note(f"\nMetadata JSON (first 500 chars):\n{metadata_json[:500]}...")
 
     # ----------------------------
     # Scan data

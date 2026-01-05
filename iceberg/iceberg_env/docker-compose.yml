@@ -42,7 +42,7 @@ services:
     image: tabulario/iceberg-rest
     ports:
       - 8182:8181
-    environment:
+    environment:  
       - AWS_ACCESS_KEY_ID=admin
       - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
@@ -105,7 +105,7 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
-      - ./warehouse:/warehouse:ro
+      - ./warehouse:/warehouse
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     depends_on:
