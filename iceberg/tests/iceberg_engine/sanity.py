@@ -707,7 +707,10 @@ def show_data_lake_catalogs_in_system_tables(
             setting_name="show_data_lake_catalogs_in_system_tables"
         )
         if check_clickhouse_version("<=25.9")(self):
-            assert value == "1", error()
+            if check_clickhouse_version("~25.8")(self) and check_clickhouse_version("~*altinity*")(self):
+                assert value == "0", error()
+            else:
+                assert value == "1", error()
         else:
             assert value == "0", error()
 
