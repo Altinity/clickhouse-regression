@@ -37,6 +37,12 @@ services:
     environment:
       - CATALOG_WAREHOUSE=file:///warehouse
       - CATALOG_IO__IMPL=org.apache.iceberg.hadoop.HadoopFileIO
+    entrypoint: >
+      sh -c "
+        mkdir -p /warehouse &&
+        chmod -R 777 /warehouse &&
+        exec java -jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
+      "
 
   rest:
     image: tabulario/iceberg-rest
