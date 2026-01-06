@@ -127,6 +127,16 @@ def check_if_not_antalya_build(test=None):
     return "antalya" not in current().context.full_clickhouse_version
 
 
+def check_if_altinity_build(test=None):
+    """True if build is Altinity build."""
+    return "altinity" in current().context.full_clickhouse_version
+
+
+def check_if_25_8_altinity_build(test=None):
+    """True if build is 25.8 Altinity build."""
+    return "25.8" in current().context.full_clickhouse_version and check_if_altinity_build()
+
+
 def check_if_head(test):
     """True if build is head build."""
     binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
