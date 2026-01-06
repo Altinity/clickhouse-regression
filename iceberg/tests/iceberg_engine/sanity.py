@@ -787,7 +787,11 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
         ).output
 
     with Then("compare results"):
-        if check_clickhouse_version(">=25.10")(self) or check_if_antalya_build() or check_if_25_8_altinity_build():
+        if (
+            check_clickhouse_version(">=25.10")(self)
+            or check_if_antalya_build()
+            or check_if_25_8_altinity_build()
+        ):
             assert f"{namespace}.{table_name}" in result_with_setting, error()
             assert result_with_setting == result_without_setting, error()
         else:
@@ -845,6 +849,90 @@ def show_databases_queries(self, minio_root_user, minio_root_password, node=None
         assert result_with_setting == result_without_setting, error()
 
 
+@TestScenario
+def boolean_issue(self, minio_root_user, minio_root_password):
+    """Reproduce https://github.com/Altinity/ClickHouse/issues/1251."""
+    table_name = f"table_{getuid()}"
+    namespace = f"namespace_{getuid()}"
+    database_name = f"database_{getuid()}"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(
+        "define table schema with five columns: string, boolean, integer, date, datetime"
+    ):
+        schema = Schema(
+            NestedField(
+                field_id=1, name="string", field_type=StringType(), required=False
+            ),
+            NestedField(
+                field_id=2, name="boolean", field_type=BooleanType(), required=False
+            ),
+        )
+
+    with And("create non-partitioned table"):
+        sort_order = SortOrder(
+            SortField(
+                source_id=1,  # string column
+                transform=IdentityTransform(),
+            )
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location="s3://warehouse/data",
+            partition_spec=PartitionSpec(),
+            sort_order=sort_order,
+        )
+
+    with And("create DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("insert data into iceberg table"):
+        length = 20
+        string_values = [str(i) for i in range(length)]
+        boolean_values = [True if i % 2 == 0 else False for i in range(length)]
+        data = [
+            {
+                "string": string_values[i],
+                "boolean": boolean_values[i],
+            }
+            for i in range(length)
+        ]
+        df = pa.Table.from_pylist(data)
+        table.append(df)
+
+    with Then("check that data is inserted into iceberg table"):
+        self.context.node.query(
+            f"""
+            SELECT * FROM {database_name}.\\`{namespace}.{table_name}\\`
+            FORMAT TabSeparated
+            """
+        )
+
+    with Then("read data from iceberg table with WHERE boolean = true, expect 10 rows"):
+        result = self.context.node.query(
+            f"""
+            SELECT * FROM {database_name}.\\`{namespace}.{table_name}\\`
+            WHERE boolean = true
+            FORMAT TabSeparated
+            """
+        )
+        # pause()
+
+
 @TestFeature
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for DataLakeCatalog database engine in ClickHouse."""
@@ -882,5 +970,8 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=show_databases_queries)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=boolean_issue)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
