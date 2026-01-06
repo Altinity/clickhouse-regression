@@ -7,6 +7,7 @@ from helpers.common import (
     get_settings_value,
     compare_with_expected,
     check_if_antalya_build,
+    check_if_25_8_altinity_build,
 )
 
 from decimal import Decimal
@@ -708,7 +709,7 @@ def show_data_lake_catalogs_in_system_tables(
             setting_name="show_data_lake_catalogs_in_system_tables"
         )
         if check_clickhouse_version("<=25.9")(self):
-            if check_clickhouse_version("~25.8")(self) and check_clickhouse_version("~*altinity*")(self):
+            if check_if_25_8_altinity_build():
                 assert value == "0", error()
             else:
                 assert value == "1", error()
@@ -786,7 +787,7 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
         ).output
 
     with Then("compare results"):
-        if check_clickhouse_version(">=25.10")(self) or check_if_antalya_build():
+        if check_clickhouse_version(">=25.10")(self) or check_if_antalya_build() or check_if_25_8_altinity_build():
             assert f"{namespace}.{table_name}" in result_with_setting, error()
             assert result_with_setting == result_without_setting, error()
         else:
