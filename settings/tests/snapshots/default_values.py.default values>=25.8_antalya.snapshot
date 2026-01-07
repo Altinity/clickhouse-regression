@@ -456,6 +456,10 @@ cluster_for_parallel_replicas = r"""'{"default":""}'"""
 
 cluster_function_process_archive_on_multiple_nodes = r"""'{"default":"1"}'"""
 
+cluster_table_function_buckets_batch_size = r"""'{"default":"0"}'"""
+
+cluster_table_function_split_granularity = r"""'{"default":"file"}'"""
+
 collect_hash_table_stats_during_aggregation = r"""'{"default":"1"}'"""
 
 collect_hash_table_stats_during_joins = r"""'{"default":"1"}'"""
@@ -801,6 +805,10 @@ except_default_mode = r"""'{"default":"ALL"}'"""
 execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
+
+export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
 
@@ -1290,9 +1298,11 @@ input_format_parquet_use_metadata_cache = r"""'{"default":"1"}'"""
 
 input_format_parquet_use_native_reader = r"""'{"default":"0"}'"""
 
-input_format_parquet_use_native_reader_v3 = r"""'{"default":"0"}'"""
+input_format_parquet_use_native_reader_v3 = r"""'{"default":"1"}'"""
 
 input_format_parquet_use_offset_index = r"""'{"default":"1"}'"""
+
+input_format_parquet_verify_checksums = r"""'{"default":"1"}'"""
 
 input_format_protobuf_flatten_google_wrappers = r"""'{"default":"0"}'"""
 
@@ -2095,6 +2105,8 @@ output_format_parquet_use_custom_encoder = r"""'{"default":"1"}'"""
 output_format_parquet_version = r"""'{"default":"2.latest"}'"""
 
 output_format_parquet_write_bloom_filter = r"""'{"default":"1"}'"""
+
+output_format_parquet_write_checksums = r"""'{"default":"1"}'"""
 
 output_format_parquet_write_page_index = r"""'{"default":"1"}'"""
 
