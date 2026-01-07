@@ -130,6 +130,13 @@ xfails = {
             ),
         )
     ],
+    "/iceberg/iceberg engine/glue catalog/feature/show data lake catalogs in system tables/*": [
+        (
+            Fail,
+            "https://github.com/clickhouse/clickhouse/issues/91363",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
 }
 
 ffails = {
