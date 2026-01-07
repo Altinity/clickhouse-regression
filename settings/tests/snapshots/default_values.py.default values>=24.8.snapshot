@@ -124,6 +124,8 @@ allow_hyperscan = r"""'{"default":"1"}'"""
 
 allow_introspection_functions = r"""'{"default":"0"}'"""
 
+allow_materialized_view_with_bad_select = r"""'{"default":"1"}'"""
+
 allow_named_collection_override_by_default = r"""'{"default":"1"}'"""
 
 allow_non_metadata_alters = r"""'{"default":"1"}'"""
@@ -2191,6 +2193,4 @@ window_view_heartbeat_interval = r"""'{"default":"15"}'"""
 workload = r"""'{"default":"default"}'"""
 
 zstd_window_log_max = r"""'{"default":"0"}'"""
-
-allow_materialized_view_with_bad_select = r"""'{"default":"1"}'"""
 
