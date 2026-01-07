@@ -375,8 +375,6 @@ def export_partitions(
     if force_export:
         inline_settings.append(("export_merge_tree_partition_force_export", 1))
 
-    inline_settings.append(("export_merge_tree_partition_lock_inside_the_task", 1))
-
     no_checks = exitcode != 0
 
     output = []
