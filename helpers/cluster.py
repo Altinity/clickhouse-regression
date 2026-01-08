@@ -1464,13 +1464,11 @@ class PackageDownloader:
                         version_output = bash(
                             f"{self.binary_path} server --version 2>&1"
                         ).output
-                        version_match = re.search(r'version\s+([0-9]+\.[0-9]+\.[0-9]+\.[0-9a-z]+)', version_output)
-                        if version_match:
-                            self.package_version = version_match.group(1)
-                        else:
-                            version_match = re.search(r'([0-9]+\.[0-9]+\.[0-9]+\.[0-9a-z]+)', version_output)
-                            if version_match:
-                                self.package_version = version_match.group(1)
+
+                        matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
+                        if matches:
+                            self.package_version = matches[-1].strip(".")
+
 
         if binary_only:
             # Hide the package path / image to force using binary
