@@ -1451,13 +1451,24 @@ class PackageDownloader:
                 bash(f"chmod +x {self.binary_path}")
 
                 if not self.package_version:
-                    self.package_version = (
-                        bash(
-                            f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                    if current_cpu() != "arm":
+                        self.package_version = (
+                            bash(
+                                f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                            )
+                            .output.split("\n")[-1]
+                            .strip(".")
                         )
-                        .output.split("\n")[-1]
-                        .strip(".")
-                    )
+                    else:
+                        # Mac: use Python regex since BSD grep doesn't support -P
+                        version_output = bash(
+                            f"{self.binary_path} server --version 2>&1"
+                        ).output
+
+                        matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
+                        if matches:
+                            self.package_version = matches[-1].strip(".")
+
 
         if binary_only:
             # Hide the package path / image to force using binary
