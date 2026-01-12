@@ -103,7 +103,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
     with And("execute queries from SQL file"):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         sql_file_path = os.path.join(
-            current_dir, "tests", "hybrid_query_fuzzing_queries.sql"
+            current_dir, "hybrid_query_fuzzing_queries.sql"
         )
 
         if os.path.exists(sql_file_path):
@@ -128,6 +128,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
                             node.query(query)
                         except Exception as e:
                             note(f"Query {i} failed: {str(e)}")
+                            pause()
 
 
 @TestFeature
