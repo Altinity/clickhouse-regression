@@ -137,6 +137,38 @@ xfails = {
             check_clickhouse_version(">=25.8"),
         )
     ],
+    "/iceberg/iceberg cache/rest catalog/iceberg database engine/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+    "/iceberg/iceberg cache/rest catalog/icebergS3 table function/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+        "/iceberg/iceberg cache/glue catalog/iceberg database engine/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+        "/iceberg/iceberg cache/glue catalog/icebergS3 table function/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
 }
 
 ffails = {
