@@ -530,3 +530,159 @@ def iceberg_table_with_all_basic_data_types(
         table.append(data)
 
     return table, table_name, namespace
+
+
+@TestStep(Given)
+def performance_iceberg_table_with_all_basic_data_types(
+    self,
+    minio_root_user,
+    minio_root_password,
+    s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
+    row_count=100,
+    batch_size=100,
+):
+    """
+    Create an Iceberg table with all basic data types and populate it with test data.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with By("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_endpoint=s3_endpoint,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create table"):
+        schema = Schema(
+            NestedField(
+                field_id=1, name="boolean_col", field_type=BooleanType(), required=False
+            ),
+            NestedField(
+                field_id=2, name="long_col", field_type=LongType(), required=False
+            ),
+            NestedField(
+                field_id=3, name="double_col", field_type=DoubleType(), required=False
+            ),
+            NestedField(
+                field_id=4, name="string_col", field_type=StringType(), required=True
+            ),
+            NestedField(
+                field_id=5,
+                name="timestamp_col",
+                field_type=TimestampType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=6, name="date_col", field_type=DateType(), required=False
+            ),
+            NestedField(
+                field_id=7, name="time_col", field_type=TimeType(), required=False
+            ),
+            NestedField(
+                field_id=8,
+                name="timestamptz_col",
+                field_type=TimestamptzType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=9, name="integer_col", field_type=IntegerType(), required=False
+            ),
+            NestedField(
+                field_id=10, name="float_col", field_type=FloatType(), required=False
+            ),
+            NestedField(
+                field_id=11,
+                name="decimal_col",
+                field_type=DecimalType(10, 2),
+                required=False,
+            ),
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location=location,
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("insert data into table"):
+        schema = pa.schema(
+            [
+                pa.field("boolean_col", pa.bool_(), nullable=True),
+                pa.field("long_col", pa.int64(), nullable=True),
+                pa.field("double_col", pa.float64(), nullable=True),
+                pa.field("string_col", pa.string(), nullable=False),
+                pa.field("timestamp_col", pa.timestamp("us"), nullable=True),
+                pa.field("date_col", pa.date32(), nullable=True),
+                pa.field("time_col", pa.time64("us"), nullable=True),
+                pa.field(
+                    "timestamptz_col", pa.timestamp("us", tz="UTC"), nullable=True
+                ),
+                pa.field("integer_col", pa.int32(), nullable=True),
+                pa.field("float_col", pa.float32(), nullable=True),
+                pa.field("decimal_col", pa.decimal128(10, 2), nullable=True),
+            ]
+        )
+
+        row_number = min(row_count, batch_size)
+        data = []
+
+        for i in range(row_number):
+            data.append(
+                {
+                    "boolean_col": random.choice([True, False]),
+                    "long_col": random.randint(0, 10000),
+                    "double_col": random.uniform(0, 10000),
+                    "string_col": random.choice(
+                        [
+                            "Alice",
+                            "Bob",
+                            "Charlie",
+                            "David",
+                            "Eve",
+                            "Frank",
+                            "George",
+                            "Hannah",
+                            "Isaac",
+                            "Jacob",
+                            "King",
+                            "Louis",
+                            "Mary",
+                            "Nancy",
+                            "Oliver",
+                            "Paul",
+                            "Queen",
+                            "Robert",
+                            "Samuel",
+                            "Thomas",
+                            "William",
+                        ]
+                    ),
+                    "timestamp_col": random.choice(
+                        [datetime(2024, 1, 1, 12, 0, 0), datetime(2024, 1, 1, 12, 0, 0)]
+                    ),
+                    "date_col": random.choice([date(2024, 1, 1), date(2024, 1, 1)]),
+                    "time_col": random.choice([time(12, 0, 0), time(12, 0, 0)]),
+                    "timestamptz_col": random.choice(
+                        [
+                            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                        ]
+                    ),
+                    "integer_col": random.randint(0, 10000),
+                    "float_col": random.uniform(0, 10000),
+                    "decimal_col": random.choice(
+                        [Decimal("456.78"), Decimal("456.78")]
+                    ),
+                }
+            )
+        df = pa.Table.from_pylist(data, schema=schema)
+        table.append(df)
+
+    return table, table_name, namespace
