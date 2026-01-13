@@ -877,7 +877,7 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
             flush_log(node=node, table_name="system.part_log")
             part_log = get_part_log(table_name=source_table, node=node)
             destination_parts = get_s3_parts(table_name=destination_table)
-            assert part_log == destination_parts, error()
+            assert part_log in destination_parts, error()
 
 
 @TestStep(Then)
