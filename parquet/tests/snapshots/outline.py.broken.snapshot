@@ -1,6 +1,0 @@
-invalid_string_1_structure = r"""'X1\tNullable(String)'"""
-
-invalid_string_1_structure_22_3 = r"""'X1\tString'"""
-
-invalid_string_1_structure_22_3_22_4 = r"""'X1\tString'"""
-

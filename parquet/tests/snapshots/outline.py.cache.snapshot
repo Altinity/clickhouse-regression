@@ -1,4 +1,0 @@
-cache1_structure = r"""'i\tNullable(Int32)\t\t\t\t\t\nj\tNullable(String)'"""
-
-cache1_structure_22_4 = r"""'i\tInt32\t\t\t\t\t\nj\tString'"""
-

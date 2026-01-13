@@ -1,0 +1,4 @@
+
+# Python virtual environments
+venv/
+.venv/

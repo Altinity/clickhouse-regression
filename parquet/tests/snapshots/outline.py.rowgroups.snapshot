@@ -1,8 +1,0 @@
-many_row_groups_2_structure = r"""'42\tNullable(Int32)'"""
-
-many_row_groups_structure = r"""'42\tNullable(Int32)'"""
-
-many_row_groups_structure_22_4 = r"""'42\tInt32'"""
-
-many_row_groups_2_structure_22_4 = r"""'42\tInt32'"""
-
