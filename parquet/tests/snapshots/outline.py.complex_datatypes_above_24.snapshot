@@ -36,8 +36,8 @@ nestedstruct_4_structure = r"""'visitorId\tNullable(Int64)\t\t\t\t\t\nvisitNumbe
 
 tuple_of_nulls_structure = r"""'b_struct\tTuple(\\n    b_c_int Nullable(Int32))'"""
 
-<<<<<<< HEAD
-=======
+
+
 struct_datetime64_UTC_2_structure = r""""stateId\tTuple(\\n    idNum Nullable(Int32),\\n    sessionNum Nullable(Int32),\\n    sessionName Nullable(String),\\n    instanceName Nullable(String),\\n    smName Nullable(String))\t\t\t\t\t\nstateMeta\tTuple(\\n    creationTime Nullable(DateTime64(6, \\'UTC\\')),\\n    updateTime Nullable(DateTime64(6, \\'UTC\\')),\\n    version Nullable(Int16),\\n    deleted Nullable(Bool),\\n    completed Nullable(Bool))\t\t\t\t\t\nstyle\tNullable(String)\t\t\t\t\t\nitemType\tNullable(Int32)\t\t\t\t\t\ndescription\tNullable(String)""" + '"'
 
->>>>>>> 4a198ded7 (update snapshots)
+

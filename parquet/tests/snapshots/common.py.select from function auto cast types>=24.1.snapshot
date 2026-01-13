@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_binary = r"""
 {"binary":"1","toTypeName(binary)":"Nullable(String)"}
 {"binary":"0","toTypeName(binary)":"Nullable(String)"}
@@ -6,15 +6,15 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"bool":true,"toTypeName(bool)":"Nullable(Bool)"}
 {"bool":false,"toTypeName(bool)":"Nullable(Bool)"}
 {"bool":true,"toTypeName(bool)":"Nullable(Bool)"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_date32 = r"""
 {"date32":"1970-01-01","toTypeName(date32)":"Nullable(Date32)"}
 {"date32":"2149-06-06","toTypeName(date32)":"Nullable(Date32)"}
@@ -64,15 +64,15 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"list_bool":[true],"toTypeName(list_bool)":"Array(Nullable(Bool))"}
 {"list_bool":[false],"toTypeName(list_bool)":"Array(Nullable(Bool))"}
 {"list_bool":[true],"toTypeName(list_bool)":"Array(Nullable(Bool))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_date32 = r"""
 {"list_date32":["1970-01-01"],"toTypeName(list_date32)":"Array(Nullable(Date32))"}
 {"list_date32":["2149-06-06"],"toTypeName(list_date32)":"Array(Nullable(Date32))"}
@@ -1208,15 +1208,15 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"list_struct_bool":[{"a":true}],"toTypeName(list_struct_bool)":"Array(Tuple(\n    a Nullable(Bool)))"}
 {"list_struct_bool":[{"a":false}],"toTypeName(list_struct_bool)":"Array(Tuple(\n    a Nullable(Bool)))"}
 {"list_struct_bool":[{"a":true}],"toTypeName(list_struct_bool)":"Array(Tuple(\n    a Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_date32 = r"""
 {"list_struct_date32":[{"a":"1970-01-01"}],"toTypeName(list_struct_date32)":"Array(Tuple(\n    a Nullable(Date32)))"}
 {"list_struct_date32":[{"a":"2149-06-06"}],"toTypeName(list_struct_date32)":"Array(Tuple(\n    a Nullable(Date32)))"}
@@ -1602,7 +1602,7 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_map_bool_bool = r"""
 {"list_map_bool_bool":[{"true":true},{"true":false},{"true":true}],"toTypeName(list_map_bool_bool)":"Array(Map(Bool, Nullable(Bool)))"}
 {"list_map_bool_bool":[{"false":true},{"false":false},{"false":true}],"toTypeName(list_map_bool_bool)":"Array(Map(Bool, Nullable(Bool)))"}
@@ -1610,13 +1610,13 @@ _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_th
 """
 
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_bool":{"true":true,"true":false,"true":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 {"map_bool_bool":{"false":true,"false":false,"false":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 {"map_bool_bool":{"true":true,"true":false,"true":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_date32 = r"""
 {"map_bool_date32":{"true":"1970-01-01","true":"2149-06-06","true":"1970-01-11"},"toTypeName(map_bool_date32)":"Map(Bool, Nullable(Date32))"}
 {"map_bool_date32":{"false":"1970-01-01","false":"2149-06-06","false":"1970-01-11"},"toTypeName(map_bool_date32)":"Map(Bool, Nullable(Date32))"}
@@ -1666,15 +1666,15 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_list_bool":{"true":[true],"true":[false],"true":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 {"map_bool_list_bool":{"false":[true],"false":[false],"false":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 {"map_bool_list_bool":{"true":[true],"true":[false],"true":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_date32 = r"""
 {"map_bool_list_date32":{"true":["1970-01-01"],"true":["2149-06-06"],"true":["1970-01-11"]},"toTypeName(map_bool_list_date32)":"Map(Bool, Array(Nullable(Date32)))"}
 {"map_bool_list_date32":{"false":["1970-01-01"],"false":["2149-06-06"],"false":["1970-01-11"]},"toTypeName(map_bool_list_date32)":"Map(Bool, Array(Nullable(Date32)))"}
@@ -1874,15 +1874,15 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_uint8 = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_uint8 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_uint8":{"true":0,"true":255,"true":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 {"map_bool_uint8":{"false":0,"false":255,"false":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 {"map_bool_uint8":{"true":0,"true":255,"true":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_date32_binary = r"""
 {"map_date32_binary":{"1970-01-01":"1","1970-01-01":"0","1970-01-01":"111100111111"},"toTypeName(map_date32_binary)":"Map(Date32, Nullable(String))"}
 {"map_date32_binary":{"2149-06-06":"1","2149-06-06":"0","2149-06-06":"111100111111"},"toTypeName(map_date32_binary)":"Map(Date32, Nullable(String))"}
@@ -4620,7 +4620,7 @@ _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__fi
 """
 
 _parquet_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_uint8 = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_struct_bool = r"""
 {"map_bool_struct_bool":{"true":{"a":true},"true":{"a":false},"true":{"a":true}},"toTypeName(map_bool_struct_bool)":"Map(Bool, Tuple(\n    a Nullable(Bool)))"}
 {"map_bool_struct_bool":{"false":{"a":true},"false":{"a":false},"false":{"a":true}},"toTypeName(map_bool_struct_bool)":"Map(Bool, Tuple(\n    a Nullable(Bool)))"}
@@ -4958,15 +4958,15 @@ _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_th
 """
 
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_uint8 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"uint8":0,"toTypeName(uint8)":"Nullable(UInt8)"}
 {"uint8":255,"toTypeName(uint8)":"Nullable(UInt8)"}
 {"uint8":128,"toTypeName(uint8)":"Nullable(UInt8)"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_binary = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_uint8 = r"""
 {"list_uint8":[0],"toTypeName(list_uint8)":"Array(Nullable(UInt8))"}
 {"list_uint8":[255],"toTypeName(list_uint8)":"Array(Nullable(UInt8))"}
@@ -8796,13 +8796,13 @@ _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_th
 """
 
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_binary = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"binary":"1","toTypeName(binary)":"Nullable(String)"}
 {"binary":"0","toTypeName(binary)":"Nullable(String)"}
 {"binary":"111100111111","toTypeName(binary)":"Nullable(String)"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_bool = r"""
 {"bool":true,"toTypeName(bool)":"Nullable(Bool)"}
 {"bool":false,"toTypeName(bool)":"Nullable(Bool)"}
@@ -8852,15 +8852,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_binary = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_binary = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"list_binary":["1"],"toTypeName(list_binary)":"Array(Nullable(String))"}
 {"list_binary":["0"],"toTypeName(list_binary)":"Array(Nullable(String))"}
 {"list_binary":["111100111111"],"toTypeName(list_binary)":"Array(Nullable(String))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_bool = r"""
 {"list_bool":[true],"toTypeName(list_bool)":"Array(Nullable(Bool))"}
 {"list_bool":[false],"toTypeName(list_bool)":"Array(Nullable(Bool))"}
@@ -9996,15 +9996,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_binary = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_binary = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"list_struct_binary":[{"a":"1"}],"toTypeName(list_struct_binary)":"Array(Tuple(\n    a Nullable(String)))"}
 {"list_struct_binary":[{"a":"0"}],"toTypeName(list_struct_binary)":"Array(Tuple(\n    a Nullable(String)))"}
 {"list_struct_binary":[{"a":"111100111111"}],"toTypeName(list_struct_binary)":"Array(Tuple(\n    a Nullable(String)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_struct_bool = r"""
 {"list_struct_bool":[{"a":true}],"toTypeName(list_struct_bool)":"Array(Tuple(\n    a Nullable(Bool)))"}
 {"list_struct_bool":[{"a":false}],"toTypeName(list_struct_bool)":"Array(Tuple(\n    a Nullable(Bool)))"}
@@ -10126,15 +10126,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_binary_bool":{"1":true,"1":false,"1":true},"toTypeName(map_binary_bool)":"Map(String, Nullable(Bool))"}
 {"map_binary_bool":{"0":true,"0":false,"0":true},"toTypeName(map_binary_bool)":"Map(String, Nullable(Bool))"}
 {"map_binary_bool":{"111100111111":true,"111100111111":false,"111100111111":true},"toTypeName(map_binary_bool)":"Map(String, Nullable(Bool))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_date32 = r"""
 {"map_binary_date32":{"1":"1970-01-01","1":"2149-06-06","1":"1970-01-11"},"toTypeName(map_binary_date32)":"Map(String, Nullable(Date32))"}
 {"map_binary_date32":{"0":"1970-01-01","0":"2149-06-06","0":"1970-01-11"},"toTypeName(map_binary_date32)":"Map(String, Nullable(Date32))"}
@@ -10184,7 +10184,7 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_list_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_map_binary_bool = r"""
 {"list_map_binary_bool":[{"1":true},{"1":false},{"1":true}],"toTypeName(list_map_binary_bool)":"Array(Map(String, Nullable(Bool)))"}
 {"list_map_binary_bool":[{"0":true},{"0":false},{"0":true}],"toTypeName(list_map_binary_bool)":"Array(Map(String, Nullable(Bool)))"}
@@ -10192,13 +10192,13 @@ _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_th
 """
 
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_list_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_binary_list_bool":{"1":[true],"1":[false],"1":[true]},"toTypeName(map_binary_list_bool)":"Map(String, Array(Nullable(Bool)))"}
 {"map_binary_list_bool":{"0":[true],"0":[false],"0":[true]},"toTypeName(map_binary_list_bool)":"Map(String, Array(Nullable(Bool)))"}
 {"map_binary_list_bool":{"111100111111":[true],"111100111111":[false],"111100111111":[true]},"toTypeName(map_binary_list_bool)":"Map(String, Array(Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_list_date32 = r"""
 {"map_binary_list_date32":{"1":["1970-01-01"],"1":["2149-06-06"],"1":["1970-01-11"]},"toTypeName(map_binary_list_date32)":"Map(String, Array(Nullable(Date32)))"}
 {"map_binary_list_date32":{"0":["1970-01-01"],"0":["2149-06-06"],"0":["1970-01-11"]},"toTypeName(map_binary_list_date32)":"Map(String, Array(Nullable(Date32)))"}
@@ -10290,15 +10290,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_struct_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_struct_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_binary_struct_bool":{"1":{"a":true},"1":{"a":false},"1":{"a":true}},"toTypeName(map_binary_struct_bool)":"Map(String, Tuple(\n    a Nullable(Bool)))"}
 {"map_binary_struct_bool":{"0":{"a":true},"0":{"a":false},"0":{"a":true}},"toTypeName(map_binary_struct_bool)":"Map(String, Tuple(\n    a Nullable(Bool)))"}
 {"map_binary_struct_bool":{"111100111111":{"a":true},"111100111111":{"a":false},"111100111111":{"a":true}},"toTypeName(map_binary_struct_bool)":"Map(String, Tuple(\n    a Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_struct_date32 = r"""
 {"map_binary_struct_date32":{"1":{"a":"1970-01-01"},"1":{"a":"2149-06-06"},"1":{"a":"1970-01-11"}},"toTypeName(map_binary_struct_date32)":"Map(String, Tuple(\n    a Nullable(Date32)))"}
 {"map_binary_struct_date32":{"0":{"a":"1970-01-01"},"0":{"a":"2149-06-06"},"0":{"a":"1970-01-11"}},"toTypeName(map_binary_struct_date32)":"Map(String, Tuple(\n    a Nullable(Date32)))"}
@@ -10402,15 +10402,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_uint8 = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_binary_uint8 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_binary_uint8":{"1":0,"1":255,"1":128},"toTypeName(map_binary_uint8)":"Map(String, Nullable(UInt8))"}
 {"map_binary_uint8":{"0":0,"0":255,"0":128},"toTypeName(map_binary_uint8)":"Map(String, Nullable(UInt8))"}
 {"map_binary_uint8":{"111100111111":0,"111100111111":255,"111100111111":128},"toTypeName(map_binary_uint8)":"Map(String, Nullable(UInt8))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_binary = r"""
 {"map_bool_binary":{"true":"1","true":"0","true":"111100111111"},"toTypeName(map_bool_binary)":"Map(Bool, Nullable(String))"}
 {"map_bool_binary":{"false":"1","false":"0","false":"111100111111"},"toTypeName(map_bool_binary)":"Map(Bool, Nullable(String))"}
@@ -10418,7 +10418,7 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_bool = r"""
-=======
+
 _parquet_native_v3_file_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_map_binary_uint8 = r"""
 {"list_map_binary_uint8":[{"1":0},{"1":255},{"1":128}],"toTypeName(list_map_binary_uint8)":"Array(Map(String, Nullable(UInt8)))"}
 {"list_map_binary_uint8":[{"0":0},{"0":255},{"0":128}],"toTypeName(list_map_binary_uint8)":"Array(Map(String, Nullable(UInt8)))"}
@@ -10774,13 +10774,13 @@ _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_tha
 """
 
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_bool":{"true":true,"true":false,"true":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 {"map_bool_bool":{"false":true,"false":false,"false":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 {"map_bool_bool":{"true":true,"true":false,"true":true},"toTypeName(map_bool_bool)":"Map(Bool, Nullable(Bool))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_date32 = r"""
 {"map_bool_date32":{"true":"1970-01-01","true":"2149-06-06","true":"1970-01-11"},"toTypeName(map_bool_date32)":"Map(Bool, Nullable(Date32))"}
 {"map_bool_date32":{"false":"1970-01-01","false":"2149-06-06","false":"1970-01-11"},"toTypeName(map_bool_date32)":"Map(Bool, Nullable(Date32))"}
@@ -10830,7 +10830,7 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_bool = r"""
-=======
+
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_map_bool_bool = r"""
 {"list_map_bool_bool":[{"true":true},{"true":false},{"true":true}],"toTypeName(list_map_bool_bool)":"Array(Map(Bool, Nullable(Bool)))"}
 {"list_map_bool_bool":[{"false":true},{"false":false},{"false":true}],"toTypeName(list_map_bool_bool)":"Array(Map(Bool, Nullable(Bool)))"}
@@ -10838,13 +10838,13 @@ _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_tha
 """
 
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_list_bool":{"true":[true],"true":[false],"true":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 {"map_bool_list_bool":{"false":[true],"false":[false],"false":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 {"map_bool_list_bool":{"true":[true],"true":[false],"true":[true]},"toTypeName(map_bool_list_bool)":"Map(Bool, Array(Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_list_date32 = r"""
 {"map_bool_list_date32":{"true":["1970-01-01"],"true":["2149-06-06"],"true":["1970-01-11"]},"toTypeName(map_bool_list_date32)":"Map(Bool, Array(Nullable(Date32)))"}
 {"map_bool_list_date32":{"false":["1970-01-01"],"false":["2149-06-06"],"false":["1970-01-11"]},"toTypeName(map_bool_list_date32)":"Map(Bool, Array(Nullable(Date32)))"}
@@ -10936,15 +10936,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_struct_bool = r"""
-=======
+
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_struct_bool = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_struct_bool":{"true":{"a":true},"true":{"a":false},"true":{"a":true}},"toTypeName(map_bool_struct_bool)":"Map(Bool, Tuple(\n    a Nullable(Bool)))"}
 {"map_bool_struct_bool":{"false":{"a":true},"false":{"a":false},"false":{"a":true}},"toTypeName(map_bool_struct_bool)":"Map(Bool, Tuple(\n    a Nullable(Bool)))"}
 {"map_bool_struct_bool":{"true":{"a":true},"true":{"a":false},"true":{"a":true}},"toTypeName(map_bool_struct_bool)":"Map(Bool, Tuple(\n    a Nullable(Bool)))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_struct_date32 = r"""
 {"map_bool_struct_date32":{"true":{"a":"1970-01-01"},"true":{"a":"2149-06-06"},"true":{"a":"1970-01-11"}},"toTypeName(map_bool_struct_date32)":"Map(Bool, Tuple(\n    a Nullable(Date32)))"}
 {"map_bool_struct_date32":{"false":{"a":"1970-01-01"},"false":{"a":"2149-06-06"},"false":{"a":"1970-01-11"}},"toTypeName(map_bool_struct_date32)":"Map(Bool, Tuple(\n    a Nullable(Date32)))"}
@@ -11048,15 +11048,15 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_uint8 = r"""
-=======
+
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_bool_uint8 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"map_bool_uint8":{"true":0,"true":255,"true":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 {"map_bool_uint8":{"false":0,"false":255,"false":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 {"map_bool_uint8":{"true":0,"true":255,"true":128},"toTypeName(map_bool_uint8)":"Map(Bool, Nullable(UInt8))"}
 """
 
-<<<<<<< HEAD
+
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_map_date32_binary = r"""
 {"map_date32_binary":{"1970-01-01":"1","1970-01-01":"0","1970-01-01":"111100111111"},"toTypeName(map_date32_binary)":"Map(Date32, Nullable(String))"}
 {"map_date32_binary":{"2149-06-06":"1","2149-06-06":"0","2149-06-06":"111100111111"},"toTypeName(map_date32_binary)":"Map(Date32, Nullable(String))"}
@@ -13794,7 +13794,7 @@ _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__fil
 """
 
 _parquet_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_uint8 = r"""
-=======
+
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_map_bool_uint8 = r"""
 {"list_map_bool_uint8":[{"true":0},{"true":255},{"true":128}],"toTypeName(list_map_bool_uint8)":"Array(Map(Bool, Nullable(UInt8)))"}
 {"list_map_bool_uint8":[{"false":0},{"false":255},{"false":128}],"toTypeName(list_map_bool_uint8)":"Array(Map(Bool, Nullable(UInt8)))"}
@@ -14126,14 +14126,14 @@ _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_tha
 """
 
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_uint8 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"uint8":0,"toTypeName(uint8)":"Nullable(UInt8)"}
 {"uint8":255,"toTypeName(uint8)":"Nullable(UInt8)"}
 {"uint8":128,"toTypeName(uint8)":"Nullable(UInt8)"}
 """
 
-<<<<<<< HEAD
-=======
+
+
 _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_that_the__file__table_function_reads_data_correctly_list_uint8 = r"""
 {"list_uint8":[0],"toTypeName(list_uint8)":"Array(Nullable(UInt8))"}
 {"list_uint8":[255],"toTypeName(list_uint8)":"Array(Nullable(UInt8))"}
@@ -18346,4 +18346,4 @@ _parquet_native_v3_url_function_select_from_function_auto_cast_types_I_check_tha
 {"struct":{"bool":true,"uint8":128,"int8":101,"uint16":32767,"int16":10101,"uint32":101010101,"int32":10101010,"uint64":"1010101010101010","int64":"1010101010101010","float":10101010,"double":5.6e266,"date32":"1970-01-11","timestamp":"1970-01-01 00:00:10.000","string":"'hello'","binary":"111100111111"},"toTypeName(struct)":"Tuple(\n    bool Nullable(Bool),\n    uint8 Nullable(UInt8),\n    int8 Nullable(Int8),\n    uint16 Nullable(UInt16),\n    int16 Nullable(Int16),\n    uint32 Nullable(UInt32),\n    int32 Nullable(Int32),\n    uint64 Nullable(UInt64),\n    int64 Nullable(Int64),\n    float Nullable(Float32),\n    double Nullable(Float64),\n    date32 Nullable(Date32),\n    timestamp Nullable(DateTime64(3, 'UTC')),\n    string Nullable(String),\n    binary Nullable(String))"}
 """
 
->>>>>>> 4a198ded7 (update snapshots)
+

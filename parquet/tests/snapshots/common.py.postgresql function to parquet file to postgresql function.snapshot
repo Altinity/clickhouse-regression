@@ -22,7 +22,7 @@ _parquet_native_v3_postgresql_compression_type__NONE__postgresql_function_to_par
 {"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_nullable_date_ = r"""
 {"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
 """
@@ -59,7 +59,7 @@ _parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_
 {"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
 """
 
-=======
+
 _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_int16 = r"""
 {"int16":32767,"toTypeName(int16)":"Int16"}
 """
@@ -420,4 +420,4 @@ _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_function_to_par
 {"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
 """
 
->>>>>>> 4a198ded7 (update snapshots)
+

@@ -10,7 +10,7 @@ _parquet_native_v3_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to
 {"uint16":65535,"toTypeName(uint16)":"UInt16"}
 """
 
-<<<<<<< HEAD
+
 _parquet_mysql_compression_type__GZIP__mysql_function_to_parquet_file_to_mysql_function_I_check_the_data_on_the_second_table_uint32 = r"""
 {"uint32":4294967295,"toTypeName(uint32)":"UInt32"}
 """
@@ -471,7 +471,7 @@ _parquet_mysql_compression_type__NONE__mysql_function_to_parquet_file_to_mysql_f
 {"uint8":255,"toTypeName(uint8)":"UInt8"}
 """
 
-=======
+
 _parquet_native_v3_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table_uint8 = r"""
 {"uint8":255,"toTypeName(uint8)":"UInt8"}
 """
@@ -1132,4 +1132,4 @@ _parquet_native_v3_mysql_compression_type__NONE__mysql_function_to_parquet_file_
 {"nullable_fixedstring_51__":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_fixedstring_51__)":"Nullable(String)"}
 """
 
->>>>>>> 4a198ded7 (update snapshots)
+

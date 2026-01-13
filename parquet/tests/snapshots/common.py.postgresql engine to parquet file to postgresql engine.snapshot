@@ -37,7 +37,7 @@ _parquet_native_v3_postgresql_compression_type__NONE__postgresql_engine_to_parqu
 {"int64":"4021889571459699167","toTypeName(int64)":"Int64"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_date_ = r"""
 {"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
 {"nullable_date_":"1970-01-01","toTypeName(nullable_date_)":"Nullable(Date)"}
@@ -416,9 +416,9 @@ _parquet_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_
 """
 
 _parquet_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int16 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int16 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int16":32767,"toTypeName(int16)":"Int16"}
 {"int16":-32768,"toTypeName(int16)":"Int16"}
 {"int16":0,"toTypeName(int16)":"Int16"}
@@ -431,11 +431,11 @@ _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parqu
 {"int16":-7563,"toTypeName(int16)":"Int16"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int32 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int32 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int32":2147483647,"toTypeName(int32)":"Int32"}
 {"int32":-2147483648,"toTypeName(int32)":"Int32"}
 {"int32":0,"toTypeName(int32)":"Int32"}
@@ -448,11 +448,11 @@ _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parqu
 {"int32":-1156852300,"toTypeName(int32)":"Int32"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int64 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int64 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
 {"int64":"-9223372036854775808","toTypeName(int64)":"Int64"}
 {"int64":"0","toTypeName(int64)":"Int64"}
@@ -465,7 +465,7 @@ _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parqu
 {"int64":"4021889571459699167","toTypeName(int64)":"Int64"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_date_ = r"""
 {"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
 {"nullable_date_":"1970-01-01","toTypeName(nullable_date_)":"Nullable(Date)"}
@@ -844,9 +844,9 @@ _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to
 """
 
 _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int16 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int16 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int16":32767,"toTypeName(int16)":"Int16"}
 {"int16":-32768,"toTypeName(int16)":"Int16"}
 {"int16":0,"toTypeName(int16)":"Int16"}
@@ -859,11 +859,11 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 {"int16":-7563,"toTypeName(int16)":"Int16"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int32 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int32 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int32":2147483647,"toTypeName(int32)":"Int32"}
 {"int32":-2147483648,"toTypeName(int32)":"Int32"}
 {"int32":0,"toTypeName(int32)":"Int32"}
@@ -876,11 +876,11 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 {"int32":-1156852300,"toTypeName(int32)":"Int32"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int64 = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_int64 = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
 {"int64":"-9223372036854775808","toTypeName(int64)":"Int64"}
 {"int64":"0","toTypeName(int64)":"Int64"}
@@ -893,7 +893,7 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 {"int64":"4021889571459699167","toTypeName(int64)":"Int64"}
 """
 
-<<<<<<< HEAD
+
 _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_date_ = r"""
 {"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
 {"nullable_date_":"1970-01-01","toTypeName(nullable_date_)":"Nullable(Date)"}
@@ -999,7 +999,7 @@ _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to
 """
 
 _parquet_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_string = r"""
-=======
+
 _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_float64 = r"""
 {"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
 {"float64":-1.7976909999999999e308,"toTypeName(float64)":"Float64"}
@@ -1131,7 +1131,7 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 """
 
 _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_string = r"""
->>>>>>> 4a198ded7 (update snapshots)
+
 {"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
 {"string":"","toTypeName(string)":"String"}
 {"string":"","toTypeName(string)":"String"}
@@ -1144,8 +1144,8 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 {"string":"gggggggggggggggggggggggggggggggggggg","toTypeName(string)":"String"}
 """
 
-<<<<<<< HEAD
-=======
+
+
 _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_datetime = r"""
 {"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
 {"datetime":"1970-01-01 01:00:00","toTypeName(datetime)":"DateTime"}
@@ -2134,4 +2134,4 @@ _parquet_native_v3_postgresql_compression_type__GZIP__postgresql_engine_to_parqu
 {"array_nullable_datetime__":["2022-06-25 01:59:39"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
 """
 
->>>>>>> 4a198ded7 (update snapshots)
+
