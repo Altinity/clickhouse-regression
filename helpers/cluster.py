@@ -65,12 +65,20 @@ def download_http_binary(binary_source):
                 with Shell() as bash:
                     bash.timeout = 300
                     try:
-                        note(
-                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                        )
-                        cmd = bash(
-                            f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                        )
+                        if current_cpu() == "arm":
+                            note(
+                                f'curl -L --progress-bar "{binary_source}" -o {file_path}'
+                            )
+                            cmd = bash(
+                                f'curl -L --progress-bar "{binary_source}" -o {file_path}'
+                            )
+                        else:
+                            note(
+                                f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                            )
+                            cmd = bash(
+                                f'wget --progress dot:giga "{binary_source}" -O {file_path}'
+                            )
                         assert cmd.exitcode == 0
                     except BaseException:
                         if os.path.exists(file_path):
@@ -98,11 +106,23 @@ def unpack_deb(deb_binary_path, program_name):
     with Shell() as bash:
         bash.timeout = 300
         if not os.path.exists(f"{deb_binary_dir}/{program_name}"):
-            cmd = bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
+            if current_cpu() == "arm":
+                deb_abs_path = os.path.abspath(deb_binary_path)
+                deb_binary_dir_abs = os.path.abspath(deb_binary_dir)
+                # BSD ar extracts to current directory, so extract and move data.tar.gz
+                cmd = bash(f'ar x "{deb_abs_path}" && mv data.tar.gz "{deb_binary_dir_abs}/"')
+            else:
+                cmd = bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
             assert cmd.exitcode == 0, error()
-            cmd = bash(
-                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" "./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}"'
-            )
+            if current_cpu() == "arm":
+                # BSD tar: -O must come right after -x, before -f
+                cmd = bash(
+                    f'tar -vxOz -f "{deb_binary_dir}/data.tar.gz" "./usr/bin/{program_name}" > "{deb_binary_dir}/{program_name}"'
+                )
+            else:
+                cmd = bash(
+                    f'tar -vxzf "{deb_binary_dir}/data.tar.gz" "./usr/bin/{program_name}" -O > "{deb_binary_dir}/{program_name}"'
+                )
             assert cmd.exitcode == 0, error()
             cmd = bash(f'chmod +x "{deb_binary_dir}/{program_name}"')
             assert cmd.exitcode == 0, error()
@@ -1451,13 +1471,24 @@ class PackageDownloader:
                 bash(f"chmod +x {self.binary_path}")
 
                 if not self.package_version:
-                    self.package_version = (
-                        bash(
-                            f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                    if current_cpu() != "arm":
+                        self.package_version = (
+                            bash(
+                                f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
+                            )
+                            .output.split("\n")[-1]
+                            .strip(".")
                         )
-                        .output.split("\n")[-1]
-                        .strip(".")
-                    )
+                    else:
+                        # Mac: use Python regex since BSD grep doesn't support -P
+                        version_output = bash(
+                            f"{self.binary_path} server --version 2>&1"
+                        ).output
+
+                        matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
+                        if matches:
+                            self.package_version = matches[-1].strip(".")
+
 
         if binary_only:
             # Hide the package path / image to force using binary
@@ -1584,7 +1615,7 @@ class Cluster(object):
         if not docker_compose_project_dir:
             raise TypeError("docker compose project directory must be specified")
 
-        if current_cpu() == "aarch64":
+        if current_cpu() in ("aarch64", "arm"):
             if not docker_compose_project_dir.endswith("_arm64"):
                 docker_compose_project_dir += f"_arm64"
 

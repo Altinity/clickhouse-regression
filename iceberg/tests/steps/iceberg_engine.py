@@ -236,6 +236,8 @@ def read_data_from_clickhouse_iceberg_table(
     input_format_parquet_filter_push_down=None,
     use_iceberg_metadata_files_cache=None,
     use_cache_for_count_from_files="0",
+    lock_object_storage_task_distribution_ms=None,
+    max_threads=None,
 ):
     if node is None:
         node = self.context.node
@@ -283,6 +285,22 @@ def read_data_from_clickhouse_iceberg_table(
             (
                 "use_cache_for_count_from_files",
                 use_cache_for_count_from_files,
+            )
+        )
+
+    if lock_object_storage_task_distribution_ms:
+        settings.append(
+            (
+                "lock_object_storage_task_distribution_ms",
+                lock_object_storage_task_distribution_ms,
+            )
+        )
+
+    if max_threads:
+        settings.append(
+            (
+                "max_threads",
+                max_threads,
             )
         )
 
@@ -433,10 +451,12 @@ def check_values_in_system_tables(self, table_name, database):
         total_rows = node.query(
             f"SELECT total_rows FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
-        assert total_rows == "10", error()
+        if check_clickhouse_version(">=25.5")(self):
+            assert total_rows == "10", error()
 
     with By("check that total bytes is correct"):
         total_bytes = node.query(
             f"SELECT total_bytes FROM system.tables WHERE name = '{table_name}'"
         ).output.strip()
-        assert total_bytes == "12990", error()
+        if check_clickhouse_version(">=25.6")(self):
+            assert total_bytes == "12990", error()

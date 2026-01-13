@@ -21,11 +21,34 @@ services:
       timeout: 5s
       retries: 5
 
+  # warehouse-init:
+  #   image: busybox
+  #   volumes:
+  #     - iceberg_warehouse:/warehouse
+  #   command: ["sh", "-c", "mkdir -p /warehouse && chmod -R 777 /warehouse"]
+
+  local-rest:
+    image: tabulario/iceberg-rest
+    user: root
+    ports:
+      - 8183:8181
+    volumes:
+      - ./warehouse:/warehouse
+    environment:
+      - CATALOG_WAREHOUSE=file:///warehouse
+      - CATALOG_IO__IMPL=org.apache.iceberg.hadoop.HadoopFileIO
+    entrypoint: >
+      sh -c "
+        mkdir -p /warehouse &&
+        chmod -R 777 /warehouse &&
+        exec java -jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
+      "
+
   rest:
     image: tabulario/iceberg-rest
     ports:
       - 8182:8181
-    environment:
+    environment:  
       - AWS_ACCESS_KEY_ID=admin
       - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
@@ -88,6 +111,7 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
+      - ./warehouse:/warehouse
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     depends_on:
@@ -118,15 +142,12 @@ services:
       zookeeper1:
         condition: service_healthy
 
-  keeper:
-    image: altinity/clickhouse-keeper:25.8.9.20496.altinityantalya
-    container_name: keeper
-    hostname: keeper
-    ports:
-      - 2181:2181
+  keeper1:
+    extends:
+      file: ../../docker-compose/keeper-service.yml
+      service: keeper1
     volumes:
-      # Note special location of Keeper config overrides. 
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper/keeper_config.xml:/etc/clickhouse-keeper/keeper_config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
 
   # dummy service which does nothing, but allows to postpone

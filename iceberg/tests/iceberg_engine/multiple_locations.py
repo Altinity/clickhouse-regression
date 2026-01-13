@@ -8,12 +8,23 @@ from helpers.common import (
 import os
 import shutil
 import subprocess
+import time
+import uuid
 import pyarrow as pa
 import pyarrow.parquet as pq
 from pyiceberg.io.pyarrow import _pyarrow_to_schema_without_ids
 
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
+
+
+from pyiceberg.catalog import load_catalog
+from pyiceberg.schema import Schema
+from pyiceberg.types import (
+    NestedField,
+    LongType,
+    StringType,
+)
 
 
 @TestScenario
@@ -153,10 +164,132 @@ def local_file_path_issue(self, minio_root_user, minio_root_password):
         pause()
 
 
+@TestScenario
+def local_metadata_and_data(self, minio_root_user, minio_root_password):
+    """Test that ClickHouse correctly handles Iceberg tables with both metadata and data stored locally."""
+    import os
+
+    # Use iceberg_env/warehouse which is mounted in ClickHouse container at /warehouse
+    warehouse = os.path.abspath("./iceberg_env/warehouse")
+    os.makedirs(warehouse, exist_ok=True)
+    note(f"Warehouse path: {warehouse}")
+    note("Note: This path is mounted in ClickHouse container at /warehouse")
+    pause()
+    catalog = load_catalog(
+        "local_rest",
+        type="rest",
+        uri="http://localhost:8183",
+        warehouse=warehouse,
+    )
+
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+    identifier = f"{namespace}.{table_name}"
+
+    # Create namespace if it does not exist
+    existing_namespaces = [ns[0] for ns in catalog.list_namespaces()]
+    if namespace not in existing_namespaces:
+        catalog.create_namespace(namespace)
+
+    # Define Iceberg schema
+    schema = Schema(
+        NestedField(1, "id", LongType(), required=False),
+        NestedField(2, "name", StringType(), required=False),
+    )
+
+    # IMPORTANT: Use host absolute path for pyiceberg (running on host)
+    # PyIceberg needs to write files, so it must use the host filesystem path
+    # The REST catalog container will handle path translation internally
+    # Host path: /home/alsu/.../warehouse/... (pyiceberg can write here)
+    # Container path: /warehouse/... (mounted from host, visible to ClickHouse)
+    table_location = os.path.abspath(f"{warehouse}/{namespace}/{table_name}")
+
+    if identifier not in [t[1] for t in catalog.list_tables(namespace)]:
+        # Use file:/// format (three slashes) for absolute paths
+        # file:///path creates: file:///path (correct format for ClickHouse)
+        # file:/path creates: file:/path (incorrect - only two slashes)
+        # Use /warehouse (container path) so files are created in the mounted directory
+        table = catalog.create_table(
+            identifier=identifier,
+            schema=schema,
+            location=f"file://{table_location}",
+        )
+    else:
+        table = catalog.load_table(identifier)
+
+    note(f"Table name: {table.name()}")
+    note(f"Location: {table.location}")
+
+    # ----------------------------
+    # Append data
+    # ----------------------------
+    arrow_table = pa.table(
+        {
+            "id": [1, 2, 3],
+            "name": ["Alice", "Bob", "Charlie"],
+        }
+    )
+
+    table.append(arrow_table)
+
+    note("Data appended")
+
+    # ----------------------------
+    # Check metadata JSON location
+    # ----------------------------
+    note("=== METADATA JSON LOCATION ===")
+    note(f"Table UUID: {table.metadata.table_uuid}")
+    note(f"Table location: {table.location()}")
+
+    # Check metadata_log for referenced metadata files
+    if table.metadata.metadata_log:
+        note("\nMetadata files referenced in metadata_log:")
+        for entry in table.metadata.metadata_log:
+            metadata_file = entry.metadata_file
+            note(f"  {metadata_file}")
+            # Convert file:// URL to local path
+            if metadata_file.startswith("file:"):
+                local_path = metadata_file[5:]  # Remove 'file:' prefix
+                note(f"  Local path: {local_path}")
+                note(f"  Exists on filesystem: {os.path.exists(local_path)}")
+                if os.path.exists(local_path):
+                    note(f"  Size: {os.path.getsize(local_path)} bytes")
+
+    note("\n=== IMPORTANT ===")
+    note("When using a REST catalog, the metadata JSON is stored by the")
+    note("REST catalog server internally, NOT in the warehouse directory.")
+    note("The warehouse directory only contains:")
+    note("  - Data files (parquet)")
+    note("  - Manifest files (avro)")
+    note("  - Manifest list files (avro)")
+    note("\nTo access metadata JSON, use pyiceberg API:")
+    note("  table.metadata.model_dump_json()")
+
+    # Show metadata JSON (first 500 chars)
+    import json
+
+    metadata_json = table.metadata.model_dump_json()
+    note(f"\nMetadata JSON (first 500 chars):\n{metadata_json[:500]}...")
+
+    # ----------------------------
+    # Scan data
+    # ----------------------------
+    scan = table.scan()
+    result = scan.to_arrow()
+
+    note("Scan result:")
+    note(result.to_pandas())
+    pause()
+
+
 @TestFeature
 @Name("multiple locations")
 def feature(self, minio_root_user, minio_root_password):
     """Test that ClickHouse correctly handles Iceberg tables with files in different locations."""
-    Scenario(test=local_file_path_issue)(
+    # Scenario(test=local_file_path_issue)(
+    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    # )
+    # pause()
+    Scenario(test=local_metadata_and_data)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

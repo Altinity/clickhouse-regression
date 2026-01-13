@@ -18,7 +18,10 @@ def ping(self):
                 with When(f"ch_{i} {cmd}"):
                     r = ch_nodes[i].command(cmd, no_checks=True)
                 with Then(f"Connection should succeed"):
-                    assert "Connected to kerberos" in r.output, error()
+                    assert (
+                        "Connected to kerberos" in r.output
+                        or "Established connection to kerberos" in r.output
+                    ), error()
 
 
 @TestScenario

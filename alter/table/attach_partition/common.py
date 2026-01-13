@@ -17,7 +17,7 @@ def clean_name(name):
 def current_cpu():
     """Return current cpu architecture."""
     arch = platform.processor()
-    if arch not in ("x86_64", "aarch64"):
+    if arch not in ("x86_64", "aarch64", "arm"):
         raise TypeError(f"unsupported CPU architecture {arch}")
     return arch
 

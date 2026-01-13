@@ -110,40 +110,12 @@ xfails = {
             check_clickhouse_version(">=25.6"),
         )
     ],
-    "/iceberg/iceberg engine/rest catalog/feature/show databases queries": [
+    "/iceberg/iceberg engine/rest catalog/feature/show databases queries/*": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/89189",
-            check_clickhouse_version(">=25.10"),
-        )
-    ],
-    "/iceberg/iceberg engine/rest catalog/feature/show tables queries": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/89189",
-            lambda test: check_clickhouse_version(">=25.3")(test)
-            and check_clickhouse_version("<25.10")(test),
-        )
-    ],
-    "/iceberg/iceberg engine/glue catalog/feature/show data lake catalogs in system tables/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/91363",
-        )
-    ],
-    "/iceberg/iceberg engine/: catalog/feature/show data lake catalogs in system tables": [
-        (
-            Fail,
-            "show_data_lake_catalogs_in_system_tables setting is not supported before 25.8 and on 25.4",
-            lambda test: check_clickhouse_version("<25.8")(test)
-            or check_is_altinity_build(),
-        )
-    ],
-    "/iceberg/iceberg engine/glue catalog/feature/show tables queries/*": [
-        (
-            Fail,
-            "/iceberg/iceberg engine/glue catalog/feature/show tables queries",
-            check_clickhouse_version("<25.10"),
+            "https://github.com/Altinity/clickhouse-regression/issues/86",
+            lambda test: check_clickhouse_version(">=25.8")(test)
+            and check_if_antalya_build(),
         )
     ],
     "/iceberg/iceberg table engine/write min max pruning/*": [
@@ -151,13 +123,50 @@ xfails = {
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/91363",
             lambda test: (
-                check_if_not_antalya_build(test)
-                and check_clickhouse_version("<26.1")(test)
+                check_if_not_antalya_build() and check_clickhouse_version("<26.1")(test)
             )
             or (
-                check_if_antalya_build(test)
-                and check_clickhouse_version("<=25.8.9")(test)
+                check_if_antalya_build() and check_clickhouse_version("<=25.8.9")(test)
             ),
+        )
+    ],
+    "/iceberg/iceberg engine/glue catalog/feature/show data lake catalogs in system tables/*": [
+        (
+            Fail,
+            "https://github.com/clickhouse/clickhouse/issues/91363",
+            check_clickhouse_version(">=25.8"),
+        )
+    ],
+    "/iceberg/iceberg cache/rest catalog/iceberg database engine/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+    "/iceberg/iceberg cache/rest catalog/icebergS3 table function/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+        "/iceberg/iceberg cache/glue catalog/iceberg database engine/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
+        )
+    ],
+        "/iceberg/iceberg cache/glue catalog/icebergS3 table function/cache": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1277",
+            lambda test: check_clickhouse_version(">=25.3")(test)
+            and check_if_antalya_build(),
         )
     ],
 }

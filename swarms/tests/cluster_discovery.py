@@ -305,7 +305,10 @@ def check_cluster_discovery_with_wrong_cluster_name(
         assert "clickhouse2" in output, error()
 
     with And("define expected exit code and message"):
-        if check_if_antalya_build(self) and check_clickhouse_version(">=25.6")(self):
+        if check_if_antalya_build(self) and check_clickhouse_version(">=25.8.12")(self):
+            exitcode = 33
+            message = "DB::Exception: All replicas were marked as lost: While executing Remote."
+        elif check_if_antalya_build(self) and check_clickhouse_version(">=25.6")(self):
             exitcode = 100
             message = "DB::Exception: Received from localhost:9000. DB::Exception: Unknown packet 18 from one of the following replicas"
         else:
