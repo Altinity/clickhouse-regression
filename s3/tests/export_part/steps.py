@@ -877,7 +877,23 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
             flush_log(node=node, table_name="system.part_log")
             part_log = get_part_log(table_name=source_table, node=node)
             destination_parts = get_s3_parts(table_name=destination_table)
-            assert part_log in destination_parts, error()
+
+            missing_parts = []
+            for part_name in part_log:
+                if not any(
+                    dest_part.startswith(part_name) for dest_part in destination_parts
+                ):
+                    missing_parts.append(part_name)
+
+            err_msg = ""
+            if missing_parts:
+                err_msg = (
+                    f"Parts from part_log not found in destination: {missing_parts}\n"
+                    f"Part log: {part_log}\n"
+                    f"Destination parts: {destination_parts}"
+                )
+
+            assert len(missing_parts) == 0, error(err_msg)
 
 
 @TestStep(Then)
