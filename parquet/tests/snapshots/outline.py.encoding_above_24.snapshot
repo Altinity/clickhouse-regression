@@ -12,3 +12,7 @@ rle_dict_plain_structure = r""""identity_line_item_id\tNullable(String)\t\t\t\t\
 
 rle_boolean_2_structure = r"""'datatype_boolean\tNullable(Bool)'"""
 
+dictionary_structure = r""""id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9, \\'UTC\\'))""" + '"'
+
+plain_structure = r""""id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9, \\'UTC\\'))""" + '"'
+

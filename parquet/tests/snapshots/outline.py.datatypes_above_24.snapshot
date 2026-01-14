@@ -106,3 +106,21 @@ unsigned_structure = r"""'a\tNullable(UInt8)\t\t\t\t\t\nb\tNullable(UInt16)\t\t\
 
 unsigned_stats_structure = r"""'utiny\tNullable(UInt8)\t\t\t\t\t\nusmall\tNullable(UInt16)\t\t\t\t\t\nuint\tNullable(Int64)\t\t\t\t\t\nubig\tNullable(UInt64)'"""
 
+arrow_timestamp_structure = r""""Time\tNullable(DateTime64(6, \\'UTC\\'))""" + '"'
+
+arrow_timestamp_ms_structure = r""""Time\tNullable(DateTime64(3, \\'UTC\\'))""" + '"'
+
+int32_2_structure = r"""'tconst\tNullable(String)\t\t\t\t\t\nprincipals\tTuple(\\n    ordering Nullable(Int32),\\n    nconst Nullable(String),\\n    category Nullable(String),\\n    job Nullable(String),\\n    characters Array(Nullable(String)))'"""
+
+large_string_map_structure = r"""'arr\tMap(String, Nullable(Int32))'"""
+
+many_datatypes_structure = r""""byteval\tNullable(Int8)\t\t\t\t\t\nshortval\tNullable(Int16)\t\t\t\t\t\nintegerval\tNullable(Int32)\t\t\t\t\t\nlongval\tNullable(Int64)\t\t\t\t\t\nfloatval\tNullable(Float32)\t\t\t\t\t\ndoubleval\tNullable(Float64)\t\t\t\t\t\ndecimalval\tNullable(Decimal(5, 2))\t\t\t\t\t\nstringval\tNullable(String)\t\t\t\t\t\nbinaryval\tNullable(String)\t\t\t\t\t\nbooleanval\tNullable(Bool)\t\t\t\t\t\ntimestampval\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\ndateval\tNullable(Date32)""" + '"'
+
+int64_negative_structure = r""""dt\tNullable(String)\t\t\t\t\t\ndt2\tNullable(Int64)\t\t\t\t\t\ndt3\tNullable(DateTime64(9, \\'UTC\\'))""" + '"'
+
+user_data_structure = r""""registration_dttm\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\nid\tNullable(Int32)\t\t\t\t\t\nfirst_name\tNullable(String)\t\t\t\t\t\nlast_name\tNullable(String)\t\t\t\t\t\nemail\tNullable(String)\t\t\t\t\t\ngender\tNullable(String)\t\t\t\t\t\nip_address\tNullable(String)\t\t\t\t\t\ncc\tNullable(String)\t\t\t\t\t\ncountry\tNullable(String)\t\t\t\t\t\nbirthdate\tNullable(String)\t\t\t\t\t\nsalary\tNullable(Float64)\t\t\t\t\t\ntitle\tNullable(String)\t\t\t\t\t\ncomments\tNullable(String)""" + '"'
+
+timestamp_ms_ns_structure = r""""date_val\tNullable(Date32)\t\t\t\t\t\ntime_val\tNullable(DateTime64(6, \\'UTC\\'))\t\t\t\t\t\ntimestamp_val\tNullable(DateTime64(6, \\'UTC\\'))\t\t\t\t\t\ntimestamps_val\tNullable(DateTime64(3, \\'UTC\\'))\t\t\t\t\t\ntimestampms_val\tNullable(DateTime64(3, \\'UTC\\'))\t\t\t\t\t\ntimestampns_val\tNullable(DateTime64(6, \\'UTC\\'))""" + '"'
+
+int32_2_structure = r""""linkback_length\tNullable(Int64)\t\t\t\t\t\nagent_call_sid\tNullable(Int64)\t\t\t\t\t\nclient_sid\tNullable(Int64)\t\t\t\t\t\nagent_sid\tNullable(Int64)\t\t\t\t\t\ncall_date\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\ncall_type\tNullable(String)\t\t\t\t\t\ncall_sid\tNullable(Int64)\t\t\t\t\t\nskills\tNullable(String)\t\t\t\t\t\nresult\tNullable(Int64)\t\t\t\t\t\ncall_wait_duration\tNullable(Int64)\t\t\t\t\t\ntransfer_duration\tNullable(Int64)\t\t\t\t\t\nwrap_up_duration\tNullable(Int64)\t\t\t\t\t\ntalk_duration\tNullable(Int64)\t\t\t\t\t\nhold_duration\tNullable(Int64)\t\t\t\t\t\ncall_month_epoch\tNullable(Int64)\t\t\t\t\t\ncall_date_epoch\tNullable(Int64)\t\t\t\t\t\n_version\tNullable(Int32)""" + '"'
+
