@@ -616,7 +616,7 @@ def minio_regression(
         Feature(test=load("s3.tests.remote_s3_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
-    with Feature("export tests"):    
+    with Feature("export tests"):
         Feature(test=load("s3.tests.export_part.feature", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
