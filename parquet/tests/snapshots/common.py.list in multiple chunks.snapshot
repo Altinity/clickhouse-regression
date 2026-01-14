@@ -1,8 +1,4 @@
-
-_parquet_list_in_multiple_chunks_I_check_that_the_data_was_successfully_written_into_the_ClickHouse_table = r"""
-
-_parquet_native_v3_list_in_multiple_chunks_I_check_that_the_data_was_successfully_written_into_the_ClickHouse_table = r"""
-
+_parquet_arrow_list_in_multiple_chunks_I_check_that_the_data_was_successfully_written_into_the_ClickHouse_table = r"""
 {"arr":[]}
 {"arr":[]}
 {"arr":[]}

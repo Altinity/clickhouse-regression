@@ -1,6 +1,6 @@
-arrow_timestamp_structure = r""""Time\tNullable(DateTime64(6, \\'UTC\\'))""" + '"'
+arrow_timestamp_structure = r"""'Time\tNullable(DateTime64(6))'"""
 
-arrow_timestamp_ms_structure = r""""Time\tNullable(DateTime64(3, \\'UTC\\'))""" + '"'
+arrow_timestamp_ms_structure = r"""'Time\tNullable(DateTime64(3))'"""
 
 binary_values_structure = r"""'foo\tNullable(String)'"""
 
@@ -48,37 +48,13 @@ int32_decimal_structure = r"""'value\tNullable(Decimal(4, 2))'"""
 
 int64_structure1 = r"""'seq\tNullable(Int64)'"""
 
-
-json_structure = r"""'BLOCK_NUMBER\tNullable(Int32)\t\t\t\t\t\nBLOCK_TIMESTAMP\tNullable(DateTime64(6))\t\t\t\t\t\nBLOCK_HASH\tNullable(String)\t\t\t\t\t\nTX_HASH\tNullable(String)\t\t\t\t\t\nNONCE\tNullable(Float64)\t\t\t\t\t\nPOSITION\tNullable(Int32)\t\t\t\t\t\nORIGIN_FUNCTION_SIGNATURE\tNullable(String)\t\t\t\t\t\nFROM_ADDRESS\tNullable(String)\t\t\t\t\t\nTO_ADDRESS\tNullable(String)\t\t\t\t\t\nETH_VALUE\tNullable(Float64)\t\t\t\t\t\nTX_FEE\tNullable(Float64)\t\t\t\t\t\nGAS_PRICE\tNullable(Float64)\t\t\t\t\t\nGAS_LIMIT\tNullable(Int32)\t\t\t\t\t\nGAS_USED\tNullable(Float64)\t\t\t\t\t\nCUMULATIVE_GAS_USED\tNullable(Float64)\t\t\t\t\t\nINPUT_DATA\tNullable(String)\t\t\t\t\t\nSTATUS\tNullable(String)\t\t\t\t\t\nTX_JSON\tArray(Nullable(String))\t\t\t\t\t\n__row_index\tNullable(Int32)'"""
-
-many_datatypes_2_structure = r"""'id\tNullable(String)\t\t\t\t\t\ncrawl_id\tNullable(Int32)\t\t\t\t\t\nunique_link_digest\tNullable(String)\t\t\t\t\t\ntag\tNullable(String)\t\t\t\t\t\nprimary_url_from_digest\tNullable(String)\t\t\t\t\t\nprimary_url_from\tNullable(String)\t\t\t\t\t\nprimary_url_from_deeprank\tNullable(Float64)\t\t\t\t\t\nprimary_url_from_status_code\tNullable(Int32)\t\t\t\t\t\nprimary_url_from_title\tNullable(String)\t\t\t\t\t\nurl_to_digest\tNullable(String)\t\t\t\t\t\nurl_to\tNullable(String)\t\t\t\t\t\nurl_to_deeprank\tNullable(Float64)\t\t\t\t\t\nurl_to_status_code\tNullable(Int32)\t\t\t\t\t\nurl_to_title\tNullable(String)\t\t\t\t\t\nlink_type\tNullable(String)\t\t\t\t\t\nanchor_text\tNullable(String)\t\t\t\t\t\nnofollow\tNullable(Bool)\t\t\t\t\t\nis_redirect\tNullable(Bool)\t\t\t\t\t\ninternal\tNullable(Bool)\t\t\t\t\t\nis_restricted\tNullable(Bool)\t\t\t\t\t\nhreflang\tNullable(String)\t\t\t\t\t\nattr_rel\tNullable(String)\t\t\t\t\t\nprimary_url_from_alias\tNullable(String)\t\t\t\t\t\nprimary_url_from_alias_digest\tNullable(String)\t\t\t\t\t\nurl_to_alias\tNullable(String)\t\t\t\t\t\nurl_to_alias_digest\tNullable(String)\t\t\t\t\t\nurl_to_https\tNullable(Bool)\t\t\t\t\t\nprimary_url_from_https\tNullable(Bool)\t\t\t\t\t\nis_hreflang\tNullable(Bool)\t\t\t\t\t\nprimary_url_from_status_code_id\tNullable(Int32)\t\t\t\t\t\nurl_to_status_code_id\tNullable(Int32)\t\t\t\t\t\nhas_image_alt_text\tNullable(Bool)\t\t\t\t\t\nhas_image_link\tNullable(Bool)\t\t\t\t\t\nis_image_alt_text_empty\tNullable(Bool)\t\t\t\t\t\ninstance_count\tNullable(Int64)\t\t\t\t\t\njoin_field\tNullable(String)\t\t\t\t\t\npart\tNullable(Int32)'"""
-
-many_datatypes_structure = r"""'byteval\tNullable(Int8)\t\t\t\t\t\nshortval\tNullable(Int16)\t\t\t\t\t\nintegerval\tNullable(Int32)\t\t\t\t\t\nlongval\tNullable(Int64)\t\t\t\t\t\nfloatval\tNullable(Float32)\t\t\t\t\t\ndoubleval\tNullable(Float64)\t\t\t\t\t\ndecimalval\tNullable(Decimal(5, 2))\t\t\t\t\t\nstringval\tNullable(String)\t\t\t\t\t\nbinaryval\tNullable(String)\t\t\t\t\t\nbooleanval\tNullable(Bool)\t\t\t\t\t\ntimestampval\tNullable(DateTime64(9))\t\t\t\t\t\ndateval\tNullable(Date32)'"""
-
-map_structure = r"""'my_map\tMap(String, Nullable(String))\t\t\t\t\t\nfilter\tNullable(String)'"""
-
-multiple_nullbytes_structure = r"""'i\tNullable(Int32)\t\t\t\t\t\nv\tNullable(String)'"""
-
-nan_double_structure = r"""'one\tNullable(Float64)\t\t\t\t\t\ntwo\tNullable(String)\t\t\t\t\t\nthree\tNullable(Bool)'"""
-
-nullbytes_structure = r"""'42\tNullable(Int32)\t\t\t\t\t\nhello world\tNullable(String)'"""
-
-pandas_arrow_timestamp_structure = r"""'foo\tNullable(Date32)'"""
-
-pandas_decimal_structure = r"""'value0\tNullable(Decimal(5, 1))\t\t\t\t\t\nvalue1\tNullable(Decimal(4, 2))\t\t\t\t\t\nvalue2\tNullable(Decimal(9, 4))\t\t\t\t\t\nvalue3\tNullable(Decimal(17, 8))\t\t\t\t\t\nvalue4\tNullable(Decimal(36, 17))'"""
-
-parquet_go_structure = r"""'FirstName\tNullable(String)\t\t\t\t\t\nData\tNullable(String)'"""
-
-
 int64_decimal_structure = r"""'value\tNullable(Decimal(10, 2))'"""
 
 json_structure = r""""BLOCK_NUMBER\tNullable(Int32)\t\t\t\t\t\nBLOCK_TIMESTAMP\tNullable(DateTime64(6, \\'UTC\\'))\t\t\t\t\t\nBLOCK_HASH\tNullable(String)\t\t\t\t\t\nTX_HASH\tNullable(String)\t\t\t\t\t\nNONCE\tNullable(Float64)\t\t\t\t\t\nPOSITION\tNullable(Int32)\t\t\t\t\t\nORIGIN_FUNCTION_SIGNATURE\tNullable(String)\t\t\t\t\t\nFROM_ADDRESS\tNullable(String)\t\t\t\t\t\nTO_ADDRESS\tNullable(String)\t\t\t\t\t\nETH_VALUE\tNullable(Float64)\t\t\t\t\t\nTX_FEE\tNullable(Float64)\t\t\t\t\t\nGAS_PRICE\tNullable(Float64)\t\t\t\t\t\nGAS_LIMIT\tNullable(Int32)\t\t\t\t\t\nGAS_USED\tNullable(Float64)\t\t\t\t\t\nCUMULATIVE_GAS_USED\tNullable(Float64)\t\t\t\t\t\nINPUT_DATA\tNullable(String)\t\t\t\t\t\nSTATUS\tNullable(String)\t\t\t\t\t\nTX_JSON\tArray(JSON)\t\t\t\t\t\n__row_index\tNullable(Int32)""" + '"'
 
-large_string_map_structure = r"""'arr\tMap(String, Nullable(Int32))'"""
-
 double_structure = r"""'cusip\tNullable(String)\t\t\t\t\t\npermno\tNullable(Int32)\t\t\t\t\t\npermco\tNullable(Int32)\t\t\t\t\t\nissuno\tNullable(Float64)\t\t\t\t\t\nhexcd\tNullable(Float64)\t\t\t\t\t\nhsiccd\tNullable(Float64)\t\t\t\t\t\ndate\tNullable(String)\t\t\t\t\t\nbidlo\tNullable(Float64)\t\t\t\t\t\naskhi\tNullable(Float64)\t\t\t\t\t\nprc\tNullable(Float64)\t\t\t\t\t\nvol\tNullable(Float64)\t\t\t\t\t\nret\tNullable(Float64)\t\t\t\t\t\nbid\tNullable(Float64)\t\t\t\t\t\nask\tNullable(Float64)\t\t\t\t\t\nshrout\tNullable(Float64)\t\t\t\t\t\ncfacpr\tNullable(Float64)\t\t\t\t\t\ncfacshr\tNullable(Float64)\t\t\t\t\t\nopenprc\tNullable(Float64)\t\t\t\t\t\nnumtrd\tNullable(Float64)\t\t\t\t\t\nretx\tNullable(Float64)'"""
 
-many_datatypes_structure = r""""byteval\tNullable(Int8)\t\t\t\t\t\nshortval\tNullable(Int16)\t\t\t\t\t\nintegerval\tNullable(Int32)\t\t\t\t\t\nlongval\tNullable(Int64)\t\t\t\t\t\nfloatval\tNullable(Float32)\t\t\t\t\t\ndoubleval\tNullable(Float64)\t\t\t\t\t\ndecimalval\tNullable(Decimal(5, 2))\t\t\t\t\t\nstringval\tNullable(String)\t\t\t\t\t\nbinaryval\tNullable(String)\t\t\t\t\t\nbooleanval\tNullable(Bool)\t\t\t\t\t\ntimestampval\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\ndateval\tNullable(Date32)""" + '"'
+many_datatypes_structure = r"""'byteval\tNullable(Int8)\t\t\t\t\t\nshortval\tNullable(Int16)\t\t\t\t\t\nintegerval\tNullable(Int32)\t\t\t\t\t\nlongval\tNullable(Int64)\t\t\t\t\t\nfloatval\tNullable(Float32)\t\t\t\t\t\ndoubleval\tNullable(Float64)\t\t\t\t\t\ndecimalval\tNullable(Decimal(5, 2))\t\t\t\t\t\nstringval\tNullable(String)\t\t\t\t\t\nbinaryval\tNullable(String)\t\t\t\t\t\nbooleanval\tNullable(Bool)\t\t\t\t\t\ntimestampval\tNullable(DateTime64(9))\t\t\t\t\t\ndateval\tNullable(Date32)'"""
 
 many_datatypes_2_structure = r"""'id\tNullable(String)\t\t\t\t\t\ncrawl_id\tNullable(Int32)\t\t\t\t\t\nunique_link_digest\tNullable(String)\t\t\t\t\t\ntag\tNullable(String)\t\t\t\t\t\nprimary_url_from_digest\tNullable(String)\t\t\t\t\t\nprimary_url_from\tNullable(String)\t\t\t\t\t\nprimary_url_from_deeprank\tNullable(Float64)\t\t\t\t\t\nprimary_url_from_status_code\tNullable(Int32)\t\t\t\t\t\nprimary_url_from_title\tNullable(String)\t\t\t\t\t\nurl_to_digest\tNullable(String)\t\t\t\t\t\nurl_to\tNullable(String)\t\t\t\t\t\nurl_to_deeprank\tNullable(Float64)\t\t\t\t\t\nurl_to_status_code\tNullable(Int32)\t\t\t\t\t\nurl_to_title\tNullable(String)\t\t\t\t\t\nlink_type\tNullable(String)\t\t\t\t\t\nanchor_text\tNullable(String)\t\t\t\t\t\nnofollow\tNullable(Bool)\t\t\t\t\t\nis_redirect\tNullable(Bool)\t\t\t\t\t\ninternal\tNullable(Bool)\t\t\t\t\t\nis_restricted\tNullable(Bool)\t\t\t\t\t\nhreflang\tNullable(String)\t\t\t\t\t\nattr_rel\tNullable(String)\t\t\t\t\t\nprimary_url_from_alias\tNullable(String)\t\t\t\t\t\nprimary_url_from_alias_digest\tNullable(String)\t\t\t\t\t\nurl_to_alias\tNullable(String)\t\t\t\t\t\nurl_to_alias_digest\tNullable(String)\t\t\t\t\t\nurl_to_https\tNullable(Bool)\t\t\t\t\t\nprimary_url_from_https\tNullable(Bool)\t\t\t\t\t\nis_hreflang\tNullable(Bool)\t\t\t\t\t\nprimary_url_from_status_code_id\tNullable(Int32)\t\t\t\t\t\nurl_to_status_code_id\tNullable(Int32)\t\t\t\t\t\nhas_image_alt_text\tNullable(Bool)\t\t\t\t\t\nhas_image_link\tNullable(Bool)\t\t\t\t\t\nis_image_alt_text_empty\tNullable(Bool)\t\t\t\t\t\ninstance_count\tNullable(Int64)\t\t\t\t\t\njoin_field\tNullable(String)\t\t\t\t\t\npart\tNullable(Int32)'"""
 
@@ -88,7 +64,7 @@ silly_names_structure = r"""'önë\tNullable(Int64)\t\t\t\t\t\n🦆\tNullable(Bo
 
 nan_double_structure = r"""'one\tNullable(Float64)\t\t\t\t\t\ntwo\tNullable(String)\t\t\t\t\t\nthree\tNullable(Bool)'"""
 
-int64_negative_structure = r""""dt\tNullable(String)\t\t\t\t\t\ndt2\tNullable(Int64)\t\t\t\t\t\ndt3\tNullable(DateTime64(9, \\'UTC\\'))""" + '"'
+int64_negative_structure = r"""'dt\tNullable(String)\t\t\t\t\t\ndt2\tNullable(Int64)\t\t\t\t\t\ndt3\tNullable(DateTime64(9))'"""
 
 nullbytes_structure = r"""'42\tNullable(Int32)\t\t\t\t\t\nhello world\tNullable(String)'"""
 
@@ -104,32 +80,9 @@ parquet_go_structure = r"""'FirstName\tNullable(String)\t\t\t\t\t\nData\tNullabl
 
 single_null_structure = r"""'mycol\tNullable(Float64)'"""
 
-
 pyspark_structure = r"""'year\tNullable(Int64)\t\t\t\t\t\nquarter\tNullable(Int64)\t\t\t\t\t\nmonth\tNullable(Int64)\t\t\t\t\t\ndayofmonth\tNullable(Int64)\t\t\t\t\t\ndayofweek\tNullable(Int64)\t\t\t\t\t\nflightdate\tNullable(String)\t\t\t\t\t\nuniquecarrier\tNullable(String)\t\t\t\t\t\nairlineid\tNullable(Float64)\t\t\t\t\t\ncarrier\tNullable(String)\t\t\t\t\t\nflightnum\tNullable(String)\t\t\t\t\t\noriginairportid\tNullable(Int64)\t\t\t\t\t\noriginairportseqid\tNullable(Int64)\t\t\t\t\t\norigincitymarketid\tNullable(Int64)\t\t\t\t\t\norigin\tNullable(String)\t\t\t\t\t\norigincityname\tNullable(String)\t\t\t\t\t\noriginstate\tNullable(String)\t\t\t\t\t\noriginstatefips\tNullable(String)\t\t\t\t\t\noriginstatename\tNullable(String)\t\t\t\t\t\noriginwac\tNullable(Float64)\t\t\t\t\t\ndestairportid\tNullable(Int64)\t\t\t\t\t\ndestairportseqid\tNullable(Int64)\t\t\t\t\t\ndestcitymarketid\tNullable(Int64)\t\t\t\t\t\ndest\tNullable(String)\t\t\t\t\t\ndestcityname\tNullable(String)\t\t\t\t\t\ndeststate\tNullable(String)\t\t\t\t\t\ndeststatefips\tNullable(String)\t\t\t\t\t\ndeststatename\tNullable(String)\t\t\t\t\t\ndestwac\tNullable(Float64)\t\t\t\t\t\ncrsdeptime\tNullable(Float64)\t\t\t\t\t\ndeptime\tNullable(Float64)\t\t\t\t\t\ndepdelay\tNullable(Float64)\t\t\t\t\t\ndepdelayminutes\tNullable(Float64)\t\t\t\t\t\ndepdel15\tNullable(Float64)\t\t\t\t\t\ndeparturedelaygroups\tNullable(Float64)\t\t\t\t\t\ndeptimeblk\tNullable(String)\t\t\t\t\t\ncrsarrtime\tNullable(Float64)\t\t\t\t\t\narrtime\tNullable(Float64)\t\t\t\t\t\narrdelay\tNullable(Float64)\t\t\t\t\t\narrdelayminutes\tNullable(Float64)\t\t\t\t\t\narrdel15\tNullable(Float64)\t\t\t\t\t\narrivaldelaygroups\tNullable(Float64)\t\t\t\t\t\narrtimeblk\tNullable(String)\t\t\t\t\t\ncancelled\tNullable(Int64)\t\t\t\t\t\ndiverted\tNullable(Int64)\t\t\t\t\t\ncrselapsedtime\tNullable(Float64)\t\t\t\t\t\nactualelapsedtime\tNullable(Float64)\t\t\t\t\t\nflights\tNullable(Float64)\t\t\t\t\t\ndistance\tNullable(Float64)\t\t\t\t\t\ndistancegroup\tNullable(Int64)'"""
 
 pyspark_structure_2 = r"""'s_store_sk\tNullable(Int32)\t\t\t\t\t\ns_store_id\tNullable(String)\t\t\t\t\t\ns_rec_start_date\tNullable(Date32)\t\t\t\t\t\ns_rec_end_date\tNullable(Date32)\t\t\t\t\t\ns_closed_date_sk\tNullable(Int32)\t\t\t\t\t\ns_store_name\tNullable(String)\t\t\t\t\t\ns_number_employees\tNullable(Int32)\t\t\t\t\t\ns_floor_space\tNullable(Int32)\t\t\t\t\t\ns_hours\tNullable(String)\t\t\t\t\t\ns_manager\tNullable(String)\t\t\t\t\t\ns_market_id\tNullable(Int32)\t\t\t\t\t\ns_geography_class\tNullable(String)\t\t\t\t\t\ns_market_desc\tNullable(String)\t\t\t\t\t\ns_market_manager\tNullable(String)\t\t\t\t\t\ns_division_id\tNullable(Int32)\t\t\t\t\t\ns_division_name\tNullable(String)\t\t\t\t\t\ns_company_id\tNullable(Int32)\t\t\t\t\t\ns_company_name\tNullable(String)\t\t\t\t\t\ns_street_number\tNullable(String)\t\t\t\t\t\ns_street_name\tNullable(String)\t\t\t\t\t\ns_street_type\tNullable(String)\t\t\t\t\t\ns_suite_number\tNullable(String)\t\t\t\t\t\ns_city\tNullable(String)\t\t\t\t\t\ns_county\tNullable(String)\t\t\t\t\t\ns_state\tNullable(String)\t\t\t\t\t\ns_zip\tNullable(String)\t\t\t\t\t\ns_country\tNullable(String)\t\t\t\t\t\ns_gmt_offset\tNullable(Decimal(5, 2))\t\t\t\t\t\ns_tax_precentage\tNullable(Decimal(5, 2))'"""
-
-
-silly_names_structure = r"""'önë\tNullable(Int64)\t\t\t\t\t\n🦆\tNullable(Bool)'"""
-
-single_null_structure = r"""'mycol\tNullable(Float64)'"""
-
-string_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nvalue\tNullable(String)'"""
-
-struct_structure_1 = r"""'inner\tTuple(\\n    str_field Nullable(String),\\n    f64_field Nullable(Float64))'"""
-
-timestamp_ms_ns_structure = r"""'date_val\tNullable(Date32)\t\t\t\t\t\ntime_val\tNullable(DateTime64(6))\t\t\t\t\t\ntimestamp_val\tNullable(DateTime64(6))\t\t\t\t\t\ntimestamps_val\tNullable(DateTime64(3))\t\t\t\t\t\ntimestampms_val\tNullable(DateTime64(3))\t\t\t\t\t\ntimestampns_val\tNullable(DateTime64(6))'"""
-
-timestamp_timezone_structure = r""""TimeRecStart\tNullable(DateTime64(3, \\'UTC\\'))""" + '"'
-
-unsigned_stats_structure = r"""'utiny\tNullable(UInt8)\t\t\t\t\t\nusmall\tNullable(UInt16)\t\t\t\t\t\nuint\tNullable(Int64)\t\t\t\t\t\nubig\tNullable(UInt64)'"""
-
-unsigned_structure = r"""'a\tNullable(UInt8)\t\t\t\t\t\nb\tNullable(UInt16)\t\t\t\t\t\nc\tNullable(Int64)\t\t\t\t\t\nd\tNullable(UInt64)'"""
-
-user_data_structure = r"""'registration_dttm\tNullable(DateTime64(9))\t\t\t\t\t\nid\tNullable(Int32)\t\t\t\t\t\nfirst_name\tNullable(String)\t\t\t\t\t\nlast_name\tNullable(String)\t\t\t\t\t\nemail\tNullable(String)\t\t\t\t\t\ngender\tNullable(String)\t\t\t\t\t\nip_address\tNullable(String)\t\t\t\t\t\ncc\tNullable(String)\t\t\t\t\t\ncountry\tNullable(String)\t\t\t\t\t\nbirthdate\tNullable(String)\t\t\t\t\t\nsalary\tNullable(Float64)\t\t\t\t\t\ntitle\tNullable(String)\t\t\t\t\t\ncomments\tNullable(String)'"""
-
-uuid_2_structure = r"""'u\tNullable(FixedString(16))'"""
-
 
 decimal_table_name_structure = r"""'dec4\tNullable(Decimal(4, 1))\t\t\t\t\t\ndec9\tNullable(Decimal(9, 3))\t\t\t\t\t\ndec18\tNullable(Decimal(18, 5))\t\t\t\t\t\nCAST(-999999999999999999999999999999999.99999 AS DECIMAL(38,5))\tNullable(Decimal(38, 5))'"""
 
@@ -137,13 +90,13 @@ string_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nvalue\tNullable(String)'"
 
 inconsistent_offsets = r"""'ints\tArray(Nullable(Int64))\t\t\t\t\t\nstrings\tNullable(String)'"""
 
-user_data_structure = r""""registration_dttm\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\nid\tNullable(Int32)\t\t\t\t\t\nfirst_name\tNullable(String)\t\t\t\t\t\nlast_name\tNullable(String)\t\t\t\t\t\nemail\tNullable(String)\t\t\t\t\t\ngender\tNullable(String)\t\t\t\t\t\nip_address\tNullable(String)\t\t\t\t\t\ncc\tNullable(String)\t\t\t\t\t\ncountry\tNullable(String)\t\t\t\t\t\nbirthdate\tNullable(String)\t\t\t\t\t\nsalary\tNullable(Float64)\t\t\t\t\t\ntitle\tNullable(String)\t\t\t\t\t\ncomments\tNullable(String)""" + '"'
+user_data_structure = r"""'registration_dttm\tNullable(DateTime64(9))\t\t\t\t\t\nid\tNullable(Int32)\t\t\t\t\t\nfirst_name\tNullable(String)\t\t\t\t\t\nlast_name\tNullable(String)\t\t\t\t\t\nemail\tNullable(String)\t\t\t\t\t\ngender\tNullable(String)\t\t\t\t\t\nip_address\tNullable(String)\t\t\t\t\t\ncc\tNullable(String)\t\t\t\t\t\ncountry\tNullable(String)\t\t\t\t\t\nbirthdate\tNullable(String)\t\t\t\t\t\nsalary\tNullable(Float64)\t\t\t\t\t\ntitle\tNullable(String)\t\t\t\t\t\ncomments\tNullable(String)'"""
 
 struct_structure_1 = r"""'inner\tTuple(\\n    str_field Nullable(String),\\n    f64_field Nullable(Float64))'"""
 
 uuid_2_structure = r"""'u\tNullable(FixedString(16))'"""
 
-timestamp_ms_ns_structure = r""""date_val\tNullable(Date32)\t\t\t\t\t\ntime_val\tNullable(DateTime64(6, \\'UTC\\'))\t\t\t\t\t\ntimestamp_val\tNullable(DateTime64(6, \\'UTC\\'))\t\t\t\t\t\ntimestamps_val\tNullable(DateTime64(3, \\'UTC\\'))\t\t\t\t\t\ntimestampms_val\tNullable(DateTime64(3, \\'UTC\\'))\t\t\t\t\t\ntimestampns_val\tNullable(DateTime64(6, \\'UTC\\'))""" + '"'
+timestamp_ms_ns_structure = r"""'date_val\tNullable(Date32)\t\t\t\t\t\ntime_val\tNullable(DateTime64(6))\t\t\t\t\t\ntimestamp_val\tNullable(DateTime64(6))\t\t\t\t\t\ntimestamps_val\tNullable(DateTime64(3))\t\t\t\t\t\ntimestampms_val\tNullable(DateTime64(3))\t\t\t\t\t\ntimestampns_val\tNullable(DateTime64(6))'"""
 
 int32_2_structure = r""""linkback_length\tNullable(Int64)\t\t\t\t\t\nagent_call_sid\tNullable(Int64)\t\t\t\t\t\nclient_sid\tNullable(Int64)\t\t\t\t\t\nagent_sid\tNullable(Int64)\t\t\t\t\t\ncall_date\tNullable(DateTime64(9, \\'UTC\\'))\t\t\t\t\t\ncall_type\tNullable(String)\t\t\t\t\t\ncall_sid\tNullable(Int64)\t\t\t\t\t\nskills\tNullable(String)\t\t\t\t\t\nresult\tNullable(Int64)\t\t\t\t\t\ncall_wait_duration\tNullable(Int64)\t\t\t\t\t\ntransfer_duration\tNullable(Int64)\t\t\t\t\t\nwrap_up_duration\tNullable(Int64)\t\t\t\t\t\ntalk_duration\tNullable(Int64)\t\t\t\t\t\nhold_duration\tNullable(Int64)\t\t\t\t\t\ncall_month_epoch\tNullable(Int64)\t\t\t\t\t\ncall_date_epoch\tNullable(Int64)\t\t\t\t\t\n_version\tNullable(Int32)""" + '"'
 
@@ -152,5 +105,4 @@ timestamp_timezone_structure = r""""TimeRecStart\tNullable(DateTime64(3, \\'UTC\
 unsigned_structure = r"""'a\tNullable(UInt8)\t\t\t\t\t\nb\tNullable(UInt16)\t\t\t\t\t\nc\tNullable(Int64)\t\t\t\t\t\nd\tNullable(UInt64)'"""
 
 unsigned_stats_structure = r"""'utiny\tNullable(UInt8)\t\t\t\t\t\nusmall\tNullable(UInt16)\t\t\t\t\t\nuint\tNullable(Int64)\t\t\t\t\t\nubig\tNullable(UInt64)'"""
-
 
