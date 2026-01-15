@@ -2494,3 +2494,237 @@ _parquet_native_v3_postgresql_compression_type__LZ4__postgresql_engine_to_parque
 {"array_nullable_string__":["ccccccccccc"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
 """
 
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_datetime = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+{"datetime":"2106-02-07 06:28:16","toTypeName(datetime)":"DateTime"}
+{"datetime":"1970-01-01 01:00:00","toTypeName(datetime)":"DateTime"}
+{"datetime":"2006-11-27 02:50:49","toTypeName(datetime)":"DateTime"}
+{"datetime":"2015-06-29 09:43:07","toTypeName(datetime)":"DateTime"}
+{"datetime":"2011-09-30 02:34:30","toTypeName(datetime)":"DateTime"}
+{"datetime":"2019-04-27 02:01:34","toTypeName(datetime)":"DateTime"}
+{"datetime":"2017-02-11 09:09:25","toTypeName(datetime)":"DateTime"}
+{"datetime":"2009-06-14 11:12:39","toTypeName(datetime)":"DateTime"}
+{"datetime":"2020-01-24 15:10:50","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_datetime = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+{"datetime":"2106-02-07 06:28:16","toTypeName(datetime)":"DateTime"}
+{"datetime":"1970-01-01 01:00:00","toTypeName(datetime)":"DateTime"}
+{"datetime":"2006-11-27 02:50:49","toTypeName(datetime)":"DateTime"}
+{"datetime":"2015-06-29 09:43:07","toTypeName(datetime)":"DateTime"}
+{"datetime":"2011-09-30 02:34:30","toTypeName(datetime)":"DateTime"}
+{"datetime":"2019-04-27 02:01:34","toTypeName(datetime)":"DateTime"}
+{"datetime":"2017-02-11 09:09:25","toTypeName(datetime)":"DateTime"}
+{"datetime":"2009-06-14 11:12:39","toTypeName(datetime)":"DateTime"}
+{"datetime":"2020-01-24 15:10:50","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_datetime = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+{"datetime":"2106-02-07 06:28:16","toTypeName(datetime)":"DateTime"}
+{"datetime":"1970-01-01 01:00:00","toTypeName(datetime)":"DateTime"}
+{"datetime":"2006-11-27 02:50:49","toTypeName(datetime)":"DateTime"}
+{"datetime":"2015-06-29 09:43:07","toTypeName(datetime)":"DateTime"}
+{"datetime":"2011-09-30 02:34:30","toTypeName(datetime)":"DateTime"}
+{"datetime":"2019-04-27 02:01:34","toTypeName(datetime)":"DateTime"}
+{"datetime":"2017-02-11 09:09:25","toTypeName(datetime)":"DateTime"}
+{"datetime":"2009-06-14 11:12:39","toTypeName(datetime)":"DateTime"}
+{"datetime":"2020-01-24 15:10:50","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2106-02-07 06:28:16","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":null,"toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2014-04-10 09:39:46","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2004-04-05 13:18:38","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-08-10 21:14:26","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-01-25 20:44:12","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2009-05-30 23:43:18","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2015-12-28 10:07:33","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2017-06-27 03:09:51","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2106-02-07 06:28:16","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":null,"toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2014-04-10 09:39:46","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2004-04-05 13:18:38","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-08-10 21:14:26","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-01-25 20:44:12","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2009-05-30 23:43:18","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2015-12-28 10:07:33","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2017-06-27 03:09:51","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2106-02-07 06:28:16","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":null,"toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2014-04-10 09:39:46","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2004-04-05 13:18:38","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-08-10 21:14:26","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2006-01-25 20:44:12","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2009-05-30 23:43:18","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2015-12-28 10:07:33","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+{"nullable_datetime_":"2017-06-27 03:09:51","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2106-02-07 06:28:16"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["1970-01-01 01:00:00"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2010-02-11 01:04:35"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2015-10-06 14:57:11"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2009-02-01 22:56:17"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2020-10-26 19:33:28"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2005-01-06 09:17:18"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2012-08-30 20:02:43"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2011-03-04 12:01:26"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2106-02-07 06:28:16"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["1970-01-01 01:00:00"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2010-02-11 01:04:35"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2015-10-06 14:57:11"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2009-02-01 22:56:17"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2020-10-26 19:33:28"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2005-01-06 09:17:18"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2012-08-30 20:02:43"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2011-03-04 12:01:26"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTT"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTT"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":[""],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTT"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"],"toTypeName(array_string_)":"Array(String)"}
+{"array_string_":["IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2106-02-07 06:28:16"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["1970-01-01 01:00:00"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2010-02-11 01:04:35"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2015-10-06 14:57:11"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2009-02-01 22:56:17"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2020-10-26 19:33:28"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2005-01-06 09:17:18"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2012-08-30 20:02:43"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+{"array_datetime_":["2011-03-04 12:01:26"],"toTypeName(array_datetime_)":"Array(DateTime)"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2106-02-07 06:28:16"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":[null],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2016-11-04 17:37:37"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2006-09-20 18:38:47"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2014-06-12 16:48:05"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-10-07 15:26:24"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2013-06-14 10:24:57"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2015-12-25 04:27:19"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-06-25 01:59:39"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2106-02-07 06:28:16"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":[null],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2016-11-04 17:37:37"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2006-09-20 18:38:47"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2014-06-12 16:48:05"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-10-07 15:26:24"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2013-06-14 10:24:57"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2015-12-25 04:27:19"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-06-25 01:59:39"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+"""
+
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[""],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[null],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["YYYYYYYYYYYYYYYYY"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ccccccccccc"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+"""
+
+_parquet_arrow_postgresql_compression_type__GZIP__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2106-02-07 06:28:16"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":[null],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2016-11-04 17:37:37"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2006-09-20 18:38:47"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2014-06-12 16:48:05"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-10-07 15:26:24"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2013-06-14 10:24:57"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2015-12-25 04:27:19"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+{"array_nullable_datetime__":["2022-06-25 01:59:39"],"toTypeName(array_nullable_datetime__)":"Array(Nullable(DateTime))"}
+"""
+
+_parquet_arrow_postgresql_compression_type__NONE__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[""],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[null],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["YYYYYYYYYYYYYYYYY"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ccccccccccc"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+"""
+
+_parquet_arrow_postgresql_compression_type__LZ4__postgresql_engine_to_parquet_file_to_postgresql_engine_I_check_the_data_on_the_table_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[""],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":[null],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["YYYYYYYYYYYYYYYYY"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+{"array_nullable_string__":["ccccccccccc"],"toTypeName(array_nullable_string__)":"Array(Nullable(String))"}
+"""
+
