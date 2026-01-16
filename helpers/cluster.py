@@ -1460,12 +1460,12 @@ class PackageDownloader:
         if self.binary_path:
             self.binary_path = os.path.abspath(self.binary_path)
             with Shell() as bash:
-                if os.path.relpath(self.binary_path).startswith("../.."):
+                if os.path.relpath(self.binary_path, current_dir()).startswith("../.."):
                     # Binary is outside of the build context, move it to where docker can find it
-                    new_path = f"{current_dir()}/../binaries/{os.path.basename(self.binary_path)}"
-                    bash(
-                        f"mkdir -p {current_dir()}/../binaries/ && cp {self.binary_path} {new_path}"
-                    )
+                    binaries_dir = os.path.abspath(f"{current_dir()}/../binaries")
+                    new_path = f"{binaries_dir}/{os.path.basename(self.binary_path)}"
+                    bash(f"mkdir -p {binaries_dir}")
+                    bash(f"cp {self.binary_path} {new_path}")
                     self.binary_path = os.path.relpath(new_path)
 
                 bash(f"chmod +x {self.binary_path}")
@@ -1488,7 +1488,6 @@ class PackageDownloader:
                         matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
                         if matches:
                             self.package_version = matches[-1].strip(".")
-
 
         if binary_only:
             # Hide the package path / image to force using binary
