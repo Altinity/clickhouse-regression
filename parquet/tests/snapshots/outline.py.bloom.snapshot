@@ -1,0 +1,18 @@
+binary_bloom_gz_parquet_structure = r"""'value\tNullable(String)'"""
+
+timestamp_bloom_gz_parquet_structure = r""""value\tNullable(DateTime64(9, \\'UTC\\'))""" + '"'
+
+double_bloom_gz_parquet_structure = r"""'value\tNullable(Float64)'"""
+
+integer_bloom_gz_parquet_structure = r"""'value\tNullable(Int32)'"""
+
+decimal_bloom_gz_parquet_structure = r"""'value\tNullable(Decimal(18, 0))'"""
+
+struct_bloom_gz_parquet_structure = r"""'field1\tNullable(Int32)\t\t\t\t\t\nfield2\tNullable(String)'"""
+
+long_bloom_gz_parquet_structure = r"""'value\tNullable(Int64)'"""
+
+date_bloom_gz_parquet_structure = r"""'value\tNullable(Date32)'"""
+
+boolean_bloom_gz_parquet_structure = r"""'value\tNullable(Bool)'"""
+
