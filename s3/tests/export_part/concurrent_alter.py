@@ -430,6 +430,7 @@ def stress(self, example):
                 Step(test=example.alter_function, parallel=True, executor=executor)(
                     table_name=source_table, **example.kwargs
                 )
+                time.sleep(0.3)
             join()
 
     with Then("Check successfully exported parts are present in destination"):
