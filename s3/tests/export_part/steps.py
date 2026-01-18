@@ -8,7 +8,9 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
+from platform import processor
 
+MINIO_CONTAINER = "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
 
 @TestStep(Given)
 def minio_storage_configuration(self, restart=True):
@@ -434,7 +436,7 @@ def get_s3_parts(self, table_name, node=None):
 
 
 @TestStep(When)
-def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
+def kill_minio(self, cluster=None, container_name=MINIO_CONTAINER, signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
 
     if cluster is None:
@@ -462,7 +464,7 @@ def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KIL
 
 
 @TestStep(When)
-def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
+def start_minio(self, cluster=None, container_name=MINIO_CONTAINER):
     """Start MinIO container and wait for it to be ready."""
 
     if cluster is None:
