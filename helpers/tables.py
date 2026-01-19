@@ -386,7 +386,7 @@ class Table:
 def create_table(
     self,
     engine,
-    columns,
+    columns=None,
     name=None,
     path=None,
     drop_sync=False,
@@ -414,7 +414,10 @@ def create_table(
     if node is None:
         node = current().context.node
 
-    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+    if columns is not None:
+        columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+    else:
+        columns_def = ""
 
     if order_by_all_columns:
         non_nullable_columns = [column for column in columns if "Nullable" not in column.datatype.name]
