@@ -1,0 +1,296 @@
+{
+    "test_cases": [
+        {
+            "name": "simple_arithmetic_alias",
+            "description": "Test simple arithmetic alias columns (value * 2, id + value)",
+            "category": "1.1_simple_arithmetic",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "computed",
+                    "expression": "value * 2",
+                    "hybrid_type": "Int64"
+                },
+                {
+                    "name": "sum_alias",
+                    "expression": "id + value",
+                    "hybrid_type": "Int64"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 0,
+                "error_message": null
+            },
+            "test_query": "SELECT id, value, computed, sum_alias FROM {hybrid_table} ORDER BY id",
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "constant_alias",
+            "description": "Test constant alias columns",
+            "category": "1.2_constant",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "threshold",
+                    "expression": "50",
+                    "hybrid_type": "Int32"
+                },
+                {
+                    "name": "default_date",
+                    "expression": "'2025-01-01'",
+                    "hybrid_type": "Date"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 0,
+                "error_message": null
+            },
+            "test_query": "SELECT id, value, threshold, default_date FROM {hybrid_table} ORDER BY id",
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "boolean_alias",
+            "description": "Test boolean/logical alias columns",
+            "category": "1.3_boolean",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "is_even",
+                    "expression": "value % 2 = 0",
+                    "hybrid_type": "UInt8"
+                },
+                {
+                    "name": "is_recent",
+                    "expression": "date_col >= '2025-01-15'",
+                    "hybrid_type": "UInt8"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 0,
+                "error_message": null
+            },
+            "test_query": "SELECT id, value, is_even, is_recent FROM {hybrid_table} ORDER BY id",
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "date_function_alias",
+            "description": "Test date/time function alias columns",
+            "category": "1.4_date_time",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "year_month",
+                    "expression": "toYYYYMM(date_col)",
+                    "hybrid_type": "UInt32"
+                },
+                {
+                    "name": "year",
+                    "expression": "toYear(date_col)",
+                    "hybrid_type": "UInt16"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 0,
+                "error_message": null
+            },
+            "test_query": "SELECT id, date_col, year_month, year FROM {hybrid_table} ORDER BY id",
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "nested_dependent_alias",
+            "description": "Test nested/dependent alias columns",
+            "category": "1.9_nested_dependent",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "doubled",
+                    "expression": "value * 2",
+                    "hybrid_type": "Int64"
+                },
+                {
+                    "name": "quadrupled",
+                    "expression": "doubled * 2",
+                    "hybrid_type": "Int64"
+                },
+                {
+                    "name": "sum_all",
+                    "expression": "id + value + doubled + quadrupled",
+                    "hybrid_type": "Int64"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 0,
+                "error_message": null
+            },
+            "test_query": "SELECT id, value, doubled, quadrupled, sum_all FROM {hybrid_table} ORDER BY id",
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "alias_in_watermark_predicate_unsupported",
+            "description": "Test alias column in watermark predicate (may be unsupported)",
+            "category": "2.2_alias_column_predicates",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "computed",
+                    "expression": "value * 2",
+                    "hybrid_type": "Int64"
+                }
+            ],
+            "watermark": {
+                "date": null,
+                "left_predicate": "computed >= 20",
+                "right_predicate": "computed < 20"
+            },
+            "expected": {
+                "exitcode": 1,
+                "error_message": null
+            },
+            "test_query": null,
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        },
+        {
+            "name": "type_mismatch_error",
+            "description": "Test type mismatch between alias and hybrid table definition",
+            "category": "4.1_type_mismatch",
+            "base_columns": [
+                {
+                    "name": "id",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "value",
+                    "datatype": "Int32"
+                },
+                {
+                    "name": "date_col",
+                    "datatype": "Date"
+                }
+            ],
+            "alias_columns": [
+                {
+                    "name": "computed",
+                    "expression": "value * 2",
+                    "hybrid_type": "String"
+                }
+            ],
+            "watermark": {
+                "date": "2025-01-15",
+                "left_predicate": "date_col >= '2025-01-15'",
+                "right_predicate": "date_col < '2025-01-15'"
+            },
+            "expected": {
+                "exitcode": 1,
+                "error_message": null
+            },
+            "test_query": null,
+            "order_by": "(date_col, id)",
+            "partition_by": "toYYYYMM(date_col)"
+        }
+    ]
+}
