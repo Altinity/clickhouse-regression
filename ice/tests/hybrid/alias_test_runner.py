@@ -192,4 +192,3 @@ def feature(self, minio_root_user, minio_root_password):
     for test_case in test_cases:
         name = test_case["name"]
         Scenario(name=name, test=run_test_case)(test_case=test_case)
-        pause()
