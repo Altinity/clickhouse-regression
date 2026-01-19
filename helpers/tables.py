@@ -660,3 +660,46 @@ def create_table_as_select(
     finally:
         with Finally(f"drop the table {table_name}"):
             node.query(f"DROP TABLE IF EXISTS {table_name}")
+
+
+@TestStep(Given)
+def create_table_as(
+    self,
+    reference_table,
+    engine="MergeTree",
+    table_name=None,
+    order_by="tuple()",
+    columns="*",
+    node=None,
+    partition_by=None,
+):
+    """Create a table using `AS {table_name}` clause."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        table_name = f"table_{getuid()}"
+
+    query = f"""
+        CREATE TABLE {table_name} 
+        """
+
+    if engine is not None:
+        query += f" ENGINE = {engine}"
+
+    if partition_by is not None:
+        query += f" PARTITION BY {partition_by}"
+
+    if order_by is not None:
+        query += f" ORDER BY {order_by}"
+
+    query += f" AS {reference_table}"
+
+    try:
+        with By(f"creating table {table_name}"):
+            node.query(query)
+            yield table_name
+
+    finally:
+        with Finally(f"drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name}")
