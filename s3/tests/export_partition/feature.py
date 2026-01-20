@@ -27,7 +27,7 @@ def minio(self, uri, bucket_prefix):
     # Feature(run=load("s3.tests.export_partition.concurrent_actions", "feature"))
     # Feature(run=load("s3.tests.export_partition.system_monitoring", "feature"))
     # Feature(run=load("s3.tests.export_partition.schema_evolution", "feature"))
-    # Feature(run=load("s3.tests.export_partition.parallel_export_partition", "feature"))
+    Feature(run=load("s3.tests.export_partition.parallel_export_partition", "feature"))
     # Feature(
     # run=load("s3.tests.export_partition.alter_destination_during_export", "feature")
     # )
