@@ -31,7 +31,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -39,7 +38,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed, sum_alias FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed, sum_alias FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed, sum_alias FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -74,7 +77,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -82,7 +84,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, threshold, default_date FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT threshold, default_date FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, threshold, default_date FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -117,7 +123,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -125,7 +130,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, is_even, is_recent FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT is_even, is_recent FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, is_even, is_recent FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -156,7 +165,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -164,7 +172,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, date_col, year_month, year FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT year_month, year FROM {hybrid_table} ORDER BY id",
+                "SELECT id, date_col, year_month, year FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -204,7 +216,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -212,7 +223,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, doubled, quadrupled, sum_all FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT doubled, quadrupled, sum_all FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, doubled, quadrupled, sum_all FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -242,7 +257,6 @@
                 }
             ],
             "watermark": {
-                "date": null,
                 "left_predicate": "computed >= 20",
                 "right_predicate": "computed < 20"
             },
@@ -250,7 +264,7 @@
                 "exitcode": 1,
                 "error_message": null
             },
-            "test_query": null,
+            "test_queries": null,
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -280,7 +294,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -288,7 +301,7 @@
                 "exitcode": 1,
                 "error_message": null
             },
-            "test_query": null,
+            "test_queries": null,
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -310,10 +323,9 @@
                     "datatype": "Date"
                 }
             ],
-            "alias_columns": [
+            "alias_columns_definition_for_hybrid_table": [
                 {
                     "name": "computed",
-                    "expression": "value * 2",
                     "hybrid_type": "Int64"
                 }
             ],
@@ -331,7 +343,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -339,7 +350,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -379,11 +394,10 @@
                 {
                     "name": "modulo",
                     "expression": "value1 % 3",
-                    "hybrid_type": "Int32"
+                    "hybrid_type": "Int16"
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -391,7 +405,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value1, value2, difference, product, modulo FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value1, value2, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT difference, product, modulo FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value1, value2, difference, product, modulo FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -431,7 +449,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -439,7 +456,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, name, upper_name, lower_name, name_length FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, name, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT upper_name, lower_name, name_length FROM {hybrid_table} ORDER BY id",
+                "SELECT id, name, upper_name, lower_name, name_length FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -479,7 +500,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -487,7 +507,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, value_str, value_float, date_string FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT value_str, value_float, date_string FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, value_str, value_float, date_string FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -531,7 +555,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -539,7 +562,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, value2, category, status, coalesced FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, value2, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT category, status, coalesced FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, value2, category, status, coalesced FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -578,7 +605,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -586,7 +612,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, name, score, formatted_date FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, name, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT score, formatted_date FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, name, score, formatted_date FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -616,7 +646,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "value >= 50",
                 "right_predicate": "value < 50"
             },
@@ -624,7 +653,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -654,7 +687,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "id >= 100",
                 "right_predicate": "id < 100"
             },
@@ -662,7 +694,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -692,7 +728,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "value BETWEEN 10 AND 100",
                 "right_predicate": "value NOT BETWEEN 10 AND 100"
             },
@@ -700,7 +735,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -730,7 +769,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "status = 'active'",
                 "right_predicate": "status != 'active'"
             },
@@ -738,7 +776,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, status, upper_status FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, status, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT upper_status FROM {hybrid_table} ORDER BY id",
+                "SELECT id, status, upper_status FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -773,7 +815,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -781,7 +822,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed, is_even FROM {hybrid_table} WHERE computed > 100 ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed, is_even FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed, is_even FROM {hybrid_table} WHERE computed > 100 ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -811,7 +856,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -819,7 +863,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT category, count(*) as cnt, sum(value) as total FROM {hybrid_table} GROUP BY category ORDER BY category",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT category FROM {hybrid_table} ORDER BY id",
+                "SELECT category, count(*) as cnt, sum(value) as total FROM {hybrid_table} GROUP BY category ORDER BY category"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -849,7 +897,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -857,7 +904,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY computed DESC, id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY computed DESC, id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -887,7 +938,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -895,7 +945,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT category, count(*) as cnt FROM {hybrid_table} GROUP BY category HAVING cnt > 1 ORDER BY category",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT category FROM {hybrid_table} ORDER BY id",
+                "SELECT category, count(*) as cnt FROM {hybrid_table} GROUP BY category HAVING cnt > 1 ORDER BY category"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -925,7 +979,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -933,7 +986,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -968,7 +1025,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -976,7 +1032,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed, coalesced_value FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed, coalesced_value FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed, coalesced_value FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1002,7 +1062,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "toYear(date_col) = 2025",
                 "right_predicate": "toYear(date_col) < 2025"
             },
@@ -1010,7 +1069,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, date_col, year_month FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT year_month FROM {hybrid_table} ORDER BY id",
+                "SELECT id, date_col, year_month FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1050,7 +1113,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -1058,7 +1120,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, doubled, tripled, squared FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT doubled, tripled, squared FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, doubled, tripled, squared FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1098,7 +1164,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -1106,7 +1171,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, is_valid, is_high_or_low, is_not_zero FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT is_valid, is_high_or_low, is_not_zero FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, is_valid, is_high_or_low, is_not_zero FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1142,7 +1211,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -1150,7 +1218,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, date_col, day_of_week, day_of_month, month FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT day_of_week, day_of_month, month FROM {hybrid_table} ORDER BY id",
+                "SELECT id, date_col, day_of_week, day_of_month, month FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1185,7 +1257,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15'",
                 "right_predicate": "date_col < '2025-01-15'"
             },
@@ -1193,7 +1264,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT computed, is_even FROM {hybrid_table} ORDER BY computed",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed, is_even FROM {hybrid_table} ORDER BY computed",
+                "SELECT id, value, computed, is_even FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         },
@@ -1228,7 +1303,6 @@
                 }
             ],
             "watermark": {
-                "date": "2025-01-15",
                 "left_predicate": "date_col >= '2025-01-15' AND value > 25",
                 "right_predicate": "date_col < '2025-01-15' OR value <= 25"
             },
@@ -1236,7 +1310,11 @@
                 "exitcode": 0,
                 "error_message": null
             },
-            "test_query": "SELECT id, value, computed, threshold FROM {hybrid_table} ORDER BY id",
+            "test_queries": [
+                "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+                "SELECT computed, threshold FROM {hybrid_table} ORDER BY id",
+                "SELECT id, value, computed, threshold FROM {hybrid_table} ORDER BY id"
+            ],
             "order_by": "(date_col, id)",
             "partition_by": "toYYYYMM(date_col)"
         }
