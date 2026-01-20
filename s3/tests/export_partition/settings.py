@@ -366,16 +366,16 @@ def feature(self):
         minio_storage_configuration(restart=True)
 
     with And("test EXPORT PARTITION settings"):
-        Scenario(run=export_partition_settings_combinations)(strength=2)
+        Scenario(test=export_partition_settings_combinations)(strength=2)
 
     with And("test Parquet settings"):
-        Scenario(run=parquet_settings_combinations)(strength=2)
+        Scenario(test=parquet_settings_combinations)(strength=2)
 
     with And("test S3 settings"):
-        Scenario(run=s3_settings_combinations)(strength=2)
+        Scenario(test=s3_settings_combinations)(strength=2)
 
     with And("test parts/partitions settings"):
-        Scenario(run=parts_partitions_settings_combinations)(strength=2)
+        Scenario(test=parts_partitions_settings_combinations)(strength=2)
 
     with And("test all settings combined"):
-        Scenario(run=all_settings_combined)(strength=3)
+        Scenario(test=all_settings_combined)(strength=3)
