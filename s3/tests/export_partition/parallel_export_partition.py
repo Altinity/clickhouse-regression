@@ -137,6 +137,45 @@ def create_source_and_destination_tables(
         return source_table, s3_table_name
 
 
+@TestStep(Given)
+def create_source_and_destination_tables_sharded(
+    self, number_of_partitions=None, number_of_parts=None
+):
+    """Create source and destination tables for export partition tests"""
+
+    if number_of_partitions is None:
+        number_of_partitions = self.context.number_of_partitions
+
+    if number_of_parts is None:
+        number_of_parts = self.context.number_of_parts
+
+    source_table = f"source_{getuid()}"
+
+    with Given("I create source and destination tables"):
+        columns = [
+            {"name": "p", "type": "UInt16"},
+            {"name": "i", "type": "UInt64"},
+            {"name": "extra", "type": "UInt8"},
+        ]
+
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=columns,
+            stop_merges=False,
+            number_of_partitions=number_of_partitions,
+            number_of_parts=number_of_parts,
+            query_settings=f"storage_policy = 'tiered_storage'",
+            cluster="sharded_cluster",
+            sharded=True,
+        )
+        s3_table_name = create_s3_table(
+            table_name="s3", create_new_bucket=True, columns=columns
+        )
+
+        return source_table, s3_table_name
+
+
 @TestOutline
 def parallel_export_partitions(
     self,
@@ -204,6 +243,14 @@ def generated_dataset(self):
 
 
 @TestScenario
+def generated_dataset_sharded(self):
+    """Test parallel EXPORT PARTITION with dataset that we generate on the fly."""
+    parallel_export_partitions(
+        source_and_destination=create_source_and_destination_tables_sharded
+    )
+
+
+@TestScenario
 def nyc_taxi_dataset(self):
     """Test parallel EXPORT PARTITION with NYC Taxi dataset."""
     parallel_export_partitions(
@@ -235,3 +282,4 @@ def feature(
         minio_storage_configuration(restart=True)
 
     Scenario(run=generated_dataset)
+    Scenario(run=generated_dataset_sharded)
