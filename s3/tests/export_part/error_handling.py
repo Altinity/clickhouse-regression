@@ -317,7 +317,7 @@ def pending_mutations(self):
 def pending_patch_parts(self):
     """Check that exporting parts with pending patch parts throws an error by default."""
 
-    with Given("I create a populated source table and empty S3 table"):
+    with Given("I create a populated source table with lightweight update support and empty S3 table"):
         source_table = "source_" + getuid()
 
         partitioned_merge_tree_table(
@@ -325,15 +325,15 @@ def pending_patch_parts(self):
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
+            query_settings="enable_block_number_column = 1, enable_block_offset_column = 1",
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I perform a lightweight UPDATE to create patch parts"):
-        update.alter_table_update_column(
-            table_name=source_table,
-            column_name="i",
-            expression="i + 1000",
-            condition="p = 1",
+        self.context.node.query(
+            f"UPDATE {source_table} SET i = i + 1000 WHERE p = 1",
+            exitcode=0,
+            steps=True,
         )
 
     with When("I try to export parts with pending patch parts (default settings)"):
