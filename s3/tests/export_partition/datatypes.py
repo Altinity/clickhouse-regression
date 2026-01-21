@@ -6,6 +6,7 @@ from s3.tests.export_partition.steps import (
     create_s3_table,
     source_matches_destination,
 )
+from s3.tests.export_part.steps import get_column_info
 from helpers.create import *
 from helpers.queries import *
 from helpers.common import getuid
@@ -161,6 +162,21 @@ def create_table_with_ephemeral_and_default_column(self, table_name):
 
 
 @TestStep(Given)
+def create_table_with_simple_default_column(self, table_name):
+    """Create a MergeTree table with simple DEFAULT column (not dependent on EPHEMERAL)."""
+    create_replicated_merge_tree_table(
+        table_name=table_name,
+        columns=[
+            {"name": "id", "type": "UInt32"},
+            {"name": "value", "type": "UInt32"},
+            {"name": "status", "type": "String", "default": "'active'"},
+        ],
+        partition_by="id",
+        query_settings="index_granularity = 1",
+    )
+
+
+@TestStep(Given)
 def create_table_with_mixed_columns(self, table_name):
     """Create a MergeTree table with mixed ALIAS, MATERIALIZED, and EPHEMERAL columns."""
     create_replicated_merge_tree_table(
@@ -300,7 +316,8 @@ def materialized_column_export(self):
 
 @TestCheck
 def ephemeral_and_default_column_export(self):
-    """Check exporting EPHEMERAL and DEFAULT columns to S3 table."""
+    """Check exporting EPHEMERAL and DEFAULT columns to S3 table.
+    EPHEMERAL columns should be ignored and not present in destination."""
 
     with Given(
         "I create a source table with EPHEMERAL and DEFAULT columns and S3 destination table"
@@ -318,14 +335,150 @@ def ephemeral_and_default_column_export(self):
             partition_by="id",
         )
 
-    export_and_verify_columns(
-        table_name=table_name,
-        s3_table_name=s3_table_name,
-        insert_query=f"INSERT INTO {table_name} (id, name_input) VALUES (1, 'alice'), (1, 'bob')",
-        order_by="id, name_upper",
-        columns=["*"],
-        description="EPHEMERAL and DEFAULT column data",
-    )
+    with When("I insert data with EPHEMERAL column values"):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, name_input) VALUES (1, 'alice'), (1, 'bob')"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify EPHEMERAL column is NOT in destination table schema"):
+        destination_columns = get_column_info(table_name=s3_table_name)
+        column_names = [col["name"] for col in destination_columns]
+        assert "name_input" not in column_names, error(
+            f"EPHEMERAL column 'name_input' should not be in destination table, but found columns: {column_names}"
+        )
+
+    with And("I verify exported data matches source (excluding EPHEMERAL)"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, name_upper",
+                    order_by="id, name_upper",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, name_upper",
+                    order_by="id, name_upper",
+                )
+                assert source_data == destination_data, error()
+
+
+@TestCheck
+def simple_default_column_with_default_value(self):
+    """Check exporting DEFAULT column when default value is used (not explicitly inserted)."""
+
+    with Given("I create a source table with DEFAULT column and S3 destination table"):
+        table_name = f"mt_default_default_{getuid()}"
+
+        create_table_with_simple_default_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_default_default",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "value", "type": "UInt32"},
+                {"name": "status", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    with When(
+        "I insert data without specifying DEFAULT column (should use default value)"
+    ):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, value) VALUES (1, 10), (1, 20)"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify exported data has default values"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                assert source_data == destination_data, error()
+                assert all("active" in row for row in source_data), error(
+                    "All rows should have default 'active' status"
+                )
+
+
+@TestCheck
+def simple_default_column_with_explicit_value(self):
+    """Check exporting DEFAULT column when explicit non-default value is inserted."""
+
+    with Given("I create a source table with DEFAULT column and S3 destination table"):
+        table_name = f"mt_default_explicit_{getuid()}"
+
+        create_table_with_simple_default_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_default_explicit",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "value", "type": "UInt32"},
+                {"name": "status", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    with When("I insert data with explicit non-default values for DEFAULT column"):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, value, status) VALUES (1, 10, 'inactive'), (1, 20, 'pending')"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify exported data has explicit values (not defaults)"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                assert source_data == destination_data, error()
+                assert any("inactive" in row for row in source_data), error(
+                    "Should have explicit 'inactive' status"
+                )
+                assert any("pending" in row for row in source_data), error(
+                    "Should have explicit 'pending' status"
+                )
 
 
 @TestCheck
@@ -407,9 +560,24 @@ def materialized_columns(self):
 
 @TestScenario
 def ephemeral_and_default_columns(self):
-    """Check that EPHEMERAL and DEFAULT columns are properly exported when exporting partitions."""
+    """Check that EPHEMERAL and DEFAULT columns are properly exported when exporting partitions.
+    EPHEMERAL columns should be ignored and not present in destination."""
 
     ephemeral_and_default_column_export()
+
+
+@TestScenario
+def simple_default_columns_with_default_value(self):
+    """Check that DEFAULT columns with default values are properly exported when exporting partitions."""
+
+    simple_default_column_with_default_value()
+
+
+@TestScenario
+def simple_default_columns_with_explicit_value(self):
+    """Check that DEFAULT columns with explicit non-default values are properly exported when exporting partitions."""
+
+    simple_default_column_with_explicit_value()
 
 
 @TestScenario
@@ -442,5 +610,7 @@ def feature(self, num_parts=10):
     Scenario(run=alias_columns)
     Scenario(run=materialized_columns)
     Scenario(run=ephemeral_and_default_columns)
+    Scenario(run=simple_default_columns_with_default_value)
+    Scenario(run=simple_default_columns_with_explicit_value)
     Scenario(run=mixed_columns)
     Scenario(run=complex_expressions)
