@@ -236,6 +236,10 @@ def before_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with Then("Check source matches destination"):
@@ -273,6 +277,10 @@ def after_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I read data on the S3 table"):
@@ -321,6 +329,10 @@ def during_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I start merges"):
@@ -368,6 +380,10 @@ def during_minio_interruption(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I start merges"):
@@ -426,6 +442,10 @@ def stress(self, example):
                     destination_table=s3_table_name,
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
+                    settings=[
+                        ("export_merge_tree_part_throw_on_pending_mutations", False),
+                        ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+                    ],
                 )
                 Step(test=example.alter_function, parallel=True, executor=executor)(
                     table_name=source_table, **example.kwargs
