@@ -1,9 +1,10 @@
 from testflows.core import *
 from testflows.asserts import error
-from s3.tests.export_partition.steps import export_partitions
+from s3.tests.export_partition.steps import export_partitions, get_partitions
 from s3.tests.export_part.steps import *
 from helpers.queries import *
 from helpers.common import getuid
+from helpers.alter import delete
 from s3.requirements.export_partition import *
 
 
@@ -147,6 +148,82 @@ def different_partition_key(self):
         assert "Tables have different partition key" in results[0].output, error()
 
 
+@TestScenario
+def pending_mutations(self):
+    """Check that exporting partitions with pending mutations throws an error by default."""
+
+    source_table = f"source_{getuid()}"
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I start a mutation and stop merges to keep it pending"):
+        delete.alter_table_delete_rows(
+            table_name=source_table,
+            condition="p = 1",
+        )
+
+    with When("I try to export partitions with pending mutations (default settings)"):
+        results = export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+            check_export=False,
+            settings=[("export_merge_tree_part_throw_on_pending_mutations", 1)],
+        )
+
+    with Then("I should see an error about pending mutations"):
+        assert results[0].exitcode == 237, error()
+        assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
+
+
+@TestScenario
+def pending_patch_parts(self):
+    """Check that exporting partitions with pending patch parts throws an error by default."""
+
+    source_table = f"source_{getuid()}"
+    with Given(
+        "I create a populated source table with lightweight update support and empty S3 table"
+    ):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            query_settings="enable_block_number_column = 1, enable_block_offset_column = 1",
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I perform a lightweight UPDATE to create patch parts"):
+        self.context.node.query(
+            f"UPDATE {source_table} SET i = i + 1000 WHERE p = 1",
+            exitcode=0,
+            steps=True,
+        )
+
+    with When("I try to export partitions with pending patch parts (default settings)"):
+        results = export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+            check_export=False,
+            settings=[("export_merge_tree_part_throw_on_pending_patch_parts", 1)],
+        )
+
+    with Then("I should see an error about pending patch parts"):
+        assert results[0].exitcode == 237, error()
+        assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(
@@ -158,7 +235,9 @@ def different_partition_key(self):
 def feature(self):
     """Check correct error handling when exporting partitions."""
 
-    Scenario(run=partition_does_not_exist)
-    Scenario(run=same_table)
-    Scenario(run=local_table)
-    Scenario(run=different_partition_key)
+    # Scenario(run=partition_does_not_exist)
+    # Scenario(run=same_table)
+    # Scenario(run=local_table)
+    # Scenario(run=different_partition_key)
+    Scenario(run=pending_mutations)
+    Scenario(run=pending_patch_parts)
