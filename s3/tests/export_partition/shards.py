@@ -1,6 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 from helpers.common import getuid
+from helpers.create import partitioned_merge_tree_table
 from s3.tests.export_partition.steps import *
 from helpers.queries import *
 from s3.requirements.export_partition import *
