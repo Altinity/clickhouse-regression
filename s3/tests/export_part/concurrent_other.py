@@ -369,6 +369,10 @@ def inserts_and_optimize(self):
             Step(test=export_parts, parallel=True, executor=executor)(
                 source_table=source_table,
                 destination_table=s3_table_name,
+                settings=[
+                    ("export_merge_tree_part_throw_on_pending_mutations", False),
+                    ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+                ],
             )
             Step(
                 test=create_partitions_with_random_uint64,
