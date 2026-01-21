@@ -525,7 +525,7 @@ def get_mutation_functions():
 )
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
 def during_pending_mutation(self, example):
-    """Test that exports apply pending mutations on the fly."""
+    """Test that exports skip pending mutations."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
@@ -544,6 +544,7 @@ def during_pending_mutation(self, example):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[("export_merge_tree_part_throw_on_pending_mutations", False)],
         )
 
     with And("I start merges (mutations)"):
