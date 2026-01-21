@@ -16,7 +16,7 @@ from s3.tests.export_partition.steps import (
 
 
 @TestCheck
-def test_export_with_settings(
+def export_with_settings(
     self,
     export_max_retries=None,
     export_manifest_ttl=None,
@@ -250,7 +250,7 @@ def export_partition_settings_combinations(self, strength=2):
         for i, test_case in enumerate(covering_array):
             Combination(
                 name=f"export_settings_{i}",
-                test=test_export_with_settings,
+                test=export_with_settings,
                 executor=executor,
                 parallel=True,
             )(**test_case)
@@ -289,7 +289,7 @@ def parquet_settings_combinations(self, strength=2):
         for i, test_case in enumerate(covering_array):
             Combination(
                 name=f"parquet_settings_{i}",
-                test=test_export_with_settings,
+                test=export_with_settings,
                 executor=executor,
                 parallel=True,
             )(**test_case)
@@ -325,7 +325,7 @@ def s3_settings_combinations(self, strength=2):
         for i, test_case in enumerate(covering_array):
             Combination(
                 name=f"s3_settings_{i}",
-                test=test_export_with_settings,
+                test=export_with_settings,
                 executor=executor,
                 parallel=True,
             )(**test_case)
@@ -358,7 +358,7 @@ def parts_partitions_settings_combinations(self, strength=2):
         for i, test_case in enumerate(covering_array):
             Combination(
                 name=f"parts_settings_{i}",
-                test=test_export_with_settings,
+                test=export_with_settings,
                 executor=executor,
                 parallel=True,
             )(**test_case)
@@ -406,7 +406,7 @@ def all_settings_combined(self, strength=3):
         for i, test_case in enumerate(covering_array):
             Combination(
                 name=f"all_settings_{i}",
-                test=test_export_with_settings,
+                test=export_with_settings,
                 executor=executor,
                 parallel=True,
             )(**test_case)
