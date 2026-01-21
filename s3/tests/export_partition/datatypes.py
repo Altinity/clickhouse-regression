@@ -1,6 +1,11 @@
+from testflows.asserts import error
 from testflows.core import *
-from s3.tests.export_partition.steps import export_partitions
-from s3.tests.export_part.steps import *
+from s3.tests.export_partition.steps import (
+    export_partitions,
+    valid_partition_key_types_columns,
+    create_s3_table,
+    source_matches_destination,
+)
 from helpers.create import *
 from helpers.queries import *
 from helpers.common import getuid
@@ -94,7 +99,6 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
 
 
 @TestSketch(Scenario)
-@Flags(TE)
 @Requirements(RQ_ClickHouse_ExportPartition_PartitionKeyTypes("1.0"))
 def valid_partition_key_types_compact(self):
     """Check that all partition key data types are supported when exporting compact parts."""
@@ -104,7 +108,6 @@ def valid_partition_key_types_compact(self):
 
 
 @TestSketch(Scenario)
-@Flags(TE)
 def valid_partition_key_types_wide(self):
     """Check that all partition key data types are supported when exporting wide parts."""
 
@@ -201,6 +204,8 @@ def export_and_verify_columns(
     table_name,
     s3_table_name,
     insert_query,
+    order_by,
+    columns,
     description="columns",
 ):
     """Helper function to export partitions and verify data matches."""
@@ -215,10 +220,23 @@ def export_and_verify_columns(
             node=self.context.node,
         )
 
-    with And(f"verifying{description} exported to S3 matches source"):
-        source_matches_destination(
-            source_table=table_name, destination_table=s3_table_name
-        )
+    with And(f"verifying {description} exported to S3 matches source"):
+        column_list = ", ".join(columns)
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier=column_list,
+                    order_by=order_by,
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier=column_list,
+                    order_by=order_by,
+                )
+                assert source_data == destination_data, error()
 
 
 @TestCheck
@@ -244,6 +262,8 @@ def alias_column_export(self):
         table_name=table_name,
         s3_table_name=s3_table_name,
         insert_query=f"INSERT INTO {table_name} VALUES (1, [1, 2, 3]), (1, [10, 20, 30])",
+        order_by="a, arr",
+        columns=["a", "arr", "arr_1"],
         description="ALIAS column data",
     )
 
@@ -272,6 +292,8 @@ def materialized_column_export(self):
         table_name=table_name,
         s3_table_name=s3_table_name,
         insert_query=f"INSERT INTO {table_name} VALUES (1, [1, 2, 3]), (1, [10, 20, 30])",
+        order_by="a, arr",
+        columns=["a", "arr", "arr_1"],
         description="MATERIALIZED column data",
     )
 
@@ -300,6 +322,8 @@ def ephemeral_and_default_column_export(self):
         table_name=table_name,
         s3_table_name=s3_table_name,
         insert_query=f"INSERT INTO {table_name} (id, name_input) VALUES (1, 'alice'), (1, 'bob')",
+        order_by="id, name_upper",
+        columns=["*"],
         description="EPHEMERAL and DEFAULT column data",
     )
 
@@ -329,6 +353,8 @@ def mixed_columns_export(self):
         table_name=table_name,
         s3_table_name=s3_table_name,
         insert_query=f"INSERT INTO {table_name} (id, value, tag_input) VALUES (1, 5, 'test'), (1, 10, 'prod')",
+        order_by="id, value",
+        columns=["id", "value", "doubled", "tripled", "tag"],
         description="mixed columns",
     )
 
@@ -359,12 +385,13 @@ def complex_expressions_export(self):
         table_name=table_name,
         s3_table_name=s3_table_name,
         insert_query=f"INSERT INTO {table_name} (id, name) VALUES (1, 'alice'), (1, 'bob')",
+        order_by="id, name",
+        columns=["id", "name", "upper_name", "concat_result"],
         description="complex expressions",
     )
 
 
 @TestScenario
-@Flags(TE)
 def alias_columns(self):
     """Check that ALIAS columns are properly exported when exporting partitions."""
 
@@ -372,7 +399,6 @@ def alias_columns(self):
 
 
 @TestScenario
-@Flags(TE)
 def materialized_columns(self):
     """Check that MATERIALIZED columns are properly exported when exporting partitions."""
 
@@ -380,7 +406,6 @@ def materialized_columns(self):
 
 
 @TestScenario
-@Flags(TE)
 def ephemeral_and_default_columns(self):
     """Check that EPHEMERAL and DEFAULT columns are properly exported when exporting partitions."""
 
@@ -388,7 +413,6 @@ def ephemeral_and_default_columns(self):
 
 
 @TestScenario
-@Flags(TE)
 def mixed_columns(self):
     """Check that mixed ALIAS, MATERIALIZED, and EPHEMERAL columns are properly exported when exporting partitions."""
 
@@ -396,7 +420,6 @@ def mixed_columns(self):
 
 
 @TestScenario
-@Flags(TE)
 def complex_expressions(self):
     """Check that complex expressions in computed columns are properly exported when exporting partitions."""
 
@@ -414,8 +437,8 @@ def feature(self, num_parts=10):
 
     self.context.num_parts = num_parts
 
-    # Scenario(run=valid_partition_key_types_compact)
-    # Scenario(run=valid_partition_key_types_wide)
+    Scenario(run=valid_partition_key_types_compact)
+    Scenario(run=valid_partition_key_types_wide)
     Scenario(run=alias_columns)
     Scenario(run=materialized_columns)
     Scenario(run=ephemeral_and_default_columns)
