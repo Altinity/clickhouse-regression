@@ -80,12 +80,16 @@ def create_table(
                     "default",
                     "materialized",
                     "alias",
+                    "ephemeral",
                     "codec",
                     "ttl",
                     "comment",
                 ]:
                     if modifier in col:
-                        query += f" {modifier.upper()} {col[modifier]}"
+                        if modifier == "ephemeral" and not col[modifier]:
+                            query += f" {modifier.upper()}"
+                        else:
+                            query += f" {modifier.upper()} {col[modifier]}"
                 query += ",\n"
             if primary_key:
                 query += f"    PRIMARY KEY({primary_key}),\n"

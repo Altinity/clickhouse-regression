@@ -1,7 +1,14 @@
 from testflows.core import *
 from testflows.asserts import error
-from s3.tests.export_partition.steps import export_partitions, get_partitions
-from s3.tests.export_part.steps import *
+
+from helpers.create import partitioned_replicated_merge_tree_table
+from s3.tests.export_partition.steps import (
+    export_partitions,
+    get_partitions,
+    source_matches_destination,
+    default_columns,
+    create_s3_table,
+)
 from helpers.queries import *
 from helpers.common import getuid
 from helpers.alter import delete
@@ -224,6 +231,85 @@ def pending_patch_parts(self):
         assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
 
 
+@TestScenario
+def pending_mutations_disabled(self):
+    """Check that exporting partitions with pending mutations succeeds when throw setting is disabled."""
+
+    source_table = f"source_{getuid()}"
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I start a mutation and stop merges to keep it pending"):
+        delete.alter_table_delete_rows(
+            table_name=source_table,
+            condition="p = 1",
+        )
+
+    with When("I export partitions with pending mutations (throw setting disabled)"):
+        export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=0,
+            settings=[("export_merge_tree_part_throw_on_pending_mutations", 0)],
+        )
+
+    with Then("I should not see an error and export should succeed"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
+@TestScenario
+def pending_patch_parts_disabled(self):
+    """Check that exporting partitions with pending patch parts does not throw an error when disabled."""
+
+    source_table = f"source_{getuid()}"
+    with Given(
+        "I create a populated source table with lightweight update support and empty S3 table"
+    ):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            query_settings="enable_block_number_column = 1, enable_block_offset_column = 1",
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I perform a lightweight UPDATE to create patch parts"):
+        self.context.node.query(
+            f"UPDATE {source_table} SET i = i + 1000 WHERE p = 1",
+            exitcode=0,
+            steps=True,
+        )
+
+    with When("I try to export partitions with pending patch parts (default settings)"):
+        results = export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+            exitcode=1,
+            check_export=False,
+            settings=[("export_merge_tree_part_throw_on_pending_patch_parts", 0)],
+        )
+
+    with Then("I should not see an error and export should succeed"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(
@@ -235,9 +321,11 @@ def pending_patch_parts(self):
 def feature(self):
     """Check correct error handling when exporting partitions."""
 
-    # Scenario(run=partition_does_not_exist)
-    # Scenario(run=same_table)
-    # Scenario(run=local_table)
-    # Scenario(run=different_partition_key)
+    Scenario(run=partition_does_not_exist)
+    Scenario(run=same_table)
+    Scenario(run=local_table)
+    Scenario(run=different_partition_key)
     Scenario(run=pending_mutations)
     Scenario(run=pending_patch_parts)
+    Scenario(run=pending_mutations_disabled)
+    Scenario(run=pending_patch_parts_disabled)

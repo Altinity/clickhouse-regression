@@ -13,6 +13,7 @@ def source_matches_destination(
     partition=None,
     source_data=None,
     destination_data=None,
+    order_by="p, i",
 ):
     """Check that source and destination table data matches."""
 
@@ -25,12 +26,16 @@ def source_matches_destination(
         with attempt:
             if source_data is None:
                 source_data = select_all_ordered(
-                    table_name=source_table, node=source_node, identifier=partition
+                    table_name=source_table,
+                    node=source_node,
+                    identifier=partition,
+                    order_by=order_by,
                 )
             if destination_data is None:
                 destination_data = select_all_ordered(
                     table_name=destination_table,
                     node=destination_node,
                     identifier=partition,
+                    order_by=order_by,
                 )
             assert source_data == destination_data, error()
