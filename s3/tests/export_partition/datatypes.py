@@ -545,6 +545,7 @@ def complex_expressions_export(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Alias("1.0"))
 def alias_columns(self):
     """Check that ALIAS columns are properly exported when exporting partitions."""
 
@@ -552,6 +553,7 @@ def alias_columns(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized("1.0"))
 def materialized_columns(self):
     """Check that MATERIALIZED columns are properly exported when exporting partitions."""
 
@@ -559,6 +561,10 @@ def materialized_columns(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Ephemeral("1.0"),
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"),
+)
 def ephemeral_and_default_columns(self):
     """Check that EPHEMERAL and DEFAULT columns are properly exported when exporting partitions.
     EPHEMERAL columns should be ignored and not present in destination."""
@@ -567,6 +573,7 @@ def ephemeral_and_default_columns(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"))
 def simple_default_columns_with_default_value(self):
     """Check that DEFAULT columns with default values are properly exported when exporting partitions."""
 
@@ -574,6 +581,7 @@ def simple_default_columns_with_default_value(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"))
 def simple_default_columns_with_explicit_value(self):
     """Check that DEFAULT columns with explicit non-default values are properly exported when exporting partitions."""
 
@@ -581,6 +589,7 @@ def simple_default_columns_with_explicit_value(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Mixed("1.0"))
 def mixed_columns(self):
     """Check that mixed ALIAS, MATERIALIZED, and EPHEMERAL columns are properly exported when exporting partitions."""
 
@@ -588,6 +597,10 @@ def mixed_columns(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Alias("1.0"),
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized("1.0"),
+)
 def complex_expressions(self):
     """Check that complex expressions in computed columns are properly exported when exporting partitions."""
 

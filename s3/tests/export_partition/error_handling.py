@@ -156,6 +156,10 @@ def different_partition_key(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_PendingMutations("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingMutations("1.0"),
+)
 def pending_mutations(self):
     """Check that exporting partitions with pending mutations throws an error by default."""
 
@@ -192,6 +196,10 @@ def pending_mutations(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_LightweightUpdate("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingPatchParts("1.0"),
+)
 def pending_patch_parts(self):
     """Check that exporting partitions with pending patch parts throws an error by default."""
 
@@ -232,6 +240,10 @@ def pending_patch_parts(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_PendingMutations("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingMutations("1.0"),
+)
 def pending_mutations_disabled(self):
     """Check that exporting partitions with pending mutations succeeds when throw setting is disabled."""
 
@@ -269,6 +281,10 @@ def pending_mutations_disabled(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_LightweightUpdate("1.0"),
+    RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingPatchParts("1.0"),
+)
 def pending_patch_parts_disabled(self):
     """Check that exporting partitions with pending patch parts does not throw an error when disabled."""
 
