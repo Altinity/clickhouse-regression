@@ -5,6 +5,8 @@ from s3.tests.export_part.steps import *
 from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.table.replace_partition.corrupted_partitions import *
+from s3.tests.export_part import alter_wrappers
+from helpers.alter import delete, update
 
 
 @TestScenario
@@ -278,6 +280,118 @@ def removed_part_or_partition(self, removal_function, target_type):
         assert results[0].exitcode == 232, error()
 
 
+@TestScenario
+def pending_mutations(self):
+    """Check that exporting parts with pending mutations throws an error by default."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I start a mutation and stop merges to keep it pending"):
+        delete.alter_table_delete_rows(
+            table_name=source_table,
+            condition="p = 1",
+        )
+
+    with When("I try to export parts with pending mutations (default settings)"):
+        results = export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            exitcode=1,
+        )
+
+    with Then("I should see an error about pending mutations"):
+        assert results[0].exitcode == 237, error()
+        assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
+
+
+@TestScenario
+def pending_patch_parts(self):
+    """Check that exporting parts with pending patch parts throws an error by default."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I perform a lightweight UPDATE to create patch parts"):
+        update.alter_table_update_column(
+            table_name=source_table,
+            column_name="i",
+            expression="i + 1000",
+            condition="p = 1",
+        )
+
+    with When("I try to export parts with pending patch parts (default settings)"):
+        results = export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            exitcode=1,
+        )
+
+    with Then("I should see an error about pending patch parts"):
+        assert results[0].exitcode == 237, error()
+        assert "PENDING_MUTATIONS_NOT_ALLOWED" in results[0].output, error()
+
+
+@TestScenario
+def outdated_parts(self):
+    """Check that exporting outdated parts throws an error by default."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            number_of_parts=2,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I get a part name before optimizing"):
+        parts_before = get_parts(table_name=source_table)
+        part_to_export = parts_before[0]
+
+    with And("I optimize the table to make parts outdated"):
+        alter_wrappers.optimize_table(table_name=source_table)
+
+    with And("I verify the part is now outdated"):
+        outdated_parts = self.context.node.query(
+            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active = 0 AND name = '{part_to_export}'",
+            exitcode=0,
+            steps=True,
+        ).output.strip()
+        assert part_to_export in outdated_parts, error()
+
+    with When("I try to export the outdated part (default settings)"):
+        results = export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            parts=[part_to_export],
+            exitcode=1,
+        )
+
+    with Then("I should see an error about outdated parts"):
+        assert results[0].exitcode == 36, error()
+        assert "BAD_ARGUMENTS" in results[0].output, error()
+        assert "export_merge_tree_part_allow_outdated_parts" in results[0].output, error()
+
+
 @TestFeature
 @Name("error handling")
 @Requirements(RQ_ClickHouse_ExportPart_FailureHandling("1.0"))
@@ -291,3 +405,6 @@ def feature(self):
     Scenario(run=different_partition_key)
     Scenario(run=part_corruption)
     Scenario(run=removed_part_or_partition)
+    Scenario(run=pending_mutations)
+    Scenario(run=pending_patch_parts)
+    Scenario(run=outdated_parts)
