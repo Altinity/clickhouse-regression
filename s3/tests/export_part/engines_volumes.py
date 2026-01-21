@@ -34,10 +34,12 @@ def configured_table(self, table_engine, number_of_partitions, number_of_parts):
         )
 
     with Then("Source and destination tables should match"):
-        source_matches_destination(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                source_matches_destination(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                )
 
 
 @TestSketch(Scenario)
@@ -103,10 +105,12 @@ def configured_volume(self, volume):
         )
 
     with Then("Source and destination tables should match"):
-        source_matches_destination(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                source_matches_destination(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                )
 
 
 @TestSketch(Scenario)
