@@ -1,23 +1,10 @@
-"""
-Combinatorial tests for EXPORT PARTITION settings using covering arrays.
-
-This module tests all possible combinations of:
-- EXPORT PARTITION specific settings
-- Settings affecting parts and partitions
-- Settings affecting parquet file writes
-- S3 settings
-
-Uses covering arrays with strength 2 (pairwise) or ideally strength 3 (3-wise).
-"""
-
-from testflows.core import *
-from testflows.asserts import error
-from testflows.combinatorics import CoveringArray
 import random
+
+from testflows.combinatorics import CoveringArray
+from testflows.core import *
 
 from helpers.common import getuid
 from helpers.create import partitioned_replicated_merge_tree_table
-from helpers.queries import select_all_ordered
 from s3.requirements.export_partition import *
 from s3.tests.export_partition.steps import (
     export_partitions,
