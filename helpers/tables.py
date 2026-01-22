@@ -403,6 +403,8 @@ def create_table(
     cluster=None,
     order_by_all_columns=False,
     stop_merges=False,
+    exitcode=None,
+    message=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -464,6 +466,8 @@ def create_table(
             node.query(
                 query,
                 settings=settings,
+                exitcode=exitcode,
+                message=message,
             )
 
             yield Table(name=name, columns=columns, partition_by=partition_by, engine=engine)
