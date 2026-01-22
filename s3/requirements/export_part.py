@@ -249,6 +249,97 @@ RQ_ClickHouse_ExportPart_LargeParts = Requirement(
     num="5.4",
 )
 
+RQ_ClickHouse_ExportPart_ColumnTypes_Alias = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.Alias",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with ALIAS columns by:\n"
+        "* Computing ALIAS column values on-the-fly from expressions during export (ALIAS columns are not stored in parts)\n"
+        "* Exporting ALIAS column values as regular columns in the destination table\n"
+        "* Requiring destination tables to have matching regular columns (not ALIAS) for exported ALIAS columns\n"
+        "* Materializing ALIAS column values during export and writing them as regular column data\n"
+        "\n"
+        "ALIAS columns are computed from expressions (e.g., `arr_1 ALIAS arr[1]`). During export, the system SHALL compute the ALIAS column values and export them as regular column data to the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.5",
+)
+
+RQ_ClickHouse_ExportPart_ColumnTypes_Materialized = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.Materialized",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with MATERIALIZED columns by:\n"
+        "* Reading MATERIALIZED column values from storage during export (MATERIALIZED columns are stored in parts and computed from expressions)\n"
+        "* Exporting MATERIALIZED column values as regular columns in the destination table\n"
+        "* Requiring destination tables to have matching regular columns (not MATERIALIZED) for exported MATERIALIZED columns\n"
+        "\n"
+        "MATERIALIZED columns are stored in parts and computed from expressions (e.g., `value * 3`). During export, the system SHALL read the stored MATERIALIZED column values and export them as regular column data to the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.6",
+)
+
+RQ_ClickHouse_ExportPart_ColumnTypes_Default = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.Default",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with DEFAULT columns by:\n"
+        "* Requiring the destination table to have a matching column that is NOT tagged as DEFAULT (must be a regular column)\n"
+        "* Materializing the source DEFAULT column values during export (using either the default value or explicit value provided during INSERT)\n"
+        "* Exporting the materialized values as a regular column to the destination table\n"
+        "* Correctly handling both cases:\n"
+        "  * When default values are used (no explicit value provided during INSERT)\n"
+        "  * When explicit non-default values are provided during INSERT\n"
+        "\n"
+        "The destination table schema SHALL require a regular column (not DEFAULT) that matches the source DEFAULT column's name and data type. During export, the system SHALL compute the actual values for DEFAULT columns (default or explicit) and export them as regular column data. This allows users to export parts from source tables with DEFAULT columns to destination object storage tables that do not support DEFAULT columns.\n"
+        "\n"
+        "DEFAULT columns have default values (e.g., `status String DEFAULT 'active'`). The system SHALL materialize these values during export and write them as regular columns to the destination.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.7",
+)
+
+RQ_ClickHouse_ExportPart_ColumnTypes_Ephemeral = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with EPHEMERAL columns by:\n"
+        "* Completely ignoring EPHEMERAL columns during export (EPHEMERAL columns are not stored and cannot be read from parts)\n"
+        "* NOT exporting EPHEMERAL columns to the destination table\n"
+        "* Requiring destination tables to NOT have matching columns for EPHEMERAL columns from the source table\n"
+        "* Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly\n"
+        "\n"
+        "EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.8",
+)
+
 RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
     name="RQ.ClickHouse.ExportPart.Restrictions.SameTable",
     version="1.0",
@@ -903,6 +994,16 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
             name="RQ.ClickHouse.ExportPart.SchemaChangeIsolation", level=2, num="5.3"
         ),
         Heading(name="RQ.ClickHouse.ExportPart.LargeParts", level=2, num="5.4"),
+        Heading(name="RQ.ClickHouse.ExportPart.ColumnTypes.Alias", level=2, num="5.5"),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ColumnTypes.Materialized", level=2, num="5.6"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ColumnTypes.Default", level=2, num="5.7"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral", level=2, num="5.8"
+        ),
         Heading(name="Export Operation Restrictions", level=1, num="6"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SameTable", level=2, num="6.1"
@@ -1030,6 +1131,10 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_DeletedRows,
         RQ_ClickHouse_ExportPart_SchemaChangeIsolation,
         RQ_ClickHouse_ExportPart_LargeParts,
+        RQ_ClickHouse_ExportPart_ColumnTypes_Alias,
+        RQ_ClickHouse_ExportPart_ColumnTypes_Materialized,
+        RQ_ClickHouse_ExportPart_ColumnTypes_Default,
+        RQ_ClickHouse_ExportPart_ColumnTypes_Ephemeral,
         RQ_ClickHouse_ExportPart_Restrictions_SameTable,
         RQ_ClickHouse_ExportPart_Restrictions_LocalTable,
         RQ_ClickHouse_ExportPart_Restrictions_PartitionKey,
@@ -1083,6 +1188,10 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 5.2 [RQ.ClickHouse.ExportPart.DeletedRows](#rqclickhouseexportpartdeletedrows)
     * 5.3 [RQ.ClickHouse.ExportPart.SchemaChangeIsolation](#rqclickhouseexportpartschemachangeisolation)
     * 5.4 [RQ.ClickHouse.ExportPart.LargeParts](#rqclickhouseexportpartlargeparts)
+    * 5.5 [RQ.ClickHouse.ExportPart.ColumnTypes.Alias](#rqclickhouseexportpartcolumntypesalias)
+    * 5.6 [RQ.ClickHouse.ExportPart.ColumnTypes.Materialized](#rqclickhouseexportpartcolumntypesmaterialized)
+    * 5.7 [RQ.ClickHouse.ExportPart.ColumnTypes.Default](#rqclickhouseexportpartcolumntypesdefault)
+    * 5.8 [RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral](#rqclickhouseexportpartcolumntypesephemeral)
 * 6 [Export Operation Restrictions](#export-operation-restrictions)
     * 6.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
     * 6.2 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
@@ -1255,6 +1364,53 @@ version: 1.0
 * Processing large data volumes efficiently during export
 * Maintaining data integrity when exporting large parts
 * Completing export operations successfully regardless of part size
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Alias
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with ALIAS columns by:
+* Computing ALIAS column values on-the-fly from expressions during export (ALIAS columns are not stored in parts)
+* Exporting ALIAS column values as regular columns in the destination table
+* Requiring destination tables to have matching regular columns (not ALIAS) for exported ALIAS columns
+* Materializing ALIAS column values during export and writing them as regular column data
+
+ALIAS columns are computed from expressions (e.g., `arr_1 ALIAS arr[1]`). During export, the system SHALL compute the ALIAS column values and export them as regular column data to the destination table.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Materialized
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with MATERIALIZED columns by:
+* Reading MATERIALIZED column values from storage during export (MATERIALIZED columns are stored in parts and computed from expressions)
+* Exporting MATERIALIZED column values as regular columns in the destination table
+* Requiring destination tables to have matching regular columns (not MATERIALIZED) for exported MATERIALIZED columns
+
+MATERIALIZED columns are stored in parts and computed from expressions (e.g., `value * 3`). During export, the system SHALL read the stored MATERIALIZED column values and export them as regular column data to the destination table.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Default
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with DEFAULT columns by:
+* Requiring the destination table to have a matching column that is NOT tagged as DEFAULT (must be a regular column)
+* Materializing the source DEFAULT column values during export (using either the default value or explicit value provided during INSERT)
+* Exporting the materialized values as a regular column to the destination table
+* Correctly handling both cases:
+  * When default values are used (no explicit value provided during INSERT)
+  * When explicit non-default values are provided during INSERT
+
+The destination table schema SHALL require a regular column (not DEFAULT) that matches the source DEFAULT column's name and data type. During export, the system SHALL compute the actual values for DEFAULT columns (default or explicit) and export them as regular column data. This allows users to export parts from source tables with DEFAULT columns to destination object storage tables that do not support DEFAULT columns.
+
+DEFAULT columns have default values (e.g., `status String DEFAULT 'active'`). The system SHALL materialize these values during export and write them as regular columns to the destination.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with EPHEMERAL columns by:
+* Completely ignoring EPHEMERAL columns during export (EPHEMERAL columns are not stored and cannot be read from parts)
+* NOT exporting EPHEMERAL columns to the destination table
+* Requiring destination tables to NOT have matching columns for EPHEMERAL columns from the source table
+* Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly
+
+EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.
 
 ## Export Operation Restrictions
 

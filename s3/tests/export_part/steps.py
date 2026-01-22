@@ -554,6 +554,82 @@ def get_column_info(self, table_name, node=None):
 
 
 @TestStep(When)
+def get_columns_with_kind(self, table_name, node=None):
+    """Get column information including default_kind from system.columns."""
+    if node is None:
+        node = self.context.node
+
+    r = node.query(
+        f"""
+        SELECT name, type, default_kind
+        FROM system.columns 
+        WHERE table = '{table_name}' AND database = currentDatabase()
+        ORDER BY position
+        FORMAT JSONEachRow
+        """,
+        exitcode=0,
+        steps=True,
+    )
+
+    columns = []
+    for line in r.output.strip().splitlines():
+        col = json.loads(line)
+        columns.append({
+            "name": col["name"],
+            "type": col["type"],
+            "default_kind": col.get("default_kind", "")
+        })
+    return columns
+
+
+@TestStep(When)
+def verify_column_not_in_destination(self, table_name, column_name, node=None):
+    """Verify that a column (e.g., EPHEMERAL) is not present in the destination table schema."""
+    if node is None:
+        node = self.context.node
+
+    dest_columns = get_columns_with_kind(table_name=table_name, node=node)
+    matching_columns = [col["name"] for col in dest_columns if column_name in col["name"]]
+    assert len(matching_columns) == 0, error(
+        f"Column '{column_name}' should not be in destination table, but found: {matching_columns}"
+    )
+
+
+@TestStep(When)
+def verify_column_in_destination(self, table_name, column_name, node=None):
+    """Verify that a column is present in the destination table schema."""
+    if node is None:
+        node = self.context.node
+
+    dest_columns = get_columns_with_kind(table_name=table_name, node=node)
+    matching_columns = [col["name"] for col in dest_columns if col["name"] == column_name]
+    assert len(matching_columns) > 0, error(
+        f"Column '{column_name}' should be in destination table, but not found. Available columns: {[col['name'] for col in dest_columns]}"
+    )
+
+
+@TestStep(Then)
+def verify_exported_data_matches_with_columns(self, source_table, destination_table, columns, order_by="p", node=None):
+    """Verify that exported data matches source table using explicit column list."""
+    if node is None:
+        node = self.context.node
+
+    source_data = select_all_ordered(
+        table_name=source_table,
+        order_by=order_by,
+        identifier=columns,
+        node=node,
+    )
+    destination_data = select_all_ordered(
+        table_name=destination_table,
+        order_by=order_by,
+        identifier=columns,
+        node=node,
+    )
+    assert source_data == destination_data, error()
+
+
+@TestStep(When)
 def get_parts(self, table_name, node=None):
     """Get all parts for a table on a given node."""
     if node is None:
