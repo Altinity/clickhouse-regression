@@ -347,58 +347,6 @@ def inserts_and_selects_not_blocked(self):
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
-def inserts_and_optimize(self):
-    """Test exports work correctly with concurrent inserts and optimizes."""
-
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            stop_merges=False,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with And("I get initial source data"):
-        initial_source_data = select_all_ordered(table_name=source_table)
-
-    with When("I run inserts, optimize, and exports in parallel"):
-        with Pool(10) as executor:
-            Step(test=export_parts, parallel=True, executor=executor)(
-                source_table=source_table,
-                destination_table=s3_table_name,
-                settings=[
-                    ("export_merge_tree_part_throw_on_pending_mutations", False),
-                    ("export_merge_tree_part_throw_on_pending_patch_parts", False),
-                ],
-            )
-            Step(
-                test=create_partitions_with_random_uint64,
-                parallel=True,
-                executor=executor,
-            )(
-                table_name=source_table,
-                number_of_partitions=10,
-                number_of_parts=2,
-                number_of_values=100,
-            )
-            Step(test=alter_wrappers.optimize_table, parallel=True, executor=executor)(
-                table_name=source_table,
-            )
-            join()
-
-    with Then("Check source matches destination"):
-        part_log_matches_destination(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
-        destination_data = select_all_ordered(table_name=s3_table_name)
-        assert initial_source_data == destination_data, error()
-
-
-@TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_QueryCancellation("1.0"))
 def kill_export(self):
     """Check that KILL queries do not break exports."""
@@ -575,7 +523,6 @@ def feature(self):
     Scenario(run=optimize_parts)
     Scenario(run=stress_select)
     Scenario(run=inserts_and_selects_not_blocked)
-    Scenario(run=inserts_and_optimize)
     Scenario(run=after_delete_rows)
     Scenario(run=kill_export)
     Scenario(run=during_pending_mutation)

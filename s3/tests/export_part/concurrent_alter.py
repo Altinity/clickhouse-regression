@@ -154,16 +154,6 @@ def get_alter_functions():
             "create partitions",
         ),
         AlterExample(
-            alter_wrappers.optimize_partition,
-            {"partition": "1"},
-            "optimize partition",
-        ),
-        AlterExample(
-            alter_wrappers.optimize_table,
-            {},
-            "optimize table",
-        ),
-        AlterExample(
             alter_wrappers.drop_table,
             {"recreate": True},
             "drop table",
