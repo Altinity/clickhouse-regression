@@ -281,6 +281,7 @@ def removed_part_or_partition(self, removal_function, target_type):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_ThrowOnPendingMutations("1.0"))
 def pending_mutations(self):
     """Check that exporting parts with pending mutations throws an error by default."""
 
@@ -314,6 +315,7 @@ def pending_mutations(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_ThrowOnPendingPatchParts("1.0"))
 def pending_patch_parts(self):
     """Check that exporting parts with pending patch parts throws an error by default."""
 
@@ -351,6 +353,7 @@ def pending_patch_parts(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Restrictions_OutdatedParts("1.0"))
 def outdated_parts(self):
     """Check that exporting outdated parts throws an error by default."""
 

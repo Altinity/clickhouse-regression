@@ -9,6 +9,7 @@ from s3.tests.export_part import alter_wrappers
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_ThrowOnPendingMutations("1.0"))
 def pending_mutations_allow(self):
     """Test that exporting parts with pending mutations succeeds when throw_on_pending_mutations=false."""
 
@@ -53,6 +54,7 @@ def pending_mutations_allow(self):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Settings_ThrowOnPendingPatchParts("1.0"))
 def pending_patch_parts_allow(self):
     """Test that exporting parts with pending patch parts succeeds when throw_on_pending_patch_parts=false."""
 

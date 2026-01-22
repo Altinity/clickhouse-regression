@@ -25,6 +25,7 @@
     * 6.3 [RQ.ClickHouse.ExportPart.Restrictions.PartitionKey](#rqclickhouseexportpartrestrictionspartitionkey)
     * 6.4 [RQ.ClickHouse.ExportPart.Restrictions.SourcePart](#rqclickhouseexportpartrestrictionssourcepart)
     * 6.5 [RQ.ClickHouse.ExportPart.Restrictions.RemovedPart](#rqclickhouseexportpartrestrictionsremovedpart)
+    * 6.6 [RQ.ClickHouse.ExportPart.Restrictions.OutdatedParts](#rqclickhouseexportpartrestrictionsoutdatedparts)
 * 7 [Export Operation Failure Handling](#export-operation-failure-handling)
     * 7.1 [RQ.ClickHouse.ExportPart.FailureHandling](#rqclickhouseexportpartfailurehandling)
     * 7.2 [RQ.ClickHouse.ExportPart.FailureHandling.PartCorruption](#rqclickhouseexportpartfailurehandlingpartcorruption)
@@ -51,8 +52,10 @@
     * 14.2 [RQ.ClickHouse.ExportPart.Settings.FileAlreadyExistsPolicy](#rqclickhouseexportpartsettingsfilealreadyexistspolicy)
     * 14.3 [RQ.ClickHouse.ExportPart.Settings.MaxBytesPerFile](#rqclickhouseexportpartsettingsmaxbytesperfile)
     * 14.4 [RQ.ClickHouse.ExportPart.Settings.MaxRowsPerFile](#rqclickhouseexportpartsettingsmaxrowsperfile)
-    * 14.5 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
-    * 14.6 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
+    * 14.5 [RQ.ClickHouse.ExportPart.Settings.ThrowOnPendingMutations](#rqclickhouseexportpartsettingsthrowonpendingmutations)
+    * 14.6 [RQ.ClickHouse.ExportPart.Settings.ThrowOnPendingPatchParts](#rqclickhouseexportpartsettingsthrowonpendingpatchparts)
+    * 14.7 [RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth](#rqclickhouseexportpartserversettingsmaxbandwidth)
+    * 14.8 [RQ.ClickHouse.ExportPart.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartserversettingsbackgroundmovepoolsize)
 * 15 [Export Operation Security](#export-operation-security)
     * 15.1 [RQ.ClickHouse.ExportPart.Security](#rqclickhouseexportpartsecurity)
     * 15.2 [RQ.ClickHouse.ExportPart.QueryCancellation](#rqclickhouseexportpartquerycancellation)
@@ -232,6 +235,14 @@ version: 1.0
 * Throwing a `NO_SUCH_DATA_PART` exception (error code 232) when attempting to export a removed part
 * Handling both detached parts and dropped parts/partitions correctly
 * Performing this validation during export execution
+
+### RQ.ClickHouse.ExportPart.Restrictions.OutdatedParts
+version: 1.0
+
+[ClickHouse] SHALL prevent exporting parts that are in the outdated state by:
+* Rejecting export operations for parts with `active = 0` (outdated parts)
+* Throwing a `BAD_ARGUMENTS` exception (error code 36) with message indicating the part is in the outdated state and cannot be exported
+* Performing this validation before any export processing begins
 
 ## Export Operation Failure Handling
 
@@ -438,6 +449,22 @@ version: 1.0
 * Name split files with numeric suffixes (e.g., `part_name.1.parquet`, `part_name.2.parquet`) to distinguish them
 * Ensure all split files are readable by the destination S3 table engine
 * Maintain data integrity across all split files, ensuring the sum of rows in all split files equals the total rows in the source part
+
+### RQ.ClickHouse.ExportPart.Settings.ThrowOnPendingMutations
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_mutations` setting that controls whether export operations throw an error when pending mutations exist. The setting SHALL:
+* Default to `true` - throw an error when pending mutations exist
+* When set to `false` - allow exports to proceed with pending mutations, exporting the part as it exists at export time without applying mutations
+* Throw a `PENDING_MUTATIONS_NOT_ALLOWED` exception (error code 237) when set to `true` and pending mutations exist
+
+### RQ.ClickHouse.ExportPart.Settings.ThrowOnPendingPatchParts
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_patch_parts` setting that controls whether export operations throw an error when pending patch parts exist. The setting SHALL:
+* Default to `true` - throw an error when pending patch parts exist
+* When set to `false` - allow exports to proceed with pending patch parts, exporting the part as it exists at export time without applying patches
+* Throw a `PENDING_MUTATIONS_NOT_ALLOWED` exception (error code 237) when set to `true` and pending patch parts exist
 
 ### RQ.ClickHouse.ExportPart.ServerSettings.MaxBandwidth
 version: 1.0
