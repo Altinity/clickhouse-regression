@@ -317,7 +317,9 @@ def pending_mutations(self):
 def pending_patch_parts(self):
     """Check that exporting parts with pending patch parts throws an error by default."""
 
-    with Given("I create a populated source table with lightweight update support and empty S3 table"):
+    with Given(
+        "I create a populated source table with lightweight update support and empty S3 table"
+    ):
         source_table = "source_" + getuid()
 
         partitioned_merge_tree_table(
@@ -389,7 +391,8 @@ def outdated_parts(self):
     with Then("I should see an error about outdated parts"):
         assert results[0].exitcode == 36, error()
         assert "BAD_ARGUMENTS" in results[0].output, error()
-        assert "export_merge_tree_part_allow_outdated_parts" in results[0].output, error()
+        assert "outdated state" in results[0].output.lower(), error()
+        assert "cannot be exported" in results[0].output.lower(), error()
 
 
 @TestFeature

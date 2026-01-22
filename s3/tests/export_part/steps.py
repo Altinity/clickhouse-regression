@@ -10,7 +10,10 @@ from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
 from platform import processor
 
-MINIO_CONTAINER = "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
+MINIO_CONTAINER = (
+    "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
+)
+
 
 @TestStep(Given)
 def minio_storage_configuration(self, restart=True):
@@ -180,10 +183,10 @@ def create_distributed_table(
     """Create a Distributed table that points to local tables on a cluster."""
     if node is None:
         node = self.context.node
-    
+
     if distributed_table_name is None:
         distributed_table_name = f"distributed_{getuid()}"
-    
+
     node.query(
         f"""
         CREATE TABLE {distributed_table_name} AS {local_table_name}
@@ -192,7 +195,7 @@ def create_distributed_table(
         exitcode=0,
         steps=True,
     )
-    
+
     return distributed_table_name
 
 

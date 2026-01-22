@@ -27,4 +27,7 @@ def minio(self, uri, bucket_prefix):
     Feature(run=load("s3.tests.export_part.system_monitoring", "feature"))
     Feature(run=load("s3.tests.export_part.concurrent_alter", "feature"))
     Feature(run=load("s3.tests.export_part.concurrent_other", "feature"))
+    Feature(
+        run=load("s3.tests.export_part.pending_mutations_and_patch_parts", "feature")
+    )
     Feature(run=load("s3.tests.export_part.rbac", "feature"))
