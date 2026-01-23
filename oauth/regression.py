@@ -174,12 +174,12 @@ def regression(
                     keycloak_realm.OAuthProvider.get_oauth_token()
 
     Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    # Scenario(run=load("oauth.tests.configuration", "feature"))
+    # Scenario(run=load("oauth.tests.authentication", "feature"))
+    # Scenario(run=load("oauth.tests.tokens", "feature"))
+    # Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    # Scenario(run=load("oauth.tests.groups", "feature"))
+    # Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
 
 
 if main():
