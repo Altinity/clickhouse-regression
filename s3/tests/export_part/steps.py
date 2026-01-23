@@ -686,6 +686,70 @@ def export_parts(
 
 
 @TestStep(When)
+def export_parts_to_table_function(
+    self,
+    source_table,
+    filename,
+    node=None,
+    parts=None,
+    exitcode=0,
+    settings=None,
+    inline_settings=True,
+    structure=None,
+    partition_by=None,
+    uri=None,
+):
+    """Export parts from a source table to a table function destination."""
+    if node is None:
+        node = self.context.node
+
+    if parts is None:
+        parts = get_parts(table_name=source_table, node=node)
+
+    if inline_settings is True:
+        inline_settings = self.context.default_settings
+
+    if uri is None:
+        uri = self.context.uri
+
+    no_checks = exitcode != 0
+    output = []
+
+    if partition_by is None:
+        partition_key_result = node.query(
+            f"""
+            SELECT partition_key
+            FROM system.tables
+            WHERE database = currentDatabase() AND name = '{source_table}'
+            """,
+            exitcode=0,
+            steps=True,
+        )
+        partition_by = partition_key_result.output.strip()
+
+    for part in parts:
+        if structure:
+            table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', structure='{structure}', partition_strategy='hive'"
+        else:
+            table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', partition_strategy='hive'"
+        
+        query = f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE FUNCTION s3({table_function_params}) PARTITION BY {partition_by}"
+        
+        output.append(
+            node.query(
+                query,
+                exitcode=exitcode,
+                no_checks=no_checks,
+                steps=True,
+                settings=settings,
+                inline_settings=inline_settings,
+            )
+        )
+
+    return output
+
+
+@TestStep(When)
 def get_export_events(self, node=None):
     """Get the export data from the system.events table of a given node."""
     if node is None:

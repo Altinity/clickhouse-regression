@@ -3,7 +3,7 @@ version: "2.3"
 services:
   clickhouse:
     extends:
-      file: ../../docker-compose/clickhouse-service.yml
+      file: ../../../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
       - ./clickhouse-config/clickhouse-low-ram-config.xml:/etc/clickhouse-server/config.d/clickhouse-low-ram-config.xml:ro
