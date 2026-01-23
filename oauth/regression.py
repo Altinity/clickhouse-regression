@@ -6,6 +6,7 @@ from azure.identity import ClientSecretCredential
 from msgraph import GraphServiceClient
 from testflows.core import *
 
+from helpers.common import check_if_not_antalya_build
 
 append_path(sys.path, "..")
 
@@ -63,7 +64,13 @@ def argparser(parser):
 
 xfails = {}
 
-ffails = {}
+ffails = {
+    "/oauth": (
+        Skip,
+        "OAuth not implemented in non Antalya build",
+        check_if_not_antalya_build,
+    ),
+}
 
 
 def write_env_file(identity_provider, tenant_id, client_id, client_secret):
