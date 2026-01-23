@@ -1,4 +1,5 @@
 from testflows.core import *
+import json
 from helpers.common import getuid
 from helpers.create import *
 from s3.tests.common import temporary_bucket_path, s3_storage
@@ -94,6 +95,12 @@ def valid_partition_key_types_columns():
         {"name": "string", "type": "String"},
         {"name": "fixedstring", "type": "FixedString(10)"},
     ]
+
+
+def escape_json_for_sql(json_obj):
+    """Escape JSON object for use in SQL string literals."""
+    json_str = json.dumps(json_obj)
+    return json_str.replace("'", "''")
 
 
 @TestStep(Given)
