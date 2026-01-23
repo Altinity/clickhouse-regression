@@ -1605,6 +1605,10 @@ class Cluster(object):
             if os.path.exists(caller_configs_dir):
                 self.configs_dir = caller_configs_dir
 
+        # Ensure configs_dir is an absolute path
+        if self.configs_dir is not None:
+            self.configs_dir = os.path.abspath(self.configs_dir)
+
         if not os.path.exists(self.configs_dir):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
 
@@ -1937,11 +1941,12 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
-                            log_path = os.path.abspath(
-                                os.path.join(self.configs_dir, "_service_logs")
-                            )
+                            # Ensure configs_dir is absolute for path resolution
+                            abs_configs_dir = os.path.abspath(self.configs_dir)
+                            log_path = os.path.abspath(os.path.join(abs_configs_dir, "_service_logs"))
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
                             bash(f"mkdir -p {log_path}")
+                            debug(f"Created _service_logs directory at: {log_path}")
                             nodes = bash(
                                 f"{self.docker_compose} ps --services"
                             ).output.split("\n")
