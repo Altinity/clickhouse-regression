@@ -8,6 +8,7 @@ from .storage import (
     valid_partition_key_types_columns,
     create_temp_bucket,
     create_s3_table,
+    escape_json_for_sql,
 )
 
 # Container management steps
@@ -64,11 +65,24 @@ from .export_fields import (
 from .tables import (
     create_distributed_table,
     wait_for_distributed_table_data,
+    insert_all_datatypes,
+    create_replicated_merge_tree_all_valid_partition_key_types,
+    create_table_with_alias_column,
+    create_table_with_materialized_column,
+    create_table_with_ephemeral_and_default_column,
+    create_table_with_simple_default_column,
+    create_table_with_mixed_columns,
+    create_table_with_complex_expressions,
+    create_table_with_json_column,
+    create_table_with_json_column_with_hints,
+    create_table_with_nested_column,
+    create_table_with_complex_nested_column,
 )
 
 # Verification steps
 from .verification import (
     source_matches_destination,
+    export_and_verify_columns,
 )
 
 __all__ = [
@@ -80,6 +94,7 @@ __all__ = [
     "valid_partition_key_types_columns",
     "create_temp_bucket",
     "create_s3_table",
+    "escape_json_for_sql",
     # Containers
     "kill_minio",
     "start_minio",
@@ -121,6 +136,19 @@ __all__ = [
     # Tables
     "create_distributed_table",
     "wait_for_distributed_table_data",
+    "insert_all_datatypes",
+    "create_replicated_merge_tree_all_valid_partition_key_types",
+    "create_table_with_alias_column",
+    "create_table_with_materialized_column",
+    "create_table_with_ephemeral_and_default_column",
+    "create_table_with_simple_default_column",
+    "create_table_with_mixed_columns",
+    "create_table_with_complex_expressions",
+    "create_table_with_json_column",
+    "create_table_with_json_column_with_hints",
+    "create_table_with_nested_column",
+    "create_table_with_complex_nested_column",
     # Verification
     "source_matches_destination",
+    "export_and_verify_columns",
 ]

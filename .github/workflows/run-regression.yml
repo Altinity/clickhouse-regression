@@ -83,6 +83,7 @@ on:
           - ldap
           - lightweight_delete
           - memory
+          - oauth
           - parquet_all
           - parquet
           - parquet_minio
@@ -845,6 +846,22 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: memory
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  oauth:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'oauth' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: oauth
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
