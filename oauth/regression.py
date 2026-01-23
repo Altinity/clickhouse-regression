@@ -67,8 +67,10 @@ ffails = {}
 
 
 def write_env_file(identity_provider, tenant_id, client_id, client_secret):
+    # Use the directory of this regression.py file
+    regression_dir = os.path.dirname(os.path.abspath(__file__))
     env_dir = os.path.join(
-        current_dir(),
+        regression_dir,
         "envs",
         f"{identity_provider.lower()}",
         f"{identity_provider.lower()}_env",
@@ -120,8 +122,13 @@ def regression(
     with Given("docker-compose cluster"):
         providers = {"keycloak": keycloak, "azure": azure}
 
+        regression_dir = os.path.dirname(os.path.abspath(__file__))
+        identity_provider_lower = str(identity_provider.lower())
         docker_compose_config = os.path.join(
-            current_dir(), "envs", identity_provider.lower()
+            regression_dir, "envs", identity_provider_lower
+        )
+        docker_compose_project_dir = os.path.join(
+            docker_compose_config, f"{identity_provider_lower}_env"
         )
 
         if identity_provider.lower() == "azure":
@@ -152,7 +159,8 @@ def regression(
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            configs_dir=docker_compose_config,
+            configs_dir=regression_dir,
+            docker_compose_project_dir=docker_compose_project_dir,
         )
 
         self.context.cluster = cluster
