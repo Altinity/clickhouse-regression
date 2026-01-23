@@ -1935,7 +1935,7 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
-                            log_path = f"../_service_logs"
+                            log_path = os.path.abspath(os.path.join(self.configs_dir, "_service_logs"))
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
                             bash(f"mkdir -p {log_path}")
                             nodes = bash(
