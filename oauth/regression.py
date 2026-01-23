@@ -167,12 +167,12 @@ def regression(
         self.context.cluster.node(node) for node in nodes["clickhouse"]
     ]
 
-    if identity_provider.lower() == "keycloak":
-        for retry in retries(timeout=300, delay=20):
-            with retry:
-                keycloak_realm.OAuthProvider.get_oauth_token()
+    with Given(f"{identity_provider} is up and running"):
+        if identity_provider.lower() == "keycloak":
+            for retry in retries(timeout=300, delay=20):
+                with retry:
+                    keycloak_realm.OAuthProvider.get_oauth_token()
 
-    pause()
     Scenario(run=load("oauth.tests.sanity", "feature"))
     Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
