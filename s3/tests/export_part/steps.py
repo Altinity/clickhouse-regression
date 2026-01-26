@@ -574,11 +574,13 @@ def get_columns_with_kind(self, table_name, node=None):
     columns = []
     for line in r.output.strip().splitlines():
         col = json.loads(line)
-        columns.append({
-            "name": col["name"],
-            "type": col["type"],
-            "default_kind": col.get("default_kind", "")
-        })
+        columns.append(
+            {
+                "name": col["name"],
+                "type": col["type"],
+                "default_kind": col.get("default_kind", ""),
+            }
+        )
     return columns
 
 
@@ -589,7 +591,9 @@ def verify_column_not_in_destination(self, table_name, column_name, node=None):
         node = self.context.node
 
     dest_columns = get_columns_with_kind(table_name=table_name, node=node)
-    matching_columns = [col["name"] for col in dest_columns if column_name in col["name"]]
+    matching_columns = [
+        col["name"] for col in dest_columns if column_name in col["name"]
+    ]
     assert len(matching_columns) == 0, error(
         f"Column '{column_name}' should not be in destination table, but found: {matching_columns}"
     )
@@ -602,14 +606,18 @@ def verify_column_in_destination(self, table_name, column_name, node=None):
         node = self.context.node
 
     dest_columns = get_columns_with_kind(table_name=table_name, node=node)
-    matching_columns = [col["name"] for col in dest_columns if col["name"] == column_name]
+    matching_columns = [
+        col["name"] for col in dest_columns if col["name"] == column_name
+    ]
     assert len(matching_columns) > 0, error(
         f"Column '{column_name}' should be in destination table, but not found. Available columns: {[col['name'] for col in dest_columns]}"
     )
 
 
 @TestStep(Then)
-def verify_exported_data_matches_with_columns(self, source_table, destination_table, columns, order_by="p", node=None):
+def verify_exported_data_matches_with_columns(
+    self, source_table, destination_table, columns, order_by="p", node=None
+):
     """Verify that exported data matches source table using explicit column list."""
     if node is None:
         node = self.context.node
@@ -732,9 +740,9 @@ def export_parts_to_table_function(
             table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', structure='{structure}', partition_strategy='hive'"
         else:
             table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', partition_strategy='hive'"
-        
+
         query = f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE FUNCTION s3({table_function_params}) PARTITION BY {partition_by}"
-        
+
         output.append(
             node.query(
                 query,
@@ -903,6 +911,21 @@ def insert_into_table(self, table_name, node=None):
             ))
             LIMIT 10;""",
         exitcode=0,
+        steps=True,
+    )
+
+
+@TestStep(When)
+def insert_random_data(
+    self, table_name, number_of_values=200, node=None, no_checks=False
+):
+    """Insert random data into a table with columns (p, i)."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})",
+        no_checks=no_checks,
         steps=True,
     )
 

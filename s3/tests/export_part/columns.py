@@ -134,7 +134,11 @@ def ephemeral_columns(self):
                 {"name": "p", "type": "UInt8"},
                 {"name": "i", "type": "UInt64"},
                 {"name": "unhexed", "type": "String", "ephemeral": ""},
-                {"name": "hexed", "type": "FixedString(4)", "default": "unhex(unhexed)"},
+                {
+                    "name": "hexed",
+                    "type": "FixedString(4)",
+                    "default": "unhex(unhexed)",
+                },
             ],
             partition_by="p",
             stop_merges=True,
@@ -160,7 +164,9 @@ def ephemeral_columns(self):
         wait_for_all_exports_to_complete()
 
     with Then("I verify EPHEMERAL column is not in destination schema"):
-        verify_column_not_in_destination(table_name=s3_table_name, column_name="unhexed")
+        verify_column_not_in_destination(
+            table_name=s3_table_name, column_name="unhexed"
+        )
 
     with And("I verify exported data matches source (excluding EPHEMERAL columns)"):
         verify_exported_data_matches_with_columns(
@@ -219,7 +225,9 @@ def default_columns_with_default_values(self):
         assert "1\t100\tactive" in source_data, error()
         assert "2\t200\tactive" in source_data, error()
 
-    with And("I verify exported data matches source including materialized DEFAULT values"):
+    with And(
+        "I verify exported data matches source including materialized DEFAULT values"
+    ):
         source_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
@@ -338,9 +346,13 @@ def mixed_columns(self):
         assert "2\t20\t40\t60" in source_data, error()
 
     with And("I verify EPHEMERAL column is not in destination schema"):
-        verify_column_not_in_destination(table_name=s3_table_name, column_name="tag_input")
+        verify_column_not_in_destination(
+            table_name=s3_table_name, column_name="tag_input"
+        )
 
-    with And("I verify ALIAS, MATERIALIZED, and DEFAULT columns are exported as regular columns"):
+    with And(
+        "I verify ALIAS, MATERIALIZED, and DEFAULT columns are exported as regular columns"
+    ):
         verify_exported_data_matches_with_columns(
             source_table=source_table,
             destination_table=s3_table_name,
@@ -405,7 +417,9 @@ def complex_expressions(self):
         assert "1\t100\tAlice\tALICE\tAlice-100" in source_data, error()
         assert "2\t200\tBob\tBOB\tBob-200" in source_data, error()
 
-    with And("I verify exported data matches source including materialized ALIAS and MATERIALIZED columns"):
+    with And(
+        "I verify exported data matches source including materialized ALIAS and MATERIALIZED columns"
+    ):
         verify_exported_data_matches_with_columns(
             source_table=source_table,
             destination_table=s3_table_name,

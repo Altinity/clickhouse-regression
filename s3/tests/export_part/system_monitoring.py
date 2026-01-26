@@ -373,6 +373,121 @@ def max_bytes_per_file_and_rows_per_file(self):
         )
 
 
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPart_SystemTables_Exports("1.0"),
+    RQ_ClickHouse_ExportPart_Logging("1.0"),
+)
+def system_tables_columns(self):
+    """Verify that system.exports and system.part_log contain all expected columns."""
+
+    expected_exports_columns = {
+        "source_database",
+        "source_table",
+        "destination_database",
+        "destination_table",
+        "create_time",
+        "part_name",
+        "query_id",
+        "destination_file_paths",
+        "elapsed",
+        "rows_read",
+        "total_rows_to_read",
+        "total_size_bytes_compressed",
+        "total_size_bytes_uncompressed",
+        "bytes_read_uncompressed",
+        "memory_usage",
+        "peak_memory_usage",
+    }
+
+    expected_part_log_columns = {
+        "hostname",
+        "query_id",
+        "event_type",
+        "merge_reason",
+        "merge_algorithm",
+        "event_date",
+        "event_time",
+        "event_time_microseconds",
+        "duration_ms",
+        "database",
+        "table",
+        "table_uuid",
+        "part_name",
+        "partition_id",
+        "partition",
+        "part_type",
+        "disk_name",
+        "path_on_disk",
+        "remote_file_paths",
+        "rows",
+        "size_in_bytes",
+        "merged_from",
+        "bytes_uncompressed",
+        "read_rows",
+        "read_bytes",
+        "peak_memory_usage",
+        "error",
+        "exception",
+        "ProfileEvents",
+    }
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = "source_" + getuid()
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I export parts to ensure system tables are populated"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+        wait_for_all_exports_to_complete(table_name=source_table)
+
+    with And("I get actual columns for system.exports using DESCRIBE TABLE"):
+        exports_columns_result = self.context.node.query(
+            "DESCRIBE TABLE system.exports FORMAT TabSeparated",
+            exitcode=0,
+            steps=True,
+        )
+        actual_exports_columns = {
+            line.split("\t")[0].strip()
+            for line in exports_columns_result.output.strip().splitlines()
+        }
+
+    with And("I get actual columns for system.part_log using DESCRIBE TABLE"):
+        part_log_columns_result = self.context.node.query(
+            "DESCRIBE TABLE system.part_log FORMAT TabSeparated",
+            exitcode=0,
+            steps=True,
+        )
+        actual_part_log_columns = {
+            line.split("\t")[0].strip()
+            for line in part_log_columns_result.output.strip().splitlines()
+        }
+
+    with Then("I verify all expected columns exist in system.exports"):
+        missing_exports_columns = expected_exports_columns - actual_exports_columns
+        assert len(missing_exports_columns) == 0, error(
+            f"Missing columns in system.exports: {missing_exports_columns}. "
+            f"Expected: {sorted(expected_exports_columns)}, "
+            f"Actual: {sorted(actual_exports_columns)}"
+        )
+
+    with And("I verify all expected columns exist in system.part_log"):
+        missing_part_log_columns = expected_part_log_columns - actual_part_log_columns
+        assert len(missing_part_log_columns) == 0, error(
+            f"Missing columns in system.part_log: {missing_part_log_columns}. "
+            f"Expected: {sorted(expected_part_log_columns)}, "
+            f"Actual: {sorted(actual_part_log_columns)}"
+        )
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPart_Logging("1.0"))
@@ -382,6 +497,7 @@ def feature(self):
     Scenario(run=system_events_and_part_log)
     Scenario(run=duplicate_logging)
     Scenario(run=system_exports_and_metrics)
+    Scenario(run=system_tables_columns)
     Scenario(run=background_move_pool_size)
     Scenario(run=max_bandwidth)
     Scenario(run=max_bytes_per_file_and_rows_per_file)

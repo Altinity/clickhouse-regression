@@ -26,7 +26,9 @@ def explicit_schema(self):
 
     with And("I get the source table structure"):
         source_columns = get_column_info(table_name=source_table)
-        structure_str = ", ".join([f"{col['name']} {col['type']}" for col in source_columns])
+        structure_str = ", ".join(
+            [f"{col['name']} {col['type']}" for col in source_columns]
+        )
 
     with When("I export parts to a table function with explicit structure"):
         filename = f"export_{getuid()}"
@@ -61,7 +63,9 @@ def schema_inheritance(self):
         )
         create_temp_bucket()
 
-    with When("I export parts to a table function without explicit structure (schema inheritance)"):
+    with When(
+        "I export parts to a table function without explicit structure (schema inheritance)"
+    ):
         filename = f"export_{getuid()}"
         export_parts_to_table_function(
             source_table=source_table,
@@ -78,14 +82,20 @@ def schema_inheritance(self):
         assert source_data == dest_data, error()
 
     with And("I verify the table function has the correct column names"):
-        source_column_names = [col["name"] for col in get_column_info(table_name=source_table)]
+        source_column_names = [
+            col["name"] for col in get_column_info(table_name=source_table)
+        ]
         dest_result = self.context.node.query(
             f"DESCRIBE TABLE {table_function} FORMAT TabSeparated",
             exitcode=0,
             steps=True,
         )
-        dest_column_names = [line.split("\t")[0] for line in dest_result.output.strip().splitlines()]
-        assert source_column_names == dest_column_names, error("Column names should match")
+        dest_column_names = [
+            line.split("\t")[0] for line in dest_result.output.strip().splitlines()
+        ]
+        assert source_column_names == dest_column_names, error(
+            "Column names should match"
+        )
 
 
 @TestScenario
@@ -111,10 +121,12 @@ def same_part_simultaneous_export_error(self):
     with And("I slow the network to make export take longer"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with When("I try to export the same part to two different table functions simultaneously"):
+    with When(
+        "I try to export the same part to two different table functions simultaneously"
+    ):
         filename1 = f"export1_{getuid()}"
         filename2 = f"export2_{getuid()}"
-        
+
         result1 = export_parts_to_table_function(
             source_table=source_table,
             filename=filename1,
@@ -194,4 +206,3 @@ def feature(self):
     Scenario(run=schema_inheritance)
     Scenario(run=same_part_simultaneous_export_error)
     Scenario(run=multiple_parts)
-
