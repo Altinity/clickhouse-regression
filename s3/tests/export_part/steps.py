@@ -908,6 +908,19 @@ def insert_into_table(self, table_name, node=None):
 
 
 @TestStep(When)
+def insert_random_data(self, table_name, number_of_values=200, node=None, no_checks=False):
+    """Insert random data into a table with columns (p, i)."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})",
+        no_checks=no_checks,
+        steps=True,
+    )
+
+
+@TestStep(When)
 def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_parts=1):
     """Check concurrent exports from different sources to the same S3 table."""
 
