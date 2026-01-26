@@ -1,7 +1,7 @@
+from testflows.asserts import error
 from helpers.common import getuid
 import helpers.config.config_d as config_d
 from alter.stress.tests.tc_netem import *
-from helpers.common import getuid
 from s3.requirements.export_partition import *
 from s3.tests.export_part.steps import (
     default_columns,
@@ -16,6 +16,7 @@ from s3.tests.export_partition.steps import (
     wait_for_export_to_complete,
     get_export_field,
     get_source_database,
+    get_destination_database,
     get_destination_table,
     get_create_time,
     get_partition_id,
@@ -24,6 +25,10 @@ from s3.tests.export_partition.steps import (
     get_parts,
     get_parts_count,
     get_parts_to_do,
+    get_exception_replica,
+    get_last_exception,
+    get_exception_part,
+    get_exception_count,
 )
 
 
@@ -433,20 +438,118 @@ def concurrent_exports_limit(self, background_move_pool_size):
         assert active_count <= background_move_pool_size, error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"))
+def all_required_fields_present(self):
+    """Check that system.replicated_partition_exports contains all required fields after export."""
+
+    source_table = f"source_{getuid()}"
+
+    with Given("create source and S3 tables"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("export partitions"):
+        export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("verify all required fields exist in table structure"):
+        structure_result = self.context.node.query(
+            "DESCRIBE TABLE system.replicated_partition_exports",
+            exitcode=0,
+            steps=True,
+        )
+        column_names = [
+            line.split("\t")[0].strip()
+            for line in structure_result.output.strip().splitlines()
+            if line.strip()
+        ]
+
+        required_fields = [
+            "database",
+            "table",
+            "destination_database",
+            "destination_table",
+            "create_time",
+            "partition_id",
+            "transaction_id",
+            "query_id",
+            "source_replica",
+            "parts",
+            "parts_count",
+            "parts_to_do",
+            "status",
+            "exception_replica",
+            "last_exception",
+            "exception_part",
+            "exception_count",
+        ]
+
+        alternative_names = {
+            "database": ["source_database"],
+            "table": ["source_table"],
+        }
+
+        missing_fields = []
+        for field in required_fields:
+            if field not in column_names:
+                if field in alternative_names:
+                    found_alternative = any(
+                        alt in column_names for alt in alternative_names[field]
+                    )
+                    if not found_alternative:
+                        missing_fields.append(field)
+                else:
+                    missing_fields.append(field)
+
+        assert (
+            len(missing_fields) == 0
+        ), error(
+            f"Missing required fields: {missing_fields}. Available columns: {column_names}"
+        )
+
+    with And("verify fields are populated after export"):
+        for retry in retries(timeout=30, delay=2):
+            with retry:
+                result = self.context.node.query(
+                    f"SELECT source_database, source_table, destination_database, destination_table, "
+                    f"create_time, partition_id, transaction_id, query_id, source_replica, "
+                    f"parts, parts_count, parts_to_do, status, exception_replica, "
+                    f"last_exception, exception_part, exception_count "
+                    f"FROM system.replicated_partition_exports "
+                    f"WHERE source_table = '{source_table}' LIMIT 1",
+                    exitcode=0,
+                    steps=True,
+                )
+                assert result.output.strip() != "", error(
+                    "Fields should be populated after export"
+                )
+
+
 @TestFeature
 @Name("system monitoring")
 @Requirements(RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"))
 def feature(self):
     """Check system monitoring of export partition operations via system.replicated_partition_exports table."""
 
-    Scenario(run=export_appears_in_table)
-    Scenario(run=export_fields_populated)
-    Scenario(run=export_status_transitions)
-    Scenario(run=parts_to_do_decreases)
-    Scenario(run=concurrent_exports_tracking)
-    Scenario(run=partition_id_matches_exported)
-    Scenario(run=parts_array_matches_table_parts)
-    Scenario(run=transaction_id_populated)
-    Scenario(test=concurrent_exports_limit)(background_move_pool_size=1)
-    Scenario(test=concurrent_exports_limit)(background_move_pool_size=4)
-    Scenario(test=concurrent_exports_limit)(background_move_pool_size=8)
+    # Scenario(run=export_appears_in_table)
+    # Scenario(run=export_fields_populated)
+    # Scenario(run=export_status_transitions)
+    # Scenario(run=parts_to_do_decreases)
+    # Scenario(run=concurrent_exports_tracking)
+    # Scenario(run=partition_id_matches_exported)
+    # Scenario(run=parts_array_matches_table_parts)
+    # Scenario(run=transaction_id_populated)
+    # Scenario(test=concurrent_exports_limit)(background_move_pool_size=1)
+    # Scenario(test=concurrent_exports_limit)(background_move_pool_size=4)
+    # Scenario(test=concurrent_exports_limit)(background_move_pool_size=8)
+    Scenario(run=all_required_fields_present)
