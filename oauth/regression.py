@@ -6,10 +6,10 @@ from azure.identity import ClientSecretCredential
 from msgraph import GraphServiceClient
 from testflows.core import *
 
-from helpers.common import check_if_not_antalya_build
 
 append_path(sys.path, "..")
 
+from helpers.common import check_if_not_antalya_build
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
@@ -65,7 +65,7 @@ def argparser(parser):
 xfails = {}
 
 ffails = {
-    "/oauth": (
+    "/oauth/*": (
         Skip,
         "OAuth not implemented in non Antalya build",
         check_if_not_antalya_build,
