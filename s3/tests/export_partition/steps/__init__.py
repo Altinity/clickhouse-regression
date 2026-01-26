@@ -85,6 +85,21 @@ from .verification import (
     export_and_verify_columns,
 )
 
+# System monitoring verification steps
+from .system_monitoring import (
+    verify_export_fields_populated,
+    verify_export_status,
+    verify_parts_to_do_decreases,
+    verify_exports_appear_in_table,
+    verify_partition_ids_match,
+    get_expected_parts_from_table,
+    verify_parts_array_matches,
+    verify_table_structure_has_fields,
+    verify_all_fields_populated,
+    verify_transaction_id_populated,
+    verify_active_exports_limited,
+)
+
 __all__ = [
     # Re-exported from export_part
     "wait_for_all_exports_to_complete",
@@ -151,4 +166,16 @@ __all__ = [
     # Verification
     "source_matches_destination",
     "export_and_verify_columns",
+    # System monitoring
+    "verify_export_fields_populated",
+    "verify_export_status",
+    "verify_parts_to_do_decreases",
+    "verify_exports_appear_in_table",
+    "verify_partition_ids_match",
+    "get_expected_parts_from_table",
+    "verify_parts_array_matches",
+    "verify_table_structure_has_fields",
+    "verify_all_fields_populated",
+    "verify_transaction_id_populated",
+    "verify_active_exports_limited",
 ]
