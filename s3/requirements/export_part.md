@@ -49,6 +49,7 @@
     * 10.4 [RQ.ClickHouse.ExportPart.Concurrency.PendingMutations](#rqclickhouseexportpartconcurrencypendingmutations)
 * 11 [Cluster and Node Support](#cluster-and-node-support)
     * 11.1 [RQ.ClickHouse.ExportPart.ClustersNodes](#rqclickhouseexportpartclustersnodes)
+    * 11.2 [RQ.ClickHouse.ExportPart.Shards](#rqclickhouseexportpartshards)
 * 12 [Export Operation Idempotency](#export-operation-idempotency)
     * 12.1 [RQ.ClickHouse.ExportPart.Idempotency](#rqclickhouseexportpartidempotency)
 * 13 [Export Operation Logging](#export-operation-logging)
@@ -463,6 +464,18 @@ version: 1.0
 * Exported data from different nodes is correctly aggregated in the destination
 * All nodes in the cluster can read the same exported data from the destination
 * Supporting various cluster configurations: sharded, replicated, one-shard clusters
+
+### RQ.ClickHouse.ExportPart.Shards
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts from sharded tables using Distributed engine, ensuring that:
+* Parts can be exported from local tables on each shard independently
+* Data distributed across multiple shards via Distributed table is correctly aggregated in the destination
+* Export operations work correctly with Distributed tables that use sharding keys for data distribution
+* Exported data from all shards matches the complete data view from the Distributed table
+* Distributed tables with multiple shards require a sharding key for inserts (error code 55: STORAGE_REQUIRES_PARAMETER)
+* Invalid sharding keys in Distributed table definitions are rejected (error code 47: UNKNOWN_IDENTIFIER)
+* Distributed tables pointing to non-existent local tables fail when inserting (error code 60: UNKNOWN_TABLE)
 
 ## Export Operation Idempotency
 

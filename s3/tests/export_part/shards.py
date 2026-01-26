@@ -8,6 +8,7 @@ from alter.table.replace_partition.common import create_partitions_with_random_u
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Shards("1.0"))
 def sharded_table_with_distributed_engine(self, cluster, nodes):
     """Test export part from a sharded table using Distributed engine with sharding key."""
 
@@ -74,10 +75,13 @@ def sharded_table_with_distributed_engine(self, cluster, nodes):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Shards("1.0"))
 def distributed_table_without_sharding_key_error(self, cluster, nodes):
     """Test that inserts into a Distributed table without a sharding key fail when there are multiple shards."""
 
-    with Given("I create local MergeTree tables on each shard and a Distributed table without sharding key"):
+    with Given(
+        "I create local MergeTree tables on each shard and a Distributed table without sharding key"
+    ):
         local_table_name = "local_" + getuid()
 
         partitioned_merge_tree_table(
@@ -101,7 +105,9 @@ def distributed_table_without_sharding_key_error(self, cluster, nodes):
 
         node = nodes[0]
 
-    with When("I try to insert data through the Distributed table without sharding key"):
+    with When(
+        "I try to insert data through the Distributed table without sharding key"
+    ):
         result = insert_random_data(
             table_name=distributed_table_name,
             number_of_values=200,
@@ -111,10 +117,14 @@ def distributed_table_without_sharding_key_error(self, cluster, nodes):
 
     with Then("I verify the error indicates sharding key is required"):
         assert result.exitcode == 55, error()
-        assert "STORAGE_REQUIRES_PARAMETER" in result.output or "sharding key" in result.output.lower(), error()
+        assert (
+            "STORAGE_REQUIRES_PARAMETER" in result.output
+            or "sharding key" in result.output.lower()
+        ), error()
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Shards("1.0"))
 def distributed_table_with_invalid_sharding_key(self, cluster, nodes):
     """Test that creating a Distributed table with an invalid sharding key fails appropriately."""
 
@@ -145,10 +155,13 @@ def distributed_table_with_invalid_sharding_key(self, cluster, nodes):
 
     with Then("I verify the error indicates invalid sharding key"):
         assert result.exitcode == 47, error()
-        assert "UNKNOWN_IDENTIFIER" in result.output or "BAD_ARGUMENTS" in result.output, error()
+        assert (
+            "UNKNOWN_IDENTIFIER" in result.output or "BAD_ARGUMENTS" in result.output
+        ), error()
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Shards("1.0"))
 def distributed_table_with_nonexistent_local_table(self, cluster, nodes):
     """Test that using a Distributed table pointing to a non-existent local table fails when inserting."""
 
@@ -177,7 +190,9 @@ def distributed_table_with_nonexistent_local_table(self, cluster, nodes):
 
     with Then("I verify the error indicates the local table doesn't exist"):
         assert result.exitcode == 60, error()
-        assert "UNKNOWN_TABLE" in result.output or "TABLE_DOESNT_EXIST" in result.output, error()
+        assert (
+            "UNKNOWN_TABLE" in result.output or "TABLE_DOESNT_EXIST" in result.output
+        ), error()
 
 
 @TestFeature
@@ -204,4 +219,6 @@ def feature(self):
 
     distributed_table_without_sharding_key_error(cluster="sharded_cluster", nodes=nodes)
     distributed_table_with_invalid_sharding_key(cluster="sharded_cluster", nodes=nodes)
-    distributed_table_with_nonexistent_local_table(cluster="sharded_cluster", nodes=nodes)
+    distributed_table_with_nonexistent_local_table(
+        cluster="sharded_cluster", nodes=nodes
+    )

@@ -456,7 +456,8 @@ def system_tables_columns(self):
             steps=True,
         )
         actual_exports_columns = {
-            line.split("\t")[0].strip() for line in exports_columns_result.output.strip().splitlines()
+            line.split("\t")[0].strip()
+            for line in exports_columns_result.output.strip().splitlines()
         }
 
     with And("I get actual columns for system.part_log using DESCRIBE TABLE"):
@@ -466,14 +467,13 @@ def system_tables_columns(self):
             steps=True,
         )
         actual_part_log_columns = {
-            line.split("\t")[0].strip() for line in part_log_columns_result.output.strip().splitlines()
+            line.split("\t")[0].strip()
+            for line in part_log_columns_result.output.strip().splitlines()
         }
 
     with Then("I verify all expected columns exist in system.exports"):
         missing_exports_columns = expected_exports_columns - actual_exports_columns
-        assert (
-            len(missing_exports_columns) == 0
-        ), error(
+        assert len(missing_exports_columns) == 0, error(
             f"Missing columns in system.exports: {missing_exports_columns}. "
             f"Expected: {sorted(expected_exports_columns)}, "
             f"Actual: {sorted(actual_exports_columns)}"
@@ -481,9 +481,7 @@ def system_tables_columns(self):
 
     with And("I verify all expected columns exist in system.part_log"):
         missing_part_log_columns = expected_part_log_columns - actual_part_log_columns
-        assert (
-            len(missing_part_log_columns) == 0
-        ), error(
+        assert len(missing_part_log_columns) == 0, error(
             f"Missing columns in system.part_log: {missing_part_log_columns}. "
             f"Expected: {sorted(expected_part_log_columns)}, "
             f"Actual: {sorted(actual_part_log_columns)}"
