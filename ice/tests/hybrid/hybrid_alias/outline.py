@@ -40,6 +40,14 @@ def datatype_from_string(datatype_str):
             return Tuple([datatype_from_string(arg) for arg in args])
         elif type_name == "DateTime64":
             return DateTime64(int(args[0]))
+        elif type_name == "DateTime":
+            if len(args) == 0:
+                return DateTime()
+            elif len(args) == 1:
+                timezone = args[0].strip("'\"")
+                return DateTime(name=f"DateTime('{timezone}')")
+            else:
+                raise ValueError(f"DateTime requires 0 or 1 argument, got {len(args)}")
         elif type_name in ("Decimal32", "Decimal64", "Decimal128", "Decimal256"):
             return globals()[type_name](int(args[0]))
         else:
