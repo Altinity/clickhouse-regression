@@ -6,7 +6,7 @@ from ...outline import outline
 def json_extract_string_alias(self):
     """
     Define parameters for test case and call main outline.
-    Test alias: json_extract_string ALIAS JSONExtractString(json_col, 'key')
+    Test alias: json_extract_string ALIAS JSONExtractString(toString(json_col), 'key')
     Extract string from JSON.
     """
     base_columns = [
@@ -16,7 +16,7 @@ def json_extract_string_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "json_extract_string", "expression": "JSONExtractString(json_col, 'key')", "hybrid_type": "String"},
+        {"name": "json_extract_string", "expression": "JSONExtractString(toString(json_col), 'key')", "hybrid_type": "String"},
     ]
     watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
     expected = {"exitcode": 0, "error_message": None}
@@ -43,5 +43,5 @@ def json_extract_string_alias(self):
 @TestScenario
 @Name("json extract string alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
-    """Test alias column: json_extract_string ALIAS JSONExtractString(json_col, 'key')."""
+    """Test alias column: json_extract_string ALIAS JSONExtractString(toString(json_col), 'key')."""
     Scenario(run=json_extract_string_alias)
