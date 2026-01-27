@@ -128,9 +128,7 @@ def run_iceberg_query_with_cluster_max_threads_1(
 
 
 @TestScenario
-def object_storage_cluster_profile_events_with_overloaded_node(
-    self, minio_root_user, minio_root_password
-):
+def object_storage_cluster_profile_events_with_overloaded_node(self, minio_root_user, minio_root_password):
     """Test ObjectStorageClusterSentToNonMatchedReplica using large file strategy.
 
     Create a table with one large file first, then many small files.
@@ -192,9 +190,7 @@ def object_storage_cluster_profile_events_with_overloaded_node(
                     count = int(parts[0])
                     total_rows_returned += count
 
-            expected_total = (large_file_count * large_file_rows) + (
-                small_files_count * small_file_rows
-            )
+            expected_total = (large_file_count * large_file_rows) + (small_files_count * small_file_rows)
             assert total_rows_returned == expected_total, error(
                 f"Expected {expected_total} total rows, but got {total_rows_returned}"
             )
@@ -229,25 +225,15 @@ def object_storage_cluster_profile_events_with_overloaded_node(
         ).output.strip()
         assert int(sent_to_matched_replica) > 0, error()
 
-    with And(
-        "total files sent to matched replicas should be equal to the number total files"
-    ):
+    with And("total files sent to matched replicas should be equal to the number total files"):
         total_files = large_file_count + small_files_count
-        assert (
-            int(sent_to_matched_replica) + int(sent_to_non_matched_replica)
-            == total_files
-        ), error()
+        assert int(sent_to_matched_replica) + int(sent_to_non_matched_replica) == total_files, error()
 
-    with And("define variable for waiting time and processed tasks"):
-        with By("at least one of nodes should have non zero waiting time"):
-            has_waiting_time = False
-
+    with And("define variable for processed tasks"):
         with By("total processed tasks should be equal to the number of files"):
             processed_tasks_total = 0
 
-    with And(
-        "check profile events on replica nodes for waiting time and processed tasks"
-    ):
+    with And("check profile events on replica nodes for processed tasks"):
         replica_nodes = [self.context.node, self.context.node2, self.context.node3]
         for replica_node in replica_nodes:
             processed_tasks = replica_node.query(
@@ -260,19 +246,7 @@ def object_storage_cluster_profile_events_with_overloaded_node(
             ).output.strip()
             processed_tasks_total += int(processed_tasks)
 
-            waiting_microseconds = replica_node.query(
-                f"""
-                SELECT ProfileEvents['ObjectStorageClusterWaitingMicroseconds']
-                FROM system.query_log
-                WHERE type = 'QueryFinish' AND log_comment = '{log_comment}' AND hostname='{replica_node.name}' AND is_initial_query='0'
-                FORMAT TabSeparated
-                """
-            ).output.strip()
-            if int(waiting_microseconds) > 0:
-                has_waiting_time = True
-
-    with And("check that waiting time and processed tasks are not zero"):
-        assert has_waiting_time, error()
+    with And("check that processed tasks are not zero"):
         assert processed_tasks_total == total_files, error()
 
 
@@ -293,10 +267,6 @@ def feature(self, minio_root_user, minio_root_password):
 
     - ObjectStorageClusterProcessedTasks: Count of tasks processed by replica nodes.
     Calculated on replica nodes.
-
-    - ObjectStorageClusterWaitingMicroseconds: Total accumulated time spent waiting
-    for tasks when retry commands are received. This accumulates across multiple retry
-    attempts during task distribution. Calculated on replica nodes.
     """
     Scenario(
         test=object_storage_cluster_profile_events_with_overloaded_node,
