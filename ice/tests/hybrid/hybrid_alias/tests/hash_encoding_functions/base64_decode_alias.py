@@ -7,15 +7,16 @@ def base64_decode_alias(self):
     """
     Define parameters for test case and call main outline.
     Test alias: base64_decoded ALIAS base64Decode(encoded_col)
-    Base64 decoding.
+    Base64 decoding. encoded_col is itself an alias that encodes text_col.
     """
     base_columns = [
         {"name": "id", "datatype": "Int32"},
         {"name": "value", "datatype": "Int32"},
-        {"name": "encoded_col", "datatype": "String"},
+        {"name": "text_col", "datatype": "String"},
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
+        {"name": "encoded_col", "expression": "base64Encode(text_col)", "hybrid_type": "String"},
         {"name": "base64_decoded", "expression": "base64Decode(encoded_col)", "hybrid_type": "String"},
     ]
     watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
