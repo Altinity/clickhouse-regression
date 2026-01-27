@@ -110,9 +110,7 @@ def unpack_deb(deb_binary_path, program_name):
                 deb_abs_path = os.path.abspath(deb_binary_path)
                 deb_binary_dir_abs = os.path.abspath(deb_binary_dir)
                 # BSD ar extracts to current directory, so extract and move data.tar.gz
-                cmd = bash(
-                    f'ar x "{deb_abs_path}" && mv data.tar.gz "{deb_binary_dir_abs}/"'
-                )
+                cmd = bash(f'ar x "{deb_abs_path}" && mv data.tar.gz "{deb_binary_dir_abs}/"')
             else:
                 cmd = bash(f'ar x "{deb_binary_path}" --output "{deb_binary_dir}"')
             assert cmd.exitcode == 0, error()
@@ -1487,7 +1485,7 @@ class PackageDownloader:
                             f"{self.binary_path} server --version 2>&1"
                         ).output
 
-                        matches = re.findall(r"(?<=version )[0-9.a-z]*", version_output)
+                        matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
                         if matches:
                             self.package_version = matches[-1].strip(".")
 
@@ -1604,10 +1602,6 @@ class Cluster(object):
             caller_configs_dir = caller_dir
             if os.path.exists(caller_configs_dir):
                 self.configs_dir = caller_configs_dir
-
-        # Ensure configs_dir is an absolute path
-        if self.configs_dir is not None:
-            self.configs_dir = os.path.abspath(self.configs_dir)
 
         if not os.path.exists(self.configs_dir):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
@@ -1941,12 +1935,9 @@ class Cluster(object):
                 if self.collect_service_logs:
                     with Finally("collect service logs"):
                         with Shell() as bash:
-                            # Ensure configs_dir is absolute for path resolution
-                            abs_configs_dir = os.path.abspath(self.configs_dir)
-                            log_path = os.path.abspath(os.path.join(abs_configs_dir, "_service_logs"))
+                            log_path = f"../_service_logs"
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
                             bash(f"mkdir -p {log_path}")
-                            debug(f"Created _service_logs directory at: {log_path}")
                             nodes = bash(
                                 f"{self.docker_compose} ps --services"
                             ).output.split("\n")
