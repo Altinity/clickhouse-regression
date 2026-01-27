@@ -407,16 +407,19 @@ class JSON(DataType):
 
     def max_value(self):
         """Return the maximum value for the column in string format."""
-        return f"{self.max}::JSON"
+        json_str = self.max.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
 
     def min_value(self):
         """Return the minimum value for the column in string format."""
-        return f"{self.min}::JSON"
+        json_str = self.min.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
 
     def rand_value(self, random=None):
         if random is None:
             random = default_random
-        # Generate a random JSON object with various types
         keys = ["a", "b", "c", "d", "e"]
         num_keys = random.randint(1, 3)
         selected_keys = random.sample(keys, num_keys)
@@ -436,10 +439,13 @@ class JSON(DataType):
                 json_parts.append(f'"{key}": [{", ".join(arr_values)}]')
 
         json_str = "{" + ", ".join(json_parts) + "}"
-        return f"'{json_str}'::JSON"
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
 
     def zero_or_null_value(self):
-        return f"{self.min}::JSON"
+        json_str = self.min.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
 
 
 class FixedString(String):
