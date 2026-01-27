@@ -6,7 +6,7 @@ from ...outline import outline
 def json_has_alias(self):
     """
     Define parameters for test case and call main outline.
-    Test alias: json_has ALIAS JSONHas(json_col, 'key')
+    Test alias: json_has ALIAS JSONHas(toString(json_col), 'key')
     Check if key exists.
     """
     base_columns = [
@@ -16,7 +16,7 @@ def json_has_alias(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "json_has", "expression": "JSONHas(json_col, 'key')", "hybrid_type": "UInt8"},
+        {"name": "json_has", "expression": "JSONHas(toString(json_col), 'key')", "hybrid_type": "UInt8"},
     ]
     watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
     expected = {"exitcode": 0, "error_message": None}
@@ -43,5 +43,5 @@ def json_has_alias(self):
 @TestScenario
 @Name("json has alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
-    """Test alias column: json_has ALIAS JSONHas(json_col, 'key')."""
+    """Test alias column: json_has ALIAS JSONHas(toString(json_col), 'key')."""
     Scenario(run=json_has_alias)
