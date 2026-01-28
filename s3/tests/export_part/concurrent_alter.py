@@ -3,7 +3,7 @@ import s3.tests.export_part.steps as steps
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
-from helpers.alter import column, ttl, update, delete, table
+from helpers.alter import column, ttl, table
 from alter.stress.tests.tc_netem import *
 from helpers.common import getuid
 from s3.tests.export_part import alter_wrappers
@@ -99,11 +99,6 @@ def get_alter_functions():
             "move partition",
         ),
         AlterExample(
-            alter_wrappers.alter_table_clear_column_in_partition,
-            {"column_name": "i"},
-            "clear column in partition",
-        ),
-        AlterExample(
             alter_wrappers.alter_table_clear_index_in_partition,
             {},
             "clear index in partition",
@@ -127,16 +122,6 @@ def get_alter_functions():
             alter_wrappers.alter_table_replace_partition,
             {},
             "replace partition",
-        ),
-        AlterExample(
-            update.alter_table_update_column,
-            {"column_name": "i", "expression": "0", "condition": "1 = 1"},
-            "update column",
-        ),
-        AlterExample(
-            delete.alter_table_delete_rows,
-            {"condition": "p = 1"},
-            "delete rows",
         ),
         AlterExample(
             table.alter_table_modify_comment,

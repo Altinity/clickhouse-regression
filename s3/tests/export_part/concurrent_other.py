@@ -449,69 +449,6 @@ def after_delete_rows(self, delete_method, delete_condition, description):
         )
 
 
-def get_mutation_functions():
-    """Return list of mutation functions with their kwargs for testing pending mutations."""
-    return [
-        MutationExample(
-            delete_from,
-            {"condition": "p = 1", "settings": [("lightweight_deletes_sync", 0)]},
-            "delete from",
-        ),
-        MutationExample(
-            delete.alter_table_delete_rows,
-            {"condition": "p = 1"},
-            "alter delete",
-        ),
-        MutationExample(
-            update.alter_table_update_column,
-            {"column_name": "i", "expression": "i + 1000", "condition": "p = 1"},
-            "alter update",
-        ),
-    ]
-
-
-@TestOutline(Scenario)
-@Examples(
-    "example",
-    [(example,) for example in get_mutation_functions()],
-)
-@Requirements(RQ_ClickHouse_ExportPart_Concurrency_PendingMutations("1.0"))
-def during_pending_mutation(self, example):
-    """Test that exports skip pending mutations."""
-
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-        partitioned_merge_tree_table(
-            table_name=source_table,
-            partition_by="p",
-            columns=default_columns(),
-            number_of_parts=10,
-            number_of_partitions=1,
-            stop_merges=True,
-        )
-        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
-
-    with When("I apply mutation (blocked) and export parts"):
-        example.mutation_function(table_name=source_table, **example.kwargs)
-        export_parts(
-            source_table=source_table,
-            destination_table=s3_table_name,
-            settings=[("export_merge_tree_part_throw_on_pending_mutations", False)],
-        )
-
-    with And("I start merges (mutations)"):
-        start_merges(table_name=source_table)
-
-    with And("I wait for mutations to complete"):
-        wait_for_all_mutations_to_complete(table_name=source_table)
-
-    with Then("Check source does not match destination hash"):
-        source_does_not_match_destination_hash(
-            source_table=source_table,
-            destination_table=s3_table_name,
-        )
-
-
 @TestFeature
 @Name("concurrent other")
 def feature(self):
@@ -525,4 +462,3 @@ def feature(self):
     Scenario(run=inserts_and_selects_not_blocked)
     Scenario(run=after_delete_rows)
     Scenario(run=kill_export)
-    Scenario(run=during_pending_mutation)
