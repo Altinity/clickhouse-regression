@@ -314,7 +314,8 @@ def during_export(self, example):
         steps.start_merges(table_name=source_table)
 
     with And(f"I {example.alter_function.__name__} on the source table"):
-        example.alter_function(table_name=source_table, **example.kwargs)
+        if example.alter_function != alter_wrappers.drop_table:
+            example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check source matches destination"):
         steps.part_log_matches_destination(
