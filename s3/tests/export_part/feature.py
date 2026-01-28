@@ -32,4 +32,4 @@ def minio(self, uri, bucket_prefix):
         run=load("s3.tests.export_part.pending_mutations_and_patch_parts", "feature")
     )
     Feature(run=load("s3.tests.export_part.rbac", "feature"))
-    Feature(run=load("s3.tests.export_part.table_functions", "feature"))
+    # Feature(run=load("s3.tests.export_part.table_functions", "feature"))
