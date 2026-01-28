@@ -134,9 +134,7 @@ def json_columns(self):
 
     json1_escaped = escape_json_for_sql({"a": {"b": 42}, "c": [1, 2, 3]})
     json2_escaped = escape_json_for_sql({"d": "Hello", "e": 100})
-    insert_query = (
-        f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
-    )
+    insert_query = f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
 
     with By("inserting data into the source table"):
         self.context.node.query(insert_query, use_file=True)
@@ -184,9 +182,7 @@ def json_columns_with_hints(self):
 
     json1_escaped = escape_json_for_sql({"a": {"b": 42, "c": "test"}})
     json2_escaped = escape_json_for_sql({"a": {"b": 100, "c": "world"}})
-    insert_query = (
-        f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
-    )
+    insert_query = f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
 
     with By("inserting data into the source table"):
         self.context.node.query(insert_query, use_file=True)
