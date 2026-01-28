@@ -339,6 +339,9 @@ def max_bytes_per_file_and_rows_per_file(self):
             ],
         )
 
+    with And("I wait for all exports to complete"):
+        wait_for_all_exports_to_complete(table_name=source_table)
+
     with And("I export the part with max_rows_per_file setting"):
         export_parts(
             source_table=source_table,
