@@ -163,7 +163,6 @@ def outline(
 
     with And("create left table"):
         left_table_name = f"left_{getuid()}"
-        right_table_name = f"right_{getuid()}"
 
         with By("get left segment columns"):
             left_segment_columns = create_columns_from_config(left_base_columns, left_alias_columns)
@@ -181,6 +180,8 @@ def outline(
             left_table.insert_test_data(cardinality=1, shuffle_values=False)
 
     with And("create right table"):
+        right_table_name = f"right_{getuid()}"
+
         with By("get right segment columns"):
             right_segment_columns = create_columns_from_config(right_base_columns, right_alias_columns)
 
