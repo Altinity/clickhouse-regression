@@ -568,6 +568,7 @@ def export_partition_with_single_concurrent_action(
             query_settings=f"storage_policy = 'tiered_storage'",
             cluster="replicated_cluster",
         )
+
         s3_table_name = create_s3_table(
             table_name="s3", create_new_bucket=True, columns=columns_with_extras
         )
@@ -600,7 +601,7 @@ def export_partition_with_single_concurrent_action(
                 source_table=table_for_actions,
             )
 
-        join()
+            join()
 
 
 @TestScenario

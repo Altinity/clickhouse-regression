@@ -174,9 +174,7 @@ class Float32(Float):
 
 class Float64(Float):
     def __init__(self):
-        super().__init__(
-            "Float64", max="1.7976909999999999e308", min="-1.7976909999999999e308"
-        )
+        super().__init__("Float64", max="1.7976909999999999e308", min="-1.7976909999999999e308")
 
     def rand_value(self, random=None):
         if random is None:
@@ -362,9 +360,7 @@ class DateTime64(DateTime):
     def rand_value(self, random=None):
         if random is None:
             random = default_random
-        return (
-            f"toDateTime64({random.randint(1072549200, 1672549200)},{self.precision})"
-        )
+        return f"toDateTime64({random.randint(1072549200, 1672549200)},{self.precision})"
 
 
 # Misc
@@ -387,29 +383,78 @@ class String(DataType):
     def rand_value(self, random=None):
         if random is None:
             random = default_random
-        return (
-            f"'{self.max[random.randint(1,len(self.max)-2)] * random.randint(0,100)}'"
-        )
+        return f"'{self.max[random.randint(1,len(self.max)-2)] * random.randint(0,100)}'"
 
     def zero_or_null_value(self):
         return self.min
+
+
+class JSON(DataType):
+    def __init__(
+        self,
+        name="JSON",
+        max='\'{"a": 42, "b": "max"}\'',
+        min="'{}'",
+    ):
+        super().__init__(
+            name=name,
+            max=max,
+            min=min,
+            supports_low_cardinality=True,
+            is_valid_map_key=False,
+            is_numeric=False,
+        )
+
+    def max_value(self):
+        """Return the maximum value for the column in string format."""
+        json_str = self.max.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
+
+    def min_value(self):
+        """Return the minimum value for the column in string format."""
+        json_str = self.min.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
+
+    def rand_value(self, random=None):
+        if random is None:
+            random = default_random
+        keys = ["a", "b", "c", "d", "e"]
+        num_keys = random.randint(1, 3)
+        selected_keys = random.sample(keys, num_keys)
+
+        json_parts = []
+        for key in selected_keys:
+            value_type = random.choice(["int", "string", "bool", "array"])
+            if value_type == "int":
+                json_parts.append(f'"{key}": {random.randint(0, 1000)}')
+            elif value_type == "string":
+                json_parts.append(f'"{key}": "{random.choice(["hello", "world", "test", "data"])}"')
+            elif value_type == "bool":
+                json_parts.append(f'"{key}": {str(random.choice([True, False])).lower()}')
+            elif value_type == "array":
+                arr_len = random.randint(1, 3)
+                arr_values = [str(random.randint(1, 10)) for _ in range(arr_len)]
+                json_parts.append(f'"{key}": [{", ".join(arr_values)}]')
+
+        json_str = "{" + ", ".join(json_parts) + "}"
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
+
+    def zero_or_null_value(self):
+        json_str = self.min.strip("'")
+        json_str_escaped = json_str.replace('"', '\\"')
+        return f"'{json_str_escaped}'::JSON"
 
 
 class FixedString(String):
     def __init__(self, length):
         self.length = length
         if length <= 51:
-            max = (
-                "'"
-                + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"[0:length]
-                + "'"
-            )
+            max = "'" + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"[0:length] + "'"
         else:
-            max = (
-                "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"
-                + "a" * (length - 51)
-                + "'"
-            )
+            max = "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ" + "a" * (length - 51) + "'"
         super().__init__(f"FixedString({length})", max=max)
 
     def max_value(self):
@@ -585,38 +630,22 @@ class Tuple(DataType):
     def max_value(self):
         """Return the maximum value for the column in string format."""
 
-        return (
-            "tuple("
-            + ",".join([datatype.max_value() for datatype in self.datatypes])
-            + ")"
-        )
+        return "tuple(" + ",".join([datatype.max_value() for datatype in self.datatypes]) + ")"
 
     def min_value(self):
         """Return the minimum value for the column in string format."""
 
-        return (
-            "tuple("
-            + ",".join([datatype.min_value() for datatype in self.datatypes])
-            + ")"
-        )
+        return "tuple(" + ",".join([datatype.min_value() for datatype in self.datatypes]) + ")"
 
     def rand_value(self, random=None):
         """Return the random value for the column in string format."""
 
-        return (
-            "tuple("
-            + ",".join([datatype.rand_value(random) for datatype in self.datatypes])
-            + ")"
-        )
+        return "tuple(" + ",".join([datatype.rand_value(random) for datatype in self.datatypes]) + ")"
 
     def zero_or_null_value(self):
         """Return the null or zero value for the column in string format."""
 
-        return (
-            "tuple("
-            + ",".join([datatype.zero_or_null_value() for datatype in self.datatypes])
-            + ")"
-        )
+        return "tuple(" + ",".join([datatype.zero_or_null_value() for datatype in self.datatypes]) + ")"
 
 
 class Map(DataType):
@@ -644,24 +673,12 @@ class Map(DataType):
     def rand_value(self, random=None):
         """Return the random value for the column in string format."""
 
-        return (
-            "map("
-            + self.key.rand_value(random)
-            + ","
-            + self.value.rand_value(random)
-            + ")"
-        )
+        return "map(" + self.key.rand_value(random) + "," + self.value.rand_value(random) + ")"
 
     def zero_or_null_value(self):
         """Return the null or zero value for the column in string format."""
 
-        return (
-            "map("
-            + self.key.zero_or_null_value()
-            + ","
-            + self.value.zero_or_null_value()
-            + ")"
-        )
+        return "map(" + self.key.zero_or_null_value() + "," + self.value.zero_or_null_value() + ")"
 
 
 class Array(DataType):

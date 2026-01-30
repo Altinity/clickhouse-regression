@@ -83,6 +83,7 @@ on:
           - ldap
           - lightweight_delete
           - memory
+          - oauth
           - parquet_all
           - parquet
           - parquet_minio

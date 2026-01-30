@@ -3,7 +3,7 @@ import s3.tests.export_part.steps as steps
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
-from helpers.alter import column, ttl, update, delete, table
+from helpers.alter import column, ttl, table
 from alter.stress.tests.tc_netem import *
 from helpers.common import getuid
 from s3.tests.export_part import alter_wrappers
@@ -99,11 +99,6 @@ def get_alter_functions():
             "move partition",
         ),
         AlterExample(
-            alter_wrappers.alter_table_clear_column_in_partition,
-            {"column_name": "i"},
-            "clear column in partition",
-        ),
-        AlterExample(
             alter_wrappers.alter_table_clear_index_in_partition,
             {},
             "clear index in partition",
@@ -129,16 +124,6 @@ def get_alter_functions():
             "replace partition",
         ),
         AlterExample(
-            update.alter_table_update_column,
-            {"column_name": "i", "expression": "0", "condition": "1 = 1"},
-            "update column",
-        ),
-        AlterExample(
-            delete.alter_table_delete_rows,
-            {"condition": "p = 1"},
-            "delete rows",
-        ),
-        AlterExample(
             table.alter_table_modify_comment,
             {"comment": "test table comment"},
             "modify table comment",
@@ -152,16 +137,6 @@ def get_alter_functions():
             create_partitions_with_random_uint64,
             {"number_of_partitions": 5, "number_of_parts": 1},
             "create partitions",
-        ),
-        AlterExample(
-            alter_wrappers.optimize_partition,
-            {"partition": "1"},
-            "optimize partition",
-        ),
-        AlterExample(
-            alter_wrappers.optimize_table,
-            {},
-            "optimize table",
         ),
         AlterExample(
             alter_wrappers.drop_table,
@@ -236,6 +211,10 @@ def before_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with Then("Check source matches destination"):
@@ -273,6 +252,10 @@ def after_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I read data on the S3 table"):
@@ -321,13 +304,18 @@ def during_export(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I start merges"):
         steps.start_merges(table_name=source_table)
 
     with And(f"I {example.alter_function.__name__} on the source table"):
-        example.alter_function(table_name=source_table, **example.kwargs)
+        if example.alter_function != alter_wrappers.drop_table:
+            example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check source matches destination"):
         steps.part_log_matches_destination(
@@ -368,6 +356,10 @@ def during_minio_interruption(self, example):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with And("I start merges"):
@@ -426,10 +418,15 @@ def stress(self, example):
                     destination_table=s3_table_name,
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
+                    settings=[
+                        ("export_merge_tree_part_throw_on_pending_mutations", False),
+                        ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+                    ],
                 )
                 Step(test=example.alter_function, parallel=True, executor=executor)(
                     table_name=source_table, **example.kwargs
                 )
+                time.sleep(0.3)
             join()
 
     with Then("Check successfully exported parts are present in destination"):

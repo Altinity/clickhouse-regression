@@ -1,29 +1,26 @@
-from helpers.common import getuid
+from testflows.core import *
 import helpers.config.config_d as config_d
-from alter.stress.tests.tc_netem import *
 from helpers.common import getuid
+from alter.stress.tests.tc_netem import *
+from helpers.create import partitioned_replicated_merge_tree_table
 from s3.requirements.export_partition import *
-from s3.tests.export_part.steps import (
-    default_columns,
-    partitioned_replicated_merge_tree_table,
-)
 from s3.tests.export_partition.steps import (
     export_partitions,
     get_partitions,
     create_s3_table,
-    check_export_status,
-    wait_for_export_to_start,
     wait_for_export_to_complete,
-    get_export_field,
-    get_source_database,
-    get_destination_table,
-    get_create_time,
-    get_partition_id,
-    get_transaction_id,
-    get_source_replica,
-    get_parts,
-    get_parts_count,
-    get_parts_to_do,
+    verify_export_fields_populated,
+    verify_export_status,
+    verify_parts_to_do_decreases,
+    verify_exports_appear_in_table,
+    verify_partition_ids_match,
+    get_expected_parts_from_table,
+    verify_parts_array_matches,
+    verify_table_structure_has_fields,
+    verify_all_fields_populated,
+    verify_transaction_id_populated,
+    verify_active_exports_limited,
+    default_columns,
 )
 
 
@@ -32,9 +29,9 @@ from s3.tests.export_partition.steps import (
 def export_appears_in_table(self):
     """Check that export operations appear in system.replicated_partition_exports table."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -44,16 +41,15 @@ def export_appears_in_table(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I export partitions to the S3 table"):
-        Check(test=export_partitions, parallel=True)(
+    with When("export partitions"):
+        export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
-        Check(test=wait_for_export_to_start, parallel=True)(source_table=source_table)
 
-    with Then("I check that exports appear in system.replicated_partition_exports"):
-        exports_count = wait_for_export_to_complete(source_table=source_table)
+    with Then("verify exports appear in system.replicated_partition_exports"):
+        wait_for_export_to_complete(source_table=source_table)
 
 
 @TestScenario
@@ -61,9 +57,9 @@ def export_appears_in_table(self):
 def export_fields_populated(self):
     """Check that all fields in system.replicated_partition_exports are populated correctly."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -73,43 +69,18 @@ def export_fields_populated(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check that source_table field is populated"):
-        source_db = get_source_database(source_table=source_table)
-        assert source_db.output.strip() != "", error()
-
-    with And("I check that destination_table field is populated"):
-        dest_table = get_destination_table(source_table=source_table)
-        assert dest_table.output.strip() == s3_table_name, error()
-
-    with And("I check that partition_id field is populated"):
-        partition_id = get_partition_id(source_table=source_table)
-        assert partition_id.output.strip() != "", error()
-
-    with And("I check that parts field is populated"):
-        parts = get_parts(source_table=source_table)
-        assert parts.output.strip() != "", error()
-
-    with And("I check that parts_count field is populated"):
-        parts_count = get_parts_count(source_table=source_table)
-        assert int(parts_count.output.strip()) > 0, error()
-
-    with And("I check that create_time field is populated"):
-        create_time = get_create_time(source_table=source_table)
-        assert create_time.output.strip() != "", error()
-
-    with And("I check that source_replica field is populated"):
-        source_replica = get_source_replica(source_table=source_table)
-        assert source_replica.output.strip() != "", error()
+    with Then("verify fields are populated"):
+        verify_export_fields_populated(
+            source_table=source_table,
+            s3_table_name=s3_table_name,
+        )
 
 
 @TestScenario
@@ -117,9 +88,9 @@ def export_fields_populated(self):
 def export_status_transitions(self):
     """Check that export status transitions from PENDING to COMPLETED correctly."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -129,24 +100,19 @@ def export_status_transitions(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with Then("I check that exports start with PENDING status"):
-        wait_for_export_to_start(source_table=source_table)
-        pending_count = check_export_status(status="PENDING", source_table=source_table)
-        assert int(pending_count.output.strip()) > 0, error()
+    with Then("verify exports start with PENDING status"):
+        verify_export_status(source_table=source_table, status="PENDING")
 
-    with And("I check that exports transition to COMPLETED status"):
+    with And("verify exports transition to COMPLETED status"):
         wait_for_export_to_complete(source_table=source_table)
-        completed_count = check_export_status(
-            status="COMPLETED", source_table=source_table
-        )
-        assert int(completed_count.output.strip()) > 0, error()
+        verify_export_status(source_table=source_table, status="COMPLETED")
 
 
 @TestScenario
@@ -154,9 +120,9 @@ def export_status_transitions(self):
 def parts_to_do_decreases(self):
     """Check that parts_to_do decreases as parts are exported."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -167,30 +133,18 @@ def parts_to_do_decreases(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I slow down the network speed"):
+    with And("slow down network speed"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=20)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check initial parts_to_do count"):
-        initial_parts_to_do = get_parts_to_do(source_table=source_table)
-        initial_count = int(initial_parts_to_do.output.strip())
-        assert initial_count > 0, error()
-
-    with And("I check that parts_to_do decreases as export progresses"):
-        for attempt in retries(timeout=60, delay=2):
-            with attempt:
-                current_parts_to_do = get_parts_to_do(source_table=source_table)
-                current_count = int(current_parts_to_do.output.strip())
-                assert current_count < initial_count or current_count == 0, error()
+    with Then("verify parts_to_do decreases"):
+        verify_parts_to_do_decreases(source_table=source_table)
 
 
 @TestScenario
@@ -201,9 +155,10 @@ def parts_to_do_decreases(self):
 def concurrent_exports_tracking(self):
     """Check that multiple concurrent exports are tracked correctly in the table."""
 
-    with Given("I create multiple populated source tables and empty S3 tables"):
-        source_tables = []
-        s3_tables = []
+    source_tables = []
+    s3_tables = []
+
+    with Given("create multiple source and S3 tables"):
         for i in range(3):
             source_table = f"source_{getuid()}"
             partitioned_replicated_merge_tree_table(
@@ -219,7 +174,7 @@ def concurrent_exports_tracking(self):
             source_tables.append(source_table)
             s3_tables.append(s3_table_name)
 
-    with When("I export partitions from all tables concurrently"):
+    with When("export partitions from all tables concurrently"):
         for source_table, s3_table in zip(source_tables, s3_tables):
             Step(test=export_partitions, parallel=True)(
                 source_table=source_table,
@@ -228,13 +183,9 @@ def concurrent_exports_tracking(self):
             )
         join()
 
-    with Then("I check that all exports appear in the table"):
+    with Then("verify all exports appear in the table"):
         for source_table in source_tables:
-            wait_for_export_to_start(source_table=source_table)
-            exports_count = check_export_status(
-                status="PENDING", source_table=source_table
-            )
-            assert int(exports_count.output.strip()) > 0, error()
+            verify_exports_appear_in_table(source_table=source_table)
 
 
 @TestScenario
@@ -242,9 +193,9 @@ def concurrent_exports_tracking(self):
 def partition_id_matches_exported(self):
     """Check that partition_id in the table matches the exported partitions."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -254,36 +205,21 @@ def partition_id_matches_exported(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I get the list of partitions to export"):
+    with And("get list of partitions to export"):
         partitions = get_partitions(table_name=source_table, node=self.context.node)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check that partition_id matches exported partitions"):
-        all_partition_ids = get_export_field(
-            field_name="partition_id",
+    with Then("verify partition_id matches exported partitions"):
+        verify_partition_ids_match(
             source_table=source_table,
-            select_clause="DISTINCT partition_id",
+            expected_partitions=partitions,
         )
-        exported_partition_ids = set(
-            [
-                pid.strip()
-                for pid in all_partition_ids.output.strip().splitlines()
-                if pid.strip()
-            ]
-        )
-
-        assert len(exported_partition_ids) == len(partitions), error()
-        for partition in partitions:
-            assert partition in exported_partition_ids, error()
 
 
 @TestScenario
@@ -291,9 +227,9 @@ def partition_id_matches_exported(self):
 def parts_array_matches_table_parts(self):
     """Check that the parts array in the table matches the actual parts in the source table."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -303,49 +239,24 @@ def parts_array_matches_table_parts(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I get the actual parts from the source table"):
-        partitions = get_partitions(table_name=source_table, node=self.context.node)
-        expected_parts = set()
-        for partition in partitions:
-            parts_result = self.context.node.query(
-                f"SELECT name FROM system.parts WHERE table = '{source_table}' AND partition_id = '{partition}' AND active = 1",
-                exitcode=0,
-                steps=True,
-            )
-            for part in parts_result.output.strip().splitlines():
-                expected_parts.add(part.strip())
+    with And("get actual parts from source table"):
+        expected_parts = get_expected_parts_from_table(
+            source_table=source_table,
+            node=self.context.node,
+        )
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check that parts array matches expected parts"):
-        all_parts_result = get_export_field(
-            field_name="parts",
+    with Then("verify parts array matches expected parts"):
+        verify_parts_array_matches(
             source_table=source_table,
-            select_clause="parts",
+            expected_parts=expected_parts,
         )
-        exported_parts_set = set()
-        for line in all_parts_result.output.strip().splitlines():
-            if line.strip():
-                import json
-
-                try:
-                    parts_array = json.loads(line.strip())
-                    if isinstance(parts_array, list):
-                        exported_parts_set.update(parts_array)
-                except (json.JSONDecodeError, ValueError):
-                    pass
-
-        assert len(exported_parts_set) >= len(expected_parts), error()
-        for part in expected_parts:
-            assert part in exported_parts_set, error()
 
 
 @TestScenario
@@ -353,9 +264,9 @@ def parts_array_matches_table_parts(self):
 def transaction_id_populated(self):
     """Check that transaction_id is populated for export operations."""
 
-    with Given("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
+    source_table = f"source_{getuid()}"
 
+    with Given("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -365,19 +276,15 @@ def transaction_id_populated(self):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check that transaction_id is populated"):
-        transaction_id = get_transaction_id(source_table=source_table)
-        assert transaction_id.output.strip() != "", error()
+    with Then("verify transaction_id is populated"):
+        verify_transaction_id_populated(source_table=source_table)
 
 
 @TestScenario
@@ -388,16 +295,16 @@ def transaction_id_populated(self):
 def concurrent_exports_limit(self, background_move_pool_size):
     """Check that the number of concurrent exports is limited by background_move_pool_size."""
 
-    with Given(f"I set background_move_pool_size to {background_move_pool_size}"):
+    source_table = f"source_{getuid()}"
+
+    with Given(f"set background_move_pool_size to {background_move_pool_size}"):
         config_d.create_and_add(
             entries={"background_move_pool_size": f"{background_move_pool_size}"},
             config_file="background_move_pool_size.xml",
             node=self.context.node,
         )
 
-    with And("I create a populated source table and empty S3 table"):
-        source_table = "source_" + getuid()
-
+    with And("create source and S3 tables"):
         partitioned_replicated_merge_tree_table(
             table_name=source_table,
             partition_by="p",
@@ -409,28 +316,55 @@ def concurrent_exports_limit(self, background_move_pool_size):
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
-    with And("I slow down the network speed"):
+    with And("slow down network speed"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=20)
 
-    with When("I export partitions to the S3 table"):
+    with When("export partitions"):
         export_partitions(
             source_table=source_table,
             destination_table=s3_table_name,
             node=self.context.node,
         )
 
-    with And("I wait for exports to start"):
-        wait_for_export_to_start(source_table=source_table)
-
-    with Then("I check that the number of active exports is limited"):
-        active_exports = get_export_field(
-            field_name="COUNT(*)",
+    with Then("verify number of active exports is limited"):
+        verify_active_exports_limited(
             source_table=source_table,
-            select_clause="COUNT(*)",
-            where_clause="status = 'PENDING' OR status = 'COMPLETED'",
+            max_count=background_move_pool_size,
         )
-        active_count = int(active_exports.output.strip())
-        assert active_count <= background_move_pool_size, error()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"))
+def all_required_fields_present(self):
+    """Check that system.replicated_partition_exports contains all required fields after export."""
+
+    source_table = f"source_{getuid()}"
+
+    with Given("create source and S3 tables"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("export partitions"):
+        export_partitions(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("verify all required fields exist in table structure"):
+        verify_table_structure_has_fields(node=self.context.node)
+
+    with And("verify fields are populated after export"):
+        verify_all_fields_populated(
+            source_table=source_table,
+            node=self.context.node,
+        )
 
 
 @TestFeature
@@ -450,3 +384,4 @@ def feature(self):
     Scenario(test=concurrent_exports_limit)(background_move_pool_size=1)
     Scenario(test=concurrent_exports_limit)(background_move_pool_size=4)
     Scenario(test=concurrent_exports_limit)(background_move_pool_size=8)
+    Scenario(run=all_required_fields_present)

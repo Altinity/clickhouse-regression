@@ -8,6 +8,11 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
+from platform import processor
+
+MINIO_CONTAINER = (
+    "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
+)
 
 
 @TestStep(Given)
@@ -164,6 +169,34 @@ def create_s3_table(
     )
 
     return table_name
+
+
+@TestStep(Given)
+def create_distributed_table(
+    self,
+    cluster,
+    local_table_name,
+    distributed_table_name=None,
+    sharding_key="rand()",
+    node=None,
+):
+    """Create a Distributed table that points to local tables on a cluster."""
+    if node is None:
+        node = self.context.node
+
+    if distributed_table_name is None:
+        distributed_table_name = f"distributed_{getuid()}"
+
+    node.query(
+        f"""
+        CREATE TABLE {distributed_table_name} AS {local_table_name}
+        ENGINE = Distributed({cluster}, default, {local_table_name}, {sharding_key})
+        """,
+        exitcode=0,
+        steps=True,
+    )
+
+    return distributed_table_name
 
 
 @TestStep(When)
@@ -434,7 +467,7 @@ def get_s3_parts(self, table_name, node=None):
 
 
 @TestStep(When)
-def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KILL"):
+def kill_minio(self, cluster=None, container_name=MINIO_CONTAINER, signal="KILL"):
     """Forcefully kill MinIO container to simulate network crash."""
 
     if cluster is None:
@@ -462,7 +495,7 @@ def kill_minio(self, cluster=None, container_name="s3_env-minio1-1", signal="KIL
 
 
 @TestStep(When)
-def start_minio(self, cluster=None, container_name="s3_env-minio1-1"):
+def start_minio(self, cluster=None, container_name=MINIO_CONTAINER):
     """Start MinIO container and wait for it to be ready."""
 
     if cluster is None:
@@ -521,6 +554,90 @@ def get_column_info(self, table_name, node=None):
 
 
 @TestStep(When)
+def get_columns_with_kind(self, table_name, node=None):
+    """Get column information including default_kind from system.columns."""
+    if node is None:
+        node = self.context.node
+
+    r = node.query(
+        f"""
+        SELECT name, type, default_kind
+        FROM system.columns 
+        WHERE table = '{table_name}' AND database = currentDatabase()
+        ORDER BY position
+        FORMAT JSONEachRow
+        """,
+        exitcode=0,
+        steps=True,
+    )
+
+    columns = []
+    for line in r.output.strip().splitlines():
+        col = json.loads(line)
+        columns.append(
+            {
+                "name": col["name"],
+                "type": col["type"],
+                "default_kind": col.get("default_kind", ""),
+            }
+        )
+    return columns
+
+
+@TestStep(When)
+def verify_column_not_in_destination(self, table_name, column_name, node=None):
+    """Verify that a column (e.g., EPHEMERAL) is not present in the destination table schema."""
+    if node is None:
+        node = self.context.node
+
+    dest_columns = get_columns_with_kind(table_name=table_name, node=node)
+    matching_columns = [
+        col["name"] for col in dest_columns if column_name in col["name"]
+    ]
+    assert len(matching_columns) == 0, error(
+        f"Column '{column_name}' should not be in destination table, but found: {matching_columns}"
+    )
+
+
+@TestStep(When)
+def verify_column_in_destination(self, table_name, column_name, node=None):
+    """Verify that a column is present in the destination table schema."""
+    if node is None:
+        node = self.context.node
+
+    dest_columns = get_columns_with_kind(table_name=table_name, node=node)
+    matching_columns = [
+        col["name"] for col in dest_columns if col["name"] == column_name
+    ]
+    assert len(matching_columns) > 0, error(
+        f"Column '{column_name}' should be in destination table, but not found. Available columns: {[col['name'] for col in dest_columns]}"
+    )
+
+
+@TestStep(Then)
+def verify_exported_data_matches_with_columns(
+    self, source_table, destination_table, columns, order_by="p", node=None
+):
+    """Verify that exported data matches source table using explicit column list."""
+    if node is None:
+        node = self.context.node
+
+    source_data = select_all_ordered(
+        table_name=source_table,
+        order_by=order_by,
+        identifier=columns,
+        node=node,
+    )
+    destination_data = select_all_ordered(
+        table_name=destination_table,
+        order_by=order_by,
+        identifier=columns,
+        node=node,
+    )
+    assert source_data == destination_data, error()
+
+
+@TestStep(When)
 def get_parts(self, table_name, node=None):
     """Get all parts for a table on a given node."""
     if node is None:
@@ -565,6 +682,70 @@ def export_parts(
         output.append(
             node.query(
                 f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                exitcode=exitcode,
+                no_checks=no_checks,
+                steps=True,
+                settings=settings,
+                inline_settings=inline_settings,
+            )
+        )
+
+    return output
+
+
+@TestStep(When)
+def export_parts_to_table_function(
+    self,
+    source_table,
+    filename,
+    node=None,
+    parts=None,
+    exitcode=0,
+    settings=None,
+    inline_settings=True,
+    structure=None,
+    partition_by=None,
+    uri=None,
+):
+    """Export parts from a source table to a table function destination."""
+    if node is None:
+        node = self.context.node
+
+    if parts is None:
+        parts = get_parts(table_name=source_table, node=node)
+
+    if inline_settings is True:
+        inline_settings = self.context.default_settings
+
+    if uri is None:
+        uri = self.context.uri
+
+    no_checks = exitcode != 0
+    output = []
+
+    if partition_by is None:
+        partition_key_result = node.query(
+            f"""
+            SELECT partition_key
+            FROM system.tables
+            WHERE database = currentDatabase() AND name = '{source_table}'
+            """,
+            exitcode=0,
+            steps=True,
+        )
+        partition_by = partition_key_result.output.strip()
+
+    for part in parts:
+        if structure:
+            table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', structure='{structure}', partition_strategy='hive'"
+        else:
+            table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', partition_strategy='hive'"
+
+        query = f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE FUNCTION s3({table_function_params}) PARTITION BY {partition_by}"
+
+        output.append(
+            node.query(
+                query,
                 exitcode=exitcode,
                 no_checks=no_checks,
                 steps=True,
@@ -735,6 +916,21 @@ def insert_into_table(self, table_name, node=None):
 
 
 @TestStep(When)
+def insert_random_data(
+    self, table_name, number_of_values=200, node=None, no_checks=False
+):
+    """Insert random data into a table with columns (p, i)."""
+    if node is None:
+        node = self.context.node
+
+    return node.query(
+        f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})",
+        no_checks=no_checks,
+        steps=True,
+    )
+
+
+@TestStep(When)
 def concurrent_export_tables(self, num_tables, number_of_values=3, number_of_parts=1):
     """Check concurrent exports from different sources to the same S3 table."""
 
@@ -783,6 +979,22 @@ def wait_for_all_exports_to_complete(self, node=None, table_name=None):
             assert (
                 get_num_active_exports(node=node, table_name=table_name) == 0
             ), error()
+
+
+@TestStep(When)
+def wait_for_distributed_table_data(self, table_name, expected_count, node=None):
+    """Wait for data to be distributed to all shards in a Distributed table."""
+    if node is None:
+        node = self.context.node
+
+    for attempt in retries(timeout=60, delay=1):
+        with attempt:
+            result = node.query(
+                f"SELECT count() FROM {table_name}",
+                exitcode=0,
+                steps=True,
+            )
+            assert int(result.output.strip()) == expected_count, error()
 
 
 @TestStep(Then)

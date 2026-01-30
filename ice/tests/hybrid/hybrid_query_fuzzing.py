@@ -17,11 +17,7 @@ def load_queries_from_sql_file(sql_file_path):
         content = f.read()
     queries = []
     for query_block in content.split("\n\n"):
-        lines = [
-            line
-            for line in query_block.split("\n")
-            if line.strip() and not line.strip().startswith("--")
-        ]
+        lines = [line for line in query_block.split("\n") if line.strip() and not line.strip().startswith("--")]
         if lines:
             query = "\n".join(lines).strip()
             if query:
@@ -52,13 +48,11 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
     url = f"http://minio:9000/warehouse/data_hybrid"
 
     with Given("create iceberg tables in different locations"):
-        _, table_name, namespace = (
-            swarm_steps.performance_iceberg_table_with_all_basic_data_types(
-                minio_root_user=minio_root_user,
-                minio_root_password=minio_root_password,
-                location=location,
-                row_count=100,
-            )
+        _, table_name, namespace = swarm_steps.performance_iceberg_table_with_all_basic_data_types(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            location=location,
+            row_count=100,
         )
 
     with And("create DataLakeCatalog database"):
@@ -69,9 +63,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
         )
 
     with And("create merge tree tables from iceberg tables with same schema and data"):
-        clickhouse_iceberg_table_name = (
-            f"{database_name}.\\`{namespace}.{table_name}\\`"
-        )
+        clickhouse_iceberg_table_name = f"{database_name}.\\`{namespace}.{table_name}\\`"
         merge_tree_table_name = f"merge_tree_table_{getuid()}"
         create_table_as_select(
             as_select_from=clickhouse_iceberg_table_name,
@@ -80,9 +72,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
         )
 
     with And("select random eventDate from MergeTree table"):
-        date_value = node.query(
-            f"SELECT date_col FROM {merge_tree_table_name} ORDER BY rand() LIMIT 1;"
-        ).output.strip()
+        date_value = node.query(f"SELECT date_col FROM {merge_tree_table_name} ORDER BY rand() LIMIT 1;").output.strip()
 
     with And("create Hybrid table"):
         # node.query(
@@ -102,9 +92,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
 
     with And("execute queries from SQL file"):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        sql_file_path = os.path.join(
-            current_dir, "hybrid_query_fuzzing_queries.sql"
-        )
+        sql_file_path = os.path.join(current_dir, "hybrid_query_fuzzing_queries.sql")
 
         if os.path.exists(sql_file_path):
             queries = load_queries_from_sql_file(sql_file_path)
@@ -122,9 +110,7 @@ def hybrid_query_fuzzing(self, minio_root_user, minio_root_password, node=None):
                 for i, query_template in enumerate(queries, 1):
                     with By(f"query {i}/{len(queries)}"):
                         try:
-                            query = substitute_table_names(
-                                query_template, substitutions
-                            )
+                            query = substitute_table_names(query_template, substitutions)
                             node.query(query)
                         except Exception as e:
                             note(f"Query {i} failed: {str(e)}")

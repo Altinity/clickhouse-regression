@@ -8,18 +8,19 @@ from testflows.core import *
 
 
 class Column:
-    def __init__(self, datatype, name=None):
+    def __init__(self, datatype=None, name=None, alias=None):
+        if alias is None and datatype is None:
+            raise ValueError("Alias or datatype must be provided")
+
         self.datatype = datatype
         self.name = (
             name
             if name is not None
-            else self.datatype.name.replace("(", "_")
-            .replace(")", "_")
-            .replace(",", "_")
-            .lower()
+            else self.datatype.name.replace("(", "_").replace(")", "_").replace(",", "_").lower()
         )
         seed = int(hashlib.sha1(self.name.encode("utf-8")).hexdigest()[:10], 16)
         self.random = random.Random(seed)
+        self.alias = alias
 
     def __eq__(self, o):
         return isinstance(o, Column) and o.name == self.name
@@ -29,7 +30,15 @@ class Column:
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
-        return self.name + " " + self.datatype.name
+        full_definition = self.name
+
+        if self.datatype is not None:
+            full_definition += " " + self.datatype.name
+
+        if self.alias is not None:
+            full_definition += f" ALIAS {self.alias}"
+
+        return full_definition
 
     def values(self, row_count, cardinality, random=None, shuffle_values=False):
         """Yield of values that have specified cardinality."""
@@ -186,11 +195,7 @@ def generate_low_card_datatypes(datatype_list):
         LowCardinality(datatype)
         for datatype in datatype_list
         if unwrap(datatype).supports_low_cardinality
-        and (
-            not isinstance(datatype, Nullable)
-            if check_clickhouse_version("<22.4")(current())
-            else True
-        )
+        and (not isinstance(datatype, Nullable) if check_clickhouse_version("<22.4")(current()) else True)
     ]
 
 
@@ -282,45 +287,27 @@ def generate_all_column_types(include=None, exclude=None):
     _basic_datatypes = include if include else basic_datatypes()
 
     null_datatypes = generate_nullable_datatypes(_basic_datatypes)
-    low_cardinality_datatypes = generate_low_card_datatypes(
-        _basic_datatypes + null_datatypes
-    )
+    low_cardinality_datatypes = generate_low_card_datatypes(_basic_datatypes + null_datatypes)
 
     array_datatypes = generate_array_datatypes(
-        _basic_datatypes
-        + null_datatypes
-        + low_cardinality_datatypes
-        + common_complex_datatypes()
+        _basic_datatypes + null_datatypes + low_cardinality_datatypes + common_complex_datatypes()
     )
 
     map_datatypes = generate_map_datatypes(
-        _basic_datatypes
-        + null_datatypes
-        + low_cardinality_datatypes
-        + common_complex_datatypes()
+        _basic_datatypes + null_datatypes + low_cardinality_datatypes + common_complex_datatypes()
     )
 
     tuple_datatype = [
         generate_tuple_datatype(
-            _basic_datatypes
-            + null_datatypes
-            + low_cardinality_datatypes
-            + common_complex_datatypes()
+            _basic_datatypes + null_datatypes + low_cardinality_datatypes + common_complex_datatypes()
         )
     ]
 
     all_test_datatypes = (
-        _basic_datatypes
-        + map_datatypes
-        + null_datatypes
-        + array_datatypes
-        + low_cardinality_datatypes
-        + tuple_datatype
+        _basic_datatypes + map_datatypes + null_datatypes + array_datatypes + low_cardinality_datatypes + tuple_datatype
     )
 
-    return [
-        Column(datatype) for datatype in all_test_datatypes if datatype not in exclude
-    ]
+    return [Column(datatype) for datatype in all_test_datatypes if datatype not in exclude]
 
 
 def generate_all_map_column_types():
@@ -328,15 +315,10 @@ def generate_all_map_column_types():
     _basic_datatypes = basic_datatypes()
 
     null_datatypes = generate_nullable_datatypes(_basic_datatypes)
-    low_cardinality_datatypes = generate_low_card_datatypes(
-        _basic_datatypes + null_datatypes
-    )
+    low_cardinality_datatypes = generate_low_card_datatypes(_basic_datatypes + null_datatypes)
 
     map_datatypes = generate_map_datatypes(
-        _basic_datatypes
-        + null_datatypes
-        + low_cardinality_datatypes
-        + common_complex_datatypes()
+        _basic_datatypes + null_datatypes + low_cardinality_datatypes + common_complex_datatypes()
     )
 
     return [Column(datatype) for datatype in map_datatypes]
@@ -373,7 +355,8 @@ class Table:
             node = current().context.node
 
         name = self.name
-        columns = self.columns
+        # Filter out alias columns (columns without datatype) - they don't need data inserted
+        columns = [col for col in self.columns if col.datatype is not None]
         columns_values = [
             column.values(
                 row_count=row_count,
@@ -387,11 +370,7 @@ class Table:
         values = []
 
         for row in range(row_count * cardinality):
-            values.append(
-                "("
-                + ",".join([next(column_values) for column_values in columns_values])
-                + ")"
-            )
+            values.append("(" + ",".join([next(column_values) for column_values in columns_values]) + ")")
 
         result = node.query(
             f"INSERT INTO {name} VALUES {','.join(values)}",
@@ -407,7 +386,7 @@ class Table:
 def create_table(
     self,
     engine,
-    columns,
+    columns=None,
     name=None,
     path=None,
     drop_sync=False,
@@ -424,6 +403,8 @@ def create_table(
     cluster=None,
     order_by_all_columns=False,
     stop_merges=False,
+    exitcode=None,
+    message=None,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -435,15 +416,14 @@ def create_table(
     if node is None:
         node = current().context.node
 
-    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+    if columns is not None:
+        columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+    else:
+        columns_def = ""
 
     if order_by_all_columns:
-        non_nullable_columns = [
-            column for column in columns if "Nullable" not in column.datatype.name
-        ]
-        order_by = (
-            "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
-        )
+        non_nullable_columns = [column for column in columns if "Nullable" not in column.datatype.name]
+        order_by = "(" + ",".join([column.name for column in non_nullable_columns]) + ")"
 
     if if_not_exists:
         if_not_exists = "IF NOT EXISTS "
@@ -457,10 +437,7 @@ def create_table(
 
     try:
         with By(f"creating table {name}"):
-            query = (
-                f"CREATE TABLE {if_not_exists}{name}{on_cluster} {columns_def}\n"
-                f"ENGINE = {engine}"
-            )
+            query = f"CREATE TABLE {if_not_exists}{name}{on_cluster} {columns_def}\n" f"ENGINE = {engine}"
             if primary_key is not None:
                 query += f"\nPRIMARY KEY {primary_key}"
 
@@ -489,17 +466,15 @@ def create_table(
             node.query(
                 query,
                 settings=settings,
+                exitcode=exitcode,
+                message=message,
             )
 
-            yield Table(
-                name=name, columns=columns, partition_by=partition_by, engine=engine
-            )
+            yield Table(name=name, columns=columns, partition_by=partition_by, engine=engine)
 
     finally:
         with Finally(f"drop the table {name}"):
-            node.query(
-                f"DROP TABLE IF EXISTS {name}{on_cluster} {' SYNC' if drop_sync else ''}"
-            )
+            node.query(f"DROP TABLE IF EXISTS {name}{on_cluster} {' SYNC' if drop_sync else ''}")
 
 
 @TestStep(Given)
@@ -532,9 +507,7 @@ def create_temporary_table(
 
     try:
         with By(f"creating table {name}"):
-            query = (
-                f"CREATE TEMPORARY TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
-            )
+            query = f"CREATE TEMPORARY TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
 
             if partition_by is not None:
                 query += f"\nPARTITION BY {partition_by}"
@@ -685,6 +658,49 @@ def create_table_as_select(
         query += f" ORDER BY {order_by}"
 
     query += f" AS SELECT {columns} FROM {as_select_from}"
+
+    try:
+        with By(f"creating table {table_name}"):
+            node.query(query)
+            yield table_name
+
+    finally:
+        with Finally(f"drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name}")
+
+
+@TestStep(Given)
+def create_table_as(
+    self,
+    reference_table,
+    engine="MergeTree",
+    table_name=None,
+    order_by="tuple()",
+    columns="*",
+    node=None,
+    partition_by=None,
+):
+    """Create a table using `AS {table_name}` clause."""
+    if node is None:
+        node = self.context.node
+
+    if table_name is None:
+        table_name = f"table_{getuid()}"
+
+    query = f"""
+        CREATE TABLE {table_name} 
+        """
+
+    if engine is not None:
+        query += f" ENGINE = {engine}"
+
+    if partition_by is not None:
+        query += f" PARTITION BY {partition_by}"
+
+    if order_by is not None:
+        query += f" ORDER BY {order_by}"
+
+    query += f" AS {reference_table}"
 
     try:
         with By(f"creating table {table_name}"):
