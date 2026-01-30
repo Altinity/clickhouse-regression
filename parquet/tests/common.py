@@ -899,6 +899,6 @@ def execute_query(
                         id=snapshot_id,
                         name=snapshot_name,
                         encoder=str,
-                        mode=snapshot.UPDATE,
+                        mode=self.context.snapshot_mode,
                     )
                     assert that(snapshot_result), error()
