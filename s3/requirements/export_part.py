@@ -340,6 +340,50 @@ RQ_ClickHouse_ExportPart_ColumnTypes_Ephemeral = Requirement(
     num="5.8",
 )
 
+RQ_ClickHouse_ExportPart_ColumnTypes_JSON = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.JSON",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with JSON columns by:\n"
+        "* Exporting JSON column values as JSON columns in the destination table\n"
+        "* Preserving JSON structure and nested data during export\n"
+        "* Supporting JSON columns with type hints (e.g., `JSON(a.b UInt32, a.c String)`)\n"
+        "* Maintaining data integrity for complex JSON structures including nested objects and arrays\n"
+        "\n"
+        "JSON columns store semi-structured data. During export, the system SHALL preserve the JSON column values and structure in the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.9",
+)
+
+RQ_ClickHouse_ExportPart_ColumnTypes_Nested = Requirement(
+    name="RQ.ClickHouse.ExportPart.ColumnTypes.Nested",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting parts containing tables with Nested columns by:\n"
+        "* Exporting Nested column values as Nested columns in the destination table\n"
+        "* Preserving the nested structure with all sub-columns during export\n"
+        "* Supporting complex Nested columns containing arrays within nested structures\n"
+        "* Maintaining data integrity for all nested sub-columns (e.g., `nested_data.key`, `nested_data.value`)\n"
+        "\n"
+        "Nested columns store structured arrays with multiple named sub-columns. During export, the system SHALL preserve the Nested column structure and all sub-column values in the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="5.10",
+)
+
 RQ_ClickHouse_ExportPart_Restrictions_SameTable = Requirement(
     name="RQ.ClickHouse.ExportPart.Restrictions.SameTable",
     version="1.0",
@@ -1115,6 +1159,10 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral", level=2, num="5.8"
         ),
+        Heading(name="RQ.ClickHouse.ExportPart.ColumnTypes.JSON", level=2, num="5.9"),
+        Heading(
+            name="RQ.ClickHouse.ExportPart.ColumnTypes.Nested", level=2, num="5.10"
+        ),
         Heading(name="Export Operation Restrictions", level=1, num="6"),
         Heading(
             name="RQ.ClickHouse.ExportPart.Restrictions.SameTable", level=2, num="6.1"
@@ -1268,6 +1316,8 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
         RQ_ClickHouse_ExportPart_ColumnTypes_Materialized,
         RQ_ClickHouse_ExportPart_ColumnTypes_Default,
         RQ_ClickHouse_ExportPart_ColumnTypes_Ephemeral,
+        RQ_ClickHouse_ExportPart_ColumnTypes_JSON,
+        RQ_ClickHouse_ExportPart_ColumnTypes_Nested,
         RQ_ClickHouse_ExportPart_Restrictions_SameTable,
         RQ_ClickHouse_ExportPart_Restrictions_LocalTable,
         RQ_ClickHouse_ExportPart_Restrictions_PartitionKey,
@@ -1330,6 +1380,8 @@ SRS_015_ClickHouse_Export_Part_to_S3 = Specification(
     * 5.6 [RQ.ClickHouse.ExportPart.ColumnTypes.Materialized](#rqclickhouseexportpartcolumntypesmaterialized)
     * 5.7 [RQ.ClickHouse.ExportPart.ColumnTypes.Default](#rqclickhouseexportpartcolumntypesdefault)
     * 5.8 [RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral](#rqclickhouseexportpartcolumntypesephemeral)
+    * 5.9 [RQ.ClickHouse.ExportPart.ColumnTypes.JSON](#rqclickhouseexportpartcolumntypesjson)
+    * 5.10 [RQ.ClickHouse.ExportPart.ColumnTypes.Nested](#rqclickhouseexportpartcolumntypesnested)
 * 6 [Export Operation Restrictions](#export-operation-restrictions)
     * 6.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
     * 6.2 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
@@ -1555,6 +1607,28 @@ version: 1.0
 * Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly
 
 EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.JSON
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with JSON columns by:
+* Exporting JSON column values as JSON columns in the destination table
+* Preserving JSON structure and nested data during export
+* Supporting JSON columns with type hints (e.g., `JSON(a.b UInt32, a.c String)`)
+* Maintaining data integrity for complex JSON structures including nested objects and arrays
+
+JSON columns store semi-structured data. During export, the system SHALL preserve the JSON column values and structure in the destination table.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Nested
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with Nested columns by:
+* Exporting Nested column values as Nested columns in the destination table
+* Preserving the nested structure with all sub-columns during export
+* Supporting complex Nested columns containing arrays within nested structures
+* Maintaining data integrity for all nested sub-columns (e.g., `nested_data.key`, `nested_data.value`)
+
+Nested columns store structured arrays with multiple named sub-columns. During export, the system SHALL preserve the Nested column structure and all sub-column values in the destination table.
 
 ## Export Operation Restrictions
 

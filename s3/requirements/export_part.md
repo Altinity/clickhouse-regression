@@ -23,6 +23,8 @@
     * 5.6 [RQ.ClickHouse.ExportPart.ColumnTypes.Materialized](#rqclickhouseexportpartcolumntypesmaterialized)
     * 5.7 [RQ.ClickHouse.ExportPart.ColumnTypes.Default](#rqclickhouseexportpartcolumntypesdefault)
     * 5.8 [RQ.ClickHouse.ExportPart.ColumnTypes.Ephemeral](#rqclickhouseexportpartcolumntypesephemeral)
+    * 5.9 [RQ.ClickHouse.ExportPart.ColumnTypes.JSON](#rqclickhouseexportpartcolumntypesjson)
+    * 5.10 [RQ.ClickHouse.ExportPart.ColumnTypes.Nested](#rqclickhouseexportpartcolumntypesnested)
 * 6 [Export Operation Restrictions](#export-operation-restrictions)
     * 6.1 [RQ.ClickHouse.ExportPart.Restrictions.SameTable](#rqclickhouseexportpartrestrictionssametable)
     * 6.2 [RQ.ClickHouse.ExportPart.Restrictions.LocalTable](#rqclickhouseexportpartrestrictionslocaltable)
@@ -248,6 +250,28 @@ version: 1.0
 * Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly
 
 EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.JSON
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with JSON columns by:
+* Exporting JSON column values as JSON columns in the destination table
+* Preserving JSON structure and nested data during export
+* Supporting JSON columns with type hints (e.g., `JSON(a.b UInt32, a.c String)`)
+* Maintaining data integrity for complex JSON structures including nested objects and arrays
+
+JSON columns store semi-structured data. During export, the system SHALL preserve the JSON column values and structure in the destination table.
+
+### RQ.ClickHouse.ExportPart.ColumnTypes.Nested
+version: 1.0
+
+[ClickHouse] SHALL support exporting parts containing tables with Nested columns by:
+* Exporting Nested column values as Nested columns in the destination table
+* Preserving the nested structure with all sub-columns during export
+* Supporting complex Nested columns containing arrays within nested structures
+* Maintaining data integrity for all nested sub-columns (e.g., `nested_data.key`, `nested_data.value`)
+
+Nested columns store structured arrays with multiple named sub-columns. During export, the system SHALL preserve the Nested column structure and all sub-column values in the destination table.
 
 ## Export Operation Restrictions
 
