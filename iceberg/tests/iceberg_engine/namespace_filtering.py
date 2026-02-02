@@ -1,8 +1,3 @@
-"""Namespace filter tests for DataLakeCatalog.
-
-See namespace_filtering_test_cases.md for the full list of test cases.
-"""
-
 from testflows.core import *
 from testflows.asserts import error
 
@@ -38,7 +33,7 @@ _NAMESPACE_PATHS = [
 @TestStep(Given)
 def create_namespace_filtering_setup(self, minio_root_user, minio_root_password):
     """
-    Creates 14 namespaces and table1, table2 in each namespace.
+    Creates 14 namespaces and two tables(table1, table2) in each namespace.
     Returns dict path -> full name (e.g. names["ns1"], names["ns1.ns11"]).
     """
     prefix = f"nf_{getuid()}"
@@ -58,10 +53,18 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
     with And("creating table1 and table2 in each namespace with tables"):
         for path in _NAMESPACE_PATHS:
             catalog_steps.create_iceberg_table_with_three_columns(
-                catalog=catalog, namespace=names[path], table_name="table1"
+                catalog=catalog,
+                namespace=names[path],
+                table_name="table1",
+                with_data=True,
+                number_of_rows=10,
             )
             catalog_steps.create_iceberg_table_with_three_columns(
-                catalog=catalog, namespace=names[path], table_name="table2"
+                catalog=catalog,
+                namespace=names[path],
+                table_name="table2",
+                with_data=True,
+                number_of_rows=10,
             )
 
     return names, prefix
@@ -69,7 +72,7 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
 
 @TestScenario
 def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_password):
-    """Create full setup, create database without namespaces filter, then verify all tables are visible."""
+    """Check that all tables are visible when no namespace filter is specified."""
     node = self.context.node
     database_name = f"datalake_{getuid()}"
 
@@ -84,9 +87,7 @@ def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_pas
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
         )
-        pause()
 
     with Then("check that all tables are visible"):
         result = node.query(f"SHOW TABLES FROM {database_name}").output.split()
@@ -98,7 +99,8 @@ def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_pas
 
 @TestScenario
 def single_namespace_filter(self, minio_root_user, minio_root_password):
-    """Check if only one namespace is specified, only tables from that namespace are visible."""
+    """Check that only tables from the specified namespace are visible when a
+    single namespace is specified in the namespaces filter."""
     node = self.context.node
     database_name = f"datalake_{getuid()}"
 
@@ -114,35 +116,37 @@ def single_namespace_filter(self, minio_root_user, minio_root_password):
             database_name=database_name,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            storage_endpoint="http://minio:9000/warehouse",
             namespaces=ns_allowed,
         )
-        pause()
 
-    with Then("system.tables lists only tables from allowed namespace"):
+    with Then("check that only tables from the specified namespace are visible"):
         result = node.query(
             f"SELECT name FROM system.tables WHERE database='{database_name}' ORDER BY name",
             settings=[("show_data_lake_catalogs_in_system_tables", 1)],
         )
         for path in _NAMESPACE_PATHS:
-            if ns_allowed in path:
-                assert f"{names[path]}.table1" in result.output, error()
-                assert f"{names[path]}.table2" in result.output, error()
+            full_name = names[path]
+            is_allowed = full_name == ns_allowed or full_name.startswith(ns_allowed + ".")
+            if is_allowed:
+                assert f"{full_name}.table1" in result.output, error()
+                assert f"{full_name}.table2" in result.output, error()
             else:
-                assert f"{names[path]}.table1" not in result.output, error()
-                assert f"{names[path]}.table2" not in result.output, error()
+                assert f"{full_name}.table1" not in result.output, error()
+                assert f"{full_name}.table2" not in result.output, error()
 
-    with And("check that select from allowed namespace succeeds"):
+    with And("check that select from the specified namespace succeeds"):
         for path in _NAMESPACE_PATHS:
-            if ns_allowed in path:
+            full_name = names[path]
+            is_allowed = (full_name == ns_allowed) or (full_name.startswith(ns_allowed + "."))
+            if is_allowed:
                 result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-                    database_name=database_name, namespace=names[path], table_name="table1", columns="count()"
+                    database_name=database_name, namespace=full_name, table_name="table1", columns="count()"
                 ).output
                 assert result.strip() == "10", error()
             else:
                 result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
                     database_name=database_name,
-                    namespace=names[path],
+                    namespace=full_name,
                     table_name="table1",
                     columns="count()",
                     exitcode=FILTERED_EXITCODE,
@@ -157,6 +161,4 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=no_namespace_filter_all_tables_visible)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=no_namespace_filter_all_tables_visible)(
-        minio_root_user=minio_root_user, minio_root_password=minio_root_password
-    )
+    Scenario(test=single_namespace_filter)(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
