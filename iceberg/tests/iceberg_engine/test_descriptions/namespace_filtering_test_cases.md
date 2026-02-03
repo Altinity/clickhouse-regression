@@ -2,9 +2,9 @@
 
 The `namespaces` database setting limits which catalog namespaces are visible to ClickHouse. You pass a comma-separated list of allowed namespace patterns; only tables in matching namespaces are visible. Supported catalog types: `rest`, `glue`, `unity`.
 
-For nested namespaces (e.g. REST catalog): an exact pattern like `ns1` includes only tables in that namespace (e.g. `ns1.table1`, `ns1.table2`). A wildcard pattern `ns1.*` includes tables from all nested namespaces (e.g. `ns1.ns11.table1`) but **not** tables in the parent namespace—so `ns1.table1` is not included in `ns1.*`; use `namespaces='ns1,ns1.*'` to include both.
+For nested namespaces (e.g. REST catalog): an exact pattern like `ns1` includes only tables in that namespace (e.g. `ns1.table1`, `ns1.table2`). A wildcard pattern `ns1.*` includes tables from all nested namespaces (e.g. `ns1.ns11.table1`) but **not** tables in the parent namespace—so `ns1.table1` is not included in `ns1.*`; use `namespaces='ns1,ns1.*'` to include both. However, AWS Glue only supports single-level namespaces.
 
-Tested catalogs: `rest`, `glue`.
+**Tested catalogs:** The full test (14 nested namespaces, wildcards, filter sampling) runs for **REST** only. For **Glue**, only single-level namespace filtering is tested (nested namespaces are not supported).
 
 
 Setup(14 namespaces and two tables in each namespace):
