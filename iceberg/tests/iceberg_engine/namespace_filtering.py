@@ -16,6 +16,8 @@ random.seed(42)
 FILTERED_ERROR_MESSAGE = "DB::Exception: Namespace"
 FILTERED_EXITCODE = 245
 
+_GLUE_NAMESPACE_PATHS = ["ns1", "ns2"]
+_GLUE_INVALID_NAMESPACE_PATHS = ["ns3", "ns3.*", "ns1.ns11"]
 
 _NAMESPACE_PATHS = [
     "ns1",
@@ -49,7 +51,7 @@ def model(namespace_filter, namespace_path):
     allowed_namespaces = [ns.strip() for ns in namespace_filter.split(",")]
     for allowed_namespace in allowed_namespaces:
         if allowed_namespace.endswith(".*"):
-            if namespace_path.startswith(allowed_namespace[:-1]):
+            if namespace_path.startswith(allowed_namespace[:-1]) and (namespace_path != allowed_namespace[:-2]):
                 return True
         else:
             if namespace_path == allowed_namespace:
@@ -128,8 +130,13 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
     Creates 14 namespaces and two tables(table1, table2) in each namespace.
     Returns dict path -> full name (e.g. names["ns1"], names["ns1.ns11"]).
     """
+    if self.context.catalog == "glue":
+        namespace_paths = _GLUE_NAMESPACE_PATHS
+    else:
+        namespace_paths = _NAMESPACE_PATHS
+
     prefix = f"nf_{getuid()}"
-    names = {path: f"{prefix}_{path}" for path in _NAMESPACE_PATHS}
+    names = {path: f"{prefix}_{path}" for path in namespace_paths}
 
     with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
@@ -139,11 +146,11 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
         )
 
     with By("creating namespaces in parent-before-child order"):
-        for path in _NAMESPACE_PATHS:
+        for path in namespace_paths:
             catalog_steps.create_namespace(catalog=catalog, namespace=names[path])
 
     with And("creating table1 and table2 in each namespace"):
-        for path in _NAMESPACE_PATHS:
+        for path in namespace_paths:
             for table_name in ["table1", "table2"]:
                 catalog_steps.create_iceberg_table_with_three_columns(
                     catalog=catalog,
@@ -161,8 +168,12 @@ def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_pas
     """Check that all tables are visible when no namespace filter is specified."""
     node = self.context.node
     database_name = f"datalake_{getuid()}"
+    if self.context.catalog == "glue":
+        namespace_paths = _GLUE_NAMESPACE_PATHS
+    else:
+        namespace_paths = _NAMESPACE_PATHS
 
-    with Given("create 14 namespaces and table1, table2 in each namespace"):
+    with Given("create 14 namespaces(or 2 for Glue) and table1, table2 in each namespace"):
         names, _ = create_namespace_filtering_setup(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
@@ -180,13 +191,18 @@ def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_pas
         result = node.query(
             f"SHOW TABLES FROM {database_name}", settings=[("show_data_lake_catalogs_in_system_tables", 1)]
         ).output.split()
-        assert len(result) == 28, error()
-        for path in _NAMESPACE_PATHS:
+
+        if self.context.catalog == "glue":
+            assert len(result) == 4, error()
+        else:
+            assert len(result) == 28, error()
+
+        for path in namespace_paths:
             assert f"{names[path]}.table1" in result, error()
             assert f"{names[path]}.table2" in result, error()
 
     with And("check that select from all tables succeeds"):
-        for path in _NAMESPACE_PATHS:
+        for path in namespace_paths:
             for table_name in ["table1", "table2"]:
                 full_name = names[path]
                 check_select_from_table(database_name=database_name, namespace=full_name, table_name=table_name)
@@ -253,7 +269,12 @@ def check_namespace_filter(self, namespace_filter, minio_root_user, minio_root_p
         self.context.node.query(f"ATTACH DATABASE {database_name}")
 
     with Then("check that the namespace filter is applied correctly"):
-        for namespace in _NAMESPACE_PATHS:
+        if self.context.catalog == "glue":
+            namespace_paths = _GLUE_NAMESPACE_PATHS
+        else:
+            namespace_paths = _NAMESPACE_PATHS
+
+        for namespace in namespace_paths:
             is_allowed = model(namespace_filter=namespace_filter, namespace_path=f"{prefix}_{namespace}")
             for table_name in ["table1", "table2"]:
                 check_table_is_visible(
@@ -282,32 +303,47 @@ def check_namespace_filter_with_wildcard(self, minio_root_user, minio_root_passw
         )
 
     with When("define all possible wildcard filters and sample 100 of them with length <= 5"):
+        if self.context.catalog == "glue":
+            namespace_paths = _GLUE_NAMESPACE_PATHS
+            invalid_namespace_paths = _GLUE_INVALID_NAMESPACE_PATHS
+            length = 4
+        else:
+            namespace_paths = _NAMESPACE_PATHS
+            invalid_namespace_paths = _INVALID_NAMESPACE_PATHS
+            length = 6
+
         single_wildcard_filters = (
-            [f"{prefix}_{path}" for path in _NAMESPACE_PATHS]
-            + [f"{prefix}_{path}.*" for path in _NAMESPACE_PATHS]
-            + [f"{prefix}_{path}" for path in _INVALID_NAMESPACE_PATHS]
+            [f"{prefix}_{path}" for path in namespace_paths]
+            + [f"{prefix}_{path}.*" for path in namespace_paths]
+            + [f"{prefix}_{path}" for path in invalid_namespace_paths]
         )
         all_combinations = []
 
-        for i in range(6):
+        for i in range(length):
             combinations_of_length_i = list(combinations(single_wildcard_filters, i))
             all_combinations.extend([", ".join(combo) for combo in combinations_of_length_i])
 
         sample = random.sample(all_combinations, min(100, len(all_combinations)))
 
     for num, namespace_filter in enumerate(sample):
-        Scenario(name=f"#{num}", test=check_namespace_filter)(
-            namespace_filter=namespace_filter,
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-            prefix=prefix,
-        )
+        with Pool(5) as pool:
+            Scenario(name=f"#{num}", test=check_namespace_filter, parallel=True, executor=pool)(
+                namespace_filter=namespace_filter,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                prefix=prefix,
+            )
+            join()
 
 
 @TestScenario
 def check_drop_table_with_namespace_filter(self, minio_root_user, minio_root_password, namespace_filter):
     """Check that drop table works for allowed namespaces and fails for filtered namespaces."""
     database_name = f"datalake_{getuid()}"
+    if self.context.catalog == "glue":
+        namespace_paths = _GLUE_NAMESPACE_PATHS
+    else:
+        namespace_paths = _NAMESPACE_PATHS
 
     with Given("create 14 namespaces and table1, table2 in each namespace"):
         names, prefix = create_namespace_filtering_setup(
@@ -326,31 +362,40 @@ def check_drop_table_with_namespace_filter(self, minio_root_user, minio_root_pas
         )
 
     with Then("check that drop table works for allowed namespaces and fails for filtered namespaces"):
-        for namespace in _NAMESPACE_PATHS:
-            is_allowed = model(namespace_filter=prefixed_filter, namespace_path=f"{prefix}_{namespace}")
-            for table_name in ["table1", "table2"]:
-                check_drop_table(
-                    database_name=database_name,
-                    namespace=f"{prefix}_{namespace}",
-                    table_name=table_name,
-                    is_allowed=is_allowed,
-                )
+        with Pool(5) as pool:
+            for namespace in namespace_paths:
+                is_allowed = model(namespace_filter=prefixed_filter, namespace_path=f"{prefix}_{namespace}")
+                for table_name in ["table1", "table2"]:
+                    Scenario(name=f"#{namespace}_{table_name}", test=check_drop_table, parallel=True, executor=pool)(
+                        database_name=database_name,
+                        namespace=f"{prefix}_{namespace}",
+                        table_name=table_name,
+                        is_allowed=is_allowed,
+                    )
+            join()
 
 
 @TestScenario
 def drop_table_with_namespace_filter(self, minio_root_user, minio_root_password):
     """Check that drop table works for allowed namespaces and fails for filtered namespaces."""
-    node = self.context.node
-
     with Given("define all possible wildcard filters"):
+        if self.context.catalog == "glue":
+            namespace_paths = _GLUE_NAMESPACE_PATHS
+            invalid_namespace_paths = _GLUE_INVALID_NAMESPACE_PATHS
+            length = 4
+        else:
+            namespace_paths = _NAMESPACE_PATHS
+            invalid_namespace_paths = _INVALID_NAMESPACE_PATHS
+            length = 6
+
         single_wildcard_filters = (
-            [f"{path}" for path in _NAMESPACE_PATHS]
-            + [f"{path}.*" for path in _NAMESPACE_PATHS]
-            + [f"{path}" for path in _INVALID_NAMESPACE_PATHS]
+            [f"{path}" for path in namespace_paths]
+            + [f"{path}.*" for path in namespace_paths]
+            + [f"{path}" for path in invalid_namespace_paths]
         )
         all_combinations = []
 
-        for i in range(6):
+        for i in range(length):
             combinations_of_length_i = list(combinations(single_wildcard_filters, i))
             all_combinations.extend([", ".join(combo) for combo in combinations_of_length_i])
 
