@@ -216,8 +216,12 @@ ffails = {
     "/iceberg/iceberg engine/: catalog/iceberg iterator race condition/iceberg iterator race condition": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/92120",
-        lambda test: check_clickhouse_version("<=25.8.12")(test)
-        or check_if_not_antalya_build(test),
+        lambda test: check_clickhouse_version("<=25.8.12")(test) or check_if_not_antalya_build(test),
+    ),
+    "/iceberg/iceberg engine/: catalog/namespace filtering": (
+        Skip,
+        "namespace filtering is supported only in antalya build from >= 25.8",
+        lambda test: check_clickhouse_version("<=25.8.15")(test) or check_if_not_antalya_build(),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
