@@ -64,19 +64,14 @@ So there are **14 × 2 = 28** distinct filter primitives.
 
 **A filter** is a subset of these 28 primitives (we allow 0, 1, 2, … up to 28 of them; order in the setting does not change semantics).
 
-| Size *k* | Number of filters | Formula |
-|----------|-------------------|--------|
+| *k* | Count | Formula |
+|-----|-------|---------|
 | 0 | 1 | C(28,0) |
 | 1 | 28 | C(28,1) |
 | 2 | 378 | C(28,2) |
 | 3 | 3,276 | C(28,3) |
 | 4 | 20,475 | C(28,4) |
 | 5 | 98,280 | C(28,5) |
-| 6 | 376,740 | C(28,6) |
-| 7 | 1,184,040 | C(28,7) |
-| 8 | 3,108,105 | C(28,8) |
-| 9 | 6,906,900 | C(28,9) |
-| 10 | 13,123,110 | C(28,10) |
 | … | … | C(28,*k*) |
 | 28 | 1 | C(28,28) |
 
@@ -92,18 +87,12 @@ $$
 \sum_{k=0}^{5} \binom{28}{k} = 1 + 28 + 378 + 3{,}276 + 20{,}475 + 98{,}280 = 122{,}438
 $$
 
-**If we only use filters of size 0..6:**
-
-$$
-\sum_{k=0}^{6} \binom{28}{k} = 122{,}438 + 376{,}740 = 499{,}178
-$$
-
 ---
 
 ## Test setup
 
 Create all possible combinations of length 0..5 from the list of 28 primitives + include invalid namespace paths.
-Run test for random smaple of 100 filters.
+Run test for random sample of 100 filters.
 
 Check that:
 - all tables from the allowed namespaces are visible in `system.tables` (SHOW TABLES FROM database)
