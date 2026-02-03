@@ -1,6 +1,8 @@
 # Testing namespace filter 
 
-The `namespaces` database setting limits which catalog namespaces are visible to ClickHouse. Supported catalog types: `rest`, `glue`, `unity`.
+The `namespaces` database setting limits which catalog namespaces are visible to ClickHouse. You pass a comma-separated list of allowed namespace patterns; only tables in matching namespaces are visible. Supported catalog types: `rest`, `glue`, `unity`.
+
+For nested namespaces (e.g. REST catalog): an exact pattern like `ns1` includes only tables in that namespace (e.g. `ns1.table1`, `ns1.table2`). A wildcard pattern `ns1.*` includes tables from all nested namespaces (e.g. `ns1.ns11.table1`) but **not** tables in the parent namespace—so `ns1.table1` is not included in `ns1.*`; use `namespaces='ns1,ns1.*'` to include both.
 
 Tested catalogs: `rest`, `glue`.
 
@@ -55,8 +57,8 @@ Setup(14 namespaces and two tables in each namespace):
 
 **Filter primitives:** For each of the 14 namespaces we have two options:
 
-- **Exact:** `ns` (only that namespace), e.g. `ns1`, `ns1.ns11`, …
-- **Wildcard:** `ns.*` (that namespace and all descendants), e.g. `ns1.*`, `ns1.ns11.*`, …
+- **Exact:** `ns` (only tables in that namespace, e.g. `ns1.table1`, `ns1.table2` for `ns1`; or `ns1.ns11` for tables in that nested namespace).
+- **Wildcard:** `ns.*` (tables in all nested namespaces and their descendants, but not in the parent—e.g. `ns1.*` includes `ns1.ns11.table1` but not `ns1.table1`).
 
 So there are **14 × 2 = 28** distinct filter primitives.
 
@@ -80,27 +82,27 @@ So there are **14 × 2 = 28** distinct filter primitives.
 
 **Total number of different filters:**
 
-\[
-\sum_{k=0}^{28} \binom{28}{k} = 2^{28} = 268\,435\,456
-\]
+$$
+\sum_{k=0}^{28} \binom{28}{k} = 2^{28} = 268{,}435{,}456
+$$
 
 **If we only use filters of size 0..5** (e.g. for sampling in tests):
 
-\[
-\sum_{k=0}^{5} \binom{28}{k} = 1 + 28 + 378 + 3\,276 + 20\,475 + 98\,280 = 122\,438
-\]
+$$
+\sum_{k=0}^{5} \binom{28}{k} = 1 + 28 + 378 + 3{,}276 + 20{,}475 + 98{,}280 = 122{,}438
+$$
 
 **If we only use filters of size 0..6:**
 
-\[
-\sum_{k=0}^{6} \binom{28}{k} = 122\,438 + 376\,740 = 499\,178
-\]
+$$
+\sum_{k=0}^{6} \binom{28}{k} = 122{,}438 + 376{,}740 = 499{,}178
+$$
 
 ---
 
 ## Test setup
 
-Create all possible combinations of length 0..6 from the list of 28 primitives + include invalid namespace paths.
+Create all possible combinations of length 0..5 from the list of 28 primitives + include invalid namespace paths.
 Run test for random smaple of 100 filters.
 
 Check that:
