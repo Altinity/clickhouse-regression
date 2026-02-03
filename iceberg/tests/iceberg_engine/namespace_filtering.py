@@ -49,7 +49,7 @@ def model(namespace_filter, namespace_path):
     allowed_namespaces = [ns.strip() for ns in namespace_filter.split(",")]
     for allowed_namespace in allowed_namespaces:
         if allowed_namespace.endswith(".*"):
-            if namespace_path.startswith(allowed_namespace[:-2]) and (namespace_path != allowed_namespace[:-2]):
+            if namespace_path.startswith(allowed_namespace[:-1]):
                 return True
         else:
             if namespace_path == allowed_namespace:
@@ -153,22 +153,16 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
         for path in _NAMESPACE_PATHS:
             catalog_steps.create_namespace(catalog=catalog, namespace=names[path])
 
-    with And("creating table1 and table2 in each namespace with tables"):
+    with And("creating table1 and table2 in each namespace"):
         for path in _NAMESPACE_PATHS:
-            catalog_steps.create_iceberg_table_with_three_columns(
-                catalog=catalog,
-                namespace=names[path],
-                table_name="table1",
-                with_data=True,
-                number_of_rows=10,
-            )
-            catalog_steps.create_iceberg_table_with_three_columns(
-                catalog=catalog,
-                namespace=names[path],
-                table_name="table2",
-                with_data=True,
-                number_of_rows=10,
-            )
+            for table_name in ["table1", "table2"]:
+                catalog_steps.create_iceberg_table_with_three_columns(
+                    catalog=catalog,
+                    namespace=names[path],
+                    table_name=table_name,
+                    with_data=True,
+                    number_of_rows=10,
+                )
 
     return names, prefix
 
@@ -221,7 +215,7 @@ def joins_with_namespace_filter_sanity_check(self, minio_root_user, minio_root_p
             minio_root_password=minio_root_password,
         )
 
-    with When("create database without namespaces filter"):
+    with When("create database with namespaces filter: ns1, ns2"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -291,7 +285,6 @@ def check_namespace_filter(self, namespace_filter, minio_root_user, minio_root_p
 def check_namespace_filter_with_wildcard(self, minio_root_user, minio_root_password):
     """Check that only tables from the specified namespace are visible when a
     wildcard is specified in the namespaces filter."""
-    node = self.context.node
 
     with Given("create 14 namespaces and table1, table2 in each namespace"):
         names, prefix = create_namespace_filtering_setup(
@@ -299,7 +292,7 @@ def check_namespace_filter_with_wildcard(self, minio_root_user, minio_root_passw
             minio_root_password=minio_root_password,
         )
 
-    with When("define all possible wildcard filters and sample 100 of them with length <= 6"):
+    with When("define all possible wildcard filters and sample 100 of them with length <= 5"):
         single_wildcard_filters = (
             [f"{prefix}_{path}" for path in _NAMESPACE_PATHS]
             + [f"{prefix}_{path}.*" for path in _NAMESPACE_PATHS]
@@ -325,7 +318,6 @@ def check_namespace_filter_with_wildcard(self, minio_root_user, minio_root_passw
 @TestScenario
 def check_drop_table_with_namespace_filter(self, minio_root_user, minio_root_password, namespace_filter):
     """Check that drop table works for allowed namespaces and fails for filtered namespaces."""
-    node = self.context.node
     database_name = f"datalake_{getuid()}"
 
     with Given("create 14 namespaces and table1, table2 in each namespace"):
