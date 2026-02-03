@@ -131,18 +131,7 @@ def create_namespace_filtering_setup(self, minio_root_user, minio_root_password)
     prefix = f"nf_{getuid()}"
     names = {path: f"{prefix}_{path}" for path in _NAMESPACE_PATHS}
 
-    with By("clean up minio bucket"):
-        catalog_steps.clean_minio_bucket(
-            bucket_name="warehouse",
-            s3_endpoint="http://localhost:9002",
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
-
-    with And("drop all caches"):
-        common_steps.drop_all_caches()
-
-    with And("create catalog"):
+    with Given("create catalog"):
         catalog = catalog_steps.create_catalog(
             s3_endpoint="http://localhost:9002",
             s3_access_key_id=minio_root_user,
