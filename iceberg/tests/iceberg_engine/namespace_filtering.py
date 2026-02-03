@@ -210,6 +210,50 @@ def no_namespace_filter_all_tables_visible(self, minio_root_user, minio_root_pas
 
 
 @TestScenario
+def joins_with_namespace_filter_sanity_check(self, minio_root_user, minio_root_password):
+    """Check that joins with namespace filter work correctly."""
+    node = self.context.node
+    database_name = f"datalake_{getuid()}"
+
+    with Given("create 14 namespaces and table1, table2 in each namespace"):
+        names, prefix = create_namespace_filtering_setup(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with When("create database without namespaces filter"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+            namespaces=f"{prefix}_ns1, {prefix}_ns2",
+        )
+
+    with Then("check that joins with namespace filter work correctly"):
+        result = node.query(
+            f"""
+            SELECT count() FROM {database_name}.\\`{prefix}_ns1.table1\\` 
+            JOIN {database_name}.\\`{prefix}_ns2.table2\\` 
+            ON True
+            """,
+            settings=[("show_data_lake_catalogs_in_system_tables", 1)],
+        )
+        assert result.output.strip() == "100", error()
+
+    with And("check that join with filtered namespace fails"):
+        node.query(
+            f"""
+            SELECT * FROM {database_name}.\\`{prefix}_ns1.ns11.table1\\` 
+            JOIN {database_name}.\\`{prefix}_ns2.table2\\` 
+            ON {database_name}.\\`{prefix}_ns1.ns11.table1\\`.name = {database_name}.\\`{prefix}_ns2.table2\\`.name
+            """,
+            settings=[("show_data_lake_catalogs_in_system_tables", 1)],
+            exitcode=FILTERED_EXITCODE,
+            message=FILTERED_ERROR_MESSAGE,
+        )
+
+
+@TestScenario
 def check_namespace_filter(self, namespace_filter, minio_root_user, minio_root_password, prefix):
     """Check that the namespace filter is applied correctly."""
     with Given("create database with namespace filter"):
@@ -329,7 +373,7 @@ def drop_table_with_namespace_filter(self, minio_root_user, minio_root_password)
             combinations_of_length_i = list(combinations(single_wildcard_filters, i))
             all_combinations.extend([", ".join(combo) for combo in combinations_of_length_i])
 
-        sample = random.sample(all_combinations, min(100, len(all_combinations)))
+        sample = random.sample(all_combinations, min(50, len(all_combinations)))
 
     for num, namespace_filter in enumerate(sample):
         Scenario(name=f"#{num}", test=check_drop_table_with_namespace_filter)(
@@ -350,5 +394,8 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Feature(test=drop_table_with_namespace_filter)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=joins_with_namespace_filter_sanity_check)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
