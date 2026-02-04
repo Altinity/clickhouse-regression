@@ -223,6 +223,15 @@ ffails = {
         "namespace filtering is supported only in antalya build from >= 25.8",
         lambda test: check_clickhouse_version("<=25.8.15")(test) or check_if_not_antalya_build(),
     ),
+    "/iceberg/iceberg engine/: catalog/dot separated column names/*": (
+        Skip,
+        "dot-separated column names broken before 25.7 and in 25.11-26.1 (https://github.com/ClickHouse/ClickHouse/issues/94196)",
+        lambda test: check_clickhouse_version("<25.7")(test)
+        or (
+            check_clickhouse_version(">=25.11")(test)
+            and check_clickhouse_version("<26.2")(test)
+        ),
+    ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
     #     "https://github.com/clickhouse/clickhouse/issues/86024",
