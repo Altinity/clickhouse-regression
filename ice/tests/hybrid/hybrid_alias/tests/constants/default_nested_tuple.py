@@ -20,7 +20,7 @@ def default_nested_tuple(self):
             "hybrid_type": "Tuple(UInt8, Tuple(UInt8, UInt8), UInt8)",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

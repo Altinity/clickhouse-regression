@@ -41,7 +41,51 @@ def toStartOfHour_alias(self):
 
 
 @TestScenario
+def toStartOfHour_alias_in_watermark(self):
+    """
+    Define parameters for test case and call main outline.
+    Test alias: start_of_hour ALIAS toStartOfHour(datetime_col)
+    Using alias column in watermark predicate.
+    """
+    base_columns = [
+        {"name": "id", "datatype": "Int32"},
+        {"name": "value", "datatype": "Int32"},
+        {"name": "datetime_col", "datatype": "DateTime"},
+        {"name": "date_col", "datatype": "Date"},
+    ]
+    alias_columns = [
+        {"name": "start_of_hour", "expression": "toStartOfHour(datetime_col)", "hybrid_type": "DateTime"},
+    ]
+    # Use alias column in watermark predicates
+    watermark = {
+        "left_predicate": "start_of_hour >= '2010-01-01 00:00:00'",
+        "right_predicate": "start_of_hour < '2010-01-01 00:00:00'",
+    }
+    expected = {"exitcode": 0, "error_message": None}
+    test_queries = [
+        "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
+        "SELECT start_of_hour FROM {hybrid_table} ORDER BY id",
+        "SELECT id, value, start_of_hour FROM {hybrid_table} ORDER BY id",
+        "SELECT id, value, start_of_hour FROM {hybrid_table} WHERE start_of_hour >= '2010-01-01 00:00:00' ORDER BY id",
+    ]
+    order_by = "(date_col, id)"
+    partition_by = "toYYYYMM(date_col)"
+
+    outline(
+        self,
+        base_columns=base_columns,
+        alias_columns=alias_columns,
+        watermark=watermark,
+        expected=expected,
+        test_queries=test_queries,
+        order_by=order_by,
+        partition_by=partition_by,
+    )
+
+
+@TestScenario
 @Name("toStartOfHour alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: start_of_hour ALIAS toStartOfHour(datetime_col)."""
     Scenario(run=toStartOfHour_alias)
+    Scenario(run=toStartOfHour_alias_in_watermark)

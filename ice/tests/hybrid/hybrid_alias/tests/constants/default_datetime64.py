@@ -20,7 +20,7 @@ def default_datetime64(self):
             "hybrid_type": "DateTime64(0)",
         },
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2008-11-06'", "right_predicate": "date_col < '2008-11-06'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

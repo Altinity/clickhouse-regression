@@ -16,7 +16,7 @@ def default_datetime(self):
     alias_columns = [
         {"name": "default_datetime", "expression": "toDateTime('2025-01-01 12:00:00')", "hybrid_type": "DateTime"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

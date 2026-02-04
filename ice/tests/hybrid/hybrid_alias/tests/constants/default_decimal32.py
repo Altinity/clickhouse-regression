@@ -16,7 +16,7 @@ def default_decimal32(self):
     alias_columns = [
         {"name": "default_decimal32", "expression": "toDecimal32(4.2, 8)", "hybrid_type": "Decimal32(8)"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2014-09-14'", "right_predicate": "date_col < '2014-09-14'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
