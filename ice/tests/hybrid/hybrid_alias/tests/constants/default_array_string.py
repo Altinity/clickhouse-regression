@@ -16,7 +16,7 @@ def default_array_string(self):
     alias_columns = [
         {"name": "default_array_string", "expression": "array('a', 'b', 'c')", "hybrid_type": "Array(String)"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

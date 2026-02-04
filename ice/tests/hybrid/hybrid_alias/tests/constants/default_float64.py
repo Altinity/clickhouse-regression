@@ -16,7 +16,7 @@ def default_float64(self):
     alias_columns = [
         {"name": "default_float64", "expression": "2.718281828459045", "hybrid_type": "Float64"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2007-05-01'", "right_predicate": "date_col < '2007-05-01'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",

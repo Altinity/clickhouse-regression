@@ -16,7 +16,7 @@ def default_int32(self):
     alias_columns = [
         {"name": "default_int32", "expression": "toInt32(50000)", "hybrid_type": "Int32"},
     ]
-    watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
+    watermark = {"left_predicate": "date_col >= '2004-04-16'", "right_predicate": "date_col < '2004-04-16'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
         "SELECT id, value, date_col FROM {hybrid_table} ORDER BY id",
