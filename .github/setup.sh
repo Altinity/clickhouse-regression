@@ -36,7 +36,7 @@ sudo sysctl vm.swappiness=100 # optional, makes zram usage more aggressive
 echo "::endgroup::"
 
 echo "::group::Install docker-compose"
-COMPOSE_VERSION="v2.26.1"
+COMPOSE_VERSION="v2.23.1"
 COMPOSE_BIN_NAME="docker-compose-linux-$(uname -m)"
 COMPOSE_URL="https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/${COMPOSE_BIN_NAME}"
 CACHE_PATH="/mnt/cache/docker-compose/${COMPOSE_VERSION}"
