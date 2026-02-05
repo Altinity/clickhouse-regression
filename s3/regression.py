@@ -37,6 +37,18 @@ xfails = {
     ":/:/zero copy replication/:mutation/:/the size of the s3 bucket:": [
         (Fail, "test doesn't clean up, needs investigation")
     ],
+    ":/:/zero copy replication/bad detached part": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/add remove one replica": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/add remove replica parallel": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/insert multiple replicas": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
     "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
@@ -141,13 +153,13 @@ xfails = {
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
-    ":/:/zero copy replication/bad detached part": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/pull/58333",
-            check_clickhouse_version("<23.11"),
-        )
-    ],
+    # ":/:/zero copy replication/bad detached part": [
+    #     (
+    #         Fail,
+    #         "https://github.com/ClickHouse/ClickHouse/pull/58333",
+    #         check_clickhouse_version("<23.11"),
+    #     )
+    # ],
     ":/:/alter/:/projection": [
         (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
     ],
