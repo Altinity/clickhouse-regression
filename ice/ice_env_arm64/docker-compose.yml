@@ -33,11 +33,31 @@ services:
       - CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
       - CATALOG_S3_ENDPOINT=http://minio:9000
 
+  ice:
+    image: altinity/ice:debug-0.9.0
+    container_name: ice
+    entrypoint: ["/bin/sh","-c","echo -e '#!/bin/sh\\nexec /bin/sh \"$$@\"' > /bin/bash && chmod +x /bin/bash && while :; do sleep 3600; done"] # fake bash
+    environment:
+      - ICE_CONFIG=/root/.ice.yaml
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password 
+      - AWS_S3_PATH_STYLE_ACCESS=true
+      - AWS_ENDPOINT_URL=http://minio:9000
+    depends_on:
+      ice-rest-catalog:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    configs:
+      - source: ice-cli-config
+        target: /root/.ice.yaml
+
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:latest
+    image: altinity/ice-rest-catalog:debug-0.9.0
     restart: unless-stopped
     ports:
-      - '5000:5000' # iceberg/http
+      - '5000:5000'
     configs:
       - source: ice-rest-catalog-yaml
         target: /etc/ice/ice-rest-catalog.yaml
@@ -69,6 +89,8 @@ services:
     extends:
       file: minio-service.yml
       service: minio
+    # volumes:
+    #   - parquet-files:/parquet-files
   mc:
     extends:
       file: minio-client.yml
@@ -129,6 +151,13 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/keeper:/etc/clickhouse-server/config.d"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/keeper/logs/:/var/log/clickhouse-server/"
 
+  # parquetify:
+  #   extends:
+  #     file: parquetify-service.yml
+  #     service: parquetify
+  #   volumes:
+  #     - parquet-files:/parquet-files
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
@@ -151,6 +180,7 @@ services:
 
 volumes:
   localstack_data:
+  parquet-files:
 
 configs:
   ice-rest-catalog-yaml:
@@ -166,3 +196,7 @@ configs:
       bearerTokens:
         - value: foo
       
+  ice-cli-config:
+    content: |
+      uri: http://ice-rest-catalog:5000
+      bearerToken: foo
