@@ -224,7 +224,7 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
             s3_secret_access_key=minio_root_password,
             columns="*",
             order_by="tuple(*)",
-            settings=[("use_hive_partitioning", "0")],
+            settings=[("use_hive_partitioning", "0"), ("session_timezone", "UTC")],
         )
         assert result.output == expected_result_s3_table_function, error()
 
