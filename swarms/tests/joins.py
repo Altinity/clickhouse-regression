@@ -10,6 +10,8 @@ import random
 import swarms.tests.steps.swarm_steps as swarm_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
+random.seed(42)
+
 
 class JoinTable:
     minio_root_user = None
@@ -322,7 +324,15 @@ def check_join(
     if format:
         query += f" FORMAT {format}"
 
-    result = node.query(query, exitcode=exitcode, message=message)
+    # https://github.com/Altinity/ClickHouse/issues/1244
+    if exitcode == 81:
+        result = node.query(query, no_checks=True)
+        assert result.exitcode in (81, 10), error(result.output)
+        assert "DB::Exception" in result.output, error(result.output)
+        if result.exitcode == 10:
+            pause()
+    else:
+        result = node.query(query, exitcode=exitcode, message=message)
 
     if (
         (
