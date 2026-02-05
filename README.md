@@ -79,7 +79,7 @@ Results for **the latest** scheduled workflow runs.
 * [Ubuntu] 22.04 / 24.04
 * [Python 3] >= 3.10.12
 * [Docker](https://docs.docker.com/engine/install/ubuntu/) >= Docker version 25.0.3, build 4debf41
-* [Docker Compose] >= v2.23.1 (non-Python version)
+* [Docker Compose] >= v2.26.1 (non-Python version)
 
 ## [Prerequisites](#table-of-contents)
 
@@ -98,14 +98,14 @@ For example,
 #### x86_64
 
 ```bash
-sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 #### Aarch64 (ARM64)
 
 ```bash
-sudo curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-compose-linux-aarch64 -o /usr/local/bin/docker-compose
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-aarch64 -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
