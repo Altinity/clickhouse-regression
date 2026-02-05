@@ -66,19 +66,11 @@ def download_http_binary(binary_source):
                     bash.timeout = 300
                     try:
                         if current_cpu() == "arm":
-                            note(
-                                f'curl -L --progress-bar "{binary_source}" -o {file_path}'
-                            )
-                            cmd = bash(
-                                f'curl -L --progress-bar "{binary_source}" -o {file_path}'
-                            )
+                            note(f'curl -L --progress-bar "{binary_source}" -o {file_path}')
+                            cmd = bash(f'curl -L --progress-bar "{binary_source}" -o {file_path}')
                         else:
-                            note(
-                                f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                            )
-                            cmd = bash(
-                                f'wget --progress dot:giga "{binary_source}" -O {file_path}'
-                            )
+                            note(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
+                            cmd = bash(f'wget --progress dot:giga "{binary_source}" -O {file_path}')
                         assert cmd.exitcode == 0
                     except BaseException:
                         if os.path.exists(file_path):
@@ -183,12 +175,8 @@ def get_binary_from_docker_container(
         with Shell() as bash:
             bash.timeout = 300
             bash(f"mkdir -p {host_binary_path}")
-            bash(
-                f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
-            )
-            bash(
-                f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}/{binary_name}"'
-            )
+            bash(f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee')
+            bash(f'docker cp "{docker_container_name}:{container_binary_path}" "{host_binary_path}/{binary_name}"')
             bash(f'docker stop "{docker_container_name}"')
 
     with And("debug"):
@@ -241,9 +229,7 @@ class ClientQueryResult:
         if self._output is None:
             try:
                 if self.raw_output:
-                    self._output = [
-                        json.loads(line) for line in self.raw_output.splitlines()
-                    ]
+                    self._output = [json.loads(line) for line in self.raw_output.splitlines()]
             except json.JSONDecodeError:
                 self._output = self.raw_output
         return self._output
@@ -352,11 +338,7 @@ class Node(object):
         def _remove_stack_trace(log: str) -> str:
             """Find the index of "Stack trace" and slice the string up to that point."""
             stack_trace_index = log.find("Stack trace")
-            return (
-                log[:stack_trace_index].strip()
-                if stack_trace_index != -1
-                else log.strip()
-            )
+            return log[:stack_trace_index].strip() if stack_trace_index != -1 else log.strip()
 
         def query(
             self,
@@ -471,9 +453,7 @@ class Node(object):
                 client += f" --{arg} {value}"
 
         with self.cluster.shell(self.name) as bash:
-            command_context = self.command(
-                client, asynchronous=True, no_checks=True, name=name, bash=bash
-            )
+            command_context = self.command(client, asynchronous=True, no_checks=True, name=name, bash=bash)
 
             with self.ClientQueryHandler(command_context) as _client:
                 yield _client
@@ -510,9 +490,7 @@ class ZooKeeperNode(Node):
 
         with By(f"sending kill -{signal} to ZooKeeper server process on {self.name}"):
             pid = self.zookeeper_pid()
-            self.command(
-                f"kill -{signal} {pid}", exitcode=0, steps=False, timeout=timeout
-            )
+            self.command(f"kill -{signal} {pid}", exitcode=0, steps=False, timeout=timeout)
 
         with And("checking pid does not exist"):
             retry(self.command, timeout=timeout, delay=3)(
@@ -590,54 +568,26 @@ class ClickHouseNode(Node):
             self.command("export THREAD_FUZZER_SLEEP_PROBABILITY=0.1")
             self.command("export THREAD_FUZZER_SLEEP_TIME_US=100000")
 
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_BEFORE_MIGRATE_PROBABILITY=1"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_AFTER_MIGRATE_PROBABILITY=1"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_MIGRATE_PROBABILITY=1"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_MIGRATE_PROBABILITY=1"
-            )
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_BEFORE_MIGRATE_PROBABILITY=1")
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_AFTER_MIGRATE_PROBABILITY=1")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_MIGRATE_PROBABILITY=1")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_AFTER_MIGRATE_PROBABILITY=1")
 
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_BEFORE_SLEEP_PROBABILITY=0.001"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_AFTER_SLEEP_PROBABILITY=0.001"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_SLEEP_PROBABILITY=0.001"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_PROBABILITY=0.001"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_BEFORE_SLEEP_TIME_US=10000"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_lock_AFTER_SLEEP_TIME_US=10000"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_SLEEP_TIME_US=10000"
-            )
-            self.command(
-                "export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000"
-            )
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_BEFORE_SLEEP_PROBABILITY=0.001")
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_AFTER_SLEEP_PROBABILITY=0.001")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_SLEEP_PROBABILITY=0.001")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_PROBABILITY=0.001")
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_BEFORE_SLEEP_TIME_US=10000")
+            self.command("export THREAD_FUZZER_pthread_mutex_lock_AFTER_SLEEP_TIME_US=10000")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_BEFORE_SLEEP_TIME_US=10000")
+            self.command("export THREAD_FUZZER_pthread_mutex_unlock_AFTER_SLEEP_TIME_US=10000")
 
     def wait_clickhouse_healthy(self, timeout=90, check_version=True, initial_delay=0):
         with By(f"waiting until ClickHouse server on {self.name} is healthy"):
-            for attempt in retries(
-                timeout=timeout, delay=5, initial_delay=initial_delay
-            ):
+            for attempt in retries(timeout=timeout, delay=5, initial_delay=initial_delay):
                 with attempt:
                     with By("checking ClickHouse server is accessible"):
-                        r = self.query(
-                            "SELECT version() FORMAT CSV", no_checks=1, steps=False
-                        )
+                        r = self.query("SELECT version() FORMAT CSV", no_checks=1, steps=False)
                     if r.exitcode == 0:
                         break
 
@@ -649,25 +599,18 @@ class ClickHouseNode(Node):
                             steps=False,
                         ).output
 
-                        fail(
-                            f"ClickHouse server is not healthy\nServer Exceptions:\n{log_messages}"
-                        )
+                        fail(f"ClickHouse server is not healthy\nServer Exceptions:\n{log_messages}")
 
             if check_version:
-                node_version = self.query(
-                    "SELECT version() FORMAT CSV", no_checks=1, steps=False
-                ).output.replace('"', "")
+                node_version = self.query("SELECT version() FORMAT CSV", no_checks=1, steps=False).output.replace(
+                    '"', ""
+                )
                 if current().context.clickhouse_version is None:
                     current().context.clickhouse_version = node_version
                 else:
-                    assert check_clickhouse_version(f"={node_version}")(
-                        current()
-                    ), error()
+                    assert check_clickhouse_version(f"={node_version}")(current()), error()
 
-            query = (
-                "SELECT * FROM system.build_options "
-                "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
-            )
+            query = "SELECT * FROM system.build_options " "WHERE name = 'CXX_FLAGS' FORMAT TabSeparated"
             output = self.query(query, no_checks=1, steps=False).output
             sanitizers = {
                 "fsanitize=thread": "tsan",
@@ -675,15 +618,11 @@ class ClickHouseNode(Node):
                 "fsanitize=address": "asan",
                 "fsanitize=undefined": "ubsan",
             }
-            sanitizer_name = next(
-                (name for flag, name in sanitizers.items() if flag in output), None
-            )
+            sanitizer_name = next((name for flag, name in sanitizers.items() if flag in output), None)
             build_option = {}
             if sanitizer_name:
                 build_option["sanitizer"] = sanitizer_name
-            current().context.build_options = getattr(
-                current().context, "build_options", {}
-            )
+            current().context.build_options = getattr(current().context, "build_options", {})
             current().context.build_options[self.name] = build_option
 
             git_branch = self.query(
@@ -837,13 +776,9 @@ class ClickHouseNode(Node):
                                 fail("no pid file yet")
 
                 if wait_healthy:
-                    self.wait_clickhouse_healthy(
-                        timeout=timeout, check_version=check_version, initial_delay=2
-                    )
+                    self.wait_clickhouse_healthy(timeout=timeout, check_version=check_version, initial_delay=2)
 
-    def restart_clickhouse(
-        self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None
-    ):
+    def restart_clickhouse(self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None):
         """Restart ClickHouse server."""
         self.stop_clickhouse(timeout=timeout, safe=safe)
 
@@ -854,9 +789,7 @@ class ClickHouseNode(Node):
         if self.clickhouse_pid():
             self.stop_clickhouse(timeout=timeout, safe=safe)
 
-        return super(ClickHouseNode, self).stop(
-            timeout=timeout, retry_count=retry_count
-        )
+        return super(ClickHouseNode, self).stop(timeout=timeout, retry_count=retry_count)
 
     def start(
         self,
@@ -923,9 +856,7 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            client += (
-                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
-            )
+            client += " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -953,17 +884,11 @@ class ClickHouseNode(Node):
                     except ExpectTimeoutError:
                         self.cluster.close_bash(None)
         else:
-            command = (
-                f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
-            )
+            command = f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
             for setting in query_settings:
                 name, value = setting
                 client += f' --{name} "{value}"'
-            with (
-                step("executing command", description=command, format_description=False)
-                if steps
-                else NullStep()
-            ):
+            with step("executing command", description=command, format_description=False) if steps else NullStep():
                 try:
                     r = self.cluster.bash(self.name)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -1007,9 +932,7 @@ class ClickHouseNode(Node):
 
         client = "clickhouse client -n"
         if secure:
-            client += (
-                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
-            )
+            client += " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
 
         if len(sql) > 1024:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
@@ -1041,11 +964,7 @@ class ClickHouseNode(Node):
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
-            with (
-                step("executing command", description=command, format_description=False)
-                if steps
-                else NullStep()
-            ):
+            with step("executing command", description=command, format_description=False) if steps else NullStep():
                 try:
                     r = self.cluster.bash(None)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -1134,17 +1053,11 @@ class ClickHouseNode(Node):
             query_settings += [("query_id", f"{query_id}")]
 
         if inline_settings:
-            sql = (
-                "; ".join([f"SET {name} = {value}" for name, value in inline_settings])
-                + "; "
-                + sql
-            )
+            sql = "; ".join([f"SET {name} = {value}" for name, value in inline_settings]) + "; " + sql
 
         client = "clickhouse client -n"
         if secure:
-            client += (
-                " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
-            )
+            client += " -s" if check_clickhouse_version("<24.1")(current()) else " --secure"
 
         if progress:
             client += " --progress"
@@ -1201,11 +1114,7 @@ class ClickHouseNode(Node):
                 else:
                     command = f'{pipe_cmd} "{sql}" | {client}{client_options} 2>&1'
 
-            with (
-                step("executing command", description=command, format_description=False)
-                if steps
-                else NullStep()
-            ):
+            with step("executing command", description=command, format_description=False) if steps else NullStep():
                 try:
                     r = self.cluster.bash(self.name)(command, *args, **kwargs)
                 except ExpectTimeoutError:
@@ -1242,11 +1151,7 @@ class ClickHouseNode(Node):
                 assert r.exitcode == exitcode, error(r.output)
 
         if message is not None:
-            with (
-                Then(f"output should contain message", description=message)
-                if steps
-                else NullStep()
-            ):
+            with Then(f"output should contain message", description=message) if steps else NullStep():
                 assert message in r.output, error(r.output)
 
         if not ignore_exception:
@@ -1339,12 +1244,7 @@ class ClickHouseKeeperNode(Node):
         with And("checking that ClickHouse keeper pid file was created"):
             for attempt in retries(timeout=timeout, delay=1):
                 with attempt:
-                    if (
-                        self.command(
-                            "ls /tmp/clickhouse-keeper.pid", steps=False, no_checks=True
-                        ).exitcode
-                        != 0
-                    ):
+                    if self.command("ls /tmp/clickhouse-keeper.pid", steps=False, no_checks=True).exitcode != 0:
                         fail("no pid file yet")
 
     def restart_keeper(self, timeout=100, user=None):
@@ -1359,9 +1259,7 @@ class ClickHouseKeeperNode(Node):
         if self.keeper_pid():
             self.stop_keeper(timeout=timeout)
 
-        return super(ClickHouseKeeperNode, self).stop(
-            timeout=timeout, retry_count=retry_count
-        )
+        return super(ClickHouseKeeperNode, self).stop(timeout=timeout, retry_count=retry_count)
 
     def start(
         self,
@@ -1372,9 +1270,7 @@ class ClickHouseKeeperNode(Node):
         user=None,
     ):
         """Start node."""
-        super(ClickHouseKeeperNode, self).start(
-            timeout=timeout, retry_count=retry_count
-        )
+        super(ClickHouseKeeperNode, self).start(timeout=timeout, retry_count=retry_count)
 
         if start_keeper:
             self.start_keeper(
@@ -1473,19 +1369,15 @@ class PackageDownloader:
                 if not self.package_version:
                     if current_cpu() != "arm":
                         self.package_version = (
-                            bash(
-                                f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'"
-                            )
+                            bash(f"{self.binary_path} server --version | grep -Po '(?<=version )[0-9.a-z]*'")
                             .output.split("\n")[-1]
                             .strip(".")
                         )
                     else:
                         # Mac: use Python regex since BSD grep doesn't support -P
-                        version_output = bash(
-                            f"{self.binary_path} server --version 2>&1"
-                        ).output
+                        version_output = bash(f"{self.binary_path} server --version 2>&1").output
 
-                        matches = re.findall(r'(?<=version )[0-9.a-z]*', version_output)
+                        matches = re.findall(r"(?<=version )[0-9.a-z]*", version_output)
                         if matches:
                             self.package_version = matches[-1].strip(".")
 
@@ -1521,9 +1413,7 @@ class PackageDownloader:
         elif source.endswith(".rpm"):
             pass
         elif source.endswith(".tgz"):
-            self.binary_path = os.path.join(
-                unpack_tgz(source), "usr/bin", self.program_name
-            )
+            self.binary_path = os.path.join(unpack_tgz(source), "usr/bin", self.program_name)
 
     def get_binary_from_deb(self, source):
         self.binary_path = unpack_deb(
@@ -1589,13 +1479,13 @@ class Cluster(object):
         self.keeper_docker_image_name = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
+        # --log-level is not supported by "compose --version" in Docker Compose v2
         with Shell() as bash:
-            cmd = bash(f"{self.docker_compose} --version")
+            version_cmd = self.docker_compose.replace(" --log-level ERROR", "")
+            cmd = bash(f"{version_cmd} --version")
             version = cmd.output.split()[-1].strip("v").split(".")
             if version < MINIMUM_COMPOSE_VERSION.split("."):
-                raise RuntimeError(
-                    f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}"
-                )
+                raise RuntimeError(f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}")
 
         # auto set configs directory
         if self.configs_dir is None:
@@ -1607,9 +1497,7 @@ class Cluster(object):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
 
         if docker_compose_project_dir is None:
-            docker_compose_project_dir = os.path.join(
-                self.configs_dir, os.path.basename(self.configs_dir) + "_env"
-            )
+            docker_compose_project_dir = os.path.join(self.configs_dir, os.path.basename(self.configs_dir) + "_env")
 
         if not docker_compose_project_dir:
             raise TypeError("docker compose project directory must be specified")
@@ -1619,20 +1507,14 @@ class Cluster(object):
                 docker_compose_project_dir += f"_arm64"
 
         if not os.path.exists(docker_compose_project_dir):
-            raise TypeError(
-                f"docker compose project directory '{docker_compose_project_dir}' does not exist"
-            )
+            raise TypeError(f"docker compose project directory '{docker_compose_project_dir}' does not exist")
 
-        docker_compose_file_path = os.path.join(
-            docker_compose_project_dir, docker_compose_file
-        )
+        docker_compose_file_path = os.path.join(docker_compose_project_dir, docker_compose_file)
 
         self.docker_compose_project_dir = docker_compose_project_dir
 
         if not os.path.exists(docker_compose_file_path):
-            raise TypeError(
-                f"docker compose file '{docker_compose_file_path}' does not exist"
-            )
+            raise TypeError(f"docker compose file '{docker_compose_file_path}' does not exist")
 
         if rm_instances_files and not reuse_env:
             shutil.rmtree(
@@ -1648,22 +1530,15 @@ class Cluster(object):
                     binary_only=True,
                 )
 
-                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = os.path.abspath(
-                    alternate_clickhouse_package.binary_path
-                )
+                self.environ["CLICKHOUSE_SPECIFIC_BINARY"] = os.path.abspath(alternate_clickhouse_package.binary_path)
 
             clickhouse_package = PackageDownloader(
                 self.clickhouse_path,
                 program_name="clickhouse",
                 binary_only=as_binary,
             )
-            if (
-                getsattr(current().context, "clickhouse_version", None) is None
-                and clickhouse_package.package_version
-            ):
-                current().context.clickhouse_version = (
-                    clickhouse_package.package_version
-                )
+            if getsattr(current().context, "clickhouse_version", None) is None and clickhouse_package.package_version:
+                current().context.clickhouse_version = clickhouse_package.package_version
 
             self.clickhouse_path = clickhouse_package.binary_path
 
@@ -1672,9 +1547,9 @@ class Cluster(object):
             else:
                 if base_os is None:
                     if clickhouse_package.package_path:
-                        assert not clickhouse_package.package_path.endswith(
-                            ".rpm"
-                        ), error("base_os must be specified for rpm packages")
+                        assert not clickhouse_package.package_path.endswith(".rpm"), error(
+                            "base_os must be specified for rpm packages"
+                        )
                     self.base_os = "altinityinfra/clickhouse-regression-multiarch:3.0"
                 else:
                     self.base_os = base_os.split("docker://", 1)[-1]
@@ -1683,12 +1558,8 @@ class Cluster(object):
 
                 if clickhouse_package.package_path:
                     package_name = os.path.basename(clickhouse_package.package_path)
-                    self.clickhouse_docker_image_name = (
-                        f"{base_os_name}:{sanitize_docker_tag(package_name)}"
-                    )
-                    self.clickhouse_path = os.path.relpath(
-                        clickhouse_package.package_path
-                    )
+                    self.clickhouse_docker_image_name = f"{base_os_name}:{sanitize_docker_tag(package_name)}"
+                    self.clickhouse_path = os.path.relpath(clickhouse_package.package_path)
                 else:
                     self.clickhouse_docker_image_name = f"{base_os_name}:local-binary"
                     with Shell() as bash:
@@ -1699,17 +1570,10 @@ class Cluster(object):
         if self.keeper_path:
             keeper_package = PackageDownloader(
                 self.keeper_path,
-                program_name=(
-                    "clickhouse-keeper"
-                    if "keeper" in self.keeper_path
-                    else "clickhouse"
-                ),
+                program_name=("clickhouse-keeper" if "keeper" in self.keeper_path else "clickhouse"),
                 binary_only=as_binary,
             )
-            if (
-                getsattr(current().context, "keeper_version", None) is None
-                and keeper_package.package_version
-            ):
+            if getsattr(current().context, "keeper_version", None) is None and keeper_package.package_version:
                 current().context.keeper_version = keeper_package.package_version
             self.keeper_path = keeper_package.binary_path
 
@@ -1721,9 +1585,7 @@ class Cluster(object):
                         assert not keeper_package.package_path.endswith(".rpm"), error(
                             "base_os must be specified for rpm packages"
                         )
-                    self.keeper_base_os = (
-                        "altinityinfra/clickhouse-regression-multiarch:2.0"
-                    )
+                    self.keeper_base_os = "altinityinfra/clickhouse-regression-multiarch:2.0"
                 else:
                     self.keeper_base_os = base_os.split("docker://", 1)[-1]
 
@@ -1731,9 +1593,7 @@ class Cluster(object):
 
                 if keeper_package.package_path:
                     package_name = os.path.basename(keeper_package.package_path)
-                    self.keeper_docker_image_name = (
-                        f"{base_os_name}:{sanitize_docker_tag(package_name)}"
-                    )
+                    self.keeper_docker_image_name = f"{base_os_name}:{sanitize_docker_tag(package_name)}"
                     self.keeper_path = os.path.relpath(keeper_package.package_path)
                 else:
                     self.keeper_docker_image_name = f"{base_os_name}:local-binary"
@@ -1747,7 +1607,9 @@ class Cluster(object):
             self.keeper_docker_image_name = self.clickhouse_docker_image_name
             self.keeper_path = self.clickhouse_path
 
-        self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
+        self.docker_compose += (
+            f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
+        )
         self.lock = threading.Lock()
 
     @property
@@ -1792,9 +1654,7 @@ class Cluster(object):
             i += 1
             with By(f"attempt #{i}"):
                 try:
-                    c = self.control_shell(
-                        f"{self.docker_compose} ps -q {node}", timeout=timeout
-                    )
+                    c = self.control_shell(f"{self.docker_compose} ps -q {node}", timeout=timeout)
                     container_id = c.output.strip()
                     if c.exitcode == 0 and len(container_id) > 1:
                         break
@@ -1804,9 +1664,7 @@ class Cluster(object):
                     self.close_control_shell()
                 timeout = timeout - (time.time() - time_start)
                 if timeout <= 0:
-                    raise RuntimeError(
-                        f"failed to get docker container id for the {node} service"
-                    )
+                    raise RuntimeError(f"failed to get docker container id for the {node} service")
                 time.sleep(1)
         return container_id
 
@@ -1893,9 +1751,7 @@ class Cluster(object):
                         except Exception as exc:
                             self._bash[id].__exit__(None, None, None)
                             if time.time() - time_start > timeout:
-                                raise RuntimeError(
-                                    f"failed to open bash to node {node}"
-                                )
+                                raise RuntimeError(f"failed to open bash to node {node}")
 
                 if node is None:
                     for name, value in self.environ.items():
@@ -1938,20 +1794,15 @@ class Cluster(object):
                             log_path = f"../_service_logs"
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
                             bash(f"mkdir -p {log_path}")
-                            nodes = bash(
-                                f"{self.docker_compose} ps --services"
-                            ).output.split("\n")
+                            nodes = bash(f"{self.docker_compose} ps --services").output.split("\n")
                             debug(nodes)
                             for node in nodes:
                                 snode = bash(
-                                    f"{self.docker_compose} logs {node} "
-                                    f"> {log_path}/{node}.log",
+                                    f"{self.docker_compose} logs {node} " f"> {log_path}/{node}.log",
                                     timeout=1000,
                                 )
                                 if snode.exitcode != 0:
-                                    xfail(
-                                        f"failed to get service log - exitcode {snode.exitcode}"
-                                    )
+                                    xfail(f"failed to get service log - exitcode {snode.exitcode}")
 
                 self.down()
         finally:
@@ -2041,9 +1892,7 @@ class Cluster(object):
                 )
                 mounts = json.load(tmp)[0]["Mounts"]
 
-        docker_exposed_dirs = [
-            m["Destination"] for m in mounts if "_instances" in m["Source"]
-        ]
+        docker_exposed_dirs = [m["Destination"] for m in mounts if "_instances" in m["Source"]]
 
         for exposed_dir in docker_exposed_dirs:
             with By(f"changing permissions in {exposed_dir}"):
@@ -2078,9 +1927,7 @@ class Cluster(object):
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
                     if self.base_os:  # check that we are not in docker mode
-                        assert os.path.exists(
-                            self.clickhouse_path
-                        ), self.clickhouse_path
+                        assert os.path.exists(self.clickhouse_path), self.clickhouse_path
 
             with And("I set all the necessary environment variables"):
                 self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
@@ -2097,34 +1944,20 @@ class Cluster(object):
                     )
                 )
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BIN_PATH"] = (
-                    ""
-                    if not self.keeper_path
-                    else os.path.relpath(self.keeper_path, current_dir())
+                    "" if not self.keeper_path else os.path.relpath(self.keeper_path, current_dir())
                 )
-                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = (
-                    self.zookeeper_version or ""
-                )
-                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = (
-                    "keeper" if self.use_keeper else "zookeeper"
-                )
+                self.environ["CLICKHOUSE_TESTS_ZOOKEEPER_VERSION"] = self.zookeeper_version or ""
+                self.environ["CLICKHOUSE_TESTS_COORDINATOR"] = "keeper" if self.use_keeper else "zookeeper"
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
-                self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"] = (
-                    self.clickhouse_docker_image_name
-                )
+                self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"] = self.clickhouse_docker_image_name
                 self.environ["CLICKHOUSE_TESTS_BASE_OS"] = self.base_os
                 self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] = (
-                    "clickhouse"
-                    if not self.base_os
-                    else self.base_os.split(":")[0].split("/")[-1]
+                    "clickhouse" if not self.base_os else self.base_os.split(":")[0].split("/")[-1]
                 )
-                self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = (
-                    self.keeper_docker_image_name
-                )
+                self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"] = self.keeper_docker_image_name
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS"] = self.keeper_base_os
                 self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] = (
-                    "clickhouse"
-                    if not self.keeper_base_os
-                    else self.keeper_base_os.split(":")[0].split("/")[-1]
+                    "clickhouse" if not self.keeper_base_os else self.keeper_base_os.split(":")[0].split("/")[-1]
                 )
 
             with And("I list environment variables to show their values"):
@@ -2147,9 +1980,7 @@ class Cluster(object):
                         return False
 
                 with And("checking if any containers are already running"):
-                    self.command(
-                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                    )
+                    self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
 
                 with And("executing docker-compose down just in case it is up"):
                     cmd = self.command(
@@ -2162,13 +1993,9 @@ class Cluster(object):
                         return False
 
                 with And("checking if any containers are still left running"):
-                    self.command(
-                        None, f"set -o pipefail && {self.docker_compose} ps | tee"
-                    )
+                    self.command(None, f"set -o pipefail && {self.docker_compose} ps | tee")
 
-                with And(
-                    "creating a unique builder just in case docker-compose needs to build images"
-                ):
+                with And("creating a unique builder just in case docker-compose needs to build images"):
                     self.command(
                         None,
                         f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
@@ -2203,9 +2030,7 @@ class Cluster(object):
                     )
 
             with By("executing docker-compose up"):
-                up_args = (
-                    "" if self.reuse_env else "--renew-anon-volumes --force-recreate"
-                )
+                up_args = "" if self.reuse_env else "--renew-anon-volumes --force-recreate"
                 for attempt in retries(count=max_up_attempts):
                     with attempt:
                         cmd = self.command(
@@ -2215,17 +2040,11 @@ class Cluster(object):
                             no_checks=True,
                         )
                         if "port is already allocated" in cmd.output:
-                            port = re.search(
-                                r"Bind for .+:([0-9]+) failed", cmd.output
-                            ).group(1)
+                            port = re.search(r"Bind for .+:([0-9]+) failed", cmd.output).group(1)
 
-                            ps = self.command(
-                                None, f"docker ps | grep {port}", no_checks=True
-                            )
+                            ps = self.command(None, f"docker ps | grep {port}", no_checks=True)
                             conflict_env = ps.output.split()[-1]
-                            raise RuntimeError(
-                                f"Failed to allocate port {port}, already in use by {conflict_env}."
-                            )
+                            raise RuntimeError(f"Failed to allocate port {port}, already in use by {conflict_env}.")
 
                         assert cmd.exitcode == 0, error(cmd.output)
                         assert "ERROR:" not in cmd.output, error(cmd.output)
@@ -2244,11 +2063,7 @@ class Cluster(object):
                     )
                     return False
 
-            if (
-                cmd.exitcode == 0
-                and "is unhealthy" not in cmd.output
-                and "Exit" not in ps_cmd.output
-            ):
+            if cmd.exitcode == 0 and "is unhealthy" not in cmd.output and "Exit" not in ps_cmd.output:
                 return True
 
             return False
@@ -2285,9 +2100,7 @@ class Cluster(object):
                         skip_if_running=self.reuse_env,
                     )
                 elif name.startswith("clickhouse"):
-                    self.node(name).start_clickhouse(
-                        thread_fuzzer=self.thread_fuzzer, skip_if_running=self.reuse_env
-                    )
+                    self.node(name).start_clickhouse(thread_fuzzer=self.thread_fuzzer, skip_if_running=self.reuse_env)
 
             for name in self.nodes.get("keeper", []):
                 if name.startswith("keeper"):
@@ -2319,11 +2132,7 @@ class Cluster(object):
         :param no_checks: skip exitcode and message checks, default: False
         :param steps: don't break command into steps, default: True
         """
-        with (
-            By("executing command", description=command, format_description=False)
-            if steps
-            else NullStep()
-        ):
+        with By("executing command", description=command, format_description=False) if steps else NullStep():
             if bash is None:
                 bash = self.bash(node, command=shell_command)
             try:
@@ -2336,11 +2145,7 @@ class Cluster(object):
             return r
 
         if exitcode is not None:
-            with (
-                Then(f"exitcode should be {exitcode}", format_name=False)
-                if steps
-                else NullStep()
-            ):
+            with Then(f"exitcode should be {exitcode}", format_name=False) if steps else NullStep():
                 if str(exitcode).startswith("!="):
                     exitcode = int(str(exitcode).split("!=", 1)[-1].strip())
                     assert r.exitcode != exitcode, error(r.output)
