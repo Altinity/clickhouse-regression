@@ -1479,10 +1479,8 @@ class Cluster(object):
         self.keeper_docker_image_name = None
 
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
-        # --log-level is not supported by "compose --version" in Docker Compose v2
         with Shell() as bash:
-            version_cmd = self.docker_compose.replace(" --log-level ERROR", "")
-            cmd = bash(f"{version_cmd} --version")
+            cmd = bash(f"{self.docker_compose} --version")
             version = cmd.output.split()[-1].strip("v").split(".")
             if version < MINIMUM_COMPOSE_VERSION.split("."):
                 raise RuntimeError(f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}")
