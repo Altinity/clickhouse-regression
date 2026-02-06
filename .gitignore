@@ -6,3 +6,6 @@ _instances/
 .idea
 integration/docker/dockerd_volume_dir/*
 binaries/
+ice/usr/bin/clickhouse
+iceberg/usr/bin/clickhouse
+iceberg/*.deb*
