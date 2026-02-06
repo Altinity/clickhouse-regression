@@ -15,6 +15,11 @@ from testflows.core.name import basename, parentname, unclean
 from testflows._core.testtype import TestSubType
 
 
+def stat_file_size_cmd(path):
+    """Return a shell command that prints file size in bytes (portable Linux/macOS)."""
+    return f"(stat -c %s {path} 2>/dev/null || stat -f %z {path})"
+
+
 def current_cpu():
     """Return current cpu architecture."""
     arch = platform.processor()
@@ -280,11 +285,8 @@ def instrument_clickhouse_server_log(
         node = self.context.node
 
     with By("getting current log size"):
-        cmd = node.command(f"stat -c %s {clickhouse_server_log}")
-        if (
-            cmd.output
-            == f"stat: cannot stat '{clickhouse_server_log}': No such file or directory"
-        ):
+        cmd = node.command(stat_file_size_cmd(clickhouse_server_log))
+        if cmd.exitcode != 0:
             start_logsize = 0
         else:
             start_logsize = cmd.output.split(" ")[0].strip()
@@ -308,7 +310,7 @@ def instrument_clickhouse_server_log(
             )
 
         with And("getting current log size at the end of the test"):
-            cmd = node.command(f"stat -c %s {clickhouse_server_log}")
+            cmd = node.command(stat_file_size_cmd(clickhouse_server_log))
             end_logsize = cmd.output.split(" ")[0].strip()
 
         dump_log = always_dump or (settings.debug and not self.parent.result)
@@ -646,10 +648,8 @@ def add_config(
                 node.stop_clickhouse(safe=False)
 
             with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
+                log_path = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log"
+                cmd = node.cluster.command(None, stat_file_size_cmd(log_path))
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):
@@ -802,10 +802,8 @@ def remove_config(
                 node.stop_clickhouse(safe=False)
 
             with And("I get the current log size"):
-                cmd = node.cluster.command(
-                    None,
-                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
-                )
+                log_path = f"{cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log"
+                cmd = node.cluster.command(None, stat_file_size_cmd(log_path))
                 logsize = cmd.output.split(" ")[0].strip()
 
             with And("I start ClickHouse back up"):

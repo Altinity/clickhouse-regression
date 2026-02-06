@@ -6,6 +6,8 @@ import xml.etree.ElementTree as xmltree
 import time
 import uuid
 
+from helpers.common import stat_file_size_cmd
+
 
 def getuid():
     return str(uuid.uuid1()).replace("-", "_")
@@ -156,7 +158,9 @@ def restart(node, config_path, safe=False, timeout=60):
             with And("getting current log size"):
                 logsize = (
                     node.command(
-                        "stat -c %s /var/log/clickhouse-server/clickhouse-server.log"
+                        stat_file_size_cmd(
+                            "/var/log/clickhouse-server/clickhouse-server.log"
+                        )
                     )
                     .output.split(" ")[0]
                     .strip()

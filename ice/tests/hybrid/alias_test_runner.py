@@ -24,12 +24,18 @@ def datatype_from_string(datatype_str):
         return Nullable(inner_datatype)
 
     datatype_map = {
+        "Int8": Int8,
+        "Int16": Int16,
         "Int32": Int32,
         "Int64": Int64,
+        "Int128": Int128,
+        "Int256": Int256,
         "UInt8": UInt8,
         "UInt16": UInt16,
         "UInt32": UInt32,
         "UInt64": UInt64,
+        "UInt128": UInt128,
+        "UInt256": UInt256,
         "Date": Date,
         "String": String,
         "Float32": Float32,
@@ -149,12 +155,22 @@ def run_test_case(self, test_case, node=None):
         right_predicate = test_case["watermark"]["right_predicate"]
         hybrid_engine = f"Hybrid({left_table_func}, {left_predicate}, {right_table_func}, {right_predicate})"
 
+        expected = test_case.get("expected", {})
+        expected_exitcode = expected.get("exitcode") if expected else None
+        expected_error_message = expected.get("error_message") if expected else None
+
         create_table(
             name=hybrid_table_name,
             engine=hybrid_engine,
             columns=hybrid_columns,
             settings=[("allow_experimental_hybrid_table", 1)],
+            exitcode=expected_exitcode,
+            message=expected_error_message,
         )
+
+    # Skip test queries if table creation is expected to fail
+    if expected_exitcode:
+        return
 
     test_queries = test_case.get("test_queries")
     if test_queries is None and test_case.get("test_query"):
@@ -181,11 +197,11 @@ def run_test_case(self, test_case, node=None):
                 if test_query_template is None:
                     continue
                 with By(f"query {i}/{len(test_queries)}"):
-                    test_query = test_query_template.format(hybrid_table=hybrid_table_name)
                     reference_query = test_query_template.format(hybrid_table=merge_tree_reference_table)
+                    test_query = test_query_template.format(hybrid_table=hybrid_table_name)
 
-                    hybrid_result = node.query(test_query).output
                     reference_result = node.query(reference_query).output
+                    hybrid_result = node.query(test_query).output
 
                     note("**************************************************")
                     note(f"{test_case['name']}")
@@ -221,3 +237,5 @@ def feature(self, minio_root_user, minio_root_password):
     for test_case in test_cases:
         name = test_case["name"]
         Scenario(name=name, test=run_test_case)(test_case=test_case)
+
+    pause()

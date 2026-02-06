@@ -1,5 +1,5 @@
 services:
-      
+
   spark-iceberg:
     image: tabulario/spark-iceberg
     container_name: spark-iceberg
@@ -21,11 +21,34 @@ services:
       timeout: 5s
       retries: 5
 
+  # warehouse-init:
+  #   image: busybox
+  #   volumes:
+  #     - iceberg_warehouse:/warehouse
+  #   command: ["sh", "-c", "mkdir -p /warehouse && chmod -R 777 /warehouse"]
+
+  local-rest:
+    image: tabulario/iceberg-rest
+    user: root
+    ports:
+      - 8183:8181
+    volumes:
+      - ./warehouse:/warehouse
+    environment:
+      - CATALOG_WAREHOUSE=file:///warehouse
+      - CATALOG_IO__IMPL=org.apache.iceberg.hadoop.HadoopFileIO
+    entrypoint: >
+      sh -c "
+        mkdir -p /warehouse &&
+        chmod -R 777 /warehouse &&
+        exec java -jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
+      "
+
   rest:
     image: tabulario/iceberg-rest
     ports:
       - 8182:8181
-    environment:
+    environment:  
       - AWS_ACCESS_KEY_ID=admin
       - AWS_SECRET_ACCESS_KEY=password
       - AWS_REGION=us-east-1
@@ -34,7 +57,7 @@ services:
       - CATALOG_S3_ENDPOINT=http://minio:9000
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:latest
+    image: altinity/ice-rest-catalog:debug-0.11.0
     restart: unless-stopped
     ports:
       - '5000:5000' # iceberg/http
@@ -64,7 +87,25 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - localstack_data:/var/lib/localstack
-    
+  
+
+  unitycatalog:
+    image: unitycatalog/unitycatalog:main
+    container_name: unitycatalog
+    ports:
+      - "8085:8080"   # host:container (avoid conflict with spark 8080)
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  unitycatalog-ui:
+    image: unitycatalog/unitycatalog-ui:main
+    container_name: unitycatalog-ui
+    depends_on:
+      - unitycatalog
+    ports:
+      - "3000:3000"
+
   minio:
     extends:
       file: minio-service.yml
@@ -88,6 +129,7 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
+      - ./warehouse:/warehouse
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
     depends_on:
@@ -148,6 +190,7 @@ services:
 
 volumes:
   localstack_data:
+  unitycatalog_data:
 
 configs:
   ice-rest-catalog-yaml:
@@ -162,4 +205,3 @@ configs:
         region: us-east-1
       bearerTokens:
         - value: foo
-      

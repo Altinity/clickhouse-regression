@@ -190,9 +190,7 @@ def create_experimental_iceberg_database(
 
 
 @TestStep(Given)
-def create_datalakecatalog_database_with_aws_glue(
-    self, database_name, region="eu-central-1", name=None
-):
+def create_datalakecatalog_database_with_aws_glue(self, database_name, region="eu-central-1", name=None):
     """Create a datalakecatalog database with AWS Glue catalog."""
     try:
         self.context.node.query(

@@ -22,6 +22,7 @@ _GLUE_INVALID_NAMESPACE_PATHS = ["ns3", "ns3.*", "ns1.ns11"]
 _NAMESPACE_PATHS = [
     "ns1",
     "ns1.ns11",
+    "ns1.ns1",
     "ns1.ns12",
     "ns1.ns11.ns111",
     "ns1.ns11.ns112",

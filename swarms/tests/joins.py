@@ -68,9 +68,7 @@ class JoinTable:
     def create_s3Cluster_table_function(cls, location, cluster_name, **kwargs):
         """Create an s3Cluster table instance."""
         location = location + "/data/**.parquet"
-        return cls(
-            location, "s3Cluster_table_function", cluster_name=cluster_name, **kwargs
-        )
+        return cls(location, "s3Cluster_table_function", cluster_name=cluster_name, **kwargs)
 
     @classmethod
     def create_iceberg_table(cls, database_name, namespace, table_name, **kwargs):
@@ -133,9 +131,7 @@ def check_join(
         node = self.context.node
 
     if join_clause == "FULL OUTER JOIN" and object_storage_cluster_join_mode == "allow":
-        xfail(
-            "FULL OUTER JOIN is not supported in allow mode https://github.com/ClickHouse/ClickHouse/issues/89996"
-        )
+        xfail("FULL OUTER JOIN is not supported in allow mode https://github.com/ClickHouse/ClickHouse/issues/89996")
 
     with Given("create merge tree tables as left and right tables"):
         left_merge_tree_table = create_table_as_select(
@@ -311,9 +307,7 @@ def check_join(
     settings = {}
 
     if object_storage_cluster_join_mode:
-        settings["object_storage_cluster_join_mode"] = (
-            f"'{object_storage_cluster_join_mode}'"
-        )
+        settings["object_storage_cluster_join_mode"] = f"'{object_storage_cluster_join_mode}'"
 
     if object_storage_cluster:
         settings["object_storage_cluster"] = f"'{object_storage_cluster}'"
@@ -483,13 +477,8 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
 
     database_name = f"database_{getuid()}"
     number_of_iceberg_tables = 3
-    locations = [
-        f"s3://warehouse/data{i}" for i in range(1, number_of_iceberg_tables + 1)
-    ]
-    urls = [
-        f"http://minio:9000/warehouse/data{i}"
-        for i in range(1, number_of_iceberg_tables + 1)
-    ]
+    locations = [f"s3://warehouse/data{i}" for i in range(1, number_of_iceberg_tables + 1)]
+    urls = [f"http://minio:9000/warehouse/data{i}" for i in range(1, number_of_iceberg_tables + 1)]
     iceberg_tables = []
 
     with Given("create DataLakeCatalog database"):
@@ -501,12 +490,10 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
 
     with Given("create iceberg tables in different locations"):
         for location in locations:
-            _, table_name, namespace = (
-                swarm_steps.iceberg_table_with_all_basic_data_types(
-                    minio_root_user=minio_root_user,
-                    minio_root_password=minio_root_password,
-                    location=location,
-                )
+            _, table_name, namespace = swarm_steps.iceberg_table_with_all_basic_data_types(
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                location=location,
             )
             iceberg_tables.append(
                 JoinTable.create_iceberg_table(
@@ -535,26 +522,16 @@ def join_clause(self, minio_root_user, minio_root_password, node=None):
         for url in urls
     ]
     iceberg_s3_cluster_table_functions = [
-        JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster")
-        for url in urls
+        JoinTable.create_icebergS3Cluster_table_function(url, "replicated_cluster") for url in urls
     ]
-    s3_cluster_table_functions = [
-        JoinTable.create_s3Cluster_table_function(url, "replicated_cluster")
-        for url in urls
-    ]
+    s3_cluster_table_functions = [JoinTable.create_s3Cluster_table_function(url, "replicated_cluster") for url in urls]
 
-    with Given(
-        "create merge tree tables from iceberg tables with same schema and data"
-    ):
+    with Given("create merge tree tables from iceberg tables with same schema and data"):
         merge_tree_tables = []
         for iceberg_table in iceberg_tables:
             merge_tree_table_name = f"merge_tree_table_{getuid()}"
-            create_table_as_select(
-                as_select_from=iceberg_table, table_name=merge_tree_table_name
-            )
-            merge_tree_tables.append(
-                JoinTable.create_merge_tree_table(table_name=merge_tree_table_name)
-            )
+            create_table_as_select(as_select_from=iceberg_table, table_name=merge_tree_table_name)
+            merge_tree_tables.append(JoinTable.create_merge_tree_table(table_name=merge_tree_table_name))
 
     left_tables = (
         iceberg_tables

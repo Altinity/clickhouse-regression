@@ -87,7 +87,33 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - localstack_data:/var/lib/localstack
-    
+  
+
+  unitycatalog:
+    image: unitycatalog/unitycatalog:latest
+    container_name: unitycatalog
+    depends_on:
+      minio:
+        condition: service_healthy
+    ports:
+      - "8085:8080"   # UC server (host:container)
+    # optional: persist UC metadata/data
+    volumes:
+      - unitycatalog_data:/opt/unitycatalog/etc
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  unitycatalog-ui:
+    image: unitycatalog/unitycatalog-ui:latest
+    container_name: unitycatalog-ui
+    depends_on:
+      - unitycatalog
+    ports:
+      - "3000:3000"
+
   minio:
     extends:
       file: minio-service.yml
@@ -172,6 +198,7 @@ services:
 
 volumes:
   localstack_data:
+  unitycatalog_data:
 
 configs:
   ice-rest-catalog-yaml:

@@ -21,6 +21,7 @@ from helpers.common import (
     add_config,
     getuid,
     Config,
+    stat_file_size_cmd,
 )
 
 ASCII_CHARS = string.ascii_lowercase + string.ascii_uppercase + string.digits
@@ -45,7 +46,9 @@ def restart(node=None, safe=False, timeout=300):
             with And("getting current log size"):
                 logsize = (
                     node.command(
-                        "stat -c %s /var/log/clickhouse-server/clickhouse-server.log"
+                        stat_file_size_cmd(
+                            "/var/log/clickhouse-server/clickhouse-server.log"
+                        )
                     )
                     .output.split(" ")[0]
                     .strip()
