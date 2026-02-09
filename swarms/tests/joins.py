@@ -329,8 +329,6 @@ def check_join(
         result = node.query(query, no_checks=True)
         assert result.exitcode in (81, 10), error(result.output)
         assert "DB::Exception" in result.output, error(result.output)
-        if result.exitcode == 10:
-            pause()
     else:
         result = node.query(query, exitcode=exitcode, message=message)
 
