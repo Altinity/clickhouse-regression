@@ -200,7 +200,7 @@ xfails = {
             ".*assert rows == actual_count.*",
         )
     ],
-    "gcs/:/combinatoric table": [
+    "gcs/:/combinatoric table/:": [
         (Fail, 
         "Time outs need investigation",
         always,

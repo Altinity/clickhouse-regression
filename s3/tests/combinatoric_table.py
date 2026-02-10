@@ -91,7 +91,7 @@ def create_test_table(
     )
 
 
-def build_insert_query(table, n_cols: int, n_rows: int, table_index: int):
+def build_insert_query(table, n_rows: int, table_index: int):
     """
     Build an INSERT query that generates unique ORDER BY keys to avoid
     deduplication issues with engines like ReplacingMergeTree, AggregatingMergeTree, etc.
@@ -101,6 +101,7 @@ def build_insert_query(table, n_cols: int, n_rows: int, table_index: int):
     We add table_index offset to ensure uniqueness across multiple tables.
     """
     columns_str = ",".join([c.name for c in table.columns])
+    n_value_cols = len(table.columns) - 2  # exclude sign and ver
 
     # Generate unique val0, val1, val2 from row number to avoid ORDER BY key collisions
     # Use table_index offset to ensure uniqueness across tables
@@ -111,9 +112,9 @@ def build_insert_query(table, n_cols: int, n_rows: int, table_index: int):
         toUInt16(intDiv(number + {offset}, 65536 * 65536) % 65536) AS val2"""
 
     # Generate random values for remaining columns (val3 onwards)
-    if n_cols > 3:
+    if n_value_cols > 3:
         random_cols = ", " + ", ".join(
-            [f"toUInt16(rand() % 65536) AS val{i}" for i in range(3, n_cols)]
+            [f"toUInt16(rand() % 65536) AS val{i}" for i in range(3, n_value_cols)]
         )
     else:
         random_cols = ""
@@ -168,7 +169,7 @@ def check_table_combination(
 
         with Given(f"data is inserted into table#{i} on {insert_node.name}"):
             insert_node.query(
-                build_insert_query(table, n_cols, n_rows, table_index=i),
+                build_insert_query(table, n_rows, table_index=i),
                 settings=[("distributed_ddl_task_timeout ", 300)],
                 timeout=300,
             )
