@@ -194,7 +194,7 @@ Build report: [TBD]
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [TBD](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
-| Altinity.Cloud | [TBD](#altinitycloud)                        |   |
+| Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
@@ -691,7 +691,7 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 #### Altinity.Cloud
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/launch_with_25.8.16.10001.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
