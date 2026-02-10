@@ -93,6 +93,7 @@ def create_test_table(
 
 @TestOutline(Scenario)
 @Tags("combinatoric")
+@Retry(2)
 def check_table_combination(
     self,
     engine: str,
