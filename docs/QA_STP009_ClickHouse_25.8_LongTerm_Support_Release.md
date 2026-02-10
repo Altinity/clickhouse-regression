@@ -710,11 +710,11 @@ The upgrade and downgrade.
 
 #### Upgrade
 
-* from 24.8 to 25.8
+* from 25.3 to 25.8
 
 #### Downgrade
 
-* from 25.8 to 24.3
+* from 25.8 to 25.3
 
 ### Compatibility With BI Tools
 
