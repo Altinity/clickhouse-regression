@@ -930,7 +930,6 @@ def boolean_issue(self, minio_root_user, minio_root_password):
             FORMAT TabSeparated
             """
         )
-        # pause()
 
 
 @TestFeature
