@@ -637,7 +637,7 @@ clickhouse-odbc version:
 * v1.3.0.20241018
 
 Results: 
-* [TBD]clickhouse-odbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
@@ -660,7 +660,7 @@ Results:
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-jdbc/
 
 Results (DBeaver): 
-* [TBD]clickhouse-jdbc/DBeaver/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/DBeaver/
 
 The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
@@ -723,7 +723,7 @@ Compatibility with the following BI tools.
 #### Grafana
 
 Results: 
-* [TBD]grafana/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/grafana/
 
 Compatibility with [Grafana].
 
@@ -735,7 +735,8 @@ Compatibility with [Tableau].
 
 #### Superset
 
-Results: [TBD]superset/
+Results:
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/superset/
 
 Compatibility with [Superset].
 
