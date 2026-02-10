@@ -188,18 +188,18 @@ Build report: [TBD]
 | Version | [TBD](#version)                       |   |
 | Window Functions | [TBD](#window-functions)             |   |
 | Python `clickhouse_driver` | [TBD*](#python-clickhouse_driver)            |   |
-| ODBC `clickhouse-odbc` | [TBD](#odbc-clickhouse-odbc)                 |  |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [TBD](#sqlalchemy)                           |    |
 | Java `clickhouse-jdbc` | [TBD](#java-clickhouse-jdbc)                 |   |
-| Java `clickhouse-jdbc` (DBeaver) | [TBD](#java-clickhouse-jdbc)          |   |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [TBD](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
 | Altinity.Cloud | [TBD](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [TBD](#upgrade-and-downgrade)                |   |
-| Grafana | [TBD](#grafana)                              |   |
+| Grafana | [Pass](#grafana)                              |   |
 | Tableau | [TBD](#tableau)                       |   |
-| Superset | [TBD](#superset)                             |   |
+| Superset | [Pass](#superset)                             |   |
 | Grype | [TBD](#grype)                         |   |
 
 ## Scope
