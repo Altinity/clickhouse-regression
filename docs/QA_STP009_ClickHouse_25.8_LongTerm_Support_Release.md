@@ -198,7 +198,7 @@ Build report: [TBD]
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [TBD](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
-| Tableau | [TBD](#tableau)                       |   |
+| Tableau | [Pass](#tableau)                     | 848 passed, 25 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
 | Grype | [TBD](#grype)                         |   |
 
@@ -729,9 +729,29 @@ Compatibility with [Grafana].
 
 #### Tableau
 
-Results: [TBD]tableau/
+**TDVT results:** 848 passed, 25 failed (97% pass rate). All failures are expected and attributable to ClickHouse or connector limitations, not data loading issues.
 
-Compatibility with [Tableau].
+**Failure breakdown:**
+
+1. **`time0`/`time1` as String (2 failures)** — calcs_data.time tests. ClickHouse returns quoted strings like `"1899-12-30 21:07:32"` but TDVT expects datetime-formatted values like `#21:07:32#`. This is because time0/time1 are Nullable(String); ClickHouse has no TIME type and time0 has pre-1900 timestamps.
+2. **`datetime0 - time0` operations (3 failures)** — operator.datetime.minus_time. Cannot subtract a String from a DateTime. Same root cause as above.
+3. **DATETIME cast of pre-1900 dates (3 failures)** — cast.str.datetime. Parsing `'1900-01-01 01:00:00'` etc. returns `#1970-01-01#` instead of the correct value. ClickHouse's DateTime type cannot represent pre-1970 timestamps.
+4. **`Date32 - Date32` arithmetic (7 failures)** — date.math.date_minus_date and date.B639952. ClickHouse does not support the minus operator between two Date32 values (known ClickHouse limitation).
+5. **`DATE(num4)` cast (1 failure)** — date.cast.num_to_date. Off by one day (`#1970-01-01#` vs `#1969-12-31#`), likely an epoch rounding issue.
+6. **Filter.datetime_fractional (1 failure)** — ClickHouse DateTime has no sub-second precision, so .123 is lost.
+7. **NULL join tests (6 failures)** — join.null.bool/date/datetime/int/real/str. The connector's INNER JOIN does not match NULL keys, so rows with NULL join columns are excluded (connector behavior).
+8. **LOD `lod.14_As in-out Set` (1 failure)** — Related to NULL handling in LOD set calculations.
+9. **BUGS.B641638 (1 failure)** — $IN_SET$ with mixed time0 types. Tableau's IN filter combines SUM with time0; time0 is Nullable(String), so the connector errors ("No such function $IN_SET$ that takes arguments of type (str, datetime, ...)"). Same root cause as 1 and 2 — no native TIME type in ClickHouse.
+
+**TDVT version comparison:** All three builds produced identical results:
+
+| Version                          | Failures |
+|----------------------------------|----------|
+| Latest LTS (Altinity 25.8)       | 25       |
+| Previous LTS (Altinity 25.3)     | 25       |
+| Upstream (ClickHouse 25.8.16.34) | 25       |
+
+All 25 failures are the exact same set across all three builds. They are pre-existing ClickHouse/JDBC connector limitations, not version-specific regressions.
 
 #### Superset
 
