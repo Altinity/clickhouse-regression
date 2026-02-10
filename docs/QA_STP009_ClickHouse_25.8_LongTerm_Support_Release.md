@@ -196,7 +196,7 @@ Build report: [TBD]
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
 | Altinity.Cloud | [TBD](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [TBD](#upgrade-and-downgrade)                |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                     | 848 passed, 25 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
@@ -704,7 +704,7 @@ Approved by Mikhail Filimonov.
 ### Upgrade and Downgrade
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.3.6.10034.altinitystable_to_25.8.4.20014.altinitytest/
 
 The upgrade and downgrade.
 
