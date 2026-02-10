@@ -192,7 +192,7 @@ Build report: [TBD]
 | SQLAlchemy | [TBD](#sqlalchemy)                           |    |
 | Java `clickhouse-jdbc` | [TBD](#java-clickhouse-jdbc)                 |   |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
-| Backup `clickhouse-backup` | [TBD](#backup-clickhouse-backup)             |   |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
@@ -668,10 +668,10 @@ The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 ### Backup `clickhouse-backup`
 
 Results: 
-* [TBD]clickhouse-backup/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup/
 
 Results (ACM):
-* [TBD]clickhouse-backup-acm/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
