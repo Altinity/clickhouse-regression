@@ -201,13 +201,12 @@ xfails = {
         )
     ],
     "gcs/:/combinatoric table/:": [
-        (Fail, 
-        "Time outs need investigation",
-        always,
-        ".*QueryRuntimeException.*",
+        (
+            Fail,
+            "Time outs need investigation",
+            always,
+            ".*QueryRuntimeException.*",
         ),
-    ],
-    "gcs/:/combinatoric table/:": [
         (
             Error,
             "Times out, needs investigation",
