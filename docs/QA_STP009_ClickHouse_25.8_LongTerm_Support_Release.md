@@ -741,7 +741,7 @@ Compatibility with [Grafana].
 6. **Filter.datetime_fractional (1 failure)** — ClickHouse DateTime has no sub-second precision, so .123 is lost.
 7. **NULL join tests (6 failures)** — join.null.bool/date/datetime/int/real/str. The connector's INNER JOIN does not match NULL keys, so rows with NULL join columns are excluded (connector behavior).
 8. **LOD `lod.14_As in-out Set` (1 failure)** — Related to NULL handling in LOD set calculations.
-9. **BUGS.B641638 (1 failure)** — $IN_SET$ with mixed time0 types. Tableau's IN filter combines SUM with time0; time0 is Nullable(String), so the connector errors ("No such function $IN_SET$ that takes arguments of type (str, datetime, ...)"). Same root cause as 1 and 2 — no native TIME type in ClickHouse.
+9. **BUGS.B641638 (1 failure)** — `$IN_SET$` with mixed time0 types. Tableau's IN filter combines SUM with time0; time0 is Nullable(String), so the connector errors ("No such function `$IN_SET$` that takes arguments of type (str, datetime, ...)"). Same root cause as 1 and 2 — no native TIME type in ClickHouse.
 
 **TDVT version comparison:** All three builds produced identical results:
 
