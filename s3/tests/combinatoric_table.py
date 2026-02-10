@@ -91,6 +91,42 @@ def create_test_table(
     )
 
 
+def build_insert_query(table, n_cols: int, n_rows: int, table_index: int):
+    """
+    Build an INSERT query that generates unique ORDER BY keys to avoid
+    deduplication issues with engines like ReplacingMergeTree, AggregatingMergeTree, etc.
+
+    The ORDER BY is (val0, val1, val2), so we ensure these columns have unique
+    combinations by deriving them deterministically from the row number.
+    We add table_index offset to ensure uniqueness across multiple tables.
+    """
+    columns_str = ",".join([c.name for c in table.columns])
+
+    # Generate unique val0, val1, val2 from row number to avoid ORDER BY key collisions
+    # Use table_index offset to ensure uniqueness across tables
+    offset = table_index * n_rows
+    unique_key_cols = f"""
+        toUInt16((number + {offset}) % 65536) AS val0,
+        toUInt16(intDiv(number + {offset}, 65536) % 65536) AS val1,
+        toUInt16(intDiv(number + {offset}, 65536 * 65536) % 65536) AS val2"""
+
+    # Generate random values for remaining columns (val3 onwards)
+    if n_cols > 3:
+        random_cols = ", " + ", ".join(
+            [f"toUInt16(rand() % 65536) AS val{i}" for i in range(3, n_cols)]
+        )
+    else:
+        random_cols = ""
+
+    return f"""
+        INSERT INTO {table.name} ({columns_str})
+        SELECT
+            1 AS sign,
+            1 AS ver,
+            {unique_key_cols}{random_cols}
+        FROM numbers({n_rows})
+        """
+
 @TestOutline(Scenario)
 @Tags("combinatoric")
 def check_table_combination(
@@ -132,14 +168,7 @@ def check_table_combination(
 
         with Given(f"data is inserted into table#{i} on {insert_node.name}"):
             insert_node.query(
-                f"""
-                INSERT INTO {table.name} ({','.join([c.name for c in table.columns])})
-                SELECT
-                    1 AS sign,
-                    1 AS ver,
-                    * FROM generateRandom('{','.join([c.full_definition() for c in table.columns][2:])}')
-                LIMIT {n_rows}
-                """,
+                build_insert_query(table, n_cols, n_rows, table_index=i),
                 settings=[("distributed_ddl_task_timeout ", 300)],
                 timeout=300,
             )
