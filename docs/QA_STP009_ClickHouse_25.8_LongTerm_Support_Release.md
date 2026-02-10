@@ -196,7 +196,7 @@ Build report: [TBD]
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                | Downgrade to 25.3 failed  |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                     | 848 passed, 25 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
