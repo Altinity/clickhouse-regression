@@ -615,17 +615,10 @@ The following client drivers SHALL be tested for compatibility:
 #### Python `clickhouse_driver`
 
 clickhouse-driver version: 
-* 0.2.9
+* 0.2.10
 
 Results: 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-driver/
-
-Created Patched for version 0.2.9:
-* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-cert.patch
-* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-json.patch
-* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-progress.patch
-* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-totals.patch
-* https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9.patch
   
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
