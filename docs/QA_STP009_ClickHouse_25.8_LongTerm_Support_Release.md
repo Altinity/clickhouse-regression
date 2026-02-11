@@ -187,7 +187,7 @@ Build report: [TBD]
 | Tiered Storage | [TBD](#tiered-storage)                |   |
 | Version | [TBD](#version)                       |   |
 | Window Functions | [TBD](#window-functions)             |   |
-| Python `clickhouse_driver` | [Pass](#python-clickhouse_driver)            | 375 passed, 109 skipped  |
+| Python `clickhouse_driver` | [Pass](#python-clickhouse_driver)            | 377 passed, 109 skipped  |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                           | 388 passed, 27 warnings   |
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |  Tests run: 232, Failures: 0, Errors: 0, Skipped: 0 |
