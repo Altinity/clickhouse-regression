@@ -130,7 +130,7 @@ The following team members SHALL be dedicated to the release:
 * [TBD]
 
 ## Known Issues
-
+https://github.com/Altinity/ClickHouse/issues/1391
 [TBD]
 
 ### Open Issues
