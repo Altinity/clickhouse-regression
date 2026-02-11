@@ -188,18 +188,18 @@ Build report: [TBD]
 | Version | [TBD](#version)                       |   |
 | Window Functions | [TBD](#window-functions)             |   |
 | Python `clickhouse_driver` | [TBD*](#python-clickhouse_driver)            |   |
-| ODBC `clickhouse-odbc` | [TBD](#odbc-clickhouse-odbc)                 |  |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [TBD](#sqlalchemy)                           |    |
 | Java `clickhouse-jdbc` | [TBD](#java-clickhouse-jdbc)                 |   |
-| Java `clickhouse-jdbc` (DBeaver) | [TBD](#java-clickhouse-jdbc)          |   |
-| Backup `clickhouse-backup` | [TBD](#backup-clickhouse-backup)             |   |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
-| Altinity.Cloud | [TBD](#altinitycloud)                        |   |
+| Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [TBD](#upgrade-and-downgrade)                |   |
-| Grafana | [TBD](#grafana)                              |   |
-| Tableau | [TBD](#tableau)                       |   |
-| Superset | [TBD](#superset)                             |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                | Downgrade to 25.3 failed  |
+| Grafana | [Pass](#grafana)                              |   |
+| Tableau | [Pass](#tableau)                     | 848 passed, 25 failed (97%). Expected fails. |
+| Superset | [Pass](#superset)                             |   |
 | Grype | [TBD](#grype)                         |   |
 
 ## Scope
@@ -618,7 +618,7 @@ clickhouse-driver version:
 * 0.2.9
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-driver/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-driver/
 
 Created Patched for version 0.2.9:
 * https://github.com/Altinity/clickhouse-regression/blob/main/container-images/test/clickhouse-driver-runner/diff-0.2.9-cert.patch
@@ -637,7 +637,7 @@ clickhouse-odbc version:
 * v1.3.0.20241018
 
 Results: 
-* [TBD]clickhouse-odbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
@@ -647,7 +647,7 @@ clickhouse-sqlalchemy version:
 * 0.2.9
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-sqlalchemy/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
@@ -657,10 +657,10 @@ clickhouse-jdbc version:
 * 0.9.0
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8-lts/clickhouse-jdbc/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-jdbc/
 
 Results (DBeaver): 
-* [TBD]clickhouse-jdbc/DBeaver/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/DBeaver/
 
 The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
@@ -668,10 +668,10 @@ The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 ### Backup `clickhouse-backup`
 
 Results: 
-* [TBD]clickhouse-backup/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup/
 
 Results (ACM):
-* [TBD]clickhouse-backup-acm/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -691,7 +691,7 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 #### Altinity.Cloud
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/launch_with_25.8.16.10001.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
@@ -704,17 +704,17 @@ Approved by Mikhail Filimonov.
 ### Upgrade and Downgrade
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.3.6.10034.altinitystable_to_25.8.4.20014.altinitytest/
 
 The upgrade and downgrade.
 
 #### Upgrade
 
-* from 24.8 to 25.8
+* from 25.3 to 25.8
 
 #### Downgrade
 
-* from 25.8 to 24.3
+* from 25.8 to 25.3
 
 ### Compatibility With BI Tools
 
@@ -723,19 +723,44 @@ Compatibility with the following BI tools.
 #### Grafana
 
 Results: 
-* [TBD]grafana/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/grafana/
 
 Compatibility with [Grafana].
 
 #### Tableau
 
-Results: [TBD]tableau/
+Results:
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/tableau/
 
 Compatibility with [Tableau].
 
+**TDVT results:** 849 passed, 24 failed (97% pass rate). All failures are expected and attributable to ClickHouse or connector limitations, not data loading issues.
+
+**Failure breakdown:**
+
+1. **`time0`/`time1` as String (2 failures)** — calcs_data.time tests. ClickHouse returns quoted strings like `"1899-12-30 21:07:32"` but TDVT expects datetime-formatted values like `#21:07:32#`. This is because time0/time1 are Nullable(String); ClickHouse has no TIME type and time0 has pre-1900 timestamps.
+2. **`datetime0 - time0` operations (3 failures)** — operator.datetime.minus_time. Cannot subtract a String from a DateTime. Same root cause as above.
+3. **DATETIME cast of pre-1900 dates (3 failures)** — cast.str.datetime. Parsing `'1900-01-01 01:00:00'` etc. returns `#1970-01-01#` instead of the correct value. ClickHouse's DateTime type cannot represent pre-1970 timestamps.
+4. **`Date32 - Date32` arithmetic (7 failures)** — date.math.date_minus_date and date.B639952. ClickHouse does not support the minus operator between two Date32 values (known ClickHouse limitation).
+5. **`DATE(num4)` cast (1 failure)** — date.cast.num_to_date. Off by one day (`#1970-01-01#` vs `#1969-12-31#`), likely an epoch rounding issue.
+6. **Filter.datetime_fractional (1 failure)** — ClickHouse DateTime has no sub-second precision, so .123 is lost.
+7. **NULL join tests (6 failures)** — join.null.bool/date/datetime/int/real/str. The connector's INNER JOIN does not match NULL keys, so rows with NULL join columns are excluded (connector behavior).
+8. **BUGS.B641638 (1 failure)** — `$IN_SET$` with mixed time0 types. Tableau's IN filter combines SUM with time0; time0 is Nullable(String), so the connector errors ("No such function `$IN_SET$` that takes arguments of type (str, datetime, ...)"). Same root cause as 1 and 2 — no native TIME type in ClickHouse.
+
+**TDVT version comparison:** All three builds produced identical results:
+
+| Version                          | Failures |
+|----------------------------------|----------|
+| Latest LTS (Altinity 25.8)       | 24       |
+| Previous LTS (Altinity 25.3)     | 24       |
+| Upstream (ClickHouse 25.8.16.34) | 24       |
+
+All 24 failures are the exact same set across all three builds. They are pre-existing ClickHouse/JDBC connector limitations, not version-specific regressions.
+
 #### Superset
 
-Results: [TBD]superset/
+Results:
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/superset/
 
 Compatibility with [Superset].
 

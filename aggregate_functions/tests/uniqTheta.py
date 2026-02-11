@@ -13,7 +13,10 @@ from aggregate_functions.tests.uniq import scenario as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_UniqTheta("1.0"))
 def scenario(self, func="uniqTheta({params})", table=None, snapshot_id=None):
     """Check uniqTheta aggregate function by using the same tests as for uniq."""
-    if check_clickhouse_version(">=24.8")(self):
+    
+    if check_clickhouse_version(">=25.8")(self):
+        clickhouse_version = ">=25.8"
+    elif check_clickhouse_version(">=24.8")(self):
         clickhouse_version = (
             ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
         )

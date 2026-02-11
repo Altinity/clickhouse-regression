@@ -71,7 +71,7 @@ def create_merge_tree_table_with_five_columns(self, table_name=None, node=None):
                 long_col Nullable(Int64), 
                 double_col Nullable(Float64), 
                 string_col Nullable(String),
-                date_col Nullable(Date)
+                date_col Nullable(Date32)
             ) 
             ENGINE = MergeTree 
             ORDER BY tuple()
@@ -249,7 +249,7 @@ def parse_clickhouse_error(error_message, only_error_name=True):
         # Code: 59. DB::Exception: Received from localhost:9000. DB::Exception: Illegal
         # type Nullable(String) of column string_col for filter. Must be UInt8 or
         # Nullable(UInt8).. (ILLEGAL_TYPE_OF_COLUMN_FOR_FILTER) -> (59, ILLEGAL_TYPE_OF_COLUMN_FOR_FILTER)
-        pattern = r"Code: (\d+)\. DB::Exception:.*?DB::Exception: .*? \(([^)]+)\)"
+        pattern = r"Code: (\d+)\. DB::Exception:.*?DB::Exception: .* \(([^)]+)\)"
 
     match = re.search(pattern, error_message, re.DOTALL)
 

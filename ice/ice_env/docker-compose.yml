@@ -54,7 +54,7 @@ services:
         target: /root/.ice.yaml
 
   ice-rest-catalog:
-    image: altinity/ice-rest-catalog:debug-0.9.0
+    image: altinity/ice-rest-catalog:debug-0.12.0
     restart: unless-stopped
     ports:
       - '5000:5000'
@@ -141,7 +141,7 @@ services:
         condition: service_healthy
 
   keeper:
-    image: altinity/clickhouse-keeper:25.8.12.20747.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.14.20001.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:
