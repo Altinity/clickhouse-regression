@@ -59,6 +59,7 @@ def create_mv_on_cluster(self):
             definer="CURRENT_USER",
             populate=True,
             node=self.context.node,
+            settings = [('deduplicate_insert_select', 'enable_even_for_bad_queries')] if check_clickhouse_version(">=25.12")(self) else None
         )
 
     with Then("I check that I can select from materialized view"):
