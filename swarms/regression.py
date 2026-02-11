@@ -19,7 +19,11 @@ from helpers.common import (
 from swarms.requirements.requirements import *
 
 
-xfails = {}
+xfails = {
+    "/swarms/feature/swarm joins/join clause/join 455 of 816480*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1244"),
+    ],
+}
 ffails = {
     "/swarms/feature": (
         Skip,

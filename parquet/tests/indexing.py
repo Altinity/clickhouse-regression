@@ -138,7 +138,7 @@ def verify_rows_read(
         f"condition: {condition}",
         name=f"{snapshot_name}_{condition_names[condition_1]}_{condition_names[condition_2]}",
         id=self.context.snapshot_id,
-        mode=snapshot.UPDATE,
+        mode=self.context.snapshot_mode,
     )
 
 

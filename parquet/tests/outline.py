@@ -65,7 +65,7 @@ def import_export(
                             else snapshot_name
                         ),
                         id=snapshot_id,
-                        mode=snapshot.UPDATE,
+                        mode=self.context.snapshot_mode,
                     )
                 ), error()
 

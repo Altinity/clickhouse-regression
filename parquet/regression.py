@@ -5,6 +5,7 @@ import boto3
 
 from minio import Minio
 from testflows.core import *
+from testflows.asserts import snapshot, values
 
 append_path(sys.path, "..")
 
@@ -454,6 +455,7 @@ def regression(
     self.context.json_files_local = os.path.join(current_dir(), "data", "json_files")
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
+    self.context.snapshot_mode = snapshot.CHECK
 
     if stress is not None:
         self.context.stress = stress

@@ -8,6 +8,7 @@ def create_hybrid_table(
     self,
     table_name=None,
     node=None,
+    columns_definition=None,
     database_name="default",
     left_table_name=None,
     right_table_name=None,
@@ -24,6 +25,9 @@ def create_hybrid_table(
     query = f"SET allow_experimental_hybrid_table = 1;\n"
 
     query += f"CREATE TABLE {database_name}.{table_name}\n"
+
+    if columns_definition is not None:
+        query += f"{columns_definition}\n"
 
     query += f"ENGINE = Hybrid({left_table_name}, {left_predicate}, {right_table_name}, {right_predicate})\n"
 

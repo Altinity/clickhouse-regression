@@ -6,6 +6,7 @@ from testflows.asserts import error
 from helpers.common import getuid
 
 from decimal import Decimal
+from datetime import datetime, date, time, timezone
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
     BooleanType,
@@ -142,33 +143,39 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
 
     with And("insert test data into iceberg table"):
         test_data = []
-        for _ in range(5):
+        for i in range(1, 6):
             row = {}
             for col_name, col_type in dot_separated_columns:
-                if isinstance(col_type, IntegerType):
-                    row[col_name] = random.randint(0, 10000)
+                if col_name == "integer.column.dot":
+                    row[col_name] = i * 10
+                elif col_name == "string.col.dot":
+                    row[col_name] = f"test{(i - 1) % 3 + 1}"
+                elif col_name == "double.column.dot":
+                    row[col_name] = i + i * 0.1
+                elif isinstance(col_type, IntegerType):
+                    row[col_name] = i
                 elif isinstance(col_type, LongType):
-                    row[col_name] = random.randint(0, 10000)
+                    row[col_name] = i * 100
                 elif isinstance(col_type, DoubleType):
-                    row[col_name] = round(random.uniform(0, 100), 2)
+                    row[col_name] = i + 0.5
                 elif isinstance(col_type, FloatType):
-                    row[col_name] = round(random.uniform(0, 100), 2)
+                    row[col_name] = i + 1.5
                 elif isinstance(col_type, BooleanType):
-                    row[col_name] = random.choice([True, False])
+                    row[col_name] = i % 2 == 1
                 elif isinstance(col_type, TimestampType):
-                    row[col_name] = random.randint(0, 100000000)
+                    row[col_name] = datetime(2020, 1, i, 12, 0, 0)
                 elif isinstance(col_type, TimestamptzType):
-                    row[col_name] = random.randint(0, 100000000)
+                    row[col_name] = datetime(2020, 1, i, 12, 0, 0, tzinfo=timezone.utc)
                 elif isinstance(col_type, DateType):
-                    row[col_name] = random.randint(0, 10000)
+                    row[col_name] = date(2020, 1, i)
                 elif isinstance(col_type, StringType):
-                    row[col_name] = random.choice(["test", "test2", "test3"])
+                    row[col_name] = f"test{(i - 1) % 3 + 1}"
                 elif isinstance(col_type, BinaryType):
-                    row[col_name] = random.choice(["test", "test2", "test3"])
+                    row[col_name] = f"binary{i}".encode()
                 elif isinstance(col_type, DecimalType):
-                    row[col_name] = Decimal(random.randint(0, 10000)) / Decimal(100)
+                    row[col_name] = Decimal(f"{i}0.50")
                 elif isinstance(col_type, TimeType):
-                    row[col_name] = random.randint(0, 100000000)
+                    row[col_name] = time(11 + i, 0, 0)
             test_data.append(row)
 
         df = pa.Table.from_pylist(test_data, schema=arrow_schema)
@@ -177,6 +184,10 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
     with And("scan and display data with pyiceberg"):
         df = table.scan().to_pandas()
         note(df)
+
+    with And("define expeced clickhouse result"):
+        expected_iceberg_result = "1\t100\t1.5\t2.5\ttrue\t2020-01-01 13:00:00.000000\t2020-01-01 12:00:00.000000\t2020-01-01\ttest1\tbinary1\t10.5\t10\ttest1\t1.1\n2\t200\t2.5\t3.5\tfalse\t2020-01-02 13:00:00.000000\t2020-01-02 12:00:00.000000\t2020-01-02\ttest2\tbinary2\t20.5\t20\ttest2\t2.2\n3\t300\t3.5\t4.5\ttrue\t2020-01-03 13:00:00.000000\t2020-01-03 12:00:00.000000\t2020-01-03\ttest3\tbinary3\t30.5\t30\ttest3\t3.3\n4\t400\t4.5\t5.5\tfalse\t2020-01-04 13:00:00.000000\t2020-01-04 12:00:00.000000\t2020-01-04\ttest1\tbinary4\t40.5\t40\ttest1\t4.4\n5\t500\t5.5\t6.5\ttrue\t2020-01-05 13:00:00.000000\t2020-01-05 12:00:00.000000\t2020-01-05\ttest2\tbinary5\t50.5\t50\ttest2\t5.5"
+        expected_result_s3_table_function = "1\t100\t1.5\t2.5\ttrue\t2020-01-01 12:00:00.000000\t2020-01-01 12:00:00.000000\t2020-01-01\ttest1\tbinary1\t10.5\t1970-01-01 12:00:00.000000\t10\ttest1\t1.1\n2\t200\t2.5\t3.5\tfalse\t2020-01-02 12:00:00.000000\t2020-01-02 12:00:00.000000\t2020-01-02\ttest2\tbinary2\t20.5\t1970-01-01 13:00:00.000000\t20\ttest2\t2.2\n3\t300\t3.5\t4.5\ttrue\t2020-01-03 12:00:00.000000\t2020-01-03 12:00:00.000000\t2020-01-03\ttest3\tbinary3\t30.5\t1970-01-01 14:00:00.000000\t30\ttest3\t3.3\n4\t400\t4.5\t5.5\tfalse\t2020-01-04 12:00:00.000000\t2020-01-04 12:00:00.000000\t2020-01-04\ttest1\tbinary4\t40.5\t1970-01-01 15:00:00.000000\t40\ttest1\t4.4\n5\t500\t5.5\t6.5\ttrue\t2020-01-05 12:00:00.000000\t2020-01-05 12:00:00.000000\t2020-01-05\ttest2\tbinary5\t50.5\t1970-01-01 16:00:00.000000\t50\ttest2\t5.5"
 
     with Then("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
@@ -191,35 +202,20 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
             database_name=database_name,
             namespace=namespace,
             table_name=table_name,
-            columns="*",
+            columns="* EXCEPT (\\`time.column\\`)",
+            order_by="tuple(*)",
         )
-        assert result.output != "", error()
-
-    with And("read data using Iceberg engine and verify specific columns are accessible"):
-        for col_name, _ in dot_separated_columns:
-            result = iceberg_engine.read_data_from_clickhouse_iceberg_table(
-                database_name=database_name, namespace=namespace, table_name=table_name, columns=f"\\`{col_name}\\`"
-            )
-            assert result.output != "", error()
+        assert result.output == expected_iceberg_result, error()
 
     with And("read data using icebergS3 table function"):
         result = icebergS3.read_data_with_icebergS3_table_function(
             storage_endpoint="http://minio:9000/warehouse/data",
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
-            columns="*",
+            columns="* EXCEPT (\\`time.column\\`)",
+            order_by="tuple(*)",
         )
-        assert result.output != "", error()
-
-    with And("read data using icebergS3 table function and verify specific columns are accessible"):
-        for col_name, _ in dot_separated_columns:
-            result = icebergS3.read_data_with_icebergS3_table_function(
-                storage_endpoint="http://minio:9000/warehouse/data",
-                s3_access_key_id=minio_root_user,
-                s3_secret_access_key=minio_root_password,
-                columns=f"\\`{col_name}\\`",
-            )
-            assert result.output != "", error()
+        assert result.output == expected_iceberg_result, error()
 
     with And("read data using S3 table function"):
         result = s3_steps.read_data_with_s3_table_function(
@@ -227,18 +223,10 @@ def all_datatypes_with_dot_separated_columns(self, minio_root_user, minio_root_p
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             columns="*",
+            order_by="tuple(*)",
+            settings=[("use_hive_partitioning", "0")],
         )
-        assert result.output != "", error()
-
-    # with And("read data using S3 table function and verify specific columns are accessible"):
-    #     for col_name, _ in dot_separated_columns:
-    #         result = s3_steps.read_data_with_s3_table_function(
-    #             endpoint="http://minio:9000/warehouse/data/data/**.parquet",
-    #             s3_access_key_id=minio_root_user,
-    #             s3_secret_access_key=minio_root_password,
-    #             columns=f"\\`{col_name}\\`",
-    #         )
-    #         assert result.output != "", error()
+        assert result.output == expected_result_s3_table_function, error()
 
 
 @TestScenario
