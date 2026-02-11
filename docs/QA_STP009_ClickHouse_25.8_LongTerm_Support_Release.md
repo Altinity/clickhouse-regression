@@ -192,11 +192,11 @@ Build report: [TBD]
 | SQLAlchemy | [TBD](#sqlalchemy)                           |    |
 | Java `clickhouse-jdbc` | [TBD](#java-clickhouse-jdbc)                 |   |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
-| Backup `clickhouse-backup` | [TBD](#backup-clickhouse-backup)             |   |
+| Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
-| Altinity.Cloud | [TBD](#altinitycloud)                        |   |
+| Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [TBD](#upgrade-and-downgrade)                |   |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                | Downgrade to 25.3 failed  |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [Pass](#tableau)                     | 848 passed, 25 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
@@ -668,10 +668,10 @@ The  [clickhouse-jdbc](https://github.com/ClickHouse/clickhouse-jdbc) driver.
 ### Backup `clickhouse-backup`
 
 Results: 
-* [TBD]clickhouse-backup/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup/
 
 Results (ACM):
-* [TBD]clickhouse-backup-acm/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-backup-acm/
 
 Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhouse-backup) utility.
 
@@ -691,7 +691,7 @@ Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-
 #### Altinity.Cloud
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/launch_with_25.8.16.10001.altinitytest/
 
 Compatibility with Altinity.Cloud.
 
@@ -704,17 +704,17 @@ Approved by Mikhail Filimonov.
 ### Upgrade and Downgrade
 
 Results: 
-[TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.3.6.10034.altinitystable_to_25.8.4.20014.altinitytest/
 
 The upgrade and downgrade.
 
 #### Upgrade
 
-* from 24.8 to 25.8
+* from 25.3 to 25.8
 
 #### Downgrade
 
-* from 25.8 to 24.3
+* from 25.8 to 25.3
 
 ### Compatibility With BI Tools
 
