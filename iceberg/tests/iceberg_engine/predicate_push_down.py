@@ -58,6 +58,7 @@ def check_read_with_predicate_push_down(
             log_comment=log_comment_with_pruning,
             use_iceberg_metadata_files_cache="0",
             use_iceberg_partition_pruning="0",
+            input_format_parquet_bloom_filter_push_down="0"
         )
         assert result.output.strip() == "", error()
 
@@ -91,6 +92,7 @@ def check_read_without_predicate_push_down(
             log_comment=log_comment_without_pruning,
             use_iceberg_metadata_files_cache="0",
             use_iceberg_partition_pruning="0",
+            input_format_parquet_bloom_filter_push_down="0",
         )
         assert result.output.strip() == "", error()
 
@@ -219,6 +221,10 @@ def check_input_format_parquet_filter_push_down(
         )
         df = pa.Table.from_pylist(data, schema=arrow_schema)
         table.append(df)
+    
+    with And("scan and display data using PyIceberg"):
+        df = table.scan().to_pandas()
+        note(df)
 
     with And("create Iceberg database"):
         iceberg_engine.create_experimental_iceberg_database(
