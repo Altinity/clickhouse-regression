@@ -193,7 +193,7 @@ Build report: [TBD]
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |  Tests run: 232, Failures: 0, Errors: 0, Skipped: 0 |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
-| Kubernetes `clickhouse-operator` | [TBD](#kubernetes-clickhouse-operator)       |   |
+| Kubernetes `clickhouse-operator` | [Fail](#kubernetes-clickhouse-operator)       | 12 Fails, related to: [issue](https://github.com/Altinity/ClickHouse/issues/1391)  |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                | Downgrade to 25.3 failed  |
@@ -683,7 +683,7 @@ clickhouse-operator version:
 * 0.25.2
 
 Results: 
-* [TBD]clickhouse-operator/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/
 
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
