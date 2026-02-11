@@ -130,12 +130,12 @@ The following team members SHALL be dedicated to the release:
 * [TBD]
 
 ## Known Issues
-https://github.com/Altinity/ClickHouse/issues/1391
 [TBD]
 
 ### Open Issues
 
-[TBD]
+* [distributed_ddl replicas_path mismatch causing ON CLUSTER DDL to hang](https://github.com/Altinity/ClickHouse/issues/1391) - results in 12 scenario failures
+
 
 ### Summary
 Build report: [TBD]
