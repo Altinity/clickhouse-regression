@@ -169,6 +169,27 @@ xfails = {
             and check_if_antalya_build(),
         )
     ],
+    "/iceberg/iceberg engine/: catalog/iceberg partition pruning/check iceberg partition pruning with integer type": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/93416",
+            check_clickhouse_version(">=26.1")
+        )
+    ],
+    "/iceberg/iceberg engine/: catalog/iceberg partition pruning/check partition pruning with complex where clause": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/93416",
+            check_clickhouse_version(">=26.1")
+        )
+    ],
+    "/iceberg/iceberg engine/: catalog/iceberg partition pruning/partition pruning with date type": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/93416",
+            check_clickhouse_version(">=26.1")
+        )
+    ],
 }
 
 ffails = {
@@ -242,6 +263,7 @@ ffails = {
     #     "https://github.com/clickhouse/clickhouse/issues/86024",
     #     check_clickhouse_version(">=25.8"),
     # ),
+
 }
 
 
