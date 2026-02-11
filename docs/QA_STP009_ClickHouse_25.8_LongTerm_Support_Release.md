@@ -13,11 +13,11 @@
 
 **Test Results:**
 
-* [TBD]
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/
 
 **Build Report:**
 
-* [TBD]
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 **Summary:**
 
