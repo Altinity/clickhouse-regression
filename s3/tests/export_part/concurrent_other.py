@@ -436,11 +436,17 @@ def after_delete_rows(self, delete_method, delete_condition, description):
     with And("I wait for mutations to complete"):
         wait_for_all_mutations_to_complete(table_name=source_table)
 
+    with And("I stop merges to prevent parts from becoming outdated"):
+        stop_merges(table_name=source_table)
+
     with And("I export parts to the S3 table"):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
         )
+
+    with And("I restart merges"):
+        start_merges(table_name=source_table)
 
     with Then("Check source matches destination"):
         source_matches_destination(
