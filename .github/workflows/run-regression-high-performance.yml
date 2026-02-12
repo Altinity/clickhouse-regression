@@ -1,0 +1,1544 @@
+name: 🔬 Run regression high performance
+run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
+  ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
+  ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        required: true
+        type: string
+        default: docker://altinity/clickhouse-server:25.3.8.10041.altinitystable
+      version:
+        description: "🎯 Expected version. Example: 25.3.8.10041"
+        type: string
+        required: true
+        default: 25.3.8.10041.altinitystable
+      arch:
+        description: "🖥 Architecture"
+        type: choice
+        options:
+          - x86
+          - arm64
+        required: true
+        default: x86
+      flags:
+        description: "🚩 Flags"
+        type: choice
+        options: 
+          - "--use-keeper --with-analyzer"
+          - "--use-keeper" 
+          - "none"
+          - "--as-binary"
+          - "--as-binary --use-keeper"
+          - "--thread-fuzzer"
+          - "--thread-fuzzer --use-keeper"
+          - "--thread-fuzzer --as-binary"
+          - "--thread-fuzzer --as-binary --use-keeper"
+          - "--with-analyzer"
+          - "--with-analyzer --use-keeper"
+          - "--with-analyzer --as-binary"
+          - "--with-analyzer --as-binary --use-keeper"
+          - "--thread-fuzzer --with-analyzer"
+          - "--thread-fuzzer --with-analyzer --use-keeper"
+          - "--thread-fuzzer --with-analyzer --as-binary"
+          - "--thread-fuzzer --with-analyzer --as-binary --use-keeper"
+      suite:
+        description: "🧪 Test suite to run (default: all)"
+        type: choice
+        options:
+          - all
+          - all_aws
+          - all_gcs
+          - aes_encryption
+          - aggregate_functions
+          - atomic_insert
+          - alter_all
+          - alter_replace_partition
+          - alter_attach_partition
+          - alter_move_partition
+          - attach
+          - base_58
+          - benchmark_all
+          - benchmark_aws
+          - benchmark_gcs
+          - benchmark_minio
+          - clickhouse_keeper
+          - clickhouse_keeper_failover
+          - data_types
+          - datetime64_extended_range
+          - disk_level_encryption
+          - dns
+          - engines
+          - example
+          - extended_precision_data_types
+          - functions
+          - iceberg
+          - jwt_authentication
+          - kafka
+          - kerberos
+          - key_value
+          - ldap
+          - lightweight_delete
+          - memory
+          - oauth
+          - parquet_all
+          - parquet
+          - parquet_minio
+          - parquet_s3
+          - parquet_native_v3
+          - parquet_minio_native_v3
+          - parquet_s3_native_v3
+          - part_moves_between_shards
+          - rbac
+          - s3_all
+          - s3_aws
+          - s3_azure
+          - s3_gcs
+          - s3_minio
+          - export_part
+          - export_partition
+          - selects
+          - session_timezone
+          - settings
+          - ssl_server
+          - swarms
+          - tiered_storage_all
+          - tiered_storage_aws
+          - tiered_storage_gcs
+          - tiered_storage_local
+          - tiered_storage_minio
+          - version
+          - window_functions
+          - hive_partitioning
+      artifacts:
+        description: "🏺 Artifact S3 bucket"
+        type: choice
+        options:
+          - internal
+      output_format:
+        description: "📜 Testflows output style."
+        type: choice
+        options:
+          - nice-new-fails
+          - brisk-new-fails
+          - plain-new-fails
+          - pnice-new-fails
+          - new-fails
+          - classic
+          - nice
+          - fails
+          - slick
+          - brisk
+          - quiet
+          - short
+          - manual
+          - dots
+          - progress
+          - raw
+      ref:
+        description: "🏷 Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
+      extra_args:
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
+        type: string
+        default: ""
+      custom_run_name:
+        description: '📝 Custom run name (optional)'
+        required: false
+  workflow_call:
+    inputs:
+      package:
+        description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
+        required: true
+        type: string
+      version:
+        description: "🎯 Expected version. Example: 23.3.1.64"
+        type: string
+      arch:
+        description: "🖥 Architecture"
+        type: string
+        required: true
+      flags:
+        description: "🚩 Flags"
+        type: string
+        required: false
+        default: "none"
+      suite:
+        description: "🧪 Test suite to run"
+        type: string
+        required: false
+        default: all
+      artifacts:
+        description: "Artifact S3 bucket"
+        type: string
+        required: false
+        default: internal
+      output_format:
+        description: "📜 Testflows output style."
+        type: string
+        required: false
+        default: new-fails
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        required: false
+        default: ""
+      extra_args:
+        description: "🎛️ Extra test program arguments. Default: none (empty string)."
+        type: string
+        required: false
+        default: ""
+      custom_run_name:
+        description: '📝 Custom run name (optional)'
+        type: string
+        required: false
+      run_s3_suites:
+        description: "Whether to run S3 and Parquet S3 suites"
+        type: boolean
+        default: false
+      parquet_native_v3:
+        description: "Whether to run Parquet Native V3 suites"
+        type: boolean
+        default: false
+      is_workflow_call:
+          description: "True when this workflow is executed via workflow_call"
+          type: boolean
+          default: true
+
+jobs:
+  aes_encryption:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aes_encryption
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  aggregate_functions_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      part: 1
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/aggregate functions/part 1/*" ${{ inputs.extra_args }} 
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  aggregate_functions_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      part: 2
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/aggregate functions/part 2/*" ${{ inputs.extra_args }} 
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  aggregate_functions_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: aggregate_functions
+      part: 3
+      timeout_minutes: 240
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/aggregate functions/part 3/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  atomic_insert:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: atomic_insert
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_replace_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_replace_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_replace_partition
+      timeout_minutes: 180
+      storage_path: /replace_partition
+      regression_args: '--only "/alter/replace partition/*"'
+      artifact_name: alter-replace-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_attach_partition_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 1
+      timeout_minutes: 180
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 1/*"'
+      artifact_name: alter-attach-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  alter_attach_partition_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_attach_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_attach_partition
+      part: 2
+      timeout_minutes: 180
+      storage_path: /attach_partition
+      regression_args: '--only "/alter/attach partition/part 2/*"'
+      artifact_name: alter-attach-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  alter_move_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter_all' || inputs.suite == 'alter_move_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: alter
+      job_name: alter_move_partition
+      timeout_minutes: 180
+      storage_path: /move_partition
+      regression_args: '--only "/alter/move partition/*"'
+      artifact_name: alter-move-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  attach:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'attach' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: attach
+      timeout_minutes: 180
+      regression_args: '--only "/attach/*"'
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  base_58:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: base_58
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  benchmark_aws:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_aws' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_aws
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_aws
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: benchmark-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  benchmark_gcs:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'benchmark_gcs' || inputs.suite == 'benchmark_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    name: benchmark_gcs
+    with:
+      suite_name: ontime_benchmark
+      job_name: ontime_benchmark_gcs
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: benchmark-gcs-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  benchmark_minio:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ontime_benchmark
+      suite_executable: benchmark.py
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: benchmark-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  clickhouse_keeper:
+    strategy:
+      matrix:
+        part: [1, 2]
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      part: ${{ matrix.part }}
+      timeout_minutes: 180
+      storage_path: /no_ssl
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  clickhouse_keeper_ssl:
+    strategy:
+      matrix:
+        part: [1, 2]
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper
+      job_name: clickhouse_keeper_ssl
+      part: ${{ matrix.part }}
+      timeout_minutes: 180
+      storage_path: /ssl
+      regression_args: '--ssl'
+      artifact_name: clickhouse_keeper-ssl-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/clickhouse keeper/part ${{ matrix.part }}/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  clickhouse_keeper_failover:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper_failover' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: clickhouse_keeper_failover
+      timeout_minutes: 180
+      storage_path: /failover
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  data_types:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: data_types
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  datetime64_extended_range:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: datetime64_extended_range
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  disk_level_encryption:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: disk_level_encryption
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  dns:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: dns
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  engines:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: engines
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  example:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: example
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  extended_precision_data_types:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: extended_precision_data_types
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  functions:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: functions
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  iceberg_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: iceberg
+      part: 1
+      timeout_minutes: 180
+      storage_path: /iceberg
+      regression_args: '--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache/*"'
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  iceberg_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'iceberg' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: iceberg
+      part: 2
+      timeout_minutes: 180
+      storage_path: /iceberg 
+      regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  jwt_authentication:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'jwt_authentication' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: jwt_authentication
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  kafka:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: kafka
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  kerberos:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: kerberos
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  key_value:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: key_value
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ldap_authentication:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/authentication
+      job_name: ldap_authentication
+      timeout_minutes: 180
+      artifact_name: ldap-authentication-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ldap_external_user_directory:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/external_user_directory
+      job_name: ldap_external_user_directory
+      timeout_minutes: 180
+      artifact_name: ldap-external_user_directory-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ldap_role_mapping:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ldap/role_mapping
+      job_name: ldap_role_mapping
+      timeout_minutes: 180
+      artifact_name: ldap-role_mapping-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  lightweight_delete:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: lightweight_delete
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  memory:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'memory' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: memory
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      timeout_minutes: 180
+      storage_path: /no_s3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet_minio:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_minio
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--storage minio --only "/parquet/minio/*"'
+      artifact_name: parquet-minio-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet_aws_s3:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_aws_s3
+      timeout_minutes: 180
+      storage_path: /aws_s3
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
+      artifact_name: parquet-aws-artifacts
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet_native_v3:
+    if: ${{ inputs.parquet_native_v3 == true && (inputs.suite == 'all' || inputs.suite == 'parquet_native_v3' || inputs.suite == 'parquet_all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_native_v3
+      timeout_minutes: 180
+      storage_path: /no_s3
+      regression_args: '--native-parquet-reader-v3'
+      artifact_name: parquet-artifacts-native-reader-v3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet_minio_native_v3:
+    if: ${{ inputs.parquet_native_v3 == true && (inputs.suite == 'all' || inputs.suite == 'parquet_minio_native_v3' || inputs.suite == 'parquet_all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_minio_native_v3
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--storage minio --only "/parquet/minio/*" --native-parquet-reader-v3'
+      artifact_name: parquet-minio-artifacts-native-reader-v3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  parquet_aws_s3_native_v3:
+    if: ${{ inputs.parquet_native_v3 == true && (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: parquet
+      job_name: parquet_aws_s3_native_v3
+      timeout_minutes: 180
+      storage_path: /aws_s3
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*" --native-parquet-reader-v3'
+      artifact_name: parquet-aws-artifacts-native-reader-v3
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  part_moves_between_shards:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: part_moves_between_shards
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  rbac_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 180
+      part: 1
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/rbac/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  rbac_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 180
+      part: 2
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/rbac/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  rbac_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: rbac
+      timeout_minutes: 180
+      part: 3
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/rbac/part 3/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_aws_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_aws
+      timeout_minutes: 360
+      part: 1
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/aws s3/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_aws_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_aws' || inputs.suite == 's3_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_aws
+      timeout_minutes: 360
+      part: 2
+      storage_path: /aws
+      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
+      artifact_name: s3-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/aws s3/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_azure_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_azure
+      timeout_minutes: 360
+      part: 1
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/azure/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  
+  s3_azure_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_azure' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_azure
+      timeout_minutes: 360
+      part: 2
+      storage_path: /azure
+      regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
+      artifact_name: s3-azure-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/azure/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_gcs_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_gcs
+      timeout_minutes: 360
+      part: 1
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/gcs/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_gcs_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_gcs' || inputs.suite == 's3_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_gcs
+      timeout_minutes: 360
+      part: 2
+      storage_path: /gcs
+      regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: s3-gcs-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/gcs/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_minio_export_part:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_part' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio_export_part
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-export-part-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/export tests/export part/*" --as-binary ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_minio_export_partition:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 'export_partition' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio_export_partition
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-export-partition-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/export tests/export partition/*" --as-binary ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_minio_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 1
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_minio_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 2
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_minio_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_minio
+      part: 3
+      timeout_minutes: 360
+      storage_path: /minio
+      regression_args: '--storage minio'
+      artifact_name: s3-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/minio/part 3/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  selects:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: selects
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  session_timezone:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: session_timezone
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+  
+  settings:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'settings' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: settings
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ssl_server_1:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 1
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/ssl server/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ssl_server_2:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 2
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/ssl server/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ssl_server_3:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ssl_server
+      part: 3
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/ssl server/part 3/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit 
+
+  swarms:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'swarms' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: swarms
+      timeout_minutes: 1200
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+    
+  tiered_storage_aws:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_aws
+      timeout_minutes: 180
+      storage_path: /aws
+      regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
+      artifact_name: tiered_storage-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_gcs:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all_gcs' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_gcs
+      timeout_minutes: 180
+      storage_path: /gcs
+      regression_args: '--with-s3gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
+      artifact_name: tiered_storage-gcs-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_local:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_local
+      timeout_minutes: 180
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_minio:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_minio
+      timeout_minutes: 180
+      storage_path: /minio
+      regression_args: '--with-minio'
+      artifact_name: tiered_storage-minio-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  version:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'version' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: version
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  window_functions:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: window_functions
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  hive_partitioning:
+    if: ${{ inputs.suite == 'hive_partitioning' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: hive_partitioning
+      timeout_minutes: 180
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
