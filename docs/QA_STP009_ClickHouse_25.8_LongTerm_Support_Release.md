@@ -145,48 +145,48 @@ Build report: [TBD]
 
 | Test Suite  | Result                                        | Comments |
 | --- |-----------------------------------------------| --- |
-| Stateless | [*TBD](#stateless)                     |   |
-| Stateful | [TBD](#stateful)                      |   |
-| Stress | [TBD](#stress)                        |  Not executed  |
-| Integration | [*TBD](#integration)                   |   |
-| AES Encryption | [TBD](#aes-encryption)                |   |
-| Aggregate Functions | [TBD](#aggregate-functions)           |   |
-| Alter | [TBD](#alter)                 |   |
-| Atomic Insert | [TBD](#atomic-insert)                 |   |
+| Stateless | [Pass](#stateless)                     |   |
+| Stateful | [Pass](#stateful)                      |   |
+| Stress | [Pass](#stress)                        |   |
+| Integration | [*Pass](#integration)                   | 1 CI Error with ASAN |
+| AES Encryption | [Pass](#aes-encryption)                |   |
+| Aggregate Functions | [Pass](#aggregate-functions)           |   |
+| Alter | [Pass](#alter)                 |   |
+| Atomic Insert | [Pass](#atomic-insert)                 |   |
 | Attach | [TBD](#attach)                        |   |
-| Base58 | [TBD](#base58)                        |   |
-| Ontime Benchmark | [TBD](#ontime-benchmark)              |   |
-| ClickHouse Keeper | [TBD](#clickhouse-keeper)             |   |
+| Base58 | [Pass](#base58)                        |   |
+| Ontime Benchmark | [Pass](#ontime-benchmark)              |   |
+| ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
 | ClickHouse Keeper Failover | [TBD](#clickhouse-keeper-failover)   |   |
-| Data Types | [TBD](#data-types)                    |   |
-| DateTime64 Extended Range | [TBD](#datetime64-extended-range)     |   |
-| Disk Level Encryption | [TBD](#disk-level-encryption)         |   |
-| DNS | [TBD](#dns)                           |   |
-| Engines  | [TBD](#engines)                       | Not executed  |
-| Example | [TBD](#example)                       |   |
-| Extended Precision Data Types | [TBD](#extended-precision-data-types) |   |
-| Functions | [TBD](#functions)                     |   |
-| Hive Partitioning | [TBD](#hive-partitioning)           |   |
-| Iceberg | [TBD](#iceberg)                       |   |
+| Data Types | [Pass](#data-types)                    |   |
+| DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
+| Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
+| DNS | [Pass](#dns)                           |   |
+| Engines  | [Pass](#engines)                       |  |
+| Example | [Pass](#example)                       |   |
+| Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
+| Functions | [Pass](#functions)                     |   |
+| Hive Partitioning | [Pass](#hive-partitioning)           |   |
+| Iceberg | [Pass](#iceberg)                       |   |
 | JWT Authentication | [TBD](#jwt-authentication)           |   |
-| Kafka | [TBD](#kafka)                         |   |
-| Kerberos | [TBD](#kerberos)                      |   |
-| Key Value | [TBD](#key-value)                     |   |
-| LDAP | [TBD](#ldap)                          |   |
-| Lightweight Delete | [TBD](#lightweight-delete)            |    |
-| Memory | [TBD](#memory)                       |   |
-| Parquet | [TBD](#parquet)                       |   |
-| Part Moves Between Shards | [TBD](#part-moves-between-shards)     |   |
-| RBAC | [TBD](#rbac)                          |   |
-| S3 | [TBD](#s3)                           |  |
-| Selects | [TBD](#selects)                       |   |
-| Session Timezone | [TBD](#session-timezone)              |   |
+| Kafka | [Pass](#kafka)                         |   |
+| Kerberos | [Pass](#kerberos)                      |   |
+| Key Value | [Pass](#key-value)                     |   |
+| LDAP | [Pass](#ldap)                          |   |
+| Lightweight Delete | [Pass](#lightweight-delete)            |    |
+| Memory | [Pass](#memory)                       |   |
+| Parquet | [Pass](#parquet)                       |   |
+| Part Moves Between Shards | [Pass](#part-moves-between-shards)     |   |
+| RBAC | [Pass](#rbac)                          |   |
+| S3 | [Pass](#s3)                           |  |
+| Selects | [Pass](#selects)                       |   |
+| Session Timezone | [Pass](#session-timezone)              |   |
 | Settings | [TBD](#settings)                      |   |
-| SSL Server | [TBD](#ssl-server)                    |   |
-| Swarms | [TBD](#swarms)                        |   |
-| Tiered Storage | [TBD](#tiered-storage)                |   |
-| Version | [TBD](#version)                       |   |
-| Window Functions | [TBD](#window-functions)             |   |
+| SSL Server | [Pass](#ssl-server)                    |   |
+| Swarms | [Pass](#swarms)                        |   |
+| Tiered Storage | [Pass](#tiered-storage)                |   |
+| Version | [Pass](#version)                       |   |
+| Window Functions | [Pass](#window-functions)             |   |
 | Python `clickhouse_driver` | [Pass](#python-clickhouse_driver)            | 377 passed, 109 skipped  |
 | ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)                 |  |
 | SQLAlchemy | [Pass](#sqlalchemy)                           | 388 passed, 27 warnings   |
@@ -363,8 +363,8 @@ Altinity Atomic Insert integration tests.
 
 Results:
 
-* [TBD]16570234845/job/46860218565
-* [TBD]16570238894/job/46860234499
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345293900
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529761
 
 Altinity Attach tests.
 
@@ -409,8 +409,8 @@ Altinity ClickHouse Keeper integration tests.
 
 Results:
 
-* [TBD]16570238894/job/46860235299
-* [TBD]16570234845/job/46860219117
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345293709
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529783
 
 Altinity ClickHouse Keeper Failover integration tests.
 
@@ -500,8 +500,8 @@ Altinity Iceberg tests.
 
 Results:
 
-* [TBD]16570238894/job/46860235180
-* [TBD]16570234845/job/46860219008
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63345302185
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63332529810
 
 Altinity JWT Authentication tests.
 
@@ -709,24 +709,31 @@ Altinity Window Functions integration tests.
 
 #### ASAN
 Results:
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21893377525
+
+Known issues:
 * [TBD]
 
 #### MSAN
 Results:
-* [TBD]
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21893427037
 
 Known issues:
-* [TBD]
 * [TBD]
 
 #### UBSAN
 Results:
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21893452122
+
+Known issues:
 * [TBD]
 
 #### TSAN
 Results:
-* [TBD]
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21893404832
 
+Known issues:
+* [TBD]
 
 ### Compatibility with Client Drivers
 
