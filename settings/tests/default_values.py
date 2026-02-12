@@ -1,6 +1,8 @@
 from testflows.core import *
 from testflows.asserts import snapshot, values, error
 from helpers.common import (
+    check_if_altinity_build,
+    check_if_not_antalya_build,
     get_snapshot_id,
     check_clickhouse_version,
     check_if_antalya_build,
@@ -70,6 +72,9 @@ def feature(self):
 
     if check_if_antalya_build(self):
         self.context.snapshot_id += "_antalya"
+    
+    if check_clickhouse_version(">=25.8")(self) and check_if_altinity_build(self) and check_if_not_antalya_build(self):
+        self.context.snapshot_id += "_altinity"
 
     with Given("get all settings from system.settings table"):
         all_settings = get_all_settings()
