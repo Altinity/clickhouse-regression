@@ -200,7 +200,7 @@ Build report: [TBD]
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [*Pass](#tableau)                     | 849 passed, 24 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
-| Grype | [TBD](#grype)                         |   |
+| Grype | [Pass](#grype)                         |   |
 
 ## Scope
 
@@ -295,7 +295,7 @@ Results:
 * AMD ASan
   * [Integration tests (amd_asan, old analyzer, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+1%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+2%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+3%2F6%29&name_2=Tests)
+  * [Integration tests (amd_asan, old analyzer, 3/6)](https://github.com/Altinity/ClickHouse/actions/runs/21752809609/job/63286184873) - CI ERROR OOM
   * [Integration tests (amd_asan, old analyzer, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+4%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+5%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+6%2F6%29&name_2=Tests)
@@ -600,26 +600,40 @@ Altinity RBAC integration tests.
 
 ##### S3
 
-Results:
-
+AWS Results:
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
+
+Azure Results:
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
+
+GCS Results:
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
+
+MinIO Results:
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/gcs/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s31/minio/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/aws_s3/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/azure/report.html
-* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/gcs/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s32/minio/report.html
 * https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s33/minio/report.html
+
+Export Parts Results:
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3part/minio/report.html
+
+Export Partition Results:
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/aarch64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
+* https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/regression/x86_64/with_analyzer/zookeeper/without_thread_fuzzer/s3partition/minio/report.html
+
 
 Altinity S3 integration tests.
 
@@ -894,9 +908,9 @@ The tests were run against Superset version `4.1.1`. Currently, there is an issu
 
 Results:
 
-[TBD]
-[TBD]
-[TBD]
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-keeper_0-25.8.16.10001.altinitytest/results.html
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-server_0-25.8.16.10001.altinitytest-alpine/results.html
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/grype/altinityinfra_clickhouse-server_0-25.8.16.10001.altinitytest/results.html
 
 [Grype](https://github.com/anchore/grype) Docker image vulnerability scanner.
 
