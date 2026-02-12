@@ -445,9 +445,6 @@ def after_delete_rows(self, delete_method, delete_condition, description):
             destination_table=s3_table_name,
         )
 
-    with And("I restart merges"):
-        start_merges(table_name=source_table)
-
     with Then("Check source matches destination"):
         source_matches_destination(
             source_table=source_table,
