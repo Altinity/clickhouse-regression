@@ -153,11 +153,11 @@ Build report: [TBD]
 | Aggregate Functions | [Pass](#aggregate-functions)           |   |
 | Alter | [Pass](#alter)                 |   |
 | Atomic Insert | [Pass](#atomic-insert)                 |   |
-| Attach | [TBD](#attach)                        |   |
+| Attach | [Pass](#attach)                        |   |
 | Base58 | [Pass](#base58)                        |   |
 | Ontime Benchmark | [Pass](#ontime-benchmark)              |   |
 | ClickHouse Keeper | [Pass](#clickhouse-keeper)             |   |
-| ClickHouse Keeper Failover | [TBD](#clickhouse-keeper-failover)   |   |
+| ClickHouse Keeper Failover | [Pass](#clickhouse-keeper-failover)   |   |
 | Data Types | [Pass](#data-types)                    |   |
 | DateTime64 Extended Range | [Pass](#datetime64-extended-range)     |   |
 | Disk Level Encryption | [Pass](#disk-level-encryption)         |   |
@@ -168,7 +168,7 @@ Build report: [TBD]
 | Functions | [Pass](#functions)                     |   |
 | Hive Partitioning | [Pass](#hive-partitioning)           |   |
 | Iceberg | [Pass](#iceberg)                       |   |
-| JWT Authentication | [TBD](#jwt-authentication)           |   |
+| JWT Authentication | [Pass](#jwt-authentication)           |   |
 | Kafka | [Pass](#kafka)                         |   |
 | Kerberos | [Pass](#kerberos)                      |   |
 | Key Value | [Pass](#key-value)                     |   |
@@ -181,7 +181,7 @@ Build report: [TBD]
 | S3 | [Pass](#s3)                           |  |
 | Selects | [Pass](#selects)                       |   |
 | Session Timezone | [Pass](#session-timezone)              |   |
-| Settings | [TBD](#settings)                      |   |
+| Settings | [Pass](#settings)                      |   |
 | SSL Server | [Pass](#ssl-server)                    |   |
 | Swarms | [Pass](#swarms)                        |   |
 | Tiered Storage | [Pass](#tiered-storage)                |   |
