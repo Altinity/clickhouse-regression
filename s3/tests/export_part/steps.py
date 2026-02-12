@@ -651,7 +651,24 @@ def get_parts(self, table_name, node=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    parts = sorted([row.strip() for row in output.splitlines() if row.strip()])
+
+    if not parts:
+        return parts
+
+    parts_list = ", ".join(f"'{p}'" for p in parts)
+    validation_query = (
+        f"SELECT name FROM system.parts "
+        f"WHERE table = '{table_name}' AND active = 1 AND name IN ({parts_list})"
+    )
+
+    validated_output = node.query(
+        validation_query,
+        exitcode=0,
+        steps=True,
+    ).output
+
+    return sorted([row.strip() for row in validated_output.splitlines() if row.strip()])
 
 
 @TestStep(When)

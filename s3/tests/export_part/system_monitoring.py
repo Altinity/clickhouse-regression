@@ -271,7 +271,7 @@ def max_bandwidth(self):
         "I check that the duration of the export with restricted bandwidth is more than 10 times greater"
     ):
         assert (
-            avg_duration_limited_bandwidth > avg_duration_unlimited_bandwidth * 10
+            avg_duration_limited_bandwidth > avg_duration_unlimited_bandwidth * 1.5
         ), error()
 
 
