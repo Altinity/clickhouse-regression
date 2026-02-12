@@ -645,8 +645,8 @@ Altinity Session Timezone tests.
 
 Results:
 
-* [TBD]16570238894/job/46860235336
-* [TBD]16570234845/job/46860219192
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930308353/job/63403280149
+* https://github.com/Altinity/clickhouse-regression/actions/runs/21930289188/job/63403233526
 
 Altinity Settings tests.
 
