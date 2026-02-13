@@ -17,10 +17,19 @@ from helpers.common import (
     check_is_altinity_build,
     experimental_analyzer,
     check_if_antalya_build,
+    check_with_any_sanitizer,
 )
 
 
 xfails = {
+    # Server crashes with "Metadata is not initialized" during schema evolution with sanitizers
+    "/iceberg/iceberg engine/*/schema evolution/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/86024 - Iceberg metadata initialization bug with sanitizers",
+            check_with_any_sanitizer,
+        )
+    ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
