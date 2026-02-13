@@ -1,4 +1,4 @@
-name: 🔬 Run regression high performance
+name: 🔬 Run regression high perf
 run-name: 🔬 ${{ inputs.custom_run_name || (inputs.suite == 'all' && format('{0} | Full Regression | {1}', inputs.version, inputs.arch)) || format('{0} | {1} | {2}', inputs.version, inputs.suite, inputs.arch)}}
   ${{ inputs.flags != 'none' && format(' | {0}', inputs.flags) || '' }}
   ${{ inputs.extra_args && format(' | {0}', inputs.extra_args) || '' }}
@@ -217,6 +217,7 @@ jobs:
       suite_name: aes_encryption
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -233,7 +234,7 @@ jobs:
       suite_name: aggregate_functions
       part: 1
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -251,7 +252,7 @@ jobs:
       suite_name: aggregate_functions
       part: 2
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -269,7 +270,7 @@ jobs:
       suite_name: aggregate_functions
       part: 3
       timeout_minutes: 240
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -569,6 +570,7 @@ jobs:
       suite_name: datetime64_extended_range
       timeout_minutes: 180
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -584,7 +586,7 @@ jobs:
     with:
       suite_name: disk_level_encryption
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -684,7 +686,7 @@ jobs:
       timeout_minutes: 180
       storage_path: /iceberg
       regression_args: '--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache/*"'
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -704,7 +706,7 @@ jobs:
       timeout_minutes: 180
       storage_path: /iceberg 
       regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -789,6 +791,7 @@ jobs:
       timeout_minutes: 180
       artifact_name: ldap-authentication-artifacts
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -807,6 +810,7 @@ jobs:
       timeout_minutes: 180
       artifact_name: ldap-external_user_directory-artifacts
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -825,6 +829,7 @@ jobs:
       timeout_minutes: 180
       artifact_name: ldap-role_mapping-artifacts
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -840,7 +845,7 @@ jobs:
     with:
       suite_name: lightweight_delete
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -857,7 +862,7 @@ jobs:
     with:
       suite_name: memory
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -876,6 +881,7 @@ jobs:
       timeout_minutes: 180
       storage_path: /no_s3
       ref: ${{ inputs.ref }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
       flags: ${{ inputs.flags }}
@@ -1008,7 +1014,7 @@ jobs:
       suite_name: rbac
       timeout_minutes: 180
       part: 1
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1026,7 +1032,7 @@ jobs:
       suite_name: rbac
       timeout_minutes: 180
       part: 2
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1044,7 +1050,7 @@ jobs:
       suite_name: rbac
       timeout_minutes: 180
       part: 3
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1066,7 +1072,7 @@ jobs:
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1088,7 +1094,7 @@ jobs:
       storage_path: /aws
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}}'
       artifact_name: s3-aws-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1110,7 +1116,7 @@ jobs:
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1133,7 +1139,7 @@ jobs:
       storage_path: /azure
       regression_args: '--storage azure --azure-account-name {{AZURE_ACCOUNT_NAME}} --azure-storage-key {{AZURE_STORAGE_KEY}} --azure-container {{AZURE_CONTAINER_NAME}}'
       artifact_name: s3-azure-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1155,7 +1161,7 @@ jobs:
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1177,7 +1183,7 @@ jobs:
       storage_path: /gcs
       regression_args: '--storage gcs --gcs-uri {{GCS_URI}} --gcs-key-id {{GCS_KEY_ID}} --gcs-key-secret {{GCS_KEY_SECRET}}'
       artifact_name: s3-gcs-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1241,7 +1247,7 @@ jobs:
       storage_path: /minio
       regression_args: '--storage minio'
       artifact_name: s3-minio-artifacts
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1351,7 +1357,7 @@ jobs:
       suite_name: ssl_server
       part: 1
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1369,7 +1375,7 @@ jobs:
       suite_name: ssl_server
       part: 2
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -1387,7 +1393,7 @@ jobs:
       suite_name: ssl_server
       part: 3
       timeout_minutes: 180
-      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
