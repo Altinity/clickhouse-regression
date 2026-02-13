@@ -851,6 +851,16 @@ def regression(
             order_by="tuple()",
         )
 
+    with And("I increase query timeouts for sanitizer builds"):
+        if check_with_any_sanitizer(self):
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            # MSAN builds are very slow, need longer timeouts for data insertion
+            default_query_settings.append(("receive_timeout", 900))
+            default_query_settings.append(("send_timeout", 900))
+            self.context.default_query_settings = default_query_settings
+
     with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
         self.context.table_extra_data.insert_test_data(
