@@ -148,7 +148,7 @@ Build report: [TBD]
 | Stateless | [Pass](#stateless)                     |   |
 | Stateful | [Pass](#stateful)                      |   |
 | Stress | [Pass](#stress)                        |   |
-| Integration | [*Pass](#integration)                   | 1 CI Error with ASAN |
+| Integration | [Pass](#integration)                   |   |
 | AES Encryption | [Pass](#aes-encryption)                |   |
 | Aggregate Functions | [Pass](#aggregate-functions)           |   |
 | Alter | [Pass](#alter)                 |   |
@@ -295,7 +295,7 @@ Results:
 * AMD ASan
   * [Integration tests (amd_asan, old analyzer, 1/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+1%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 2/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+2%2F6%29&name_2=Tests)
-  * [Integration tests (amd_asan, old analyzer, 3/6)](https://github.com/Altinity/ClickHouse/actions/runs/21752809609/job/63286184873) - CI ERROR OOM
+  * [Integration tests (amd_asan, old analyzer, 3/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=1393&sha=d1ca9be99e7e2d6e49f689ee1a6ae4e3f96a62e4&name_0=PR&name_1=Integration%20tests%20%28amd_asan%2C%20old%20analyzer%2C%203%2F6%29)
   * [Integration tests (amd_asan, old analyzer, 4/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+4%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 5/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+5%2F6%29&name_2=Tests)
   * [Integration tests (amd_asan, old analyzer, 6/6)](https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=releases%2F25.8.16&sha=dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272&name_0=MasterCI&name_1=Integration+tests+%28amd_asan%2C+old+analyzer%2C+6%2F6%29&name_2=Tests)
