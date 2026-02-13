@@ -725,29 +725,55 @@ Altinity Window Functions integration tests.
 Results:
 * https://github.com/Altinity/clickhouse-regression/actions/runs/21893377525
 
-Known issues:
-* [TBD]
-
 #### MSAN
 Results:
 * https://github.com/Altinity/clickhouse-regression/actions/runs/21893427037
-
-Known issues:
-* [TBD]
 
 #### UBSAN
 Results:
 * https://github.com/Altinity/clickhouse-regression/actions/runs/21893452122
 
-Known issues:
-* [TBD]
-
 #### TSAN
 Results:
 * https://github.com/Altinity/clickhouse-regression/actions/runs/21893404832
 
-Known issues:
-* [TBD]
+#### Sanitizer Test Results Summary
+| Sanitizer | Total Jobs | Failed | Timeouts | Primary Failure Mode |
+|-----------|------------|--------|----------|---------------------|
+| **UBSAN** | 65 | 7 | 1 | CPU overload (SERVER_OVERLOADED), test timeouts |
+| **ASAN** | 65 | 10 | 4 | Server startup delays, data corruption errors |
+| **TSAN** | 65 | 14 | 8 | Server startup failures due to TSAN overhead |
+| **MSAN** | 65 | 16 | 10 | Server startup failures due to MSAN overhead |
+
+#### Identified Issues
+| Issue | UBSAN | ASAN | TSAN | MSAN | Type | GitHub Issue |
+|-------|:-----:|:----:|:----:|:----:|------|--------------|
+| UNKNOWN_CODEC (Code 432) - Data corruption in partition operations | ✓ | ✓ | ✓ | ✓ | **Bug** | Under investigation |
+| Merge Part UINT32_MAX overflow (`Source part 0_101_101_4294967295`) | - | ✓ | ✓ | ✓ | **Bug** | [#69001](https://github.com/ClickHouse/ClickHouse/issues/69001) |
+| Iceberg Metadata Not Initialized (server crash on ALTER TABLE) | ✓ | - | ✓ | ✓ | **Bug** | [#86024](https://github.com/ClickHouse/ClickHouse/issues/86024) |
+| Server startup failures (Connection refused) | Rare | Moderate | Severe | Severe | Infra | Expected with sanitizers |
+| Settings snapshot assertion failures | ✓ | ✓ | ✓ | ✓ | Test | Test environment issue |
+
+#### Failure Justification
+The majority of sanitizer test failures fall into two categories:
+
+**1. Infrastructure/Performance Issues (~80% of failures)**  
+Sanitizers add significant runtime overhead (TSAN/MSAN: 5–15x, ASAN: 2x). This causes server startup timeouts, query timeouts, and job timeouts (3-hour limit) before test completion.  
+These failures are expected behavior for sanitizer builds.
+
+**2. Real Bugs Found (~20% of failures)**  
+Three bugs were identified across multiple sanitizers:
+
+| Bug | Description | Status |
+|-----|-------------|--------|
+| **UNKNOWN_CODEC** | Data corruption during ALTER ATTACH/REPLACE PARTITION operations causing invalid codec family codes | Under investigation |
+| **Merge Part Overflow** | Integer overflow (UINT32_MAX) in part numbering during OPTIMIZE TABLE - [#69001](https://github.com/ClickHouse/ClickHouse/issues/69001) | Open since Aug 2024 |
+| **Iceberg Metadata** | Uninitialized metadata during ALTER TABLE on Iceberg tables with DataLakeCatalog - [#86024](https://github.com/ClickHouse/ClickHouse/issues/86024) | Open, assigned |
+
+#### Conclusion
+The sanitizer tests successfully identified real bugs in ClickHouse. Two of the three bugs are already tracked in upstream ClickHouse. The high failure count is primarily due to 
+expected sanitizer performance overhead, not quality issues with ClickHouse 25.8.
+
 
 ### Compatibility with Client Drivers
 
