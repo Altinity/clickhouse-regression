@@ -202,6 +202,11 @@ xfails = {
 }
 
 ffails = {
+    "/iceberg/iceberg engine/*": (
+        Skip,
+        "Iceberg tests unstable with sanitizer builds (server startup issues)",
+        check_with_any_sanitizer,
+    ),
     "/iceberg/iceberg engine": (
         Skip,
         "Iceberg engine was introduced in 24.12",

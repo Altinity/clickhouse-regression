@@ -255,18 +255,11 @@ ffails = {
         "Not supportted in ARM builds",
         (lambda test: platform.machine() == "aarch64"),
     ),
-    "/rbac/part 1/privileges/system drop cache/compiled expression cache*": [
-        (
-            Skip,
-            "Not supported in ARM builds",
-            (lambda test: platform.machine() == "aarch64"),
-        ),
-        (
-            Skip,
-            "JIT compilation disabled in sanitizer builds",
-            check_with_any_sanitizer,
-        ),
-    ],
+    "/rbac/part 1/privileges/system drop cache/compiled expression cache*": (
+        Skip,
+        "JIT compilation disabled in ARM and sanitizer builds",
+        (lambda test: platform.machine() == "aarch64" or check_with_any_sanitizer(test)),
+    ),
     "rbac/part 1/privileges/:/table_type='ReplicatedReplacingMergeTree-sharded_cluster": (
         Skip,
         "Causes clickhouse timeout on 21.10",

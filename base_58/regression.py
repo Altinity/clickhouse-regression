@@ -15,11 +15,11 @@ from helpers.common import check_clickhouse_version, experimental_analyzer, chec
 pr_70846 = "https://github.com/ClickHouse/ClickHouse/pull/70846"
 
 xfails = {
-    # Memory usage tests fail with sanitizers due to 2-3x memory overhead
+    # Memory usage tests fail with sanitizers due to test code issues and memory overhead
     "/base58/memory usage/*": [
         (
-            Fail,
-            "Memory usage assertions invalid with sanitizer builds (2-3x memory overhead)",
+            Error,
+            "Memory usage tests have issues with sanitizer builds",
             check_with_any_sanitizer,
         )
     ],
