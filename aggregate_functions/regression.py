@@ -851,17 +851,27 @@ def regression(
             order_by="tuple()",
         )
 
+    with And("I increase query timeouts for sanitizer builds"):
+        if check_with_any_sanitizer(self):
+            default_query_settings = getsattr(
+                current().context, "default_query_settings", []
+            )
+            # MSAN builds are very slow, need longer timeouts for data insertion
+            default_query_settings.append(("receive_timeout", 900))
+            default_query_settings.append(("send_timeout", 900))
+            self.context.default_query_settings = default_query_settings
+
     with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
         self.context.table_extra_data.insert_test_data(
             cardinality=5, shuffle_values=True
         )
 
-    with And("allow higher cpu_wait_ratio "):
+    with And("allow higher cpu_wait_ratio (increased for sanitizer builds)"):
         if check_clickhouse_version(">=25.4")(self):
             allow_higher_cpu_wait_ratio(
-                min_os_cpu_wait_time_ratio_to_throw=10,
-                max_os_cpu_wait_time_ratio_to_throw=20,
+                min_os_cpu_wait_time_ratio_to_throw=50,
+                max_os_cpu_wait_time_ratio_to_throw=100,
             )
 
     with Feature("part 1"):

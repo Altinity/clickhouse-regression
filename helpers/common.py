@@ -56,7 +56,10 @@ def check_analyzer():
 def check_with_ubsan(test):
     """Check if the build is with undefined behavior sanitizer (ubsan)."""
     if hasattr(test.context, "build_options"):
-        if "ubsan" in test.context.build_options.values():
+        if any(
+            node_build_options.get("sanitizer") == "ubsan"
+            for node_build_options in test.context.build_options.values()
+        ):
             return True
 
     return False
@@ -65,7 +68,10 @@ def check_with_ubsan(test):
 def check_with_tsan(test):
     """Check if the build is with thread sanitizer (tsan)."""
     if hasattr(test.context, "build_options"):
-        if "tsan" in test.context.build_options.values():
+        if any(
+            node_build_options.get("sanitizer") == "tsan"
+            for node_build_options in test.context.build_options.values()
+        ):
             return True
 
     return False
@@ -74,7 +80,10 @@ def check_with_tsan(test):
 def check_with_asan(test):
     """Check if the build is with address sanitizer (asan)."""
     if hasattr(test.context, "build_options"):
-        if "asan" in test.context.build_options.values():
+        if any(
+            node_build_options.get("sanitizer") == "asan"
+            for node_build_options in test.context.build_options.values()
+        ):
             return True
 
     return False
@@ -83,7 +92,10 @@ def check_with_asan(test):
 def check_with_msan(test):
     """Check if the build is with memory sanitizer (msan)."""
     if hasattr(test.context, "build_options"):
-        if "msan" in test.context.build_options.values():
+        if any(
+            node_build_options.get("sanitizer") == "msan"
+            for node_build_options in test.context.build_options.values()
+        ):
             return True
 
     return False
@@ -148,7 +160,9 @@ def check_with_any_sanitizer(test):
     sanitizers = ["tsan", "asan", "ubsan", "msan"]
     if hasattr(test.context, "build_options"):
         return any(
-            sanitizer in test.context.build_options.values() for sanitizer in sanitizers
+            node_build_options.get("sanitizer") == sanitizer
+            for node_build_options in test.context.build_options.values()
+            for sanitizer in sanitizers
         )
     return False
 
@@ -161,7 +175,8 @@ def check_several_sanitizers_in_binary_link(
     def check(test):
         if hasattr(test.context, "build_options"):
             return any(
-                sanitizer in test.context.build_options.values()
+                node_build_options.get("sanitizer") == sanitizer
+                for node_build_options in test.context.build_options.values()
                 for sanitizer in sanitizers
             )
         return False

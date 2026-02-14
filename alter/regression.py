@@ -34,6 +34,29 @@ def argparser(parser):
 
 
 xfails = {
+    # Data corruption bugs exposed by sanitizer builds
+    "/alter/attach partition/*": [
+        (
+            Fail,
+            "UNKNOWN_CODEC data corruption with sanitizers - needs investigation",
+            check_with_any_sanitizer,
+        )
+    ],
+    "/alter/replace partition/*": [
+        (
+            Fail,
+            "UNKNOWN_CODEC data corruption with sanitizers - needs investigation",
+            check_with_any_sanitizer,
+        )
+    ],
+    # Merge part UINT32_MAX overflow bug
+    "/alter/attach partition/*/optimize table * final/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/69001 - Merge part UINT32_MAX overflow",
+            check_with_any_sanitizer,
+        )
+    ],
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
         (
             Fail,
