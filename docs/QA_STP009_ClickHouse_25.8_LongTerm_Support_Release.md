@@ -130,7 +130,6 @@ The following team members SHALL be dedicated to the release:
 * [TBD]
 
 ## Known Issues
-* Downgrade from 25.8 to 25.3 fails with error `Code: 79` (`Unknown mark file extension: '4'`) while loading `system.*_log` tables.
 
 ### Open Issues
 
@@ -196,7 +195,7 @@ Build report: [TBD]
 | Kubernetes `clickhouse-operator` | [Fail](#kubernetes-clickhouse-operator)       | 12 Fails, related to: [issue](https://github.com/Altinity/ClickHouse/issues/1391)  |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
-| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                | Downgrade to 25.3 failed due to `Unknown mark file extension: '4'` when loading `system.*_log` tables.  |
+| Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [*Pass](#tableau)                     | 849 passed, 24 failed (97%). Expected fails. |
 | Superset | [Pass](#superset)                             |   |
@@ -865,7 +864,7 @@ Approved by Mikhail Filimonov.
 
 Results: 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/acm-launch-and-upgrade/upgrade_downgrade_from_25.3.6.10034.altinitystable_to_25.8.4.20014.altinitytest/
-* Failed due to `Code: 79` (`Unknown mark file extension: '4'`) when attaching/loading `system.*_log` tables.
+* Downgrade to 25.3.8 works in 25.8.16 (after change in [PR #1407](https://github.com/Altinity/ClickHouse/pull/1407))
 * Downgrade to previous 25.8.x versions works.
 
 The upgrade and downgrade.
