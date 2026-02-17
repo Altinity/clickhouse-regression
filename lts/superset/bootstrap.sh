@@ -20,6 +20,8 @@ cp -fv server.* ./superset/clickhouse/
 cp -fv *.pem ./superset/clickhouse/
 
 # you need install latest version of https://mikefarah.gitbook.io/yq/
+# Convert env_file from object syntax (path/required) to simple string format for older docker-compose compatibility
+yq -i eval '(.services[] | select(has("env_file")) | .env_file) = ["docker/.env"]' ${DOCKER_COMPOSE_FILE}
 yq -i eval '.services.superset.build.context = "./"' ${DOCKER_COMPOSE_FILE}
 yq -i eval '.services.superset.build.dockerfile = "Dockerfile"' ${DOCKER_COMPOSE_FILE}
 yq -i eval '.services.superset-init.build.dockerfile = "Dockerfile"' ${DOCKER_COMPOSE_FILE}
