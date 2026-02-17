@@ -28,56 +28,53 @@ Not approved for release.
 * 1 [Introduction](#introduction)
 * 2 [Timeline](#timeline)
 * 3 [Human Resources And Assignments](#human-resources-and-assignments)
-* 4 [End User Recommendations](#end-user-recommendations)
-    * 4.1 [Release Notes](#release-notes)
+* 4 [Release Notes](#release-notes)
 * 5 [Known Issues](#known-issues)
     * 5.1 [Open Issues](#open-issues)
     * 5.2 [Summary](#summary)
 * 6 [Scope](#scope)
     * 6.1 [Automated Regression Tests](#automated-regression-tests)
         * 6.1.1 [Stateless](#stateless)
-        * 6.1.2 [Stateful](#stateful)
-        * 6.1.3 [Stress](#stress)
-        * 6.1.4 [Integration](#integration)
-        * 6.1.5 [Altinity TestFlows Integration](#altinity-testflows-integration)
-            * 6.1.5.1 [AES Encryption](#aes-encryption)
-            * 6.1.5.2 [Aggregate Functions](#aggregate-functions)
-            * 6.1.5.3 [Alter](#alter)
-            * 6.1.5.4 [Atomic Insert](#atomic-insert)
-            * 6.1.5.5 [Attach](#attach)
-            * 6.1.5.6 [Base58](#base58)
-            * 6.1.5.7 [Ontime Benchmark](#ontime-benchmark)
-            * 6.1.5.8 [ClickHouse Keeper](#clickhouse-keeper)
-            * 6.1.5.9 [ClickHouse Keeper Failover](#clickhouse-keeper-failover)
-            * 6.1.5.10 [Data Types](#data-types)
-            * 6.1.5.11 [DateTime64 Extended Range](#datetime64-extended-range)
-            * 6.1.5.12 [Disk Level Encryption](#disk-level-encryption)
-            * 6.1.5.13 [DNS](#dns)
-            * 6.1.5.14 [Engines](#engines)
-            * 6.1.5.15 [Example](#example)
-            * 6.1.5.16 [Extended Precision Data Types](#extended-precision-data-types)
-            * 6.1.5.17 [Functions](#functions)
-            * 6.1.5.18 [Hive Partitioning](#hive-partitioning)
-            * 6.1.5.19 [Iceberg](#iceberg)
-            * 6.1.5.20 [JWT Authentication](#jwt-authentication)
-            * 6.1.5.21 [Kafka](#kafka)
-            * 6.1.5.22 [Kerberos](#kerberos)
-            * 6.1.5.23 [Key Value](#key-value)
-            * 6.1.5.24 [LDAP](#ldap)
-            * 6.1.5.25 [Lightweight Delete](#lightweight-delete)
-            * 6.1.5.26 [Memory](#memory)
-            * 6.1.5.27 [Parquet](#parquet)
-            * 6.1.5.28 [Part Moves Between Shards](#part-moves-between-shards)
-            * 6.1.5.29 [RBAC](#rbac)
-            * 6.1.5.30 [S3](#s3)
-            * 6.1.5.31 [Selects](#selects)
-            * 6.1.5.32 [Session Timezone](#session-timezone)
-            * 6.1.5.33 [Settings](#settings)
-            * 6.1.5.34 [SSL Server](#ssl-server)
-            * 6.1.5.35 [Swarms](#swarms)
-            * 6.1.5.36 [Tiered Storage](#tiered-storage)
-            * 6.1.5.37 [Version](#version)
-            * 6.1.5.38 [Window Functions](#window-functions)
+        * 6.1.2 [Stress](#stress)
+        * 6.1.3 [Integration](#integration)
+        * 6.1.4 [Altinity TestFlows Integration](#altinity-testflows-integration)
+            * 6.1.4.1 [AES Encryption](#aes-encryption)
+            * 6.1.4.2 [Aggregate Functions](#aggregate-functions)
+            * 6.1.4.3 [Alter](#alter)
+            * 6.1.4.4 [Atomic Insert](#atomic-insert)
+            * 6.1.4.5 [Attach](#attach)
+            * 6.1.4.6 [Base58](#base58)
+            * 6.1.4.7 [Ontime Benchmark](#ontime-benchmark)
+            * 6.1.4.8 [ClickHouse Keeper](#clickhouse-keeper)
+            * 6.1.4.9 [ClickHouse Keeper Failover](#clickhouse-keeper-failover)
+            * 6.1.4.10 [Data Types](#data-types)
+            * 6.1.4.11 [DateTime64 Extended Range](#datetime64-extended-range)
+            * 6.1.4.12 [Disk Level Encryption](#disk-level-encryption)
+            * 6.1.4.13 [DNS](#dns)
+            * 6.1.4.14 [Engines](#engines)
+            * 6.1.4.15 [Example](#example)
+            * 6.1.4.16 [Extended Precision Data Types](#extended-precision-data-types)
+            * 6.1.4.17 [Functions](#functions)
+            * 6.1.4.18 [Iceberg](#iceberg)
+            * 6.1.4.19 [JWT Authentication](#jwt-authentication)
+            * 6.1.4.20 [Kafka](#kafka)
+            * 6.1.4.21 [Kerberos](#kerberos)
+            * 6.1.4.22 [Key Value](#key-value)
+            * 6.1.4.23 [LDAP](#ldap)
+            * 6.1.4.24 [Lightweight Delete](#lightweight-delete)
+            * 6.1.4.25 [Memory](#memory)
+            * 6.1.4.26 [Parquet](#parquet)
+            * 6.1.4.27 [Part Moves Between Shards](#part-moves-between-shards)
+            * 6.1.4.28 [RBAC](#rbac)
+            * 6.1.4.29 [S3](#s3)
+            * 6.1.4.30 [Selects](#selects)
+            * 6.1.4.31 [Session Timezone](#session-timezone)
+            * 6.1.4.32 [Settings](#settings)
+            * 6.1.4.33 [SSL Server](#ssl-server)
+            * 6.1.4.34 [Swarms](#swarms)
+            * 6.1.4.35 [Tiered Storage](#tiered-storage)
+            * 6.1.4.36 [Version](#version)
+            * 6.1.4.37 [Window Functions](#window-functions)
     * 6.2 [Regression Tests with Sanitizers](#regression-tests-with-sanitizers)
         * 6.2.1 [ASAN](#asan)
         * 6.2.2 [MSAN](#msan)
@@ -125,7 +122,7 @@ The following team members SHALL be dedicated to the release:
 * Eugene Klimov (Superset)
 * Mikhail Filimonov (production clusters, support team feedback)
 
-### Release Notes
+## Release Notes
 
 * [TBD]
 
@@ -145,7 +142,6 @@ Build report: [TBD]
 | Test Suite  | Result                                        | Comments |
 | --- |-----------------------------------------------| --- |
 | Stateless | [Pass](#stateless)                     |   |
-| Stateful | [Pass](#stateful)                      |   |
 | Stress | [Pass](#stress)                        |   |
 | Integration | [Pass](#integration)                   |   |
 | AES Encryption | [Pass](#aes-encryption)                |   |
@@ -165,7 +161,6 @@ Build report: [TBD]
 | Example | [Pass](#example)                       |   |
 | Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
 | Functions | [Pass](#functions)                     |   |
-| Hive Partitioning | [Pass](#hive-partitioning)           |   |
 | Iceberg | [Pass](#iceberg)                       |   |
 | JWT Authentication | [Pass](#jwt-authentication)           |   |
 | Kafka | [Pass](#kafka)                         |   |
