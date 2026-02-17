@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""LTS regression: run clickhouse-odbc tests against ClickHouse (e.g. LTS builds)."""
+"""LTS regression: top-level orchestrator for all LTS sub-suites."""
 import os
-import subprocess
+import sys
 
 from testflows.core import *
 
@@ -11,7 +11,7 @@ from helpers.argparser import argparser, CaptureClusterArgs
 
 
 def lts_argparser(parser):
-    """Extended argument parser for LTS/ODBC suite."""
+    """Extended argument parser for the LTS meta-suite."""
     argparser(parser)
     parser.add_argument(
         "--odbc-release",
@@ -20,75 +20,66 @@ def lts_argparser(parser):
         help="clickhouse-odbc driver version (git tag), default: v1.2.1.20220905",
         default="v1.2.1.20220905",
     )
+    parser.add_argument(
+        "--superset-version",
+        type=str,
+        dest="superset_version",
+        help="Apache Superset version, default: 4.1.1",
+        default="4.1.1",
+    )
+    parser.add_argument(
+        "--clickhouse-driver",
+        type=str,
+        dest="clickhouse_driver",
+        choices=["clickhouse-connect", "clickhouse-sqlalchemy"],
+        help="ClickHouse Python driver for Superset, default: clickhouse-connect",
+        default="clickhouse-connect",
+    )
+    parser.add_argument(
+        "--suite",
+        type=str,
+        dest="suite",
+        choices=["all", "clickhouse-odbc", "superset"],
+        help="Which sub-suite to run, default: all",
+        default="all",
+    )
+
+
+xfails = {}
+
+ffails = {}
 
 
 @TestModule
 @Name("lts")
 @ArgumentParser(lts_argparser)
+@XFails(xfails)
+@FFails(ffails)
 @CaptureClusterArgs
 def regression(
     self,
     cluster_args,
     clickhouse_version,
     odbc_release="v1.2.1.20220905",
+    superset_version="4.1.1",
+    clickhouse_driver="clickhouse-connect",
+    suite="all",
     stress=None,
     with_analyzer=False,
 ):
-    """Run clickhouse-odbc tests in a Docker container against the given ClickHouse image."""
-    suite_dir = os.path.dirname(os.path.abspath(__file__))
-    odbc_dir = os.path.join(suite_dir, "odbc")
-    packages_dir = os.path.join(odbc_dir, "PACKAGES")
-    os.makedirs(packages_dir, exist_ok=True)
+    """Run LTS regression suites against a ClickHouse image.
 
-    clickhouse_path = cluster_args.get("clickhouse_path", "/usr/bin/clickhouse")
-    if clickhouse_path and str(clickhouse_path).startswith("docker://"):
-        clickhouse_image = str(clickhouse_path).removeprefix("docker://")
-    else:
-        clickhouse_image = "altinityinfra/clickhouse-server:0-25.8.16.10001.altinitytest"
+    Orchestrates clickhouse-odbc, superset (and future grafana/dbeaver) sub-suites.
+    """
+    if suite in ("all", "clickhouse-odbc"):
+        from clickhouse_odbc.regression import regression as odbc_regression
 
-    with Scenario("build ODBC runner image"):
-        build_cmd = [
-            "docker",
-            "build",
-            "--build-arg",
-            f"CLICKHOUSE_IMAGE={clickhouse_image}",
-            "-t",
-            "clickhouse-odbc-runner",
-            ".",
-        ]
-        note(f"Running: {' '.join(build_cmd)}")
-        result = subprocess.run(build_cmd, cwd=odbc_dir)
-        if result.returncode != 0:
-            fail(f"docker build failed with exit code {result.returncode}")
+        Module(run=odbc_regression)
 
-    with Scenario("run clickhouse-odbc tests"):
-        run_cmd = [
-            "docker",
-            "run",
-            "--rm",
-            "-v",
-            f"{packages_dir}:/clickhouse",
-            "-e",
-            f"RELEASE={odbc_release}",
-            "clickhouse-odbc-runner",
-        ]
-        note(f"Running: {' '.join(run_cmd)}")
-        result = subprocess.run(run_cmd, cwd=odbc_dir)
-        if result.returncode != 0:
-            fail(f"docker run failed with exit code {result.returncode}")
+    if suite in ("all", "superset"):
+        from superset.regression import regression as superset_regression
 
-    with Scenario("verify test results"):
-        test_log = os.path.join(packages_dir, "test.log")
-        if not os.path.exists(test_log):
-            fail(f"test.log not found at {test_log}")
-
-        with open(test_log) as f:
-            log_content = f.read()
-
-        if "tests failed" in log_content and "0 tests failed" not in log_content:
-            fail(f"Tests failed. See {test_log}:\n{log_content[-2000:]}")
-
-        note(f"Tests passed. Log: {test_log}")
+        Module(run=superset_regression)
 
 
 if main():
