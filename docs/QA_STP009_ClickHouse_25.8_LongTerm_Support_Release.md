@@ -1,15 +1,15 @@
 # QA-STP009 ClickHouse 25.8 Long-Term Support Release  
 # Software Test Plan
 
-(c) 2025 Altinity Inc. All Rights Reserved.
+(c) 2026 Altinity Inc. All Rights Reserved.
 
 **Author:** vzakaznikov
 
-**Date:** [TBD]
+**Date:** Feb 17, 2026
 
 ## Execution Summary
 
-**Completed:** [TBD]
+**Completed:** Feb 17, 2026
 
 **Test Results:**
 
