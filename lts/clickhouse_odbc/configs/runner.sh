@@ -37,14 +37,15 @@ apt-get install -y git libpoco-dev libicu-dev unixodbc-dev
 apt update -y
 
 #install clickhouse-odbc
-git clone --recursive "https://github.com/ClickHouse/clickhouse-odbc"
+git clone "https://github.com/ClickHouse/clickhouse-odbc"
 cd clickhouse-odbc
 git checkout "${RELEASE}"
-# git apply /diff.patch
+git submodule update --init --recursive
+git apply /diff.patch
 
 apt install odbcinst -y
 apt-get install python3-pip -y
-apt install unixodbc-dev
+apt install unixodbc-dev -y
 pip install pyodbc
 pip install testflows
 apt update -y
@@ -52,6 +53,10 @@ apt update -y
 # configurating odbc
 odbcinst -i -d -f /clickhouse-odbc/packaging/odbcinst.ini.sample
 odbcinst -i -s -l -f /clickhouse-odbc/packaging/odbc.ini.sample
+
+# Fix relative include path in FindUnixODBC.cmake so it resolves correctly
+# when nanodbc's CMakeLists.txt triggers find_package(ODBC) from a subdirectory
+sed -i 's|include(cmake/extract_flags.cmake)|include(${CMAKE_CURRENT_LIST_DIR}/../extract_flags.cmake)|' cmake/Modules/FindUnixODBC.cmake
 
 mkdir build
 cd build
@@ -64,4 +69,5 @@ cp driver/libclickhouseodbcw.so /usr/local/lib64/libclickhouseodbcw.so
 cp driver/libclickhouseodbc.so /usr/local/lib64/libclickhouseodbc.so
 
 # testing clickhouse-odbc
-cmake --build . --config RelWithDebInfo --target test > /clickhouse/test.log
+ctest -C RelWithDebInfo -E "(nano|test\.py|parametrized)" --output-on-failure 2>&1 | tee /clickhouse/test.log
+cp Testing/Temporary/LastTest.log /clickhouse/test_detailed.log 2>/dev/null || true

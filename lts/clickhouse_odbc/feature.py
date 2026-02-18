@@ -12,7 +12,7 @@ from lts.clickhouse_odbc.requirements.requirements import (
 @TestFeature
 @Name("clickhouse-odbc")
 @Specifications(SRS_100_ClickHouse_ODBC_Driver_LTS_Testing)
-def feature(self, odbc_release="v1.2.1.20220905"):
+def feature(self, odbc_release="v1.5.2.20260217"):
     """Run clickhouse-odbc tests against a ClickHouse image."""
     suite_dir = os.path.dirname(os.path.abspath(__file__))
 

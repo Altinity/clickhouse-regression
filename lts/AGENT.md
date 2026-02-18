@@ -5,161 +5,126 @@ LTS (Long-Term Support) regression suites located under `lts/`.
 
 ## Folder Layout
 
-Each target product has its own sub-directory that follows the canonical TestFlows
-structure used across `altinity/clickhouse-regression` and `altinity/clickhouse-grafana`.
+There is a single `regression.py` at the top level that orchestrates all sub-suites.
+Each sub-suite has a `feature.py` that is loaded via `Feature(test=load(...))` —
+the same pattern used in `s3/` for `export_part` and `export_partition`.
+
+Sub-suites do **not** have their own `regression.py`.
 
 ```
 lts/
-├── AGENT.md              # This file — conventions & guidelines
-├── README.md             # Quick-start documentation
-├── regression.py         # Top-level orchestrator (runs all sub-suites)
+├── AGENT.md                  # This file — conventions & guidelines
+├── README.md                 # Quick-start documentation
+├── __init__.py
+├── regression.py             # Single entry point — loads all sub-suite features
 │
-├── clickhouse-odbc/      # Driver / API tests
+├── clickhouse_odbc/          # ODBC driver tests
 │   ├── __init__.py
-│   ├── regression.py     # Entry point for the ODBC suite
+│   ├── feature.py            # @TestFeature loaded by regression.py
+│   ├── configs/              # Dockerfile, runner.sh, diff.patch
 │   ├── requirements/
 │   │   ├── requirements.md   # Human-readable SRS document
 │   │   └── requirements.py   # Auto-generated TestFlows Requirement objects
-│   ├── steps/            # Reusable step functions (Given / When / Then)
-│   │   └── __init__.py
-│   ├── tests/            # Test scenarios
-│   │   └── __init__.py
-│   ├── configs/          # Infrastructure (Dockerfile, scripts, patches)
-│   │   ├── Dockerfile
-│   │   ├── runner.sh
-│   │   └── diff.patch
-│   └── ...
-│
-├── superset/             # Web UI tests (Apache Superset)
-│   ├── __init__.py
-│   ├── regression.py
-│   ├── requirements/
-│   │   ├── requirements.md
-│   │   └── requirements.py
 │   ├── steps/
-│   │   └── __init__.py
-│   ├── tests/
-│   │   └── __init__.py
-│   ├── configs/          # Infrastructure (Dockerfiles, bootstrap scripts, TLS certs)
-│   │   ├── Dockerfile.clickhouse-connect
-│   │   ├── Dockerfile.clickhouse-sqlalchemy
-│   │   ├── bootstrap.sh
-│   │   └── ...
-│   └── ...
+│   │   └── docker.py         # Given/When/Then steps for Docker operations
+│   └── tests/
+│       └── build_and_run.py  # @TestFeature with build/run/verify scenarios
 │
-├── grafana/              # Web UI tests (Grafana plugin) — planned
-│   └── ...
-│
-└── dbeaver/              # Desktop UI tests (DBeaver) — planned, semi-auto
-    └── ...
+└── superset/                 # Apache Superset integration tests
+    ├── __init__.py
+    ├── feature.py            # @TestFeature loaded by regression.py
+    ├── configs/              # Dockerfiles, bootstrap scripts, TLS certs
+    ├── requirements/
+    │   ├── requirements.md
+    │   └── requirements.py
+    ├── steps/
+    │   ├── environment.py    # Docker Compose setup/teardown
+    │   └── ui.py             # Selenium-based UI interaction steps
+    └── tests/
+        ├── connection.py     # Database connection scenarios
+        ├── sql_lab.py        # SQL Lab query/schema scenarios
+        ├── charts.py         # Chart creation scenarios
+        └── dashboards.py     # Dashboard creation/refresh scenarios
+```
+
+## How It Works
+
+### regression.py (the only entry point)
+
+`lts/regression.py` resolves the ClickHouse Docker image from `--clickhouse`,
+sets `self.context.clickhouse_image`, and loads each sub-suite feature:
+
+```python
+Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
+    odbc_release=odbc_release,
+)
+Feature(test=load("lts.superset.feature", "feature"))(
+    superset_version=superset_version,
+    clickhouse_driver=clickhouse_driver,
+)
+```
+
+### Sub-suite feature.py
+
+Each `feature.py` is a `@TestFeature`-decorated function that:
+1. Sets up suite-specific context (configs dir, parameters)
+2. Loads its test features via `Feature(run=load("lts.<suite>.tests.<module>", "feature"))`
+
+This mirrors how `s3/tests/export_part/feature.py` works.
+
+### Import Convention
+
+All imports use full package paths from the repo root:
+
+```python
+from lts.clickhouse_odbc.requirements.requirements import ...
+from lts.clickhouse_odbc.steps.docker import ...
+from lts.superset.requirements.requirements import ...
 ```
 
 ## Test Structure Conventions
 
 ### 1. Requirements
 
-Every test suite MUST have a `requirements/` folder containing:
+Every sub-suite MUST have a `requirements/` folder containing:
 
-- **`requirements.md`** — A human-readable Software Requirements Specification (SRS).
-  Each requirement has a unique identifier following the pattern
-  `RQ.SRS-<NNN>.<Product>.<Feature>`, a version, and a prose description.
+- **`requirements.md`** — Human-readable SRS. Each requirement has a unique
+  identifier following `RQ.SRS-<NNN>.<Product>.<Feature>`, a version, and a
+  prose description.
 
-- **`requirements.py`** — Auto-generated from the `.md` file via
-  `tfs requirements generate`. Contains `Requirement` objects that test scenarios
-  link back to. **Do not edit by hand.**
+- **`requirements.py`** — Auto-generated via `tfs requirements generate`.
+  Contains `Requirement` and `Specification` objects. **Do not edit by hand.**
 
 ### 2. Requirement-to-Scenario Mapping
 
-| Granularity | Mapping |
-|---|---|
-| Atomic requirement (single behaviour) | 1 requirement → 1 test scenario (ideal) |
-| Higher-level requirement (feature area) | 1 requirement → 1 test feature/suite containing multiple scenarios |
-
-Every `@TestScenario` SHOULD reference its requirement(s) via the `@Requirements` decorator:
+Every `@TestScenario` SHOULD reference its requirement(s) via `@Requirements`:
 
 ```python
 @TestScenario
-@Requirements(RQ_SRS_100_ODBC_DataTypes_Int8("1.0"))
-def int8(self, connection):
-    """Verify Int8 read/write via ODBC."""
+@Requirements(RQ_SRS_100_ODBC_DriverBuild("1.0"))
+def build_odbc_runner(self):
+    """Build the ODBC runner Docker image."""
     ...
 ```
 
 ### 3. Steps
 
-Place reusable step functions in the `steps/` directory. Steps represent
-**Given / When / Then** actions that are shared across multiple scenarios.
+Reusable **Given / When / Then** step functions go in `steps/`. Steps are shared
+across multiple scenarios within the same sub-suite.
 
-```python
-# steps/connection.py
-from testflows.core import *
+### 4. Tests
 
-@TestStep(Given)
-def odbc_connection(self, dsn="ClickHouse DSN (ANSI)"):
-    """Create and return a PyODBC connection."""
-    import pyodbc
-    connection = pyodbc.connect(f"DSN={dsn}")
-    yield connection
-    connection.close()
-```
+Test files live in `tests/` and each expose a `@TestFeature` named `feature`
+that groups related `@TestScenario` functions.
 
-For web UI suites (Grafana, Superset) the `steps/` folder typically mirrors the
-UI page structure (e.g., `steps/login/`, `steps/dashboard/`, `steps/panel/`).
+## CLI Arguments
 
-### 4. Test Scenarios
-
-Test scenarios live in `tests/` and are organized by feature area.
-
-```python
-# tests/datatypes.py
-from testflows.core import *
-from requirements.requirements import *
-
-@TestFeature
-@Name("datatypes")
-def feature(self, connection):
-    """Test all supported ClickHouse data types via ODBC."""
-    Scenario(run=int8)
-    Scenario(run=int16)
-    ...
-```
-
-### 5. regression.py (per suite)
-
-Each sub-suite's `regression.py` is the entry point. It:
-
-1. Defines an `argparser` for suite-specific CLI options
-2. Declares `xfails` / `ffails` for known issues
-3. Sets up infrastructure (Docker containers, services)
-4. Imports and runs `Feature`/`Scenario` from `tests/`
-
-```python
-@TestModule
-@ArgumentParser(my_argparser)
-@XFails(xfails)
-@FFails(ffails)
-def regression(self, ...):
-    Feature(run=datatypes_feature)
-    Feature(run=connectivity_feature)
-```
-
-### 6. Top-level regression.py
-
-The top-level `lts/regression.py` orchestrates all sub-suites so they can be
-invoked with a single command:
-
-```bash
-python3 lts/regression.py --clickhouse docker://<image>
-```
-
-## Automation Approach per Target
-
-| Target | Type | Approach |
+| Argument | Default | Description |
 |---|---|---|
-| clickhouse-odbc | Driver / API | Fully automated — PyODBC + TestFlows |
-| grafana | Web UI | Fully automated — Selenium / Playwright (see `altinity/clickhouse-grafana`) |
-| superset | Web UI | Fully automated — Selenium / Playwright |
-| dbeaver | Desktop UI | Semi-automated — agent-driven with possible manual verification steps |
+| `--clickhouse docker://<image>` | altinityinfra/clickhouse-server:... | ClickHouse image to test |
+| `--odbc-release <tag>` | v1.2.1.20220905 | clickhouse-odbc git tag |
+| `--superset-version <ver>` | 4.1.1 | Apache Superset version |
+| `--clickhouse-driver <name>` | clickhouse-connect | Superset ClickHouse driver |
 
 ## Running Tests
 
@@ -167,9 +132,22 @@ python3 lts/regression.py --clickhouse docker://<image>
 # Run all LTS suites
 python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest
 
-# Run only clickhouse-odbc
-python3 lts/clickhouse-odbc/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest
+# Run only clickhouse-odbc tests
+python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest \
+    --only "/lts/clickhouse-odbc/*"
 
-# Run only superset
-python3 lts/superset/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest
+# Run only superset tests
+python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest \
+    --only "/lts/superset/*"
 ```
+
+## Adding a New Sub-suite
+
+1. Create `lts/<new_suite>/` with `__init__.py`, `feature.py`, `configs/`,
+   `requirements/`, `steps/`, `tests/`
+2. Write the SRS in `requirements/requirements.md` and generate
+   `requirements.py` via `tfs requirements generate`
+3. Implement `feature.py` as a `@TestFeature` that loads test modules
+4. Add `Feature(test=load("lts.<new_suite>.feature", "feature"))(...)`
+   to `lts/regression.py`
+5. Add any new CLI arguments to `lts_argparser` in `regression.py`
