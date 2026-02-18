@@ -128,9 +128,11 @@ The following team members SHALL be dedicated to the release:
 
 ## Known Issues
 
+* [FIXED] [distributed_ddl replicas_path mismatch causing ON CLUSTER DDL to hang](https://github.com/Altinity/ClickHouse/issues/1391) - results in 12 scenario failures
+
 ### Open Issues
 
-* [distributed_ddl replicas_path mismatch causing ON CLUSTER DDL to hang](https://github.com/Altinity/ClickHouse/issues/1391) - results in 12 scenario failures
+
 
 
 ### Summary
@@ -187,7 +189,7 @@ Build report: [TBD]
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |  Tests run: 232, Failures: 0, Errors: 0, Skipped: 0 |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
-| Kubernetes `clickhouse-operator` | [Fail](#kubernetes-clickhouse-operator)       | 12 Fails, related to: [issue](https://github.com/Altinity/ClickHouse/issues/1391)  |
+| Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator)       | Tests run: 80, 1 XFail, 2 Fails (expected)  |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
 | Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
@@ -833,11 +835,15 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
+Note:
+the build tag used for final run: altinityinfra/clickhouse-server:1403-25.8.16.10001.altinitytest-alpine
+
 clickhouse-operator version: 
 * 0.25.2
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/ - before fix
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator-ddl-fix/ - after ddl-fix
 
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).
