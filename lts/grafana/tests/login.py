@@ -9,6 +9,7 @@ from lts.grafana.requirements.requirements import (
 from lts.grafana.steps.ui import (
     create_webdriver,
     open_grafana,
+    take_screenshot,
     login,
     skip_password_change,
     verify_logged_in,
@@ -30,6 +31,9 @@ def login_with_default_credentials(self):
     with And("I open the Grafana login page"):
         open_grafana(driver=driver)
 
+    with And("I take a screenshot of the login page"):
+        take_screenshot(driver=driver, name="grafana_login_page")
+
     with When("I log in with default admin credentials"):
         login(driver=driver, username="admin", password="admin")
 
@@ -38,6 +42,9 @@ def login_with_default_credentials(self):
 
     with Then("I should be on the Grafana home page"):
         verify_logged_in(driver=driver)
+
+    with And("I take a screenshot of the home page after login"):
+        take_screenshot(driver=driver, name="grafana_after_login")
 
 
 @TestFeature

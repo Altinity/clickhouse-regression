@@ -60,6 +60,24 @@ RQ_SRS_102_Grafana_Login = Requirement(
     num="3.2.1",
 )
 
+RQ_SRS_102_Grafana_DatasourceQuery = Requirement(
+    name="RQ.SRS-102.Grafana.DatasourceQuery",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "Grafana SHALL be able to execute SQL queries against ClickHouse through the\n"
+        "Altinity clickhouse-grafana datasource plugin and SHALL display results\n"
+        "correctly in the Explore view with Table format.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.3.1",
+)
+
 RQ_SRS_102_Grafana_Compatibility_LTS = Requirement(
     name="RQ.SRS-102.Grafana.Compatibility.LTS",
     version="1.0",
@@ -73,7 +91,7 @@ RQ_SRS_102_Grafana_Compatibility_LTS = Requirement(
     ),
     link=None,
     level=3,
-    num="3.3.1",
+    num="3.4.1",
 )
 
 SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
@@ -105,13 +123,16 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
         ),
         Heading(name="Login", level=2, num="3.2"),
         Heading(name="RQ.SRS-102.Grafana.Login", level=3, num="3.2.1"),
-        Heading(name="Compatibility", level=2, num="3.3"),
-        Heading(name="RQ.SRS-102.Grafana.Compatibility.LTS", level=3, num="3.3.1"),
+        Heading(name="Datasource Query", level=2, num="3.3"),
+        Heading(name="RQ.SRS-102.Grafana.DatasourceQuery", level=3, num="3.3.1"),
+        Heading(name="Compatibility", level=2, num="3.4"),
+        Heading(name="RQ.SRS-102.Grafana.Compatibility.LTS", level=3, num="3.4.1"),
     ),
     requirements=(
         RQ_SRS_102_Grafana_Environment,
         RQ_SRS_102_Grafana_Environment_SeleniumGrid,
         RQ_SRS_102_Grafana_Login,
+        RQ_SRS_102_Grafana_DatasourceQuery,
         RQ_SRS_102_Grafana_Compatibility_LTS,
     ),
     content=r"""
@@ -128,8 +149,10 @@ SRS_102_Altinity_Grafana_ClickHouse_Plugin_LTS_Testing = Specification(
         * 3.1.2 [RQ.SRS-102.Grafana.Environment.SeleniumGrid](#rqsrs-102grafanaenvironmentseleniumgrid)
     * 3.2 [Login](#login)
         * 3.2.1 [RQ.SRS-102.Grafana.Login](#rqsrs-102grafanalogin)
-    * 3.3 [Compatibility](#compatibility)
-        * 3.3.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
+    * 3.3 [Datasource Query](#datasource-query)
+        * 3.3.1 [RQ.SRS-102.Grafana.DatasourceQuery](#rqsrs-102grafanadatasourcequery)
+    * 3.4 [Compatibility](#compatibility)
+        * 3.4.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
 
 ## Introduction
 
@@ -172,6 +195,15 @@ version: 1.0
 
 Grafana SHALL allow logging in with default admin credentials (admin/admin)
 and SHALL display the home page after successful authentication.
+
+### Datasource Query
+
+#### RQ.SRS-102.Grafana.DatasourceQuery
+version: 1.0
+
+Grafana SHALL be able to execute SQL queries against ClickHouse through the
+Altinity clickhouse-grafana datasource plugin and SHALL display results
+correctly in the Explore view with Table format.
 
 ### Compatibility
 

@@ -52,3 +52,4 @@ def feature(
         wait_for_selenium()
 
     Feature(run=load("lts.grafana.tests.login", "feature"))
+    Feature(run=load("lts.grafana.tests.datasource_query", "feature"))

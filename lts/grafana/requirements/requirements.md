@@ -11,8 +11,10 @@
         * 3.1.2 [RQ.SRS-102.Grafana.Environment.SeleniumGrid](#rqsrs-102grafanaenvironmentseleniumgrid)
     * 3.2 [Login](#login)
         * 3.2.1 [RQ.SRS-102.Grafana.Login](#rqsrs-102grafanalogin)
-    * 3.3 [Compatibility](#compatibility)
-        * 3.3.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
+    * 3.3 [Datasource Query](#datasource-query)
+        * 3.3.1 [RQ.SRS-102.Grafana.DatasourceQuery](#rqsrs-102grafanadatasourcequery)
+    * 3.4 [Compatibility](#compatibility)
+        * 3.4.1 [RQ.SRS-102.Grafana.Compatibility.LTS](#rqsrs-102grafanacompatibilitylts)
 
 ## Introduction
 
@@ -55,6 +57,15 @@ version: 1.0
 
 Grafana SHALL allow logging in with default admin credentials (admin/admin)
 and SHALL display the home page after successful authentication.
+
+### Datasource Query
+
+#### RQ.SRS-102.Grafana.DatasourceQuery
+version: 1.0
+
+Grafana SHALL be able to execute SQL queries against ClickHouse through the
+Altinity clickhouse-grafana datasource plugin and SHALL display results
+correctly in the Explore view with Table format.
 
 ### Compatibility
 
