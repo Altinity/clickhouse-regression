@@ -21,7 +21,7 @@
 
 **Summary:**
 
-**:first_place_medal: Approved for release.**
+**🏅 Approved for release.**
 
 ## Table of Contents
 
