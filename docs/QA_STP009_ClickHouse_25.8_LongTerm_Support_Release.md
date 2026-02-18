@@ -114,12 +114,12 @@ The testing of 25.8.16.10001 binaries SHALL be started on February 6, 2026 and b
 The following team members SHALL be dedicated to the release:
 
 * Vitaliy Zakaznikov (manager)
-* Davit Mnatobishvili (regression, clickhouse-odbc, grafana, superset, DBeaver)
+* Davit Mnatobishvili (clickhouse-odbc, grafana, superset, DBeaver)
 * Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
+* Carlos Raymundo (regression)
 * Saba Momtselidze (clickhouse-operator)
-* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
-* Dima Borovstov (Tableau)
-* Eugene Klimov (Superset)
+* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup, ACM upgrade and downgrade)
+* Julian Huang (Tableau)
 * Mikhail Filimonov (production clusters, support team feedback)
 
 ## Release Notes
