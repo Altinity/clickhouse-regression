@@ -1,5 +1,6 @@
 from testflows.core import *
 from ..outline import outline
+from ..requirements import *
 
 
 @TestScenario
@@ -85,6 +86,10 @@ def alias_column_in_predicate_overlapping_segments(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Ice_HybridAlias_Predicates_AliasColumn("1.0"),
+    RQ_Ice_HybridAlias_QueryContext_GroupBy("1.0"),
+)
 @Name("alias column in predicate")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column used in watermark predicate: computed >= 20 and computed < 20."""

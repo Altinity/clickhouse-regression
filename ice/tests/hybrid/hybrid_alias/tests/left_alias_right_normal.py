@@ -1,5 +1,6 @@
 from testflows.core import *
 from ..outline import outline
+from ..requirements import *
 
 
 @TestScenario
@@ -58,6 +59,9 @@ def left_alias_right_normal(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Ice_HybridAlias_Segments_LeftAliasRightNormal("1.0"),
+)
 @Name("left alias right normal")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test case where left segment has alias column but right table has normal column."""
