@@ -5,23 +5,23 @@
 
 **Author:** vzakaznikov
 
-**Date:** Feb 17, 2026
+**Date:** Feb 1, 2026
 
 ## Execution Summary
 
-**Completed:** Feb 17, 2026
+**Completed:** Feb 18, 2026
 
 **Test Results:**
 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/
 
 **Build Report:**
-
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/50d19e9216a5e7d6b48ee263986e7ccae8cb2f18/22142718052/ci_run_report.html (final run)
 * https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 **Summary:**
 
-Not approved for release.
+**:first_place_medal: Approved for release.**
 
 ## Table of Contents
 
