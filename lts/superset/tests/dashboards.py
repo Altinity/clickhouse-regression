@@ -1,4 +1,5 @@
 """Test scenarios for Superset dashboards with ClickHouse-backed charts."""
+
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (

@@ -35,6 +35,20 @@ def lts_argparser(parser):
         help="ClickHouse Python driver for Superset, default: clickhouse-connect",
         default="clickhouse-connect",
     )
+    parser.add_argument(
+        "--grafana-version",
+        type=str,
+        dest="grafana_version",
+        help="Grafana version, default: latest",
+        default="latest",
+    )
+    parser.add_argument(
+        "--grafana-plugin-version",
+        type=str,
+        dest="grafana_plugin_version",
+        help="Altinity clickhouse-grafana plugin version, default: 3.4.9",
+        default="3.4.9",
+    )
 
 
 xfails = {}
@@ -54,6 +68,8 @@ def regression(
     odbc_release="v1.2.1.20220905",
     superset_version="4.1.1",
     clickhouse_driver="clickhouse-connect",
+    grafana_version="latest",
+    grafana_plugin_version="3.4.9",
     stress=None,
     with_analyzer=False,
 ):
@@ -74,6 +90,10 @@ def regression(
     Feature(test=load("lts.superset.feature", "feature"))(
         superset_version=superset_version,
         clickhouse_driver=clickhouse_driver,
+    )
+    Feature(test=load("lts.grafana.feature", "feature"))(
+        grafana_version=grafana_version,
+        grafana_plugin_version=grafana_plugin_version,
     )
 
 

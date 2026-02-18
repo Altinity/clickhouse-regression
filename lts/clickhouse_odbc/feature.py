@@ -1,4 +1,5 @@
 """ClickHouse ODBC driver sub-suite feature loaded by the LTS orchestrator."""
+
 import os
 import sys
 

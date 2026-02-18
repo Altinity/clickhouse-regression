@@ -1,4 +1,5 @@
 """Test scenarios for building and running clickhouse-odbc against ClickHouse LTS."""
+
 import os
 
 from testflows.core import *

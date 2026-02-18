@@ -1,0 +1,33 @@
+services:
+  clickhouse:
+    image: ${CLICKHOUSE_IMAGE:-clickhouse/clickhouse-server}:${CLICKHOUSE_VERSION:-latest}
+    environment:
+      - CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS=true
+    volumes:
+      - ./init_schema.sql:/docker-entrypoint-initdb.d/init_schema.sql
+      - ./users.xml:/etc/clickhouse-server/users.d/users.xml
+
+  grafana:
+    image: ${GRAFANA_IMAGE:-grafana/grafana}:${GRAFANA_VERSION:-latest}
+    environment:
+      GF_INSTALL_PLUGINS: "https://github.com/Altinity/clickhouse-grafana/releases/download/v${GRAFANA_PLUGIN_VERSION:-3.4.9}/vertamedia-clickhouse-datasource-${GRAFANA_PLUGIN_VERSION:-3.4.9}.zip;vertamedia-clickhouse-datasource"
+      GF_LOG_LEVEL: debug
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: vertamedia-clickhouse-datasource
+      GF_UNIFIED_ALERTING_ENABLED: "true"
+      GF_ALERTING_ENABLED: "false"
+    volumes:
+      - ./provisioning/datasources/:/etc/grafana/provisioning/datasources/
+    depends_on:
+      - clickhouse
+
+  selenium:
+    image: selenium/standalone-chrome:${SELENIUM_VERSION:-4.40.0}
+    environment:
+      - SE_ENABLE_TRACING=false
+      - SE_ENABLE_TLS=false
+    ports:
+      - "0:4444"
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - grafana

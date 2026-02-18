@@ -30,21 +30,38 @@ lts/
 │   └── tests/
 │       └── build_and_run.py  # @TestFeature with build/run/verify scenarios
 │
-└── superset/                 # Apache Superset integration tests
+├── superset/                 # Apache Superset integration tests
+│   ├── __init__.py
+│   ├── feature.py            # @TestFeature loaded by regression.py
+│   ├── configs/              # Dockerfiles, bootstrap scripts, TLS certs
+│   ├── requirements/
+│   │   ├── requirements.md
+│   │   └── requirements.py
+│   ├── steps/
+│   │   ├── environment.py    # Docker Compose setup/teardown
+│   │   └── ui.py             # Selenium-based UI interaction steps
+│   └── tests/
+│       ├── connection.py     # Database connection scenarios
+│       ├── sql_lab.py        # SQL Lab query/schema scenarios
+│       ├── charts.py         # Chart creation scenarios
+│       └── dashboards.py     # Dashboard creation/refresh scenarios
+│
+└── grafana/                  # Altinity Grafana ClickHouse plugin tests
     ├── __init__.py
     ├── feature.py            # @TestFeature loaded by regression.py
-    ├── configs/              # Dockerfiles, bootstrap scripts, TLS certs
+    ├── configs/              # docker-compose.yml, provisioning, users.xml
+    │   ├── docker-compose.yml
+    │   ├── init_schema.sql
+    │   ├── users.xml
+    │   └── provisioning/datasources/clickhouse.yaml
     ├── requirements/
     │   ├── requirements.md
     │   └── requirements.py
     ├── steps/
-    │   ├── environment.py    # Docker Compose setup/teardown
+    │   ├── environment.py    # Docker Compose setup/teardown + health checks
     │   └── ui.py             # Selenium-based UI interaction steps
     └── tests/
-        ├── connection.py     # Database connection scenarios
-        ├── sql_lab.py        # SQL Lab query/schema scenarios
-        ├── charts.py         # Chart creation scenarios
-        └── dashboards.py     # Dashboard creation/refresh scenarios
+        └── login.py          # Grafana login scenario
 ```
 
 ## How It Works
@@ -61,6 +78,10 @@ Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
 Feature(test=load("lts.superset.feature", "feature"))(
     superset_version=superset_version,
     clickhouse_driver=clickhouse_driver,
+)
+Feature(test=load("lts.grafana.feature", "feature"))(
+    grafana_version=grafana_version,
+    grafana_plugin_version=grafana_plugin_version,
 )
 ```
 
@@ -125,6 +146,8 @@ that groups related `@TestScenario` functions.
 | `--odbc-release <tag>` | v1.2.1.20220905 | clickhouse-odbc git tag |
 | `--superset-version <ver>` | 4.1.1 | Apache Superset version |
 | `--clickhouse-driver <name>` | clickhouse-connect | Superset ClickHouse driver |
+| `--grafana-version <ver>` | latest | Grafana version |
+| `--grafana-plugin-version <ver>` | 3.4.9 | Altinity clickhouse-grafana plugin version |
 
 ## Running Tests
 
@@ -139,6 +162,10 @@ python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:
 # Run only superset tests
 python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest \
     --only "/lts/superset/*"
+
+# Run only grafana tests
+python3 lts/regression.py --clickhouse docker://altinityinfra/clickhouse-server:latest \
+    --only "/lts/grafana/*"
 ```
 
 ## Adding a New Sub-suite

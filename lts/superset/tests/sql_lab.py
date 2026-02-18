@@ -1,4 +1,5 @@
 """Test scenarios for Superset SQL Lab with ClickHouse."""
+
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (
