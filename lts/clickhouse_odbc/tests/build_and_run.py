@@ -1,5 +1,4 @@
 """Test scenarios for building and running clickhouse-odbc against ClickHouse LTS."""
-
 import os
 
 from testflows.core import *
@@ -18,11 +17,11 @@ from lts.clickhouse_odbc.steps.docker import (
 
 @TestScenario
 @Requirements(RQ_SRS_100_ODBC_DriverBuild("1.0"))
-def build_odbc_runner(self, configs_dir, clickhouse_image):
+def build_odbc_runner(self):
     """Build the ODBC runner Docker image."""
     build_odbc_runner_image(
-        configs_dir=configs_dir,
-        clickhouse_image=clickhouse_image,
+        configs_dir=self.context.configs_dir,
+        clickhouse_image=self.context.clickhouse_image,
     )
 
 
@@ -31,42 +30,26 @@ def build_odbc_runner(self, configs_dir, clickhouse_image):
     RQ_SRS_100_ODBC_Connection("1.0"),
     RQ_SRS_100_ODBC_Compatibility_LTS("1.0"),
 )
-def run_odbc_tests(self, configs_dir, packages_dir, odbc_release):
+def run_odbc_tests(self):
     """Run the clickhouse-odbc test suite in a container."""
     run_odbc_tests_in_container(
-        configs_dir=configs_dir,
-        packages_dir=packages_dir,
-        odbc_release=odbc_release,
+        configs_dir=self.context.configs_dir,
+        packages_dir=self.context.packages_dir,
+        odbc_release=self.context.odbc_release,
     )
 
 
 @TestScenario
 @Requirements(RQ_SRS_100_ODBC_Compatibility_LTS("1.0"))
-def check_results(self, packages_dir):
+def check_results(self):
     """Verify test results from the ODBC test run."""
-    verify_test_results(packages_dir=packages_dir)
+    verify_test_results(packages_dir=self.context.packages_dir)
 
 
 @TestFeature
 @Name("build and run")
-def feature(self, configs_dir, packages_dir, clickhouse_image, odbc_release):
+def feature(self):
     """Build clickhouse-odbc, run tests against ClickHouse, verify results."""
-    Scenario(
-        "build ODBC runner image",
-        run=build_odbc_runner,
-        kwargs=dict(configs_dir=configs_dir, clickhouse_image=clickhouse_image),
-    )
-    Scenario(
-        "run clickhouse-odbc tests",
-        run=run_odbc_tests,
-        kwargs=dict(
-            configs_dir=configs_dir,
-            packages_dir=packages_dir,
-            odbc_release=odbc_release,
-        ),
-    )
-    Scenario(
-        "verify test results",
-        run=check_results,
-        kwargs=dict(packages_dir=packages_dir),
-    )
+    Scenario(run=build_odbc_runner)
+    Scenario(run=run_odbc_tests)
+    Scenario(run=check_results)

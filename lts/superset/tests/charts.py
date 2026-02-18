@@ -1,5 +1,4 @@
 """Test scenarios for Superset chart creation with ClickHouse data."""
-
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (
@@ -16,7 +15,7 @@ from lts.superset.requirements.requirements import (
 )
 def create_chart(self):
     """Verify a chart can be created from a ClickHouse dataset."""
-    pass
+    note("placeholder — implement chart creation test")
 
 
 @TestScenario
@@ -26,7 +25,7 @@ def create_chart(self):
 )
 def chart_data_types(self):
     """Verify charts correctly render various ClickHouse data types."""
-    pass
+    note("placeholder — implement chart data types test")
 
 
 @TestFeature

@@ -1,5 +1,4 @@
 """Test scenarios for Superset SQL Lab with ClickHouse."""
-
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (
@@ -16,7 +15,7 @@ from lts.superset.requirements.requirements import (
 )
 def query_execution(self):
     """Verify queries can be executed in SQL Lab against ClickHouse."""
-    pass
+    note("placeholder — implement SQL Lab query execution test")
 
 
 @TestScenario
@@ -26,7 +25,7 @@ def query_execution(self):
 )
 def schema_explorer(self):
     """Verify schema explorer lists ClickHouse databases, tables, and columns."""
-    pass
+    note("placeholder — implement schema explorer test")
 
 
 @TestFeature

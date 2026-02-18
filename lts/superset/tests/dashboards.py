@@ -1,5 +1,4 @@
 """Test scenarios for Superset dashboards with ClickHouse-backed charts."""
-
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (
@@ -16,7 +15,7 @@ from lts.superset.requirements.requirements import (
 )
 def create_dashboard(self):
     """Verify a dashboard can be created with ClickHouse-backed charts."""
-    pass
+    note("placeholder — implement dashboard creation test")
 
 
 @TestScenario
@@ -26,7 +25,7 @@ def create_dashboard(self):
 )
 def refresh_dashboard(self):
     """Verify dashboard refresh works for ClickHouse data."""
-    pass
+    note("placeholder — implement dashboard refresh test")
 
 
 @TestFeature

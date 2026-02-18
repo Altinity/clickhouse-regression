@@ -1,5 +1,4 @@
 """Test scenarios for Superset database connection to ClickHouse."""
-
 from testflows.core import *
 
 from lts.superset.requirements.requirements import (
@@ -18,7 +17,7 @@ from lts.superset.requirements.requirements import (
 )
 def http_connection(self):
     """Verify Superset can connect to ClickHouse over HTTP."""
-    pass
+    note("placeholder — implement HTTP connection test")
 
 
 @TestScenario
@@ -29,7 +28,7 @@ def http_connection(self):
 )
 def https_connection(self):
     """Verify Superset can connect to ClickHouse over HTTPS."""
-    pass
+    note("placeholder — implement HTTPS connection test")
 
 
 @TestFeature

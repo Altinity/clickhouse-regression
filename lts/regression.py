@@ -35,18 +35,9 @@ def lts_argparser(parser):
         help="ClickHouse Python driver for Superset, default: clickhouse-connect",
         default="clickhouse-connect",
     )
-    parser.add_argument(
-        "--suite",
-        type=str,
-        dest="suite",
-        choices=["all", "clickhouse-odbc", "superset"],
-        help="Which sub-suite to run, default: all",
-        default="all",
-    )
 
 
 xfails = {}
-
 ffails = {}
 
 
@@ -63,23 +54,27 @@ def regression(
     odbc_release="v1.2.1.20220905",
     superset_version="4.1.1",
     clickhouse_driver="clickhouse-connect",
-    suite="all",
     stress=None,
     with_analyzer=False,
 ):
-    """Run LTS regression suites against a ClickHouse image.
+    """Run LTS regression suites against a ClickHouse image."""
+    clickhouse_path = cluster_args.get("clickhouse_path", "/usr/bin/clickhouse")
+    if clickhouse_path and str(clickhouse_path).startswith("docker://"):
+        self.context.clickhouse_image = str(clickhouse_path).removeprefix("docker://")
+    else:
+        self.context.clickhouse_image = (
+            "altinityinfra/clickhouse-server:0-25.8.16.10001.altinitytest"
+        )
 
-    Orchestrates clickhouse-odbc, superset (and future grafana/dbeaver) sub-suites.
-    """
-    if suite in ("all", "clickhouse-odbc"):
-        from clickhouse_odbc.regression import regression as odbc_regression
+    self.context.clickhouse_version = clickhouse_version
 
-        Module(run=odbc_regression)
-
-    if suite in ("all", "superset"):
-        from superset.regression import regression as superset_regression
-
-        Module(run=superset_regression)
+    Feature(test=load("lts.clickhouse_odbc.feature", "feature"))(
+        odbc_release=odbc_release,
+    )
+    Feature(test=load("lts.superset.feature", "feature"))(
+        superset_version=superset_version,
+        clickhouse_driver=clickhouse_driver,
+    )
 
 
 if main():
