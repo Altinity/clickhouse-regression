@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -41,6 +42,7 @@ def replaceAll_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_StringFunction("1.0"))
 @Name("replaceAll alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: replaced_all ALIAS replaceAll(name, 'old', 'new')."""

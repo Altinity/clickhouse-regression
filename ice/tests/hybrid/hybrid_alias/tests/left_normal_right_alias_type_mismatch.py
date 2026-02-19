@@ -1,5 +1,6 @@
 from testflows.core import *
 from ..outline import outline
+from ..requirements import *
 
 
 @TestScenario
@@ -70,6 +71,9 @@ def left_normal_right_alias_type_mismatch(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Ice_HybridAlias_LeftNormalRightAliasTypeMismatch("1.0"),
+)
 @Name("left normal right alias type mismatch")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test case where left segment has normal column with mismatched type

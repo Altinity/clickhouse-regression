@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -92,6 +93,7 @@ def toTimeZone_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_DateTimeFunction("1.0"))
 @Name("toTimeZone alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: to_timezone ALIAS toTimeZone(datetime_col, 'America/New_York')."""

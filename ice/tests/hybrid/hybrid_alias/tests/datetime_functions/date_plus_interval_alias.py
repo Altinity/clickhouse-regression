@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -82,6 +83,7 @@ def date_plus_interval_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_DateTimeFunction("1.0"))
 @Name("date plus interval alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: date_plus_interval ALIAS date_col + INTERVAL 7 DAY."""

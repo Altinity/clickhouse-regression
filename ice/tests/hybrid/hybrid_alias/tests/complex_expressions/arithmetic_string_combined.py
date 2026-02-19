@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -81,6 +82,7 @@ def arithmetic_string_combined_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_ComplexExpression("1.0"))
 @Name("arithmetic string combined")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: score ALIAS (value * 2) + (id % 10) - length(name)."""

@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -83,6 +84,7 @@ def multiple_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Arithmetic("1.0"))
 @Name("multiple alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: multiple ALIAS (value1 * value2 - value3) % value2"""

@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -79,6 +80,7 @@ def is_xor_condition_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_BooleanLogical("1.0"))
 @Name("is xor condition alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: is_xor_condition ALIAS xor(value > 50, value < 100)."""

@@ -379,6 +379,15 @@ def wait_for_all_merges_to_complete(self, node=None, table_name=None):
 
 
 @TestStep(When)
+def stop_merges(self, table_name, node=None):
+    """Stop merges on a given table."""
+    if node is None:
+        node = self.context.node
+
+    node.query(f"SYSTEM STOP MERGES {table_name}", exitcode=0)
+
+
+@TestStep(When)
 def start_merges(self, table_name, node=None):
     """Start merges on a given table."""
     if node is None:
@@ -651,7 +660,7 @@ def get_parts(self, table_name, node=None):
         steps=True,
     ).output
 
-    return sorted([row.strip() for row in output.splitlines()])
+    return sorted([row.strip() for row in output.splitlines() if row.strip()])
 
 
 @TestStep(When)

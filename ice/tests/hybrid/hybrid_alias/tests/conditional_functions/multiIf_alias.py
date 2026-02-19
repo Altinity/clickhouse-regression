@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -87,6 +88,7 @@ def multiIf_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Conditional("1.0"))
 @Name("multiIf alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: status ALIAS multiIf(value < 10, 'low', value < 50, 'medium', 'high')."""

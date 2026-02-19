@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -41,6 +42,7 @@ def base64_encode_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_HashEncodingFunction("1.0"))
 @Name("base64 encode alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: base64_encoded ALIAS base64Encode(string_col)."""

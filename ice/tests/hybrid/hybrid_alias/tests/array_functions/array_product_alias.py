@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -81,6 +82,7 @@ def array_product_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_ArrayFunction("1.0"))
 @Name("array product alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: array_product ALIAS arrayProduct(array_col)."""

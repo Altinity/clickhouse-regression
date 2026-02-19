@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -85,6 +86,7 @@ def four_level_dependency_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_NestedDependent("1.0"))
 @Name("four level dependency")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: hexadecupled ALIAS octupled * 2 (four-level dependency chain)."""

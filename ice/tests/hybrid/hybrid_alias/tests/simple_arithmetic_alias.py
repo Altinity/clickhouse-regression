@@ -1,5 +1,6 @@
 from testflows.core import *
 from ..outline import outline
+from ..requirements import *
 
 
 @TestScenario
@@ -39,6 +40,9 @@ def simple_arithmetic_alias(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Ice_HybridAlias_SimpleArithmeticAlias("1.0"),
+)
 @Name("simple arithmetic alias")
 def feature(self, minio_root_user, minio_root_password):
     """Test simple arithmetic alias columns in hybrid tables:

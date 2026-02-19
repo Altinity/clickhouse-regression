@@ -28,6 +28,7 @@ iceberg_clickhouse_type_mapping = {
     "Nullable(Float64)": DoubleType(),
     "Nullable(String)": StringType(),
     "Nullable(Date)": DateType(),
+    "Nullable(Date32)": DateType(),
 }
 
 
