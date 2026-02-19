@@ -32,85 +32,42 @@ RQ_Ice_HybridAlias_Settings_AsteriskIncludeAliasColumns = Requirement(
     num='2.1'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic',
+RQ_Ice_HybridAlias_Arithmetic = Requirement(
+    name='RQ.Ice.HybridAlias.Arithmetic',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support ALIAS columns that perform basic arithmetic\n'
-        'operations (`+`, `-`, `*`, `/`, `%`) on base columns in Hybrid table segments.\n'
-        'The alias expression SHALL be evaluated on-the-fly and return correct results\n'
-        'across both segments.\n'
+        '[ClickHouse] SHALL support ALIAS columns that perform arithmetic operations\n'
+        'on base columns in Hybrid table segments. The alias expression SHALL be\n'
+        'evaluated on-the-fly and return correct results across both segments.\n'
         '\n'
-        'Supported numeric base column types SHALL include:\n'
-        'Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float32, Float64.\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'CREATE TABLE left_table (\n'
-        '    id Int32,\n'
-        '    value Int32,\n'
-        '    date_col Date,\n'
-        '    computed ALIAS value * 2,\n'
-        '    sum_alias ALIAS id + value\n'
-        ') ENGINE = MergeTree ORDER BY (date_col, id);\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.1.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic_Division = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.Division',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL correctly evaluate ALIAS columns that use division operations\n'
-        'in Hybrid table segments. The result type SHALL match the expected numeric type\n'
-        'of the division (integer division for integer types, floating-point for float types).\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'quotient ALIAS value1 / value2\n'
-        'modulo ALIAS value % 3\n'
-        '```\n'
+        '* `computed ALIAS value * 2` — multiplication\n'
+        '* `sum_alias ALIAS id + value` — addition\n'
+        '* `difference ALIAS value1 - value2` — subtraction\n'
+        '* `product ALIAS value1 * value2` — multiplication of two columns\n'
+        '* `quotient ALIAS value1 / value2` — division\n'
+        '* `modulo ALIAS value % 3` — modulo\n'
+        '* `intdiv ALIAS intDiv(value, 2)` — integer division\n'
+        '* `negative ALIAS abs(value) - abs(value * 2)` — negative result values\n'
+        '* `multiple ALIAS (value1 * value2 - value3) % (value2 + 1)` — complex multi-operand\n'
+        '* `scaled ALIAS price * 1.5` — Float32 base column arithmetic\n'
+        '* `total ALIAS amount1 + amount2` — Float64 base column addition\n'
+        '* `ratio ALIAS amount1 / amount2` — Float64 base column division\n'
+        '* `div_by_zero ALIAS value / 0` — division by zero edge case\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.1.2'
+    level=2,
+    num='3.1'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic_FloatTypes = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.FloatTypes',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL correctly evaluate ALIAS columns that operate on Float32\n'
-        'and Float64 base columns in Hybrid table segments. Arithmetic operations\n'
-        'on floating-point types SHALL preserve floating-point precision semantics.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.1.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_Constant = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Constant',
+RQ_Ice_HybridAlias_Constants = Requirement(
+    name='RQ.Ice.HybridAlias.Constants',
     version='1.0',
     priority=None,
     group=None,
@@ -121,65 +78,38 @@ RQ_Ice_HybridAlias_AliasTypes_Constant = Requirement(
         'Hybrid table segments. The constant SHALL be returned for every row regardless\n'
         'of the base column values.\n'
         '\n'
-        'Supported constant types SHALL include numeric constants (integers, floats),\n'
-        'string constants, and boolean constants (`true`, `false`, `1`, `0`).\n'
+        'The following constant types SHALL be covered:\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'threshold ALIAS 50\n'
-        'max_value ALIAS 1000\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.2.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_Constant_StringDate = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Constant.StringDate',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that evaluate to string constants\n'
-        'and date constants in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        "default_date ALIAS toDate('2025-01-01')\n"
-        "label ALIAS 'constant_string'\n"
-        '```\n'
+        '* `default_int8 ALIAS -50` (Int8)\n'
+        '* `default_int32 ALIAS toInt32(50000)` (Int32)\n'
+        '* `default_int64 ALIAS toInt64(1000000000)` (Int64)\n'
+        '* `default_int128 ALIAS toInt128(...)` (Int128)\n'
+        '* `default_int256 ALIAS toInt256(...)` (Int256)\n'
+        '* `default_uint256 ALIAS toUInt256(...)` (UInt256)\n'
+        '* `default_float32 ALIAS toFloat32(3.14159)` (Float32)\n'
+        '* `default_float64 ALIAS 2.718281828459045` (Float64)\n'
+        '* `default_decimal32 ALIAS toDecimal32(4.2, 8)` (Decimal32)\n'
+        "* `default_string ALIAS 'hello world'` (String)\n"
+        "* `default_date ALIAS toDate('2025-01-01')` (Date)\n"
+        "* `default_datetime ALIAS toDateTime('2025-01-01 12:00:00')` (DateTime)\n"
+        "* `default_datetime64 ALIAS toDateTime64('2025-01-01 12:00:00', 0)` (DateTime64)\n"
+        '* `default_bool ALIAS true` (Bool)\n'
+        '* `default_bool_false ALIAS false` (Bool)\n'
+        '* `default_array ALIAS array(1, 2, 3)` (Array(UInt8))\n'
+        "* `default_array_string ALIAS array('a', 'b', 'c')` (Array(String))\n"
+        "* `default_tuple ALIAS tuple(1, 'hello', 3.14)` (Tuple)\n"
+        '* `default_nested_tuple ALIAS tuple(1, tuple(2, 3), 4)` (nested Tuple)\n'
+        "* `default_map ALIAS map('key1', 'value1', 'key2', 'value2')` (Map)\n"
+        "* `default_json ALIAS '...'::JSON` (JSON)\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.2.2'
+    level=2,
+    num='3.2'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_Constant_Null = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Constant.Null',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that evaluate to NULL constants in\n'
-        'Hybrid table segments. The NULL value SHALL be returned for every row.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.2.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_BooleanLogical = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical',
+RQ_Ice_HybridAlias_BooleanLogical = Requirement(
+    name='RQ.Ice.HybridAlias.BooleanLogical',
     version='1.0',
     priority=None,
     group=None,
@@ -187,66 +117,42 @@ RQ_Ice_HybridAlias_AliasTypes_BooleanLogical = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns that evaluate to boolean values\n'
-        '(UInt8 0/1) using comparison operators (`=`, `!=`, `<`, `<=`, `>`, `>=`) in\n'
-        'Hybrid table segments.\n'
+        '(UInt8 0/1) in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'is_even ALIAS value % 2 = 0\n'
-        "is_recent ALIAS date_col >= '2025-01-15'\n"
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.3.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_BooleanLogical_ComplexExpressions = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.ComplexExpressions',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use logical operators (`AND`,\n'
-        '`OR`, `NOT`) to combine multiple boolean conditions in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'is_valid ALIAS value > 0 AND value < 100\n'
-        "is_active ALIAS status = 'active' OR status = 'pending'\n"
-        '```\n'
+        '* `is_equal ALIAS value = 42` — equality\n'
+        '* `is_not_equal ALIAS value != 42` — inequality\n'
+        '* `is_less ALIAS value < 100` — less than\n'
+        '* `is_less_equal ALIAS value <= 100` — less or equal\n'
+        '* `is_greater ALIAS value > 0` — greater than\n'
+        '* `is_greater_equal ALIAS value >= 0` — greater or equal\n'
+        '* `is_even ALIAS value % 2 = 0` — arithmetic with comparison\n'
+        "* `is_recent ALIAS date_col >= '2025-01-15'` — date comparison\n"
+        "* `is_active ALIAS status = 'active'` — string comparison\n"
+        '* `is_valid ALIAS value > 0 AND value < 100` — AND\n'
+        '* `is_or_condition ALIAS value < 10 OR value > 90` — OR\n'
+        '* `is_not_condition ALIAS NOT (value = 0)` — NOT\n'
+        '* `is_complex_logic ALIAS (value > 0 AND value < 100) OR (value > 200 AND value < 300)` — complex AND/OR\n'
+        '* `is_xor_condition ALIAS xor(value > 50, value < 100)` — XOR\n'
+        '* `is_in_range ALIAS value BETWEEN 10 AND 100` — BETWEEN\n'
+        '* `is_not_in_range ALIAS value NOT BETWEEN 10 AND 100` — NOT BETWEEN\n'
+        '* `is_in_set ALIAS value IN (1, 2, 3, 4, 5)` — IN\n'
+        '* `is_not_in_set ALIAS value NOT IN (1, 2, 3, 4, 5)` — NOT IN\n'
+        "* `is_like ALIAS name LIKE '%test%'` — LIKE\n"
+        "* `is_not_like ALIAS name NOT LIKE '%test%'` — NOT LIKE\n"
+        "* `is_ilike ALIAS name ILIKE '%TEST%'` — ILIKE\n"
+        '* `is_null_check ALIAS isNull(value)` — NULL check\n'
+        '* `is_not_null_check ALIAS isNotNull(value)` — NOT NULL check\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.3.2'
+    level=2,
+    num='3.3'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_BooleanLogical_NullHandling = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.NullHandling',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL handle NULL values correctly in boolean ALIAS column\n'
-        'comparisons within Hybrid table segments. Comparisons involving NULL SHALL follow\n'
-        'standard SQL three-valued logic.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.3.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction',
+RQ_Ice_HybridAlias_DateTimeFunction = Requirement(
+    name='RQ.Ice.HybridAlias.DateTimeFunction',
     version='1.0',
     priority=None,
     group=None,
@@ -254,73 +160,48 @@ RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns that use date and time functions\n'
-        'in Hybrid table segments. Supported functions SHALL include `toYear`, `toMonth`,\n'
-        '`toDayOfWeek`, `toDayOfMonth`, `toYYYYMM`, and `toString` applied to date columns.\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'year_month ALIAS toYYYYMM(date_col)\n'
-        'year ALIAS toYear(date_col)\n'
-        'day_of_week ALIAS toDayOfWeek(date_col)\n'
-        'date_string ALIAS toString(date_col)\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.4.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction_Arithmetic = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.Arithmetic',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that perform date arithmetic using\n'
-        'interval additions and subtractions in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'next_day ALIAS date_col + INTERVAL 1 DAY\n'
-        'prev_month ALIAS date_col - INTERVAL 1 MONTH\n'
-        '```\n'
+        '* `year ALIAS toYear(date_col)` — year extraction\n'
+        '* `month ALIAS toMonth(date_col)` — month extraction\n'
+        '* `day_of_week ALIAS toDayOfWeek(date_col)` — day of week\n'
+        '* `day_of_month ALIAS toDayOfMonth(date_col)` — day of month\n'
+        '* `quarter ALIAS toQuarter(date_col)` — quarter\n'
+        '* `year_month ALIAS toYYYYMM(date_col)` — YYYYMM format\n'
+        '* `year_month_day ALIAS toYYYYMMDD(date_col)` — YYYYMMDD format\n'
+        '* `hour ALIAS toHour(datetime_col)` — hour extraction\n'
+        '* `minute ALIAS toMinute(datetime_col)` — minute extraction\n'
+        '* `second ALIAS toSecond(datetime_col)` — second extraction\n'
+        '* `start_of_day ALIAS toStartOfDay(datetime_col)` — truncate to day\n'
+        '* `start_of_hour ALIAS toStartOfHour(datetime_col)` — truncate to hour\n'
+        '* `start_of_month ALIAS toStartOfMonth(datetime_col)` — truncate to month\n'
+        '* `start_of_quarter ALIAS toStartOfQuarter(datetime_col)` — truncate to quarter\n'
+        '* `start_of_week ALIAS toStartOfWeek(datetime_col)` — truncate to week\n'
+        '* `start_of_year ALIAS toStartOfYear(datetime_col)` — truncate to year\n'
+        '* `date_string ALIAS toString(date_col)` — date to string\n'
+        '* `datetime_string ALIAS toString(datetime_col)` — datetime to string\n'
+        "* `tz_converted ALIAS toTimeZone(datetime_col, 'America/New_York')` — timezone conversion\n"
+        '* `timestamp ALIAS toUnixTimestamp(date_col)` — unix timestamp\n'
+        '* `date_plus_days ALIAS addDays(date_col, 7)` — add days\n'
+        '* `date_plus_months ALIAS addMonths(date_col, 1)` — add months\n'
+        '* `date_plus_years ALIAS addYears(date_col, 1)` — add years\n'
+        '* `date_minus_days ALIAS subtractDays(date_col, 7)` — subtract days\n'
+        '* `date_minus_months ALIAS subtractMonths(date_col, 1)` — subtract months\n'
+        '* `date_minus_years ALIAS subtractYears(date_col, 1)` — subtract years\n'
+        '* `date_plus_interval ALIAS date_col + INTERVAL 7 DAY` — interval addition\n'
+        '* `date_minus_interval ALIAS date_col - INTERVAL 1 MONTH` — interval subtraction\n'
+        '* `datetime_plus_interval ALIAS datetime_col + INTERVAL 1 HOUR` — datetime interval\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.4.2'
+    level=2,
+    num='3.4'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction_UnixTimestamp = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.UnixTimestamp',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use `toUnixTimestamp` and\n'
-        'time zone conversion functions in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'timestamp ALIAS toUnixTimestamp(date_col)\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.4.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_StringFunction = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.StringFunction',
+RQ_Ice_HybridAlias_StringFunction = Requirement(
+    name='RQ.Ice.HybridAlias.StringFunction',
     version='1.0',
     priority=None,
     group=None,
@@ -328,66 +209,49 @@ RQ_Ice_HybridAlias_AliasTypes_StringFunction = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns that use string manipulation functions\n'
-        'in Hybrid table segments. Supported functions SHALL include `upper`, `lower`,\n'
-        '`length`, `substring`, and `reverse`.\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'upper_name ALIAS upper(name)\n'
-        'lower_name ALIAS lower(name)\n'
-        'name_length ALIAS length(name)\n'
-        'substring_name ALIAS substring(name, 1, 5)\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.5.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_StringFunction_Concatenation = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.StringFunction.Concatenation',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use string concatenation functions\n'
-        '(`concat`, `concat_ws`) in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        "full_name ALIAS concat(first_name, ' ', last_name)\n"
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.5.2'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_StringFunction_NullHandling = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.StringFunction.NullHandling',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL handle NULL string values correctly in string function ALIAS\n'
-        'columns within Hybrid table segments.\n'
+        '* `upper_name ALIAS upper(name)` — uppercase\n'
+        '* `lower_name ALIAS lower(name)` — lowercase\n'
+        '* `name_length ALIAS length(name)` — length\n'
+        '* `name_length_utf8 ALIAS lengthUTF8(name)` — UTF-8 length\n'
+        '* `substring_name ALIAS substring(name, 1, 5)` — substring with length\n'
+        '* `substring_from ALIAS substring(name, 3)` — substring from position\n'
+        '* `reversed_name ALIAS reverse(name)` — reverse\n'
+        "* `concatenated ALIAS concat(first_name, ' ', last_name)` — concat\n"
+        "* `concat_ws ALIAS concatWithSeparator(' ', first_name, last_name)` — concat with separator\n"
+        "* `array_concat ALIAS arrayStringConcat([first, second], ' ')` — array string concat\n"
+        "* `replaced_all ALIAS replaceAll(name, 'old', 'new')` — replace all\n"
+        "* `replaced_one ALIAS replaceOne(name, 'old', 'new')` — replace one\n"
+        "* `replaced_regexp ALIAS replaceRegexpOne(name, '\\\\d+', 'X')` — regex replace\n"
+        '* `repeated_name ALIAS repeat(name, 3)` — repeat\n'
+        "* `left_padded ALIAS leftPad(name, 10, '0')` — left pad\n"
+        "* `right_padded ALIAS rightPad(name, 10, '0')` — right pad\n"
+        "* `trimmed_name ALIAS trimBoth(name, 'a')` — trim both\n"
+        "* `trimmed_left ALIAS trimLeft(name, 'a')` — trim left\n"
+        "* `trimmed_right ALIAS trimRight(name, 'a')` — trim right\n"
+        "* `position_sub ALIAS position(name, 'test')` — position\n"
+        "* `position_ci ALIAS positionCaseInsensitive(name, 'TEST')` — case-insensitive position\n"
+        "* `starts_with ALIAS startsWith(name, 'prefix')` — starts with\n"
+        "* `ends_with ALIAS endsWith(name, 'suffix')` — ends with\n"
+        '* `is_empty ALIAS empty(name)` — empty check\n'
+        '* `is_not_empty ALIAS notEmpty(name)` — not empty check\n'
+        '* `ascii_code ALIAS ascii(name)` — ascii code\n'
+        "* `split_by_char ALIAS splitByChar(',', name)` — split by char\n"
+        "* `split_by_string ALIAS splitByString('::', name)` — split by string\n"
+        "* `formatted ALIAS format('Hello {1}, you are {0} years old', age, name)` — format\n"
+        "* `extract_groups ALIAS extractAllGroups(name, '(\\\\w+)=(\\\\w+)')` — regex extraction\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.5.3'
+    level=2,
+    num='3.5'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_TypeConversion = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion',
+RQ_Ice_HybridAlias_TypeConversion = Requirement(
+    name='RQ.Ice.HybridAlias.TypeConversion',
     version='1.0',
     priority=None,
     group=None,
@@ -395,136 +259,70 @@ RQ_Ice_HybridAlias_AliasTypes_TypeConversion = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns that perform explicit type conversions\n'
-        'in Hybrid table segments. Supported conversion functions SHALL include:\n'
+        'in Hybrid table segments, including narrowing conversions from larger to smaller types.\n'
         '\n'
-        '* Numeric: `toInt8`, `toInt16`, `toInt32`, `toInt64`, `toUInt8`, `toUInt16`, `toUInt32`, `toUInt64`, `toFloat32`, `toFloat64`\n'
-        '* String: `toString`\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'value_str ALIAS toString(value)\n'
-        'value_float ALIAS toFloat64(value)\n'
-        '```\n'
+        '* `toInt8(value)` — Int32 to Int8\n'
+        '* `toInt8(small_value)` — Int16 to Int8 (narrowing)\n'
+        '* `toInt16(value)` — Int32 to Int16\n'
+        '* `toInt16(value)` — Int32 to Int16 (narrowing)\n'
+        '* `toInt32(value)` — identity conversion\n'
+        '* `toInt32(big_value)` — Int64 to Int32 (narrowing)\n'
+        '* `toInt64(value)` — Int32 to Int64 (widening)\n'
+        '* `toUInt8(value)` — to UInt8\n'
+        '* `toUInt8(small_value)` — UInt16 to UInt8 (narrowing)\n'
+        '* `toUInt16(value)` — to UInt16\n'
+        '* `toUInt16(value)` — UInt32 to UInt16 (narrowing)\n'
+        '* `toUInt32(value)` — to UInt32\n'
+        '* `toUInt32(big_value)` — UInt64 to UInt32 (narrowing)\n'
+        '* `toUInt64(value)` — to UInt64\n'
+        '* `toFloat32(value)` — to Float32\n'
+        '* `toFloat32(big_float)` — Float64 to Float32 (narrowing)\n'
+        '* `toFloat64(value)` — to Float64\n'
+        '* `toString(value)` — to String\n'
+        '* `toDate(toString(date_col))` — to Date\n'
+        '* `toDateTime(toString(date_col))` — to DateTime\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.6.1'
+    level=2,
+    num='3.6'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_TypeConversion_DateConversions = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion.DateConversions',
+RQ_Ice_HybridAlias_Conditional = Requirement(
+    name='RQ.Ice.HybridAlias.Conditional',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support ALIAS columns that use date conversion functions\n'
-        '(`toDate`, `toDateTime`) in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'value_date ALIAS toDate(date_string)\n'
-        'value_datetime ALIAS toDateTime(timestamp_string)\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.6.2'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_TypeConversion_InvalidConversion = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion.InvalidConversion',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL return an error or handle gracefully when an ALIAS column\n'
-        'expression performs an invalid type conversion in Hybrid table segments.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.6.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_Conditional = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Conditional',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use `if` conditional expressions\n'
+        '[ClickHouse] SHALL support ALIAS columns that use conditional expressions\n'
         'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        "category ALIAS if(value > 50, 'high', 'low')\n"
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.7.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_Conditional_MultiIf = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Conditional.MultiIf',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use `multiIf` expressions with\n'
-        'multiple conditions in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        "status ALIAS multiIf(value < 10, 'low', value < 50, 'medium', 'high')\n"
-        '```\n'
+        "* `category ALIAS if(value > 50, 'high', 'low')` — if expression\n"
+        "* `case_when ALIAS CASE WHEN value > 50 THEN 'high' ELSE 'low' END` — CASE WHEN\n"
+        "* `case_expr ALIAS CASE value WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END` — CASE value WHEN\n"
+        "* `status ALIAS multiIf(value < 10, 'low', value < 50, 'medium', 'high')` — multiIf\n"
+        "* `grade ALIAS multiIf(score >= 90, 'A', score >= 80, 'B', score >= 70, 'C', 'F')` — multiIf grading\n"
+        '* `coalesced ALIAS coalesce(value1, value2, 0)` — coalesce\n'
+        '* `null_if_result ALIAS nullIf(value, 0)` — nullIf\n'
+        '* `if_null_result ALIAS ifNull(value, 0)` — ifNull\n'
+        '* `nullable_value ALIAS toNullable(value)` — toNullable\n'
+        '* `assumed_not_null ALIAS assumeNotNull(nullable_value)` — assumeNotNull\n'
+        "* `transform_result ALIAS transform(value, [...], [...], 'default')` — transform\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.7.2'
+    level=2,
+    num='3.7'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_Conditional_Coalesce = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.Conditional.Coalesce',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that use `coalesce` to provide\n'
-        'fallback values for NULL base column values in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'coalesced ALIAS coalesce(value1, value2, 0)\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.7.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_NestedDependent = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent',
+RQ_Ice_HybridAlias_NestedDependent = Requirement(
+    name='RQ.Ice.HybridAlias.NestedDependent',
     version='1.0',
     priority=None,
     group=None,
@@ -532,92 +330,29 @@ RQ_Ice_HybridAlias_AliasTypes_NestedDependent = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns that depend on other ALIAS columns\n'
-        '(single-level dependency) in Hybrid table segments.\n'
+        'in Hybrid table segments, including multi-level dependency chains.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'computed ALIAS value * 2\n'
-        'computed_2 ALIAS computed + 10\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.8.1'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_NestedDependent_MultiLevel = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultiLevel',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support multi-level alias dependency chains (3 or more\n'
-        'levels deep) in Hybrid table segments. The engine SHALL correctly resolve\n'
-        'the dependency chain and evaluate each alias in the correct order.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'doubled ALIAS value * 2\n'
-        'quadrupled ALIAS doubled * 2\n'
-        'octupled ALIAS quadrupled * 2\n'
-        '```\n'
+        '* `computed + 10` depending on `computed ALIAS value * 2` — single-level dependency\n'
+        '* `doubled → quadrupled` chain — two-level dependency\n'
+        '* `doubled → quadrupled → octupled` chain — three-level dependency\n'
+        '* `doubled → quadrupled → octupled → hexadecupled` chain — four-level dependency\n'
+        '* `sum_all ALIAS id + value + doubled + quadrupled` — depends on multiple aliases\n'
+        '* `product_all ALIAS doubled * quadrupled` — product of two aliases\n'
+        '* `percentage ALIAS (doubled * 100) / (value + doubled)` — percentage calculation\n'
+        '* `nested_math ALIAS (doubled + quadrupled) * 2` — complex arithmetic with aliases\n'
+        '* `conditional_result ALIAS if(doubled > 100, quadrupled, doubled)` — conditional referencing aliases\n'
+        "* `string_combined ALIAS concat(toString(doubled), '-', toString(quadrupled))` — string ops on aliases\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.8.2'
+    level=2,
+    num='3.8'
 )
 
-RQ_Ice_HybridAlias_AliasTypes_NestedDependent_MultipleDependencies = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultipleDependencies',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns that depend on multiple other ALIAS\n'
-        'columns simultaneously in Hybrid table segments.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'doubled ALIAS value * 2\n'
-        'quadrupled ALIAS doubled * 2\n'
-        'sum_all ALIAS id + value + doubled + quadrupled\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.8.3'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_NestedDependent_CircularDependency = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.CircularDependency',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL detect and reject circular alias dependencies when creating\n'
-        'tables that are used in Hybrid table segments. An error SHALL be returned\n'
-        'if alias A depends on alias B and alias B depends on alias A.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='3.8.4'
-)
-
-RQ_Ice_HybridAlias_AliasTypes_ComplexExpression = Requirement(
-    name='RQ.Ice.HybridAlias.AliasTypes.ComplexExpression',
+RQ_Ice_HybridAlias_ComplexExpression = Requirement(
+    name='RQ.Ice.HybridAlias.ComplexExpression',
     version='1.0',
     priority=None,
     group=None,
@@ -625,416 +360,295 @@ RQ_Ice_HybridAlias_AliasTypes_ComplexExpression = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support ALIAS columns with complex expressions that combine\n'
-        'multiple functions and operations in Hybrid table segments. Nested function\n'
-        'calls, multiple operations, and correct operator precedence SHALL be handled.\n'
+        'multiple functions and operations in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'score ALIAS (value * 2) + (id % 10) - length(name)\n'
-        "formatted_date ALIAS concat(toString(toYear(date_col)), '-', toString(toMonth(date_col)))\n"
-        '```\n'
+        '* `score ALIAS (value * 2) + (id % 10) - length(name)` — arithmetic + string\n'
+        "* `formatted_date ALIAS concat(toString(toYear(date_col)), '-', toString(toMonth(date_col)))` — nested date/string\n"
+        '* `normalized_value ALIAS (value - min_value) / (max_value - min_value)` — normalization formula\n'
+        '* `weighted_sum ALIAS (value1 * 0.3) + (value2 * 0.5) + (value3 * 0.2)` — weighted sum\n'
+        '* `complex_math ALIAS sqrt(pow(value, 2) + pow(id, 2))` — Pythagorean calculation\n'
+        '* `complex_round ALIAS round((value * 1.5) / 3.0, 2)` — arithmetic with rounding\n'
+        '* `conditional_math ALIAS if(value > 0, sqrt(value), abs(value))` — conditional with math\n'
+        '* `nested_conditional ALIAS multiIf(value < 10, value * 2, value < 50, value * 3, value * 4)` — nested conditional\n'
+        '* `string_transform ALIAS concat(upper(substring(name, 1, 1)), lower(substring(name, 2)))` — string chain\n'
+        "* `string_math ALIAS length(concat(toString(value), '_', toString(id)))` — cross-domain\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='3.9.1'
+    level=2,
+    num='3.9'
 )
 
-RQ_Ice_HybridAlias_Predicates_DirectColumn = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.DirectColumn',
+RQ_Ice_HybridAlias_MathFunction = Requirement(
+    name='RQ.Ice.HybridAlias.MathFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using base columns directly in watermark predicates\n'
-        'for Hybrid tables that contain ALIAS columns. The predicates SHALL correctly\n'
-        'route data between segments without affecting alias evaluation.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use mathematical functions\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'ENGINE = Hybrid(\n'
-        "    remote(..., left_table), date_col >= '2025-01-15',\n"
-        "    remote(..., right_table), date_col < '2025-01-15'\n"
-        ')\n'
-        '```\n'
-        '\n'
-        'Supported predicate types SHALL include date column predicates, numeric column\n'
-        'predicates, string column predicates, and range predicates (`BETWEEN`).\n'
+        'The following functions SHALL be covered:\n'
+        'abs, sqrt, cbrt, pow, power, exp, exp2, exp10, ln, log, log2, log10, log1p,\n'
+        'sin, cos, tan, asin, acos, atan, atan2, sinh, cosh, tanh, asinh, acosh, atanh,\n'
+        'erf, erfc, lgamma, tgamma, sign.\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.1.1'
+    level=2,
+    num='3.10'
 )
 
-RQ_Ice_HybridAlias_Predicates_AliasColumn = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.AliasColumn',
+RQ_Ice_HybridAlias_RoundingFunction = Requirement(
+    name='RQ.Ice.HybridAlias.RoundingFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support or explicitly handle ALIAS columns used directly in\n'
-        'watermark predicates for Hybrid tables. If supported, the alias expression\n'
-        'SHALL be correctly evaluated during predicate routing. If not supported, a clear\n'
-        'error message SHALL be returned.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use rounding functions\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'ENGINE = Hybrid(\n'
-        '    remote(..., left_table), computed >= 20,\n'
-        '    remote(..., right_table), computed < 20\n'
-        ')\n'
-        '```\n'
-        '\n'
-        'Where `computed` is defined as `computed ALIAS value * 2`.\n'
+        'The following functions SHALL be covered:\n'
+        'round (with and without precision), ceil (with and without precision), ceiling,\n'
+        'floor (with and without precision), trunc (with and without precision), truncate,\n'
+        'roundBankers (with and without precision), roundDown, roundAge, roundDuration.\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.2.1'
+    level=2,
+    num='3.11'
 )
 
-RQ_Ice_HybridAlias_Predicates_BaseDependentColumn = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.BaseDependentColumn',
+RQ_Ice_HybridAlias_ArrayFunction = Requirement(
+    name='RQ.Ice.HybridAlias.ArrayFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL correctly handle watermark predicates that reference base\n'
-        'columns upon which ALIAS columns depend in Hybrid tables. The predicate SHALL\n'
-        'control data routing between segments, and the alias expression SHALL be\n'
-        'independently evaluated on the routed data.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use array manipulation functions\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example, given `computed ALIAS value * 2`, a watermark predicate\n'
-        '`value >= 50` SHALL route rows based on the `value` column while `computed`\n'
-        "remains correctly evaluated as `value * 2` on each segment's data.\n"
+        'The following cases SHALL be covered:\n'
+        '\n'
+        '* `arrayElement(array_col, 1)` — first element\n'
+        '* `arrayElement(array_col, length(array_col))` — last element\n'
+        '* `length(array_col)` — array length\n'
+        '* `arraySum(array_col)` — array sum\n'
+        '* `arrayProduct(array_col)` — array product\n'
+        '* `arraySort(array_col)` — sort\n'
+        '* `arrayReverse(array_col)` — reverse\n'
+        '* `arrayDistinct(array_col)` — deduplicate\n'
+        '* `arraySlice(array_col, 1, 3)` — slice\n'
+        '* `arrayConcat(array1, array2)` — concatenation\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.3.1'
+    level=2,
+    num='3.12'
 )
 
-RQ_Ice_HybridAlias_Predicates_BaseIndependentColumn = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.BaseIndependentColumn',
+RQ_Ice_HybridAlias_TupleFunction = Requirement(
+    name='RQ.Ice.HybridAlias.TupleFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL correctly handle watermark predicates that reference base\n'
-        'columns unrelated to any ALIAS column definitions in Hybrid tables. Alias\n'
-        'column evaluation SHALL not be affected by predicates on independent columns.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use tuple element access\n'
+        'functions in Hybrid table segments.\n'
         '\n'
-        'For example, given `computed ALIAS value * 2`, a watermark predicate\n'
-        "`date_col >= '2025-01-15'` SHALL route data by date while `computed` is\n"
-        'evaluated independently.\n'
+        'The following cases SHALL be covered:\n'
+        '\n'
+        '* `tupleElement(tuple_col, 1)` — first element\n'
+        '* `tupleElement(tuple_col, 2)` — second element\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.4.1'
+    level=2,
+    num='3.13'
 )
 
-RQ_Ice_HybridAlias_Predicates_Complex = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.Complex',
+RQ_Ice_HybridAlias_MapFunction = Requirement(
+    name='RQ.Ice.HybridAlias.MapFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support complex watermark predicates that combine base\n'
-        'columns and alias columns using logical operators (`AND`, `OR`) in Hybrid tables.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use map manipulation functions\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        'ENGINE = Hybrid(\n'
-        "    remote(..., left_table), date_col >= '2025-01-15' AND value > 100,\n"
-        "    remote(..., right_table), date_col < '2025-01-15' OR value <= 100\n"
-        ')\n'
-        '```\n'
+        "* `map_col['key']` — element access by key\n"
+        '* `mapKeys(map_col)` — key extraction\n'
+        '* `mapValues(map_col)` — value extraction\n'
+        '* `length(map_col)` — map size\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.5.1'
+    level=2,
+    num='3.14'
 )
 
-RQ_Ice_HybridAlias_Predicates_DateBased = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.DateBased',
+RQ_Ice_HybridAlias_JsonFunction = Requirement(
+    name='RQ.Ice.HybridAlias.JsonFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support date-based watermark predicates in Hybrid tables\n'
-        'with ALIAS columns. Both direct date column comparisons and date function\n'
-        'predicates SHALL be supported.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use JSON extraction functions\n'
+        'in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        '-- Direct date comparison\n'
-        "date_col >= '2025-01-15'\n"
-        "date_col < '2025-01-15'\n"
-        '\n'
-        '-- Date function predicate\n'
-        'toYYYYMM(date_col) >= 202501\n'
-        'toYear(date_col) = 2025\n'
-        '```\n'
+        "* `JSONExtractInt(toString(json_col), 'key')` — integer extraction\n"
+        "* `JSONExtractFloat(toString(json_col), 'key')` — float extraction\n"
+        "* `JSONExtractString(toString(json_col), 'key')` — string extraction\n"
+        "* `JSONHas(toString(json_col), 'key')` — key existence check\n"
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.6.1'
+    level=2,
+    num='3.15'
 )
 
-RQ_Ice_HybridAlias_Predicates_NumericRange = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.NumericRange',
+RQ_Ice_HybridAlias_HashEncodingFunction = Requirement(
+    name='RQ.Ice.HybridAlias.HashEncodingFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support numeric range watermark predicates in Hybrid tables\n'
-        'with ALIAS columns. `BETWEEN`, range predicates with `AND`, and `IN` predicates\n'
-        'SHALL be supported.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use hashing and encoding\n'
+        'functions in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        '-- BETWEEN predicate\n'
-        'id BETWEEN 10 AND 15\n'
-        '\n'
-        '-- Range with AND\n'
-        'value >= 1 AND value <= 1000\n'
-        '\n'
-        '-- IN predicate\n'
-        'value IN (10, 20, 30)\n'
-        '```\n'
+        '* `hex(string_col)` — hex encoding\n'
+        '* `base64Encode(string_col)` — base64 encoding\n'
+        '* `base64Decode(encoded_col)` — base64 decoding (alias-on-alias dependency)\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.7.1'
+    level=2,
+    num='3.16'
 )
 
-RQ_Ice_HybridAlias_Predicates_String = Requirement(
-    name='RQ.Ice.HybridAlias.Predicates.String',
+RQ_Ice_HybridAlias_UtilityFunction = Requirement(
+    name='RQ.Ice.HybridAlias.UtilityFunction',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support string-based watermark predicates in Hybrid tables\n'
-        'with ALIAS columns. Equality predicates, `IN` predicates with strings, and\n'
-        '`LIKE` predicates SHALL be supported.\n'
+        '[ClickHouse] SHALL support ALIAS columns that use utility and comparison\n'
+        'functions in Hybrid table segments.\n'
         '\n'
-        'For example:\n'
+        'The following cases SHALL be covered:\n'
         '\n'
-        '```sql\n'
-        "name = 'test'\n"
-        "status IN ('active', 'pending')\n"
-        "name LIKE 'test%'\n"
-        '```\n'
+        '* `least(val1, val2)` — least of two values\n'
+        '* `least(val1, val2, val3)` — least of three values\n'
+        '* `least(val1, val2, val3, val4)` — least of four values\n'
+        '* `least(str1, str2)` — least of strings\n'
+        '* `least(date1, date2)` — least of dates\n'
+        '* `greatest(val1, val2)` — greatest of two values\n'
+        '* `greatest(val1, val2, val3)` — greatest of three values\n'
+        '* `greatest(val1, val2, val3, val4)` — greatest of four values\n'
+        '* `greatest(str1, str2, str3)` — greatest of strings\n'
+        '* `greatest(date1, date2)` — greatest of dates\n'
+        '* `countDigits(value)` — digit count (Int32)\n'
+        '* `countDigits(big_value)` — digit count (Int64)\n'
+        '* `countDigits(uint_value)` — digit count (UInt32)\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='4.8.1'
+    level=2,
+    num='3.17'
 )
 
-RQ_Ice_HybridAlias_QueryContext_Select = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.Select',
+RQ_Ice_HybridAlias_QueryContext = Requirement(
+    name='RQ.Ice.HybridAlias.QueryContext',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selecting ALIAS columns in the `SELECT` clause of\n'
-        'queries on Hybrid tables. The following patterns SHALL be supported:\n'
+        '[ClickHouse] SHALL support ALIAS columns in various SQL query contexts\n'
+        'when querying Hybrid tables.\n'
         '\n'
-        '* Selecting only alias columns\n'
-        '* Selecting a mix of base and alias columns\n'
-        '* Selecting nested/dependent aliases\n'
-        '* Selecting aliases within expressions (e.g., `computed + 10`)\n'
+        'The following query patterns SHALL be covered:\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT computed, sum_alias FROM hybrid_table ORDER BY id;\n'
-        'SELECT id, value, computed FROM hybrid_table ORDER BY id;\n'
-        '```\n'
+        '* BETWEEN and IN predicates in watermarks — `id BETWEEN 10 AND 15`, `value IN (10, 20, 30)`\n'
+        "* String LIKE predicate in watermark — `name LIKE 'A%'`\n"
+        '* Complex AND/OR watermark predicates combining base and alias columns\n'
+        '* HAVING clause filtering on alias column aggregations — `HAVING sum(computed) > 100`\n'
+        '* JOIN operations with alias columns in result set — self-join selecting alias from both sides\n'
+        '* Subqueries selecting and filtering alias columns — `SELECT * FROM (SELECT id, computed FROM ...)`\n'
+        '* ORDER BY alias columns — `ORDER BY computed ASC`, `ORDER BY computed DESC, sum_alias ASC`\n'
+        '* GROUP BY single and multiple alias columns — `GROUP BY year_month`, `GROUP BY year_val, month_val`\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='5.1.1'
+    level=2,
+    num='4.1'
 )
 
-RQ_Ice_HybridAlias_QueryContext_Where = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.Where',
+RQ_Ice_HybridAlias_SimpleArithmeticAlias = Requirement(
+    name='RQ.Ice.HybridAlias.SimpleArithmeticAlias',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using ALIAS columns in the `WHERE` clause of queries\n'
-        'on Hybrid tables. Filtering by alias columns, filtering by base columns when\n'
-        'aliases are in `SELECT`, and complex `WHERE` conditions with aliases SHALL all\n'
+        '[ClickHouse] SHALL support multiple ALIAS columns (`computed ALIAS value * 2`,\n'
+        '`sum_alias ALIAS id + value`) in a single Hybrid table with both aliases\n'
+        'queryable via SELECT in various combinations (alias only, mix of base and alias).\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='5.1'
+)
+
+RQ_Ice_HybridAlias_AliasColumnInPredicate = Requirement(
+    name='RQ.Ice.HybridAlias.AliasColumnInPredicate',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support or explicitly handle ALIAS columns used directly\n'
+        'in watermark predicates for Hybrid tables (`computed >= 20` / `computed < 20`).\n'
+        'If supported, the alias expression SHALL be correctly evaluated during predicate\n'
+        'routing. GROUP BY and aggregations (`max`, `min`) on alias columns SHALL also\n'
         'be supported.\n'
         '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT id, computed FROM hybrid_table WHERE computed > 100 ORDER BY id;\n'
-        'SELECT id, value, computed FROM hybrid_table WHERE value > 5000 ORDER BY id;\n'
-        '```\n'
-        '\n'
     ),
     link=None,
-    level=3,
-    num='5.2.1'
+    level=2,
+    num='5.2'
 )
 
-RQ_Ice_HybridAlias_QueryContext_GroupBy = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.GroupBy',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support using ALIAS columns in the `GROUP BY` clause of\n'
-        'queries on Hybrid tables. Grouping by alias columns, grouping by date function\n'
-        'aliases, and multiple alias columns in `GROUP BY` SHALL be supported.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT date_col, sum(computed) AS total FROM hybrid_table GROUP BY date_col ORDER BY date_col;\n'
-        'SELECT year_month, count() FROM hybrid_table GROUP BY year_month ORDER BY year_month;\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='5.3.1'
-)
-
-RQ_Ice_HybridAlias_QueryContext_OrderBy = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.OrderBy',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support using ALIAS columns in the `ORDER BY` clause of\n'
-        'queries on Hybrid tables. Both `ASC` and `DESC` ordering by alias columns and\n'
-        'multiple alias columns in `ORDER BY` SHALL be supported.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT id, computed FROM hybrid_table ORDER BY computed ASC;\n'
-        'SELECT id, computed, sum_alias FROM hybrid_table ORDER BY computed DESC, sum_alias ASC;\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='5.4.1'
-)
-
-RQ_Ice_HybridAlias_QueryContext_Having = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.Having',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support using ALIAS columns in the `HAVING` clause of\n'
-        'queries on Hybrid tables. Filtering grouped results based on aggregations of\n'
-        'alias columns SHALL be supported.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT date_col, sum(computed) AS total\n'
-        'FROM hybrid_table\n'
-        'GROUP BY date_col\n'
-        'HAVING total > 100\n'
-        'ORDER BY date_col;\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='5.5.1'
-)
-
-RQ_Ice_HybridAlias_QueryContext_Join = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.Join',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns in `JOIN` operations involving Hybrid\n'
-        'tables. ALIAS columns SHALL be accessible in JOIN conditions, and alias columns\n'
-        'from both sides of a JOIN SHALL be available in the result set.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='5.6.1'
-)
-
-RQ_Ice_HybridAlias_QueryContext_Subquery = Requirement(
-    name='RQ.Ice.HybridAlias.QueryContext.Subquery',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support ALIAS columns in subqueries involving Hybrid tables.\n'
-        'ALIAS columns SHALL be accessible in subquery `SELECT` and `WHERE` clauses.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        'SELECT * FROM (SELECT id, computed FROM hybrid_table WHERE computed > 50) sub ORDER BY id;\n'
-        '```\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='5.7.1'
-)
-
-RQ_Ice_HybridAlias_Segments_LeftAliasRightNormal = Requirement(
-    name='RQ.Ice.HybridAlias.Segments.LeftAliasRightNormal',
+RQ_Ice_HybridAlias_LeftAliasRightNormal = Requirement(
+    name='RQ.Ice.HybridAlias.LeftAliasRightNormal',
     version='1.0',
     priority=None,
     group=None,
@@ -1042,28 +656,37 @@ RQ_Ice_HybridAlias_Segments_LeftAliasRightNormal = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support Hybrid tables where the left segment defines a\n'
-        'column as an ALIAS and the right segment defines the same column as a regular\n'
-        '(non-alias) column. The Hybrid table SHALL correctly return values from both\n'
-        'segments regardless of how the underlying column is defined.\n'
-        '\n'
-        'For example:\n'
-        '\n'
-        '```sql\n'
-        '-- Left table: computed is an ALIAS\n'
-        'computed ALIAS value * 2\n'
-        '\n'
-        '-- Right table: computed is a regular column\n'
-        'computed Int64\n'
-        '```\n'
+        'column as an ALIAS (`computed ALIAS value * 2`) and the right segment defines\n'
+        'the same column as a regular column (`computed Int64`). The Hybrid table SHALL\n'
+        'correctly return values from both segments.\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='6.1.1'
+    level=2,
+    num='5.3'
 )
 
-RQ_Ice_HybridAlias_Segments_LeftNormalRightAlias = Requirement(
-    name='RQ.Ice.HybridAlias.Segments.LeftNormalRightAlias',
+RQ_Ice_HybridAlias_LeftAliasRightNormalTypeMismatch = Requirement(
+    name='RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL handle Hybrid tables where the left segment defines a column\n'
+        'as an ALIAS returning Int64 and the right segment defines the same column as a\n'
+        'regular Float64 column. Automatic type casting SHALL be applied when\n'
+        '`hybrid_table_auto_cast_columns = 1` is enabled.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='5.4'
+)
+
+RQ_Ice_HybridAlias_LeftNormalRightAlias = Requirement(
+    name='RQ.Ice.HybridAlias.LeftNormalRightAlias',
     version='1.0',
     priority=None,
     group=None,
@@ -1071,18 +694,37 @@ RQ_Ice_HybridAlias_Segments_LeftNormalRightAlias = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support Hybrid tables where the left segment defines a\n'
-        'column as a regular (non-alias) column and the right segment defines the same\n'
-        'column as an ALIAS. The Hybrid table SHALL correctly return values from both\n'
-        'segments.\n'
+        'column as a regular column (`computed Int64`) and the right segment defines\n'
+        'the same column as an ALIAS (`computed ALIAS value * 2`). The Hybrid table\n'
+        'SHALL correctly return values from both segments.\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='6.2.1'
+    level=2,
+    num='5.5'
 )
 
-RQ_Ice_HybridAlias_Segments_BothAlias = Requirement(
-    name='RQ.Ice.HybridAlias.Segments.BothAlias',
+RQ_Ice_HybridAlias_LeftNormalRightAliasTypeMismatch = Requirement(
+    name='RQ.Ice.HybridAlias.LeftNormalRightAliasTypeMismatch',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL return an error when the left segment defines a column as a\n'
+        'regular Int32 column and the right segment defines the same column as an ALIAS\n'
+        'returning Int64, when the types are incompatible. The error SHALL indicate\n'
+        'a type mismatch between segments.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='5.6'
+)
+
+RQ_Ice_HybridAlias_DifferentAliasExpressions = Requirement(
+    name='RQ.Ice.HybridAlias.DifferentAliasExpressions',
     version='1.0',
     priority=None,
     group=None,
@@ -1090,156 +732,34 @@ RQ_Ice_HybridAlias_Segments_BothAlias = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support Hybrid tables where both segments define the same\n'
-        'column as an ALIAS. The alias expression SHALL be independently evaluated on\n'
-        "each segment's data.\n"
+        'column as an ALIAS but with different expressions (left: `value * 2`,\n'
+        'right: `value * 3`). Each segment SHALL independently evaluate its own alias\n'
+        'expression.\n'
         '\n'
     ),
     link=None,
-    level=3,
-    num='6.3.1'
+    level=2,
+    num='5.7'
 )
 
-RQ_Ice_HybridAlias_Segments_TypeMismatch = Requirement(
-    name='RQ.Ice.HybridAlias.Segments.TypeMismatch',
+RQ_Ice_HybridAlias_AliasMissingInSegment = Requirement(
+    name='RQ.Ice.HybridAlias.AliasMissingInSegment',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL handle type mismatches between segment alias columns and\n'
-        'the Hybrid table column definitions. When `hybrid_table_auto_cast_columns = 1`\n'
-        'is enabled, automatic type casting SHALL be applied. When disabled, type\n'
-        'mismatches SHALL produce appropriate errors.\n'
-        '\n'
-        'For example, if an alias returns `Int16` but the Hybrid table defines the\n'
-        'column as `Int32`, automatic casting SHALL widen the type when enabled.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='6.4.1'
-)
-
-RQ_Ice_HybridAlias_TypeCompatibility_Alignment = Requirement(
-    name='RQ.Ice.HybridAlias.TypeCompatibility.Alignment',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support explicit type alignment between ALIAS column return\n'
-        'types and Hybrid table column definitions. The ALIAS expression return type\n'
-        "SHALL be compatible with or castable to the Hybrid table's column type.\n"
-        '\n'
-        'For example:\n'
-        '\n'
-        '* Alias returns `Int32`, Hybrid table expects `Int64` — SHALL work\n'
-        '* Alias returns `String`, Hybrid table expects `Int32` — SHALL produce an error\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='7.1.1'
-)
-
-RQ_Ice_HybridAlias_TypeCompatibility_AutoCast = Requirement(
-    name='RQ.Ice.HybridAlias.TypeCompatibility.AutoCast',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support automatic type casting for ALIAS columns across\n'
-        'Hybrid table segments when `hybrid_table_auto_cast_columns = 1` is enabled.\n'
-        'The automatic casting SHALL handle widening numeric conversions without data\n'
-        'loss.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='7.2.1'
-)
-
-RQ_Ice_HybridAlias_EdgeCases_MissingDependencies = Requirement(
-    name='RQ.Ice.HybridAlias.EdgeCases.MissingDependencies',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL return an error when an ALIAS column references a\n'
-        'non-existent or dropped base column in a table used as a Hybrid table segment.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='8.1.1'
-)
-
-RQ_Ice_HybridAlias_EdgeCases_NullHandling = Requirement(
-    name='RQ.Ice.HybridAlias.EdgeCases.NullHandling',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL correctly handle NULL values in ALIAS column evaluation\n'
-        'within Hybrid table segments. When a base column value is NULL, the alias\n'
-        'expression SHALL evaluate according to [ClickHouse] NULL propagation rules.\n'
-        '\n'
-        'Aliases that produce NULL values SHALL return NULL in the Hybrid table query\n'
-        'results. NULL values in alias predicates SHALL follow standard SQL three-valued\n'
-        'logic.\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='8.2.1'
-)
-
-RQ_Ice_HybridAlias_EdgeCases_DivisionByZero = Requirement(
-    name='RQ.Ice.HybridAlias.EdgeCases.DivisionByZero',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL handle division by zero in ALIAS column expressions within\n'
-        'Hybrid table segments according to standard [ClickHouse] behavior (returning\n'
-        '`inf`, `-inf`, or `nan` for floating-point types, or 0 for integer types).\n'
-        '\n'
-    ),
-    link=None,
-    level=3,
-    num='8.3.1'
-)
-
-RQ_Ice_HybridAlias_EdgeCases_SegmentMismatch = Requirement(
-    name='RQ.Ice.HybridAlias.EdgeCases.SegmentMismatch',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL handle mismatches between segments in Hybrid tables where\n'
-        'alias definitions differ. The following mismatch scenarios SHALL be handled:\n'
-        '\n'
-        '* Different alias expressions in left and right segments for the same column name\n'
-        '* An alias present in one segment but missing in the other segment\n'
-        '* Incompatible return types between segment alias expressions\n'
+        '[ClickHouse] SHALL return an error when a Hybrid table defines a column that\n'
+        'is present as an ALIAS in one segment but completely missing from the other\n'
+        'segment (neither as alias nor regular column). The error SHALL indicate the\n'
+        'missing column.\n'
         '\n'
         '[ClickHouse]: https://clickhouse.com\n'
     ),
     link=None,
-    level=3,
-    num='8.4.1'
+    level=2,
+    num='5.8'
 )
 
 SRS_Hybrid_Table_ALIAS_Columns = Specification(
@@ -1263,150 +783,63 @@ SRS_Hybrid_Table_ALIAS_Columns = Specification(
         Heading(name='Settings', level=1, num='2'),
         Heading(name='RQ.Ice.HybridAlias.Settings.AsteriskIncludeAliasColumns', level=2, num='2.1'),
         Heading(name='ALIAS Column Types', level=1, num='3'),
-        Heading(name='Simple Arithmetic Aliases', level=2, num='3.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic', level=3, num='3.1.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.Division', level=3, num='3.1.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.FloatTypes', level=3, num='3.1.3'),
-        Heading(name='Constant Aliases', level=2, num='3.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Constant', level=3, num='3.2.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Constant.StringDate', level=3, num='3.2.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Constant.Null', level=3, num='3.2.3'),
-        Heading(name='Boolean Logical Aliases', level=2, num='3.3'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical', level=3, num='3.3.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.ComplexExpressions', level=3, num='3.3.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.NullHandling', level=3, num='3.3.3'),
-        Heading(name='Date Time Function Aliases', level=2, num='3.4'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction', level=3, num='3.4.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.Arithmetic', level=3, num='3.4.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.UnixTimestamp', level=3, num='3.4.3'),
-        Heading(name='String Function Aliases', level=2, num='3.5'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.StringFunction', level=3, num='3.5.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.StringFunction.Concatenation', level=3, num='3.5.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.StringFunction.NullHandling', level=3, num='3.5.3'),
-        Heading(name='Type Conversion Aliases', level=2, num='3.6'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion', level=3, num='3.6.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion.DateConversions', level=3, num='3.6.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.TypeConversion.InvalidConversion', level=3, num='3.6.3'),
-        Heading(name='Conditional Aliases', level=2, num='3.7'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Conditional', level=3, num='3.7.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Conditional.MultiIf', level=3, num='3.7.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.Conditional.Coalesce', level=3, num='3.7.3'),
-        Heading(name='Nested Dependent Aliases', level=2, num='3.8'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent', level=3, num='3.8.1'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultiLevel', level=3, num='3.8.2'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultipleDependencies', level=3, num='3.8.3'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.NestedDependent.CircularDependency', level=3, num='3.8.4'),
-        Heading(name='Complex Expression Aliases', level=2, num='3.9'),
-        Heading(name='RQ.Ice.HybridAlias.AliasTypes.ComplexExpression', level=3, num='3.9.1'),
-        Heading(name='Watermark and Predicate Types', level=1, num='4'),
-        Heading(name='Direct Column Predicates', level=2, num='4.1'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.DirectColumn', level=3, num='4.1.1'),
-        Heading(name='Alias Column Predicates', level=2, num='4.2'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.AliasColumn', level=3, num='4.2.1'),
-        Heading(name='Predicates on Columns That Aliases Depend On', level=2, num='4.3'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.BaseDependentColumn', level=3, num='4.3.1'),
-        Heading(name='Predicates on Columns That Aliases Do Not Depend On', level=2, num='4.4'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.BaseIndependentColumn', level=3, num='4.4.1'),
-        Heading(name='Complex Predicates with Aliases', level=2, num='4.5'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.Complex', level=3, num='4.5.1'),
-        Heading(name='Date Based Predicates', level=2, num='4.6'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.DateBased', level=3, num='4.6.1'),
-        Heading(name='Numeric Range Predicates', level=2, num='4.7'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.NumericRange', level=3, num='4.7.1'),
-        Heading(name='String Predicates', level=2, num='4.8'),
-        Heading(name='RQ.Ice.HybridAlias.Predicates.String', level=3, num='4.8.1'),
-        Heading(name='Query Context', level=1, num='5'),
-        Heading(name='SELECT Clause', level=2, num='5.1'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.Select', level=3, num='5.1.1'),
-        Heading(name='WHERE Clause', level=2, num='5.2'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.Where', level=3, num='5.2.1'),
-        Heading(name='GROUP BY Clause', level=2, num='5.3'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.GroupBy', level=3, num='5.3.1'),
-        Heading(name='ORDER BY Clause', level=2, num='5.4'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.OrderBy', level=3, num='5.4.1'),
-        Heading(name='HAVING Clause', level=2, num='5.5'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.Having', level=3, num='5.5.1'),
-        Heading(name='JOIN Operations', level=2, num='5.6'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.Join', level=3, num='5.6.1'),
-        Heading(name='Subqueries', level=2, num='5.7'),
-        Heading(name='RQ.Ice.HybridAlias.QueryContext.Subquery', level=3, num='5.7.1'),
-        Heading(name='Segment Behavior', level=1, num='6'),
-        Heading(name='Left Alias Right Normal', level=2, num='6.1'),
-        Heading(name='RQ.Ice.HybridAlias.Segments.LeftAliasRightNormal', level=3, num='6.1.1'),
-        Heading(name='Left Normal Right Alias', level=2, num='6.2'),
-        Heading(name='RQ.Ice.HybridAlias.Segments.LeftNormalRightAlias', level=3, num='6.2.1'),
-        Heading(name='Both Segments Alias', level=2, num='6.3'),
-        Heading(name='RQ.Ice.HybridAlias.Segments.BothAlias', level=3, num='6.3.1'),
-        Heading(name='Segment Type Mismatch', level=2, num='6.4'),
-        Heading(name='RQ.Ice.HybridAlias.Segments.TypeMismatch', level=3, num='6.4.1'),
-        Heading(name='Type Compatibility', level=1, num='7'),
-        Heading(name='Type Alignment', level=2, num='7.1'),
-        Heading(name='RQ.Ice.HybridAlias.TypeCompatibility.Alignment', level=3, num='7.1.1'),
-        Heading(name='Automatic Type Casting', level=2, num='7.2'),
-        Heading(name='RQ.Ice.HybridAlias.TypeCompatibility.AutoCast', level=3, num='7.2.1'),
-        Heading(name='Edge Cases and Error Scenarios', level=1, num='8'),
-        Heading(name='Missing Dependencies', level=2, num='8.1'),
-        Heading(name='RQ.Ice.HybridAlias.EdgeCases.MissingDependencies', level=3, num='8.1.1'),
-        Heading(name='NULL Handling', level=2, num='8.2'),
-        Heading(name='RQ.Ice.HybridAlias.EdgeCases.NullHandling', level=3, num='8.2.1'),
-        Heading(name='Division by Zero', level=2, num='8.3'),
-        Heading(name='RQ.Ice.HybridAlias.EdgeCases.DivisionByZero', level=3, num='8.3.1'),
-        Heading(name='Segment Mismatches', level=2, num='8.4'),
-        Heading(name='RQ.Ice.HybridAlias.EdgeCases.SegmentMismatch', level=3, num='8.4.1'),
+        Heading(name='RQ.Ice.HybridAlias.Arithmetic', level=2, num='3.1'),
+        Heading(name='RQ.Ice.HybridAlias.Constants', level=2, num='3.2'),
+        Heading(name='RQ.Ice.HybridAlias.BooleanLogical', level=2, num='3.3'),
+        Heading(name='RQ.Ice.HybridAlias.DateTimeFunction', level=2, num='3.4'),
+        Heading(name='RQ.Ice.HybridAlias.StringFunction', level=2, num='3.5'),
+        Heading(name='RQ.Ice.HybridAlias.TypeConversion', level=2, num='3.6'),
+        Heading(name='RQ.Ice.HybridAlias.Conditional', level=2, num='3.7'),
+        Heading(name='RQ.Ice.HybridAlias.NestedDependent', level=2, num='3.8'),
+        Heading(name='RQ.Ice.HybridAlias.ComplexExpression', level=2, num='3.9'),
+        Heading(name='RQ.Ice.HybridAlias.MathFunction', level=2, num='3.10'),
+        Heading(name='RQ.Ice.HybridAlias.RoundingFunction', level=2, num='3.11'),
+        Heading(name='RQ.Ice.HybridAlias.ArrayFunction', level=2, num='3.12'),
+        Heading(name='RQ.Ice.HybridAlias.TupleFunction', level=2, num='3.13'),
+        Heading(name='RQ.Ice.HybridAlias.MapFunction', level=2, num='3.14'),
+        Heading(name='RQ.Ice.HybridAlias.JsonFunction', level=2, num='3.15'),
+        Heading(name='RQ.Ice.HybridAlias.HashEncodingFunction', level=2, num='3.16'),
+        Heading(name='RQ.Ice.HybridAlias.UtilityFunction', level=2, num='3.17'),
+        Heading(name='Query Context', level=1, num='4'),
+        Heading(name='RQ.Ice.HybridAlias.QueryContext', level=2, num='4.1'),
+        Heading(name='Top-Level Tests', level=1, num='5'),
+        Heading(name='RQ.Ice.HybridAlias.SimpleArithmeticAlias', level=2, num='5.1'),
+        Heading(name='RQ.Ice.HybridAlias.AliasColumnInPredicate', level=2, num='5.2'),
+        Heading(name='RQ.Ice.HybridAlias.LeftAliasRightNormal', level=2, num='5.3'),
+        Heading(name='RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch', level=2, num='5.4'),
+        Heading(name='RQ.Ice.HybridAlias.LeftNormalRightAlias', level=2, num='5.5'),
+        Heading(name='RQ.Ice.HybridAlias.LeftNormalRightAliasTypeMismatch', level=2, num='5.6'),
+        Heading(name='RQ.Ice.HybridAlias.DifferentAliasExpressions', level=2, num='5.7'),
+        Heading(name='RQ.Ice.HybridAlias.AliasMissingInSegment', level=2, num='5.8'),
         ),
     requirements=(
         RQ_Ice_HybridAlias_Settings_AsteriskIncludeAliasColumns,
-        RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic,
-        RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic_Division,
-        RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic_FloatTypes,
-        RQ_Ice_HybridAlias_AliasTypes_Constant,
-        RQ_Ice_HybridAlias_AliasTypes_Constant_StringDate,
-        RQ_Ice_HybridAlias_AliasTypes_Constant_Null,
-        RQ_Ice_HybridAlias_AliasTypes_BooleanLogical,
-        RQ_Ice_HybridAlias_AliasTypes_BooleanLogical_ComplexExpressions,
-        RQ_Ice_HybridAlias_AliasTypes_BooleanLogical_NullHandling,
-        RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction,
-        RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction_Arithmetic,
-        RQ_Ice_HybridAlias_AliasTypes_DateTimeFunction_UnixTimestamp,
-        RQ_Ice_HybridAlias_AliasTypes_StringFunction,
-        RQ_Ice_HybridAlias_AliasTypes_StringFunction_Concatenation,
-        RQ_Ice_HybridAlias_AliasTypes_StringFunction_NullHandling,
-        RQ_Ice_HybridAlias_AliasTypes_TypeConversion,
-        RQ_Ice_HybridAlias_AliasTypes_TypeConversion_DateConversions,
-        RQ_Ice_HybridAlias_AliasTypes_TypeConversion_InvalidConversion,
-        RQ_Ice_HybridAlias_AliasTypes_Conditional,
-        RQ_Ice_HybridAlias_AliasTypes_Conditional_MultiIf,
-        RQ_Ice_HybridAlias_AliasTypes_Conditional_Coalesce,
-        RQ_Ice_HybridAlias_AliasTypes_NestedDependent,
-        RQ_Ice_HybridAlias_AliasTypes_NestedDependent_MultiLevel,
-        RQ_Ice_HybridAlias_AliasTypes_NestedDependent_MultipleDependencies,
-        RQ_Ice_HybridAlias_AliasTypes_NestedDependent_CircularDependency,
-        RQ_Ice_HybridAlias_AliasTypes_ComplexExpression,
-        RQ_Ice_HybridAlias_Predicates_DirectColumn,
-        RQ_Ice_HybridAlias_Predicates_AliasColumn,
-        RQ_Ice_HybridAlias_Predicates_BaseDependentColumn,
-        RQ_Ice_HybridAlias_Predicates_BaseIndependentColumn,
-        RQ_Ice_HybridAlias_Predicates_Complex,
-        RQ_Ice_HybridAlias_Predicates_DateBased,
-        RQ_Ice_HybridAlias_Predicates_NumericRange,
-        RQ_Ice_HybridAlias_Predicates_String,
-        RQ_Ice_HybridAlias_QueryContext_Select,
-        RQ_Ice_HybridAlias_QueryContext_Where,
-        RQ_Ice_HybridAlias_QueryContext_GroupBy,
-        RQ_Ice_HybridAlias_QueryContext_OrderBy,
-        RQ_Ice_HybridAlias_QueryContext_Having,
-        RQ_Ice_HybridAlias_QueryContext_Join,
-        RQ_Ice_HybridAlias_QueryContext_Subquery,
-        RQ_Ice_HybridAlias_Segments_LeftAliasRightNormal,
-        RQ_Ice_HybridAlias_Segments_LeftNormalRightAlias,
-        RQ_Ice_HybridAlias_Segments_BothAlias,
-        RQ_Ice_HybridAlias_Segments_TypeMismatch,
-        RQ_Ice_HybridAlias_TypeCompatibility_Alignment,
-        RQ_Ice_HybridAlias_TypeCompatibility_AutoCast,
-        RQ_Ice_HybridAlias_EdgeCases_MissingDependencies,
-        RQ_Ice_HybridAlias_EdgeCases_NullHandling,
-        RQ_Ice_HybridAlias_EdgeCases_DivisionByZero,
-        RQ_Ice_HybridAlias_EdgeCases_SegmentMismatch,
+        RQ_Ice_HybridAlias_Arithmetic,
+        RQ_Ice_HybridAlias_Constants,
+        RQ_Ice_HybridAlias_BooleanLogical,
+        RQ_Ice_HybridAlias_DateTimeFunction,
+        RQ_Ice_HybridAlias_StringFunction,
+        RQ_Ice_HybridAlias_TypeConversion,
+        RQ_Ice_HybridAlias_Conditional,
+        RQ_Ice_HybridAlias_NestedDependent,
+        RQ_Ice_HybridAlias_ComplexExpression,
+        RQ_Ice_HybridAlias_MathFunction,
+        RQ_Ice_HybridAlias_RoundingFunction,
+        RQ_Ice_HybridAlias_ArrayFunction,
+        RQ_Ice_HybridAlias_TupleFunction,
+        RQ_Ice_HybridAlias_MapFunction,
+        RQ_Ice_HybridAlias_JsonFunction,
+        RQ_Ice_HybridAlias_HashEncodingFunction,
+        RQ_Ice_HybridAlias_UtilityFunction,
+        RQ_Ice_HybridAlias_QueryContext,
+        RQ_Ice_HybridAlias_SimpleArithmeticAlias,
+        RQ_Ice_HybridAlias_AliasColumnInPredicate,
+        RQ_Ice_HybridAlias_LeftAliasRightNormal,
+        RQ_Ice_HybridAlias_LeftAliasRightNormalTypeMismatch,
+        RQ_Ice_HybridAlias_LeftNormalRightAlias,
+        RQ_Ice_HybridAlias_LeftNormalRightAliasTypeMismatch,
+        RQ_Ice_HybridAlias_DifferentAliasExpressions,
+        RQ_Ice_HybridAlias_AliasMissingInSegment,
         ),
     content=r'''
 # SRS Hybrid Table ALIAS Columns
@@ -1418,110 +851,45 @@ SRS_Hybrid_Table_ALIAS_Columns = Specification(
 * 2 [Settings](#settings)
     * 2.1 [RQ.Ice.HybridAlias.Settings.AsteriskIncludeAliasColumns](#rqicehybridaliassettingsasteriskincludealiascolumns)
 * 3 [ALIAS Column Types](#alias-column-types)
-    * 3.1 [Simple Arithmetic Aliases](#simple-arithmetic-aliases)
-        * 3.1.1 [RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic](#rqicehybridaliasaliastypessimplearithmetic)
-        * 3.1.2 [RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.Division](#rqicehybridaliasaliastypessimplearithmeticdivision)
-        * 3.1.3 [RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.FloatTypes](#rqicehybridaliasaliastypessimplearithmeticfloattypes)
-    * 3.2 [Constant Aliases](#constant-aliases)
-        * 3.2.1 [RQ.Ice.HybridAlias.AliasTypes.Constant](#rqicehybridaliasaliastypesconstant)
-        * 3.2.2 [RQ.Ice.HybridAlias.AliasTypes.Constant.StringDate](#rqicehybridaliasaliastypesconstantstringdate)
-        * 3.2.3 [RQ.Ice.HybridAlias.AliasTypes.Constant.Null](#rqicehybridaliasaliastypesconstantnull)
-    * 3.3 [Boolean Logical Aliases](#boolean-logical-aliases)
-        * 3.3.1 [RQ.Ice.HybridAlias.AliasTypes.BooleanLogical](#rqicehybridaliasaliastypesbooleanlogical)
-        * 3.3.2 [RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.ComplexExpressions](#rqicehybridaliasaliastypesbooleanlogicalcomplexexpressions)
-        * 3.3.3 [RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.NullHandling](#rqicehybridaliasaliastypesbooleanlogicalnullhandling)
-    * 3.4 [Date Time Function Aliases](#date-time-function-aliases)
-        * 3.4.1 [RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction](#rqicehybridaliasaliastypesdatetimefunction)
-        * 3.4.2 [RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.Arithmetic](#rqicehybridaliasaliastypesdatetimefunctionarithmetic)
-        * 3.4.3 [RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.UnixTimestamp](#rqicehybridaliasaliastypesdatetimefunctionunixtimestamp)
-    * 3.5 [String Function Aliases](#string-function-aliases)
-        * 3.5.1 [RQ.Ice.HybridAlias.AliasTypes.StringFunction](#rqicehybridaliasaliastypesstringfunction)
-        * 3.5.2 [RQ.Ice.HybridAlias.AliasTypes.StringFunction.Concatenation](#rqicehybridaliasaliastypesstringfunctionconcatenation)
-        * 3.5.3 [RQ.Ice.HybridAlias.AliasTypes.StringFunction.NullHandling](#rqicehybridaliasaliastypesstringfunctionnullhandling)
-    * 3.6 [Type Conversion Aliases](#type-conversion-aliases)
-        * 3.6.1 [RQ.Ice.HybridAlias.AliasTypes.TypeConversion](#rqicehybridaliasaliastypestypeconversion)
-        * 3.6.2 [RQ.Ice.HybridAlias.AliasTypes.TypeConversion.DateConversions](#rqicehybridaliasaliastypestypeconversiondateconversions)
-        * 3.6.3 [RQ.Ice.HybridAlias.AliasTypes.TypeConversion.InvalidConversion](#rqicehybridaliasaliastypestypeconversioninvalidconversion)
-    * 3.7 [Conditional Aliases](#conditional-aliases)
-        * 3.7.1 [RQ.Ice.HybridAlias.AliasTypes.Conditional](#rqicehybridaliasaliastypesconditional)
-        * 3.7.2 [RQ.Ice.HybridAlias.AliasTypes.Conditional.MultiIf](#rqicehybridaliasaliastypesconditionalmultiif)
-        * 3.7.3 [RQ.Ice.HybridAlias.AliasTypes.Conditional.Coalesce](#rqicehybridaliasaliastypesconditionalcoalesce)
-    * 3.8 [Nested Dependent Aliases](#nested-dependent-aliases)
-        * 3.8.1 [RQ.Ice.HybridAlias.AliasTypes.NestedDependent](#rqicehybridaliasaliastypesnesteddependent)
-        * 3.8.2 [RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultiLevel](#rqicehybridaliasaliastypesnesteddependentmultilevel)
-        * 3.8.3 [RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultipleDependencies](#rqicehybridaliasaliastypesnesteddependentmultipledependencies)
-        * 3.8.4 [RQ.Ice.HybridAlias.AliasTypes.NestedDependent.CircularDependency](#rqicehybridaliasaliastypesnesteddependentcirculardependency)
-    * 3.9 [Complex Expression Aliases](#complex-expression-aliases)
-        * 3.9.1 [RQ.Ice.HybridAlias.AliasTypes.ComplexExpression](#rqicehybridaliasaliastypescomplexexpression)
-* 4 [Watermark and Predicate Types](#watermark-and-predicate-types)
-    * 4.1 [Direct Column Predicates](#direct-column-predicates)
-        * 4.1.1 [RQ.Ice.HybridAlias.Predicates.DirectColumn](#rqicehybridaliaspredicatesdirectcolumn)
-    * 4.2 [Alias Column Predicates](#alias-column-predicates)
-        * 4.2.1 [RQ.Ice.HybridAlias.Predicates.AliasColumn](#rqicehybridaliaspredicatesaliascolumn)
-    * 4.3 [Predicates on Columns That Aliases Depend On](#predicates-on-columns-that-aliases-depend-on)
-        * 4.3.1 [RQ.Ice.HybridAlias.Predicates.BaseDependentColumn](#rqicehybridaliaspredicatesbasedependentcolumn)
-    * 4.4 [Predicates on Columns That Aliases Do Not Depend On](#predicates-on-columns-that-aliases-do-not-depend-on)
-        * 4.4.1 [RQ.Ice.HybridAlias.Predicates.BaseIndependentColumn](#rqicehybridaliaspredicatesbaseindependentcolumn)
-    * 4.5 [Complex Predicates with Aliases](#complex-predicates-with-aliases)
-        * 4.5.1 [RQ.Ice.HybridAlias.Predicates.Complex](#rqicehybridaliaspredicatescomplex)
-    * 4.6 [Date Based Predicates](#date-based-predicates)
-        * 4.6.1 [RQ.Ice.HybridAlias.Predicates.DateBased](#rqicehybridaliaspredicatesdatebased)
-    * 4.7 [Numeric Range Predicates](#numeric-range-predicates)
-        * 4.7.1 [RQ.Ice.HybridAlias.Predicates.NumericRange](#rqicehybridaliaspredicatesnumericrange)
-    * 4.8 [String Predicates](#string-predicates)
-        * 4.8.1 [RQ.Ice.HybridAlias.Predicates.String](#rqicehybridaliaspredicatesstring)
-* 5 [Query Context](#query-context)
-    * 5.1 [SELECT Clause](#select-clause)
-        * 5.1.1 [RQ.Ice.HybridAlias.QueryContext.Select](#rqicehybridaliasquerycontextselect)
-    * 5.2 [WHERE Clause](#where-clause)
-        * 5.2.1 [RQ.Ice.HybridAlias.QueryContext.Where](#rqicehybridaliasquerycontextwhere)
-    * 5.3 [GROUP BY Clause](#group-by-clause)
-        * 5.3.1 [RQ.Ice.HybridAlias.QueryContext.GroupBy](#rqicehybridaliasquerycontextgroupby)
-    * 5.4 [ORDER BY Clause](#order-by-clause)
-        * 5.4.1 [RQ.Ice.HybridAlias.QueryContext.OrderBy](#rqicehybridaliasquerycontextorderby)
-    * 5.5 [HAVING Clause](#having-clause)
-        * 5.5.1 [RQ.Ice.HybridAlias.QueryContext.Having](#rqicehybridaliasquerycontexthaving)
-    * 5.6 [JOIN Operations](#join-operations)
-        * 5.6.1 [RQ.Ice.HybridAlias.QueryContext.Join](#rqicehybridaliasquerycontextjoin)
-    * 5.7 [Subqueries](#subqueries)
-        * 5.7.1 [RQ.Ice.HybridAlias.QueryContext.Subquery](#rqicehybridaliasquerycontextsubquery)
-* 6 [Segment Behavior](#segment-behavior)
-    * 6.1 [Left Alias Right Normal](#left-alias-right-normal)
-        * 6.1.1 [RQ.Ice.HybridAlias.Segments.LeftAliasRightNormal](#rqicehybridaliassegmentsleftaliasrightnormal)
-    * 6.2 [Left Normal Right Alias](#left-normal-right-alias)
-        * 6.2.1 [RQ.Ice.HybridAlias.Segments.LeftNormalRightAlias](#rqicehybridaliassegmentsleftnormalrightalias)
-    * 6.3 [Both Segments Alias](#both-segments-alias)
-        * 6.3.1 [RQ.Ice.HybridAlias.Segments.BothAlias](#rqicehybridaliassegmentsbothalias)
-    * 6.4 [Segment Type Mismatch](#segment-type-mismatch)
-        * 6.4.1 [RQ.Ice.HybridAlias.Segments.TypeMismatch](#rqicehybridaliassegmentstypemismatch)
-* 7 [Type Compatibility](#type-compatibility)
-    * 7.1 [Type Alignment](#type-alignment)
-        * 7.1.1 [RQ.Ice.HybridAlias.TypeCompatibility.Alignment](#rqicehybridaliastypecompatibilityalignment)
-    * 7.2 [Automatic Type Casting](#automatic-type-casting)
-        * 7.2.1 [RQ.Ice.HybridAlias.TypeCompatibility.AutoCast](#rqicehybridaliastypecompatibilityautocast)
-* 8 [Edge Cases and Error Scenarios](#edge-cases-and-error-scenarios)
-    * 8.1 [Missing Dependencies](#missing-dependencies)
-        * 8.1.1 [RQ.Ice.HybridAlias.EdgeCases.MissingDependencies](#rqicehybridaliasedgecasesmissingdependencies)
-    * 8.2 [NULL Handling](#null-handling)
-        * 8.2.1 [RQ.Ice.HybridAlias.EdgeCases.NullHandling](#rqicehybridaliasedgecasesnullhandling)
-    * 8.3 [Division by Zero](#division-by-zero)
-        * 8.3.1 [RQ.Ice.HybridAlias.EdgeCases.DivisionByZero](#rqicehybridaliasedgecasesdivisionbyzero)
-    * 8.4 [Segment Mismatches](#segment-mismatches)
-        * 8.4.1 [RQ.Ice.HybridAlias.EdgeCases.SegmentMismatch](#rqicehybridaliasedgecasessegmentmismatch)
+    * 3.1 [RQ.Ice.HybridAlias.Arithmetic](#rqicehybridaliasarithmetic)
+    * 3.2 [RQ.Ice.HybridAlias.Constants](#rqicehybridaliasconstants)
+    * 3.3 [RQ.Ice.HybridAlias.BooleanLogical](#rqicehybridaliasbooleanlogical)
+    * 3.4 [RQ.Ice.HybridAlias.DateTimeFunction](#rqicehybridaliasdatetimefunction)
+    * 3.5 [RQ.Ice.HybridAlias.StringFunction](#rqicehybridaliasstringfunction)
+    * 3.6 [RQ.Ice.HybridAlias.TypeConversion](#rqicehybridaliastypeconversion)
+    * 3.7 [RQ.Ice.HybridAlias.Conditional](#rqicehybridaliasconditional)
+    * 3.8 [RQ.Ice.HybridAlias.NestedDependent](#rqicehybridaliasnesteddependent)
+    * 3.9 [RQ.Ice.HybridAlias.ComplexExpression](#rqicehybridaliascomplexexpression)
+    * 3.10 [RQ.Ice.HybridAlias.MathFunction](#rqicehybridaliasmathfunction)
+    * 3.11 [RQ.Ice.HybridAlias.RoundingFunction](#rqicehybridaliasroundingfunction)
+    * 3.12 [RQ.Ice.HybridAlias.ArrayFunction](#rqicehybridaliasarrayfunction)
+    * 3.13 [RQ.Ice.HybridAlias.TupleFunction](#rqicehybridaliastuplefunction)
+    * 3.14 [RQ.Ice.HybridAlias.MapFunction](#rqicehybridaliasmapfunction)
+    * 3.15 [RQ.Ice.HybridAlias.JsonFunction](#rqicehybridaliasjsonfunction)
+    * 3.16 [RQ.Ice.HybridAlias.HashEncodingFunction](#rqicehybridaliashashencodingfunction)
+    * 3.17 [RQ.Ice.HybridAlias.UtilityFunction](#rqicehybridaliasutilityfunction)
+* 4 [Query Context](#query-context)
+    * 4.1 [RQ.Ice.HybridAlias.QueryContext](#rqicehybridaliasquerycontext)
+* 5 [Top-Level Tests](#top-level-tests)
+    * 5.1 [RQ.Ice.HybridAlias.SimpleArithmeticAlias](#rqicehybridaliassimplearithmeticalias)
+    * 5.2 [RQ.Ice.HybridAlias.AliasColumnInPredicate](#rqicehybridaliasaliascolumninpredicate)
+    * 5.3 [RQ.Ice.HybridAlias.LeftAliasRightNormal](#rqicehybridaliasLeftaliasrightnormal)
+    * 5.4 [RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch](#rqicehybridaliasLeftaliasrightnormaltypemismatch)
+    * 5.5 [RQ.Ice.HybridAlias.LeftNormalRightAlias](#rqicehybridaliasleftnormalrightalias)
+    * 5.6 [RQ.Ice.HybridAlias.LeftNormalRightAliasTypeMismatch](#rqicehybridaliasleftnormalrightaliastypemismatch)
+    * 5.7 [RQ.Ice.HybridAlias.DifferentAliasExpressions](#rqicehybridaliasdifferentaliasexpressions)
+    * 5.8 [RQ.Ice.HybridAlias.AliasMissingInSegment](#rqicehybridaliasaliasmissinginsegment)
 
 ## Introduction
 
 This software requirements specification covers requirements for ALIAS columns
-in [ClickHouse] Hybrid table engine segments. ALIAS columns are computed columns
-whose values are calculated on-the-fly from expressions referencing base columns
-or other alias columns. When used with the Hybrid table engine, ALIAS columns
-must be handled consistently across segments (left and right) and correctly
-evaluated through watermark predicates.
+in [ClickHouse] Hybrid table engine segments. Each requirement corresponds to
+a test folder or a top-level test file under `hybrid_alias/tests/`.
 
-The Hybrid table engine unions multiple data sources behind per-segment
-predicates so queries behave like a single table while data is migrated or
-tiered. ALIAS columns add a layer of computed values that must be transparent
-to this routing mechanism.
+Every test creates left and right segment tables, a Hybrid table, and a
+reference MergeTree table to compare results. Each test file contains two
+scenarios: one with a date-based watermark predicate on a base column, and one
+with the alias column used directly in the watermark predicate.
 
 ## Settings
 
@@ -1540,731 +908,452 @@ SELECT * FROM hybrid_table ORDER BY id;
 
 ## ALIAS Column Types
 
-### Simple Arithmetic Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic
+### RQ.Ice.HybridAlias.Arithmetic
 version: 1.0
 
-[ClickHouse] SHALL support ALIAS columns that perform basic arithmetic
-operations (`+`, `-`, `*`, `/`, `%`) on base columns in Hybrid table segments.
-The alias expression SHALL be evaluated on-the-fly and return correct results
-across both segments.
+[ClickHouse] SHALL support ALIAS columns that perform arithmetic operations
+on base columns in Hybrid table segments. The alias expression SHALL be
+evaluated on-the-fly and return correct results across both segments.
 
-Supported numeric base column types SHALL include:
-Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float32, Float64.
+The following cases SHALL be covered:
 
-For example:
+* `computed ALIAS value * 2` — multiplication
+* `sum_alias ALIAS id + value` — addition
+* `difference ALIAS value1 - value2` — subtraction
+* `product ALIAS value1 * value2` — multiplication of two columns
+* `quotient ALIAS value1 / value2` — division
+* `modulo ALIAS value % 3` — modulo
+* `intdiv ALIAS intDiv(value, 2)` — integer division
+* `negative ALIAS abs(value) - abs(value * 2)` — negative result values
+* `multiple ALIAS (value1 * value2 - value3) % (value2 + 1)` — complex multi-operand
+* `scaled ALIAS price * 1.5` — Float32 base column arithmetic
+* `total ALIAS amount1 + amount2` — Float64 base column addition
+* `ratio ALIAS amount1 / amount2` — Float64 base column division
+* `div_by_zero ALIAS value / 0` — division by zero edge case
 
-```sql
-CREATE TABLE left_table (
-    id Int32,
-    value Int32,
-    date_col Date,
-    computed ALIAS value * 2,
-    sum_alias ALIAS id + value
-) ENGINE = MergeTree ORDER BY (date_col, id);
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.Division
-version: 1.0
-
-[ClickHouse] SHALL correctly evaluate ALIAS columns that use division operations
-in Hybrid table segments. The result type SHALL match the expected numeric type
-of the division (integer division for integer types, floating-point for float types).
-
-For example:
-
-```sql
-quotient ALIAS value1 / value2
-modulo ALIAS value % 3
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.SimpleArithmetic.FloatTypes
-version: 1.0
-
-[ClickHouse] SHALL correctly evaluate ALIAS columns that operate on Float32
-and Float64 base columns in Hybrid table segments. Arithmetic operations
-on floating-point types SHALL preserve floating-point precision semantics.
-
-### Constant Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.Constant
+### RQ.Ice.HybridAlias.Constants
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that evaluate to constant values in
 Hybrid table segments. The constant SHALL be returned for every row regardless
 of the base column values.
 
-Supported constant types SHALL include numeric constants (integers, floats),
-string constants, and boolean constants (`true`, `false`, `1`, `0`).
+The following constant types SHALL be covered:
 
-For example:
+* `default_int8 ALIAS -50` (Int8)
+* `default_int32 ALIAS toInt32(50000)` (Int32)
+* `default_int64 ALIAS toInt64(1000000000)` (Int64)
+* `default_int128 ALIAS toInt128(...)` (Int128)
+* `default_int256 ALIAS toInt256(...)` (Int256)
+* `default_uint256 ALIAS toUInt256(...)` (UInt256)
+* `default_float32 ALIAS toFloat32(3.14159)` (Float32)
+* `default_float64 ALIAS 2.718281828459045` (Float64)
+* `default_decimal32 ALIAS toDecimal32(4.2, 8)` (Decimal32)
+* `default_string ALIAS 'hello world'` (String)
+* `default_date ALIAS toDate('2025-01-01')` (Date)
+* `default_datetime ALIAS toDateTime('2025-01-01 12:00:00')` (DateTime)
+* `default_datetime64 ALIAS toDateTime64('2025-01-01 12:00:00', 0)` (DateTime64)
+* `default_bool ALIAS true` (Bool)
+* `default_bool_false ALIAS false` (Bool)
+* `default_array ALIAS array(1, 2, 3)` (Array(UInt8))
+* `default_array_string ALIAS array('a', 'b', 'c')` (Array(String))
+* `default_tuple ALIAS tuple(1, 'hello', 3.14)` (Tuple)
+* `default_nested_tuple ALIAS tuple(1, tuple(2, 3), 4)` (nested Tuple)
+* `default_map ALIAS map('key1', 'value1', 'key2', 'value2')` (Map)
+* `default_json ALIAS '...'::JSON` (JSON)
 
-```sql
-threshold ALIAS 50
-max_value ALIAS 1000
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.Constant.StringDate
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that evaluate to string constants
-and date constants in Hybrid table segments.
-
-For example:
-
-```sql
-default_date ALIAS toDate('2025-01-01')
-label ALIAS 'constant_string'
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.Constant.Null
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that evaluate to NULL constants in
-Hybrid table segments. The NULL value SHALL be returned for every row.
-
-### Boolean Logical Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.BooleanLogical
+### RQ.Ice.HybridAlias.BooleanLogical
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that evaluate to boolean values
-(UInt8 0/1) using comparison operators (`=`, `!=`, `<`, `<=`, `>`, `>=`) in
-Hybrid table segments.
+(UInt8 0/1) in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-is_even ALIAS value % 2 = 0
-is_recent ALIAS date_col >= '2025-01-15'
-```
+* `is_equal ALIAS value = 42` — equality
+* `is_not_equal ALIAS value != 42` — inequality
+* `is_less ALIAS value < 100` — less than
+* `is_less_equal ALIAS value <= 100` — less or equal
+* `is_greater ALIAS value > 0` — greater than
+* `is_greater_equal ALIAS value >= 0` — greater or equal
+* `is_even ALIAS value % 2 = 0` — arithmetic with comparison
+* `is_recent ALIAS date_col >= '2025-01-15'` — date comparison
+* `is_active ALIAS status = 'active'` — string comparison
+* `is_valid ALIAS value > 0 AND value < 100` — AND
+* `is_or_condition ALIAS value < 10 OR value > 90` — OR
+* `is_not_condition ALIAS NOT (value = 0)` — NOT
+* `is_complex_logic ALIAS (value > 0 AND value < 100) OR (value > 200 AND value < 300)` — complex AND/OR
+* `is_xor_condition ALIAS xor(value > 50, value < 100)` — XOR
+* `is_in_range ALIAS value BETWEEN 10 AND 100` — BETWEEN
+* `is_not_in_range ALIAS value NOT BETWEEN 10 AND 100` — NOT BETWEEN
+* `is_in_set ALIAS value IN (1, 2, 3, 4, 5)` — IN
+* `is_not_in_set ALIAS value NOT IN (1, 2, 3, 4, 5)` — NOT IN
+* `is_like ALIAS name LIKE '%test%'` — LIKE
+* `is_not_like ALIAS name NOT LIKE '%test%'` — NOT LIKE
+* `is_ilike ALIAS name ILIKE '%TEST%'` — ILIKE
+* `is_null_check ALIAS isNull(value)` — NULL check
+* `is_not_null_check ALIAS isNotNull(value)` — NOT NULL check
 
-#### RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.ComplexExpressions
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use logical operators (`AND`,
-`OR`, `NOT`) to combine multiple boolean conditions in Hybrid table segments.
-
-For example:
-
-```sql
-is_valid ALIAS value > 0 AND value < 100
-is_active ALIAS status = 'active' OR status = 'pending'
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.BooleanLogical.NullHandling
-version: 1.0
-
-[ClickHouse] SHALL handle NULL values correctly in boolean ALIAS column
-comparisons within Hybrid table segments. Comparisons involving NULL SHALL follow
-standard SQL three-valued logic.
-
-### Date Time Function Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction
+### RQ.Ice.HybridAlias.DateTimeFunction
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that use date and time functions
-in Hybrid table segments. Supported functions SHALL include `toYear`, `toMonth`,
-`toDayOfWeek`, `toDayOfMonth`, `toYYYYMM`, and `toString` applied to date columns.
+in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-year_month ALIAS toYYYYMM(date_col)
-year ALIAS toYear(date_col)
-day_of_week ALIAS toDayOfWeek(date_col)
-date_string ALIAS toString(date_col)
-```
+* `year ALIAS toYear(date_col)` — year extraction
+* `month ALIAS toMonth(date_col)` — month extraction
+* `day_of_week ALIAS toDayOfWeek(date_col)` — day of week
+* `day_of_month ALIAS toDayOfMonth(date_col)` — day of month
+* `quarter ALIAS toQuarter(date_col)` — quarter
+* `year_month ALIAS toYYYYMM(date_col)` — YYYYMM format
+* `year_month_day ALIAS toYYYYMMDD(date_col)` — YYYYMMDD format
+* `hour ALIAS toHour(datetime_col)` — hour extraction
+* `minute ALIAS toMinute(datetime_col)` — minute extraction
+* `second ALIAS toSecond(datetime_col)` — second extraction
+* `start_of_day ALIAS toStartOfDay(datetime_col)` — truncate to day
+* `start_of_hour ALIAS toStartOfHour(datetime_col)` — truncate to hour
+* `start_of_month ALIAS toStartOfMonth(datetime_col)` — truncate to month
+* `start_of_quarter ALIAS toStartOfQuarter(datetime_col)` — truncate to quarter
+* `start_of_week ALIAS toStartOfWeek(datetime_col)` — truncate to week
+* `start_of_year ALIAS toStartOfYear(datetime_col)` — truncate to year
+* `date_string ALIAS toString(date_col)` — date to string
+* `datetime_string ALIAS toString(datetime_col)` — datetime to string
+* `tz_converted ALIAS toTimeZone(datetime_col, 'America/New_York')` — timezone conversion
+* `timestamp ALIAS toUnixTimestamp(date_col)` — unix timestamp
+* `date_plus_days ALIAS addDays(date_col, 7)` — add days
+* `date_plus_months ALIAS addMonths(date_col, 1)` — add months
+* `date_plus_years ALIAS addYears(date_col, 1)` — add years
+* `date_minus_days ALIAS subtractDays(date_col, 7)` — subtract days
+* `date_minus_months ALIAS subtractMonths(date_col, 1)` — subtract months
+* `date_minus_years ALIAS subtractYears(date_col, 1)` — subtract years
+* `date_plus_interval ALIAS date_col + INTERVAL 7 DAY` — interval addition
+* `date_minus_interval ALIAS date_col - INTERVAL 1 MONTH` — interval subtraction
+* `datetime_plus_interval ALIAS datetime_col + INTERVAL 1 HOUR` — datetime interval
 
-#### RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.Arithmetic
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that perform date arithmetic using
-interval additions and subtractions in Hybrid table segments.
-
-For example:
-
-```sql
-next_day ALIAS date_col + INTERVAL 1 DAY
-prev_month ALIAS date_col - INTERVAL 1 MONTH
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.DateTimeFunction.UnixTimestamp
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use `toUnixTimestamp` and
-time zone conversion functions in Hybrid table segments.
-
-For example:
-
-```sql
-timestamp ALIAS toUnixTimestamp(date_col)
-```
-
-### String Function Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.StringFunction
+### RQ.Ice.HybridAlias.StringFunction
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that use string manipulation functions
-in Hybrid table segments. Supported functions SHALL include `upper`, `lower`,
-`length`, `substring`, and `reverse`.
+in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-upper_name ALIAS upper(name)
-lower_name ALIAS lower(name)
-name_length ALIAS length(name)
-substring_name ALIAS substring(name, 1, 5)
-```
+* `upper_name ALIAS upper(name)` — uppercase
+* `lower_name ALIAS lower(name)` — lowercase
+* `name_length ALIAS length(name)` — length
+* `name_length_utf8 ALIAS lengthUTF8(name)` — UTF-8 length
+* `substring_name ALIAS substring(name, 1, 5)` — substring with length
+* `substring_from ALIAS substring(name, 3)` — substring from position
+* `reversed_name ALIAS reverse(name)` — reverse
+* `concatenated ALIAS concat(first_name, ' ', last_name)` — concat
+* `concat_ws ALIAS concatWithSeparator(' ', first_name, last_name)` — concat with separator
+* `array_concat ALIAS arrayStringConcat([first, second], ' ')` — array string concat
+* `replaced_all ALIAS replaceAll(name, 'old', 'new')` — replace all
+* `replaced_one ALIAS replaceOne(name, 'old', 'new')` — replace one
+* `replaced_regexp ALIAS replaceRegexpOne(name, '\\d+', 'X')` — regex replace
+* `repeated_name ALIAS repeat(name, 3)` — repeat
+* `left_padded ALIAS leftPad(name, 10, '0')` — left pad
+* `right_padded ALIAS rightPad(name, 10, '0')` — right pad
+* `trimmed_name ALIAS trimBoth(name, 'a')` — trim both
+* `trimmed_left ALIAS trimLeft(name, 'a')` — trim left
+* `trimmed_right ALIAS trimRight(name, 'a')` — trim right
+* `position_sub ALIAS position(name, 'test')` — position
+* `position_ci ALIAS positionCaseInsensitive(name, 'TEST')` — case-insensitive position
+* `starts_with ALIAS startsWith(name, 'prefix')` — starts with
+* `ends_with ALIAS endsWith(name, 'suffix')` — ends with
+* `is_empty ALIAS empty(name)` — empty check
+* `is_not_empty ALIAS notEmpty(name)` — not empty check
+* `ascii_code ALIAS ascii(name)` — ascii code
+* `split_by_char ALIAS splitByChar(',', name)` — split by char
+* `split_by_string ALIAS splitByString('::', name)` — split by string
+* `formatted ALIAS format('Hello {1}, you are {0} years old', age, name)` — format
+* `extract_groups ALIAS extractAllGroups(name, '(\\w+)=(\\w+)')` — regex extraction
 
-#### RQ.Ice.HybridAlias.AliasTypes.StringFunction.Concatenation
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use string concatenation functions
-(`concat`, `concat_ws`) in Hybrid table segments.
-
-For example:
-
-```sql
-full_name ALIAS concat(first_name, ' ', last_name)
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.StringFunction.NullHandling
-version: 1.0
-
-[ClickHouse] SHALL handle NULL string values correctly in string function ALIAS
-columns within Hybrid table segments.
-
-### Type Conversion Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.TypeConversion
+### RQ.Ice.HybridAlias.TypeConversion
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that perform explicit type conversions
-in Hybrid table segments. Supported conversion functions SHALL include:
+in Hybrid table segments, including narrowing conversions from larger to smaller types.
 
-* Numeric: `toInt8`, `toInt16`, `toInt32`, `toInt64`, `toUInt8`, `toUInt16`, `toUInt32`, `toUInt64`, `toFloat32`, `toFloat64`
-* String: `toString`
+The following cases SHALL be covered:
 
-For example:
+* `toInt8(value)` — Int32 to Int8
+* `toInt8(small_value)` — Int16 to Int8 (narrowing)
+* `toInt16(value)` — Int32 to Int16
+* `toInt16(value)` — Int32 to Int16 (narrowing)
+* `toInt32(value)` — identity conversion
+* `toInt32(big_value)` — Int64 to Int32 (narrowing)
+* `toInt64(value)` — Int32 to Int64 (widening)
+* `toUInt8(value)` — to UInt8
+* `toUInt8(small_value)` — UInt16 to UInt8 (narrowing)
+* `toUInt16(value)` — to UInt16
+* `toUInt16(value)` — UInt32 to UInt16 (narrowing)
+* `toUInt32(value)` — to UInt32
+* `toUInt32(big_value)` — UInt64 to UInt32 (narrowing)
+* `toUInt64(value)` — to UInt64
+* `toFloat32(value)` — to Float32
+* `toFloat32(big_float)` — Float64 to Float32 (narrowing)
+* `toFloat64(value)` — to Float64
+* `toString(value)` — to String
+* `toDate(toString(date_col))` — to Date
+* `toDateTime(toString(date_col))` — to DateTime
 
-```sql
-value_str ALIAS toString(value)
-value_float ALIAS toFloat64(value)
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.TypeConversion.DateConversions
+### RQ.Ice.HybridAlias.Conditional
 version: 1.0
 
-[ClickHouse] SHALL support ALIAS columns that use date conversion functions
-(`toDate`, `toDateTime`) in Hybrid table segments.
-
-For example:
-
-```sql
-value_date ALIAS toDate(date_string)
-value_datetime ALIAS toDateTime(timestamp_string)
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.TypeConversion.InvalidConversion
-version: 1.0
-
-[ClickHouse] SHALL return an error or handle gracefully when an ALIAS column
-expression performs an invalid type conversion in Hybrid table segments.
-
-### Conditional Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.Conditional
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use `if` conditional expressions
+[ClickHouse] SHALL support ALIAS columns that use conditional expressions
 in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-category ALIAS if(value > 50, 'high', 'low')
-```
+* `category ALIAS if(value > 50, 'high', 'low')` — if expression
+* `case_when ALIAS CASE WHEN value > 50 THEN 'high' ELSE 'low' END` — CASE WHEN
+* `case_expr ALIAS CASE value WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'other' END` — CASE value WHEN
+* `status ALIAS multiIf(value < 10, 'low', value < 50, 'medium', 'high')` — multiIf
+* `grade ALIAS multiIf(score >= 90, 'A', score >= 80, 'B', score >= 70, 'C', 'F')` — multiIf grading
+* `coalesced ALIAS coalesce(value1, value2, 0)` — coalesce
+* `null_if_result ALIAS nullIf(value, 0)` — nullIf
+* `if_null_result ALIAS ifNull(value, 0)` — ifNull
+* `nullable_value ALIAS toNullable(value)` — toNullable
+* `assumed_not_null ALIAS assumeNotNull(nullable_value)` — assumeNotNull
+* `transform_result ALIAS transform(value, [...], [...], 'default')` — transform
 
-#### RQ.Ice.HybridAlias.AliasTypes.Conditional.MultiIf
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use `multiIf` expressions with
-multiple conditions in Hybrid table segments.
-
-For example:
-
-```sql
-status ALIAS multiIf(value < 10, 'low', value < 50, 'medium', 'high')
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.Conditional.Coalesce
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that use `coalesce` to provide
-fallback values for NULL base column values in Hybrid table segments.
-
-For example:
-
-```sql
-coalesced ALIAS coalesce(value1, value2, 0)
-```
-
-### Nested Dependent Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.NestedDependent
+### RQ.Ice.HybridAlias.NestedDependent
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns that depend on other ALIAS columns
-(single-level dependency) in Hybrid table segments.
+in Hybrid table segments, including multi-level dependency chains.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-computed ALIAS value * 2
-computed_2 ALIAS computed + 10
-```
+* `computed + 10` depending on `computed ALIAS value * 2` — single-level dependency
+* `doubled → quadrupled` chain — two-level dependency
+* `doubled → quadrupled → octupled` chain — three-level dependency
+* `doubled → quadrupled → octupled → hexadecupled` chain — four-level dependency
+* `sum_all ALIAS id + value + doubled + quadrupled` — depends on multiple aliases
+* `product_all ALIAS doubled * quadrupled` — product of two aliases
+* `percentage ALIAS (doubled * 100) / (value + doubled)` — percentage calculation
+* `nested_math ALIAS (doubled + quadrupled) * 2` — complex arithmetic with aliases
+* `conditional_result ALIAS if(doubled > 100, quadrupled, doubled)` — conditional referencing aliases
+* `string_combined ALIAS concat(toString(doubled), '-', toString(quadrupled))` — string ops on aliases
 
-#### RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultiLevel
-version: 1.0
-
-[ClickHouse] SHALL support multi-level alias dependency chains (3 or more
-levels deep) in Hybrid table segments. The engine SHALL correctly resolve
-the dependency chain and evaluate each alias in the correct order.
-
-For example:
-
-```sql
-doubled ALIAS value * 2
-quadrupled ALIAS doubled * 2
-octupled ALIAS quadrupled * 2
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.NestedDependent.MultipleDependencies
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns that depend on multiple other ALIAS
-columns simultaneously in Hybrid table segments.
-
-For example:
-
-```sql
-doubled ALIAS value * 2
-quadrupled ALIAS doubled * 2
-sum_all ALIAS id + value + doubled + quadrupled
-```
-
-#### RQ.Ice.HybridAlias.AliasTypes.NestedDependent.CircularDependency
-version: 1.0
-
-[ClickHouse] SHALL detect and reject circular alias dependencies when creating
-tables that are used in Hybrid table segments. An error SHALL be returned
-if alias A depends on alias B and alias B depends on alias A.
-
-### Complex Expression Aliases
-
-#### RQ.Ice.HybridAlias.AliasTypes.ComplexExpression
+### RQ.Ice.HybridAlias.ComplexExpression
 version: 1.0
 
 [ClickHouse] SHALL support ALIAS columns with complex expressions that combine
-multiple functions and operations in Hybrid table segments. Nested function
-calls, multiple operations, and correct operator precedence SHALL be handled.
+multiple functions and operations in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-score ALIAS (value * 2) + (id % 10) - length(name)
-formatted_date ALIAS concat(toString(toYear(date_col)), '-', toString(toMonth(date_col)))
-```
+* `score ALIAS (value * 2) + (id % 10) - length(name)` — arithmetic + string
+* `formatted_date ALIAS concat(toString(toYear(date_col)), '-', toString(toMonth(date_col)))` — nested date/string
+* `normalized_value ALIAS (value - min_value) / (max_value - min_value)` — normalization formula
+* `weighted_sum ALIAS (value1 * 0.3) + (value2 * 0.5) + (value3 * 0.2)` — weighted sum
+* `complex_math ALIAS sqrt(pow(value, 2) + pow(id, 2))` — Pythagorean calculation
+* `complex_round ALIAS round((value * 1.5) / 3.0, 2)` — arithmetic with rounding
+* `conditional_math ALIAS if(value > 0, sqrt(value), abs(value))` — conditional with math
+* `nested_conditional ALIAS multiIf(value < 10, value * 2, value < 50, value * 3, value * 4)` — nested conditional
+* `string_transform ALIAS concat(upper(substring(name, 1, 1)), lower(substring(name, 2)))` — string chain
+* `string_math ALIAS length(concat(toString(value), '_', toString(id)))` — cross-domain
 
-## Watermark and Predicate Types
-
-### Direct Column Predicates
-
-#### RQ.Ice.HybridAlias.Predicates.DirectColumn
+### RQ.Ice.HybridAlias.MathFunction
 version: 1.0
 
-[ClickHouse] SHALL support using base columns directly in watermark predicates
-for Hybrid tables that contain ALIAS columns. The predicates SHALL correctly
-route data between segments without affecting alias evaluation.
+[ClickHouse] SHALL support ALIAS columns that use mathematical functions
+in Hybrid table segments.
 
-For example:
+The following functions SHALL be covered:
+abs, sqrt, cbrt, pow, power, exp, exp2, exp10, ln, log, log2, log10, log1p,
+sin, cos, tan, asin, acos, atan, atan2, sinh, cosh, tanh, asinh, acosh, atanh,
+erf, erfc, lgamma, tgamma, sign.
 
-```sql
-ENGINE = Hybrid(
-    remote(..., left_table), date_col >= '2025-01-15',
-    remote(..., right_table), date_col < '2025-01-15'
-)
-```
-
-Supported predicate types SHALL include date column predicates, numeric column
-predicates, string column predicates, and range predicates (`BETWEEN`).
-
-### Alias Column Predicates
-
-#### RQ.Ice.HybridAlias.Predicates.AliasColumn
+### RQ.Ice.HybridAlias.RoundingFunction
 version: 1.0
 
-[ClickHouse] SHALL support or explicitly handle ALIAS columns used directly in
-watermark predicates for Hybrid tables. If supported, the alias expression
-SHALL be correctly evaluated during predicate routing. If not supported, a clear
-error message SHALL be returned.
+[ClickHouse] SHALL support ALIAS columns that use rounding functions
+in Hybrid table segments.
 
-For example:
+The following functions SHALL be covered:
+round (with and without precision), ceil (with and without precision), ceiling,
+floor (with and without precision), trunc (with and without precision), truncate,
+roundBankers (with and without precision), roundDown, roundAge, roundDuration.
 
-```sql
-ENGINE = Hybrid(
-    remote(..., left_table), computed >= 20,
-    remote(..., right_table), computed < 20
-)
-```
-
-Where `computed` is defined as `computed ALIAS value * 2`.
-
-### Predicates on Columns That Aliases Depend On
-
-#### RQ.Ice.HybridAlias.Predicates.BaseDependentColumn
+### RQ.Ice.HybridAlias.ArrayFunction
 version: 1.0
 
-[ClickHouse] SHALL correctly handle watermark predicates that reference base
-columns upon which ALIAS columns depend in Hybrid tables. The predicate SHALL
-control data routing between segments, and the alias expression SHALL be
-independently evaluated on the routed data.
+[ClickHouse] SHALL support ALIAS columns that use array manipulation functions
+in Hybrid table segments.
 
-For example, given `computed ALIAS value * 2`, a watermark predicate
-`value >= 50` SHALL route rows based on the `value` column while `computed`
-remains correctly evaluated as `value * 2` on each segment's data.
+The following cases SHALL be covered:
 
-### Predicates on Columns That Aliases Do Not Depend On
+* `arrayElement(array_col, 1)` — first element
+* `arrayElement(array_col, length(array_col))` — last element
+* `length(array_col)` — array length
+* `arraySum(array_col)` — array sum
+* `arrayProduct(array_col)` — array product
+* `arraySort(array_col)` — sort
+* `arrayReverse(array_col)` — reverse
+* `arrayDistinct(array_col)` — deduplicate
+* `arraySlice(array_col, 1, 3)` — slice
+* `arrayConcat(array1, array2)` — concatenation
 
-#### RQ.Ice.HybridAlias.Predicates.BaseIndependentColumn
+### RQ.Ice.HybridAlias.TupleFunction
 version: 1.0
 
-[ClickHouse] SHALL correctly handle watermark predicates that reference base
-columns unrelated to any ALIAS column definitions in Hybrid tables. Alias
-column evaluation SHALL not be affected by predicates on independent columns.
+[ClickHouse] SHALL support ALIAS columns that use tuple element access
+functions in Hybrid table segments.
 
-For example, given `computed ALIAS value * 2`, a watermark predicate
-`date_col >= '2025-01-15'` SHALL route data by date while `computed` is
-evaluated independently.
+The following cases SHALL be covered:
 
-### Complex Predicates with Aliases
+* `tupleElement(tuple_col, 1)` — first element
+* `tupleElement(tuple_col, 2)` — second element
 
-#### RQ.Ice.HybridAlias.Predicates.Complex
+### RQ.Ice.HybridAlias.MapFunction
 version: 1.0
 
-[ClickHouse] SHALL support complex watermark predicates that combine base
-columns and alias columns using logical operators (`AND`, `OR`) in Hybrid tables.
+[ClickHouse] SHALL support ALIAS columns that use map manipulation functions
+in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-ENGINE = Hybrid(
-    remote(..., left_table), date_col >= '2025-01-15' AND value > 100,
-    remote(..., right_table), date_col < '2025-01-15' OR value <= 100
-)
-```
+* `map_col['key']` — element access by key
+* `mapKeys(map_col)` — key extraction
+* `mapValues(map_col)` — value extraction
+* `length(map_col)` — map size
 
-### Date Based Predicates
-
-#### RQ.Ice.HybridAlias.Predicates.DateBased
+### RQ.Ice.HybridAlias.JsonFunction
 version: 1.0
 
-[ClickHouse] SHALL support date-based watermark predicates in Hybrid tables
-with ALIAS columns. Both direct date column comparisons and date function
-predicates SHALL be supported.
+[ClickHouse] SHALL support ALIAS columns that use JSON extraction functions
+in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
--- Direct date comparison
-date_col >= '2025-01-15'
-date_col < '2025-01-15'
+* `JSONExtractInt(toString(json_col), 'key')` — integer extraction
+* `JSONExtractFloat(toString(json_col), 'key')` — float extraction
+* `JSONExtractString(toString(json_col), 'key')` — string extraction
+* `JSONHas(toString(json_col), 'key')` — key existence check
 
--- Date function predicate
-toYYYYMM(date_col) >= 202501
-toYear(date_col) = 2025
-```
-
-### Numeric Range Predicates
-
-#### RQ.Ice.HybridAlias.Predicates.NumericRange
+### RQ.Ice.HybridAlias.HashEncodingFunction
 version: 1.0
 
-[ClickHouse] SHALL support numeric range watermark predicates in Hybrid tables
-with ALIAS columns. `BETWEEN`, range predicates with `AND`, and `IN` predicates
-SHALL be supported.
+[ClickHouse] SHALL support ALIAS columns that use hashing and encoding
+functions in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
--- BETWEEN predicate
-id BETWEEN 10 AND 15
+* `hex(string_col)` — hex encoding
+* `base64Encode(string_col)` — base64 encoding
+* `base64Decode(encoded_col)` — base64 decoding (alias-on-alias dependency)
 
--- Range with AND
-value >= 1 AND value <= 1000
-
--- IN predicate
-value IN (10, 20, 30)
-```
-
-### String Predicates
-
-#### RQ.Ice.HybridAlias.Predicates.String
+### RQ.Ice.HybridAlias.UtilityFunction
 version: 1.0
 
-[ClickHouse] SHALL support string-based watermark predicates in Hybrid tables
-with ALIAS columns. Equality predicates, `IN` predicates with strings, and
-`LIKE` predicates SHALL be supported.
+[ClickHouse] SHALL support ALIAS columns that use utility and comparison
+functions in Hybrid table segments.
 
-For example:
+The following cases SHALL be covered:
 
-```sql
-name = 'test'
-status IN ('active', 'pending')
-name LIKE 'test%'
-```
+* `least(val1, val2)` — least of two values
+* `least(val1, val2, val3)` — least of three values
+* `least(val1, val2, val3, val4)` — least of four values
+* `least(str1, str2)` — least of strings
+* `least(date1, date2)` — least of dates
+* `greatest(val1, val2)` — greatest of two values
+* `greatest(val1, val2, val3)` — greatest of three values
+* `greatest(val1, val2, val3, val4)` — greatest of four values
+* `greatest(str1, str2, str3)` — greatest of strings
+* `greatest(date1, date2)` — greatest of dates
+* `countDigits(value)` — digit count (Int32)
+* `countDigits(big_value)` — digit count (Int64)
+* `countDigits(uint_value)` — digit count (UInt32)
 
 ## Query Context
 
-### SELECT Clause
-
-#### RQ.Ice.HybridAlias.QueryContext.Select
+### RQ.Ice.HybridAlias.QueryContext
 version: 1.0
 
-[ClickHouse] SHALL support selecting ALIAS columns in the `SELECT` clause of
-queries on Hybrid tables. The following patterns SHALL be supported:
+[ClickHouse] SHALL support ALIAS columns in various SQL query contexts
+when querying Hybrid tables.
 
-* Selecting only alias columns
-* Selecting a mix of base and alias columns
-* Selecting nested/dependent aliases
-* Selecting aliases within expressions (e.g., `computed + 10`)
+The following query patterns SHALL be covered:
 
-For example:
+* BETWEEN and IN predicates in watermarks — `id BETWEEN 10 AND 15`, `value IN (10, 20, 30)`
+* String LIKE predicate in watermark — `name LIKE 'A%'`
+* Complex AND/OR watermark predicates combining base and alias columns
+* HAVING clause filtering on alias column aggregations — `HAVING sum(computed) > 100`
+* JOIN operations with alias columns in result set — self-join selecting alias from both sides
+* Subqueries selecting and filtering alias columns — `SELECT * FROM (SELECT id, computed FROM ...)`
+* ORDER BY alias columns — `ORDER BY computed ASC`, `ORDER BY computed DESC, sum_alias ASC`
+* GROUP BY single and multiple alias columns — `GROUP BY year_month`, `GROUP BY year_val, month_val`
 
-```sql
-SELECT computed, sum_alias FROM hybrid_table ORDER BY id;
-SELECT id, value, computed FROM hybrid_table ORDER BY id;
-```
+## Top-Level Tests
 
-### WHERE Clause
-
-#### RQ.Ice.HybridAlias.QueryContext.Where
+### RQ.Ice.HybridAlias.SimpleArithmeticAlias
 version: 1.0
 
-[ClickHouse] SHALL support using ALIAS columns in the `WHERE` clause of queries
-on Hybrid tables. Filtering by alias columns, filtering by base columns when
-aliases are in `SELECT`, and complex `WHERE` conditions with aliases SHALL all
+[ClickHouse] SHALL support multiple ALIAS columns (`computed ALIAS value * 2`,
+`sum_alias ALIAS id + value`) in a single Hybrid table with both aliases
+queryable via SELECT in various combinations (alias only, mix of base and alias).
+
+### RQ.Ice.HybridAlias.AliasColumnInPredicate
+version: 1.0
+
+[ClickHouse] SHALL support or explicitly handle ALIAS columns used directly
+in watermark predicates for Hybrid tables (`computed >= 20` / `computed < 20`).
+If supported, the alias expression SHALL be correctly evaluated during predicate
+routing. GROUP BY and aggregations (`max`, `min`) on alias columns SHALL also
 be supported.
 
-For example:
-
-```sql
-SELECT id, computed FROM hybrid_table WHERE computed > 100 ORDER BY id;
-SELECT id, value, computed FROM hybrid_table WHERE value > 5000 ORDER BY id;
-```
-
-### GROUP BY Clause
-
-#### RQ.Ice.HybridAlias.QueryContext.GroupBy
-version: 1.0
-
-[ClickHouse] SHALL support using ALIAS columns in the `GROUP BY` clause of
-queries on Hybrid tables. Grouping by alias columns, grouping by date function
-aliases, and multiple alias columns in `GROUP BY` SHALL be supported.
-
-For example:
-
-```sql
-SELECT date_col, sum(computed) AS total FROM hybrid_table GROUP BY date_col ORDER BY date_col;
-SELECT year_month, count() FROM hybrid_table GROUP BY year_month ORDER BY year_month;
-```
-
-### ORDER BY Clause
-
-#### RQ.Ice.HybridAlias.QueryContext.OrderBy
-version: 1.0
-
-[ClickHouse] SHALL support using ALIAS columns in the `ORDER BY` clause of
-queries on Hybrid tables. Both `ASC` and `DESC` ordering by alias columns and
-multiple alias columns in `ORDER BY` SHALL be supported.
-
-For example:
-
-```sql
-SELECT id, computed FROM hybrid_table ORDER BY computed ASC;
-SELECT id, computed, sum_alias FROM hybrid_table ORDER BY computed DESC, sum_alias ASC;
-```
-
-### HAVING Clause
-
-#### RQ.Ice.HybridAlias.QueryContext.Having
-version: 1.0
-
-[ClickHouse] SHALL support using ALIAS columns in the `HAVING` clause of
-queries on Hybrid tables. Filtering grouped results based on aggregations of
-alias columns SHALL be supported.
-
-For example:
-
-```sql
-SELECT date_col, sum(computed) AS total
-FROM hybrid_table
-GROUP BY date_col
-HAVING total > 100
-ORDER BY date_col;
-```
-
-### JOIN Operations
-
-#### RQ.Ice.HybridAlias.QueryContext.Join
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns in `JOIN` operations involving Hybrid
-tables. ALIAS columns SHALL be accessible in JOIN conditions, and alias columns
-from both sides of a JOIN SHALL be available in the result set.
-
-### Subqueries
-
-#### RQ.Ice.HybridAlias.QueryContext.Subquery
-version: 1.0
-
-[ClickHouse] SHALL support ALIAS columns in subqueries involving Hybrid tables.
-ALIAS columns SHALL be accessible in subquery `SELECT` and `WHERE` clauses.
-
-For example:
-
-```sql
-SELECT * FROM (SELECT id, computed FROM hybrid_table WHERE computed > 50) sub ORDER BY id;
-```
-
-## Segment Behavior
-
-### Left Alias Right Normal
-
-#### RQ.Ice.HybridAlias.Segments.LeftAliasRightNormal
+### RQ.Ice.HybridAlias.LeftAliasRightNormal
 version: 1.0
 
 [ClickHouse] SHALL support Hybrid tables where the left segment defines a
-column as an ALIAS and the right segment defines the same column as a regular
-(non-alias) column. The Hybrid table SHALL correctly return values from both
-segments regardless of how the underlying column is defined.
+column as an ALIAS (`computed ALIAS value * 2`) and the right segment defines
+the same column as a regular column (`computed Int64`). The Hybrid table SHALL
+correctly return values from both segments.
 
-For example:
+### RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch
+version: 1.0
 
-```sql
--- Left table: computed is an ALIAS
-computed ALIAS value * 2
+[ClickHouse] SHALL handle Hybrid tables where the left segment defines a column
+as an ALIAS returning Int64 and the right segment defines the same column as a
+regular Float64 column. Automatic type casting SHALL be applied when
+`hybrid_table_auto_cast_columns = 1` is enabled.
 
--- Right table: computed is a regular column
-computed Int64
-```
-
-### Left Normal Right Alias
-
-#### RQ.Ice.HybridAlias.Segments.LeftNormalRightAlias
+### RQ.Ice.HybridAlias.LeftNormalRightAlias
 version: 1.0
 
 [ClickHouse] SHALL support Hybrid tables where the left segment defines a
-column as a regular (non-alias) column and the right segment defines the same
-column as an ALIAS. The Hybrid table SHALL correctly return values from both
-segments.
+column as a regular column (`computed Int64`) and the right segment defines
+the same column as an ALIAS (`computed ALIAS value * 2`). The Hybrid table
+SHALL correctly return values from both segments.
 
-### Both Segments Alias
+### RQ.Ice.HybridAlias.LeftNormalRightAliasTypeMismatch
+version: 1.0
 
-#### RQ.Ice.HybridAlias.Segments.BothAlias
+[ClickHouse] SHALL return an error when the left segment defines a column as a
+regular Int32 column and the right segment defines the same column as an ALIAS
+returning Int64, when the types are incompatible. The error SHALL indicate
+a type mismatch between segments.
+
+### RQ.Ice.HybridAlias.DifferentAliasExpressions
 version: 1.0
 
 [ClickHouse] SHALL support Hybrid tables where both segments define the same
-column as an ALIAS. The alias expression SHALL be independently evaluated on
-each segment's data.
+column as an ALIAS but with different expressions (left: `value * 2`,
+right: `value * 3`). Each segment SHALL independently evaluate its own alias
+expression.
 
-### Segment Type Mismatch
-
-#### RQ.Ice.HybridAlias.Segments.TypeMismatch
+### RQ.Ice.HybridAlias.AliasMissingInSegment
 version: 1.0
 
-[ClickHouse] SHALL handle type mismatches between segment alias columns and
-the Hybrid table column definitions. When `hybrid_table_auto_cast_columns = 1`
-is enabled, automatic type casting SHALL be applied. When disabled, type
-mismatches SHALL produce appropriate errors.
-
-For example, if an alias returns `Int16` but the Hybrid table defines the
-column as `Int32`, automatic casting SHALL widen the type when enabled.
-
-## Type Compatibility
-
-### Type Alignment
-
-#### RQ.Ice.HybridAlias.TypeCompatibility.Alignment
-version: 1.0
-
-[ClickHouse] SHALL support explicit type alignment between ALIAS column return
-types and Hybrid table column definitions. The ALIAS expression return type
-SHALL be compatible with or castable to the Hybrid table's column type.
-
-For example:
-
-* Alias returns `Int32`, Hybrid table expects `Int64` — SHALL work
-* Alias returns `String`, Hybrid table expects `Int32` — SHALL produce an error
-
-### Automatic Type Casting
-
-#### RQ.Ice.HybridAlias.TypeCompatibility.AutoCast
-version: 1.0
-
-[ClickHouse] SHALL support automatic type casting for ALIAS columns across
-Hybrid table segments when `hybrid_table_auto_cast_columns = 1` is enabled.
-The automatic casting SHALL handle widening numeric conversions without data
-loss.
-
-## Edge Cases and Error Scenarios
-
-### Missing Dependencies
-
-#### RQ.Ice.HybridAlias.EdgeCases.MissingDependencies
-version: 1.0
-
-[ClickHouse] SHALL return an error when an ALIAS column references a
-non-existent or dropped base column in a table used as a Hybrid table segment.
-
-### NULL Handling
-
-#### RQ.Ice.HybridAlias.EdgeCases.NullHandling
-version: 1.0
-
-[ClickHouse] SHALL correctly handle NULL values in ALIAS column evaluation
-within Hybrid table segments. When a base column value is NULL, the alias
-expression SHALL evaluate according to [ClickHouse] NULL propagation rules.
-
-Aliases that produce NULL values SHALL return NULL in the Hybrid table query
-results. NULL values in alias predicates SHALL follow standard SQL three-valued
-logic.
-
-### Division by Zero
-
-#### RQ.Ice.HybridAlias.EdgeCases.DivisionByZero
-version: 1.0
-
-[ClickHouse] SHALL handle division by zero in ALIAS column expressions within
-Hybrid table segments according to standard [ClickHouse] behavior (returning
-`inf`, `-inf`, or `nan` for floating-point types, or 0 for integer types).
-
-### Segment Mismatches
-
-#### RQ.Ice.HybridAlias.EdgeCases.SegmentMismatch
-version: 1.0
-
-[ClickHouse] SHALL handle mismatches between segments in Hybrid tables where
-alias definitions differ. The following mismatch scenarios SHALL be handled:
-
-* Different alias expressions in left and right segments for the same column name
-* An alias present in one segment but missing in the other segment
-* Incompatible return types between segment alias expressions
+[ClickHouse] SHALL return an error when a Hybrid table defines a column that
+is present as an ALIAS in one segment but completely missing from the other
+segment (neither as alias nor regular column). The error SHALL indicate the
+missing column.
 
 [ClickHouse]: https://clickhouse.com
 '''
