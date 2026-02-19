@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -88,6 +89,7 @@ def transform_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Conditional("1.0"))
 @Name("transform alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: transformed ALIAS transform(value, [0, -2147483648, 2147483647], ['a', 'b', 'c'], 'default')."""

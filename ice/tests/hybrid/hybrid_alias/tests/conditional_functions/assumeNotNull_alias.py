@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -80,6 +81,7 @@ def assumeNotNull_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Conditional("1.0"))
 @Name("assumeNotNull alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: assumed_not_null ALIAS assumeNotNull(nullable_value)."""
