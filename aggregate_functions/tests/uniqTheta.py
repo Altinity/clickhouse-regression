@@ -14,7 +14,7 @@ from aggregate_functions.tests.uniq import scenario as checks
 def scenario(self, func="uniqTheta({params})", table=None, snapshot_id=None):
     """Check uniqTheta aggregate function by using the same tests as for uniq."""
     
-    if check_clickhouse_version(">=25.8")(self):
+    if check_clickhouse_version(">=25.8.15")(self):
         clickhouse_version = ">=25.8"
     elif check_clickhouse_version(">=24.8")(self):
         clickhouse_version = (

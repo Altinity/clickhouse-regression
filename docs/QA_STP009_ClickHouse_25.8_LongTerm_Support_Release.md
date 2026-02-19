@@ -5,23 +5,24 @@
 
 **Author:** vzakaznikov
 
-**Date:** Feb 17, 2026
+**Date:** Feb 1, 2026
 
 ## Execution Summary
 
-**Completed:** Feb 17, 2026
+**Completed:** Feb 18, 2026
 
 **Test Results:**
 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/
 
 **Build Report:**
-
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/v25.8.16.10001.altinitystable/50d19e9216a5e7d6b48ee263986e7ccae8cb2f18/22144652887/ci_run_report.html (release run)
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/50d19e9216a5e7d6b48ee263986e7ccae8cb2f18/22142718052/ci_run_report.html (merge run)
 * https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 **Summary:**
 
-Not approved for release.
+**🏅 Approved for release.**
 
 ## Table of Contents
 
@@ -107,19 +108,19 @@ This test plan covers testing of ClickHouse 25.8 LTS (long-term support) Altinit
 
 ## Timeline
 
-The testing of 25.8.x binaries SHALL be started on [TBD] and be completed by [TBD].
+The testing of 25.8.16.10001 binaries SHALL be started on February 6, 2026 and be completed by February 18, 2026.
 
 ## Human Resources And Assignments
 
 The following team members SHALL be dedicated to the release:
 
 * Vitaliy Zakaznikov (manager)
-* Davit Mnatobishvili (regression, clickhouse-odbc, grafana, superset, DBeaver)
+* Davit Mnatobishvili (clickhouse-odbc, grafana, superset, DBeaver)
 * Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
+* Carlos Raymundo (regression)
 * Saba Momtselidze (clickhouse-operator)
-* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
-* Dima Borovstov (Tableau)
-* Eugene Klimov (Superset)
+* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup, ACM upgrade and downgrade)
+* Julian Huang (Tableau)
 * Mikhail Filimonov (production clusters, support team feedback)
 
 ## Release Notes
@@ -132,11 +133,10 @@ The following team members SHALL be dedicated to the release:
 
 ### Open Issues
 
-
-
+* No open issues
 
 ### Summary
-Build report: [TBD]
+Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 > [!NOTE]
 > **\*Pass** - tests passed with known fails
@@ -191,7 +191,7 @@ Build report: [TBD]
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
 | Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator)       | Tests run: 80, 1 XFail, 2 Fails (expected)  |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
-| Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
+| Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [*Pass](#tableau)                     | 849 passed, 24 failed (97%). Expected fails. |
