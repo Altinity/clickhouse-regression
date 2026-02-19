@@ -484,13 +484,6 @@ xfails = {
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/part */state/*": [
-        (
-            Fail,
-            "Not deterministic, need to investigate",
-            check_clickhouse_version(">=25.1"),
-        )
-    ],
 }
 
 
@@ -853,6 +846,7 @@ def regression(
 
     with And("I populate tables with test data"):
         self.context.table.insert_test_data(cardinality=1, shuffle_values=False)
+        pause()
         self.context.table_extra_data.insert_test_data(
             cardinality=5, shuffle_values=True
         )
