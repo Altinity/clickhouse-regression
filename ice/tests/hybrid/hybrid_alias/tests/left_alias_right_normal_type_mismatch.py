@@ -60,8 +60,7 @@ def left_alias_right_normal_type_mismatch(self):
 
 @TestScenario
 @Requirements(
-    RQ_Ice_HybridAlias_Segments_TypeMismatch("1.0"),
-    RQ_Ice_HybridAlias_TypeCompatibility_Alignment("1.0"),
+    RQ_Ice_HybridAlias_LeftAliasRightNormalTypeMismatch("1.0"),
 )
 @Name("left alias right normal type mismatch")
 def feature(self, minio_root_user=None, minio_root_password=None):

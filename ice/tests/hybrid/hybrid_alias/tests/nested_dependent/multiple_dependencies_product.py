@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -83,6 +84,7 @@ def multiple_dependencies_product_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_NestedDependent("1.0"))
 @Name("multiple dependencies product")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: product_all ALIAS doubled * quadrupled (multiple dependencies)."""

@@ -4,9 +4,12 @@ from ..requirements import *
 
 
 @TestScenario
-def left_alias_right_normal(self):
+def different_alias_expressions(self):
     """
-    Define parameters for test case and call main outline.
+    Test where left and right segments define the same alias column name
+    with different expressions.
+    Left: computed ALIAS value * 2
+    Right: computed ALIAS value * 3
     """
     base_columns = [
         {"name": "id", "datatype": "Int32"},
@@ -14,7 +17,7 @@ def left_alias_right_normal(self):
         {"name": "date_col", "datatype": "Date"},
     ]
     alias_columns = [
-        {"name": "computed", "expression": "value * 2", "hybrid_type": "Int64"},
+        {"name": "computed", "hybrid_type": "Int64"},
     ]
     left_base_columns = [
         {"name": "id", "datatype": "Int32"},
@@ -25,12 +28,13 @@ def left_alias_right_normal(self):
         {"name": "id", "datatype": "Int32"},
         {"name": "value", "datatype": "Int32"},
         {"name": "date_col", "datatype": "Date"},
-        {"name": "computed", "datatype": "Int64"},  # Regular column in right
     ]
     left_alias_columns = [
-        {"name": "computed", "expression": "value * 2"},  # Alias in left
+        {"name": "computed", "expression": "value * 2"},
     ]
-    right_alias_columns = []
+    right_alias_columns = [
+        {"name": "computed", "expression": "value * 3"},
+    ]
     watermark = {"left_predicate": "date_col >= '2025-01-15'", "right_predicate": "date_col < '2025-01-15'"}
     expected = {"exitcode": 0, "error_message": None}
     test_queries = [
@@ -60,9 +64,10 @@ def left_alias_right_normal(self):
 
 @TestScenario
 @Requirements(
-    RQ_Ice_HybridAlias_LeftAliasRightNormal("1.0"),
+    RQ_Ice_HybridAlias_DifferentAliasExpressions("1.0"),
 )
-@Name("left alias right normal")
+@Name("different alias expressions")
 def feature(self, minio_root_user=None, minio_root_password=None):
-    """Test case where left segment has alias column but right table has normal column."""
-    Scenario(run=left_alias_right_normal)
+    """Test where left and right segments define the same alias column name
+    with different expressions (value * 2 vs value * 3)."""
+    Scenario(run=different_alias_expressions)

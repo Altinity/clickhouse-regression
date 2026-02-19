@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -83,6 +84,7 @@ def complex_arithmetic_aliases_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_NestedDependent("1.0"))
 @Name("complex arithmetic aliases")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: nested_math ALIAS (doubled + quadrupled) * 2 (complex arithmetic with aliases)."""

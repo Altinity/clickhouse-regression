@@ -41,7 +41,7 @@ def simple_arithmetic_alias(self):
 
 @TestScenario
 @Requirements(
-    RQ_Ice_HybridAlias_AliasTypes_SimpleArithmetic("1.0"),
+    RQ_Ice_HybridAlias_SimpleArithmeticAlias("1.0"),
 )
 @Name("simple arithmetic alias")
 def feature(self, minio_root_user, minio_root_password):

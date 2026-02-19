@@ -60,7 +60,7 @@ def left_normal_right_alias(self):
 
 @TestScenario
 @Requirements(
-    RQ_Ice_HybridAlias_Segments_LeftNormalRightAlias("1.0"),
+    RQ_Ice_HybridAlias_LeftNormalRightAlias("1.0"),
 )
 @Name("left normal right alias")
 def feature(self, minio_root_user, minio_root_password):
