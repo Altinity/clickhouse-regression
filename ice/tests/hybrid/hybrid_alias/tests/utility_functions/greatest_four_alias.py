@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -44,6 +45,7 @@ def greatest_four_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_UtilityFunction("1.0"))
 @Name("greatest four alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: greatest_four ALIAS greatest(val1, val2, val3, val4)."""

@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -41,6 +42,7 @@ def countDigits_int64_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_UtilityFunction("1.0"))
 @Name("countDigits int64 alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: digit_count_int64 ALIAS countDigits(big_value) (Int64)."""
