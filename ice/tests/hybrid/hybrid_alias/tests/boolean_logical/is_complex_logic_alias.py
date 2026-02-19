@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -87,6 +88,7 @@ def is_complex_logic_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_BooleanLogical("1.0"))
 @Name("is complex logic alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: is_complex_logic ALIAS (value > 0 AND value < 100) OR (value > 200 AND value < 300)."""
