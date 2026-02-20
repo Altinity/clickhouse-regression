@@ -1,0 +1,2 @@
+lz4_non_hadoop_structure = r"""'c0\tNullable(Int64)\t\t\t\t\t\nc1\tNullable(String)\t\t\t\t\t\nv11\tNullable(Float64)'"""
+
