@@ -83,7 +83,7 @@ def prewhere_clause(self, table_name, node=None):
     table_name_without_backslashes = table_name.replace("\\", "")
     exitcode, message = 0, None
 
-    if check_clickhouse_version("<=26.1")(self):
+    if check_clickhouse_version("<26.2")(self):
         exitcode = 182
         storage_name = "IcebergS3" if check_clickhouse_version(">=25")(self) else "Iceberg"
         message = f"DB::Exception: Storage {storage_name} (table {table_name_without_backslashes}) does not support PREWHERE. (ILLEGAL_PREWHERE)"
