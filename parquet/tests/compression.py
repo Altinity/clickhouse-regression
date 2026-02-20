@@ -15,7 +15,17 @@ def lz4_raw(self):
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
 
-    import_export(snapshot_name="lz4_raw_structure", import_file=import_file)
+    snapshot_id = (
+        get_snapshot_id(clickhouse_version=">=26.1")
+        if check_clickhouse_version(">=26.1")(self)
+        else None
+    )
+
+    import_export(
+        snapshot_name="lz4_raw_structure",
+        import_file=import_file,
+        snapshot_id=snapshot_id,
+    )
 
 
 @TestScenario
@@ -25,7 +35,17 @@ def lz4_raw_large(self):
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
-    import_export(snapshot_name="lz4_raw_large_structure", import_file=import_file)
+    snapshot_id = (
+        get_snapshot_id(clickhouse_version=">=26.1")
+        if check_clickhouse_version(">=26.1")(self)
+        else None
+    )
+
+    import_export(
+        snapshot_name="lz4_raw_large_structure",
+        import_file=import_file,
+        snapshot_id=snapshot_id,
+    )
 
 
 @TestScenario
@@ -35,7 +55,17 @@ def lz4_hadoop(self):
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_hadoop_structure", import_file=import_file)
+    snapshot_id = (
+        get_snapshot_id(clickhouse_version=">=26.1")
+        if check_clickhouse_version(">=26.1")(self)
+        else None
+    )
+
+    import_export(
+        snapshot_name="lz4_hadoop_structure",
+        import_file=import_file,
+        snapshot_id=snapshot_id,
+    )
 
 
 @TestScenario
@@ -45,7 +75,17 @@ def lz4_hadoop_large(self):
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_hadoop_large_structure", import_file=import_file)
+    snapshot_id = (
+        get_snapshot_id(clickhouse_version=">=26.1")
+        if check_clickhouse_version(">=26.1")(self)
+        else None
+    )
+
+    import_export(
+        snapshot_name="lz4_hadoop_large_structure",
+        import_file=import_file,
+        snapshot_id=snapshot_id,
+    )
 
 
 @TestScenario
@@ -55,7 +95,17 @@ def lz4_non_hadoop(self):
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file)
+    snapshot_id = (
+        get_snapshot_id(clickhouse_version=">=26.1")
+        if check_clickhouse_version(">=26.1")(self)
+        else None
+    )
+
+    import_export(
+        snapshot_name="lz4_non_hadoop_structure",
+        import_file=import_file,
+        snapshot_id=snapshot_id,
+    )
 
 
 @TestScenario
