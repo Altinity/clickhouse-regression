@@ -8,7 +8,10 @@ from helpers.common import *
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL("1.0"))
 def insert_into_engine(self):
     """Check that when data is inserted into a table with `URL` engine, it is written into the source file correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -41,7 +44,10 @@ def insert_into_engine(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL("1.0"))
 def select_from_engine(self):
     """Check that when a table with `URL` engine is attached on top of a Parquet file, it reads the data correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
@@ -78,7 +84,10 @@ def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `URL` engine,
     the data can be read back correctly from the source file using a different table with `URL` engine.
     """
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
@@ -167,7 +176,10 @@ def engine_to_file_to_engine(self):
 def insert_into_engine_from_file(self, compression_type):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `URL` engine."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
@@ -217,7 +229,10 @@ def insert_into_engine_from_file(self, compression_type):
 )
 def engine_select_output_to_file(self, compression_type):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `URL` engine."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
     path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet'"
@@ -254,7 +269,10 @@ def engine_select_output_to_file(self, compression_type):
 def insert_into_function(self):
     """Check that when data is inserted into `url` table function with manually defined structure,
     it is written into the source file correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     file_name = "file_" + getuid() + ".Parquet"
     table_name = "table_" + getuid()
@@ -313,7 +331,10 @@ def insert_into_function(self):
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `url` table function with manually cast column types,
     it is read correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
 
@@ -330,7 +351,9 @@ def select_from_function_manual_cast_types(self):
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `url` table function with automatic cast column types,
     it is read correctly."""
-    if check_clickhouse_version("<22.6")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    elif check_clickhouse_version("<22.6")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     else:
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")

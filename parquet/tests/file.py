@@ -17,7 +17,10 @@ from helpers.datatypes import Date
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
 def insert_into_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine, it is written into the source file correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name_parquet_file = "table_" + getuid()
     table_name_merge_tree = "table_" + getuid()
@@ -82,7 +85,10 @@ def insert_into_engine(self):
 def select_from_engine(self):
     """Check that when a table with `File(Parquet)` engine is attached on top of a Parquet file, it reads the data correctly."""
     node = self.context.node
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -124,7 +130,10 @@ def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine,
     the data can be read back correctly from the source file using a different table with `File(Parquet)` engine.
     """
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
@@ -229,7 +238,10 @@ def insert_into_engine_from_file(self, compression_type):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `File(Parquet)` engine.
     """
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
@@ -282,7 +294,10 @@ def insert_into_engine_from_file(self, compression_type):
 )
 def engine_select_output_to_file(self, compression_type):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `File(Parquet)` engine."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_name = "table_" + getuid()
     path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet'"
@@ -319,7 +334,10 @@ def engine_select_output_to_file(self, compression_type):
 def insert_into_function_manual_cast_types(self):
     """Check that when data is inserted into `file` table function with manually defined structure,
     it is written into the source file correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     file_name = "file_" + getuid()
     table_name = "table_" + getuid()
@@ -371,7 +389,10 @@ def insert_into_function_manual_cast_types(self):
 def insert_into_function_auto_cast_types(self):
     """Check that when data is inserted into `file` table function with automatically defined structure,
     it is written into the source file correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     file_name = "file_" + getuid()
     table_name = "table_" + getuid()
@@ -434,7 +455,11 @@ def insert_into_function_auto_cast_types(self):
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `file` table function with manually cast column types,
     it is read correctly."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+
+    if check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    elif check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     node = self.context.node
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
@@ -458,7 +483,9 @@ def select_from_function_manual_cast_types(self):
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `file` table function with automatic cast column types,
     it is read correctly."""
-    if check_clickhouse_version("<22.6")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    elif check_clickhouse_version("<22.6")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     else:
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
@@ -500,7 +527,10 @@ def date_as_uint16(self):
 
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
 
 
 @TestScenario
@@ -525,7 +555,10 @@ def date_as_uint16_multiple_dates(self):
 
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
 
 
 @TestScenario
@@ -564,7 +597,10 @@ def date_as_uint16_nullable(self):
 
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('/var/lib/clickhouse/user_files/{file_name}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
 
 
 @TestScenario
@@ -656,7 +692,10 @@ def date_as_uint16_file_engine(self):
             parquet_file = f"/var/lib/clickhouse/data/default/{table_name}/data.Parquet"
 
         r = node.query(f"DESC file('{parquet_file}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
 
 
 @TestScenario
@@ -681,7 +720,10 @@ def date_as_uint16_edge_cases(self):
 
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
 
 
 @TestScenario
@@ -705,7 +747,10 @@ def date_as_uint16_with_other_columns(self):
 
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
-        assert "d" in r.output and "Nullable(UInt16)" in r.output, error()
+        expected_date_type = (
+            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+        )
+        assert "d" in r.output and expected_date_type in r.output, error()
         assert "i" in r.output, error()
         assert "s" in r.output, error()
 
