@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import warnings
 from testflows.core import *
 
 append_path(sys.path, "..")
@@ -284,6 +285,8 @@ def regression(
     minio_args=None,
 ):
     """Run tests for Iceberg tables."""
+    warnings.filterwarnings("ignore", message="Delete operation did not match any records")
+
     nodes = {
         "clickhouse": (
             "clickhouse1",
