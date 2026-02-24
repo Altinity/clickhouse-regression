@@ -489,6 +489,7 @@ def attach_partition_from_on_node(
                     source_table_engine == "ReplicatedReplacingMergeTree"
                     or source_table_engine == "ReplicatedCollapsingMergeTree"
                     or source_table_engine == "ReplicatedGraphiteMergeTree"
+                    or source_table_engine == "ReplicatedAggregatingMergeTree"
                 ):
                     values = [0, 1]
                     value = 1
