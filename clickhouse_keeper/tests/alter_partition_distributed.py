@@ -23,7 +23,7 @@ def alter_partition(
             "/replicated/{shard}"
             f"/{table_name}'"
             ", '{replica}') "
-            "ORDER BY tuple() "
+            "ORDER BY v "
             "SETTINGS assign_part_uuids=1,"
             " part_moves_between_shards_enable=1,"
             " part_moves_between_shards_delay_seconds=1;",
@@ -339,7 +339,7 @@ def alter_clear_column_in_partition(self):
                 f"/{table_name}'"
                 ", '{replica}') "
                 "PARTITION BY p "
-                "ORDER BY tuple() "
+                "ORDER BY v "
                 "SETTINGS assign_part_uuids=1,"
                 " part_moves_between_shards_enable=1,"
                 " part_moves_between_shards_delay_seconds=1;",
@@ -396,7 +396,7 @@ def alter_clear_index_in_partition(self):
                 f"/{table_name}'"
                 ", '{replica}') "
                 "PARTITION BY p "
-                "ORDER BY tuple() "
+                "ORDER BY v "
                 "SETTINGS assign_part_uuids=1,"
                 " part_moves_between_shards_enable=1,"
                 " part_moves_between_shards_delay_seconds=1;",
@@ -554,7 +554,7 @@ def alter_update_in_partition(self):
                 f"/{table_name}'"
                 ", '{replica}') "
                 "PARTITION BY p "
-                "ORDER BY tuple() "
+                "ORDER BY v "
                 "SETTINGS assign_part_uuids=1,"
                 " part_moves_between_shards_enable=1,"
                 " part_moves_between_shards_delay_seconds=1;",
@@ -608,7 +608,7 @@ def alter_delete_in_partition(self):
                 f"/{table_name}'"
                 ", '{replica}') "
                 "PARTITION BY p "
-                "ORDER BY tuple() "
+                "ORDER BY v "
                 "SETTINGS assign_part_uuids=1,"
                 " part_moves_between_shards_enable=1,"
                 " part_moves_between_shards_delay_seconds=1;",
