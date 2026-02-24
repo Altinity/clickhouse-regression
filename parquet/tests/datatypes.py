@@ -863,7 +863,11 @@ def selectdatewithfilter(self):
         with Then("I check the output is correct"):
             with values() as that:
 
-                snapshot_name = "import_using_filter_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "import_using_filter_structure"
+                snapshot_name = (
+                    "import_using_filter_structure_above_26"
+                    if check_clickhouse_version(">=26.1")(self)
+                    else "import_using_filter_structure"
+                )
 
                 assert that(
                     snapshot(
@@ -927,7 +931,7 @@ def unsupportednull(self):
                 """,
                 message=message,
                 exitcode=exitcode,
-                settings=[("max_memory_usage", 20000000000)]
+                settings=[("max_memory_usage", 20000000000)],
             )
 
 

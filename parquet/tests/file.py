@@ -17,10 +17,7 @@ from helpers.datatypes import Date
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"))
 def insert_into_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine, it is written into the source file correctly."""
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table_name_parquet_file = "table_" + getuid()
     table_name_merge_tree = "table_" + getuid()
@@ -85,10 +82,7 @@ def insert_into_engine(self):
 def select_from_engine(self):
     """Check that when a table with `File(Parquet)` engine is attached on top of a Parquet file, it reads the data correctly."""
     node = self.context.node
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    self.context.snapshot_id = get_snapshot_id()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -130,10 +124,7 @@ def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine,
     the data can be read back correctly from the source file using a different table with `File(Parquet)` engine.
     """
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
@@ -238,10 +229,7 @@ def insert_into_engine_from_file(self, compression_type):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `File(Parquet)` engine.
     """
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
@@ -294,10 +282,7 @@ def insert_into_engine_from_file(self, compression_type):
 )
 def engine_select_output_to_file(self, compression_type):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `File(Parquet)` engine."""
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table_name = "table_" + getuid()
     path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet'"
@@ -334,10 +319,12 @@ def engine_select_output_to_file(self, compression_type):
 def insert_into_function_manual_cast_types(self):
     """Check that when data is inserted into `file` table function with manually defined structure,
     it is written into the source file correctly."""
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    elif check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    else:
+        self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     file_name = "file_" + getuid()
     table_name = "table_" + getuid()
@@ -389,10 +376,12 @@ def insert_into_function_manual_cast_types(self):
 def insert_into_function_auto_cast_types(self):
     """Check that when data is inserted into `file` table function with automatically defined structure,
     it is written into the source file correctly."""
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    elif check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    else:
+        self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     file_name = "file_" + getuid()
     table_name = "table_" + getuid()
@@ -456,10 +445,12 @@ def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `file` table function with manually cast column types,
     it is read correctly."""
 
-    if check_clickhouse_version(">=24.1")(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
-    elif check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    elif check_clickhouse_version(">=24.1")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
+    else:
+        self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
