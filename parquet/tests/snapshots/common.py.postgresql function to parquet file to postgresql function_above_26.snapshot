@@ -382,3 +382,51 @@ _parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_
 {"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
 """
 
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_table_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
