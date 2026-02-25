@@ -1,0 +1,8 @@
+_aggregate_functions_rankCorr_zero_rows = r"""
+{"rankCorr(number, number)":null,"any(toTypeName(number))":"","any(toTypeName(number))":""}
+"""
+
+_clickhouse_aggregate_functions_rankCorr_zero_rows = r"""
+{"rankCorr(number, number)":null,"any(toTypeName(number))":"","any(toTypeName(number))":""}
+"""
+
