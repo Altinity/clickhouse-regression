@@ -789,6 +789,26 @@ ffails = {
         Skip,
         "studentTTestOneSample test is not implemented",
     ),
+    "/aggregate functions/part 1/function_list/untested function cume_dist": (
+        Skip,
+        "cume_dist test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function argAndMin": (
+        Skip,
+        "argAndMin test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function argAndMax": (
+        Skip,
+        "argAndMax test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function quantilesPrometheusHistogram": (
+        Skip,
+        "quantilesPrometheusHistogram test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function quantilePrometheusHistogram": (
+        Skip,
+        "quantilePrometheusHistogram test is not implemented",
+    ),
 }
 
 

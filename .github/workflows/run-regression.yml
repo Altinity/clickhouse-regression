@@ -75,6 +75,7 @@ on:
           - example
           - extended_precision_data_types
           - functions
+          - ice
           - iceberg
           - jwt_authentication
           - kafka
@@ -697,6 +698,22 @@ jobs:
       timeout_minutes: 180
       storage_path: /iceberg 
       regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ice:
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ice' }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ice
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
