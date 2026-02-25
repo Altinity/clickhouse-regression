@@ -110,6 +110,17 @@ cannot_remove_default_exitcode = 239
 
 
 def cannot_update_default(self):
+    if check_clickhouse_version("<23.8")(self):
+        message = "Exception: Cannot update user `default` in users.xml because this storage is readonly"
+    else:
+        message = "Exception: Cannot update user `default` in users_xml because this storage is readonly"
+
+    return (
+        cannot_remove_default_exitcode,
+        message,
+    )
+
+def cannot_set_default_role_for_default_user(self):
     if check_clickhouse_version(">=26.2")(self):
         # PR #88139 changed storage initialization order, causing SET_NON_GRANTED_ROLE (512)
         # PR #96841 fixed exit codes to return 255 for server errors
