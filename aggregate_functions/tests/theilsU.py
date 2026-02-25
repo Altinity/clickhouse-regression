@@ -16,7 +16,9 @@ def scenario(self, func="theilsU({params})", table=None, snapshot_id=None):
     as well as functions specific checks."""
 
     clickhouse_version = None
-    if check_current_cpu("aarch64")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_current_cpu("aarch64")(self):
         clickhouse_version = ">=24.3"
 
     self.context.snapshot_id = get_snapshot_id(

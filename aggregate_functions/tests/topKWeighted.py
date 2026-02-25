@@ -24,7 +24,9 @@ def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
     """Check topKWeighted aggregate function by using the same checks as for avgWeighted
     as well as functions specific checks."""
 
-    if check_clickhouse_version(">=23.12")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=23.12")(self):
         clickhouse_version = ">=23.12"
     elif check_clickhouse_version(">=23.7")(self):
         clickhouse_version = ">=23.7"
@@ -103,7 +105,7 @@ def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
             "permutations",
             description="sanity check most common column type permutations",
         ):
-            with Pool(3) as executor:
+            with Pool(1) as executor:
                 columns = [col for col in table.columns if col in common_columns()]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
@@ -122,7 +124,7 @@ def scenario(self, func="topKWeighted({params})", table=None, snapshot_id=None):
                         test=datatype,
                         parallel=True,
                         executor=executor,
-                    )(func=func, table=table, col1_name=col1_name, col2_name=col2_name)
+                    )(func=_func, table=table, col1_name=col1_name, col2_name=col2_name)
 
                 join()
 
