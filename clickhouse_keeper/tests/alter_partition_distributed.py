@@ -333,7 +333,7 @@ def alter_clear_column_in_partition(self):
         with Given("I create table"):
             retry(node.query, timeout=100, delay=1)(
                 f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
-                f" (v UInt64,p UInt64) "
+                f" (v UInt64, p UInt64, c UInt64) "
                 "ENGINE = ReplicatedSummingMergeTree('/clickhouse/tables"
                 "/replicated/{shard}"
                 f"/{table_name}'"
@@ -350,22 +350,23 @@ def alter_clear_column_in_partition(self):
             retry(node.query, timeout=100, delay=1)(f"SYSTEM STOP MERGES {table_name}")
 
             retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name} VALUES (1,1)"
+                f"INSERT INTO {table_name} VALUES (1,1,100)"
             )
             retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name} VALUES (2,2)"
+                f"INSERT INTO {table_name} VALUES (2,2,200)"
             )
 
-        with And("I clear partition in column"):
+        with And("I clear non-key column c in partition 1"):
             node.query(f"SYSTEM START MERGES {table_name}")
-            node.query(f"ALTER TABLE {table_name} CLEAR COLUMN v IN PARTITION 1")
+            node.query(f"ALTER TABLE {table_name} CLEAR COLUMN c IN PARTITION 1")
 
             node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
-        with Then("I check partition in column 'v' cleared"):
+        with Then("I check column 'c' cleared in partition 1"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name} FORMAT TabSeparated", message="1"
+                    f"SELECT c FROM {table_name} WHERE p = 1 FORMAT TabSeparated",
+                    message="0",
                 )
 
     finally:
@@ -548,7 +549,7 @@ def alter_update_in_partition(self):
         with Given("I create table"):
             retry(node.query, timeout=100, delay=1)(
                 f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
-                f" (v UInt64,p UInt64) "
+                f" (v UInt64, p UInt64, c UInt64) "
                 "ENGINE = ReplicatedSummingMergeTree('/clickhouse/tables"
                 "/replicated/{shard}"
                 f"/{table_name}'"
@@ -563,21 +564,22 @@ def alter_update_in_partition(self):
 
         with And("I make insert into table"):
             retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name} VALUES (1,1)"
+                f"INSERT INTO {table_name} VALUES (1,1,2)"
             )
             retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name} VALUES (2,2)"
+                f"INSERT INTO {table_name} VALUES (2,2,2)"
             )
 
-        with And("I update partition 2 of column v as v = v + 2"):
+        with And("I update partition 2 of non-key column c as c = c + 2"):
             node.query(
-                f"ALTER TABLE {table_name} UPDATE v = v + 2 IN PARTITION 2 WHERE p = 2;"
+                f"ALTER TABLE {table_name} UPDATE c = c + 2 IN PARTITION 2 WHERE p = 2;"
             )
 
         with Then("I check data is updated"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(
-                    f"SELECT * FROM {table_name} FORMAT TabSeparated", message="4"
+                    f"SELECT c FROM {table_name} WHERE p = 2 FORMAT TabSeparated",
+                    message="4",
                 )
 
     finally:
