@@ -10,6 +10,70 @@ _aggregate_functions_state_welchTTestState_constant = r"""
 {"hex(welchTTestState(1, 2))":"0000000000000000000000000000F03F0000000000000000000000000000F03F0000000000000000000000000000F03F","any(toTypeName(1))":"UInt8","any(toTypeName(2))":"UInt8"}
 """
 
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint16__ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint32__ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint64__ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint8__ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_uint32_ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_uint64_ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__lowcardinality_uint8_ = r"""
+{"hex(welchTTestState(decimal128_38_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__nullable_uint16_ = r"""
+{"hex(welchTTestState(decimal128_38_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__nullable_uint32_ = r"""
+{"hex(welchTTestState(decimal128_38_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__nullable_uint64_ = r"""
+{"hex(welchTTestState(decimal128_38_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__nullable_uint8_ = r"""
+{"hex(welchTTestState(decimal128_38_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__uint16 = r"""
+{"hex(welchTTestState(decimal128_38_, uint16))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__uint32 = r"""
+{"hex(welchTTestState(decimal128_38_, uint32))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__uint64 = r"""
+{"hex(welchTTestState(decimal128_38_, uint64))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_decimal128_38__uint8 = r"""
+{"hex(welchTTestState(decimal128_38_, uint8))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640","any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint8))":"UInt8"}
+"""
+
 _aggregate_functions_state_welchTTestState_datatypes_permutations_float32_lowcardinality_nullable_uint16__ = r"""
 {"hex(welchTTestState(float32, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8200000C0FFFFEF4F1906E816E4411150","any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
@@ -1480,6 +1544,70 @@ _aggregate_functions_state_welchTTestState_datatypes_permutations_lowcardinality
 
 _aggregate_functions_state_welchTTestState_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
 {"hex(welchTTestState(lowcardinality_uint8_, uint8))":"0000000000000040000000000000204000000000000000000000000000B497400000000000000000000000009C111441","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint16__ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint32__ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint64__ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint8__ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, uint16))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, uint32))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, uint64))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
+{"hex(welchTTestState(nullable_decimal128_38__, uint8))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240000000000000F03F619A338A87240B40","any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_state_welchTTestState_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
