@@ -359,11 +359,11 @@ def create_replica_on_third_node(
 
 @TestStep
 def add_remove_replica_on_first_node(
-    self, table_name, active_replicas, engine, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None, order_by="tuple()"
 ):
     "Create replica on first node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_first_node(
-        table_name=table_name, active_replicas=active_replicas, engine=engine
+        table_name=table_name, active_replicas=active_replicas, engine=engine, order_by=order_by
     )
 
     if delay_before_delete is None:
@@ -380,11 +380,11 @@ def add_remove_replica_on_first_node(
 
 @TestStep
 def add_remove_replica_on_second_node(
-    self, table_name, active_replicas, engine, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None, order_by="tuple()"
 ):
     "Create replica on second node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_second_node(
-        table_name=table_name, active_replicas=active_replicas, engine=engine
+        table_name=table_name, active_replicas=active_replicas, engine=engine, order_by=order_by
     )
 
     if delay_before_delete is None:
@@ -401,13 +401,14 @@ def add_remove_replica_on_second_node(
 
 @TestStep
 def add_remove_replica_on_third_node(
-    self, table_name, active_replicas, engine, delay_before_delete=None
+    self, table_name, active_replicas, engine, delay_before_delete=None, order_by="tuple()"
 ):
     "Create replica on third node, wait less that 2 seconds and delete replica from the node."
     create_replica_on_third_node(
         table_name=table_name,
         active_replicas=active_replicas,
         engine=engine,
+        order_by=order_by
     )
 
     if delay_before_delete is None:
@@ -487,7 +488,10 @@ def attach_partition_from_on_node(
                 if (
                     source_table_engine == "ReplicatedReplacingMergeTree"
                     or source_table_engine == "ReplicatedCollapsingMergeTree"
+                    or source_table_engine == "ReplicatedVersionedCollapsingMergeTree"
                     or source_table_engine == "ReplicatedGraphiteMergeTree"
+                    or source_table_engine == "ReplicatedAggregatingMergeTree"
+                    or source_table_engine == "ReplicatedSummingMergeTree"
                 ):
                     values = [0, 1]
                     value = 1

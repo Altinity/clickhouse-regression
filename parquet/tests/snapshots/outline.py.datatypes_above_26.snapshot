@@ -1,0 +1,4 @@
+int64_nulls_structure = r"""'id\tInt64\t\t\t\t\t\nid_with_null\tNullable(Int64)\t\t\t\t\t\nid_int\tNullable(Int32)'"""
+
+parquet_go_structure = r"""'FirstName\tString\t\t\t\t\t\nData\tString'"""
+
