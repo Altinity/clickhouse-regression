@@ -2,6 +2,7 @@ from testflows.core import *
 
 from helpers.datatypes import Float64
 from helpers.tables import is_numeric, common_columns, unwrap
+from helpers.common import check_clickhouse_version
 from aggregate_functions.tests.steps import (
     execute_query,
     permutations_with_replacement,
@@ -25,7 +26,13 @@ def datatype(self, func, table, col1_name, col2_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_RankCorr("1.0"))
 def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
     """Check rankCorr aggregate function by using the same checks as for corr."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    clickhouse_version = None
+    if check_clickhouse_version(">=25.10")(self):
+        clickhouse_version = ">=25.10"
+
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+    )
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
@@ -44,11 +51,16 @@ def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
                 f"SELECT {func.format(params='number,number+1')} FROM numbers(1)"
             )
         else:
-            execute_query(
-                f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
-                message="Exception:",
-                exitcode=36,
-            )
+            if check_clickhouse_version("<25.10")(self):
+                execute_query(
+                    f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)",
+                    message="Exception:",
+                    exitcode=36,
+                )
+            else:
+                execute_query(
+                    f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)"
+                )
 
     with Check("with group by"):
         execute_query(
