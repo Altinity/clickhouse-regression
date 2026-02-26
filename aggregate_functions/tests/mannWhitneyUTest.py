@@ -20,7 +20,9 @@ from aggregate_functions.tests.steps import (
 def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
 
-    if check_clickhouse_version(">=24.9")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.9")(self):
         clickhouse_version = ">=24.9"
     elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
@@ -73,7 +75,7 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
             )
 
         with Check("single NULL value"):
-            if "kolmogorovSmirnov" in func and check_clickhouse_version(">=26.1")(
+            if check_clickhouse_version(">=26.1")(
                 self
             ):
                 execute_query(
