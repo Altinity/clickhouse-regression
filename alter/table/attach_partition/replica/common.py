@@ -479,16 +479,16 @@ def attach_partition_from_on_node(
     try:
         query = f"ALTER TABLE {destination_table_name} ATTACH PARTITION 1 FROM {source_table_name}"
         node.query(query)
-        num_rows = node.query(
-            f"SELECT count() from {destination_table_name} FORMAT TabSeparated"
-        )
 
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                num_rows = node.query(
+                    f"SELECT count() from {destination_table_name} FORMAT TabSeparated"
+                )
+
                 if (
                     source_table_engine == "ReplicatedReplacingMergeTree"
                     or source_table_engine == "ReplicatedCollapsingMergeTree"
-                    or source_table_engine == "ReplicatedVersionedCollapsingMergeTree"
                     or source_table_engine == "ReplicatedGraphiteMergeTree"
                     or source_table_engine == "ReplicatedAggregatingMergeTree"
                     or source_table_engine == "ReplicatedSummingMergeTree"

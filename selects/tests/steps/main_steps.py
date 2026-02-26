@@ -1104,7 +1104,7 @@ def create_alias_table(self, node=None):
     name = f"alias_{getuid()}"
     table_statement = (
         "CREATE TABLE IF NOT EXISTS {name}(id Int32, x Int32, s Int32 ALIAS id + x) "
-        "ENGINE = ReplacingMergeTree ORDER BY tuple()"
+        "ENGINE = ReplacingMergeTree ORDER BY id"
     )
 
     if node is None:
