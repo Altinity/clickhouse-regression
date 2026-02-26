@@ -20,6 +20,8 @@ from aggregate_functions.tests.steps import (
 def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
 
+    if check_clickhouse_version(">=24.9")(self):
+        clickhouse_version = ">=24.9"
     if check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.2")(self):
