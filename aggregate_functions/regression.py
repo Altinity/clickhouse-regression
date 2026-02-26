@@ -484,6 +484,20 @@ xfails = {
             check_clickhouse_version(">=24.11"),
         )
     ],
+    "/aggregate functions/part 2/finalizeAggregation/sumCount_finalizeAggregation_Merge/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/97370",
+            check_clickhouse_version(">=26.1"),
+        )
+    ],
+    "/aggregate functions/part 3/merge/sumCountMerge/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/97370",
+            check_clickhouse_version(">=26.1"),
+        )
+    ],
 }
 
 
