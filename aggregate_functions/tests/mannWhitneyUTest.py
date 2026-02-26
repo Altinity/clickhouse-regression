@@ -22,7 +22,7 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
 
     if check_clickhouse_version(">=24.9")(self):
         clickhouse_version = ">=24.9"
-    if check_clickhouse_version(">=24.1")(self):
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.2")(self):
         clickhouse_version = ">=23.2"
