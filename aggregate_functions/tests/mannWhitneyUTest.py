@@ -71,11 +71,18 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
             )
 
         with Check("single NULL value"):
-            execute_query(
-                f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
-                exitcode=exitcode,
-                message=message,
-            )
+            if "kolmogorovSmirnov" in func and check_clickhouse_version(">=26.1")(
+                self
+            ):
+                execute_query(
+                    f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                )
+            else:
+                execute_query(
+                    f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                    exitcode=exitcode,
+                    message=message,
+                )
 
     with Check("with group by"):
         execute_query(
