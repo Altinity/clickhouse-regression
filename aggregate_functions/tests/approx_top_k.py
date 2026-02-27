@@ -21,7 +21,6 @@ def scenario(self, func="approx_top_k({params})", table=None, snapshot_id=None):
 
     self.context.snapshot_id = get_snapshot_id(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version, add_analyzer=True
-        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version, add_analyzer=True
     )
 
     if table is None:
