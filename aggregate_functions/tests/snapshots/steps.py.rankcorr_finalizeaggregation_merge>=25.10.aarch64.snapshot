@@ -698,3 +698,23 @@ _aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_with_group_
 {"finalizeAggregation(CAST(unhex('0505EE0C098F54EDEA3F5BD5B66D3810C23F3399E0F581AFEEBF080A6DC20806E53F912F0C362660DA3F6957148B0ABF054006B16FBFE51534408F337099388D6240AADDAE5A88229140820F477C15A7BF40'), 'AggregateFunction(rankCorr, UInt64 ,UInt64)'))":-0.19999999999999996}
 """
 
+_clickhouse_aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('010303000000000000000000000000000010400000000000001440000000000000F03F0000000000001040000000000000F03F'), 'AggregateFunction(rankCorr, Nullable(Int8) ,Nullable(Int8))'))":0.125}
+"""
+
+_clickhouse_aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(rankCorr, Nullable(Int8) ,Nullable(Int8))'))":null}
+"""
+
+_clickhouse_aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_some_negative_values_0 = r"""
+{"finalizeAggregation(CAST(unhex('0A0A00000000000010C000000000000008C000000000000000C0000000000000F0BF0000000000000000000000000000F03F0000000000000040000000000000084000000000000010400000000000001440000000000000264000000000000028400000000000002A400000000000002C400000000000002E4000000000000030400000000000003140000000000000324000000000000033400000000000003440'), 'AggregateFunction(rankCorr, UInt64 ,UInt64)'))":1}
+"""
+
+_clickhouse_aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('0505000000000000000046B4D1EAF618ED3FAE1EDCDDB937E8BFC0A2B08AF1E1D1BF7BCF28A0D2A8EF3F000000000000F03FAEDDD4B8648E1D40583A272E904C4B408FC09056DC3679406E0C477DEA49A740'), 'AggregateFunction(rankCorr, UInt64 ,UInt64)'))":0.19999999999999996}
+"""
+
+_clickhouse_aggregate_functions_finalizeAggregation_rankCorrfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('0505EE0C098F54EDEA3F5BD5B66D3810C23F3399E0F581AFEEBF080A6DC20806E53F912F0C362660DA3F6957148B0ABF054006B16FBFE51534408F337099388D6240AADDAE5A88229140820F477C15A7BF40'), 'AggregateFunction(rankCorr, UInt64 ,UInt64)'))":-0.19999999999999996}
+"""
+
