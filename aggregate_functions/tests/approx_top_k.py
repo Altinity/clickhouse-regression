@@ -14,8 +14,13 @@ from aggregate_functions.tests.topK import scenario as checks
 def scenario(self, func="approx_top_k({params})", table=None, snapshot_id=None):
     """Check approx_top_k, aggregate function by using the same checks as for topK."""
 
+    if check_clickhouse_version(">=25.12")(self):
+        clickhouse_version = ">=25.12"
+    else:
+        clickhouse_version = ">=24.8"
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=24.8", add_analyzer=True
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version, add_analyzer=True
     )
 
     if table is None:
