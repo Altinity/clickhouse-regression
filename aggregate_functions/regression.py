@@ -407,13 +407,6 @@ xfails = {
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/part */mannWhitneyUTest/*": [
-        (
-            Fail,
-            issue_69192,
-            check_clickhouse_version(">=24.9"),
-        )
-    ],
     "/aggregate functions/part */merge/mannWhitneyUTestMerge/*": [
         (
             Fail,
