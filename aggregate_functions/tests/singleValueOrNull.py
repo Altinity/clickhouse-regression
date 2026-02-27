@@ -18,7 +18,7 @@ from helpers.common import check_clickhouse_version
 def scenario(self, func="singleValueOrNull({params})", table=None, snapshot_id=None):
     """Check singleValueOrNull aggregate function by using the same tests as for first_value."""
 
-    if check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self) and "State" in self.name:
         clickhouse_version = ">=26.1"
     else:
         clickhouse_version = ">=23.2"
