@@ -27,7 +27,9 @@ def datatype(self, func, table, col1_name, col2_name):
 def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
     """Check rankCorr aggregate function by using the same checks as for corr."""
     clickhouse_version = None
-    if check_clickhouse_version(">=25.10")(self):
+    if check_clickhouse_version(">=26.1")(self) and "State" in self.name:
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=25.10")(self):
         clickhouse_version = ">=25.10"
 
     self.context.snapshot_id = get_snapshot_id(
