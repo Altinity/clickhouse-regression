@@ -7,6 +7,7 @@ from aggregate_functions.requirements import (
 from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.sum import scenario as checks
 
+from helpers.common import check_clickhouse_version
 
 @TestScenario
 @Name("sumCount")
@@ -14,8 +15,13 @@ from aggregate_functions.tests.sum import scenario as checks
 def scenario(self, func="sumCount({params})", table=None, snapshot_id=None):
     """Check sumCount aggregate function by using the same tests as for sum."""
 
+    if check_clickhouse_version(">=26.1")(self) and "State" in self.name:
+        clickhouse_version = ">=26.1"
+    else:
+        clickhouse_version = None
+
     self.context.snapshot_id = get_snapshot_id(
-        snapshot_id=snapshot_id, clickhouse_version=">=26.1"
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
     if "Merge" in self.name:
