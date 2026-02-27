@@ -10,7 +10,7 @@ If you have docker image for test (get it from https://hub.docker.com/r/altinity
 ```bash
 docker build . -t clickhouse-driver
 
-docker run --rm -e RELEASE=0.2.9 clickhouse-driver
+docker run --rm -e RELEASE=0.2.10 clickhouse-driver
 ```
 
 If you don't have docker image for tests:

@@ -407,13 +407,6 @@ xfails = {
             check_clickhouse_version("<22.4"),
         )
     ],
-    "/aggregate functions/part */mannWhitneyUTest/*": [
-        (
-            Fail,
-            issue_69192,
-            check_clickhouse_version(">=24.9"),
-        )
-    ],
     "/aggregate functions/part */merge/mannWhitneyUTestMerge/*": [
         (
             Fail,
@@ -484,11 +477,18 @@ xfails = {
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/part */state/*": [
+    "/aggregate functions/part 2/finalizeAggregation/sumCount_finalizeAggregation_Merge/*": [
         (
             Fail,
-            "Not deterministic, need to investigate",
-            check_clickhouse_version(">=25.1"),
+            "https://github.com/ClickHouse/ClickHouse/issues/97370",
+            check_clickhouse_version(">=26.1"),
+        )
+    ],
+    "/aggregate functions/part 3/merge/sumCountMerge/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/97370",
+            check_clickhouse_version(">=26.1"),
         )
     ],
 }
@@ -795,6 +795,26 @@ ffails = {
     "/aggregate functions/part 1/function_list/untested function studentTTestOneSample": (
         Skip,
         "studentTTestOneSample test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function cume_dist": (
+        Skip,
+        "cume_dist test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function argAndMin": (
+        Skip,
+        "argAndMin test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function argAndMax": (
+        Skip,
+        "argAndMax test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function quantilesPrometheusHistogram": (
+        Skip,
+        "quantilesPrometheusHistogram test is not implemented",
+    ),
+    "/aggregate functions/part 1/function_list/untested function quantilePrometheusHistogram": (
+        Skip,
+        "quantilePrometheusHistogram test is not implemented",
     ),
 }
 

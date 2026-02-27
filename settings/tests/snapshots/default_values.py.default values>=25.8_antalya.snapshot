@@ -80,7 +80,7 @@ allow_experimental_delta_lake_writes = r"""'{"default":"0"}'"""
 
 allow_experimental_dynamic_type = r"""'{"default":"1"}'"""
 
-allow_experimental_export_merge_tree_part = r"""'{"default":"1"}\n{"default":"1"}'"""
+allow_experimental_export_merge_tree_part = r"""'{"default":"1"}'"""
 
 allow_experimental_full_text_index = r"""'{"default":"0"}'"""
 
@@ -89,6 +89,8 @@ allow_experimental_funnel_functions = r"""'{"default":"0"}'"""
 allow_experimental_geo_types = r"""'{"default":"1"}'"""
 
 allow_experimental_hash_functions = r"""'{"default":"0"}'"""
+
+allow_experimental_hybrid_table = r"""'{"default":"0"}'"""
 
 allow_experimental_iceberg_compaction = r"""'{"default":"0"}'"""
 
@@ -454,6 +456,10 @@ cluster_for_parallel_replicas = r"""'{"default":""}'"""
 
 cluster_function_process_archive_on_multiple_nodes = r"""'{"default":"1"}'"""
 
+cluster_table_function_buckets_batch_size = r"""'{"default":"0"}'"""
+
+cluster_table_function_split_granularity = r"""'{"default":"file"}'"""
+
 collect_hash_table_stats_during_aggregation = r"""'{"default":"1"}'"""
 
 collect_hash_table_stats_during_joins = r"""'{"default":"1"}'"""
@@ -798,7 +804,19 @@ except_default_mode = r"""'{"default":"ALL"}'"""
 
 execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
+export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
+
+export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
+
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
+
+export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
@@ -1050,6 +1068,8 @@ http_write_exception_in_output_format = r"""'{"default":"1"}'"""
 
 http_zlib_compression_level = r"""'{"default":"3"}'"""
 
+hybrid_table_auto_cast_columns = r"""'{"default":"1"}'"""
+
 iceberg_engine_ignore_schema_evolution = r"""'{"default":"0"}'"""
 
 iceberg_metadata_compression_method = r"""'{"default":""}'"""
@@ -1059,6 +1079,8 @@ iceberg_metadata_log_level = r"""'{"default":"none"}'"""
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -1276,9 +1298,11 @@ input_format_parquet_use_metadata_cache = r"""'{"default":"1"}'"""
 
 input_format_parquet_use_native_reader = r"""'{"default":"0"}'"""
 
-input_format_parquet_use_native_reader_v3 = r"""'{"default":"0"}'"""
+input_format_parquet_use_native_reader_v3 = r"""'{"default":"1"}'"""
 
 input_format_parquet_use_offset_index = r"""'{"default":"1"}'"""
+
+input_format_parquet_verify_checksums = r"""'{"default":"1"}'"""
 
 input_format_protobuf_flatten_google_wrappers = r"""'{"default":"0"}'"""
 
@@ -2081,6 +2105,8 @@ output_format_parquet_use_custom_encoder = r"""'{"default":"1"}'"""
 output_format_parquet_version = r"""'{"default":"2.latest"}'"""
 
 output_format_parquet_write_bloom_filter = r"""'{"default":"1"}'"""
+
+output_format_parquet_write_checksums = r"""'{"default":"1"}'"""
 
 output_format_parquet_write_page_index = r"""'{"default":"1"}'"""
 

@@ -1,3 +1,5 @@
+import random
+
 from testflows.core import *
 
 from helpers.tables import *
@@ -10,9 +12,9 @@ from aggregate_functions.requirements import (
 def generate_test_data(table_name=None, datatype=None, sample_size=150, num=4):
     if table_name is None or datatype is None:
         return ""
-    random.seed(41)
+    rng = random.Random(41)
     return [
-        random.sample(
+        rng.sample(
             range(datatype.max + 1 - sample_size * 3, datatype.max + 1), sample_size
         )
         for _ in range(num)

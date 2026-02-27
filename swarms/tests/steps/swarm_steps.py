@@ -2,6 +2,7 @@ from testflows.core import *
 
 import pyarrow as pa
 import numpy as np
+import random
 import iceberg.tests.steps.catalog as catalog_steps
 
 from datetime import datetime, timedelta, timezone, time, date
@@ -39,6 +40,8 @@ from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform, HourTransform, BucketTransform
 
+random.seed(42)
+
 
 def create_swarm_cluster_entry(
     cluster_name,
@@ -46,6 +49,7 @@ def create_swarm_cluster_entry(
     path="/clickhouse/discovery/swarm",
     observer=None,
     allow_experimental_cluster_discovery=True,
+    user=None,
 ):
     """Create swarm cluster configuration entry.
 
@@ -63,6 +67,9 @@ def create_swarm_cluster_entry(
 
     if path is not None:
         discovery["path"] = path
+
+    if user is not None:
+        discovery["user"] = user
 
     if secret is not None:
         discovery["secret"] = secret
@@ -96,6 +103,7 @@ def add_node_to_swarm(
     modify=False,
     entries=None,
     duplicate_tags=False,
+    user=None,
 ):
     """Add a node to the swarm cluster.
 
@@ -122,6 +130,7 @@ def add_node_to_swarm(
                 path=path,
                 observer=observer,
                 allow_experimental_cluster_discovery=allow_experimental_cluster_discovery,
+                user=user,
             )
 
         change_clickhouse_config(
@@ -334,11 +343,75 @@ def setup_iceberg_table(
             ]
         )
         table.append(df)
-        table.append(df)
 
     with And("scan and display data"):
         df = table.scan().to_pandas()
         note(df)
+
+    return table, table_name, namespace
+
+
+@TestStep(Given)
+def setup_performance_iceberg_table(
+    self,
+    minio_root_user,
+    minio_root_password,
+    row_count=100,
+    batch_size=100,
+    s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
+):
+    """
+    Create an Iceberg table with three columns and populate it with test data in batches.
+    Table is partitioned by name with IdentityTransform and sorted by name.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with By("create catalog"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_endpoint=s3_endpoint,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And(f"create namespace and create {namespace}.{table_name} table"):
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+        table = catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            location=location,
+        )
+
+    with And(
+        f"insert {row_count} rows in batches of {batch_size} into {namespace}.{table_name} table"
+    ):
+        remaining_rows = row_count
+        batch_num = 0
+
+        while remaining_rows > 0:
+            current_batch_size = min(batch_size, remaining_rows)
+            batch_num += 1
+
+            with By(f"inserted {batch_num*batch_size}/{row_count} rows"):
+                data = []
+                for _ in range(current_batch_size):
+                    data.append(
+                        {
+                            "name": catalog_steps.random_name(),
+                            "double": random.uniform(0, 100),
+                            "integer": random.randint(0, 10000),
+                        }
+                    )
+                df = pa.Table.from_pylist(data)
+                table.append(df)
+
+            remaining_rows -= current_batch_size
+
+    with And("scan and display data"):
+        df = table.scan().to_pandas()
+        note(f"Total rows inserted: {len(df)}")
 
     return table, table_name, namespace
 
@@ -455,5 +528,161 @@ def iceberg_table_with_all_basic_data_types(
         table.append(data)
         table.append(data)
         table.append(data)
+
+    return table, table_name, namespace
+
+
+@TestStep(Given)
+def performance_iceberg_table_with_all_basic_data_types(
+    self,
+    minio_root_user,
+    minio_root_password,
+    s3_endpoint="http://localhost:9002",
+    location="s3://warehouse/data",
+    row_count=100,
+    batch_size=100,
+):
+    """
+    Create an Iceberg table with all basic data types and populate it with test data.
+    """
+    namespace = f"namespace_{getuid()}"
+    table_name = f"table_{getuid()}"
+
+    with By("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_endpoint=s3_endpoint,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And("create table"):
+        schema = Schema(
+            NestedField(
+                field_id=1, name="boolean_col", field_type=BooleanType(), required=False
+            ),
+            NestedField(
+                field_id=2, name="long_col", field_type=LongType(), required=False
+            ),
+            NestedField(
+                field_id=3, name="double_col", field_type=DoubleType(), required=False
+            ),
+            NestedField(
+                field_id=4, name="string_col", field_type=StringType(), required=True
+            ),
+            NestedField(
+                field_id=5,
+                name="timestamp_col",
+                field_type=TimestampType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=6, name="date_col", field_type=DateType(), required=False
+            ),
+            NestedField(
+                field_id=7, name="time_col", field_type=TimeType(), required=False
+            ),
+            NestedField(
+                field_id=8,
+                name="timestamptz_col",
+                field_type=TimestamptzType(),
+                required=False,
+            ),
+            NestedField(
+                field_id=9, name="integer_col", field_type=IntegerType(), required=False
+            ),
+            NestedField(
+                field_id=10, name="float_col", field_type=FloatType(), required=False
+            ),
+            NestedField(
+                field_id=11,
+                name="decimal_col",
+                field_type=DecimalType(10, 2),
+                required=False,
+            ),
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location=location,
+            partition_spec=PartitionSpec(),
+            sort_order=SortOrder(),
+        )
+
+    with And("insert data into table"):
+        schema = pa.schema(
+            [
+                pa.field("boolean_col", pa.bool_(), nullable=True),
+                pa.field("long_col", pa.int64(), nullable=True),
+                pa.field("double_col", pa.float64(), nullable=True),
+                pa.field("string_col", pa.string(), nullable=False),
+                pa.field("timestamp_col", pa.timestamp("us"), nullable=True),
+                pa.field("date_col", pa.date32(), nullable=True),
+                pa.field("time_col", pa.time64("us"), nullable=True),
+                pa.field(
+                    "timestamptz_col", pa.timestamp("us", tz="UTC"), nullable=True
+                ),
+                pa.field("integer_col", pa.int32(), nullable=True),
+                pa.field("float_col", pa.float32(), nullable=True),
+                pa.field("decimal_col", pa.decimal128(10, 2), nullable=True),
+            ]
+        )
+
+        row_number = min(row_count, batch_size)
+        data = []
+
+        for i in range(row_number):
+            data.append(
+                {
+                    "boolean_col": random.choice([True, False]),
+                    "long_col": random.randint(0, 10000),
+                    "double_col": random.uniform(0, 10000),
+                    "string_col": random.choice(
+                        [
+                            "Alice",
+                            "Bob",
+                            "Charlie",
+                            "David",
+                            "Eve",
+                            "Frank",
+                            "George",
+                            "Hannah",
+                            "Isaac",
+                            "Jacob",
+                            "King",
+                            "Louis",
+                            "Mary",
+                            "Nancy",
+                            "Oliver",
+                            "Paul",
+                            "Queen",
+                            "Robert",
+                            "Samuel",
+                            "Thomas",
+                            "William",
+                        ]
+                    ),
+                    "timestamp_col": random.choice(
+                        [datetime(2024, 1, 1, 12, 0, 0), datetime(2024, 1, 1, 12, 0, 0)]
+                    ),
+                    "date_col": random.choice([date(2024, 1, 1), date(2024, 1, 1)]),
+                    "time_col": random.choice([time(12, 0, 0), time(12, 0, 0)]),
+                    "timestamptz_col": random.choice(
+                        [
+                            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                            datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+                        ]
+                    ),
+                    "integer_col": random.randint(0, 10000),
+                    "float_col": random.uniform(0, 10000),
+                    "decimal_col": random.choice(
+                        [Decimal("456.78"), Decimal("456.78")]
+                    ),
+                }
+            )
+        df = pa.Table.from_pylist(data, schema=schema)
+        table.append(df)
 
     return table, table_name, namespace

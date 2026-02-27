@@ -769,9 +769,9 @@ The tests were run against Superset version `4.1.1`. Currently, there is an issu
 
 Results:
 
-https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-keeper_0-25.3.6.10034.altinitystable/results.html
-https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-server_0-25.3.6.10034.altinitystable/results.html
-https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-server_0-25.3.6.10034.altinitystable-alpine/results.html
+https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-keeper_0-25.3.8.10041.altinitystable/results.html
+https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-server_0-25.3.8.10041.altinitystable/results.html
+https://s3.amazonaws.com/altinity-build-artifacts/0/d32d0074004db61e346611c777e26532a456fe2f/grype/altinityinfra_clickhouse-server_0-25.3.8.10041.altinitystable-alpine/results.html
 
 [Grype](https://github.com/anchore/grype) Docker image vulnerability scanner.
 

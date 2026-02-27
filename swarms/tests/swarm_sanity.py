@@ -40,21 +40,23 @@ def create_swarm_cluster(self):
         )
 
     with Then("check that swarm cluster is created"):
-        for node in self.context.nodes:
+        for node in [self.context.node, self.context.node2, self.context.node3]:
             result = swarm_steps.show_clusters(node=node)
-            assert cluster_name in result.output, error()
+            for retry in retries(count=10, delay=2):
+                with retry:
+                    assert cluster_name in result.output, error()
 
     with And(
         "check that swarm nodes (clickhouse2 and clickhouse3) are added to the cluster"
     ):
-        for node in self.context.nodes:
+        for node in [self.context.node, self.context.node2, self.context.node3]:
             output = swarm_steps.check_cluster_hostnames(
                 cluster_name=cluster_name, node=node
             )
             assert "clickhouse2" in output and "clickhouse3" in output, error()
 
     with And("check that observer node was not added to the cluster"):
-        for node in self.context.nodes:
+        for node in [self.context.node, self.context.node2, self.context.node3]:
             output = swarm_steps.check_cluster_hostnames(
                 cluster_name=cluster_name, node=node
             )
@@ -252,7 +254,7 @@ def check_scale_up_and_down(self, minio_root_user, minio_root_password, node=Non
     ):
         for retry in retries(count=10, delay=2):
             with retry:
-                for node in self.context.nodes:
+                for node in [self.context.node, self.context.node2, self.context.node3]:
                     output = swarm_steps.check_cluster_hostnames(
                         cluster_name=cluster_name, node=node
                     )

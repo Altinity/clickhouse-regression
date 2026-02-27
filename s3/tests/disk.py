@@ -2529,6 +2529,13 @@ def disk_tests(self, uri, bucket_prefix):
 
             self.context.uri = f"{uri}disk/{temp_s3_path}/"
             self.context.bucket_path = f"{bucket_prefix}/disk/{temp_s3_path}"
+
+        with And("I add S3 credentials configuration"):
+            named_s3_credentials(
+                access_key_id=self.context.access_key_id,
+                secret_access_key=self.context.secret_access_key,
+                restart=True,
+            )
     else:
         self.context.uri = None
         self.context.bucket_path = None

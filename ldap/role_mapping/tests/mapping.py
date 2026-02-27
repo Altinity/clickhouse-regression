@@ -932,7 +932,7 @@ def role_removed_and_readded(self, ldap_server, ldap_user):
                     )
 
                     with Then("I expect to get no errors"):
-                        client.app.expect("Ok\.")
+                        client.app.expect("Ok\\.")
                         client.app.expect(r"clickhouse1 :\) ")
 
                 with When("I remove the role that grants the privilege"):

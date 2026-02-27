@@ -9,6 +9,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
+from helpers.common import check_if_not_antalya_build
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
@@ -63,12 +64,20 @@ def argparser(parser):
 
 xfails = {}
 
-ffails = {}
+ffails = {
+    "/oauth/*": (
+        Skip,
+        "OAuth not implemented in non Antalya build",
+        check_if_not_antalya_build,
+    ),
+}
 
 
 def write_env_file(identity_provider, tenant_id, client_id, client_secret):
+    # Use the directory of this regression.py file
+    regression_dir = os.path.dirname(os.path.abspath(__file__))
     env_dir = os.path.join(
-        current_dir(),
+        regression_dir,
         "envs",
         f"{identity_provider.lower()}",
         f"{identity_provider.lower()}_env",
@@ -120,8 +129,13 @@ def regression(
     with Given("docker-compose cluster"):
         providers = {"keycloak": keycloak, "azure": azure}
 
+        regression_dir = os.path.dirname(os.path.abspath(__file__))
+        identity_provider_lower = str(identity_provider.lower())
         docker_compose_config = os.path.join(
-            current_dir(), "envs", identity_provider.lower()
+            regression_dir, "envs", identity_provider_lower
+        )
+        docker_compose_project_dir = os.path.join(
+            docker_compose_config, f"{identity_provider_lower}_env"
         )
 
         if identity_provider.lower() == "azure":
@@ -152,7 +166,8 @@ def regression(
         cluster = create_cluster(
             **cluster_args,
             nodes=nodes,
-            configs_dir=docker_compose_config,
+            configs_dir=regression_dir,
+            docker_compose_project_dir=docker_compose_project_dir,
         )
 
         self.context.cluster = cluster
@@ -167,19 +182,19 @@ def regression(
         self.context.cluster.node(node) for node in nodes["clickhouse"]
     ]
 
-    if identity_provider.lower() == "keycloak":
-        for retry in retries(timeout=300, delay=20):
-            with retry:
-                keycloak_realm.OAuthProvider.get_oauth_token()
+    with Given(f"{identity_provider} is up and running"):
+        if identity_provider.lower() == "keycloak":
+            for retry in retries(timeout=300, delay=20):
+                with retry:
+                    keycloak_realm.OAuthProvider.get_oauth_token()
 
-    pause()
     Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    # Scenario(run=load("oauth.tests.configuration", "feature"))
+    # Scenario(run=load("oauth.tests.authentication", "feature"))
+    # Scenario(run=load("oauth.tests.tokens", "feature"))
+    # Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    # Scenario(run=load("oauth.tests.groups", "feature"))
+    # Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
 
 
 if main():

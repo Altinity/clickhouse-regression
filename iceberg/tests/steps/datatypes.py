@@ -5,6 +5,8 @@ import pyarrow as pa
 from decimal import Decimal
 from pyiceberg.types import *
 
+random.seed(42)
+
 
 class BaseIcebergTypeTest:
     name: str = None

@@ -1,3 +1,4 @@
+import uuid
 from testflows.core import *
 from s3.tests.export_part.steps import *
 from helpers.create import *
@@ -5,11 +6,27 @@ from helpers.queries import *
 from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
 from s3.tests.export_part import alter_wrappers
+from helpers.alter import delete, update
+
+
+class MutationExample:
+    """Wrapper class to control how example names appear in coverage reports."""
+
+    def __init__(self, mutation_function, kwargs, name):
+        self.mutation_function = mutation_function
+        self.kwargs = kwargs
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
 
 
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
-def parallel_insert(self):
+def insert_parts(self):
     """Check that exports work correctly with concurrent inserts of source data."""
 
     with Given("I create an empty source and S3 table"):
@@ -41,18 +58,13 @@ def parallel_insert(self):
         Step(test=export_parts, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
         join()
 
     with Then("Destination data should be a subset of source data"):
-        wait_for_all_exports_to_complete(node=self.context.node)
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        wait_for_all_exports_to_complete()
+        source_data = select_all_ordered(table_name=source_table)
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert set(source_data) >= set(destination_data), error()
 
     with And("Inserts should have completed successfully"):
@@ -73,23 +85,20 @@ def multiple_sources_same_destination(self, num_tables):
         source_data = []
         destination_data = []
         for i in range(num_tables):
-            data = select_all_ordered(
-                table_name=source_tables[i], node=self.context.node
-            )
+            data = select_all_ordered(table_name=source_tables[i])
             source_data.extend(data)
-            data = select_all_ordered(
-                table_name=destination_tables[i], node=self.context.node
-            )
+            data = select_all_ordered(table_name=destination_tables[i])
             destination_data.extend(data)
 
     with Then("All data should be present in the S3 table"):
         assert set(source_data) == set(destination_data), error()
 
     with And("Exports should have run concurrently"):
-        verify_export_concurrency(node=self.context.node, source_tables=source_tables)
+        verify_export_concurrency(source_tables=source_tables)
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
 def select_parts(self):
     """Test selecting from the source table before, during, and after exports."""
 
@@ -109,9 +118,7 @@ def select_parts(self):
         )
 
     with And("I select data from the source table before exporting parts"):
-        before_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        before_export_data = select_all_ordered(table_name=source_table)
 
     with When("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
@@ -120,22 +127,15 @@ def select_parts(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I select data from the source table during exporting parts"):
-        during_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        during_export_data = select_all_ordered(table_name=source_table)
 
     with And("I select data from the source and destination after exporting parts"):
         wait_for_all_exports_to_complete()
-        after_export_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+        after_export_data = select_all_ordered(table_name=source_table)
+        destination_data = select_all_ordered(table_name=s3_table_name)
 
     with Then("Check data is consistent before, during, and after exports"):
         assert before_export_data == during_export_data, error()
@@ -145,7 +145,8 @@ def select_parts(self):
 
 
 @TestScenario
-def merge_parts(self):
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+def optimize_parts(self):
     """Test merging parts from the source table before, during, and after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
@@ -163,7 +164,7 @@ def merge_parts(self):
         )
 
     with And("I optimize partition 1 before export"):
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="1",
         )
@@ -178,18 +179,17 @@ def merge_parts(self):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I optimize partition 2 during export"):
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="2",
         )
 
     with And("I optimize partition 3 after export"):
         wait_for_all_exports_to_complete()
-        optimize_partition(
+        alter_wrappers.optimize_partition(
             table_name=source_table,
             partition="3",
         )
@@ -224,21 +224,132 @@ def merge_parts(self):
         }, error()
 
 
-def get_actions():
-    return [
-        (alter_wrappers.optimize_partition, {}),
-        (select_all_ordered, {}),
-        (create_partitions_with_random_uint64, {}),
-    ]
+@TestStep(When)
+def select_and_collect(self, table_name, select_action, results_list, node=None):
+    """Wrapper to collect select results."""
+    if node is None:
+        node = self.context.node
+    result = select_action(table_name=table_name, node=node)
+    results_list.append(result)
+    return result
 
 
 @TestOutline(Scenario)
 @Examples(
-    "action, kwargs",
-    get_actions(),
+    "select_action",
+    [
+        (select_all_ordered,),
+        (select_hash,),
+    ],
 )
-def stress(self, action, kwargs):
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+def stress_select(self, select_action):
     """Test a high volume of actions in parallel with exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=10,
+            number_of_partitions=10,
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I get starting data"):
+        source_data = select_action(table_name=source_table)
+
+    with And("I slow the network"):
+        network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
+
+    with When(
+        f"I export parts to the S3 table in parallel with {select_action.__name__}"
+    ):
+        select_results = []
+
+        with Pool(10) as executor:
+            for _ in range(100):
+                Step(test=export_parts, parallel=True, executor=executor)(
+                    source_table=source_table,
+                    destination_table=s3_table_name,
+                    parts=[get_random_part(table_name=source_table)],
+                    exitcode=1,
+                )
+                Step(test=select_and_collect, parallel=True, executor=executor)(
+                    table_name=source_table,
+                    select_action=select_action,
+                    results_list=select_results,
+                )
+            join()
+
+    with Then("Check data is consistent"):
+        assert len(select_results) == 100, error()
+        assert all(result == source_data for result in select_results), error()
+
+    with And("Check part log matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_NonBlocking("1.0"))
+def inserts_and_selects_not_blocked(self):
+    """Test non-blocking inserts and selects during exports."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I get initial source data"):
+        initial_source_data = select_all_ordered(table_name=source_table)
+
+    with And("I stop MinIO"):
+        kill_minio()
+
+    with When("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+    with And("I run inserts and selects on the source table"):
+        for _ in range(10):
+            before_insert_data = select_all_ordered(
+                table_name=source_table,
+            )
+            insert_into_table(table_name=source_table)
+            after_insert_data = select_all_ordered(
+                table_name=source_table,
+            )
+            assert after_insert_data != before_insert_data, error()
+
+    with And("I start MinIO"):
+        start_minio()
+
+    with Then("Check source matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+        destination_data = select_all_ordered(table_name=s3_table_name)
+        assert initial_source_data == destination_data, error()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_QueryCancellation("1.0"))
+def kill_export(self):
+    """Check that KILL queries do not break exports."""
 
     with Given("I create a populated source table and empty S3 table"):
         source_table = f"source_{getuid()}"
@@ -256,25 +367,89 @@ def stress(self, action, kwargs):
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
-    with When(f"I export parts to the S3 table in parallel with {action.__name__}"):
+    with When(f"I export parts to the S3 table in parallel with kill queries"):
         for _ in range(100):
+            query_id = str(uuid.uuid4())
             Step(test=export_parts, parallel=True)(
                 source_table=source_table,
                 destination_table=s3_table_name,
-                node=self.context.node,
                 parts=[get_random_part(table_name=source_table)],
+                settings=[("query_id", query_id)],
+                exitcode=1,
             )
-            Step(test=action, parallel=True)(table_name=source_table, **kwargs)
+            Step(test=kill_query, parallel=True)(
+                node=self.context.node,
+                query_id=query_id,
+            )
         join()
 
-    with And("I wait for all exports and merges to complete"):
-        wait_for_all_exports_to_complete(node=self.context.node)
-        wait_for_all_merges_to_complete(node=self.context.node, table_name=source_table)
+    with Then("Check part log matches destination"):
+        part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
-    with Then("Check successfully exported parts are present in destination"):
-        part_log = get_part_log(node=self.context.node, table_name=source_table)
-        destination_parts = get_s3_parts(table_name=s3_table_name)
-        assert part_log == destination_parts, error()
+
+@TestOutline(Scenario)
+@Examples(
+    "delete_method, delete_condition, description",
+    [
+        ("DELETE FROM", "i = 1", "one row"),
+        ("DELETE FROM", "i IN (1, 3)", "multiple rows"),
+        ("DELETE FROM", "p = 1", "all rows"),
+        ("ALTER DELETE", "i = 1", "one row"),
+        ("ALTER DELETE", "i IN (1, 3)", "multiple rows"),
+        ("ALTER DELETE", "p = 1", "all rows"),
+    ],
+)
+@Requirements(RQ_ClickHouse_ExportPart_DeletedRows("1.0"))
+def after_delete_rows(self, delete_method, delete_condition, description):
+    """Test that exports correctly exclude deleted rows."""
+
+    with Given("I create a populated source table and empty S3 table"):
+        source_table = f"source_{getuid()}"
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            populate=False,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with And("I create partitions with sequential uint64 values"):
+        create_partitions_with_sequential_uint64(
+            table_name=source_table,
+        )
+
+    with When(f"I delete rows using {delete_method} ({description})"):
+        if delete_method == "DELETE FROM":
+            delete_from(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+        else:
+            alter_table_delete_rows(
+                table_name=source_table,
+                condition=delete_condition,
+            )
+
+    with And("I wait for mutations to complete"):
+        wait_for_all_mutations_to_complete(table_name=source_table)
+
+    with And("I stop merges to prevent parts from becoming outdated"):
+        stop_merges(table_name=source_table)
+
+    with And("I export parts to the S3 table"):
+        export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
+
+    with Then("Check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestFeature
@@ -283,7 +458,10 @@ def feature(self):
     """Check that exports work correctly with explicitly parallel tests."""
 
     Scenario(test=multiple_sources_same_destination)(num_tables=5)
-    Scenario(run=parallel_insert)
+    Scenario(run=insert_parts)
     Scenario(run=select_parts)
-    Scenario(run=merge_parts)
-    Scenario(run=stress)
+    Scenario(run=optimize_parts)
+    Scenario(run=stress_select)
+    Scenario(run=inserts_and_selects_not_blocked)
+    Scenario(run=after_delete_rows)
+    Scenario(run=kill_export)

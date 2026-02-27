@@ -35,7 +35,9 @@ def access_clickhouse(
     body_result = node.command(command="cat /tmp/ch_response.txt")
     response_body = body_result.output.strip()
 
-    assert http_code == status_code, error()
+    assert http_code == status_code, error(
+        f"Expected HTTP status code {status_code}, but got {http_code}. Response body: {response_body}"
+    )
 
     return response_body
 
@@ -44,7 +46,8 @@ def access_clickhouse(
 def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse with an invalid JWT token."""
 
-    access_clickhouse(token=token, ip=ip, https=https, status_code=403)
+    response = access_clickhouse(token=token, ip=ip, https=https, status_code=500)
+    assert "failed to verify signature" in response, error()
 
 
 @TestStep(Then)

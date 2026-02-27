@@ -3,7 +3,7 @@ version: "2.3"
 services:
   clickhouse:
     extends:
-      file: ../../docker-compose/clickhouse-service.yml
+      file: ../../../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"

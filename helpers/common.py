@@ -18,7 +18,7 @@ from testflows._core.testtype import TestSubType
 def current_cpu():
     """Return current cpu architecture."""
     arch = platform.processor()
-    if arch not in ("x86_64", "aarch64"):
+    if arch not in ("x86_64", "aarch64", "arm"):
         raise TypeError(f"unsupported CPU architecture {arch}")
     return arch
 
@@ -117,16 +117,24 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
-def check_if_antalya_build(test):
+def check_if_antalya_build(test=None):
     """True if build is Antalya build."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
-    return "antalya" in binary_path
+    return "antalya" in current().context.full_clickhouse_version
 
 
-def check_if_not_antalya_build(test):
+def check_if_not_antalya_build(test=None):
     """True if build is not Antalya build."""
-    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
-    return "antalya" not in binary_path
+    return "antalya" not in current().context.full_clickhouse_version
+
+
+def check_if_altinity_build(test=None):
+    """True if build is Altinity build."""
+    return "altinity" in current().context.full_clickhouse_version
+
+
+def check_if_25_8_altinity_build(test=None):
+    """True if build is 25.8 Altinity build."""
+    return "25.8" in current().context.full_clickhouse_version and check_if_altinity_build() and check_if_not_antalya_build()
 
 
 def check_if_head(test):
@@ -220,14 +228,19 @@ def check_clickhouse_version(version):
     return check
 
 
-def check_is_altinity_build(node):
+def check_is_altinity_build(node=None):
     """
     Check if the build is from Altinity.
 
     The check needs to be robust, it's possible that a test build
     will not have the version set correctly.
     """
-    res = node.command("grep -i -a altinity /usr/bin/clickhouse", no_checks=True)
+    if node is None:
+        node = current().context.node
+
+    res = node.command(
+        "grep -q -i -a altinity /usr/bin/clickhouse", no_checks=True, steps=False
+    )
     return res.exitcode == 0
 
 

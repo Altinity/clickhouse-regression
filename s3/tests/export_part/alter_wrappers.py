@@ -180,7 +180,7 @@ def alter_table_attach_partition_from(
             partition_by="p",
             stop_merges=True,
             populate=False,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
         partition_name = create_new_partition(table_name=path_to_backup)
@@ -209,7 +209,7 @@ def alter_table_move_partition_to_table(
             partition_by="p",
             stop_merges=True,
             populate=False,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
 
@@ -356,7 +356,7 @@ def alter_table_replace_partition(
             partition_by="p",
             stop_merges=True,
             number_of_partitions=1,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
 
@@ -388,7 +388,7 @@ def alter_table_fetch_partition(
             partition_by="p",
             populate=False,
             stop_merges=True,
-            columns=get_column_info(node=self.context.node, table_name=table_name),
+            columns=get_column_info(table_name=table_name),
             query_settings=f"storage_policy = 'tiered_storage'",
         )
         partition_name = create_new_partition(table_name=path_to_backup)
@@ -401,6 +401,7 @@ def alter_table_fetch_partition(
             table_name=table_name,
             partition_name=partition_name,
             path_to_backup=f"/clickhouse/tables/shard0/{path_to_backup}",
+            no_checks=True,
             **query_kwargs,
         )
 
@@ -422,10 +423,7 @@ def optimize_partition(self, table_name, partition=None, node=None):
     if partition is None:
         partition = get_random_partition(table_name=table_name, node=node)
 
-    with By(f"Starting merges for table {table_name} and partition {partition}"):
-        start_merges(table_name=table_name, node=node)
-
-    with And(f"Optimizing partition {partition}"):
+    with By(f"Optimizing partition {partition}"):
         node.query(
             f"OPTIMIZE TABLE {table_name} PARTITION '{partition}' FINAL",
             exitcode=0,
@@ -440,11 +438,8 @@ def optimize_table(self, table_name, node=None):
     if node is None:
         node = self.context.node
 
-    with By(f"Starting merges for table {table_name}"):
-        start_merges(table_name=table_name, node=node)
-
-    with And(f"Optimizing {table_name}"):
-        optimize(node=self.context.node, table_name=table_name, final=True)
+    with By(f"Optimizing {table_name}"):
+        optimize(node=node, table_name=table_name, final=True)
 
 
 @TestStep(When)
@@ -465,4 +460,5 @@ def drop_table(self, table_name, node=None, recreate=False):
                 columns=default_columns(simple=False),
                 stop_merges=True,
                 query_settings="storage_policy = 'tiered_storage'",
+                if_not_exists=True,
             )

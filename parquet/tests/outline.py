@@ -12,6 +12,10 @@ def import_export(
     self, snapshot_name, import_file, snapshot_id=None, limit=None, settings=None
 ):
     """Import parquet file into a clickhouse table and export it back."""
+
+    if check_clickhouse_version(">=26.1")(self):
+        settings = [("max_memory_usage", 20000000000)]
+
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
@@ -29,7 +33,8 @@ def import_export(
 
     with Given("I save file structure"):
         import_column_structure = node.query(
-            f"DESCRIBE TABLE file('{import_file}', Parquet) FORMAT TabSeparated"
+            f"DESCRIBE TABLE file('{import_file}', Parquet) FORMAT TabSeparated",
+            settings=settings,
         )
 
     with And("I try to import the binary Parquet file into the table"):
@@ -41,6 +46,7 @@ def import_export(
             """,
             file_output="output" + getuid(),
             use_file=True,
+            settings=settings,
         )
 
     with And("I read the contents of the created table"):
@@ -91,7 +97,8 @@ def import_export(
                 skip("datetime column structure is different in Parquet and ClickHouse")
 
             export_columns_structure = node.query(
-                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated"
+                f"DESCRIBE TABLE file('{path_to_export}') FORMAT TabSeparated",
+                settings=settings,
             )
             assert (
                 import_column_structure.output.strip()

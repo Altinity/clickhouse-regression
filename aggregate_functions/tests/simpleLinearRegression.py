@@ -19,7 +19,9 @@ def scenario(
 ):
     """Check simpleLinearRegression aggregate function by using the same tests as for covarPop."""
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.2")(self):
         clickhouse_version = ">=23.2"

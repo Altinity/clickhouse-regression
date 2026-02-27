@@ -33,7 +33,6 @@ def packet_delay(self, delay_ms):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -68,7 +67,6 @@ def packet_loss(self, percent_loss):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -107,7 +105,6 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -144,7 +141,6 @@ def packet_corruption(self, percent_corrupt):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -181,7 +177,6 @@ def packet_duplication(self, percent_duplicated):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -220,7 +215,6 @@ def packet_reordering(self, delay_ms, percent_reordered):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -255,7 +249,6 @@ def packet_rate_limit(self, rate_mbit):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     for retry in retries(timeout=30, delay=1):
@@ -278,6 +271,7 @@ def get_minio_interruption_strategies():
     "strategy, signal",
     get_minio_interruption_strategies(),
 )
+@Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"))
 def minio_interruption(self, strategy, signal):
     """Check that MinIO outages at different times during exports work correctly."""
 
@@ -336,7 +330,6 @@ def minio_interruption(self, strategy, signal):
             kill_minio(signal=signal)
 
     with Then("I start MinIO"):
-        wait_for_all_exports_to_complete()
         start_minio()
 
     if strategy == "after":
@@ -384,7 +377,7 @@ def clickhouse_interruption(self, strategy, signal, safe):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I get parts before the interruption"):
-        parts = get_parts(table_name=source_table, node=self.context.node)
+        parts = get_parts(table_name=source_table)
 
     with And("I slow the network to make export take longer"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
@@ -435,10 +428,10 @@ def clickhouse_interruption(self, strategy, signal, safe):
             self.context.node.stop_clickhouse(safe=safe, signal=signal)
 
     with Then("I start ClickHouse"):
-        wait_for_all_exports_to_complete()
         self.context.node.start_clickhouse(thread_fuzzer=True)
 
     with And("I get data from both tables"):
+        wait_for_all_exports_to_complete()
         source_data = select_all_ordered(
             table_name=source_table, node=self.context.node
         )
@@ -461,8 +454,6 @@ def clickhouse_interruption(self, strategy, signal, safe):
 @Name("network")
 def feature(self):
     """Check that exports work correctly with various network conditions."""
-
-    # TODO corruption (bit flipping)
 
     Scenario(test=packet_delay)(delay_ms=100)
     Scenario(test=packet_loss)(percent_loss=50)

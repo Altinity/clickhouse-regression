@@ -1,4 +1,4 @@
-FROM altinityinfra/clickhouse-server:0-25.8.9.20024.altinitytest
+FROM altinityinfra/clickhouse-server:0-25.8.16.10001.altinitytest
 
 COPY runner.sh runner.sh
 COPY diff-0.2.1.patch diff-0.2.1.patch

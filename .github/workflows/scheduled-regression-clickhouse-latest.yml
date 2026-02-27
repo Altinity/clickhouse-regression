@@ -8,7 +8,7 @@ on:
 
 jobs:
   get_clickhouse_version:
-    runs-on: [ self-hosted, x86, type-cx42, image-x86-app-docker-ce ]
+    runs-on: [ self-hosted, x86, type-cx43, image-x86-app-docker-ce ]
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:

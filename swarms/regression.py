@@ -19,7 +19,11 @@ from helpers.common import (
 from swarms.requirements.requirements import *
 
 
-xfails = {}
+xfails = {
+    "/swarms/feature/swarm joins/join clause/join 455 of 816480*": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1244"),
+    ],
+}
 ffails = {
     "/swarms/feature": (
         Skip,
@@ -92,7 +96,7 @@ def regression(
         self.context.zookeeper_nodes = [self.context.cluster.node("zookeeper1")]
 
     with And("enable or disable experimental analyzer if needed"):
-        for node in self.context.swarm_nodes:
+        for node in self.context.nodes:
             experimental_analyzer(node=node, with_analyzer=with_analyzer)
 
     Feature(test=load("swarms.tests.feature", "feature"))(

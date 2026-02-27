@@ -21,6 +21,7 @@ from helpers.common import (
     experimental_analyzer,
     check_current_cpu,
     allow_higher_cpu_wait_ratio,
+    check_if_not_antalya_build, check_if_antalya_build,
 )
 from parquet.tests.common import start_minio, parquet_test_columns
 
@@ -28,18 +29,11 @@ from parquet.tests.common import start_minio, parquet_test_columns
 def parquet_argparser(parser):
     argparser_s3(parser)
 
-    parser.add_argument(
-        "--native-parquet-reader-v2",
-        action="store_true",
-        default=False,
-        help="Use native parquet reader v2.",
-    )
-    parser.add_argument(
-        "--native-parquet-reader-v3",
-        action="store_true",
-        default=False,
-        help="Use native parquet reader v3.",
-    )
+    # parser.add_argument(
+    #     "--reader-type",
+    #     default="arrow",
+    #     help="Reader type to use for parquet tests. Options: arrow, native_v2, native_v3",
+    # )
     parser.add_argument(
         "--stress-bloom",
         action="store_true",
@@ -394,6 +388,41 @@ ffails = {
 }
 
 
+def configure_parquet_reader_settings(
+    reader_type, native_v2_implemented, native_v3_implemented
+):
+    """Configure parquet reader settings based on reader type."""
+    if reader_type == "arrow":
+        default_query_settings = getsattr(
+            current().context, "default_query_settings", []
+        )
+
+        if native_v2_implemented:
+            default_query_settings.append(("input_format_parquet_use_native_reader", 0))
+        if native_v3_implemented:
+            default_query_settings.append(
+                ("input_format_parquet_use_native_reader_v3", 0)
+            )
+
+    if reader_type == "native_v2":
+        default_query_settings = getsattr(
+            current().context, "default_query_settings", []
+        )
+        if native_v3_implemented:
+            default_query_settings.append(
+                ("input_format_parquet_use_native_reader_v3", 0)
+            )
+
+        default_query_settings.append(("input_format_parquet_use_native_reader", 1))
+    if reader_type == "native_v3":
+        default_query_settings = getsattr(
+            current().context, "default_query_settings", []
+        )
+        default_query_settings.append(("input_format_parquet_use_native_reader_v3", 1))
+        if native_v2_implemented:
+            default_query_settings.append(("input_format_parquet_use_native_reader", 0))
+
+
 @TestModule
 @ArgumentParser(parquet_argparser)
 @XFails(xfails)
@@ -412,9 +441,8 @@ def regression(
     clickhouse_version: str,
     node="clickhouse1",
     with_analyzer=False,
-    native_parquet_reader_v2=False,
-    native_parquet_reader_v3=False,
     stress_bloom=False,
+    # reader_type="arrow",
 ):
     """Parquet regression."""
     nodes = {
@@ -427,13 +455,6 @@ def regression(
     self.context.json_files = "/json_files"
     self.context.parquet_output_path = "/parquet-files"
 
-    if check_clickhouse_version("<23.3")(self):
-        pool = 2
-        parallel = NO_PARALLEL
-    else:
-        pool = 1
-        parallel = PARALLEL
-
     if stress is not None:
         self.context.stress = stress
 
@@ -445,6 +466,22 @@ def regression(
         )
         self.context.cluster = cluster
 
+    # native_v3_implemented = not check_clickhouse_version("<25.8")(self)
+    # native_v2_implemented = not check_clickhouse_version("<24.6")(self)
+
+    # if native_v3_implemented and reader_type == "native_v3":
+    #     skip("native_v3 reader is not implemented before ClickHouse version 25.8")
+
+    # if native_v2_implemented and reader_type == "native_v2":
+    #     skip("native_v2 reader is not implemented before ClickHouse version 24.6")
+
+    if check_clickhouse_version("<23.3")(self):
+        pool = 2
+        parallel = NO_PARALLEL
+    else:
+        pool = 1
+        parallel = PARALLEL
+
     with And("I enable or disable experimental analyzer if needed"):
         for node in nodes["clickhouse"]:
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
@@ -455,20 +492,12 @@ def regression(
                 min_os_cpu_wait_time_ratio_to_throw=10,
                 max_os_cpu_wait_time_ratio_to_throw=20,
             )
-
-    with And("I enable or disable the native parquet reader"):
-        if native_parquet_reader_v2:
+    with And("I check if not antalya build"):
+        if check_if_antalya_build(self):
             default_query_settings = getsattr(
                 current().context, "default_query_settings", []
             )
-            default_query_settings.append(("input_format_parquet_use_native_reader", 1))
-        if native_parquet_reader_v3:
-            default_query_settings = getsattr(
-                current().context, "default_query_settings", []
-            )
-            default_query_settings.append(
-                ("input_format_parquet_use_native_reader_v3", 1)
-            )
+            default_query_settings.append(("input_format_parquet_use_native_reader_v3", 0))
 
     with And("I have a Parquet table definition"):
         columns = (

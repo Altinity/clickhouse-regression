@@ -4,9 +4,10 @@ from testflows.asserts import snapshot, values, error
 from helpers.common import (
     getuid,
     check_clickhouse_version,
-    get_snapshot_id,
     get_settings_value,
     compare_with_expected,
+    check_if_antalya_build,
+    check_if_25_8_altinity_build,
 )
 
 from decimal import Decimal
@@ -21,7 +22,7 @@ from pyiceberg.types import (
     NestedField,
     ListType,
 )
-from pyiceberg.partitioning import PartitionSpec
+from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.table.sorting import SortOrder, SortField
 from pyiceberg.transforms import IdentityTransform
 
@@ -694,7 +695,7 @@ def show_data_lake_catalogs_in_system_tables(
             catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
         )
 
-    with When("create database with Iceberg engine"):
+    with When("create database with DataLakeCatalog engine"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -708,34 +709,18 @@ def show_data_lake_catalogs_in_system_tables(
             setting_name="show_data_lake_catalogs_in_system_tables"
         )
         if check_clickhouse_version("<=25.9")(self):
-            assert value == "1", error()
+            if check_if_25_8_altinity_build():
+                assert value == "0", error()
+            else:
+                assert value == "1", error()
         else:
             assert value == "0", error()
 
-    with And("define snapshot id"):
-        versions = [">=25.6", ">=25.5"]
-        for version in versions:
-            if check_clickhouse_version(version)(self):
-                self.context.snapshot_id = get_snapshot_id(clickhouse_version=version)
-                break
-        else:
-            self.context.snapshot_id = get_snapshot_id()
-
-    with And("compare with snapshot"):
+    with And("check that iceberg table is visible in system.tables table"):
         if value == "1":
-            snapshot_name = f"system.tables.{table_name}"
-            snapshot_value = node.query(
-                f"SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated"
+            iceberg_engine.check_values_in_system_tables(
+                table_name=f"{namespace}.{table_name}", database=database_name
             )
-            with values() as that:
-                assert that(
-                    snapshot(
-                        snapshot_value.output.strip(),
-                        name=snapshot_name,
-                        id=self.context.snapshot_id,
-                        mode=snapshot.CHECK,
-                    )
-                ), error()
 
     with And(
         "set the setting to 0 and check that iceberg table is not visible in system.tables table"
@@ -748,23 +733,16 @@ def show_data_lake_catalogs_in_system_tables(
         )
         compare_with_expected(expected="", output=result)
 
-    with And("set the setting to 1 and compare with snapshot"):
-        snapshot_name = f"system.tables.{table_name}"
-        snapshot_value = node.query(
+    with And(
+        "set the setting to 1 and check that iceberg table is visible in system.tables table"
+    ):
+        result = node.query(
             f"""
-            SET show_data_lake_catalogs_in_system_tables = 1; 
-            SELECT * FROM system.tables WHERE name = '{namespace}.{table_name}' FORMAT TabSeparated
-            """
+            SET show_data_lake_catalogs_in_system_tables = 1;
+            SELECT name FROM system.tables WHERE name = '{namespace}.{table_name}'
+        """
         )
-        with values() as that:
-            assert that(
-                snapshot(
-                    snapshot_value.output.strip(),
-                    name=snapshot_name,
-                    id=self.context.snapshot_id,
-                    mode=snapshot.CHECK,
-                )
-            ), error()
+        compare_with_expected(expected=f"{namespace}.{table_name}", output=result)
 
 
 @TestScenario
@@ -809,7 +787,16 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
         ).output
 
     with Then("compare results"):
-        assert result_with_setting == result_without_setting, error()
+        if (
+            check_clickhouse_version(">=25.10")(self)
+            or check_if_antalya_build()
+            or check_if_25_8_altinity_build()
+        ):
+            assert f"{namespace}.{table_name}" in result_with_setting, error()
+            assert result_with_setting == result_without_setting, error()
+        else:
+            assert f"{namespace}.{table_name}" in result_with_setting, error()
+            assert result_without_setting == "", error()
 
 
 @TestScenario
@@ -839,22 +826,110 @@ def show_databases_queries(self, minio_root_user, minio_root_password, node=None
             s3_secret_access_key=minio_root_password,
         )
 
-    with And(
+    with Then(
         "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is enabled"
     ):
         result_with_setting = node.query(
-            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW DATABASES"
+            f"SET show_data_lake_catalogs_in_system_tables = 1; SHOW DATABASES;"
         ).output
+
+    with And("assert that database is visible"):
+        assert f"{database_name}" in result_with_setting, error()
 
     with And(
         "get result of SHOW DATABASES query when show_data_lake_catalogs_in_system_tables is disabled"
     ):
         result_without_setting = node.query(
-            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW DATABASES"
+            f"SET show_data_lake_catalogs_in_system_tables = 0; SHOW DATABASES;"
         ).output
 
-    with And("compare results"):
+    with And(
+        "compare results, assert that show data_lake_catalogs_in_system_tables setting does not affect SHOW DATABASES query"
+    ):
         assert result_with_setting == result_without_setting, error()
+
+
+@TestScenario
+def boolean_issue(self, minio_root_user, minio_root_password):
+    """Reproduce https://github.com/Altinity/ClickHouse/issues/1251."""
+    table_name = f"table_{getuid()}"
+    namespace = f"namespace_{getuid()}"
+    database_name = f"database_{getuid()}"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_endpoint="http://localhost:9002",
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(
+        "define table schema with five columns: string, boolean, integer, date, datetime"
+    ):
+        schema = Schema(
+            NestedField(
+                field_id=1, name="string", field_type=StringType(), required=False
+            ),
+            NestedField(
+                field_id=2, name="boolean", field_type=BooleanType(), required=False
+            ),
+        )
+
+    with And("create non-partitioned table"):
+        sort_order = SortOrder(
+            SortField(
+                source_id=1,  # string column
+                transform=IdentityTransform(),
+            )
+        )
+        table = catalog_steps.create_iceberg_table(
+            catalog=catalog,
+            namespace=namespace,
+            table_name=table_name,
+            schema=schema,
+            location="s3://warehouse/data",
+            partition_spec=PartitionSpec(),
+            sort_order=sort_order,
+        )
+
+    with And("create DataLakeCatalog database"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with And("insert data into iceberg table"):
+        length = 20
+        string_values = [str(i) for i in range(length)]
+        boolean_values = [True if i % 2 == 0 else False for i in range(length)]
+        data = [
+            {
+                "string": string_values[i],
+                "boolean": boolean_values[i],
+            }
+            for i in range(length)
+        ]
+        df = pa.Table.from_pylist(data)
+        table.append(df)
+
+    with Then("check that data is inserted into iceberg table"):
+        self.context.node.query(
+            f"""
+            SELECT * FROM {database_name}.\\`{namespace}.{table_name}\\`
+            FORMAT TabSeparated
+            """
+        )
+
+    with Then("read data from iceberg table with WHERE boolean = true, expect 10 rows"):
+        result = self.context.node.query(
+            f"""
+            SELECT * FROM {database_name}.\\`{namespace}.{table_name}\\`
+            WHERE boolean = true
+            FORMAT TabSeparated
+            """
+        )
 
 
 @TestFeature
@@ -894,5 +969,8 @@ def feature(self, minio_root_user, minio_root_password):
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
     Scenario(test=show_databases_queries)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Scenario(test=boolean_issue)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

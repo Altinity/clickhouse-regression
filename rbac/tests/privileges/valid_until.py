@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid, check_clickhouse_version
+from helpers.common import check_if_altinity_build, getuid, check_clickhouse_version
 
 from rbac.requirements import *
 import rbac.tests.multiple_auth_methods.common as common
@@ -39,7 +39,10 @@ def test_non_expired_password_login(self, auth_method, password):
             auth_method = auth_method.split(" ")[0].replace("hash", "password")
             assert f"VALID UNTIL \\'{future_date}\\'" in show_create_user, error()
 
-            if auth_method == "no_password" and check_clickhouse_version("<24.9")(self):
+            if auth_method == "no_password" and not (
+                check_clickhouse_version(">=24.9")(self)
+                or (check_clickhouse_version("~24.8")(self) and check_if_altinity_build(self))
+            ):
                 assert auth_method not in show_create_user, error()
             else:
                 assert auth_method in show_create_user, error()
@@ -77,7 +80,10 @@ def test_expired_password_rejection(self, auth_method, password):
             auth_method = auth_method.split(" ")[0].replace("hash", "password")
             assert "VALID UNTIL \\'2023-12-12 00:00:00\\'" in show_create_user, error()
 
-            if auth_method == "no_password" and check_clickhouse_version("<24.9")(self):
+            if auth_method == "no_password" and not (
+                check_clickhouse_version(">=24.9")(self)
+                or (check_clickhouse_version("~24.8")(self) and check_if_altinity_build(self))
+            ):
                 assert auth_method not in show_create_user, error()
             else:
                 assert auth_method in show_create_user, error()
@@ -244,15 +250,17 @@ def valid_until_with_not_identified(self):
             show_create_user = self.context.node.query(
                 f"SHOW CREATE USER {user_name}"
             ).output
-            if check_clickhouse_version("<24.9")(self):
+            if check_clickhouse_version(">=24.9")(self) or (
+                check_clickhouse_version("~24.8")(self) and check_if_altinity_build(self)
+            ):
                 assert (
                     show_create_user
-                    == f"CREATE USER {user_name} VALID UNTIL \\'{future_date}\\'"
+                    == f"CREATE USER {user_name} IDENTIFIED WITH no_password VALID UNTIL \\'{future_date}\\'"
                 ), error()
             else:
                 assert (
                     show_create_user
-                    == f"CREATE USER {user_name} IDENTIFIED WITH no_password VALID UNTIL \\'{future_date}\\'"
+                    == f"CREATE USER {user_name} VALID UNTIL \\'{future_date}\\'"
                 ), error()
 
     finally:

@@ -17,7 +17,9 @@ def scenario(
     self, func="kolmogorovSmirnovTest({params})", table=None, snapshot_id=None
 ):
     """Check kolmogorovSmirnovTest aggregate function by using the same tests as for mannWhitneyUTest."""
-    if check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.3")(self) and check_current_cpu("aarch64")(self):
         clickhouse_version = ">=24.3"
     elif check_clickhouse_version("<24.1")(self):
         clickhouse_version = ">=23.11"

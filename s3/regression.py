@@ -37,6 +37,18 @@ xfails = {
     ":/:/zero copy replication/:mutation/:/the size of the s3 bucket:": [
         (Fail, "test doesn't clean up, needs investigation")
     ],
+    ":/:/zero copy replication/bad detached part": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/add remove one replica": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/add remove replica parallel": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
+    ":/:/zero copy replication/insert multiple replicas": [
+        (Fail, "https://github.com/Altinity/ClickHouse/issues/1338")
+    ],
     "minio/:/backup/:/alter freeze": [(Fail, "External disks do not create backups")],
     "minio/:/disk/environment credentials/:": [
         (Fail, "AWS S3 credentials not set for minio tests.")
@@ -141,13 +153,13 @@ xfails = {
     ":/:/disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
-    ":/:/zero copy replication/bad detached part": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/pull/58333",
-            check_clickhouse_version("<23.11"),
-        )
-    ],
+    # ":/:/zero copy replication/bad detached part": [
+    #     (
+    #         Fail,
+    #         "https://github.com/ClickHouse/ClickHouse/pull/58333",
+    #         check_clickhouse_version("<23.11"),
+    #     )
+    # ],
     ":/:/alter/:/projection": [
         (Fail, "Wrong error message 22.3", check_clickhouse_version("<22.8")),
     ],
@@ -188,10 +200,13 @@ xfails = {
             ".*assert rows == actual_count.*",
         )
     ],
-    "gcs/:/combinatoric table": [
-        (Fail, "Time outs need investigation"),
-    ],
     "gcs/:/combinatoric table/:": [
+        (
+            Fail,
+            "Time outs need investigation",
+            always,
+            ".*QueryRuntimeException.*",
+        ),
         (
             Error,
             "Times out, needs investigation",
@@ -501,15 +516,15 @@ ffails = {
         "doesn't work <22.8",
         check_clickhouse_version("<22.8"),
     ),
-    "/:/:/part 3/export part/*": (
+    "/:/:/export tests/export part/*": (
         Skip,
         "Export part introduced in Antalya build",
-        check_if_not_antalya_build,
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
-    "/:/:/part 3/export partition/*": (
+    "/:/:/export tests/export partition/*": (
         Skip,
         "Export partition introduced in Antalya build",
-        check_if_not_antalya_build,
+        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
 }
 
@@ -616,6 +631,7 @@ def minio_regression(
         Feature(test=load("s3.tests.remote_s3_function", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )
+    with Feature("export tests"):
         Feature(test=load("s3.tests.export_part.feature", "minio"))(
             uri=uri_bucket_file, bucket_prefix=bucket_prefix
         )

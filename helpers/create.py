@@ -80,12 +80,16 @@ def create_table(
                     "default",
                     "materialized",
                     "alias",
+                    "ephemeral",
                     "codec",
                     "ttl",
                     "comment",
                 ]:
                     if modifier in col:
-                        query += f" {modifier.upper()} {col[modifier]}"
+                        if modifier == "ephemeral" and not col[modifier]:
+                            query += f" {modifier.upper()}"
+                        else:
+                            query += f" {modifier.upper()} {col[modifier]}"
                 query += ",\n"
             if primary_key:
                 query += f"    PRIMARY KEY({primary_key}),\n"
@@ -374,6 +378,7 @@ def create_replicated_merge_tree_table(
     cluster: str = None,
     stop_merges: bool = False,
     query_settings: str = None,
+    sharded=False
 ):
     """Create a table with the ReplicatedMergeTree engine."""
     if columns is None:
@@ -383,12 +388,15 @@ def create_replicated_merge_tree_table(
             {"name": "extra", "type": "Int8"},
         ]
 
-    if cluster:
+    if sharded:
+        shard_path = f"{{shard2}}"
+    else:
         shard_path = "shard0"
+
+    if cluster:
         engine = f"ReplicatedMergeTree('/clickhouse/tables/{shard_path}/{table_name}', '{{replica}}')"
     else:
         replica_name = "replica0"
-        shard_path = "shard0"
         engine = f"ReplicatedMergeTree('/clickhouse/tables/{shard_path}/{table_name}', '{replica_name}')"
 
     create_table(
@@ -413,12 +421,14 @@ def partitioned_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
     number_of_partitions=5,
     number_of_parts=1,
     number_of_values=3,
+    if_not_exists=False,
     query_settings=None,
 ):
     """Create a MergeTree table partitioned by a specific column."""
@@ -427,9 +437,11 @@ def partitioned_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
             query_settings=query_settings,
+            if_not_exists=if_not_exists,
         )
 
     if populate:
@@ -450,12 +462,14 @@ def partitioned_replicated_merge_tree_table(
     table_name,
     partition_by,
     columns=None,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
     number_of_partitions=5,
-    number_of_parts=1,
+    number_of_parts=10,
     query_settings=None,
+    sharded=False
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
@@ -465,9 +479,11 @@ def partitioned_replicated_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
             query_settings=query_settings,
+            sharded=sharded,
         )
 
     if populate:
@@ -529,6 +545,7 @@ def partitioned_replacing_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -543,6 +560,7 @@ def partitioned_replacing_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )
@@ -564,6 +582,7 @@ def partitioned_summing_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -578,6 +597,7 @@ def partitioned_summing_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )
@@ -599,6 +619,7 @@ def partitioned_collapsing_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -614,6 +635,7 @@ def partitioned_collapsing_merge_tree_table(
             columns=columns,
             partition_by=partition_by,
             sign="p",
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )
@@ -635,6 +657,7 @@ def partitioned_versioned_collapsing_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -651,6 +674,7 @@ def partitioned_versioned_collapsing_merge_tree_table(
             partition_by=partition_by,
             sign="p",
             version="i",
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )
@@ -672,6 +696,7 @@ def partitioned_aggregating_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -686,6 +711,7 @@ def partitioned_aggregating_merge_tree_table(
             table_name=table_name,
             columns=columns,
             partition_by=partition_by,
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )
@@ -707,6 +733,7 @@ def partitioned_graphite_merge_tree_table(
     table_name,
     partition_by,
     columns,
+    order_by="tuple()",
     cluster=None,
     stop_merges=False,
     populate=True,
@@ -722,6 +749,7 @@ def partitioned_graphite_merge_tree_table(
             columns=columns,
             partition_by=partition_by,
             config="graphite_rollup_example",
+            order_by=order_by,
             cluster=cluster,
             stop_merges=stop_merges,
         )

@@ -18,7 +18,9 @@ def list(self):
     with Given("I have a Parquet file with the array datatype"):
         import_file = os.path.join("arrow", "list_columns.parquet")
 
-    import_export(snapshot_name="array_structure", import_file=import_file)
+    snapshot_name = "array_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "array_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -34,7 +36,9 @@ def nested_array(self):
     ):
         import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
 
-    import_export(snapshot_name="nested_array_structure", import_file=import_file)
+    snapshot_name = "nested_array_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nested_array_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -48,7 +52,9 @@ def nested_map(self):
     with Given("I have a Parquet file with the nested map datatype"):
         import_file = os.path.join("arrow", "nested_maps.snappy.parquet")
 
-    import_export(snapshot_name="nested_map_structure", import_file=import_file)
+    snapshot_name = "nested_map_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nested_map_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -61,7 +67,9 @@ def nestedstruct(self):
     with Given("I have a Parquet file with the nested struct datatype"):
         import_file = os.path.join("arrow", "nested_structs.rust.parquet")
 
-    import_export(snapshot_name="nested_struct_structure", import_file=import_file)
+    snapshot_name = "nested_struct_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nested_struct_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -74,7 +82,9 @@ def complex_null(self):
     with Given("I have a Parquet file with the array, map and tuple with null values"):
         import_file = os.path.join("arrow", "nullable.impala.parquet")
 
-    import_export(snapshot_name="complex_null_structure", import_file=import_file)
+    snapshot_name = "complex_null_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "complex_null_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -89,7 +99,9 @@ def tupleofnulls(self):
     with Given("I have a Parquet file with the tuple of nulls"):
         import_file = os.path.join("arrow", "nulls.snappy.parquet")
 
-    import_export(snapshot_name="tuple_of_nulls_structure", import_file=import_file)
+    snapshot_name = "tuple_of_nulls_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "tuple_of_nulls_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -104,9 +116,9 @@ def big_tuple_with_nulls(self):
     with Given("I have a Parquet file with the big tuple with nulls"):
         import_file = os.path.join("arrow", "repeated_no_annotation.parquet")
 
-    import_export(
-        snapshot_name="big_tuple_with_nulls_structure", import_file=import_file
-    )
+    snapshot_name = "big_tuple_with_nulls_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "big_tuple_with_nulls_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -118,7 +130,9 @@ def arraystring(self):
     with Given("I have a Parquet file with nested array containing strings"):
         import_file = os.path.join("datatypes", "apkwan.parquet")
 
-    import_export(snapshot_name="array_string_structure", import_file=import_file)
+    snapshot_name = "array_string_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "array_string_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -131,7 +145,9 @@ def largenestedarray(self):
     with Given("I have a large Parquet file with array datatype"):
         import_file = os.path.join("datatypes", "candidate.parquet")
 
-    import_export(snapshot_name="large_array_structure", import_file=import_file)
+    snapshot_name = "large_array_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "large_array_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -144,7 +160,9 @@ def largestruct(self):
     with Given("I have a large Parquet file with struct datatype"):
         import_file = os.path.join("datatypes", "complex.parquet")
 
-    import_export(snapshot_name="large_struct_structure1", import_file=import_file)
+    snapshot_name = "large_struct_structure1_above_26" if check_clickhouse_version(">=26.1")(self) else "large_struct_structure1"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -157,9 +175,9 @@ def largestruct2(self):
     with Given("I have a large Parquet file with struct datatype"):
         import_file = os.path.join("malloy-smaller", "tbl_.parquet")
 
-    import_export(
-        snapshot_name="large_nested_struct_2_structure", import_file=import_file
-    )
+    snapshot_name = "large_nested_struct_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "large_nested_struct_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -172,7 +190,9 @@ def largestruct3(self):
     with Given("I have a large Parquet file with struct datatype"):
         import_file = os.path.join("datatypes", "bug4859.parquet")
 
-    import_export(snapshot_name="large_struct_3_structure", import_file=import_file)
+    snapshot_name = "large_struct_3_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "large_struct_3_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -185,7 +205,9 @@ def lagemap(self):
     with Given("I have a large Parquet file with map datatype"):
         import_file = os.path.join("datatypes", "map.parquet")
 
-    import_export(snapshot_name="large_map_2_structure", import_file=import_file)
+    snapshot_name = "large_map_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "large_map_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -200,9 +222,9 @@ def tuplewithdatetime(self):
     ):
         import_file = os.path.join("datatypes", "simple.parquet")
 
-    import_export(
-        snapshot_name="struct_datetime64_UTC_2_structure", import_file=import_file
-    )
+    snapshot_name = "struct_datetime64_UTC_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "struct_datetime64_UTC_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -221,10 +243,9 @@ def bytearraydictionary(self):
     ):
         import_file = os.path.join("datatypes", "sorted.zstd_18_131072_small.parquet")
 
-    import_export(
-        snapshot_name="fixed_length_byte_dictionary_structure",
-        import_file=import_file,
-    )
+    snapshot_name = "fixed_length_byte_dictionary_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "fixed_length_byte_dictionary_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -237,7 +258,9 @@ def nestedallcomplex(self):
     with Given("I have a large Parquet file with nested complex datatypes"):
         import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
 
-    import_export(snapshot_name="complex_nested_2_structure", import_file=import_file)
+    snapshot_name = "complex_nested_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "complex_nested_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -250,7 +273,9 @@ def nestedstruct2(self):
     with Given("I have a Parquet file with with nested struct"):
         import_file = os.path.join("datatypes", "bug1589.parquet")
 
-    import_export(snapshot_name="nestedstruct_2_structure", import_file=import_file)
+    snapshot_name = "nestedstruct_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nestedstruct_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -263,7 +288,9 @@ def nestedstruct3(self):
     with Given("I have a Parquet file with with nested struct"):
         import_file = os.path.join("datatypes", "bug2267.parquet")
 
-    import_export(snapshot_name="nestedstruct_3_structure", import_file=import_file)
+    snapshot_name = "nestedstruct_3_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nestedstruct_3_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -276,7 +303,9 @@ def nestedstruct4(self):
     with Given("I have a Parquet file with with nested struct"):
         import_file = os.path.join("datatypes", "issue_6013.parquet")
 
-    import_export(snapshot_name="nestedstruct_4_structure", import_file=import_file)
+    snapshot_name = "nestedstruct_4_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nestedstruct_4_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario
@@ -289,7 +318,9 @@ def nestedarray2(self):
     with Given("I have a Parquet file with with nested array"):
         import_file = os.path.join("datatypes", "bug2557.parquet")
 
-    import_export(snapshot_name="nestedarray_2_structure", import_file=import_file)
+    snapshot_name = "nestedarray_2_structure_above_26" if check_clickhouse_version(">=26.1")(self) else "nestedarray_2_structure"
+
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestFeature

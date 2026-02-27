@@ -510,7 +510,7 @@ def group_order_by_multiple_alias_with_override_column(self, node=None):
     try:
         with Given("I create table form the issue"):
             node.query(
-                f"CREATE TABLE {name} (id String, device UUID) ENGINE = ReplacingMergeTree() ORDER BY tuple();"
+                f"CREATE TABLE {name} (id String, device UUID) ENGINE = ReplacingMergeTree() ORDER BY device;"
             )
 
         with When("I insert data in this table"):
@@ -557,7 +557,7 @@ def group_order_by_multiple_alias_with_aggregate_new_alias(self, node=None):
         with Given("I create table form the issue"):
             node.query(
                 f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
-                " ENGINE = ReplacingMergeTree() ORDER BY tuple();"
+                " ENGINE = ReplacingMergeTree() ORDER BY timestamp;"
             )
 
         with When("I insert data in this table"):

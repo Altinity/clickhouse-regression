@@ -1,54 +1,28 @@
+from testflows.asserts import error
 from testflows.core import *
-from s3.tests.export_partition.steps import export_partitions
-from s3.tests.export_part.steps import *
-from helpers.create import *
+from s3.tests.export_partition.steps import (
+    export_partitions,
+    valid_partition_key_types_columns,
+    create_s3_table,
+    escape_json_for_sql,
+    insert_all_datatypes,
+    create_replicated_merge_tree_all_valid_partition_key_types,
+    create_table_with_alias_column,
+    create_table_with_materialized_column,
+    create_table_with_ephemeral_and_default_column,
+    create_table_with_simple_default_column,
+    create_table_with_mixed_columns,
+    create_table_with_complex_expressions,
+    create_table_with_json_column,
+    create_table_with_json_column_with_hints,
+    create_table_with_nested_column,
+    create_table_with_complex_nested_column,
+    export_and_verify_columns,
+)
+from s3.tests.export_part.steps import get_column_info
 from helpers.queries import *
 from helpers.common import getuid
 from s3.requirements.export_partition import *
-
-
-@TestStep(When)
-def insert_all_datatypes(self, table_name, rows_per_part=1, num_parts=1, node=None):
-    """Insert all datatypes into a MergeTree table."""
-
-    if node is None:
-        node = self.context.node
-
-    for part in range(num_parts):
-        node.query(
-            f"INSERT INTO {table_name} (int8, int16, int32, int64, uint8, uint16, uint32, uint64, date, date32, datetime, datetime64, string, fixedstring) SELECT 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, '13', '14' FROM numbers({rows_per_part})"
-        )
-
-
-@TestStep(Given)
-def create_replicated_merge_tree_all_valid_partition_key_types(
-    self, column_name, cluster=None, node=None, rows_per_part=1
-):
-    """Create a MergeTree table with all valid partition key types and both wide and compact parts."""
-
-    if node is None:
-        node = self.context.node
-
-    with By("creating a MergeTree table with all data types"):
-        table_name = f"table_{getuid()}"
-        create_replicated_merge_tree_table(
-            table_name=table_name,
-            columns=valid_partition_key_types_columns(),
-            partition_by=column_name,
-            cluster=cluster,
-            stop_merges=False,
-            query_settings=f"min_rows_for_wide_part=10",
-        )
-
-    with And("I insert compact and wide parts into the table"):
-        insert_all_datatypes(
-            table_name=table_name,
-            rows_per_part=rows_per_part,
-            num_parts=self.context.num_parts,
-            node=node,
-        )
-
-    return table_name
 
 
 @TestCheck
@@ -94,7 +68,6 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
 
 
 @TestSketch(Scenario)
-@Flags(TE)
 @Requirements(RQ_ClickHouse_ExportPartition_PartitionKeyTypes("1.0"))
 def valid_partition_key_types_compact(self):
     """Check that all partition key data types are supported when exporting compact parts."""
@@ -104,12 +77,520 @@ def valid_partition_key_types_compact(self):
 
 
 @TestSketch(Scenario)
-@Flags(TE)
 def valid_partition_key_types_wide(self):
     """Check that all partition key data types are supported when exporting wide parts."""
 
     key_types = [datatype["name"] for datatype in valid_partition_key_types_columns()]
     valid_partition_key_table(partition_key_type=either(*key_types), rows_per_part=100)
+
+
+@TestCheck
+def alias_column_export(self):
+    """Check exporting ALIAS columns to S3 table."""
+
+    with Given("I create a source table with ALIAS column and S3 destination table"):
+        table_name = f"mt_alias_{getuid()}"
+
+        create_table_with_alias_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_alias",
+            create_new_bucket=True,
+            columns=[
+                {"name": "a", "type": "UInt32"},
+                {"name": "arr", "type": "Array(UInt64)"},
+                {"name": "arr_1", "type": "UInt64"},
+            ],
+            partition_by="a",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} VALUES (1, [1, 2, 3]), (1, [10, 20, 30])",
+        order_by="a, arr",
+        columns=["a", "arr", "arr_1"],
+        description="ALIAS column data",
+    )
+
+
+@TestCheck
+def materialized_column_export(self):
+    """Check exporting MATERIALIZED columns to S3 table."""
+
+    with Given(
+        "I create a source table with MATERIALIZED column and S3 destination table"
+    ):
+        table_name = f"mt_materialized_{getuid()}"
+        create_table_with_materialized_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_materialized",
+            create_new_bucket=True,
+            columns=[
+                {"name": "a", "type": "UInt32"},
+                {"name": "arr", "type": "Array(UInt64)"},
+                {"name": "arr_1", "type": "UInt64"},
+            ],
+            partition_by="a",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} VALUES (1, [1, 2, 3]), (1, [10, 20, 30])",
+        order_by="a, arr",
+        columns=["a", "arr", "arr_1"],
+        description="MATERIALIZED column data",
+    )
+
+
+@TestCheck
+def ephemeral_and_default_column_export(self):
+    """Check exporting EPHEMERAL and DEFAULT columns to S3 table.
+    EPHEMERAL columns should be ignored and not present in destination."""
+
+    with Given(
+        "I create a source table with EPHEMERAL and DEFAULT columns and S3 destination table"
+    ):
+        table_name = f"mt_ephemeral_{getuid()}"
+
+        create_table_with_ephemeral_and_default_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_ephemeral",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "name_upper", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    with When("I insert data with EPHEMERAL column values"):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, name_input) VALUES (1, 'alice'), (1, 'bob')"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify EPHEMERAL column is NOT in destination table schema"):
+        destination_columns = get_column_info(table_name=s3_table_name)
+        column_names = [col["name"] for col in destination_columns]
+        assert "name_input" not in column_names, error(
+            f"EPHEMERAL column 'name_input' should not be in destination table, but found columns: {column_names}"
+        )
+
+    with And("I verify exported data matches source (excluding EPHEMERAL)"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, name_upper",
+                    order_by="id, name_upper",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, name_upper",
+                    order_by="id, name_upper",
+                )
+                assert source_data == destination_data, error()
+
+
+@TestCheck
+def simple_default_column_with_default_value(self):
+    """Check exporting DEFAULT column when default value is used (not explicitly inserted)."""
+
+    with Given("I create a source table with DEFAULT column and S3 destination table"):
+        table_name = f"mt_default_default_{getuid()}"
+
+        create_table_with_simple_default_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_default_default",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "value", "type": "UInt32"},
+                {"name": "status", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    with When(
+        "I insert data without specifying DEFAULT column (should use default value)"
+    ):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, value) VALUES (1, 10), (1, 20)"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify exported data has default values"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                assert source_data == destination_data, error()
+                assert all("active" in row for row in source_data), error(
+                    "All rows should have default 'active' status"
+                )
+
+
+@TestCheck
+def simple_default_column_with_explicit_value(self):
+    """Check exporting DEFAULT column when explicit non-default value is inserted."""
+
+    with Given("I create a source table with DEFAULT column and S3 destination table"):
+        table_name = f"mt_default_explicit_{getuid()}"
+
+        create_table_with_simple_default_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_default_explicit",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "value", "type": "UInt32"},
+                {"name": "status", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    with When("I insert data with explicit non-default values for DEFAULT column"):
+        self.context.node.query(
+            f"INSERT INTO {table_name} (id, value, status) VALUES (1, 10, 'inactive'), (1, 20, 'pending')"
+        )
+
+    with And("I export partitions to the S3 table"):
+        export_partitions(
+            source_table=table_name,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("I verify exported data has explicit values (not defaults)"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    node=self.context.node,
+                    identifier="id, value, status",
+                    order_by="id, value",
+                )
+                assert source_data == destination_data, error()
+                assert any("inactive" in row for row in source_data), error(
+                    "Should have explicit 'inactive' status"
+                )
+                assert any("pending" in row for row in source_data), error(
+                    "Should have explicit 'pending' status"
+                )
+
+
+@TestCheck
+def mixed_columns_export(self):
+    """Check exporting mixed ALIAS, MATERIALIZED, and EPHEMERAL columns to S3 table."""
+
+    with Given("I create a source table with mixed columns and S3 destination table"):
+        table_name = f"mt_mixed_{getuid()}"
+
+        create_table_with_mixed_columns(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_mixed",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "value", "type": "UInt32"},
+                {"name": "doubled", "type": "UInt64"},
+                {"name": "tripled", "type": "UInt64"},
+                {"name": "tag", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} (id, value, tag_input) VALUES (1, 5, 'test'), (1, 10, 'prod')",
+        order_by="id, value",
+        columns=["id", "value", "doubled", "tripled", "tag"],
+        description="mixed columns",
+    )
+
+
+@TestCheck
+def complex_expressions_export(self):
+    """Check exporting complex expressions in computed columns to S3 table."""
+
+    with Given(
+        "I create a source table with complex expressions and S3 destination table"
+    ):
+        table_name = f"mt_complex_expr_{getuid()}"
+
+        create_table_with_complex_expressions(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_complex_expr",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "name", "type": "String"},
+                {"name": "upper_name", "type": "String"},
+                {"name": "concat_result", "type": "String"},
+            ],
+            partition_by="id",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} (id, name) VALUES (1, 'alice'), (1, 'bob')",
+        order_by="id, name",
+        columns=["id", "name", "upper_name", "concat_result"],
+        description="complex expressions",
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Alias("1.0"))
+def alias_columns(self):
+    """Check that ALIAS columns are properly exported when exporting partitions."""
+
+    alias_column_export()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized("1.0"))
+def materialized_columns(self):
+    """Check that MATERIALIZED columns are properly exported when exporting partitions."""
+
+    materialized_column_export()
+
+
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Ephemeral("1.0"),
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"),
+)
+def ephemeral_and_default_columns(self):
+    """Check that EPHEMERAL and DEFAULT columns are properly exported when exporting partitions.
+    EPHEMERAL columns should be ignored and not present in destination."""
+
+    ephemeral_and_default_column_export()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"))
+def simple_default_columns_with_default_value(self):
+    """Check that DEFAULT columns with default values are properly exported when exporting partitions."""
+
+    simple_default_column_with_default_value()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Default("1.0"))
+def simple_default_columns_with_explicit_value(self):
+    """Check that DEFAULT columns with explicit non-default values are properly exported when exporting partitions."""
+
+    simple_default_column_with_explicit_value()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Mixed("1.0"))
+def mixed_columns(self):
+    """Check that mixed ALIAS, MATERIALIZED, and EPHEMERAL columns are properly exported when exporting partitions."""
+
+    mixed_columns_export()
+
+
+@TestScenario
+@Requirements(
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Alias("1.0"),
+    RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized("1.0"),
+)
+def complex_expressions(self):
+    """Check that complex expressions in computed columns are properly exported when exporting partitions."""
+
+    complex_expressions_export()
+
+
+@TestCheck
+def json_column_export(self):
+    """Check exporting JSON columns to S3 table."""
+
+    with Given("I create a source table with JSON column and S3 destination table"):
+        table_name = f"mt_json_{getuid()}"
+
+        create_table_with_json_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_json",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "json_data", "type": "JSON"},
+            ],
+            partition_by="id",
+        )
+
+    json1_escaped = escape_json_for_sql({"a": {"b": 42}, "c": [1, 2, 3]})
+    json2_escaped = escape_json_for_sql({"d": "Hello", "e": 100})
+    insert_query = f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=insert_query,
+        order_by="id",
+        columns=["id", "json_data"],
+        description="JSON column data",
+    )
+
+
+@TestCheck
+def json_column_with_hints_export(self):
+    """Check exporting JSON columns with type hints to S3 table."""
+
+    with Given(
+        "I create a source table with JSON column (with hints) and S3 destination table"
+    ):
+        table_name = f"mt_json_hints_{getuid()}"
+
+        create_table_with_json_column_with_hints(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_json_hints",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "json_data", "type": "JSON(a.b UInt32, a.c String)"},
+            ],
+            partition_by="id",
+        )
+
+    json1_escaped = escape_json_for_sql({"a": {"b": 42, "c": "test"}})
+    json2_escaped = escape_json_for_sql({"a": {"b": 100, "c": "world"}})
+    insert_query = f"INSERT INTO {table_name} (id, json_data) VALUES (1, '{json1_escaped}'), (1, '{json2_escaped}')"
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=insert_query,
+        order_by="id",
+        columns=["id", "json_data"],
+        description="JSON column data with hints",
+    )
+
+
+@TestCheck
+def nested_column_export(self):
+    """Check exporting Nested columns to S3 table."""
+
+    with Given("I create a source table with Nested column and S3 destination table"):
+        table_name = f"mt_nested_{getuid()}"
+
+        create_table_with_nested_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_nested",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "nested_data", "type": "Nested(key String, value UInt64)"},
+            ],
+            partition_by="id",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} (id, nested_data.key, nested_data.value) VALUES (1, ['key1', 'key2'], [10, 20]), (1, ['key3'], [30])",
+        order_by="id, nested_data.key",
+        columns=["id", "nested_data.key", "nested_data.value"],
+        description="Nested column data",
+    )
+
+
+@TestCheck
+def complex_nested_column_export(self):
+    """Check exporting complex Nested columns (with arrays) to S3 table."""
+
+    with Given(
+        "I create a source table with complex Nested column and S3 destination table"
+    ):
+        table_name = f"mt_nested_complex_{getuid()}"
+
+        create_table_with_complex_nested_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_nested_complex",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {
+                    "name": "nested_data",
+                    "type": "Nested(name String, age UInt8, scores Array(UInt32))",
+                },
+            ],
+            partition_by="id",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=f"INSERT INTO {table_name} (id, nested_data.name, nested_data.age, nested_data.scores) VALUES (1, ['Alice', 'Bob'], [25, 30], [[100, 90], [85, 95]]), (1, ['Charlie'], [35], [[80, 90, 100]])",
+        order_by="id, nested_data.name",
+        columns=["id", "nested_data.name", "nested_data.age", "nested_data.scores"],
+        description="complex Nested column data",
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_JSON("1.0"))
+def json_columns(self):
+    """Check that JSON columns are properly exported when exporting partitions."""
+
+    json_column_export()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_JSON("1.0"))
+def json_columns_with_hints(self):
+    """Check that JSON columns with type hints are properly exported when exporting partitions."""
+
+    json_column_with_hints_export()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Nested("1.0"))
+def nested_columns(self):
+    """Check that Nested columns are properly exported when exporting partitions."""
+
+    nested_column_export()
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Nested("1.0"))
+def complex_nested_columns(self):
+    """Check that complex Nested columns (with arrays) are properly exported when exporting partitions."""
+
+    complex_nested_column_export()
 
 
 @TestFeature
@@ -125,3 +606,14 @@ def feature(self, num_parts=10):
 
     Scenario(run=valid_partition_key_types_compact)
     Scenario(run=valid_partition_key_types_wide)
+    Scenario(run=alias_columns)
+    Scenario(run=materialized_columns)
+    Scenario(run=ephemeral_and_default_columns)
+    Scenario(run=simple_default_columns_with_default_value)
+    Scenario(run=simple_default_columns_with_explicit_value)
+    Scenario(run=mixed_columns)
+    Scenario(run=complex_expressions)
+    Scenario(run=json_columns)
+    Scenario(run=json_columns_with_hints)
+    Scenario(run=nested_columns)
+    Scenario(run=complex_nested_columns)

@@ -3,153 +3,225 @@ import s3.tests.export_part.steps as steps
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
-from helpers.alter import column, ttl, update, delete, table
+from helpers.alter import column, ttl, table
 from alter.stress.tests.tc_netem import *
 from helpers.common import getuid
 from s3.tests.export_part import alter_wrappers
 
 
+class AlterExample:
+    """Wrapper class to control how example names appear in coverage reports."""
+
+    def __init__(self, alter_function, kwargs, name):
+        self.alter_function = alter_function
+        self.kwargs = kwargs
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
 def get_alter_functions():
     return [
-        (
+        AlterExample(
             alter_wrappers.alter_table_add_column,
             {},
+            "add column",
         ),
-        (alter_wrappers.alter_table_drop_column, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_drop_column,
+            {},
+            "drop column",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_modify_column,
             {"column_name": "i"},
+            "modify column",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_rename_column,
             {"column_name_old": "Path"},
+            "rename column",
         ),
-        (
+        AlterExample(
             column.alter_table_comment_column,
             {"column_name": "p", "comment": "test column comment"},
+            "comment column",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_add_constraint,
             {},
+            "add constraint",
         ),
-        (alter_wrappers.alter_table_drop_constraint, {}),
-        (alter_wrappers.alter_table_drop_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_drop_constraint,
+            {},
+            "drop constraint",
+        ),
+        AlterExample(
+            alter_wrappers.alter_table_drop_partition,
+            {},
+            "drop partition",
+        ),
+        AlterExample(
             ttl.alter_table_modify_ttl,
             {
                 "ttl_expression": "if(Time < toDateTime('2006-02-07'), Time + INTERVAL 100 YEAR, toDateTime('2106-02-07'))"
             },
+            "modify ttl",
         ),
-        (alter_wrappers.alter_table_detach_partition, {}),
-        (alter_wrappers.alter_table_attach_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_detach_partition,
+            {},
+            "detach partition",
+        ),
+        AlterExample(
+            alter_wrappers.alter_table_attach_partition,
+            {},
+            "attach partition",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_attach_partition_from,
             {},
+            "attach partition from",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_move_partition_to_table,
             {},
+            "move partition to table",
         ),
-        (alter_wrappers.alter_table_move_partition, {}),
-        (
-            alter_wrappers.alter_table_clear_column_in_partition,
-            {"column_name": "i"},
+        AlterExample(
+            alter_wrappers.alter_table_move_partition,
+            {},
+            "move partition",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_clear_index_in_partition,
             {},
+            "clear index in partition",
         ),
-        (alter_wrappers.alter_table_freeze_partition, {}),
-        (
+        AlterExample(
+            alter_wrappers.alter_table_freeze_partition,
+            {},
+            "freeze partition",
+        ),
+        AlterExample(
             alter_wrappers.alter_table_freeze_partition_with_name,
             {},
+            "freeze partition with name",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_unfreeze_partition_with_name,
             {},
+            "unfreeze partition with name",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_replace_partition,
             {},
+            "replace partition",
         ),
-        (
-            update.alter_table_update_column,
-            {"column_name": "i", "expression": "0", "condition": "1 = 1"},
-        ),
-        (delete.alter_table_delete_rows, {"condition": "p = 1"}),
-        (
+        AlterExample(
             table.alter_table_modify_comment,
             {"comment": "test table comment"},
+            "modify table comment",
         ),
-        (
+        AlterExample(
             alter_wrappers.alter_table_fetch_partition,
             {"cleanup": True},
+            "fetch partition",
         ),
-        (
+        AlterExample(
             create_partitions_with_random_uint64,
             {"number_of_partitions": 5, "number_of_parts": 1},
+            "create partitions",
         ),
-        (alter_wrappers.optimize_partition, {"partition": "1"}),
-        (alter_wrappers.optimize_table, {}),
-        # (alter_wrappers.drop_table, {"recreate": True}),
+        AlterExample(
+            alter_wrappers.drop_table,
+            {"recreate": True},
+            "drop table",
+        ),
     ]
+
+
+@TestStep(Given)
+def create_source_table(
+    self, alter_function, number_of_parts=2, number_of_partitions=5
+):
+    """Create a source table in preparation for the given alter function."""
+    source_table = f"source_{getuid()}"
+
+    if alter_function == alter_wrappers.alter_table_fetch_partition:
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=number_of_parts,
+            number_of_partitions=number_of_partitions,
+            columns=steps.default_columns(simple=False),
+            stop_merges=True,
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+    else:
+        partitioned_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            number_of_parts=number_of_parts,
+            number_of_partitions=number_of_partitions,
+            columns=steps.default_columns(simple=False),
+            stop_merges=True,
+            query_settings="storage_policy = 'tiered_storage'",
+        )
+
+    return source_table
 
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
-def before_export(self, alter_function, kwargs):
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
+def before_export(self, example):
     """Test altering the source table before exporting parts."""
 
     with Given("I create a populated source table"):
-        source_table = f"source_{getuid()}"
+        source_table = create_source_table(alter_function=example.alter_function)
 
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
 
-    with When(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with When(f"I {example.alter_function.__name__} on the source table"):
+        example.alter_function(table_name=source_table, **example.kwargs)
 
     with And("I populate the source table with new parts"):
         steps.insert_into_table(
             table_name=source_table,
         )
 
-    with When("I create an empty S3 table"):
+    with And("I create an empty S3 table"):
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
-            columns=steps.get_column_info(
-                node=self.context.node, table_name=source_table
-            ),
+            columns=steps.get_column_info(table_name=source_table),
         )
 
     with And("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
     with Then("Check source matches destination"):
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
         steps.source_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
@@ -158,91 +230,64 @@ def before_export(self, alter_function, kwargs):
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
-def after_export(self, alter_function, kwargs):
+@Requirements(
+    RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
+    RQ_ClickHouse_ExportPart_SchemaChangeIsolation("1.0"),
+)
+def after_export(self, example):
     """Test altering the source table after exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
             columns=steps.default_columns(simple=False),
         )
 
-    with And("I export parts to the S3 table"):
+    with When("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
-    with When("I read data on the S3 table"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
-        initial_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
+    with And("I read data on the S3 table"):
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
+        initial_destination_data = select_all_ordered(table_name=s3_table_name)
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
+
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check destination is not affected by the alter"):
-        final_destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
         )
+        final_destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_destination_data == final_destination_data, error()
 
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
-def during_export(self, alter_function, kwargs):
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"))
+def during_export(self, example):
     """Test altering the source table during exporting parts."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -250,60 +295,51 @@ def during_export(self, alter_function, kwargs):
         )
 
     with And("I read data on the source table"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I slow the network"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.05)
 
-    with And("I export parts to the S3 table"):
+    with When("I export parts to the S3 table"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
+
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        if example.alter_function != alter_wrappers.drop_table:
+            example.alter_function(table_name=source_table, **example.kwargs)
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
         )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
-def during_minio_interruption(self, alter_function, kwargs):
+@Requirements(
+    RQ_ClickHouse_ExportPart_Concurrency_ConcurrentAlters("1.0"),
+    RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"),
+)
+def during_minio_interruption(self, example):
     """Test altering the source table during MinIO interruption."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=2,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -311,9 +347,7 @@ def during_minio_interruption(self, alter_function, kwargs):
         )
 
     with And("I get initial source data"):
-        initial_source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
+        initial_source_data = select_all_ordered(table_name=source_table)
 
     with And("I stop MinIO"):
         steps.kill_minio()
@@ -322,54 +356,46 @@ def during_minio_interruption(self, alter_function, kwargs):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            node=self.context.node,
+            settings=[
+                ("export_merge_tree_part_throw_on_pending_mutations", False),
+                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+            ],
         )
 
-    with And(f"I {alter_function.__name__} on the source table"):
-        alter_function(table_name=source_table, **kwargs)
+    with And("I start merges"):
+        steps.start_merges(table_name=source_table)
+
+    with And(f"I {example.alter_function.__name__} on the source table"):
+        if example.alter_function != alter_wrappers.drop_table:
+            example.alter_function(table_name=source_table, **example.kwargs)
 
     with And("I start MinIO"):
         steps.start_minio()
 
     with Then("Check source matches destination"):
-        steps.wait_for_all_exports_to_complete(node=self.context.node)
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
         )
+        destination_data = select_all_ordered(table_name=s3_table_name)
         assert initial_source_data == destination_data, error()
 
 
 @TestOutline(Scenario)
 @Examples(
-    "alter_function, kwargs",
-    get_alter_functions(),
+    "example",
+    [(example,) for example in get_alter_functions()],
 )
-def stress(self, alter_function, kwargs):
+@Requirements(RQ_ClickHouse_ExportPart_Concurrency("1.0"))
+def stress(self, example):
     """Test a high volume of alters in parallel with exports."""
 
     with Given("I create a populated source table and empty S3 table"):
-        source_table = f"source_{getuid()}"
-
-        if alter_function == alter_wrappers.alter_table_fetch_partition:
-            partitioned_replicated_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=10,
-                number_of_partitions=10,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
-        else:
-            partitioned_merge_tree_table(
-                table_name=source_table,
-                partition_by="p",
-                number_of_parts=10,
-                number_of_partitions=10,
-                columns=steps.default_columns(simple=False),
-                stop_merges=True,
-                query_settings="storage_policy = 'tiered_storage'",
-            )
+        source_table = create_source_table(
+            alter_function=example.alter_function,
+            number_of_parts=10,
+            number_of_partitions=10,
+        )
         s3_table_name = steps.create_s3_table(
             table_name="s3",
             create_new_bucket=True,
@@ -383,32 +409,31 @@ def stress(self, alter_function, kwargs):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
     with When(
-        f"I export parts to the S3 table in parallel with {alter_function.__name__}"
+        f"I export parts to the S3 table in parallel with {example.alter_function.__name__}"
     ):
         with Pool(10) as executor:
             for _ in range(100):
                 Step(test=steps.export_parts, parallel=True, executor=executor)(
                     source_table=source_table,
                     destination_table=s3_table_name,
-                    node=self.context.node,
                     parts=[steps.get_random_part(table_name=source_table)],
                     exitcode=1,
+                    settings=[
+                        ("export_merge_tree_part_throw_on_pending_mutations", False),
+                        ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+                    ],
                 )
-                Step(test=alter_function, parallel=True, executor=executor)(
-                    table_name=source_table, **kwargs
+                Step(test=example.alter_function, parallel=True, executor=executor)(
+                    table_name=source_table, **example.kwargs
                 )
+                time.sleep(0.3)
             join()
 
-    with And("I wait for all background exports to complete"):
-        steps.wait_for_all_exports_to_complete(table_name=source_table)
-
-    with And("I flush system.part_log"):
-        steps.flush_log(table_name="system.part_log")
-
     with Then("Check successfully exported parts are present in destination"):
-        part_log = steps.get_part_log(node=self.context.node, table_name=source_table)
-        destination_parts = steps.get_s3_parts(table_name=s3_table_name)
-        assert part_log == destination_parts, error()
+        steps.part_log_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestFeature

@@ -372,12 +372,16 @@ RQ_ClickHouse_ExportPartition_SchemaCompatibility = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL require source and destination tables to have compatible schemas for successful export operations:\n"
-        "* Identical physical column schemas between source and destination\n"
+        "* Identical physical column schemas between source and destination, with the following exceptions:\n"
+        "  * Source DEFAULT columns SHALL match destination regular columns (destination must not have DEFAULT columns)\n"
+        "  * Source ALIAS columns SHALL match destination regular columns (destination must not have ALIAS columns)\n"
+        "  * Source MATERIALIZED columns SHALL match destination regular columns (destination must not have MATERIALIZED columns)\n"
+        "  * Source EPHEMERAL columns SHALL NOT have matching columns in the destination (EPHEMERAL columns are ignored during export)\n"
         "* The same partition key expression in both tables\n"
-        "* Compatible data types for all columns\n"
-        "* Matching column order and names\n"
+        "* Compatible data types for all columns (matching base types, not column modifiers)\n"
+        "* Matching column order and names for all exported columns\n"
         "\n"
-        "Schema compatibility ensures that exported data can be correctly read from the destination table without data loss or corruption.\n"
+        "Schema compatibility ensures that exported data can be correctly read from the destination table without data loss or corruption. Special column types (DEFAULT, ALIAS, MATERIALIZED) in the source are materialized during export and written as regular columns to the destination.\n"
         "\n"
     ),
     link=None,
@@ -439,6 +443,122 @@ RQ_ClickHouse_ExportPartition_PartitionContent = Requirement(
     num="12.1",
 )
 
+RQ_ClickHouse_ExportPartition_ColumnTypes_Alias = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ColumnTypes.Alias",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions containing tables with ALIAS columns by:\n"
+        "* Computing ALIAS column values on-the-fly from expressions during export (ALIAS columns are not stored in parts)\n"
+        "* Exporting ALIAS column values as regular columns in the destination table\n"
+        "* Requiring destination tables to have matching regular columns (not ALIAS) for exported ALIAS columns\n"
+        "* Including ALIAS columns when explicitly selected during export (ALIAS columns are not included in `SELECT *` by default)\n"
+        "\n"
+        "ALIAS columns are computed from expressions (e.g., `arr_1 ALIAS arr[1]`). During export, the system SHALL compute the ALIAS column values and export them as regular column data to the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.1",
+)
+
+RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ColumnTypes.Materialized",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions containing tables with MATERIALIZED columns by:\n"
+        "* Reading MATERIALIZED column values from storage during export (MATERIALIZED columns are stored in parts and computed from expressions)\n"
+        "* Exporting MATERIALIZED column values as regular columns in the destination table\n"
+        "* Requiring destination tables to have matching regular columns (not MATERIALIZED) for exported MATERIALIZED columns\n"
+        "\n"
+        "MATERIALIZED columns are stored in parts and computed from expressions (e.g., `value * 2`). During export, the system SHALL read the stored MATERIALIZED column values and export them as regular column data to the destination table.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.2",
+)
+
+RQ_ClickHouse_ExportPartition_ColumnTypes_Default = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ColumnTypes.Default",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions containing tables with DEFAULT columns by:\n"
+        "* Requiring the destination table to have a matching column that is NOT tagged as DEFAULT (must be a regular column)\n"
+        "* Materializing the source DEFAULT column values during export (using either the default value or explicit value provided during INSERT)\n"
+        "* Exporting the materialized values as a regular column to the destination table\n"
+        "* Correctly handling both cases:\n"
+        "  * When default values are used (no explicit value provided during INSERT)\n"
+        "  * When explicit non-default values are provided during INSERT\n"
+        "\n"
+        "**Prior Behavior:**\n"
+        "Prior to this feature, export operations with DEFAULT columns were not possible because object storage tables do not support DEFAULT columns, and schema compatibility required 100% matching column types between source and destination.\n"
+        "\n"
+        "**Current Behavior:**\n"
+        "With this feature, the destination table schema SHALL have a regular column (not DEFAULT) that matches the source DEFAULT column's name and data type. During export, the system SHALL compute the actual values for DEFAULT columns (default or explicit) and export them as regular column data. This allows users to export partitions from source tables with DEFAULT columns to destination object storage tables that do not support DEFAULT columns.\n"
+        "\n"
+        "DEFAULT columns have default values (e.g., `status String DEFAULT 'active'`). The system SHALL materialize these values during export and write them as regular columns to the destination.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.3",
+)
+
+RQ_ClickHouse_ExportPartition_ColumnTypes_Ephemeral = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ColumnTypes.Ephemeral",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions containing tables with EPHEMERAL columns by:\n"
+        "* Completely ignoring EPHEMERAL columns during export (EPHEMERAL columns are not stored and cannot be read from parts)\n"
+        "* NOT exporting EPHEMERAL columns to the destination table\n"
+        "* Requiring destination tables to NOT have matching columns for EPHEMERAL columns from the source table\n"
+        "* Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly\n"
+        "\n"
+        "EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.4",
+)
+
+RQ_ClickHouse_ExportPartition_ColumnTypes_Mixed = Requirement(
+    name="RQ.ClickHouse.ExportPartition.ColumnTypes.Mixed",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions containing tables with a mix of ALIAS, MATERIALIZED, EPHEMERAL, and DEFAULT columns by:\n"
+        "* Handling all column types correctly during export\n"
+        "* Exporting only stored and computed columns (ALIAS, MATERIALIZED, DEFAULT) while ignoring EPHEMERAL columns\n"
+        "* Maintaining data integrity when multiple column types are present in the same table\n"
+        "\n"
+        "Tables may contain a mix of different column types, and the export operation SHALL handle all column types correctly, exporting only stored and computed columns while ignoring EPHEMERAL columns.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.5",
+)
+
 RQ_ClickHouse_ExportPartition_SchemaChangeIsolation = Requirement(
     name="RQ.ClickHouse.ExportPartition.SchemaChangeIsolation",
     version="1.0",
@@ -458,7 +578,7 @@ RQ_ClickHouse_ExportPartition_SchemaChangeIsolation = Requirement(
     ),
     link=None,
     level=2,
-    num="12.2",
+    num="13.6",
 )
 
 RQ_ClickHouse_ExportPartition_LargePartitions = Requirement(
@@ -482,7 +602,7 @@ RQ_ClickHouse_ExportPartition_LargePartitions = Requirement(
     ),
     link=None,
     level=2,
-    num="12.3",
+    num="13.7",
 )
 
 RQ_ClickHouse_ExportPartition_Corrupted = Requirement(
@@ -500,7 +620,176 @@ RQ_ClickHouse_ExportPartition_Corrupted = Requirement(
     ),
     link=None,
     level=2,
-    num="12.4",
+    num="13.8",
+)
+
+RQ_ClickHouse_ExportPartition_PendingMutations = Requirement(
+    name="RQ.ClickHouse.ExportPartition.PendingMutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL handle export operations when partitions contain pending mutations (e.g., DELETE mutations) by:\n"
+        "* By default, throwing an error (`PENDING_MUTATIONS_NOT_ALLOWED`) when pending mutations exist in the partition and `export_merge_tree_part_throw_on_pending_mutations` is set to `1` (default)\n"
+        "* When `export_merge_tree_part_throw_on_pending_mutations` is set to `0`, allowing export operations to proceed even when pending mutations exist\n"
+        "* Providing users with control over whether exports should wait for mutations to complete or proceed with pending mutations\n"
+        "* Maintaining data integrity in exported data regardless of the setting chosen\n"
+        "\n"
+        "**Pending Mutations Behavior:**\n"
+        "* Pending mutations are mutations (e.g., DELETE, UPDATE) that have been initiated but not yet completed\n"
+        "* By default, export operations SHALL fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending mutations exist\n"
+        "* Users can disable this behavior by setting `export_merge_tree_part_throw_on_pending_mutations = 0` to allow exports to proceed\n"
+        "* When exports proceed with pending mutations, the exported data SHALL reflect the state of the partition at the time of export, which may include unapplied mutations\n"
+        "\n"
+        "This ensures that users can control whether export operations wait for mutations to complete or proceed immediately, providing flexibility for different use cases.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.9",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightUpdate = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that contain patch parts created by lightweight UPDATE operations by:\n"
+        "* Allowing export operations to succeed even when patch parts exist in the source partition\n"
+        "* Exporting partition data successfully regardless of the presence of patch parts\n"
+        "* Not requiring patch parts to be materialized before export operations can proceed\n"
+        "* Handling partitions with multiple patch parts correctly during export\n"
+        "* Maintaining export operation stability when lightweight updates occur before or during export\n"
+        "\n"
+        "Lightweight updates create patch parts that contain only updated columns and rows. The export operation SHALL succeed even in the presence of these patch parts, though the patches might not be applied to the exported data. This ensures that export operations are not blocked by lightweight update operations and can proceed independently.\n"
+        "\n"
+        "**Pending Patch Parts Behavior:**\n"
+        "* By default, export operations SHALL throw an error (`PENDING_MUTATIONS_NOT_ALLOWED`) when pending patch parts exist in the partition and `export_merge_tree_part_throw_on_pending_patch_parts` is set to `1` (default)\n"
+        "* When `export_merge_tree_part_throw_on_pending_patch_parts` is set to `0`, export operations SHALL succeed even when pending patch parts exist\n"
+        "* This allows users to control whether exports should wait for patch parts to be materialized or proceed with pending patch parts\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.10",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightUpdate_MultiplePatches = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that have multiple patch parts from multiple lightweight UPDATE operations by:\n"
+        "* Handling partitions with multiple patch parts created by different UPDATE operations\n"
+        "* Exporting partition data correctly when patch parts exist for the same partition\n"
+        "* Not failing export operations due to the presence of multiple patch parts\n"
+        "* Maintaining data integrity during export when multiple lightweight updates have been applied\n"
+        "\n"
+        "Users may perform multiple lightweight UPDATE operations on the same partition, creating multiple patch parts. The export operation must handle these correctly without errors.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.11",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightUpdate_Concurrent = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations when lightweight UPDATE operations occur concurrently or sequentially on partitions being exported by:\n"
+        "* Allowing export operations to proceed when lightweight updates are performed before export starts\n"
+        "* Not blocking lightweight UPDATE operations when export operations are in progress\n"
+        "* Handling the presence of patch parts created during or before export operations\n"
+        "* Ensuring export operations complete successfully regardless of when lightweight updates occur relative to the export operation\n"
+        "\n"
+        "Export operations and lightweight updates may occur at different times, and the system must handle both operations correctly without interference.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.12",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that contain rows marked as deleted by lightweight DELETE operations by:\n"
+        "* Allowing export operations to succeed even when deleted rows exist in the source partition\n"
+        "* Automatically applying the `_row_exists` mask during export to ensure only non-deleted rows are exported\n"
+        "* Exporting partition data successfully regardless of the presence of deleted rows\n"
+        "* Not requiring deleted rows to be physically removed before export operations can proceed\n"
+        "* Maintaining export operation stability when lightweight deletes occur before or during export\n"
+        "\n"
+        "Lightweight deletes mark rows as deleted using a hidden `_row_exists` system column. The export operation SHALL automatically apply this mask to ensure only visible (non-deleted) rows are exported to the destination, maintaining data consistency between source and destination tables.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.13",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete_MultipleDeletes = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting partitions that have multiple lightweight DELETE operations applied by:\n"
+        "* Handling partitions with multiple delete mutations on the same partition\n"
+        "* Exporting partition data correctly when multiple deletes have been applied\n"
+        "* Not failing export operations due to the presence of multiple delete mutations\n"
+        "* Maintaining data integrity during export when multiple lightweight deletes have been applied\n"
+        "* Ensuring that only non-deleted rows are exported even when multiple delete operations affect overlapping rows\n"
+        "\n"
+        "Users may perform multiple lightweight DELETE operations on the same partition, creating multiple delete mutations. The export operation must handle these correctly and ensure that all deleted rows are excluded from the export.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.14",
+)
+
+RQ_ClickHouse_ExportPartition_LightweightDelete_Concurrent = Requirement(
+    name="RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations when lightweight DELETE operations occur concurrently or sequentially on partitions being exported by:\n"
+        "* Allowing export operations to proceed when lightweight deletes are performed before export starts\n"
+        "* Not blocking lightweight DELETE operations when export operations are in progress\n"
+        "* Handling the presence of delete masks (`_row_exists` column) created during or before export operations\n"
+        "* Ensuring export operations complete successfully regardless of when lightweight deletes occur relative to the export operation\n"
+        "* Applying delete masks correctly to ensure deleted rows are not exported\n"
+        "\n"
+        "Export operations and lightweight deletes may occur at different times, and the system must handle both operations correctly without interference, ensuring that deleted rows are always excluded from exports.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="13.15",
 )
 
 RQ_ClickHouse_ExportPartition_RetryMechanism = Requirement(
@@ -518,7 +807,7 @@ RQ_ClickHouse_ExportPartition_RetryMechanism = Requirement(
     ),
     link=None,
     level=2,
-    num="13.1",
+    num="14.1",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_MaxRetries = Requirement(
@@ -546,7 +835,7 @@ RQ_ClickHouse_ExportPartition_Settings_MaxRetries = Requirement(
     ),
     link=None,
     level=2,
-    num="13.2",
+    num="14.2",
 )
 
 RQ_ClickHouse_ExportPartition_ResumeAfterFailure = Requirement(
@@ -562,7 +851,7 @@ RQ_ClickHouse_ExportPartition_ResumeAfterFailure = Requirement(
     ),
     link=None,
     level=2,
-    num="13.3",
+    num="14.3",
 )
 
 RQ_ClickHouse_ExportPartition_PartialProgress = Requirement(
@@ -587,7 +876,7 @@ RQ_ClickHouse_ExportPartition_PartialProgress = Requirement(
     ),
     link=None,
     level=2,
-    num="13.4",
+    num="14.4",
 )
 
 RQ_ClickHouse_ExportPartition_Cleanup = Requirement(
@@ -603,7 +892,7 @@ RQ_ClickHouse_ExportPartition_Cleanup = Requirement(
     ),
     link=None,
     level=2,
-    num="13.5",
+    num="14.5",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_ManifestTTL = Requirement(
@@ -631,7 +920,67 @@ RQ_ClickHouse_ExportPartition_Settings_ManifestTTL = Requirement(
     ),
     link=None,
     level=2,
-    num="13.6",
+    num="14.6",
+)
+
+RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingMutations = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingMutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_mutations` setting that controls whether export operations should fail when pending mutations exist in the partition. The default value SHALL be `1` (enabled), meaning exports will fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending mutations exist.\n"
+        "\n"
+        "When set to `0`, export operations SHALL proceed even when pending mutations exist in the partition. This allows users to export partitions without waiting for mutations to complete.\n"
+        "\n"
+        "This setting allows users to control whether export operations wait for mutations to complete or proceed immediately, providing flexibility for different use cases.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE source_table \n"
+        "EXPORT PARTITION ID '2020' \n"
+        "TO TABLE destination_table\n"
+        "SETTINGS allow_experimental_export_merge_tree_part = 1,\n"
+        "         export_merge_tree_part_throw_on_pending_mutations = 0\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.7",
+)
+
+RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingPatchParts = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingPatchParts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_patch_parts` setting that controls whether export operations should fail when pending patch parts exist in the partition. The default value SHALL be `1` (enabled), meaning exports will fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending patch parts exist.\n"
+        "\n"
+        "When set to `0`, export operations SHALL proceed even when pending patch parts exist in the partition. This allows users to export partitions without waiting for patch parts to be materialized.\n"
+        "\n"
+        "This setting allows users to control whether export operations wait for patch parts to be materialized or proceed with pending patch parts, providing flexibility for different use cases.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE source_table \n"
+        "EXPORT PARTITION ID '2020' \n"
+        "TO TABLE destination_table\n"
+        "SETTINGS allow_experimental_export_merge_tree_part = 1,\n"
+        "         export_merge_tree_part_throw_on_pending_patch_parts = 0\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.8",
 )
 
 RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
@@ -642,18 +991,61 @@ RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.\n"
+        "[ClickHouse] SHALL support cancellation of `EXPORT PARTITION`.\n" "\n"
+    ),
+    link=None,
+    level=2,
+    num="14.9",
+)
+
+RQ_ClickHouse_ExportPartition_QueryCancellation_KillExportPartition = Requirement(
+    name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support cancellation of in-progress `EXPORT PARTITION` operations with `KILL EXPORT PARTITION` command.\n"
         "\n"
-        "The system SHALL:\n"
-        "* Allow users to abort export partition operations that are in progress using `KILL QUERY`\n"
-        "* Stop exporting partitions that have not yet been exported when the query is cancelled\n"
-        "* Clean up any partial export state when a query is cancelled\n"
-        "* Return an appropriate error or cancellation message to the user\n"
-        "* Not leave orphaned export operations in the system after query cancellation\n"
-        "* Allow users to retry the export operation after cancellation if needed\n"
+        "For example,\n"
         "\n"
-        "Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.\n"
+        "```sql\n"
+        "CREATE TABLE rmt_table (id UInt64, year UInt16) \n"
+        "ENGINE = ReplicatedMergeTree('/clickhouse/tables/{database}/rmt_table', 'replica1') \n"
+        "PARTITION BY year ORDER BY tuple();\n"
         "\n"
+        "CREATE TABLE s3_table (id UInt64, year UInt16) \n"
+        "ENGINE = S3(s3_conn, filename='data', format=Parquet, partition_strategy='hive') \n"
+        "PARTITION BY year;\n"
+        "\n"
+        "INSERT INTO rmt_table VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021);\n"
+        "\n"
+        "ALTER TABLE rmt_table EXPORT PARTITION ID '2020' TO TABLE s3_table;\n"
+        "\n"
+        "KILL EXPORT PARTITION \n"
+        "WHERE partition_id = '2020' \n"
+        "  AND source_table = 'rmt_table' \n"
+        "  AND destination_table = 's3_table'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="14.9.1.1",
+)
+
+RQ_ClickHouse_ExportPartition_QueryCancellation_KillQuery = Requirement(
+    name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.\n"
+        "\n"
+        "``\n"
         "For example,\n"
         "\n"
         "```sql\n"
@@ -663,14 +1055,14 @@ RQ_ClickHouse_ExportPartition_QueryCancellation = Requirement(
         "TO TABLE destination_table\n"
         "SETTINGS allow_experimental_export_merge_tree_part = 1;\n"
         "\n"
-        "-- Cancel the export in another session\n"
+        "-- Try to cancel the export in another session\n"
         "KILL QUERY WHERE query_id = '<query_id>';\n"
         "```\n"
         "\n"
     ),
     link=None,
-    level=2,
-    num="13.7",
+    level=4,
+    num="14.9.2.1",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues = Requirement(
@@ -695,7 +1087,7 @@ RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues = Requirement(
     ),
     link=None,
     level=2,
-    num="14.1",
+    num="15.1",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption = Requirement(
@@ -719,7 +1111,7 @@ RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption = Requir
     ),
     link=None,
     level=2,
-    num="14.2",
+    num="15.2",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption = Requirement(
@@ -744,7 +1136,7 @@ RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption = Requirement(
     ),
     link=None,
     level=2,
-    num="14.3",
+    num="15.3",
 )
 
 RQ_ClickHouse_ExportPartition_NetworkResilience_KeeperInterruption = Requirement(
@@ -762,7 +1154,7 @@ RQ_ClickHouse_ExportPartition_NetworkResilience_KeeperInterruption = Requirement
     ),
     link=None,
     level=2,
-    num="14.4",
+    num="15.4",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_SameTable = Requirement(
@@ -792,7 +1184,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_SameTable = Requirement(
     ),
     link=None,
     level=3,
-    num="15.1.1",
+    num="16.1.1",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_DestinationSupport = Requirement(
@@ -815,7 +1207,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_DestinationSupport = Requirement(
     ),
     link=None,
     level=3,
-    num="15.2.1",
+    num="16.2.1",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_LocalTable = Requirement(
@@ -845,7 +1237,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_LocalTable = Requirement(
     ),
     link=None,
     level=3,
-    num="15.3.1",
+    num="16.3.1",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey = Requirement(
@@ -875,7 +1267,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey = Requirement(
     ),
     link=None,
     level=3,
-    num="15.4.1",
+    num="16.4.1",
 )
 
 RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition = Requirement(
@@ -906,7 +1298,7 @@ RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition = Requirement(
     ),
     link=None,
     level=3,
-    num="15.5.1",
+    num="16.5.1",
 )
 
 RQ_ClickHouse_ExportPartition_Concurrency = Requirement(
@@ -929,7 +1321,77 @@ RQ_ClickHouse_ExportPartition_Concurrency = Requirement(
     ),
     link=None,
     level=2,
-    num="16.1",
+    num="17.1",
+)
+
+RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations while parallel INSERT operations are executing on the source table by:\n"
+        "* Allowing INSERT operations to continue executing while export partition is in progress\n"
+        "* Exporting a consistent snapshot of partition data that existed at the time export started, or capturing data that is inserted during export depending on the export implementation\n"
+        "* Handling exports correctly when merges are stopped (`SYSTEM STOP MERGES`) and parts are not merged during export\n"
+        "* Handling exports correctly when merges are enabled and parts may be merged during export\n"
+        "* Maintaining data integrity in both source and destination tables during concurrent inserts and exports\n"
+        "* Ensuring that exported data accurately represents the partition state, whether merges are enabled or disabled\n"
+        "\n"
+        "Production systems often have continuous data ingestion, and export operations must work correctly even when new data is being inserted into the source table during export.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="17.2",
+)
+
+RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support export operations while `OPTIMIZE TABLE` operations are executing in parallel on the source table by:\n"
+        "* Allowing `OPTIMIZE TABLE` operations to run concurrently with export partition operations\n"
+        "* Handling merge operations that occur during export without data corruption or loss\n"
+        "* Ensuring that exported data accurately represents the partition state during concurrent optimize and export operations\n"
+        "* Maintaining data integrity in both source and destination tables when parts are being merged during export\n"
+        "* Coordinating merge and export operations to prevent conflicts or race conditions\n"
+        "\n"
+        "Users may need to optimize tables for performance while export operations are in progress, and the system must handle these concurrent operations correctly.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="17.3",
+)
+
+RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects = Requirement(
+    name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support parallel SELECT queries on the source table while export partition operations are executing by:\n"
+        "* Allowing multiple SELECT queries to execute concurrently with export partition operations\n"
+        "* Ensuring that SELECT queries can read data from the source table during export without blocking or errors\n"
+        "* Maintaining read consistency during export operations\n"
+        "* Not interfering with export operations when SELECT queries are executing\n"
+        "* Allowing users to query exported data from the destination table while export is in progress (for already exported partitions)\n"
+        "\n"
+        "Users need to be able to query data during export operations for monitoring, validation, or other operational purposes, and the system must support concurrent reads and exports.\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="17.4",
 )
 
 RQ_ClickHouse_ExportPartition_Idempotency = Requirement(
@@ -953,7 +1415,7 @@ RQ_ClickHouse_ExportPartition_Idempotency = Requirement(
     ),
     link=None,
     level=2,
-    num="17.1",
+    num="18.1",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_ForceExport = Requirement(
@@ -981,7 +1443,7 @@ RQ_ClickHouse_ExportPartition_Settings_ForceExport = Requirement(
     ),
     link=None,
     level=2,
-    num="17.2",
+    num="18.2",
 )
 
 RQ_ClickHouse_ExportPartition_Logging = Requirement(
@@ -1017,7 +1479,7 @@ RQ_ClickHouse_ExportPartition_Logging = Requirement(
     ),
     link=None,
     level=2,
-    num="18.1",
+    num="19.1",
 )
 
 RQ_ClickHouse_ExportPartition_SystemTables_Exports = Requirement(
@@ -1055,7 +1517,7 @@ RQ_ClickHouse_ExportPartition_SystemTables_Exports = Requirement(
     ),
     link=None,
     level=2,
-    num="19.1",
+    num="20.1",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_AllowExperimental = Requirement(
@@ -1073,7 +1535,7 @@ RQ_ClickHouse_ExportPartition_Settings_AllowExperimental = Requirement(
     ),
     link=None,
     level=2,
-    num="20.1",
+    num="21.1",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled = Requirement(
@@ -1097,7 +1559,7 @@ RQ_ClickHouse_ExportPartition_Settings_AllowExperimental_Disabled = Requirement(
     ),
     link=None,
     level=2,
-    num="20.2",
+    num="21.2",
 )
 
 RQ_ClickHouse_ExportPartition_Settings_OverwriteFile = Requirement(
@@ -1125,7 +1587,7 @@ RQ_ClickHouse_ExportPartition_Settings_OverwriteFile = Requirement(
     ),
     link=None,
     level=2,
-    num="21.1",
+    num="22.1",
 )
 
 RQ_ClickHouse_ExportPartition_ParallelFormatting = Requirement(
@@ -1148,7 +1610,7 @@ RQ_ClickHouse_ExportPartition_ParallelFormatting = Requirement(
     ),
     link=None,
     level=2,
-    num="22.1",
+    num="23.1",
 )
 
 RQ_ClickHouse_ExportPartition_ServerSettings_MaxBandwidth = Requirement(
@@ -1166,7 +1628,7 @@ RQ_ClickHouse_ExportPartition_ServerSettings_MaxBandwidth = Requirement(
     ),
     link=None,
     level=2,
-    num="23.1",
+    num="24.1",
 )
 
 RQ_ClickHouse_ExportPartition_ServerSettings_BackgroundMovePoolSize = Requirement(
@@ -1184,7 +1646,7 @@ RQ_ClickHouse_ExportPartition_ServerSettings_BackgroundMovePoolSize = Requiremen
     ),
     link=None,
     level=2,
-    num="23.2",
+    num="24.2",
 )
 
 RQ_ClickHouse_ExportPartition_Metrics_Export = Requirement(
@@ -1202,7 +1664,7 @@ RQ_ClickHouse_ExportPartition_Metrics_Export = Requirement(
     ),
     link=None,
     level=2,
-    num="23.3",
+    num="24.3",
 )
 
 RQ_ClickHouse_ExportPartition_Security_RBAC = Requirement(
@@ -1224,7 +1686,7 @@ RQ_ClickHouse_ExportPartition_Security_RBAC = Requirement(
     ),
     link=None,
     level=2,
-    num="24.1",
+    num="25.1",
 )
 
 RQ_ClickHouse_ExportPartition_Security_DataEncryption = Requirement(
@@ -1242,7 +1704,7 @@ RQ_ClickHouse_ExportPartition_Security_DataEncryption = Requirement(
     ),
     link=None,
     level=2,
-    num="24.2",
+    num="25.2",
 )
 
 RQ_ClickHouse_ExportPartition_Security_Network = Requirement(
@@ -1263,7 +1725,7 @@ RQ_ClickHouse_ExportPartition_Security_Network = Requirement(
     ),
     link=None,
     level=2,
-    num="24.3",
+    num="25.3",
 )
 
 SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
@@ -1333,154 +1795,242 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         Heading(
             name="RQ.ClickHouse.ExportPartition.PartitionContent", level=2, num="12.1"
         ),
+        Heading(name="Column types support", level=1, num="13"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.SchemaChangeIsolation",
-            level=2,
-            num="12.2",
+            name="RQ.ClickHouse.ExportPartition.ColumnTypes.Alias", level=2, num="13.1"
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.LargePartitions", level=2, num="12.3"
-        ),
-        Heading(name="RQ.ClickHouse.ExportPartition.Corrupted", level=2, num="12.4"),
-        Heading(name="Export operation failure handling", level=1, num="13"),
-        Heading(
-            name="RQ.ClickHouse.ExportPartition.RetryMechanism", level=2, num="13.1"
-        ),
-        Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.MaxRetries",
+            name="RQ.ClickHouse.ExportPartition.ColumnTypes.Materialized",
             level=2,
             num="13.2",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.ResumeAfterFailure", level=2, num="13.3"
+            name="RQ.ClickHouse.ExportPartition.ColumnTypes.Default",
+            level=2,
+            num="13.3",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.PartialProgress", level=2, num="13.4"
+            name="RQ.ClickHouse.ExportPartition.ColumnTypes.Ephemeral",
+            level=2,
+            num="13.4",
         ),
-        Heading(name="RQ.ClickHouse.ExportPartition.Cleanup", level=2, num="13.5"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.ManifestTTL",
+            name="RQ.ClickHouse.ExportPartition.ColumnTypes.Mixed", level=2, num="13.5"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.SchemaChangeIsolation",
             level=2,
             num="13.6",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.QueryCancellation", level=2, num="13.7"
+            name="RQ.ClickHouse.ExportPartition.LargePartitions", level=2, num="13.7"
         ),
-        Heading(name="Network resilience", level=1, num="14"),
+        Heading(name="RQ.ClickHouse.ExportPartition.Corrupted", level=2, num="13.8"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues",
+            name="RQ.ClickHouse.ExportPartition.PendingMutations", level=2, num="13.9"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate", level=2, num="13.10"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches",
             level=2,
-            num="14.1",
+            num="13.11",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption",
+            name="RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent",
+            level=2,
+            num="13.12",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete", level=2, num="13.13"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes",
+            level=2,
+            num="13.14",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent",
+            level=2,
+            num="13.15",
+        ),
+        Heading(name="Export operation failure handling", level=1, num="14"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.RetryMechanism", level=2, num="14.1"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.MaxRetries",
             level=2,
             num="14.2",
         ),
         Heading(
+            name="RQ.ClickHouse.ExportPartition.ResumeAfterFailure", level=2, num="14.3"
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.PartialProgress", level=2, num="14.4"
+        ),
+        Heading(name="RQ.ClickHouse.ExportPartition.Cleanup", level=2, num="14.5"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.ManifestTTL",
+            level=2,
+            num="14.6",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingMutations",
+            level=2,
+            num="14.7",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingPatchParts",
+            level=2,
+            num="14.8",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation", level=2, num="14.9"
+        ),
+        Heading(name="Kill Export Partition", level=3, num="14.9.1"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition",
+            level=4,
+            num="14.9.1.1",
+        ),
+        Heading(name="Kill Query Cancellation", level=3, num="14.9.2"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery",
+            level=4,
+            num="14.9.2.1",
+        ),
+        Heading(name="Network resilience", level=1, num="15"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues",
+            level=2,
+            num="15.1",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption",
+            level=2,
+            num="15.2",
+        ),
+        Heading(
             name="RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption",
             level=2,
-            num="14.3",
+            num="15.3",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption",
             level=2,
-            num="14.4",
+            num="15.4",
         ),
-        Heading(name="Export operation restrictions", level=1, num="15"),
-        Heading(name="Preventing same table exports", level=2, num="15.1"),
+        Heading(name="Export operation restrictions", level=1, num="16"),
+        Heading(name="Preventing same table exports", level=2, num="16.1"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Restrictions.SameTable",
             level=3,
-            num="15.1.1",
+            num="16.1.1",
         ),
-        Heading(name="Destination table compatibility", level=2, num="15.2"),
+        Heading(name="Destination table compatibility", level=2, num="16.2"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport",
             level=3,
-            num="15.2.1",
+            num="16.2.1",
         ),
-        Heading(name="Local table restriction", level=2, num="15.3"),
+        Heading(name="Local table restriction", level=2, num="16.3"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Restrictions.LocalTable",
             level=3,
-            num="15.3.1",
+            num="16.3.1",
         ),
-        Heading(name="Partition key compatibility", level=2, num="15.4"),
+        Heading(name="Partition key compatibility", level=2, num="16.4"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey",
             level=3,
-            num="15.4.1",
+            num="16.4.1",
         ),
-        Heading(name="Source partition availability", level=2, num="15.5"),
+        Heading(name="Source partition availability", level=2, num="16.5"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition",
             level=3,
-            num="15.5.1",
+            num="16.5.1",
         ),
-        Heading(name="Export operation concurrency", level=1, num="16"),
-        Heading(name="RQ.ClickHouse.ExportPartition.Concurrency", level=2, num="16.1"),
-        Heading(name="Export operation idempotency", level=1, num="17"),
-        Heading(name="RQ.ClickHouse.ExportPartition.Idempotency", level=2, num="17.1"),
+        Heading(name="Export operation concurrency", level=1, num="17"),
+        Heading(name="RQ.ClickHouse.ExportPartition.Concurrency", level=2, num="17.1"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Settings.ForceExport",
+            name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts",
             level=2,
             num="17.2",
         ),
-        Heading(name="Export operation logging", level=1, num="18"),
-        Heading(name="RQ.ClickHouse.ExportPartition.Logging", level=2, num="18.1"),
-        Heading(name="Monitoring export operations", level=1, num="19"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable",
+            level=2,
+            num="17.3",
+        ),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects",
+            level=2,
+            num="17.4",
+        ),
+        Heading(name="Export operation idempotency", level=1, num="18"),
+        Heading(name="RQ.ClickHouse.ExportPartition.Idempotency", level=2, num="18.1"),
+        Heading(
+            name="RQ.ClickHouse.ExportPartition.Settings.ForceExport",
+            level=2,
+            num="18.2",
+        ),
+        Heading(name="Export operation logging", level=1, num="19"),
+        Heading(name="RQ.ClickHouse.ExportPartition.Logging", level=2, num="19.1"),
+        Heading(name="Monitoring export operations", level=1, num="20"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.SystemTables.Exports",
             level=2,
-            num="19.1",
+            num="20.1",
         ),
-        Heading(name="Enabling export functionality", level=1, num="20"),
+        Heading(name="Enabling export functionality", level=1, num="21"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Settings.AllowExperimental",
             level=2,
-            num="20.1",
+            num="21.1",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled",
             level=2,
-            num="20.2",
+            num="21.2",
         ),
-        Heading(name="Handling file conflicts during export", level=1, num="21"),
+        Heading(name="Handling file conflicts during export", level=1, num="22"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Settings.OverwriteFile",
             level=2,
-            num="21.1",
+            num="22.1",
         ),
-        Heading(name="Export operation configuration", level=1, num="22"),
+        Heading(name="Export operation configuration", level=1, num="23"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.ParallelFormatting", level=2, num="22.1"
+            name="RQ.ClickHouse.ExportPartition.ParallelFormatting", level=2, num="23.1"
         ),
-        Heading(name="Controlling export performance", level=1, num="23"),
+        Heading(name="Controlling export performance", level=1, num="24"),
         Heading(
             name="RQ.ClickHouse.ExportPartition.ServerSettings.MaxBandwidth",
             level=2,
-            num="23.1",
+            num="24.1",
         ),
         Heading(
             name="RQ.ClickHouse.ExportPartition.ServerSettings.BackgroundMovePoolSize",
             level=2,
-            num="23.2",
+            num="24.2",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Metrics.Export", level=2, num="23.3"
+            name="RQ.ClickHouse.ExportPartition.Metrics.Export", level=2, num="24.3"
         ),
-        Heading(name="Export operation security", level=1, num="24"),
+        Heading(name="Export operation security", level=1, num="25"),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Security.RBAC", level=2, num="24.1"
+            name="RQ.ClickHouse.ExportPartition.Security.RBAC", level=2, num="25.1"
         ),
         Heading(
             name="RQ.ClickHouse.ExportPartition.Security.DataEncryption",
             level=2,
-            num="24.2",
+            num="25.2",
         ),
         Heading(
-            name="RQ.ClickHouse.ExportPartition.Security.Network", level=2, num="24.3"
+            name="RQ.ClickHouse.ExportPartition.Security.Network", level=2, num="25.3"
         ),
     ),
     requirements=(
@@ -1502,16 +2052,32 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_SchemaCompatibility,
         RQ_ClickHouse_ExportPartition_PartitionKeyTypes,
         RQ_ClickHouse_ExportPartition_PartitionContent,
+        RQ_ClickHouse_ExportPartition_ColumnTypes_Alias,
+        RQ_ClickHouse_ExportPartition_ColumnTypes_Materialized,
+        RQ_ClickHouse_ExportPartition_ColumnTypes_Default,
+        RQ_ClickHouse_ExportPartition_ColumnTypes_Ephemeral,
+        RQ_ClickHouse_ExportPartition_ColumnTypes_Mixed,
         RQ_ClickHouse_ExportPartition_SchemaChangeIsolation,
         RQ_ClickHouse_ExportPartition_LargePartitions,
         RQ_ClickHouse_ExportPartition_Corrupted,
+        RQ_ClickHouse_ExportPartition_PendingMutations,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate_MultiplePatches,
+        RQ_ClickHouse_ExportPartition_LightweightUpdate_Concurrent,
+        RQ_ClickHouse_ExportPartition_LightweightDelete,
+        RQ_ClickHouse_ExportPartition_LightweightDelete_MultipleDeletes,
+        RQ_ClickHouse_ExportPartition_LightweightDelete_Concurrent,
         RQ_ClickHouse_ExportPartition_RetryMechanism,
         RQ_ClickHouse_ExportPartition_Settings_MaxRetries,
         RQ_ClickHouse_ExportPartition_ResumeAfterFailure,
         RQ_ClickHouse_ExportPartition_PartialProgress,
         RQ_ClickHouse_ExportPartition_Cleanup,
         RQ_ClickHouse_ExportPartition_Settings_ManifestTTL,
+        RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingMutations,
+        RQ_ClickHouse_ExportPartition_Settings_ThrowOnPendingPatchParts,
         RQ_ClickHouse_ExportPartition_QueryCancellation,
+        RQ_ClickHouse_ExportPartition_QueryCancellation_KillExportPartition,
+        RQ_ClickHouse_ExportPartition_QueryCancellation_KillQuery,
         RQ_ClickHouse_ExportPartition_NetworkResilience_PacketIssues,
         RQ_ClickHouse_ExportPartition_NetworkResilience_DestinationInterruption,
         RQ_ClickHouse_ExportPartition_NetworkResilience_NodeInterruption,
@@ -1522,6 +2088,9 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
         RQ_ClickHouse_ExportPartition_Restrictions_PartitionKey,
         RQ_ClickHouse_ExportPartition_Restrictions_SourcePartition,
         RQ_ClickHouse_ExportPartition_Concurrency,
+        RQ_ClickHouse_ExportPartition_Concurrency_ParallelInserts,
+        RQ_ClickHouse_ExportPartition_Concurrency_OptimizeTable,
+        RQ_ClickHouse_ExportPartition_Concurrency_ParallelSelects,
         RQ_ClickHouse_ExportPartition_Idempotency,
         RQ_ClickHouse_ExportPartition_Settings_ForceExport,
         RQ_ClickHouse_ExportPartition_Logging,
@@ -1573,57 +2142,79 @@ SRS_016_ClickHouse_Export_Partition_to_S3 = Specification(
     * 11.1 [RQ.ClickHouse.ExportPartition.PartitionKeyTypes](#rqclickhouseexportpartitionpartitionkeytypes)
 * 12 [Partition content support](#partition-content-support)
     * 12.1 [RQ.ClickHouse.ExportPartition.PartitionContent](#rqclickhouseexportpartitionpartitioncontent)
-    * 12.2 [RQ.ClickHouse.ExportPartition.SchemaChangeIsolation](#rqclickhouseexportpartitionschemachangeisolation)
-    * 12.3 [RQ.ClickHouse.ExportPartition.LargePartitions](#rqclickhouseexportpartitionlargepartitions)
-    * 12.4 [RQ.ClickHouse.ExportPartition.Corrupted](#rqclickhouseexportpartitioncorrupted)
-* 13 [Export operation failure handling](#export-operation-failure-handling)
-    * 13.1 [RQ.ClickHouse.ExportPartition.RetryMechanism](#rqclickhouseexportpartitionretrymechanism)
-    * 13.2 [RQ.ClickHouse.ExportPartition.Settings.MaxRetries](#rqclickhouseexportpartitionsettingsmaxretries)
-    * 13.3 [RQ.ClickHouse.ExportPartition.ResumeAfterFailure](#rqclickhouseexportpartitionresumeafterfailure)
-    * 13.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
-    * 13.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
-    * 13.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
-    * 13.7 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
-* 14 [Network resilience](#network-resilience)
-    * 14.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
-    * 14.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
-    * 14.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
-    * 14.4 [RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption](#rqclickhouseexportpartitionnetworkresiliencekeeperinterruption)
-* 15 [Export operation restrictions](#export-operation-restrictions)
-    * 15.1 [Preventing same table exports](#preventing-same-table-exports)
-        * 15.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
-    * 15.2 [Destination table compatibility](#destination-table-compatibility)
-        * 15.2.1 [RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport](#rqclickhouseexportpartitionrestrictionsdestinationsupport)
-    * 15.3 [Local table restriction](#local-table-restriction)
-        * 15.3.1 [RQ.ClickHouse.ExportPartition.Restrictions.LocalTable](#rqclickhouseexportpartitionrestrictionslocaltable)
-    * 15.4 [Partition key compatibility](#partition-key-compatibility)
-        * 15.4.1 [RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey](#rqclickhouseexportpartitionrestrictionspartitionkey)
-    * 15.5 [Source partition availability](#source-partition-availability)
-        * 15.5.1 [RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition](#rqclickhouseexportpartitionrestrictionssourcepartition)
-* 16 [Export operation concurrency](#export-operation-concurrency)
-    * 16.1 [RQ.ClickHouse.ExportPartition.Concurrency](#rqclickhouseexportpartitionconcurrency)
-* 17 [Export operation idempotency](#export-operation-idempotency)
-    * 17.1 [RQ.ClickHouse.ExportPartition.Idempotency](#rqclickhouseexportpartitionidempotency)
-    * 17.2 [RQ.ClickHouse.ExportPartition.Settings.ForceExport](#rqclickhouseexportpartitionsettingsforceexport)
-* 18 [Export operation logging](#export-operation-logging)
-    * 18.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
-* 19 [Monitoring export operations](#monitoring-export-operations)
-    * 19.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
-* 20 [Enabling export functionality](#enabling-export-functionality)
-    * 20.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
-    * 20.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
-* 21 [Handling file conflicts during export](#handling-file-conflicts-during-export)
-    * 21.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
-* 22 [Export operation configuration](#export-operation-configuration)
-    * 22.1 [RQ.ClickHouse.ExportPartition.ParallelFormatting](#rqclickhouseexportpartitionparallelformatting)
-* 23 [Controlling export performance](#controlling-export-performance)
-    * 23.1 [RQ.ClickHouse.ExportPartition.ServerSettings.MaxBandwidth](#rqclickhouseexportpartitionserversettingsmaxbandwidth)
-    * 23.2 [RQ.ClickHouse.ExportPartition.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartitionserversettingsbackgroundmovepoolsize)
-    * 23.3 [RQ.ClickHouse.ExportPartition.Metrics.Export](#rqclickhouseexportpartitionmetricsexport)
-* 24 [Export operation security](#export-operation-security)
-    * 24.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
-    * 24.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
-    * 24.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
+* 13 [Column types support](#column-types-support)
+    * 13.1 [RQ.ClickHouse.ExportPartition.ColumnTypes.Alias](#rqclickhouseexportpartitioncolumntypesalias)
+    * 13.2 [RQ.ClickHouse.ExportPartition.ColumnTypes.Materialized](#rqclickhouseexportpartitioncolumntypesmaterialized)
+    * 13.3 [RQ.ClickHouse.ExportPartition.ColumnTypes.Default](#rqclickhouseexportpartitioncolumntypesdefault)
+    * 13.4 [RQ.ClickHouse.ExportPartition.ColumnTypes.Ephemeral](#rqclickhouseexportpartitioncolumntypesephemeral)
+    * 13.5 [RQ.ClickHouse.ExportPartition.ColumnTypes.Mixed](#rqclickhouseexportpartitioncolumntypesmixed)
+    * 13.6 [RQ.ClickHouse.ExportPartition.SchemaChangeIsolation](#rqclickhouseexportpartitionschemachangeisolation)
+    * 13.7 [RQ.ClickHouse.ExportPartition.LargePartitions](#rqclickhouseexportpartitionlargepartitions)
+    * 13.8 [RQ.ClickHouse.ExportPartition.Corrupted](#rqclickhouseexportpartitioncorrupted)
+    * 13.9 [RQ.ClickHouse.ExportPartition.PendingMutations](#rqclickhouseexportpartitionpendingmutations)
+    * 13.10 [RQ.ClickHouse.ExportPartition.LightweightUpdate](#rqclickhouseexportpartitionlightweightupdate)
+    * 13.11 [RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches](#rqclickhouseexportpartitionlightweightupdatemultiplepatches)
+    * 13.12 [RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent](#rqclickhouseexportpartitionlightweightupdateconcurrent)
+    * 13.13 [RQ.ClickHouse.ExportPartition.LightweightDelete](#rqclickhouseexportpartitionlightweightdelete)
+    * 13.14 [RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes](#rqclickhouseexportpartitionlightweightdeletemultipledeletes)
+    * 13.15 [RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent](#rqclickhouseexportpartitionlightweightdeleteconcurrent)
+* 14 [Export operation failure handling](#export-operation-failure-handling)
+    * 14.1 [RQ.ClickHouse.ExportPartition.RetryMechanism](#rqclickhouseexportpartitionretrymechanism)
+    * 14.2 [RQ.ClickHouse.ExportPartition.Settings.MaxRetries](#rqclickhouseexportpartitionsettingsmaxretries)
+    * 14.3 [RQ.ClickHouse.ExportPartition.ResumeAfterFailure](#rqclickhouseexportpartitionresumeafterfailure)
+    * 14.4 [RQ.ClickHouse.ExportPartition.PartialProgress](#rqclickhouseexportpartitionpartialprogress)
+    * 14.5 [RQ.ClickHouse.ExportPartition.Cleanup](#rqclickhouseexportpartitioncleanup)
+    * 14.6 [RQ.ClickHouse.ExportPartition.Settings.ManifestTTL](#rqclickhouseexportpartitionsettingsmanifestttl)
+    * 14.7 [RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingMutations](#rqclickhouseexportpartitionsettingsthrowonpendingmutations)
+    * 14.8 [RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingPatchParts](#rqclickhouseexportpartitionsettingsthrowonpendingpatchparts)
+    * 14.9 [RQ.ClickHouse.ExportPartition.QueryCancellation](#rqclickhouseexportpartitionquerycancellation)
+        * 14.9.1 [Kill Export Partition](#kill-export-partition)
+            * 14.9.1.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition](#rqclickhouseexportpartitionquerycancellationkillexportpartition)
+        * 14.9.2 [Kill Query Cancellation](#kill-query-cancellation)
+            * 14.9.2.1 [RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery](#rqclickhouseexportpartitionquerycancellationkillquery)
+* 15 [Network resilience](#network-resilience)
+    * 15.1 [RQ.ClickHouse.ExportPartition.NetworkResilience.PacketIssues](#rqclickhouseexportpartitionnetworkresiliencepacketissues)
+    * 15.2 [RQ.ClickHouse.ExportPartition.NetworkResilience.DestinationInterruption](#rqclickhouseexportpartitionnetworkresiliencedestinationinterruption)
+    * 15.3 [RQ.ClickHouse.ExportPartition.NetworkResilience.NodeInterruption](#rqclickhouseexportpartitionnetworkresiliencenodeinterruption)
+    * 15.4 [RQ.ClickHouse.ExportPartition.NetworkResilience.KeeperInterruption](#rqclickhouseexportpartitionnetworkresiliencekeeperinterruption)
+* 16 [Export operation restrictions](#export-operation-restrictions)
+    * 16.1 [Preventing same table exports](#preventing-same-table-exports)
+        * 16.1.1 [RQ.ClickHouse.ExportPartition.Restrictions.SameTable](#rqclickhouseexportpartitionrestrictionssametable)
+    * 16.2 [Destination table compatibility](#destination-table-compatibility)
+        * 16.2.1 [RQ.ClickHouse.ExportPartition.Restrictions.DestinationSupport](#rqclickhouseexportpartitionrestrictionsdestinationsupport)
+    * 16.3 [Local table restriction](#local-table-restriction)
+        * 16.3.1 [RQ.ClickHouse.ExportPartition.Restrictions.LocalTable](#rqclickhouseexportpartitionrestrictionslocaltable)
+    * 16.4 [Partition key compatibility](#partition-key-compatibility)
+        * 16.4.1 [RQ.ClickHouse.ExportPartition.Restrictions.PartitionKey](#rqclickhouseexportpartitionrestrictionspartitionkey)
+    * 16.5 [Source partition availability](#source-partition-availability)
+        * 16.5.1 [RQ.ClickHouse.ExportPartition.Restrictions.SourcePartition](#rqclickhouseexportpartitionrestrictionssourcepartition)
+* 17 [Export operation concurrency](#export-operation-concurrency)
+    * 17.1 [RQ.ClickHouse.ExportPartition.Concurrency](#rqclickhouseexportpartitionconcurrency)
+    * 17.2 [RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts](#rqclickhouseexportpartitionconcurrencyparallelinserts)
+    * 17.3 [RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable](#rqclickhouseexportpartitionconcurrencyoptimizetable)
+    * 17.4 [RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects](#rqclickhouseexportpartitionconcurrencyparallelselects)
+* 18 [Export operation idempotency](#export-operation-idempotency)
+    * 18.1 [RQ.ClickHouse.ExportPartition.Idempotency](#rqclickhouseexportpartitionidempotency)
+    * 18.2 [RQ.ClickHouse.ExportPartition.Settings.ForceExport](#rqclickhouseexportpartitionsettingsforceexport)
+* 19 [Export operation logging](#export-operation-logging)
+    * 19.1 [RQ.ClickHouse.ExportPartition.Logging](#rqclickhouseexportpartitionlogging)
+* 20 [Monitoring export operations](#monitoring-export-operations)
+    * 20.1 [RQ.ClickHouse.ExportPartition.SystemTables.Exports](#rqclickhouseexportpartitionsystemtablesexports)
+* 21 [Enabling export functionality](#enabling-export-functionality)
+    * 21.1 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental](#rqclickhouseexportpartitionsettingsallowexperimental)
+    * 21.2 [RQ.ClickHouse.ExportPartition.Settings.AllowExperimental.Disabled](#rqclickhouseexportpartitionsettingsallowexperimentaldisabled)
+* 22 [Handling file conflicts during export](#handling-file-conflicts-during-export)
+    * 22.1 [RQ.ClickHouse.ExportPartition.Settings.OverwriteFile](#rqclickhouseexportpartitionsettingsoverwritefile)
+* 23 [Export operation configuration](#export-operation-configuration)
+    * 23.1 [RQ.ClickHouse.ExportPartition.ParallelFormatting](#rqclickhouseexportpartitionparallelformatting)
+* 24 [Controlling export performance](#controlling-export-performance)
+    * 24.1 [RQ.ClickHouse.ExportPartition.ServerSettings.MaxBandwidth](#rqclickhouseexportpartitionserversettingsmaxbandwidth)
+    * 24.2 [RQ.ClickHouse.ExportPartition.ServerSettings.BackgroundMovePoolSize](#rqclickhouseexportpartitionserversettingsbackgroundmovepoolsize)
+    * 24.3 [RQ.ClickHouse.ExportPartition.Metrics.Export](#rqclickhouseexportpartitionmetricsexport)
+* 25 [Export operation security](#export-operation-security)
+    * 25.1 [RQ.ClickHouse.ExportPartition.Security.RBAC](#rqclickhouseexportpartitionsecurityrbac)
+    * 25.2 [RQ.ClickHouse.ExportPartition.Security.DataEncryption](#rqclickhouseexportpartitionsecuritydataencryption)
+    * 25.3 [RQ.ClickHouse.ExportPartition.Security.Network](#rqclickhouseexportpartitionsecuritynetwork)
 
 ## Introduction
 
@@ -1841,12 +2432,16 @@ SETTINGS allow_experimental_export_merge_tree_part = 1
 version: 1.0
 
 [ClickHouse] SHALL require source and destination tables to have compatible schemas for successful export operations:
-* Identical physical column schemas between source and destination
+* Identical physical column schemas between source and destination, with the following exceptions:
+  * Source DEFAULT columns SHALL match destination regular columns (destination must not have DEFAULT columns)
+  * Source ALIAS columns SHALL match destination regular columns (destination must not have ALIAS columns)
+  * Source MATERIALIZED columns SHALL match destination regular columns (destination must not have MATERIALIZED columns)
+  * Source EPHEMERAL columns SHALL NOT have matching columns in the destination (EPHEMERAL columns are ignored during export)
 * The same partition key expression in both tables
-* Compatible data types for all columns
-* Matching column order and names
+* Compatible data types for all columns (matching base types, not column modifiers)
+* Matching column order and names for all exported columns
 
-Schema compatibility ensures that exported data can be correctly read from the destination table without data loss or corruption.
+Schema compatibility ensures that exported data can be correctly read from the destination table without data loss or corruption. Special column types (DEFAULT, ALIAS, MATERIALIZED) in the source are materialized during export and written as regular columns to the destination.
 
 ## Partition key types support
 
@@ -1884,6 +2479,69 @@ version: 1.0
 
 Partitions may contain a mix of different part types, and the export must handle all of them correctly to ensure complete partition export.
 
+## Column types support
+
+### RQ.ClickHouse.ExportPartition.ColumnTypes.Alias
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions containing tables with ALIAS columns by:
+* Computing ALIAS column values on-the-fly from expressions during export (ALIAS columns are not stored in parts)
+* Exporting ALIAS column values as regular columns in the destination table
+* Requiring destination tables to have matching regular columns (not ALIAS) for exported ALIAS columns
+* Including ALIAS columns when explicitly selected during export (ALIAS columns are not included in `SELECT *` by default)
+
+ALIAS columns are computed from expressions (e.g., `arr_1 ALIAS arr[1]`). During export, the system SHALL compute the ALIAS column values and export them as regular column data to the destination table.
+
+### RQ.ClickHouse.ExportPartition.ColumnTypes.Materialized
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions containing tables with MATERIALIZED columns by:
+* Reading MATERIALIZED column values from storage during export (MATERIALIZED columns are stored in parts and computed from expressions)
+* Exporting MATERIALIZED column values as regular columns in the destination table
+* Requiring destination tables to have matching regular columns (not MATERIALIZED) for exported MATERIALIZED columns
+
+MATERIALIZED columns are stored in parts and computed from expressions (e.g., `value * 2`). During export, the system SHALL read the stored MATERIALIZED column values and export them as regular column data to the destination table.
+
+### RQ.ClickHouse.ExportPartition.ColumnTypes.Default
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions containing tables with DEFAULT columns by:
+* Requiring the destination table to have a matching column that is NOT tagged as DEFAULT (must be a regular column)
+* Materializing the source DEFAULT column values during export (using either the default value or explicit value provided during INSERT)
+* Exporting the materialized values as a regular column to the destination table
+* Correctly handling both cases:
+  * When default values are used (no explicit value provided during INSERT)
+  * When explicit non-default values are provided during INSERT
+
+**Prior Behavior:**
+Prior to this feature, export operations with DEFAULT columns were not possible because object storage tables do not support DEFAULT columns, and schema compatibility required 100% matching column types between source and destination.
+
+**Current Behavior:**
+With this feature, the destination table schema SHALL have a regular column (not DEFAULT) that matches the source DEFAULT column's name and data type. During export, the system SHALL compute the actual values for DEFAULT columns (default or explicit) and export them as regular column data. This allows users to export partitions from source tables with DEFAULT columns to destination object storage tables that do not support DEFAULT columns.
+
+DEFAULT columns have default values (e.g., `status String DEFAULT 'active'`). The system SHALL materialize these values during export and write them as regular columns to the destination.
+
+### RQ.ClickHouse.ExportPartition.ColumnTypes.Ephemeral
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions containing tables with EPHEMERAL columns by:
+* Completely ignoring EPHEMERAL columns during export (EPHEMERAL columns are not stored and cannot be read from parts)
+* NOT exporting EPHEMERAL columns to the destination table
+* Requiring destination tables to NOT have matching columns for EPHEMERAL columns from the source table
+* Allowing EPHEMERAL columns to be used in DEFAULT column expressions, where the DEFAULT column values (computed from EPHEMERAL values) SHALL be exported correctly
+
+EPHEMERAL columns are not stored and are only used for DEFAULT column computation. During export, EPHEMERAL columns SHALL be completely ignored and SHALL NOT appear in the destination table schema.
+
+### RQ.ClickHouse.ExportPartition.ColumnTypes.Mixed
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions containing tables with a mix of ALIAS, MATERIALIZED, EPHEMERAL, and DEFAULT columns by:
+* Handling all column types correctly during export
+* Exporting only stored and computed columns (ALIAS, MATERIALIZED, DEFAULT) while ignoring EPHEMERAL columns
+* Maintaining data integrity when multiple column types are present in the same table
+
+Tables may contain a mix of different column types, and the export operation SHALL handle all column types correctly, exporting only stored and computed columns while ignoring EPHEMERAL columns.
+
 ### RQ.ClickHouse.ExportPartition.SchemaChangeIsolation
 version: 1.0
 
@@ -1914,6 +2572,98 @@ version: 1.0
 [ClickHouse] SHALL output an error and prevent export operations from proceeding when trying to export a partition that contains corrupted parts in the source table.
 
 The system SHALL detect corruption in partitions containing compact parts, wide parts, or mixed part types.
+
+### RQ.ClickHouse.ExportPartition.PendingMutations
+version: 1.0
+
+[ClickHouse] SHALL handle export operations when partitions contain pending mutations (e.g., DELETE mutations) by:
+* By default, throwing an error (`PENDING_MUTATIONS_NOT_ALLOWED`) when pending mutations exist in the partition and `export_merge_tree_part_throw_on_pending_mutations` is set to `1` (default)
+* When `export_merge_tree_part_throw_on_pending_mutations` is set to `0`, allowing export operations to proceed even when pending mutations exist
+* Providing users with control over whether exports should wait for mutations to complete or proceed with pending mutations
+* Maintaining data integrity in exported data regardless of the setting chosen
+
+**Pending Mutations Behavior:**
+* Pending mutations are mutations (e.g., DELETE, UPDATE) that have been initiated but not yet completed
+* By default, export operations SHALL fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending mutations exist
+* Users can disable this behavior by setting `export_merge_tree_part_throw_on_pending_mutations = 0` to allow exports to proceed
+* When exports proceed with pending mutations, the exported data SHALL reflect the state of the partition at the time of export, which may include unapplied mutations
+
+This ensures that users can control whether export operations wait for mutations to complete or proceed immediately, providing flexibility for different use cases.
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that contain patch parts created by lightweight UPDATE operations by:
+* Allowing export operations to succeed even when patch parts exist in the source partition
+* Exporting partition data successfully regardless of the presence of patch parts
+* Not requiring patch parts to be materialized before export operations can proceed
+* Handling partitions with multiple patch parts correctly during export
+* Maintaining export operation stability when lightweight updates occur before or during export
+
+Lightweight updates create patch parts that contain only updated columns and rows. The export operation SHALL succeed even in the presence of these patch parts, though the patches might not be applied to the exported data. This ensures that export operations are not blocked by lightweight update operations and can proceed independently.
+
+**Pending Patch Parts Behavior:**
+* By default, export operations SHALL throw an error (`PENDING_MUTATIONS_NOT_ALLOWED`) when pending patch parts exist in the partition and `export_merge_tree_part_throw_on_pending_patch_parts` is set to `1` (default)
+* When `export_merge_tree_part_throw_on_pending_patch_parts` is set to `0`, export operations SHALL succeed even when pending patch parts exist
+* This allows users to control whether exports should wait for patch parts to be materialized or proceed with pending patch parts
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate.MultiplePatches
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that have multiple patch parts from multiple lightweight UPDATE operations by:
+* Handling partitions with multiple patch parts created by different UPDATE operations
+* Exporting partition data correctly when patch parts exist for the same partition
+* Not failing export operations due to the presence of multiple patch parts
+* Maintaining data integrity during export when multiple lightweight updates have been applied
+
+Users may perform multiple lightweight UPDATE operations on the same partition, creating multiple patch parts. The export operation must handle these correctly without errors.
+
+### RQ.ClickHouse.ExportPartition.LightweightUpdate.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support export operations when lightweight UPDATE operations occur concurrently or sequentially on partitions being exported by:
+* Allowing export operations to proceed when lightweight updates are performed before export starts
+* Not blocking lightweight UPDATE operations when export operations are in progress
+* Handling the presence of patch parts created during or before export operations
+* Ensuring export operations complete successfully regardless of when lightweight updates occur relative to the export operation
+
+Export operations and lightweight updates may occur at different times, and the system must handle both operations correctly without interference.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that contain rows marked as deleted by lightweight DELETE operations by:
+* Allowing export operations to succeed even when deleted rows exist in the source partition
+* Automatically applying the `_row_exists` mask during export to ensure only non-deleted rows are exported
+* Exporting partition data successfully regardless of the presence of deleted rows
+* Not requiring deleted rows to be physically removed before export operations can proceed
+* Maintaining export operation stability when lightweight deletes occur before or during export
+
+Lightweight deletes mark rows as deleted using a hidden `_row_exists` system column. The export operation SHALL automatically apply this mask to ensure only visible (non-deleted) rows are exported to the destination, maintaining data consistency between source and destination tables.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete.MultipleDeletes
+version: 1.0
+
+[ClickHouse] SHALL support exporting partitions that have multiple lightweight DELETE operations applied by:
+* Handling partitions with multiple delete mutations on the same partition
+* Exporting partition data correctly when multiple deletes have been applied
+* Not failing export operations due to the presence of multiple delete mutations
+* Maintaining data integrity during export when multiple lightweight deletes have been applied
+* Ensuring that only non-deleted rows are exported even when multiple delete operations affect overlapping rows
+
+Users may perform multiple lightweight DELETE operations on the same partition, creating multiple delete mutations. The export operation must handle these correctly and ensure that all deleted rows are excluded from the export.
+
+### RQ.ClickHouse.ExportPartition.LightweightDelete.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support export operations when lightweight DELETE operations occur concurrently or sequentially on partitions being exported by:
+* Allowing export operations to proceed when lightweight deletes are performed before export starts
+* Not blocking lightweight DELETE operations when export operations are in progress
+* Handling the presence of delete masks (`_row_exists` column) created during or before export operations
+* Ensuring export operations complete successfully regardless of when lightweight deletes occur relative to the export operation
+* Applying delete masks correctly to ensure deleted rows are not exported
+
+Export operations and lightweight deletes may occur at different times, and the system must handle both operations correctly without interference, ensuring that deleted rows are always excluded from exports.
 
 ## Export operation failure handling
 
@@ -1982,21 +2732,85 @@ SETTINGS allow_experimental_export_merge_tree_part = 1,
          export_merge_tree_partition_manifest_ttl = 360
 ```
 
+### RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingMutations
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_mutations` setting that controls whether export operations should fail when pending mutations exist in the partition. The default value SHALL be `1` (enabled), meaning exports will fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending mutations exist.
+
+When set to `0`, export operations SHALL proceed even when pending mutations exist in the partition. This allows users to export partitions without waiting for mutations to complete.
+
+This setting allows users to control whether export operations wait for mutations to complete or proceed immediately, providing flexibility for different use cases.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_part_throw_on_pending_mutations = 0
+```
+
+### RQ.ClickHouse.ExportPartition.Settings.ThrowOnPendingPatchParts
+version: 1.0
+
+[ClickHouse] SHALL support the `export_merge_tree_part_throw_on_pending_patch_parts` setting that controls whether export operations should fail when pending patch parts exist in the partition. The default value SHALL be `1` (enabled), meaning exports will fail with `PENDING_MUTATIONS_NOT_ALLOWED` error when pending patch parts exist.
+
+When set to `0`, export operations SHALL proceed even when pending patch parts exist in the partition. This allows users to export partitions without waiting for patch parts to be materialized.
+
+This setting allows users to control whether export operations wait for patch parts to be materialized or proceed with pending patch parts, providing flexibility for different use cases.
+
+For example,
+
+```sql
+ALTER TABLE source_table 
+EXPORT PARTITION ID '2020' 
+TO TABLE destination_table
+SETTINGS allow_experimental_export_merge_tree_part = 1,
+         export_merge_tree_part_throw_on_pending_patch_parts = 0
+```
+
 ### RQ.ClickHouse.ExportPartition.QueryCancellation
 version: 1.0
 
-[ClickHouse] SHALL support cancellation of `EXPORT PARTITION` queries using the `KILL QUERY` command before the query returns.
+[ClickHouse] SHALL support cancellation of `EXPORT PARTITION`.
 
-The system SHALL:
-* Allow users to abort export partition operations that are in progress using `KILL QUERY`
-* Stop exporting partitions that have not yet been exported when the query is cancelled
-* Clean up any partial export state when a query is cancelled
-* Return an appropriate error or cancellation message to the user
-* Not leave orphaned export operations in the system after query cancellation
-* Allow users to retry the export operation after cancellation if needed
+#### Kill Export Partition
 
-Query cancellation provides users with control over long-running export operations and allows them to stop exports that are no longer needed or are taking too long.
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillExportPartition
+version: 1.0
 
+[ClickHouse] SHALL support cancellation of in-progress `EXPORT PARTITION` operations with `KILL EXPORT PARTITION` command.
+
+For example,
+
+```sql
+CREATE TABLE rmt_table (id UInt64, year UInt16) 
+ENGINE = ReplicatedMergeTree('/clickhouse/tables/{database}/rmt_table', 'replica1') 
+PARTITION BY year ORDER BY tuple();
+
+CREATE TABLE s3_table (id UInt64, year UInt16) 
+ENGINE = S3(s3_conn, filename='data', format=Parquet, partition_strategy='hive') 
+PARTITION BY year;
+
+INSERT INTO rmt_table VALUES (1, 2020), (2, 2020), (3, 2020), (4, 2021);
+
+ALTER TABLE rmt_table EXPORT PARTITION ID '2020' TO TABLE s3_table;
+
+KILL EXPORT PARTITION 
+WHERE partition_id = '2020' 
+  AND source_table = 'rmt_table' 
+  AND destination_table = 's3_table'
+```
+
+#### Kill Query Cancellation
+
+##### RQ.ClickHouse.ExportPartition.QueryCancellation.KillQuery
+version: 1.0
+
+[ClickHouse] SHALL NOT be able to cancel an in-progress `EXPORT PARTITION` operation using the `KILL QUERY` command.
+
+``
 For example,
 
 ```sql
@@ -2006,7 +2820,7 @@ EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1;
 
--- Cancel the export in another session
+-- Try to cancel the export in another session
 KILL QUERY WHERE query_id = '<query_id>';
 ```
 
@@ -2174,6 +2988,43 @@ version: 1.0
 * Maintaining separate progress tracking for each concurrent operation
 
 Multiple users may want to export different partitions simultaneously, and the system must coordinate these operations to prevent conflicts while maximizing parallelism.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.ParallelInserts
+version: 1.0
+
+[ClickHouse] SHALL support export operations while parallel INSERT operations are executing on the source table by:
+* Allowing INSERT operations to continue executing while export partition is in progress
+* Exporting a consistent snapshot of partition data that existed at the time export started, or capturing data that is inserted during export depending on the export implementation
+* Handling exports correctly when merges are stopped (`SYSTEM STOP MERGES`) and parts are not merged during export
+* Handling exports correctly when merges are enabled and parts may be merged during export
+* Maintaining data integrity in both source and destination tables during concurrent inserts and exports
+* Ensuring that exported data accurately represents the partition state, whether merges are enabled or disabled
+
+Production systems often have continuous data ingestion, and export operations must work correctly even when new data is being inserted into the source table during export.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.OptimizeTable
+version: 1.0
+
+[ClickHouse] SHALL support export operations while `OPTIMIZE TABLE` operations are executing in parallel on the source table by:
+* Allowing `OPTIMIZE TABLE` operations to run concurrently with export partition operations
+* Handling merge operations that occur during export without data corruption or loss
+* Ensuring that exported data accurately represents the partition state during concurrent optimize and export operations
+* Maintaining data integrity in both source and destination tables when parts are being merged during export
+* Coordinating merge and export operations to prevent conflicts or race conditions
+
+Users may need to optimize tables for performance while export operations are in progress, and the system must handle these concurrent operations correctly.
+
+### RQ.ClickHouse.ExportPartition.Concurrency.ParallelSelects
+version: 1.0
+
+[ClickHouse] SHALL support parallel SELECT queries on the source table while export partition operations are executing by:
+* Allowing multiple SELECT queries to execute concurrently with export partition operations
+* Ensuring that SELECT queries can read data from the source table during export without blocking or errors
+* Maintaining read consistency during export operations
+* Not interfering with export operations when SELECT queries are executing
+* Allowing users to query exported data from the destination table while export is in progress (for already exported partitions)
+
+Users need to be able to query data during export operations for monitoring, validation, or other operational purposes, and the system must support concurrent reads and exports.
 
 ## Export operation idempotency
 

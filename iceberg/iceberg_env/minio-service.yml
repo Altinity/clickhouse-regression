@@ -17,7 +17,7 @@ services:
         - 9002:9000
     command: ["server", "/data", "--console-address", ":9001"]
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9001/minio/health/live"]
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/localhost/9000' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5

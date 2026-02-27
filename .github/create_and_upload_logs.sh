@@ -7,7 +7,7 @@ echo $version > version.log.txt
 echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
 tfs --debug --no-colors transform nice-new-fails raw.log nice-new-fails.log.txt
 tfs --debug --no-colors transform fails raw.log fails.log.txt
-tfs --debug --no-colors report results -a "$SUITE_REPORT_INDEX_URL" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+tfs --debug --no-colors report results -a "$JOB_REPORT_INDEX" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
 echo "Re-compress the raw.log"
 cat raw.log | xzcat | xz -z -T $(nproc) - > raw.log.2
 mv raw.log.2 raw.log

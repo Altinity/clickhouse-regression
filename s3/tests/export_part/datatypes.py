@@ -1,4 +1,5 @@
 from testflows.core import *
+from testflows.asserts import error
 from s3.tests.export_part.steps import *
 from helpers.create import *
 from helpers.queries import *
@@ -72,16 +73,14 @@ def valid_partition_key_table(self, partition_key_type, rows_per_part=1):
         export_parts(
             source_table=table_name,
             destination_table=s3_table_name,
-            node=self.context.node,
         )
 
     with And("I read data from both tables"):
         source_data = select_all_ordered(
-            table_name=table_name, node=self.context.node, order_by=partition_key_type
+            table_name=table_name, order_by=partition_key_type
         )
         destination_data = select_all_ordered(
             table_name=s3_table_name,
-            node=self.context.node,
             order_by=partition_key_type,
         )
 

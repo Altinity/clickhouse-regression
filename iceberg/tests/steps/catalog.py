@@ -1,4 +1,5 @@
 import os
+import sys
 
 # import boto3
 import random
@@ -69,6 +70,7 @@ def create_rest_catalog(
     s3_endpoint="http://localhost:9002",
     catalog_type=CATALOG_TYPE,
     auth_header="foo",
+    clean_up_minio_bucket=True,
 ):
     if name is None:
         name = f"catalog_{getuid()}"
@@ -85,6 +87,9 @@ def create_rest_catalog(
         if auth_header:
             conf["token"] = auth_header
 
+        if sys.platform == "darwin":
+            conf["py-io-impl"] = "pyiceberg.io.fsspec.FsspecFileIO"
+
         catalog = load_catalog(
             name,
             **conf,
@@ -93,12 +98,13 @@ def create_rest_catalog(
 
     finally:
         with Finally("drop catalog"):
-            clean_minio_bucket(
-                bucket_name="warehouse",
-                s3_endpoint=s3_endpoint,
-                s3_access_key_id=s3_access_key_id,
-                s3_secret_access_key=s3_secret_access_key,
-            )
+            if clean_up_minio_bucket:
+                clean_minio_bucket(
+                    bucket_name="warehouse",
+                    s3_endpoint=s3_endpoint,
+                    s3_access_key_id=s3_access_key_id,
+                    s3_secret_access_key=s3_secret_access_key,
+                )
 
 
 @TestStep(Given)
@@ -112,6 +118,7 @@ def create_glue_catalog(
     glue_access_key_id="test",
     glue_secret_access_key="test",
     s3_endpoint="http://localhost:9002",
+    clean_up_minio_bucket=True,
 ):
     if name is None:
         name = f"glue_catalog_{getuid()}"
@@ -133,12 +140,13 @@ def create_glue_catalog(
 
     finally:
         with Finally("drop catalog"):
-            clean_minio_bucket(
-                bucket_name="warehouse",
-                s3_endpoint=s3_endpoint,
-                s3_access_key_id=s3_access_key_id,
-                s3_secret_access_key=s3_secret_access_key,
-            )
+            if clean_up_minio_bucket:
+                clean_minio_bucket(
+                    bucket_name="warehouse",
+                    s3_endpoint=s3_endpoint,
+                    s3_access_key_id=s3_access_key_id,
+                    s3_secret_access_key=s3_secret_access_key,
+                )
 
 
 @TestStep(Given)
@@ -149,15 +157,6 @@ def create_catalog(self, **kwargs):
         return create_glue_catalog(**kwargs)
     else:
         raise ValueError(f"Unsupported catalog type: {self.context.catalog}")
-
-
-# @TestStep(Given)
-# def create_aws_glue_catalog(self, warehouse, name=None):
-#     if name is None:
-#         name = f"glue_catalog_{getuid()}"
-
-#     catalog = GlueCatalog(name=name, warehouse=warehouse)
-#     yield catalog
 
 
 # @TestStep(Given)
@@ -240,6 +239,7 @@ def create_iceberg_table(
     sort_order=None,
     format_version="2",
     table_properties={},
+    drop_table=True,
 ):
     """Create iceberg table."""
     table_properties["format-version"] = format_version
@@ -257,9 +257,8 @@ def create_iceberg_table(
 
     finally:
         with Finally("drop table"):
-            drop_iceberg_table(
-                catalog=catalog, namespace=namespace, table_name=table_name
-            )
+            if drop_table:
+                drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
 
 
 @TestStep(Given)
@@ -271,6 +270,7 @@ def create_iceberg_table_with_three_columns(
     location="s3://warehouse/data",
     with_data=False,
     number_of_rows=10,
+    table_properties={},
 ):
     """Define schema, partition spec, sort order and create iceberg table with three columns."""
     schema = Schema(
@@ -295,6 +295,7 @@ def create_iceberg_table_with_three_columns(
         location=location,
         partition_spec=partition_spec,
         sort_order=sort_order,
+        table_properties=table_properties,
     )
 
     if with_data:
@@ -328,16 +329,10 @@ def create_iceberg_table_with_five_columns(
     Table partitioned by string column and sorted by the same column."""
 
     schema = Schema(
-        NestedField(
-            field_id=1, name="boolean_col", field_type=BooleanType(), required=False
-        ),
+        NestedField(field_id=1, name="boolean_col", field_type=BooleanType(), required=False),
         NestedField(field_id=2, name="long_col", field_type=LongType(), required=False),
-        NestedField(
-            field_id=3, name="double_col", field_type=DoubleType(), required=False
-        ),
-        NestedField(
-            field_id=4, name="string_col", field_type=StringType(), required=False
-        ),
+        NestedField(field_id=3, name="double_col", field_type=DoubleType(), required=False),
+        NestedField(field_id=4, name="string_col", field_type=StringType(), required=False),
         NestedField(field_id=5, name="date_col", field_type=DateType(), required=False),
     )
 
@@ -372,8 +367,7 @@ def create_iceberg_table_with_five_columns(
                         "long_col": random.randint(1000, 10000),
                         "double_col": round(random.uniform(1.0, 500.0), 2),
                         "string_col": f"User{random.randint(1, 1000)}",
-                        "date_col": date.today()
-                        - timedelta(days=random.randint(0, 3650)),
+                        "date_col": date.today() - timedelta(days=random.randint(0, 3650)),
                     }
                 )
 
@@ -407,9 +401,7 @@ def list_objects_cli(
     current_env.update(env)
 
     try:
-        result = subprocess.run(
-            cmd, env=current_env, capture_output=True, text=True, check=True
-        )
+        result = subprocess.run(cmd, env=current_env, capture_output=True, text=True, check=True)
         stdout = result.stdout
     except subprocess.CalledProcessError as e:
         note(f"AWS CLI command failed: {e}")
@@ -518,9 +510,7 @@ def create_catalog_and_iceberg_table_with_data(
         drop_iceberg_table(catalog=catalog, namespace=namespace, table_name=table_name)
 
     with And(f"define schema and create {namespace}.{table_name} table"):
-        table = create_iceberg_table_with_five_columns(
-            catalog=catalog, namespace=namespace, table_name=table_name
-        )
+        table = create_iceberg_table_with_five_columns(catalog=catalog, namespace=namespace, table_name=table_name)
 
     with And("insert data into Iceberg table if required"):
         df = pa.Table.from_pylist(
@@ -597,9 +587,7 @@ def random_name(length=5):
 
 def random_datetime(start=datetime(2020, 1, 1), end=datetime.now()):
     """Generate a random datetime between start and end."""
-    return start + timedelta(
-        seconds=random.randint(0, int((end - start).total_seconds()))
-    )
+    return start + timedelta(seconds=random.randint(0, int((end - start).total_seconds())))
 
 
 def random_decimal(*, precision=9, scale=2):
@@ -708,32 +696,20 @@ def iceberg_to_pyarrow(iceberg_type):
     if isinstance(iceberg_type, BinaryType):
         return pa.binary()
     if isinstance(iceberg_type, StructType):
-        return pa.struct(
-            [
-                (f.name, iceberg_to_pyarrow(iceberg_type=f.field_type))
-                for f in iceberg_type.fields
-            ]
-        )
+        return pa.struct([(f.name, iceberg_to_pyarrow(iceberg_type=f.field_type)) for f in iceberg_type.fields])
     if isinstance(iceberg_type, ListType):
         return pa.list_(iceberg_to_pyarrow(iceberg_type=iceberg_type.element_type))
     if isinstance(iceberg_type, MapType):
-        return pa.map_(
-            pa.string(), iceberg_to_pyarrow(iceberg_type=iceberg_type.value_type)
-        )
+        return pa.map_(pa.string(), iceberg_to_pyarrow(iceberg_type=iceberg_type.value_type))
     raise NotImplementedError(f"Unsupported type: {type(iceberg_type)}")
 
 
 def random_data(iceberg_type):
     """Generate random data matching given Iceberg datatype."""
     if isinstance(iceberg_type, StructType):
-        return {
-            f.name: random_data(iceberg_type=f.field_type) for f in iceberg_type.fields
-        }
+        return {f.name: random_data(iceberg_type=f.field_type) for f in iceberg_type.fields}
     if isinstance(iceberg_type, ListType):
-        return [
-            random_data(iceberg_type=iceberg_type.element_type)
-            for _ in range(random.randint(0, 3))
-        ]
+        return [random_data(iceberg_type=iceberg_type.element_type) for _ in range(random.randint(0, 3))]
     if isinstance(iceberg_type, MapType):
         return {
             random_name(length=4): random_data(iceberg_type=iceberg_type.value_type)

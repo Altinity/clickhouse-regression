@@ -30,6 +30,7 @@ from parquet.tests.steps.bloom_filter import (
 )
 from parquet.tests.steps.general import select_from_parquet
 from parquet.tests.steps.arrow import *
+from parquet.data.scripts.create_large_footer import create_parquet_with_large_footer
 
 
 @TestStep(Given)
@@ -232,6 +233,20 @@ def check_datatypes(
             ), f"Data with and without native reader is different: {data_without_native_reader.output.strip()} != {data_with_native_reader.output.strip()}"
 
 
+@TestScenario
+def max_message_size(self):
+    """Check that ClickHouse can read a Parquet file with a large message size."""
+
+    with Given("I create a parquet file with a large footer"):
+        filename = create_parquet_with_large_footer()
+    with Then("I check if the parquet file can be read"):
+        import_export(
+            snapshot_name="max_message_size",
+            import_file=filename,
+            settings=[("input_format_parquet_use_native_reader_v3", 1)],
+        )
+
+
 @TestSketch(Scenario)
 @Flags(TE)
 def boolean_support(self):
@@ -318,3 +333,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=boolean_support)
     Scenario(run=integer_support)
     Scenario(run=page_header_v2)
+    Scenario(run=max_message_size)

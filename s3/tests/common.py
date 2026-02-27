@@ -157,6 +157,35 @@ def add_config(
                             wait_for_config_to_be_loaded()
 
 
+def create_export_partition_config(
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="enable_experimental_export_merge_tree_partition.xml",
+):
+    """Create export partition config content.."""
+    entries = {"enable_experimental_export_merge_tree_partition_feature": "1"}
+
+    return create_xml_config_content(
+        entries, config_file=config_file, config_d_dir=config_d_dir
+    )
+
+
+@TestStep(Given)
+def enable_export_partition(
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d",
+    config_file="enable_experimental_export_merge_tree_partition.xml",
+    timeout=300,
+    restart=True,
+    config=None,
+    nodes=None,
+):
+    """Add configuration which enables export partition."""
+    if config is None:
+        config = create_export_partition_config(config_d_dir, config_file)
+
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
+
+
 def create_s3_storage_config_content(
     disks,
     policies,
@@ -206,6 +235,25 @@ def s3_storage(
         config = create_s3_storage_config_content(
             disks, policies, config_d_dir, config_file
         )
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
+
+
+@TestStep(Given)
+def named_s3_credentials(
+    self, access_key_id, secret_access_key, restart=False, nodes=None, timeout=60
+):
+    """Add S3 connection configuration as a named collection."""
+    config = create_xml_config_content(
+        entries={
+            "named_collections": {
+                "s3_credentials": {
+                    "access_key_id": access_key_id,
+                    "secret_access_key": secret_access_key,
+                }
+            }
+        },
+        config_file="s3_credentials.xml",
+    )
     return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
 
 
@@ -1847,16 +1895,14 @@ def insert_to_s3_function(
 ):
     """Write a table to a file in s3. File will be overwritten from an empty table during cleanup."""
 
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = uri or self.context.uri
     node = current().context.node
 
     try:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
 
         if compression:
-            query += f", '{compression}'"
+            query += f", compression_method='{compression}'"
 
         query += f") SELECT * FROM {table_name}"
 
@@ -1868,7 +1914,7 @@ def insert_to_s3_function(
         yield
 
     finally:
-        query = f"INSERT INTO FUNCTION s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSV', '{columns}'"
+        query = f"INSERT INTO FUNCTION s3(s3_credentials, url='{uri}{filename}', format='CSV', structure='{columns}'"
         query += f") SELECT * FROM null('{columns}')"
 
         node.query(query)
@@ -1887,20 +1933,28 @@ def insert_from_s3_function(
     no_checks=False,
 ):
     """Import data from a file in s3 to a table."""
-    access_key_id = self.context.access_key_id
-    secret_access_key = self.context.secret_access_key
     uri = uri or self.context.uri
     node = current().context.node
+    use_old_syntax = (
+        check_clickhouse_version("<24.0")(self) and cluster_name is not None
+    )
 
     if cluster_name is None:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3('{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        query = f"INSERT INTO {table_name} SELECT * FROM s3(s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+        compression_param = (
+            f", compression_method='{compression}'" if compression else ""
+        )
     else:
-        query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', '{uri}{filename}', '{access_key_id}','{secret_access_key}', 'CSVWithNames', '{columns}'"
+        if use_old_syntax:
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', '{uri}{filename}', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'CSVWithNames', '{columns}'"
+            compression_param = f", '{compression}'" if compression else ""
+        else:
+            query = f"INSERT INTO {table_name} SELECT * FROM s3Cluster('{cluster_name}', s3_credentials, url='{uri}{filename}', format='CSVWithNames', structure='{columns}'"
+            compression_param = (
+                f", compression_method='{compression}'" if compression else ""
+            )
 
-    if compression:
-        query += f", '{compression}'"
-
-    query += ")"
+    query += compression_param + ")"
 
     if fmt:
         query += f" FORMAT {fmt}"
