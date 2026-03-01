@@ -1,0 +1,4 @@
+FROM apache/superset:${SUPERSET_VERSION:-4.1.1} AS dev
+USER root
+RUN pip3 install -U clickhouse-connect psycopg2-binary
+USER superset
