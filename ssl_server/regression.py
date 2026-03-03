@@ -77,6 +77,25 @@ xfails = {
         (Fail, "not supported by SSL library")
     ],
     ":/check certificate/system certificates": [(Fail, "unstable test")],
+    # fips 140-3
+    ":/fips 140-3/server/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/fips 140-3/server/:/tcp connection/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/fips 140-3/:/:/:/just disabling TLSv1_1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/fips 140-3/clickhouse client/:/:/: should be rejected": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
+    ],
+    ":/fips 140-3/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/fips 140-3/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
+        (Fail, "not supported by SSL library")
+    ],
     # zookeeper ssl
     ":/zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256/:": [
         (
@@ -157,6 +176,11 @@ ffails = {
         "https://github.com/ClickHouse/ClickHouse/issues/79876",
         check_clickhouse_version(">=25.5"),
     ),
+    ":/fips 140-3": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/79876",
+        check_clickhouse_version(">=25.5"),
+    ),
     "/ssl server/:/verification modes": (
         Skip,
         "native protocol supported on >=23.3",
@@ -206,6 +230,33 @@ ffails = {
     ":/fips/:/:/connection using non-FIPS compatible cipher TLS_*": (
         XFail,
         "not supported by TLSv1.2",
+    ),
+    ":/fips 140-3/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    ":/fips 140-3/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    ":/fips 140-3/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    ":/fips 140-3/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    ":/fips 140-3/clickhouse server acting as a client/:/:onnection:should:": (
+        Error,
+        "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
+        check_clickhouse_version(">=24.3"),
+        r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
+    ),
+    ":/fips 140-3/server/all protocols disabled/tcp connection/clickhouse-client/:/:": (
+        Fail,
+        "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
+        check_clickhouse_version(">=24.4"),
     ),
     # skip zookeeper fips on ARM
     ":/zookeeper fips": (Skip, "not supported on ARM", check_current_cpu("aarch64")),
@@ -274,6 +325,7 @@ def regression(
     with Feature("part 2"):
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
+        Feature(run=load("ssl_server.tests.fips_140_3", "feature"))
 
     with Feature("part 3"):
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
