@@ -27,43 +27,36 @@
             * 4.3.3.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SelfTest.Conditional](#rqsrs-035clickhousefipscompatibleawslcselftestconditional)
     * 4.4 [Service Indicator](#service-indicator)
         * 4.4.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.ServiceIndicator](#rqsrs-035clickhousefipscompatibleawslcserviceindicator)
-    * 4.5 [Startup Verification](#startup-verification)
-        * 4.5.1 [FIPS Mode Check](#fips-mode-check)
-            * 4.5.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.FIPSModeCheck](#rqsrs-035clickhousefipscompatibleawslcstartupverificationfipsmodecheck)
-        * 4.5.2 [Version String](#version-string)
-            * 4.5.2.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.VersionString](#rqsrs-035clickhousefipscompatibleawslcstartupverificationversionstring)
-        * 4.5.3 [Static Linking Verification](#static-linking-verification)
-            * 4.5.3.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.StaticLinking](#rqsrs-035clickhousefipscompatibleawslcstartupverificationstaticlinking)
-    * 4.6 [Operational Environment](#operational-environment)
-        * 4.6.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.OperationalEnvironment](#rqsrs-035clickhousefipscompatibleawslcoperationalenvironment)
-    * 4.7 [SSL Tests](#ssl-tests)
-        * 4.7.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSLTests](#rqsrs-035clickhousefipscompatibleawslcssltests)
-    * 4.8 [ACVP Check Expected Tests](#acvp-check-expected-tests)
-        * 4.8.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.ACVP.CheckExpectedTests](#rqsrs-035clickhousefipscompatibleawslcacvpcheckexpectedtests)
-    * 4.9 [Build Options System Table](#build-options-system-table)
-        * 4.9.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SystemTable.BuildOptions](#rqsrs-035clickhousefipscompatibleawslcsystemtablebuildoptions)
-    * 4.10 [MySQL FIPS Function](#mysql-fips-function)
-        * 4.10.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.MySQLFunction](#rqsrs-035clickhousefipscompatibleawslcmysqlfunction)
-    * 4.11 [SSL Configuration](#ssl-configuration)
-        * 4.11.1 [FIPS Setting](#fips-setting)
-            * 4.11.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Client.Config.Settings.FIPS](#rqsrs-035clickhousefipscompatibleawslcsslclientconfigsettingsfips)
-        * 4.11.2 [Server SSL Configuration](#server-ssl-configuration)
-            * 4.11.2.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Server.Config](#rqsrs-035clickhousefipscompatibleawslcsslserverconfig)
-        * 4.11.3 [Client SSL Configuration](#client-ssl-configuration)
-            * 4.11.3.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Client.Config](#rqsrs-035clickhousefipscompatibleawslcsslclientconfig)
-    * 4.12 [Server TCP Connections](#server-tcp-connections)
-        * 4.12.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.TCP](#rqsrs-035clickhousefipscompatibleawslcserverssltcp)
-    * 4.13 [Server HTTPS Connections](#server-https-connections)
-        * 4.13.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.HTTPS](#rqsrs-035clickhousefipscompatibleawslcserversslhttps)
-    * 4.14 [TCP Clients](#tcp-clients)
-        * 4.14.1 [clickhouse-client](#clickhouse-client)
-            * 4.14.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.ClickHouseClient.FIPS](#rqsrs-035clickhousefipscompatibleawslcclientsssltcpclickhouseclientfips)
-            * 4.14.1.2 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.ClickHouseClient.NonFIPS](#rqsrs-035clickhousefipscompatibleawslcclientsssltcpclickhouseclientnonfips)
-        * 4.14.2 [Test Python Client](#test-python-client)
-            * 4.14.2.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.Python](#rqsrs-035clickhousefipscompatibleawslcclientsssltcppython)
-    * 4.15 [HTTPS Clients](#https-clients)
-        * 4.15.1 [curl](#curl)
-            * 4.15.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.HTTPS.Curl](#rqsrs-035clickhousefipscompatibleawslcclientssslhttpscurl)
+    * 4.5 [Operational Environment](#operational-environment)
+        * 4.5.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.OperationalEnvironment](#rqsrs-035clickhousefipscompatibleawslcoperationalenvironment)
+    * 4.6 [SSL Tests](#ssl-tests)
+        * 4.6.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSLTests](#rqsrs-035clickhousefipscompatibleawslcssltests)
+    * 4.7 [ACVP Check Expected Tests](#acvp-check-expected-tests)
+        * 4.7.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.ACVP.CheckExpectedTests](#rqsrs-035clickhousefipscompatibleawslcacvpcheckexpectedtests)
+    * 4.8 [Build Options System Table](#build-options-system-table)
+        * 4.8.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SystemTable.BuildOptions](#rqsrs-035clickhousefipscompatibleawslcsystemtablebuildoptions)
+    * 4.9 [MySQL FIPS Function](#mysql-fips-function)
+        * 4.9.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.MySQLFunction](#rqsrs-035clickhousefipscompatibleawslcmysqlfunction)
+    * 4.10 [SSL Configuration](#ssl-configuration)
+        * 4.10.1 [FIPS Setting](#fips-setting)
+            * 4.10.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Client.Config.Settings.FIPS](#rqsrs-035clickhousefipscompatibleawslcsslclientconfigsettingsfips)
+        * 4.10.2 [Server SSL Configuration](#server-ssl-configuration)
+            * 4.10.2.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Server.Config](#rqsrs-035clickhousefipscompatibleawslcsslserverconfig)
+        * 4.10.3 [Client SSL Configuration](#client-ssl-configuration)
+            * 4.10.3.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.SSL.Client.Config](#rqsrs-035clickhousefipscompatibleawslcsslclientconfig)
+    * 4.11 [Server TCP Connections](#server-tcp-connections)
+        * 4.11.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.TCP](#rqsrs-035clickhousefipscompatibleawslcserverssltcp)
+    * 4.12 [Server HTTPS Connections](#server-https-connections)
+        * 4.12.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.HTTPS](#rqsrs-035clickhousefipscompatibleawslcserversslhttps)
+    * 4.13 [TCP Clients](#tcp-clients)
+        * 4.13.1 [clickhouse-client](#clickhouse-client)
+            * 4.13.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.ClickHouseClient.FIPS](#rqsrs-035clickhousefipscompatibleawslcclientsssltcpclickhouseclientfips)
+            * 4.13.1.2 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.ClickHouseClient.NonFIPS](#rqsrs-035clickhousefipscompatibleawslcclientsssltcpclickhouseclientnonfips)
+        * 4.13.2 [Test Python Client](#test-python-client)
+            * 4.13.2.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.TCP.Python](#rqsrs-035clickhousefipscompatibleawslcclientsssltcppython)
+    * 4.14 [HTTPS Clients](#https-clients)
+        * 4.14.1 [curl](#curl)
+            * 4.14.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.HTTPS.Curl](#rqsrs-035clickhousefipscompatibleawslcclientssslhttpscurl)
 
 
 ## Revision History
@@ -256,37 +249,6 @@ cryptographic service is an approved FIPS service.
 
 Alternatively, the macro `CALL_SERVICE_AND_CHECK_APPROVED(approved, func)` MAY be used
 to perform all the above steps in a single call.
-
-### Startup Verification
-
-#### FIPS Mode Check
-
-##### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.FIPSModeCheck
-version: 1.0
-
-[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL verify that the module
-is operating in FIPS-approved mode. Per 140sp4816 Section 11.1, running `bssl isfips` SHALL
-return `1` to confirm the module is installed and configured in a FIPS-compliant manner.
-
-#### Version String
-
-##### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.VersionString
-version: 1.0
-
-[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL verify that the module
-reports the correct version. Calling the `awslc_version_string()` function SHALL return
-`AWS-LC FIPS 2.0.0` which confirms the module identity and operational mode as described in
-140sp4816 Section 11.1.
-
-#### Static Linking Verification
-
-##### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.StartupVerification.StaticLinking
-version: 1.0
-
-[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL verify that the module
-is statically linked into the binary. Running `nm <clickhouse_binary> | grep awslc_version_string`
-SHALL show a `T` flag in the output, confirming the symbol is present in the text (code) section
-of the binary rather than being dynamically loaded, as described in 140sp4816 Section 11.1.
 
 ### Operational Environment
 
