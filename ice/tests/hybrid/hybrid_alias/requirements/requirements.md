@@ -29,12 +29,13 @@
 * 5 [Top-Level Tests](#top-level-tests)
     * 5.1 [RQ.Ice.HybridAlias.SimpleArithmeticAlias](#rqicehybridaliassimplearithmeticalias)
     * 5.2 [RQ.Ice.HybridAlias.AliasColumnInPredicate](#rqicehybridaliasaliascolumninpredicate)
-    * 5.3 [RQ.Ice.HybridAlias.LeftAliasRightNormal](#rqicehybridaliasLeftaliasrightnormal)
-    * 5.4 [RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch](#rqicehybridaliasLeftaliasrightnormaltypemismatch)
+    * 5.3 [RQ.Ice.HybridAlias.LeftAliasRightNormal](#rqicehybridaliasleftaliasrightnormal)
+    * 5.4 [RQ.Ice.HybridAlias.LeftAliasRightNormalTypeMismatch](#rqicehybridaliasleftaliasrightnormaltypemismatch)
     * 5.5 [RQ.Ice.HybridAlias.LeftNormalRightAlias](#rqicehybridaliasleftnormalrightalias)
     * 5.6 [RQ.Ice.HybridAlias.LeftNormalRightAliasTypeMismatch](#rqicehybridaliasleftnormalrightaliastypemismatch)
     * 5.7 [RQ.Ice.HybridAlias.DifferentAliasExpressions](#rqicehybridaliasdifferentaliasexpressions)
     * 5.8 [RQ.Ice.HybridAlias.AliasMissingInSegment](#rqicehybridaliasaliasmissinginsegment)
+
 
 ## Introduction
 
@@ -492,8 +493,10 @@ version: 1.0
 
 [ClickHouse] SHALL return an error when the left segment defines a column as a
 regular Int32 column and the right segment defines the same column as an ALIAS
-returning Int64, when the types are incompatible. The error SHALL indicate
-a type mismatch between segments.
+returning Int64, when `hybrid_table_auto_cast_columns` is not enabled and the
+types are incompatible. The error SHALL indicate a type mismatch between
+segments. When `hybrid_table_auto_cast_columns=1` is enabled (with
+`enable_analyzer=1`), automatic type casting SHALL resolve the mismatch.
 
 ### RQ.Ice.HybridAlias.DifferentAliasExpressions
 version: 1.0
