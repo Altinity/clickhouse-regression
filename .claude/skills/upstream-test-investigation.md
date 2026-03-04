@@ -17,8 +17,34 @@ This skill focuses on **single test investigation**, not PR-wide triage.
 
 | Test Type | Check Name Pattern | Test Name Pattern | Example |
 |-----------|-------------------|-------------------|---------|
-| **Integration** | `Integration tests (amd_*, ...)` | `test_*/test.py::test_*` | `test_storage_rabbitmq/test.py::test_rabbitmq_json` |
+| **Integration** | `Integration tests (amd_*, N/M)` | `test_*/test.py::test_*` | `test_storage_rabbitmq/test.py::test_rabbitmq_json` |
 | **Stateless** | `Stateless tests (arm_*, ...)` | `NNNNN_test_name` (5-digit prefix) | `01825_type_json_in_array` |
+| **AST fuzzer** | `AST fuzzer (amd_*)` | Error message (not a test name) | `Logical error: 'std::exception... out_of_range...'` |
+| **Stress test** | `Stress test (amd_*)` | Meta-status | `Server died`, `Cannot start clickhouse-server` |
+| **BuzzHouse** | `BuzzHouse (amd_*)` | Error message | Similar to AST fuzzer |
+
+### Fuzzer / Stress Test Investigation Differences
+
+These job types require a different investigation approach than Integration/Stateless tests:
+
+**AST fuzzer:**
+- Randomly mutates SQL queries from existing tests to find server crashes
+- The `test_name` in the database IS the error message (e.g., `Logical error: 'std::exception. Code: 1001, type: std::out_of_range, e.what() = vector'`)
+- Key log files: `fatal.log` (crashing query + stack trace), `stderr.log`, `job.log`
+- The `fatal.log` ends with a `Changed settings:` line listing all non-default settings needed to reproduce
+- Always check if `allow_experimental_*` settings are involved — experimental features are expected to have bugs
+
+**Stress test:**
+- Runs the server under heavy load for an extended period
+- Key log files: `run.log`, `application_errors.txt`, `clickhouse-server.err.log`, `clickhouse-server.initial.log`
+- If the server failed to start, check `clickhouse-server.initial.log` for the root cause
+- `application_errors.txt` contains all exceptions during the run
+
+**Reproduction from fuzzer crashes:**
+1. Read `fatal.log` to extract the crashing SQL query
+2. Read the `Changed settings:` line for required settings
+3. Create a minimal table matching what the query expects
+4. Run the query with those settings enabled
 
 ---
 
@@ -123,6 +149,8 @@ cat tests/integration/<TEST_DIR>/test.py
 
 ## Step 5: Search for Upstream Issues
 
+### Basic Searches
+
 ```bash
 # Search by test name
 gh search issues --repo ClickHouse/ClickHouse "<test_name>" --limit 10
@@ -131,11 +159,72 @@ gh search issues --repo ClickHouse/ClickHouse "<test_name>" --limit 10
 gh search issues --repo ClickHouse/ClickHouse "<error_keyword>" --state open --limit 10
 
 # View issue details
-gh issue view <ISSUE_NUMBER> --repo ClickHouse/ClickHouse --comments
+gh issue view <ISSUE_NUMBER> --repo ClickHouse/ClickHouse --json title,state,body,comments
 
 # Check if fix exists
 gh pr list --repo ClickHouse/ClickHouse --search "<test_name>" --state merged
 ```
+
+### Advanced Search Strategies
+
+The basic search often returns no results. Use multiple strategies systematically:
+
+**By STID (Stack Trace ID):** The upstream CI auto-generates issues with STID identifiers (format: `XXXX-XXXX`). These appear in the `test_name` field in the CI database:
+```bash
+gh api search/issues --method GET \
+  -f "q=repo:ClickHouse/ClickHouse is:issue \"STID: <STID>\"" \
+  -f per_page=10
+```
+
+**By exact error message in title:**
+```bash
+gh api search/issues --method GET \
+  -f "q=repo:ClickHouse/ClickHouse is:issue \"<exact_error>\" in:title" \
+  -f per_page=10
+```
+
+**By stack trace function names:**
+```bash
+gh api search/issues --method GET \
+  -f "q=repo:ClickHouse/ClickHouse is:issue \"<FunctionName>\" \"<ErrorType>\"" \
+  -f per_page=10
+```
+
+**By label combinations:**
+```bash
+gh api search/issues --method GET \
+  -f "q=repo:ClickHouse/ClickHouse is:issue label:fuzz \"<error_keyword>\"" \
+  -f per_page=20
+```
+
+**By component labels:** Common labels: `fuzz`, `crash`, `bug`, `comp-joins`, `comp-analyzer`, `experimental feature`, `testing`
+
+### Parse API Results
+
+```bash
+gh api search/issues --method GET \
+  -f "q=repo:ClickHouse/ClickHouse is:issue <QUERY>" \
+  -f per_page=10 | python3 -c "
+import json,sys
+d = json.load(sys.stdin)
+print(f'Total results: {d.get(\"total_count\", 0)}')
+for item in d.get('items', []):
+    print(f'  #{item[\"number\"]} [{item[\"state\"]}] {item[\"title\"]}')
+    print(f'    URL: {item[\"html_url\"]}')
+"
+```
+
+### Search Checklist
+
+When investigating a crash/error, try these searches in order:
+1. STID (if available in CI database `test_name` field)
+2. Exact error message in issue title
+3. Key function name from stack trace + error type
+4. Error type + `fuzz` label
+5. Related feature keywords + `crash`
+6. Broader error category (e.g., `out_of_range vector`)
+
+If all searches return empty, the bug is **unreported** and should be filed.
 
 ---
 
@@ -180,6 +269,18 @@ chmod +x clickhouse
 | **Flaky test** | Race condition in test, intermittent |
 | **Real bug (debug only)** | Assertion catches issue, release ignores |
 | **Real bug (all builds)** | Actual ClickHouse bug |
+| **Experimental feature bug** | Bug in code guarded by `allow_experimental_*` settings; expected to be unstable |
+| **Pre-existing upstream bug** | Bug exists in upstream CI history, not introduced by our changes |
+
+### Experimental Feature Bugs
+
+When the failure requires `allow_experimental_*` settings (visible in fuzzer's `Changed settings:` line):
+
+1. The feature is explicitly marked experimental — upstream tolerates known bugs
+2. On **release builds**: returns error code 1001 (`LOGICAL_ERROR` / `STD_EXCEPTION`), server stays up
+3. On **debug/sanitizer builds**: triggers `abortOnFailedAssertion()` → SIGABRT, server crashes
+4. These are real bugs but lower priority — still worth reporting if no upstream issue exists
+5. Cross-reference with upstream CI to confirm it's not Altinity-specific (see `upstream-ci-database-queries.md`)
 
 ---
 
@@ -235,8 +336,9 @@ chmod +x clickhouse
 ## Related Skills
 
 - **`pr-ci-failure-triage.md`** - PR-wide failure analysis
-- **`upstream-ci-database-queries.md`** - Upstream CI database query reference
+- **`upstream-ci-database-queries.md`** - CI database query reference (Altinity + upstream), including cross-referencing
 - **`regression-test-database-investigation.md`** - For Altinity regression tests (different from upstream)
+- **`github-issue-template.md`** - Templates for writing GitHub issues after investigation
 
 ---
 

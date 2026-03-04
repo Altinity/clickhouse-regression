@@ -16,16 +16,26 @@ This skill provides a high-level triage of PR CI status and creates summary comm
 
 ### CI Report URL
 
-Access the CI report overview:
+**PR runs:**
 ```
 https://s3.amazonaws.com/altinity-build-artifacts/PRs/<PR>/<SHA>/<RUN_ID>/ci_run_report.html
 ```
 
+**Branch/REF runs** (e.g., `antalya-25.8`, `v25.8.16.20001.altinityantalya`):
+```
+https://s3.amazonaws.com/altinity-build-artifacts/REFs/<BRANCH>/<SHA>/<RUN_ID>/ci_run_report.html
+```
+
 ### JSON Log Browser
 
-For detailed test logs:
+**PR runs:**
 ```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=<CHECK_NAME>
+https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=<URL_ENCODED_CHECK_NAME>
+```
+
+**Branch/REF runs** — note `name_0=MasterCI` and `REF=` instead of `PR=`:
+```
+https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=<BRANCH>&sha=<SHA>&name_0=MasterCI&name_1=<URL_ENCODED_CHECK_NAME>
 ```
 
 ---
@@ -211,9 +221,10 @@ are cascade failures from server crash.
 
 ## Related Skills
 
-- **`upstream-test-investigation.md`** - Deep investigation of upstream test (Stateless/Integration)
-- **`upstream-ci-database-queries.md`** - Upstream CI database query reference
+- **`upstream-test-investigation.md`** - Deep investigation of upstream test (Stateless/Integration/Fuzzer/Stress)
+- **`upstream-ci-database-queries.md`** - CI database query reference (Altinity + upstream)
 - **`regression-test-database-investigation.md`** - Altinity regression test database investigation
+- **`github-issue-template.md`** - Templates for writing GitHub issues after investigation
 
 ---
 

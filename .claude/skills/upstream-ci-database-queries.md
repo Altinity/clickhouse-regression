@@ -11,28 +11,39 @@ This is separate from the regression test database (`clickhouse_regression_resul
 
 ### Altinity CI Database
 
-- **URL:** `https://github-checks.internal.tenant-a.staging.altinity.cloud:8443`
+- **Host:** `github-checks.internal.tenant-a.staging.altinity.cloud`
 - **Database/Table:** `` `gh-data`.checks ``
 - **User:** `robot`
 - **Password:** Must be provided by user
 - **Web UI:** `https://github-checks.internal.tenant-a.staging.altinity.cloud:8443/play`
 
+**Connection method: HTTP API (port 8443)** — verified working:
 ```bash
 curl -s "https://github-checks.internal.tenant-a.staging.altinity.cloud:8443/?user=robot&password=<PASSWORD>" \
   --data-binary "SELECT * FROM \`gh-data\`.checks LIMIT 1 FORMAT Vertical"
 ```
 
+**Note:** Native protocol (`clickhouse-client`) does NOT work on this host (SSL error on both ports 9440 and 8443). Always use `curl` with the HTTP API.
+
 ### Upstream ClickHouse CI Database
 
-- **URL:** `https://play.clickhouse.com`
+- **Host:** `play.clickhouse.com`
 - **Database/Table:** `default.checks`
-- **User:** `play` (no password)
 - **Web UI:** `https://play.clickhouse.com/play`
 
-**Note:** Use WebFetch tool for upstream queries. URL encode the query:
+**Connection method 1: Native protocol (preferred)** — faster for large queries:
+```bash
+clickhouse-client --host play.clickhouse.com --port 9440 --secure \
+  --user explorer --password '' \
+  --query "SELECT * FROM default.checks LIMIT 1 FORMAT Vertical"
 ```
-https://play.clickhouse.com/?user=play&query=<URL_ENCODED_QUERY>
+
+**Connection method 2: HTTP API** — works from any environment:
+```bash
+curl -s "https://play.clickhouse.com/?user=play&query=SELECT+1"
 ```
+
+Both `explorer` (native) and `play` (HTTP) users work with no password.
 
 ---
 
@@ -57,10 +68,20 @@ https://play.clickhouse.com/?user=play&query=<URL_ENCODED_QUERY>
 
 ## Test Type Identification
 
-| Test Type | Check Name Pattern | Test Name Pattern |
-|-----------|-------------------|-------------------|
-| **Integration** | `Integration tests (amd_*, ...)` | `test_*/test.py::test_*` |
-| **Stateless** | `Stateless tests (arm_*, ...)` | `NNNNN_test_name` (5-digit prefix) |
+| Test Type | Check Name Pattern | Test Name Pattern | Log Files |
+|-----------|-------------------|-------------------|-----------|
+| **Integration** | `Integration tests (amd_*, N/M)` | `test_*/test.py::test_*` | `integration_run_parallel_N.log` |
+| **Stateless** | `Stateless tests (arm_*, ...)` | `NNNNN_test_name` (5-digit prefix) | `job.log` |
+| **AST fuzzer** | `AST fuzzer (amd_*)` | Error message as test_name | `fatal.log`, `stderr.log`, `job.log` |
+| **Stress test** | `Stress test (amd_*)` | Meta-status (e.g., `Server died`) | `run.log`, `application_errors.txt`, `clickhouse-server.err.log` |
+| **BuzzHouse** | `BuzzHouse (amd_*)` | Error message as test_name | `fatal.log`, `stderr.log` |
+| **Stateful** | `Stateful tests (amd_*)` | Test name | `job.log` |
+
+### Fuzzer/Stress Test Notes
+
+- **AST fuzzer** randomly mutates SQL queries to find server crashes. The `test_name` in the database contains the error message, not a test file name. The `fatal.log` contains the crashing query and stack trace. The `Changed settings` line at the end of `fatal.log` lists all non-default settings needed to reproduce.
+- **Stress tests** run the server under load for extended periods. If the server crashes, check `clickhouse-server.err.log` for the root cause. `application_errors.txt` lists all exceptions during the run.
+- **BuzzHouse** is similar to AST fuzzer but generates more complex query sequences. Same log structure as AST fuzzer.
 
 ---
 
@@ -212,23 +233,132 @@ ORDER BY check_start_time DESC
 
 ## Log URLs
 
-### Integration Test Logs
+There are two URL patterns depending on whether the CI run is for a **PR** or a **branch/REF** (e.g., `antalya-25.8`, `v25.8.16.20001.altinityantalya`).
 
+### PR-based Runs
+
+**JSON log browser:**
 ```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=Integration%20tests%20%28<build_type>%29
+https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=<URL_ENCODED_JOB_NAME>
 ```
 
-### Stateless Test Logs
+**Direct log file:**
+```
+https://altinity-build-artifacts.s3.amazonaws.com/PRs/<PR>/<SHA>/<job_artifact_dir>/<log_file>
+```
 
+**CI report:**
 ```
-https://altinity-build-artifacts.s3.amazonaws.com/json.html?PR=<PR>&sha=<SHA>&name_0=PR&name_1=Stateless+tests+%28<build_type>%29&name_2=Tests
+https://s3.amazonaws.com/altinity-build-artifacts/PRs/<PR>/<SHA>/<RUN_ID>/ci_run_report.html
 ```
+
+### Branch/REF-based Runs
+
+**JSON log browser** — note `name_0=MasterCI` instead of `name_0=PR`:
+```
+https://altinity-build-artifacts.s3.amazonaws.com/json.html?REF=<BRANCH>&sha=<SHA>&name_0=MasterCI&name_1=<URL_ENCODED_JOB_NAME>
+```
+
+**Direct log file:**
+```
+https://altinity-build-artifacts.s3.amazonaws.com/REFs/<BRANCH>/<SHA>//<job_artifact_dir>/<log_file>
+```
+
+**CI report:**
+```
+https://s3.amazonaws.com/altinity-build-artifacts/REFs/<BRANCH>/<SHA>/<RUN_ID>/ci_run_report.html
+```
+
+### Job Artifact Directory Naming
+
+The `<job_artifact_dir>` in direct log URLs follows this pattern:
+
+| Job Type | Directory Pattern | Example |
+|----------|------------------|---------|
+| Integration tests | `integration_tests_<build>_<N>_<M>` | `integration_tests_amd_binary_1_5` |
+| Stateless tests | `stateless_tests_<build>_<modes>_parallel` | `stateless_tests_amd_binary_old_analyzer_s3_storage_databasereplicated_parallel` |
+| AST fuzzer | `ast_fuzzer_<build>` | `ast_fuzzer_amd_msan` |
+| Stress test | `stress_test_<build>` | `stress_test_amd_tsan` |
 
 ### S3 Artifact Listing
 
+**PR artifacts:**
 ```bash
 curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=PRs/<PR>/<SHA>/&delimiter=/" \
   | grep -oE '<Prefix>[^<]+</Prefix>' | sed 's/<[^>]*>//g'
+```
+
+**REF artifacts:**
+```bash
+curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=REFs/<BRANCH>/<SHA>/&delimiter=/" \
+  | grep -oE '<Prefix>[^<]+</Prefix>' | sed 's/<[^>]*>//g'
+```
+
+---
+
+## Cross-Referencing Altinity CI vs Upstream CI
+
+When a failure involves upstream ClickHouse code (not Altinity-specific features), check whether the same error exists upstream to determine origin.
+
+### When to Cross-Reference
+
+- The failing test is an upstream test (Stateless, Integration, AST fuzzer, Stress)
+- The error message is a `LOGICAL_ERROR` or server crash
+- The failure doesn't involve Altinity-specific features (Hybrid engine, etc.)
+
+### Step 1: Find the Error Signature
+
+Extract a unique error string from the Altinity failure, e.g.:
+- `std::out_of_range, e.what() = vector`
+- `Logical error: 'Unexpected size of tuple element'`
+- A specific assertion message
+
+### Step 2: Query Upstream CI
+
+```bash
+clickhouse-client --host play.clickhouse.com --port 9440 --secure \
+  --user explorer --password '' --query "
+SELECT
+    check_name,
+    check_start_time,
+    pull_request_number,
+    test_name
+FROM default.checks
+WHERE check_name LIKE '%<JOB_TYPE>%'
+    AND test_status = 'FAIL'
+    AND test_name LIKE '%<ERROR_SIGNATURE>%'
+ORDER BY check_start_time ASC
+LIMIT 30
+"
+```
+
+### Step 3: Interpret Results
+
+| Finding | Conclusion |
+|---------|------------|
+| Same error exists upstream before our branch point | **Pre-existing upstream bug**, not caused by backport |
+| Same error only appears after a specific upstream PR | Upstream regression, check if that PR was backported |
+| Error does not exist upstream at all | **Altinity-specific issue**, likely from our patches |
+| Error appears upstream only recently | May be a new upstream regression reaching our branch |
+
+### Step 4: Monthly Distribution
+
+To see the trend over time:
+
+```bash
+clickhouse-client --host play.clickhouse.com --port 9440 --secure \
+  --user explorer --password '' --query "
+SELECT
+    toStartOfMonth(check_start_time) as month,
+    count() as hits,
+    groupUniqArray(pull_request_number) as prs
+FROM default.checks
+WHERE check_name LIKE '%<JOB_TYPE>%'
+    AND test_status = 'FAIL'
+    AND test_name LIKE '%<ERROR_SIGNATURE>%'
+GROUP BY month
+ORDER BY month
+"
 ```
 
 ---
@@ -240,3 +370,4 @@ curl -s "https://altinity-build-artifacts.s3.amazonaws.com/?list-type=2&prefix=P
 - PR number 0 indicates master/main branch runs
 - Sanitizer builds often expose race conditions missed by regular builds
 - Debug builds have assertions that cause crashes on errors release builds ignore
+- For AST fuzzer failures, the `test_name` column contains the full error message (not a test file name)

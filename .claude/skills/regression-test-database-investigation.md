@@ -13,7 +13,7 @@ It does not analyze logs or run tests.
 
 ## Database Access
 
-- **URL:** `https://github-checks.internal.tenant-a.staging.altinity.cloud:8443`
+- **Host:** `github-checks.internal.tenant-a.staging.altinity.cloud`
 - **Database:** `gh-data`
 - **Table:** `clickhouse_regression_results`
 - **Full path:** `` `gh-data`.clickhouse_regression_results ``
@@ -27,13 +27,14 @@ If the password is not provided, explicitly ask for it before proceeding.
 
 ### Connection Example
 
-Use curl to query the database:
+**Connection method: HTTP API (port 8443)** — verified working:
 
 ```bash
-curl -s "https://github-checks.internal.tenant-a.staging.altinity.cloud:8443" \
-  --user "robot:$PASSWORD" \
+curl -s "https://github-checks.internal.tenant-a.staging.altinity.cloud:8443/?user=robot&password=<PASSWORD>" \
   --data-binary "SELECT * FROM \`gh-data\`.clickhouse_regression_results LIMIT 1 FORMAT Vertical"
 ```
+
+**Note:** Native protocol (`clickhouse-client`) does NOT work on this host (SSL error). Always use `curl` with the HTTP API on port 8443.
 
 For interactive exploration, use the web UI at:
 `https://github-checks.internal.tenant-a.staging.altinity.cloud:8443/play`
