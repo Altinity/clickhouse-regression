@@ -514,3 +514,39 @@ def test_tuple_datatypes_export(self, minio_root_user, minio_root_password):
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
+
+
+@TestFeature
+@Name("export part all datatypes")
+def feature(self, minio_root_user, minio_root_password):
+    """Test export pipeline with all datatype categories."""
+    Feature(test=test_basic_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_comprehensive_numeric_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_comprehensive_string_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_comprehensive_datetime_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_nullable_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_low_cardinality_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_enum_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_array_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_map_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    Feature(test=test_tuple_datatypes_export)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
