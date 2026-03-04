@@ -61,15 +61,16 @@ Segments of tables with hybrid engine can evolve independently, so the same logi
 - MergeTree segment: `Decimal`
 - Iceberg segment: `Int`
 
-When `hybrid_table_auto_cast_columns = 1` is enabled (requires `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents `CANNOT_CONVERT_TYPE` errors.
+When `hybrid_table_auto_cast_columns = 1` is enabled (requires `enable_analyzer = 1`, formerly `allow_experimental_analyzer = 1`), the engine automatically inserts the necessary `CAST` operations so every shard receives the schema defined by the Hybrid table. This prevents `CANNOT_CONVERT_TYPE` errors.
 
 **Important Notes:**
-- Auto-casting requires the analyzer (`allow_experimental_analyzer = 1`)
+- The Hybrid engine only supports `enable_analyzer = 1` (the only supported mode)
+- Auto-casting requires the analyzer (`enable_analyzer = 1`)
 - Manual casts in your SQL queries will still work but may result in double-casting
 
 **When to use:**
 - Enable when segments have different physical types but represent the same logical data
-- Disable if you prefer explicit casts in your queries or if analyzer is not available
+- Disable if you prefer explicit casts in your queries
 
 ## Watermark and data lifecycle
 
@@ -221,3 +222,22 @@ Design your data pipeline so that:
    ```
 
 3. **Choose appropriate watermark column**: Use a column that represents a natural data boundary (for example `date`, `timestamp`, etc.).
+
+### Distributed execution and testing
+
+Because Hybrid builds on top of `Distributed`, it inherits several independent execution paths that should all be covered by tests:
+
+- **Local vs remote execution of subqueries**  
+  `Distributed` can execute a part of the query plan locally or send it to remote shards as a SQL subquery. These are different code paths. The setting `prefer_localhost_replica = 0` forces the engine to treat the local replica as remote, which is useful to exercise the "remote" path even when data is on the same node. Some issues only appear when the result of the local plan is merged with results coming back from remote shards.
+
+- **Sending SQL vs serialized query plan**  
+  By default, Hybrid/Distributed sends SQL text to remote servers and you can see these subqueries in the logs. A newer mode controlled by `serialize_query_plan = 1` instead sends a serialized query plan (a graph of steps encoded as JSON) to remote servers. This setting is currently disabled by default but is expected to be enabled in the future, so tests should cover both modes.
+
+- **Different remote aggregation stages**  
+  When a query is pushed to shards as SQL, the remote side can run at different logical stages (for example `complete`, `with_mergeable_state`, `with_mergeable_state_after_aggregation`, `with_mergeable_state_after_aggregation_and_limit`). Hybrid queries can hit all of these paths depending on the query shape (simple selects, aggregations, aggregations with HAVING, queries with `LIMIT`, and so on), so the test matrix should intentionally exercise each stage.
+
+- **Analyzer requirement**  
+  Hybrid only supports `enable_analyzer = 1`. All tests should run with the analyzer enabled; behavior with `enable_analyzer = 0` is not supported.
+
+- **Distributed-over-Distributed layouts**  
+  It is possible (and common for some deployments, such as large multi-cluster environments) to have `Distributed` tables that themselves read from other `Distributed` tables. Hybrid segments can therefore participate in "distributed-over-distributed" topologies. Tests should include such scenarios because they stress routing, query plan distribution, and result merging in more complex setups.
