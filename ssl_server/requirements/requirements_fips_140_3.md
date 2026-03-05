@@ -57,6 +57,10 @@
     * 4.14 [HTTPS Clients](#https-clients)
         * 4.14.1 [curl](#curl)
             * 4.14.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.HTTPS.Curl](#rqsrs-035clickhousefipscompatibleawslcclientssslhttpscurl)
+    * 4.15 [Server to Server Connections](#server-to-server-connections)
+        * 4.15.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver](#rqsrs-035clickhousefipscompatibleawslcserversslinterserver)
+    * 4.16 [Server to Keeper Connections](#server-to-keeper-connections)
+        * 4.16.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper](#rqsrs-035clickhousefipscompatibleawslcserversslkeeper)
 
 
 ## Revision History
@@ -411,6 +415,26 @@ version: 1.0
 
 [ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support accepting
 connections from [curl] used as HTTPS protocol client that is configured to establish only [FIPS 140-3 Compatible SSL Connection]s.
+
+### Server to Server Connections
+
+#### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring
+interserver HTTPS connections (used for replication and distributed queries between [ClickHouse] nodes)
+to use only [FIPS 140-3 Compatible SSL Connection]s. Data replicated between nodes over the
+`interserver_https_port` SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.
+
+### Server to Keeper Connections
+
+#### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring
+connections from [ClickHouse] to [ClickHouse] Keeper (or ZooKeeper) to use only
+[FIPS 140-3 Compatible SSL Connection]s. All coordination traffic between [ClickHouse] and
+Keeper over the secure port SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.
 
 [FIPS 140-3 Compatible SSL Connection]: #fips-140-3-compatible-ssl-connection
 [clickhouse-client]: https://clickhouse.com/docs/en/interfaces/cli

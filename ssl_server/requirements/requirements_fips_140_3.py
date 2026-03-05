@@ -434,6 +434,44 @@ RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_HTTPS_Curl = Requirement
         "[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support accepting\n"
         "connections from [curl] used as HTTPS protocol client that is configured to establish only [FIPS 140-3 Compatible SSL Connection]s.\n"
         "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.14.1.1",
+)
+
+RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Interserver = Requirement(
+    name="RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring\n"
+        "interserver HTTPS connections (used for replication and distributed queries between [ClickHouse] nodes)\n"
+        "to use only [FIPS 140-3 Compatible SSL Connection]s. Data replicated between nodes over the\n"
+        "`interserver_https_port` SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.15.1",
+)
+
+RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper = Requirement(
+    name="RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring\n"
+        "connections from [ClickHouse] to [ClickHouse] Keeper (or ZooKeeper) to use only\n"
+        "[FIPS 140-3 Compatible SSL Connection]s. All coordination traffic between [ClickHouse] and\n"
+        "Keeper over the secure port SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.\n"
+        "\n"
         "[FIPS 140-3 Compatible SSL Connection]: #fips-140-3-compatible-ssl-connection\n"
         "[clickhouse-client]: https://clickhouse.com/docs/en/interfaces/cli\n"
         "[OpenSSL ciphers]: https://www.openssl.org/docs/man1.1.1/man1/ciphers.html\n"
@@ -453,8 +491,8 @@ RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_HTTPS_Curl = Requirement
         "[140sp4816]: https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp4816.pdf\n"
     ),
     link=None,
-    level=4,
-    num="4.14.1.1",
+    level=3,
+    num="4.16.1",
 )
 
 SRS_035_ClickHouse_With_FIPS_140_3_Compatible_AWS_LC = Specification(
@@ -606,6 +644,18 @@ SRS_035_ClickHouse_With_FIPS_140_3_Compatible_AWS_LC = Specification(
             level=4,
             num="4.14.1.1",
         ),
+        Heading(name="Server to Server Connections", level=2, num="4.15"),
+        Heading(
+            name="RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver",
+            level=3,
+            num="4.15.1",
+        ),
+        Heading(name="Server to Keeper Connections", level=2, num="4.16"),
+        Heading(
+            name="RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper",
+            level=3,
+            num="4.16.1",
+        ),
     ),
     requirements=(
         RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC,
@@ -628,6 +678,8 @@ SRS_035_ClickHouse_With_FIPS_140_3_Compatible_AWS_LC = Specification(
         RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_TCP_ClickHouseClient_NonFIPS,
         RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_TCP_Python,
         RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_HTTPS_Curl,
+        RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Interserver,
+        RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper,
     ),
     content=r"""
 # SRS-035 ClickHouse With FIPS 140-3 Compatible AWS-LC
@@ -689,6 +741,10 @@ SRS_035_ClickHouse_With_FIPS_140_3_Compatible_AWS_LC = Specification(
     * 4.14 [HTTPS Clients](#https-clients)
         * 4.14.1 [curl](#curl)
             * 4.14.1.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Clients.SSL.HTTPS.Curl](#rqsrs-035clickhousefipscompatibleawslcclientssslhttpscurl)
+    * 4.15 [Server to Server Connections](#server-to-server-connections)
+        * 4.15.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver](#rqsrs-035clickhousefipscompatibleawslcserversslinterserver)
+    * 4.16 [Server to Keeper Connections](#server-to-keeper-connections)
+        * 4.16.1 [RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper](#rqsrs-035clickhousefipscompatibleawslcserversslkeeper)
 
 
 ## Revision History
@@ -1043,6 +1099,26 @@ version: 1.0
 
 [ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support accepting
 connections from [curl] used as HTTPS protocol client that is configured to establish only [FIPS 140-3 Compatible SSL Connection]s.
+
+### Server to Server Connections
+
+#### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Interserver
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring
+interserver HTTPS connections (used for replication and distributed queries between [ClickHouse] nodes)
+to use only [FIPS 140-3 Compatible SSL Connection]s. Data replicated between nodes over the
+`interserver_https_port` SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.
+
+### Server to Keeper Connections
+
+#### RQ.SRS-035.ClickHouse.FIPS.Compatible.AWSLC.Server.SSL.Keeper
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS 140-3] compatible [AWS-LC] SHALL support configuring
+connections from [ClickHouse] to [ClickHouse] Keeper (or ZooKeeper) to use only
+[FIPS 140-3 Compatible SSL Connection]s. All coordination traffic between [ClickHouse] and
+Keeper over the secure port SHALL be encrypted using only FIPS-approved TLS protocols and cipher suites.
 
 [FIPS 140-3 Compatible SSL Connection]: #fips-140-3-compatible-ssl-connection
 [clickhouse-client]: https://clickhouse.com/docs/en/interfaces/cli
