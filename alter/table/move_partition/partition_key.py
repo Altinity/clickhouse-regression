@@ -264,11 +264,12 @@ def check_move_partition(
         ).output
         self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
         self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
-        data_after = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra FORMAT TabSeparated"
-        )
+        
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                data_after = self.context.node_1.query(
+                    f"SELECT * FROM {destination_table_name} WHERE a > 1 ORDER BY a,b,c,extra FORMAT TabSeparated"
+                )
                 assert data_after.output == data_before, error()
 
 
