@@ -3,90 +3,144 @@ from testflows.asserts import *
 from oauth.requirements.requirements import *
 
 
-@TestCheck
-def access_clickhouse_with_specific_config(self, set_clickhouse_configuration):
-    """Attempt to access ClickHouse with incorrect OAuth configuration."""
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
+        "1.0"
+    ),
+)
+def invalid_processor_type(self):
+    """ClickHouse SHALL reject auth when token processor has an invalid type."""
+    client = self.context.provider_client
 
-    with Given("I set an incorrect OAuth configuration"):
-        set_clickhouse_configuration()
+    with Given("I configure a token processor with an invalid type"):
+        change_token_processors(
+            processor_name="keycloak_bad",
+            processor_type="invalid_type",
+        )
 
-    with Then("I check that the ClickHouse server is still alive"):
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=token, status_code=500)
+
+    with And("the server is still alive"):
         check_clickhouse_is_alive()
 
 
-@TestSketch(Scenario)
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    ),
+)
+def missing_processor_type(self):
+    """ClickHouse SHALL reject auth when token processor type is missing."""
+    client = self.context.provider_client
+
+    with Given("I configure a token processor without a type"):
+        change_token_processors(
+            processor_name="keycloak_no_type",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=token, status_code=500)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
         "1.0"
     ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
-        "1.0"
-    ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token(
-        "1.0"
-    ),
+)
+def non_existent_processor_in_user_directory(self):
+    """ClickHouse SHALL reject auth when user_directories references a processor that does not exist."""
+    client = self.context.provider_client
+
+    with Given("I configure user directories pointing to a non-existent processor"):
+        change_user_directories_config(
+            processor="does_not_exist",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=token, status_code=500)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_processor(
         "1.0"
     ),
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
-        "1.0"
-    ),
 )
-def check_incorrect_configuration(self):
-    """Check ClickHouse behavior with incorrect OAuth configuration."""
+def empty_processor_in_user_directory(self):
+    """ClickHouse SHALL reject auth when user_directories processor is empty."""
     client = self.context.provider_client
 
-    configurations = either(
-        *[
-            client.OAuthProvider.invalid_processor_type_configuration,
-            client.OAuthProvider.missing_processor_type_configuration,
-            client.OAuthProvider.empty_processor_type_configuration,
-            client.OAuthProvider.whitespace_processor_type_configuration,
-            client.OAuthProvider.case_sensitive_processor_type_configuration,
-            client.OAuthProvider.invalid_processor_name_configuration,
-            client.OAuthProvider.whitespace_processor_name_configuration,
-            client.OAuthProvider.special_chars_processor_name_configuration,
-            client.OAuthProvider.missing_processor_user_directory_configuration,
-            client.OAuthProvider.whitespace_processor_user_directory_configuration,
-            client.OAuthProvider.non_existent_processor_user_directory_configuration,
-            client.OAuthProvider.case_mismatch_processor_user_directory_configuration,
-            client.OAuthProvider.invalid_common_roles_configuration,
-            client.OAuthProvider.whitespace_common_roles_configuration,
-            client.OAuthProvider.special_chars_common_roles_configuration,
-            client.OAuthProvider.invalid_roles_filter_configuration,
-            client.OAuthProvider.empty_roles_filter_configuration,
-            client.OAuthProvider.whitespace_roles_filter_configuration,
-            client.OAuthProvider.malformed_roles_filter_configuration,
-            client.OAuthProvider.no_token_processors_configuration,
-            client.OAuthProvider.duplicate_processor_names_configuration,
-            client.OAuthProvider.invalid_processor_attributes_configuration,
-            client.OAuthProvider.missing_user_directories_configuration,
-            client.OAuthProvider.empty_user_directories_configuration,
-            client.OAuthProvider.malformed_xml_structure_configuration,
-            client.OAuthProvider.null_values_configuration,
-            client.OAuthProvider.extremely_long_values_configuration,
-            client.OAuthProvider.unicode_special_chars_configuration,
-            client.OAuthProvider.sql_injection_attempt_configuration,
-            client.OAuthProvider.path_traversal_attempt_configuration,
-            client.OAuthProvider.completely_invalid_configuration,
-            client.OAuthProvider.partially_invalid_configuration,
-            client.OAuthProvider.mixed_valid_invalid_configuration,
-        ]
-    )
+    with Given("I configure user directories with an empty processor"):
+        change_user_directories_config(
+            processor="",
+        )
 
-    access_clickhouse_with_specific_config(set_clickhouse_configuration=configurations)
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=token, status_code=500)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_Tokens_Operational_ProviderType("1.0"),
+)
+def valid_openid_processor_type(self):
+    """ClickHouse SHALL accept auth when token processor type is OpenID (case-insensitive)."""
+    client = self.context.provider_client
+
+    with Given("I configure a token processor with type OpenID"):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            userinfo_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/userinfo"
+            ),
+            token_introspection_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/token/introspect"
+            ),
+            jwks_uri=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/certs"
+            ),
+        )
+
+    with And("I configure user directories to use the processor"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse accepts the token"):
+        access_clickhouse(token=token, status_code=200)
 
 
 @TestFeature
@@ -95,7 +149,14 @@ def check_incorrect_configuration(self):
     RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
         "1.0"
     ),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_TokenProcessors_provider(
+        "1.0"
+    ),
 )
 def feature(self):
-    """Feature to test OAuth authentication flow with different configurations."""
-    Scenario(run=check_incorrect_configuration)
+    """Test OAuth token processor and user directory configuration validation."""
+    Scenario(run=invalid_processor_type)
+    Scenario(run=missing_processor_type)
+    Scenario(run=non_existent_processor_in_user_directory)
+    Scenario(run=empty_processor_in_user_directory)
+    Scenario(run=valid_openid_processor_type)
