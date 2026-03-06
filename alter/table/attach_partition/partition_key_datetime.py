@@ -463,11 +463,11 @@ def check_attach_partition_from(
         ).output
         self.context.node_1.query(f"DETACH TABLE {destination_table_name}")
         self.context.node_1.query(f"ATTACH TABLE {destination_table_name}")
-        data_after = self.context.node_1.query(
-            f"SELECT * FROM {destination_table_name} WHERE time > '2000-05-10' ORDER BY time,date,extra FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                data_after = self.context.node_1.query(
+                    f"SELECT * FROM {destination_table_name} WHERE time > '2000-05-10' ORDER BY time,date,extra FORMAT TabSeparated"
+                )
                 assert data_after.output == data_before, error()
 
 
