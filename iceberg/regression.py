@@ -191,7 +191,7 @@ xfails = {
             check_clickhouse_version(">=26.1"),
         )
     ],
-    "/iceberg/iceberg engine/rest catalog/predicate push down/check input format parquet filter push down/*": [
+    "/iceberg/iceberg engine/: catalog/predicate push down/check input format parquet filter push down/*": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/97172",
