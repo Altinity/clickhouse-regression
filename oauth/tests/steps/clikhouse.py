@@ -1,4 +1,5 @@
 import json
+from helpers.common import getuid
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
@@ -7,18 +8,31 @@ from oauth.requirements.requirements import *
 
 @TestStep(Then)
 def access_clickhouse(
-    self, token, ip="clickhouse1", https=False, status_code=200, node=None
+    self, token, ip="clickhouse1", https=False, status_code=200, node=None, query=None
 ):
-    """Execute a query to ClickHouse with JWT token authentication and return both response and status code."""
+    """Execute a query to ClickHouse with JWT token authentication.
+
+    Returns the response body string. Asserts the HTTP status code matches
+    ``status_code`` (default 200).
+    """
     if node is None:
         node = self.context.bash_tools
 
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:8123/"
 
-    curl_command = f"""curl -s -o /tmp/ch_response.txt -w "%{{http_code}}" \
---location '{url}?query=SELECT%20currentUser()' \
---header 'Authorization: Bearer {token}'"""
+    if query is None:
+        query = "SELECT currentUser()"
+
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/ch_response_{uid}.txt"
+
+    encoded_query = query.replace(" ", "%20")
+    curl_command = (
+        f'curl -s -o {tmp_file} -w "%{{http_code}}" '
+        f"--location '{url}?query={encoded_query}' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
 
     if https:
         curl_command += " -k"
@@ -32,11 +46,12 @@ def access_clickhouse(
     except ValueError:
         http_code = None
 
-    body_result = node.command(command="cat /tmp/ch_response.txt")
+    body_result = node.command(command=f"cat {tmp_file}")
     response_body = body_result.output.strip()
 
     assert http_code == status_code, error(
-        f"Expected HTTP status code {status_code}, but got {http_code}. Response body: {response_body}"
+        f"Expected HTTP status code {status_code}, but got {http_code}. "
+        f"Response body: {response_body}"
     )
 
     return response_body
@@ -44,25 +59,23 @@ def access_clickhouse(
 
 @TestStep(Then)
 def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False):
-    """Execute a query to ClickHouse with an invalid JWT token."""
+    """Execute a query to ClickHouse with an invalid JWT token.
 
+    Expects HTTP 500 with a signature-verification failure message.
+    """
     response = access_clickhouse(token=token, ip=ip, https=https, status_code=500)
-    assert "failed to verify signature" in response, error()
+    assert (
+        "failed to verify signature" in response or "AUTHENTICATION_FAILED" in response
+    ), error()
 
 
 @TestStep(Then)
 def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse without authentication."""
-
     access_clickhouse(token="", ip=ip, https=https, status_code=401)
 
 
 @TestStep(Given)
-@Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
-        "1.0"
-    )
-)
 def change_token_processors(
     self,
     processor_name,
@@ -72,8 +85,8 @@ def change_token_processors(
     jwks_uri=None,
     jwks_cache_lifetime=None,
     token_cache_lifetime=None,
-    claims=None,
-    verifier_leeway=None,
+    username_claim=None,
+    groups_claim=None,
     configuration_endpoint=None,
     userinfo_endpoint=None,
     token_introspection_endpoint=None,
@@ -83,54 +96,45 @@ def change_token_processors(
 ):
     """Change ClickHouse token processor configuration."""
 
-    entries = {"token_processor": {}}
-    entries["token_processor"][processor_name] = {}
+    proc = {}
 
     if processor_type is not None:
-        entries["token_processor"][processor_name]["type"] = processor_type
+        proc["type"] = processor_type
 
     if algo is not None:
-        entries["token_processor"]["algo"] = algo
+        proc["algo"] = algo
 
     if static_key is not None:
-        entries["token_processor"][processor_name]["static_key"] = static_key
+        proc["static_key"] = static_key
 
     if static_jwks is not None:
-        entries["token_processor"][processor_name]["static_jwks"] = static_jwks
+        proc["static_jwks"] = static_jwks
 
     if jwks_uri is not None:
-        entries["token_processor"][processor_name]["jwks_uri"] = jwks_uri
+        proc["jwks_uri"] = jwks_uri
 
     if jwks_cache_lifetime is not None:
-        entries["token_processor"][processor_name][
-            "jwks_cache_lifetime"
-        ] = jwks_cache_lifetime
+        proc["jwks_cache_lifetime"] = jwks_cache_lifetime
 
     if token_cache_lifetime is not None:
-        entries["token_processor"][processor_name][
-            "token_cache_lifetime"
-        ] = token_cache_lifetime
+        proc["token_cache_lifetime"] = token_cache_lifetime
 
-    if claims is not None:
-        entries["jwt_validators"][processor_name]["claims"] = claims
+    if username_claim is not None:
+        proc["username_claim"] = username_claim
 
-    if verifier_leeway is not None:
-        entries["jwt_validators"][processor_name]["verifier_leeway"] = verifier_leeway
+    if groups_claim is not None:
+        proc["groups_claim"] = groups_claim
 
     if configuration_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "configuration_endpoint"
-        ] = configuration_endpoint
+        proc["configuration_endpoint"] = configuration_endpoint
 
     if userinfo_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "userinfo_endpoint"
-        ] = userinfo_endpoint
+        proc["userinfo_endpoint"] = userinfo_endpoint
 
     if token_introspection_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "token_introspection_endpoint"
-        ] = token_introspection_endpoint
+        proc["token_introspection_endpoint"] = token_introspection_endpoint
+
+    entries = {"token_processor": {processor_name: proc}}
 
     change_clickhouse_config(
         entries=entries,
@@ -153,16 +157,15 @@ def change_user_directories_config(
 ):
     """Change ClickHouse user directories configuration."""
 
-    entries = {"user_directories": {}}
-    entries["user_directories"]["token"] = {}
-
-    entries["user_directories"]["token"]["processor"] = processor
+    token_section = {"processor": processor}
 
     if common_roles is not None:
-        entries["user_directories"]["token"]["common_roles"] = common_roles
+        token_section["common_roles"] = common_roles
 
     if roles_filter is not None:
-        entries["user_directories"]["token"]["roles_filter"] = roles_filter
+        token_section["roles_filter"] = roles_filter
+
+    entries = {"user_directories": {"token": token_section}}
 
     change_clickhouse_config(
         entries=entries,

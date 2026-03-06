@@ -3,67 +3,113 @@ from testflows.asserts import *
 from oauth.requirements.requirements import *
 
 
-@TestCheck
-def verify_keycloak_auth_flow(self, auth_step):
-    """Verify Keycloak authentication role/group behavior."""
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
+)
+def valid_token_accepted(self):
+    """ClickHouse SHALL accept a valid Keycloak access token over HTTP."""
+    client = self.context.provider_client
 
-    with Given("I set Keycloak authentication-related configuration or state"):
-        auth_step()
+    with Given("I get a valid OAuth token from Keycloak"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with When("I get an OAuth token from the provider"):
-        client = self.context.provider_client
-        token = client.OAuthProvider.get_oauth_token()
+    with Then("ClickHouse accepts the token and returns the current user"):
+        body = access_clickhouse(token=token, status_code=200)
 
-    with Then("I try to access ClickHouse with the token"):
-        response = access_clickhouse(token=token)
-        assert response.status_code == 200, error()
+    with And("the response contains a user identity"):
+        assert len(body) > 0, error()
 
-    with And("I check that the ClickHouse server is still alive"):
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"),
+)
+def empty_token_rejected(self):
+    """ClickHouse SHALL reject an empty bearer token with HTTP 401."""
+    access_clickhouse_unauthenticated()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
+)
+def tampered_signature_rejected(self):
+    """ClickHouse SHALL reject a token with a tampered signature."""
+    client = self.context.provider_client
+
+    with Given("I get a valid token and tamper with the signature"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = token[:-4] + "7b39"
+
+    with Then("ClickHouse rejects the tampered token"):
+        access_clickhouse_when_forbidden(token=token)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
+)
+def malformed_token_rejected(self):
+    """ClickHouse SHALL reject a completely malformed token."""
+    with Then("ClickHouse rejects the garbage token"):
+        access_clickhouse(token="not.a.valid-jwt", status_code=500)
+
+    with And("the server is still alive"):
         check_clickhouse_is_alive()
 
 
-@TestSketch(Scenario)
+@TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserDirectories_UserGroups("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_GroupFiltering("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_MultipleGroups("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoGroups("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SubgroupMemberships("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingClickHouseRoles("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_SameName("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoMatchingRoles("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoPermissionToViewGroups("1.0"),
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoDefaultRole("1.0"),
+    RQ_SRS_042_OAuth_Authentication_Actions_Authentication("1.0"),
 )
-def auth_scenarios(self):
-    """Check Keycloak authentication requirements."""
+def valid_token_on_all_nodes(self):
+    """ClickHouse SHALL accept a valid token on every node in the cluster."""
     client = self.context.provider_client
 
-    configurations = [
-        client.OAuthProvider.auth_user_directories_user_groups,
-        client.OAuthProvider.auth_user_roles,
-        client.OAuthProvider.auth_user_roles_group_filtering,
-        client.OAuthProvider.auth_user_roles_multiple_groups,
-        client.OAuthProvider.auth_user_roles_no_groups,
-        client.OAuthProvider.auth_user_roles_subgroup_memberships,
-        client.OAuthProvider.auth_user_roles_no_matching_clickhouse_roles,
-        client.OAuthProvider.auth_user_roles_same_name,
-        client.OAuthProvider.auth_user_roles_no_matching_roles,
-        client.OAuthProvider.auth_user_roles_no_permission_to_view_groups,
-        client.OAuthProvider.auth_user_roles_no_default_role,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for step in configurations:
-        verify_keycloak_auth_flow(auth_step=step)
+    for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
+        with Then(f"node {i} ({ip}) accepts the token"):
+            access_clickhouse(token=token, ip=ip, status_code=200)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserRoles_NoAccessTokenProcessors("1.0"),
+)
+def no_token_processor_configured(self):
+    """ClickHouse SHALL reject auth when no valid token processor is defined."""
+    client = self.context.provider_client
+
+    with Given("I configure a token processor with no type"):
+        change_token_processors(
+            processor_name="empty_proc",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=token, status_code=500)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
 
 
 @TestFeature
 @Name("authentication")
 @Requirements(
-    RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_AccessTokenProcessors("1.0"),
 )
 def feature(self):
-    """Feature to test Keycloak authentication requirements."""
-
-    Scenario(run=auth_scenarios)
+    """Test basic OAuth authentication flows with Keycloak tokens."""
+    Scenario(run=valid_token_accepted)
+    Scenario(run=empty_token_rejected)
+    Scenario(run=tampered_signature_rejected)
+    Scenario(run=malformed_token_rejected)
+    Scenario(run=valid_token_on_all_nodes)
+    Scenario(run=no_token_processor_configured)

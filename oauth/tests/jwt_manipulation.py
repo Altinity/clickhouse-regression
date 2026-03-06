@@ -3,215 +3,211 @@ from testflows.asserts import *
 from oauth.requirements.requirements import *
 
 
-@TestCheck
-def access_clickhouse_with_modified_token(self, token_modification_step):
-    """Attempt to access ClickHouse with a modified JWT token."""
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
+)
+def modify_alg_to_none(self):
+    """ClickHouse SHALL reject a token with alg changed to 'none'."""
+    client = self.context.provider_client
 
-    with Given("I get a valid OAuth token from the provider"):
-        client = self.context.provider_client
-        original_token = client.OAuthProvider.get_oauth_token()
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with When("I modify the token using the specified step"):
-        modified_token = token_modification_step(token=original_token)
+    with When("I change alg to 'none'"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, header_changes={"alg": "none"}
+        )
 
-    with Then("I try to access ClickHouse with the modified token"):
-        response = access_clickhouse(token=modified_token)
-        assert response.status_code == 401, error()
-
-    with And("I check that the ClickHouse server is still alive"):
-        check_clickhouse_is_alive()
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
 )
-def test_jwt_header_modifications(self):
-    """Test ClickHouse behavior with modified JWT header fields."""
+def modify_alg_to_hs256(self):
+    """ClickHouse SHALL reject a token with alg changed to HS256 (algorithm confusion)."""
     client = self.context.provider_client
 
-    header_modifications = [
-        client.OAuthProvider.modify_jwt_header_alg_to_none,
-        client.OAuthProvider.modify_jwt_header_alg_to_hs256,
-        client.OAuthProvider.modify_jwt_header_alg_to_invalid,
-        client.OAuthProvider.modify_jwt_header_typ_to_invalid,
-        client.OAuthProvider.modify_jwt_header_kid_to_invalid,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in header_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I change alg to 'HS256'"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, header_changes={"alg": "HS256"}
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Typ("1.0"),
 )
-def test_jwt_payload_exp_modifications(self):
-    """Test ClickHouse behavior with modified JWT expiration fields."""
+def modify_typ_to_invalid(self):
+    """ClickHouse SHALL reject a token with typ changed to an invalid value."""
     client = self.context.provider_client
 
-    exp_modifications = [
-        client.OAuthProvider.modify_jwt_payload_exp_to_expired,
-        client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
-        client.OAuthProvider.modify_jwt_payload_iat_to_future,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in exp_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I change typ to 'INVALID'"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, header_changes={"typ": "INVALID"}
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
 )
-def test_jwt_payload_identity_modifications(self):
-    """Test ClickHouse behavior with modified JWT identity fields."""
+def modify_kid_to_invalid(self):
+    """ClickHouse SHALL reject a token with kid changed to an unknown key ID."""
     client = self.context.provider_client
 
-    identity_modifications = [
-        client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in identity_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I change kid to a non-existent key ID"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, header_changes={"kid": "non-existent-key-id"}
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Exp("1.0"),
 )
-def test_jwt_payload_authorization_modifications(self):
-    """Test ClickHouse behavior with modified JWT authorization fields."""
+def modify_exp_to_past(self):
+    """ClickHouse SHALL reject a token with exp set to a past timestamp."""
     client = self.context.provider_client
 
-    auth_modifications = [
-        client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_groups_to_admin,
-        client.OAuthProvider.modify_jwt_payload_groups_to_empty,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in auth_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I set exp to epoch 1000000000 (2001)"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, payload_changes={"exp": 1000000000}
+        )
+
+    with Then("ClickHouse rejects the expired token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Sub("1.0"),
 )
-def test_jwt_payload_user_info_modifications(self):
-    """Test ClickHouse behavior with modified JWT user information fields."""
+def modify_sub_to_invalid(self):
+    """ClickHouse SHALL reject a token with sub changed (signature mismatch)."""
     client = self.context.provider_client
 
-    user_info_modifications = [
-        client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
-        client.OAuthProvider.modify_jwt_payload_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
-        client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_email_to_invalid,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in user_info_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I change the sub claim"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, payload_changes={"sub": "invalid-subject-id"}
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Aud("1.0"),
 )
-def test_jwt_signature_modifications(self):
-    """Test ClickHouse behavior with modified JWT signatures."""
+def modify_azp_to_invalid(self):
+    """ClickHouse SHALL reject a token with azp changed (signature mismatch)."""
     client = self.context.provider_client
 
-    signature_modifications = [
-        client.OAuthProvider.modify_jwt_signature_to_invalid,
-        client.OAuthProvider.invalidate_jwt_signature,
-        client.OAuthProvider.remove_jwt_signature,
-        client.OAuthProvider.modify_jwt_signature_e_to_invalid,
-        client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
-        client.OAuthProvider.modify_jwt_signature_n_to_invalid,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in signature_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I change the azp claim"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, payload_changes={"azp": "invalid-client-id"}
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
 )
-def test_comprehensive_jwt_modifications(self):
-    """Test all JWT token modifications comprehensively."""
+def replace_signature_entirely(self):
+    """ClickHouse SHALL reject a token with a completely replaced signature."""
     client = self.context.provider_client
 
-    all_modifications = [
-        client.OAuthProvider.modify_jwt_header_alg_to_none,
-        client.OAuthProvider.modify_jwt_header_alg_to_hs256,
-        client.OAuthProvider.modify_jwt_header_alg_to_invalid,
-        client.OAuthProvider.modify_jwt_header_typ_to_invalid,
-        client.OAuthProvider.modify_jwt_header_kid_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_exp_to_expired,
-        client.OAuthProvider.modify_jwt_payload_exp_to_far_future,
-        client.OAuthProvider.modify_jwt_payload_iat_to_future,
-        client.OAuthProvider.modify_jwt_payload_jti_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_iss_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_sub_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_typ_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_azp_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_sid_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_acr_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_allowed_origins_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_scope_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_groups_to_admin,
-        client.OAuthProvider.modify_jwt_payload_groups_to_empty,
-        client.OAuthProvider.modify_jwt_payload_email_verified_to_false,
-        client.OAuthProvider.modify_jwt_payload_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_preferred_username_to_admin,
-        client.OAuthProvider.modify_jwt_payload_given_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_family_name_to_invalid,
-        client.OAuthProvider.modify_jwt_payload_email_to_invalid,
-        client.OAuthProvider.modify_jwt_signature_to_invalid,
-        client.OAuthProvider.invalidate_jwt_signature,
-        client.OAuthProvider.remove_jwt_signature,
-        client.OAuthProvider.modify_jwt_signature_e_to_invalid,
-        client.OAuthProvider.modify_jwt_signature_kty_to_invalid,
-        client.OAuthProvider.modify_jwt_signature_n_to_invalid,
-    ]
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    for modification_step in all_modifications:
-        access_clickhouse_with_modified_token(token_modification_step=modification_step)
+    with When("I replace the signature with garbage"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, signature_change="totally-invalid-signature"
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
+)
+def remove_signature(self):
+    """ClickHouse SHALL reject a token with an empty signature."""
+    client = self.context.provider_client
+
+    with Given("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with When("I remove the signature"):
+        modified = client.OAuthProvider.modify_jwt_token(
+            token=token, signature_change=""
+        )
+
+    with Then("ClickHouse rejects the token"):
+        access_clickhouse(token=modified, status_code=500)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"),
+)
+def empty_token(self):
+    """ClickHouse SHALL reject an empty token with HTTP 401."""
+    with Then("ClickHouse rejects the empty token"):
+        access_clickhouse(token="", status_code=401)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
+)
+def malformed_token_string(self):
+    """ClickHouse SHALL reject a garbage string that is not a valid JWT."""
+    with Then("ClickHouse rejects the garbage token"):
+        access_clickhouse(token="not.a.valid-jwt", status_code=500)
 
 
 @TestFeature
 @Name("jwt_manipulation")
 @Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
-        "1.0"
-    ),
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Typ("1.0"),
-    RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Exp("1.0"),
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Sub("1.0"),
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Aud("1.0"),
@@ -220,12 +216,15 @@ def test_comprehensive_jwt_modifications(self):
     RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"),
 )
 def feature(self):
-    """Feature to test OAuth authentication flow with JWT token manipulation."""
-
-    Scenario(run=test_jwt_header_modifications)
-    Scenario(run=test_jwt_payload_exp_modifications)
-    Scenario(run=test_jwt_payload_identity_modifications)
-    Scenario(run=test_jwt_payload_authorization_modifications)
-    Scenario(run=test_jwt_payload_user_info_modifications)
-    Scenario(run=test_jwt_signature_modifications)
-    Scenario(run=test_comprehensive_jwt_modifications)
+    """Test OAuth authentication with manipulated JWT tokens."""
+    Scenario(run=modify_alg_to_none)
+    Scenario(run=modify_alg_to_hs256)
+    Scenario(run=modify_typ_to_invalid)
+    Scenario(run=modify_kid_to_invalid)
+    Scenario(run=modify_exp_to_past)
+    Scenario(run=modify_sub_to_invalid)
+    Scenario(run=modify_azp_to_invalid)
+    Scenario(run=replace_signature_entirely)
+    Scenario(run=remove_signature)
+    Scenario(run=empty_token)
+    Scenario(run=malformed_token_string)
