@@ -154,7 +154,7 @@ xfails = {
             and check_if_antalya_build(),
         )
     ],
-        "/iceberg/iceberg cache/glue catalog/iceberg database engine/cache": [
+    "/iceberg/iceberg cache/glue catalog/iceberg database engine/cache": [
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
@@ -162,7 +162,7 @@ xfails = {
             and check_if_antalya_build(),
         )
     ],
-        "/iceberg/iceberg cache/glue catalog/icebergS3 table function/cache": [
+    "/iceberg/iceberg cache/glue catalog/icebergS3 table function/cache": [
         (
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
@@ -174,21 +174,28 @@ xfails = {
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/93416",
-            check_clickhouse_version(">=26.1")
+            check_clickhouse_version(">=26.1"),
         )
     ],
     "/iceberg/iceberg engine/: catalog/iceberg partition pruning/check partition pruning with complex where clause": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/93416",
-            check_clickhouse_version(">=26.1")
+            check_clickhouse_version(">=26.1"),
         )
     ],
     "/iceberg/iceberg engine/: catalog/iceberg partition pruning/partition pruning with date type": [
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/93416",
-            check_clickhouse_version(">=26.1")
+            check_clickhouse_version(">=26.1"),
+        )
+    ],
+    "/iceberg/iceberg engine/rest catalog/predicate push down/check input format parquet filter push down/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/97172",
+            check_clickhouse_version(">=26.1"),
         )
     ],
 }
@@ -238,12 +245,14 @@ ffails = {
     "/iceberg/iceberg engine/: catalog/iceberg iterator race condition/iceberg iterator race condition": (
         Skip,
         "https://github.com/ClickHouse/ClickHouse/issues/92120",
-        lambda test: check_clickhouse_version("<=25.8.12")(test) or check_if_not_antalya_build(test),
+        lambda test: check_clickhouse_version("<=25.8.12")(test)
+        or check_if_not_antalya_build(test),
     ),
     "/iceberg/iceberg engine/: catalog/namespace filtering": (
         Skip,
         "namespace filtering is supported only in antalya build from >= 25.8",
-        lambda test: check_clickhouse_version("<=25.8.15")(test) or check_if_not_antalya_build(),
+        lambda test: check_clickhouse_version("<=25.8.15")(test)
+        or check_if_not_antalya_build(),
     ),
     "/iceberg/iceberg engine/: catalog/dot separated column names/*": (
         Skip,
