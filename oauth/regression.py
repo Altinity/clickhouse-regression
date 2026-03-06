@@ -2,8 +2,6 @@
 import sys
 import os
 
-from azure.identity import ClientSecretCredential
-from msgraph import GraphServiceClient
 from testflows.core import *
 
 
@@ -14,9 +12,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
-from oauth.tests.steps import azure_application as azure, keycloak_realm
 from oauth.tests.steps import keycloak_realm as keycloak
-from oauth.tests.steps.azure_application import setup_azure_application
 
 
 def argparser(parser):
@@ -25,7 +21,6 @@ def argparser(parser):
 
     parser.add_argument(
         "--tenant-id",
-        # type=Secret(name="tenant_id"),
         type=str,
         dest="tenant_id",
         help="Tenant ID for Azure AD",
@@ -44,7 +39,6 @@ def argparser(parser):
 
     parser.add_argument(
         "--client-secret",
-        # type=Secret(name="client_secret"),
         type=str,
         dest="client_secret",
         help="Client secret for Azure AD application",
@@ -64,33 +58,19 @@ def argparser(parser):
 
 xfails = {}
 
-ffails = {
-    "/oauth/*": (
-        Skip,
-        "OAuth not implemented in non Antalya build",
-        check_if_not_antalya_build,
-    ),
-}
+ffails = {}
 
 
-def write_env_file(identity_provider, tenant_id, client_id, client_secret):
-    # Use the directory of this regression.py file
-    regression_dir = os.path.dirname(os.path.abspath(__file__))
-    env_dir = os.path.join(
-        regression_dir,
-        "envs",
-        f"{identity_provider.lower()}",
-        f"{identity_provider.lower()}_env",
-    )
-    os.makedirs(env_dir, exist_ok=True)
-    env_path = os.path.join(env_dir, ".env")
-    print(env_path)
-    with open(env_path, "w") as f:
-        f.write(
-            f"TENANT_ID = {tenant_id}\n"
-            f"CLIENT_SECRET = {client_secret}\n"
-            f"CLIENT_ID = {client_id}\n"
-        )
+def _load_provider_module(identity_provider):
+    """Lazily import provider modules so Azure deps are not required for Keycloak."""
+    if identity_provider == "keycloak":
+        return keycloak
+    elif identity_provider == "azure":
+        from oauth.tests.steps import azure_application as azure
+
+        return azure
+    else:
+        raise ValueError(f"Unknown identity provider: {identity_provider}")
 
 
 @TestFeature
@@ -111,7 +91,7 @@ def regression(
     client_id=None,
     client_secret=None,
 ):
-    """Run tests for OAuth in Clickhouse."""
+    """Run tests for OAuth in ClickHouse."""
 
     nodes = {
         "clickhouse": (
@@ -126,11 +106,11 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    with Given("docker-compose cluster"):
-        providers = {"keycloak": keycloak, "azure": azure}
+    identity_provider_lower = str(identity_provider).lower()
+    provider_module = _load_provider_module(identity_provider_lower)
 
+    with Given("docker-compose cluster"):
         regression_dir = os.path.dirname(os.path.abspath(__file__))
-        identity_provider_lower = str(identity_provider.lower())
         docker_compose_config = os.path.join(
             regression_dir, "envs", identity_provider_lower
         )
@@ -138,7 +118,11 @@ def regression(
             docker_compose_config, f"{identity_provider_lower}_env"
         )
 
-        if identity_provider.lower() == "azure":
+        if identity_provider_lower == "azure":
+            from azure.identity import ClientSecretCredential
+            from msgraph import GraphServiceClient
+            from oauth.tests.steps.azure_application import setup_azure_application
+
             cred = ClientSecretCredential(tenant_id, client_id, client_secret)
             self.context.client = GraphServiceClient(
                 credentials=cred, scopes=["https://graph.microsoft.com/.default"]
@@ -148,14 +132,7 @@ def regression(
             self.context.tenant_id = tenant_id
             self.context.client_id = application.app_id
             self.context.client_secret = application.password_credentials[0].secret_text
-
-            write_env_file(
-                identity_provider,
-                tenant_id,
-                self.context.client_id,
-                self.context.client_secret,
-            )
-        elif identity_provider.lower() == "keycloak":
+        elif identity_provider_lower == "keycloak":
             self.context.keycloak_url = "http://keycloak:8080"
             self.context.username = "demo"
             self.context.password = "demo"
@@ -171,7 +148,7 @@ def regression(
         )
 
         self.context.cluster = cluster
-        self.context.provider_client = providers[identity_provider.lower()]
+        self.context.provider_client = provider_module
         self.context.provider_name = identity_provider
 
     self.context.bash_tools = self.context.cluster.node("bash-tools")
@@ -183,18 +160,18 @@ def regression(
     ]
 
     with Given(f"{identity_provider} is up and running"):
-        if identity_provider.lower() == "keycloak":
+        if identity_provider_lower == "keycloak":
             for retry in retries(timeout=300, delay=20):
                 with retry:
-                    keycloak_realm.OAuthProvider.get_oauth_token()
+                    keycloak.OAuthProvider.get_oauth_token()
 
     Scenario(run=load("oauth.tests.sanity", "feature"))
-    # Scenario(run=load("oauth.tests.configuration", "feature"))
-    # Scenario(run=load("oauth.tests.authentication", "feature"))
-    # Scenario(run=load("oauth.tests.tokens", "feature"))
-    # Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    # Scenario(run=load("oauth.tests.groups", "feature"))
-    # Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    Scenario(run=load("oauth.tests.configuration", "feature"))
+    Scenario(run=load("oauth.tests.authentication", "feature"))
+    Scenario(run=load("oauth.tests.tokens", "feature"))
+    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    Scenario(run=load("oauth.tests.groups", "feature"))
+    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
 
 
 if main():
