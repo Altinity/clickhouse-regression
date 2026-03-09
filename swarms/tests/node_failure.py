@@ -170,6 +170,7 @@ def check_restart_clickhouse_on_swarm_node(
                 exitcode=32,
                 message="DB::Exception: Attempt to read after eof",
                 cluster_name=cluster_name,
+                delay_before_execution=1,
             )
             Step(
                 "restart clickhouse on random swarm node",
