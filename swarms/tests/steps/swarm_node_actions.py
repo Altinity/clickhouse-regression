@@ -79,9 +79,7 @@ def restart_network_on_random_swarm_node(
 
 
 @TestStep(Given)
-def fill_clickhouse_disks(
-    self, node=None, database_name=None, minio_root_user=None, minio_root_password=None
-):
+def fill_clickhouse_disks(self, node=None):
     """Force clickhouse to run out of disk space."""
     if node is None:
         node = self.context.node
@@ -95,13 +93,6 @@ def fill_clickhouse_disks(
 
     with Given("apply limited disk config"):
         clickhouse_limited_disk_config(node=node)
-
-    if database_name is not None:
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
 
     try:
         for disk_mount in clickhouse_disk_mounts:
