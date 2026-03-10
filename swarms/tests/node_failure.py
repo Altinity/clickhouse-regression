@@ -285,8 +285,6 @@ def initiator_out_of_disk_space(
     with And("fill up disks of initiator node"):
         actions.fill_clickhouse_disks(
             node=node,
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
         )
 
     with Then("run long select from iceberg table"):
