@@ -143,7 +143,7 @@ def check_restart_clickhouse_on_swarm_node(
     self,
     minio_root_user,
     minio_root_password,
-    row_count=100,
+    row_count=1000,
     batch_size=100,
     cluster_name="static_swarm_cluster",
     node=None,
@@ -170,14 +170,14 @@ def check_restart_clickhouse_on_swarm_node(
                 exitcode=32,
                 message="DB::Exception: Attempt to read after eof",
                 cluster_name=cluster_name,
-                delay_before_execution=1,
+                delay_before_execution=0,
             )
             Step(
                 "restart clickhouse on random swarm node",
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
-            )(delay=0.0)
+            )(delay=30, signal="KILL", delay_before_execution=5)
             join()
 
 
@@ -457,8 +457,6 @@ def feature(self, minio_root_user, minio_root_password, node=None):
     Scenario(test=check_restart_clickhouse_on_swarm_node)(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
-        row_count=row_count,
-        batch_size=batch_size,
     )
     Scenario(test=network_failure)(
         minio_root_user=minio_root_user,

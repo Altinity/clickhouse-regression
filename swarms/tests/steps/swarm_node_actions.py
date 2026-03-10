@@ -39,7 +39,9 @@ def restart_random_swarm_node(self, delay=None):
 
 
 @TestStep(Given)
-def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
+def restart_clickhouse_on_random_swarm_node(
+    self, signal="SEGV", delay=None, delay_before_execution=0
+):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
     """
@@ -48,8 +50,12 @@ def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
     if delay is None:
         delay = random.random() * 10 + 1
 
+    if delay_before_execution > 0:
+        with When(f"I wait {delay_before_execution}s"):
+            time.sleep(delay_before_execution)
+
     with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
-        with When(f"I wait {delay:.2}s"):
+        with When(f"I wait {delay}s"):
             time.sleep(delay)
 
 
