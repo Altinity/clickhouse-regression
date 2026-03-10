@@ -58,8 +58,13 @@ def argparser(parser):
 
 xfails = {}
 
-ffails = {}
-
+ffails = {
+    "/oauth/*": (
+        Skip,
+        "OAuth not implemented in non Antalya build",
+        check_if_not_antalya_build,
+    ),
+}
 
 def _load_provider_module(identity_provider):
     """Lazily import provider modules so Azure deps are not required for Keycloak."""
