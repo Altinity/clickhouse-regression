@@ -1,0 +1,105 @@
+{
+  "format-version": 2,
+  "table-uuid": "fbb0a4ea-488e-4387-9cdc-23888ec32fae",
+  "location": "/var/lib/clickhouse/user_files/iceberg_local_basic",
+  "last-sequence-number": 1,
+  "last-updated-ms": 1773338034540,
+  "last-column-id": 3,
+  "current-schema-id": 0,
+  "schemas": [
+    {
+      "type": "struct",
+      "schema-id": 0,
+      "fields": [
+        {
+          "id": 1,
+          "name": "name",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "id": 2,
+          "name": "double",
+          "required": false,
+          "type": "double"
+        },
+        {
+          "id": 3,
+          "name": "integer",
+          "required": false,
+          "type": "long"
+        }
+      ]
+    }
+  ],
+  "default-spec-id": 0,
+  "partition-specs": [
+    {
+      "spec-id": 0,
+      "fields": [
+        {
+          "name": "name",
+          "transform": "identity",
+          "source-id": 1,
+          "field-id": 1000
+        }
+      ]
+    }
+  ],
+  "last-partition-id": 1000,
+  "default-sort-order-id": 1,
+  "sort-orders": [
+    {
+      "order-id": 1,
+      "fields": [
+        {
+          "transform": "identity",
+          "source-id": 1,
+          "direction": "asc",
+          "null-order": "nulls-first"
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "write.parquet.compression-codec": "zstd"
+  },
+  "current-snapshot-id": 3822130054520905500,
+  "refs": {
+    "main": {
+      "snapshot-id": 3822130054520905500,
+      "type": "branch"
+    }
+  },
+  "snapshots": [
+    {
+      "sequence-number": 1,
+      "snapshot-id": 3822130054520905500,
+      "timestamp-ms": 1773338034540,
+      "summary": {
+        "operation": "append",
+        "added-files-size": "3896",
+        "added-data-files": "3",
+        "added-records": "3",
+        "changed-partition-count": "3",
+        "total-data-files": "3",
+        "total-delete-files": "0",
+        "total-records": "3",
+        "total-files-size": "3896",
+        "total-position-deletes": "0",
+        "total-equality-deletes": "0"
+      },
+      "manifest-list": "/var/lib/clickhouse/user_files/iceberg_local_basic/metadata/manifest_list_local.avro",
+      "schema-id": 0
+    }
+  ],
+  "statistics": [],
+  "partition-statistics": [],
+  "snapshot-log": [
+    {
+      "timestamp-ms": 1773338034540,
+      "snapshot-id": 3822130054520905500
+    }
+  ],
+  "metadata-log": []
+}

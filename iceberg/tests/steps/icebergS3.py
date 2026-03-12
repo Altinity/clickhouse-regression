@@ -29,6 +29,7 @@ def read_data_with_icebergS3_table_function(
     format="TabSeparated",
     object_storage_cluster=None,
     iceberg_metadata_table_uuid=None,
+    iceberg_metadata_file_path=None,
 ):
     """Read Iceberg tables from S3 using the icebergS3(iceberg) table function."""
     if node is None:
@@ -99,6 +100,11 @@ def read_data_with_icebergS3_table_function(
         query = f"""
             SELECT {columns} 
             FROM {function_name}('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}', SETTINGS iceberg_metadata_table_uuid = '{iceberg_metadata_table_uuid}')
+            """
+    elif iceberg_metadata_file_path:
+        query = f"""
+            SELECT {columns} 
+            FROM {function_name}('{storage_endpoint}', '{s3_access_key_id}', '{s3_secret_access_key}', SETTINGS iceberg_metadata_file_path = '{iceberg_metadata_file_path}')
             """
     else:
         query = f"""
