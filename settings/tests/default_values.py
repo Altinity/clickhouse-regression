@@ -45,6 +45,7 @@ def check_default_value(self, setting):
 def feature(self):
     """Check default values in `system.settings` table."""
     versions = [
+        ">=26.1",
         ">=25.11",
         ">=25.10",
         ">=25.8",
