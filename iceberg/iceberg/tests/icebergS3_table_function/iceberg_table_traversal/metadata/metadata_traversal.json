@@ -1,0 +1,57 @@
+{
+  "format-version": 2,
+  "table-uuid": "exploit-uuid",
+  "location": "/var/lib/clickhouse/user_files/iceberg_traversal_test",
+  "last-sequence-number": 1,
+  "last-updated-ms": 1773335716018,
+  "last-column-id": 1,
+  "current-schema-id": 0,
+  "schemas": [
+    {
+      "type": "struct",
+      "schema-id": 0,
+      "fields": [
+        {
+          "id": 1,
+          "name": "data",
+          "required": false,
+          "type": "binary"
+        }
+      ]
+    }
+  ],
+  "default-spec-id": 0,
+  "partition-specs": [
+    {
+      "spec-id": 0,
+      "fields": []
+    }
+  ],
+  "last-partition-id": 999,
+  "default-sort-order-id": 0,
+  "sort-orders": [
+    {
+      "order-id": 0,
+      "fields": []
+    }
+  ],
+  "current-snapshot-id": 1,
+  "snapshots": [
+    {
+      "sequence-number": 1,
+      "snapshot-id": 1,
+      "timestamp-ms": 1773335716018,
+      "summary": {
+        "operation": "append"
+      },
+      "manifest-list": "/var/lib/clickhouse/user_files/iceberg_traversal_test/metadata/manifest_list_traversal.avro",
+      "schema-id": 0
+    }
+  ],
+  "snapshot-log": [
+    {
+      "timestamp-ms": 1773335716018,
+      "snapshot-id": 1
+    }
+  ]
+}
