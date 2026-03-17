@@ -254,6 +254,11 @@ ffails = {
         lambda test: check_clickhouse_version("<=25.8.15")(test)
         or check_if_not_antalya_build(),
     ),
+    "/iceberg/iceberg engine/: catalog/sort key timezone/*": (
+        Skip,
+        "iceberg_partition_timezone sort key support introduced in antalya-26.1",
+        lambda test: check_if_not_antalya_build(test) or check_clickhouse_version("<26.1")(test),
+    ),
     "/iceberg/iceberg engine/: catalog/dot separated column names/*": (
         Skip,
         "dot-separated column names broken before 25.7 and in 25.11-26.1 (https://github.com/ClickHouse/ClickHouse/issues/94196)",
