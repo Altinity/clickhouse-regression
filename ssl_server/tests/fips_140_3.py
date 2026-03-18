@@ -605,6 +605,157 @@ def dictionary(self):
         bash_tools.command(f"rm -f {server_file_path}")
 
 
+AWSLC_VERSION = "AWS-LC-FIPS-2.0.0"
+AWSLC_ZIP_SHA256 = "6241ec2f13a5f80224ee9cd8592ed66a97d426481066feaa4efc6f24e60bbc96"
+AWSLC_ZIP_URL = f"https://github.com/aws/aws-lc/archive/refs/tags/{AWSLC_VERSION}.zip"
+GO_VERSION = "1.22.5"
+
+
+@TestStep(Given)
+def install_test_deps(self, node):
+    """Install Go and download AWS-LC source inside the ClickHouse container.
+    Returns the AWS-LC source root path."""
+    awslc_src = f"/tmp/aws-lc-{AWSLC_VERSION}"
+
+    with By("installing Go if not already present"):
+        if node.command("go version", no_checks=True).exitcode != 0:
+            node.command(
+                "apt-get update -o Acquire::Retries=3 && "
+                "apt-get install -y --no-install-recommends wget unzip ca-certificates",
+                exitcode=0,
+                timeout=120,
+            )
+            node.command(
+                f"wget -q https://go.dev/dl/go{GO_VERSION}.linux-amd64.tar.gz -O /tmp/go.tar.gz && "
+                "tar -xzf /tmp/go.tar.gz -C /usr/local && "
+                "rm /tmp/go.tar.gz",
+                exitcode=0,
+                timeout=120,
+            )
+            node.command(
+                'echo \'export PATH=$PATH:/usr/local/go/bin\' >> /etc/profile && '
+                "export PATH=$PATH:/usr/local/go/bin && go version",
+                exitcode=0,
+            )
+
+    with And("downloading AWS-LC source if not already present"):
+        if node.command(f"test -f {awslc_src}/ssl/test/runner/runner_test.go", no_checks=True).exitcode != 0:
+            node.command(
+                f"wget -q {AWSLC_ZIP_URL} -O /tmp/awslc.zip && "
+                f"cd /tmp && unzip -qo awslc.zip && rm awslc.zip",
+                exitcode=0,
+                timeout=120,
+            )
+
+    return awslc_src
+
+
+@TestStep(Given)
+def create_symlinks(self, node, clickhouse_binary, names):
+    """Create symlinks for clickhouse multi-tool binary modes."""
+    for name in names:
+        symlink = f"/tmp/{name}"
+        node.command(f"ln -sf {clickhouse_binary} {symlink}", exitcode=0)
+
+
+@TestScenario
+@Name("aws-lc ssl")
+def awslc_ssl_tests(self):
+    """Run the AWS-LC SSL test suite (8037 tests) against the ClickHouse
+    ssl-shim and ssl-handshaker binary modes."""
+    node = self.context.node
+
+    with Given("I install test dependencies"):
+        awslc_src = install_test_deps(node=node)
+
+    with And("I create symlinks for ssl-shim and ssl-handshaker"):
+        create_symlinks(
+            node=node,
+            clickhouse_binary="/usr/bin/clickhouse",
+            names=["clickhouse-ssl-shim", "clickhouse-ssl-handshaker"],
+        )
+
+    with When("I run the SSL test runner"):
+        cmd = node.command(
+            "export PATH=$PATH:/usr/local/go/bin && "
+            f"cd {awslc_src}/ssl/test/runner && "
+            "go test -v -timeout 30m . "
+            "-shim-path /tmp/clickhouse-ssl-shim "
+            "-handshaker-path /tmp/clickhouse-ssl-handshaker "
+            "-num-workers 4",
+            timeout=1800,
+            no_checks=True,
+        )
+
+    with Then("the test run should pass"):
+        assert cmd.exitcode == 0, error()
+
+    with And("output should contain PASS"):
+        assert "PASS" in cmd.output, error()
+
+
+@TestScenario
+@Name("aws-lc acvp")
+def awslc_acvp_tests(self):
+    """Run the AWS-LC ACVP test suite (31 algorithm suites) against the
+    ClickHouse acvp-server binary mode."""
+    node = self.context.node
+
+    with Given("I install test dependencies"):
+        awslc_src = install_test_deps(node=node)
+
+    with And("I create symlink for acvp-server"):
+        create_symlinks(
+            node=node,
+            clickhouse_binary="/usr/bin/clickhouse",
+            names=["clickhouse-acvp-server"],
+        )
+
+    with And("I build acvptool"):
+        node.command(
+            "export PATH=$PATH:/usr/local/go/bin && "
+            f"cd {awslc_src}/util/fipstools/acvp/acvptool && "
+            "go build -o /tmp/acvptool .",
+            exitcode=0,
+            timeout=300,
+        )
+
+    with And("I build testmodulewrapper"):
+        node.command(
+            "export PATH=$PATH:/usr/local/go/bin && "
+            f"cd {awslc_src}/util/fipstools/acvp/acvptool/testmodulewrapper && "
+            "go build -o /tmp/testmodulewrapper .",
+            exitcode=0,
+            timeout=300,
+        )
+
+    with When("I run the ACVP check_expected tests"):
+        cmd = node.command(
+            "export PATH=$PATH:/usr/local/go/bin && "
+            f"cd {awslc_src}/util/fipstools/acvp/acvptool/test && "
+            "go run check_expected.go "
+            "-tool /tmp/acvptool "
+            "-module-wrappers modulewrapper:/tmp/clickhouse-acvp-server,testmodulewrapper:/tmp/testmodulewrapper "
+            "-tests tests.json",
+            timeout=600,
+            no_checks=True,
+        )
+
+    with Then("the test run should pass"):
+        assert cmd.exitcode == 0, error()
+
+    with And("output should indicate all tests passed"):
+        assert "All tests passed" in cmd.output, error()
+
+
+@TestFeature
+@Name("aws-lc test suites")
+def awslc_test_suites(self):
+    """Run the AWS-LC SSL and ACVP test suites against the ClickHouse FIPS binary."""
+    Scenario(run=awslc_ssl_tests)
+    Scenario(run=awslc_acvp_tests)
+
+
 @TestScenario
 @Name("log check")
 @Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC("1.0"))
@@ -872,6 +1023,7 @@ def feature(self, node="clickhouse1"):
     if self.context.fips_mode:
         Feature(run=fips_check)
         Scenario(run=break_hash)
+        Feature(run=awslc_test_suites)
 
     Feature(run=server)
     Feature(run=clickhouse_client)
