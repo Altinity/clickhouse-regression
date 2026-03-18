@@ -10,6 +10,67 @@ from s3.requirements.export_part import *
 from alter.stress.tests.tc_netem import *
 
 
+def _select_source_and_destination_data(source_table, destination_table, node):
+    source_data = select_all_ordered(table_name=source_table, node=node)
+    destination_data = select_all_ordered(table_name=destination_table, node=node)
+    return source_data, destination_data
+
+
+def _assert_with_retries(assert_fn, timeout=30, delay=1):
+    for retry in retries(timeout=timeout, delay=delay):
+        with retry:
+            assert_fn()
+
+
+def _assert_source_matches_destination_with_retries(source_table, destination_table):
+    _assert_with_retries(
+        lambda: source_matches_destination(
+            source_table=source_table,
+            destination_table=destination_table,
+        )
+    )
+
+
+def _assert_destination_empty_with_retries(source_table, destination_table, node):
+    def _check():
+        _, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert len(destination_data) == 0, error()
+
+    _assert_with_retries(_check)
+
+
+def _assert_destination_matches_source_with_retries(
+    source_table, destination_table, node
+):
+    def _check():
+        source_data, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert source_data == destination_data, error()
+
+    _assert_with_retries(_check)
+
+
+def _assert_destination_subset_of_source_with_retries(
+    source_table, destination_table, node
+):
+    def _check():
+        source_data, destination_data = _select_source_and_destination_data(
+            source_table=source_table,
+            destination_table=destination_table,
+            node=node,
+        )
+        assert set(source_data) >= set(destination_data), error()
+
+    _assert_with_retries(_check)
+
+
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPart_NetworkResilience_PacketIssues("1.0"))
 def packet_delay(self, delay_ms):
@@ -35,13 +96,11 @@ def packet_delay(self, delay_ms):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -69,13 +128,11 @@ def packet_loss(self, percent_loss):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -107,13 +164,11 @@ def packet_loss_gemodel(self, interruption_probability, recovery_probability):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -143,13 +198,11 @@ def packet_corruption(self, percent_corrupt):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -179,13 +232,11 @@ def packet_duplication(self, percent_duplicated):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -217,13 +268,11 @@ def packet_reordering(self, delay_ms, percent_reordered):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 @TestScenario
@@ -251,13 +300,11 @@ def packet_rate_limit(self, rate_mbit):
             destination_table=s3_table_name,
         )
 
-    for retry in retries(timeout=30, delay=1):
-        with retry:
-            with Then("Check source matches destination"):
-                source_matches_destination(
-                    source_table=source_table,
-                    destination_table=s3_table_name,
-                )
+    with Then("Check source matches destination"):
+        _assert_source_matches_destination_with_retries(
+            source_table=source_table,
+            destination_table=s3_table_name,
+        )
 
 
 def get_minio_interruption_strategies():
@@ -432,22 +479,28 @@ def clickhouse_interruption(self, strategy, signal, safe):
 
     with And("I get data from both tables"):
         wait_for_all_exports_to_complete()
-        source_data = select_all_ordered(
-            table_name=source_table, node=self.context.node
-        )
-        destination_data = select_all_ordered(
-            table_name=s3_table_name, node=self.context.node
-        )
 
     if strategy == "before":
         with And("Destination should be empty"):
-            assert len(destination_data) == 0, error()
-    elif strategy == "after" or safe == True:
+            _assert_destination_empty_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
+    elif strategy == "after" and safe == True:
         with And("Destination matches source"):
-            assert source_data == destination_data, error()
+            _assert_destination_matches_source_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
     else:
         with And("Destination data should be a subset of source data"):
-            assert set(source_data) >= set(destination_data), error()
+            _assert_destination_subset_of_source_with_retries(
+                source_table=source_table,
+                destination_table=s3_table_name,
+                node=self.context.node,
+            )
 
 
 @TestFeature
