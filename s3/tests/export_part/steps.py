@@ -673,6 +673,7 @@ def export_parts(
     exitcode=0,
     settings=None,
     inline_settings=True,
+    continue_if_already_being_exported=False,
 ):
     """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
     if node is None:
@@ -686,6 +687,35 @@ def export_parts(
 
     no_checks = exitcode != 0
     output = []
+
+    if continue_if_already_being_exported:
+        for part in parts:
+            for attempt in retries(timeout=200, delay=3):
+                with attempt:
+                    result = node.query(
+                        f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                        exitcode=None,
+                        no_checks=True,
+                        steps=True,
+                        settings=settings,
+                        inline_settings=inline_settings,
+                    )
+
+                    if result.exitcode == exitcode:
+                        output.append(result)
+                        break
+
+                    output_lower = result.output.lower()
+
+                    if "already being exported" in output_lower:
+                        break
+
+                    if "background executor is busy" in output_lower:
+                        fail("background executor is busy")
+
+                    assert result.exitcode == exitcode, error(result.output)
+
+        return output
 
     for part in parts:
         output.append(

@@ -38,7 +38,8 @@ def system_events_and_part_log(self):
 
     with And("I read the final logged export events and part log"):
         final_events = get_export_events()
-        part_log = get_part_log()
+        flush_log(table_name="system.part_log")
+        part_log = get_part_log(table_name=source_table)
 
     with Then("I check that the number of part exports is correct"):
         assert (
@@ -47,8 +48,12 @@ def system_events_and_part_log(self):
 
     with And("I check that the part log contains the correct parts"):
         parts = get_parts(table_name=source_table)
-        for part in parts:
-            assert part in part_log, error()
+        for attempt in retries(timeout=10, delay=1):
+            with attempt:
+                flush_log(table_name="system.part_log")
+                part_log = get_part_log(table_name=source_table)
+                for part in parts:
+                    assert part in part_log, error()
 
 
 @TestOutline(Scenario)
@@ -196,6 +201,7 @@ def background_move_pool_size(self, background_move_pool_size):
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
+            continue_if_already_being_exported=True,
         )
 
     with Then("I check that the number of threads used for exporting parts is correct"):
