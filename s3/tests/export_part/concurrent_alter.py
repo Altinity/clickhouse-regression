@@ -1,5 +1,6 @@
 from testflows.core import *
 import s3.tests.export_part.steps as steps
+import helpers.config.config_d as config_d
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
@@ -336,9 +337,27 @@ def during_export(self, example):
     RQ_ClickHouse_ExportPart_NetworkResilience_DestinationInterruption("1.0"),
 )
 def during_minio_interruption(self, example):
-    """Test altering the source table during MinIO interruption."""
+    """Test altering the source table during MinIO interruption.
 
-    with Given("I create a populated source table and empty S3 table"):
+    With low s3_retry_attempts, background export tasks fail quickly when
+    MinIO is down.  After MinIO restarts and the alter completes we create
+    a fresh S3 destination (matching the post-alter schema) and re-export
+    to verify data integrity.
+    """
+
+    export_settings = [
+        ("export_merge_tree_part_throw_on_pending_mutations", False),
+        ("export_merge_tree_part_throw_on_pending_patch_parts", False),
+    ]
+
+    with Given("I lower s3_retry_attempts so stuck exports fail quickly"):
+        config_d.create_and_add(
+            entries={"s3_retry_attempts": "3"},
+            config_file="s3_retry_attempts.xml",
+            node=self.context.node,
+        )
+
+    with And("I create a populated source table and empty S3 table"):
         source_table = create_source_table(alter_function=example.alter_function)
         s3_table_name = steps.create_s3_table(
             table_name="s3",
@@ -352,14 +371,11 @@ def during_minio_interruption(self, example):
     with And("I stop MinIO"):
         steps.kill_minio()
 
-    with When("I export parts to the S3 table"):
+    with When("I try to export parts to the S3 table while MinIO is down"):
         steps.export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
-            settings=[
-                ("export_merge_tree_part_throw_on_pending_mutations", False),
-                ("export_merge_tree_part_throw_on_pending_patch_parts", False),
-            ],
+            settings=export_settings,
         )
 
     with And("I start merges"):
@@ -372,13 +388,32 @@ def during_minio_interruption(self, example):
     with And("I start MinIO"):
         steps.start_minio()
 
+    with And("I wait for any in-flight exports to finish"):
+        steps.wait_for_all_exports_to_complete(table_name=source_table)
+
+    with And("I create a fresh S3 table matching the post-alter source schema"):
+        source_columns = steps.get_column_info(table_name=source_table)
+        s3_table_name = steps.create_s3_table(
+            table_name="s3_post_alter",
+            create_new_bucket=True,
+            columns=source_columns,
+        )
+
+    with And("I re-export parts now that MinIO is available"):
+        steps.export_parts(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            settings=export_settings,
+        )
+
     with Then("Check source matches destination"):
         steps.part_log_matches_destination(
             source_table=source_table,
             destination_table=s3_table_name,
         )
+        source_data = select_all_ordered(table_name=source_table)
         destination_data = select_all_ordered(table_name=s3_table_name)
-        assert initial_source_data == destination_data, error()
+        assert source_data == destination_data, error()
 
 
 @TestOutline(Scenario)
