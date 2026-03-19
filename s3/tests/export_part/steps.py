@@ -673,8 +673,13 @@ def export_parts(
     exitcode=0,
     settings=None,
     inline_settings=True,
+    retry_on_busy=True,
 ):
-    """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
+    """Export parts from a source table to a destination table on the same node.
+    If parts are not provided, all parts will be exported.
+    When retry_on_busy is True (default) and exitcode=0, retries exports that
+    fail with 'Background executor is busy' until a slot becomes available.
+    """
     if node is None:
         node = self.context.node
 
@@ -688,16 +693,31 @@ def export_parts(
     output = []
 
     for part in parts:
-        output.append(
-            node.query(
-                f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
-                exitcode=exitcode,
-                no_checks=no_checks,
-                steps=True,
-                settings=settings,
-                inline_settings=inline_settings,
+        if retry_on_busy and exitcode == 0:
+            for attempt in retries(timeout=300, delay=0.1):
+                with attempt:
+                    r = node.query(
+                        f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                        no_checks=True,
+                        steps=True,
+                        settings=settings,
+                        inline_settings=inline_settings,
+                    )
+                    if r.exitcode != 0 and "Background executor is busy" in r.output:
+                        fail("Background executor is busy, retrying")
+                    assert r.exitcode == 0, error()
+            output.append(r)
+        else:
+            output.append(
+                node.query(
+                    f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                    exitcode=exitcode,
+                    no_checks=no_checks,
+                    steps=True,
+                    settings=settings,
+                    inline_settings=inline_settings,
+                )
             )
-        )
 
     return output
 
@@ -715,8 +735,12 @@ def export_parts_to_table_function(
     structure=None,
     partition_by=None,
     uri=None,
+    retry_on_busy=True,
 ):
-    """Export parts from a source table to a table function destination."""
+    """Export parts from a source table to a table function destination.
+    When retry_on_busy is True (default) and exitcode=0, retries exports that
+    fail with 'Background executor is busy' until a slot becomes available.
+    """
     if node is None:
         node = self.context.node
 
@@ -752,16 +776,31 @@ def export_parts_to_table_function(
 
         query = f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE FUNCTION s3({table_function_params}) PARTITION BY {partition_by}"
 
-        output.append(
-            node.query(
-                query,
-                exitcode=exitcode,
-                no_checks=no_checks,
-                steps=True,
-                settings=settings,
-                inline_settings=inline_settings,
+        if retry_on_busy and exitcode == 0:
+            for attempt in retries(timeout=300, delay=0.1):
+                with attempt:
+                    r = node.query(
+                        query,
+                        no_checks=True,
+                        steps=True,
+                        settings=settings,
+                        inline_settings=inline_settings,
+                    )
+                    if r.exitcode != 0 and "Background executor is busy" in r.output:
+                        fail("Background executor is busy, retrying")
+                    assert r.exitcode == 0, error()
+            output.append(r)
+        else:
+            output.append(
+                node.query(
+                    query,
+                    exitcode=exitcode,
+                    no_checks=no_checks,
+                    steps=True,
+                    settings=settings,
+                    inline_settings=inline_settings,
+                )
             )
-        )
 
     return output
 
