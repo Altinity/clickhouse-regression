@@ -42,7 +42,7 @@ services:
         condition: service_healthy
 
   keeper:
-    image: altinity/clickhouse-keeper:25.8.14.20001.altinityantalya
+    image: altinity/clickhouse-keeper:25.8.16.20002.altinityantalya
     container_name: keeper
     hostname: keeper
     ports:
