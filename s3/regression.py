@@ -526,6 +526,11 @@ ffails = {
         "Export partition introduced in Antalya build",
         check_if_not_antalya_build or check_clickhouse_version("<25.8"),
     ),
+    "/:/:/export tests/export part/filename pattern/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        check_if_not_antalya_build or check_clickhouse_version("<26.1"),
+    ),
 }
 
 
