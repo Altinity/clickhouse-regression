@@ -10,12 +10,12 @@ on:
         description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
-        default: docker://altinity/clickhouse-server:25.3.8.10041.altinitystable
+        default: docker://altinity/clickhouse-server:25.3.8.10042.altinitystable
       version:
-        description: "🎯 Expected version. Example: 25.3.8.10041"
+        description: "🎯 Expected version. Example: 25.3.8.10042"
         type: string
         required: true
-        default: 25.3.8.10041.altinitystable
+        default: 25.3.8.10042.altinitystable
       arch:
         description: "🖥 Architecture"
         type: choice
