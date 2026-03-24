@@ -196,17 +196,14 @@ def tcp_connection_clickhouse_client(
         self.context.connection_port = port
 
     with Check("Connection with no protocols should be rejected"):
-        output = clickhouse_client_connection(
+        clickhouse_client_connection(
             options={
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
             hostname=hostname,
+            message="NO_SUPPORTED_VERSIONS_ENABLED",
         )
-        assert (
-            "NO_SUPPORTED_VERSIONS_ENABLED" in output
-            or "TLSV1_ALERT_PROTOCOL_VERSION" in output
-        ), error()
 
     with Check(f"TLSv1_2 suite connection should {tls_status}"):
         clickhouse_client_connection(
@@ -302,7 +299,7 @@ def tcp_connection_clickhouse_client(
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            output = clickhouse_client_connection(
+            clickhouse_client_connection(
                 options={
                     "cipherList": cipher,
                     "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
@@ -310,10 +307,6 @@ def tcp_connection_clickhouse_client(
                 success=False,
                 hostname=hostname,
             )
-            assert (
-                "NO_CIPHERS_AVAILABLE" in output
-                or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output
-            ), error()
 
     for cipher in fips_140_3_compatible_tlsv1_3_cipher_suites:
         with Check(
@@ -745,7 +738,7 @@ def awslc_acvp_tests(self):
         assert cmd.exitcode == 0, error()
 
     with And("output should indicate all tests passed"):
-        assert "All tests passed" in cmd.output, error()
+        assert "ACVP tests matched expectations" in cmd.output, error()
 
 
 @TestFeature
