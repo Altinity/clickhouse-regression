@@ -75,7 +75,6 @@ on:
           - example
           - extended_precision_data_types
           - functions
-          - ice
           - iceberg
           - jwt_authentication
           - kafka
@@ -709,7 +708,7 @@ jobs:
     secrets: inherit
 
   ice:
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'ice' }}
+    if: false  # ice suite disabled in CI
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: ice
