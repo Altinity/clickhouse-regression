@@ -81,6 +81,20 @@ xfails = {
     "/aggregate functions/part */state/topKWeightedState/datatypes/permutations/:": [
         (Fail, issue_55997)
     ],
+    "/aggregate functions/part */state/quantileDeterministicState/*": [
+        (
+            Fail,
+            "use-of-uninitialized-value, https://github.com/ClickHouse/ClickHouse/pull/81062",
+            check_clickhouse_version(">=25.1") and check_clickhouse_version("<25.8"),
+        )
+    ],
+    "/aggregate functions/part */state/quantilesDeterministicState/*": [
+        (
+            Fail,
+            "use-of-uninitialized-value, https://github.com/ClickHouse/ClickHouse/pull/81062",
+            check_clickhouse_version(">=25.1") and check_clickhouse_version("<25.8"),
+        )
+    ],
     "/aggregate functions/part */state/maxIntersectionsState/:": [
         (
             Fail,
