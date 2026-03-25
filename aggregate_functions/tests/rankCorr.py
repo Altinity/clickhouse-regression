@@ -65,8 +65,16 @@ def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
                 )
 
     with Check("with group by"):
+        snapshot_name_override = None
+        if "State" in self.name and "_binary" in getattr(
+            self.context, "clickhouse_path", ""
+        ):
+            snapshot_name_override = (
+                current().name.replace("/part 3", "") + "_binary"
+            )
         execute_query(
-            f"SELECT {func.format(params='sin(number),exp(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(10) GROUP BY number % 2"
+            f"SELECT {func.format(params='sin(number),exp(number)')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(10) GROUP BY number % 2",
+            snapshot_name=snapshot_name_override,
         )
 
     with Check("some negative values"):
