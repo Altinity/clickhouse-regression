@@ -851,6 +851,7 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.clickhouse_path = cluster_args.get("clickhouse_path", "")
 
     if stress is not None:
         self.context.stress = stress
