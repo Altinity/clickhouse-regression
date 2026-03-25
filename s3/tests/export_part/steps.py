@@ -8,7 +8,12 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
+from helpers.cluster import MESSAGES_TO_RETRY
 from platform import processor
+
+# Stress/concurrent scenarios can hit ClickHouse 745 SERVER_OVERLOADED (CPU wait ratio);
+# extend default client retries for partition setup INSERTs only.
+_EXPORT_PART_MESSAGES_TO_RETRY = list(MESSAGES_TO_RETRY) + ["(SERVER_OVERLOADED)"]
 
 MINIO_CONTAINER = (
     "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
@@ -230,6 +235,7 @@ def create_new_partition(
                 f"INSERT INTO {table_name} (p, i) SELECT {partition_id}, rand64() FROM numbers({number_of_values})",
                 exitcode=0,
                 steps=True,
+                messages_to_retry=_EXPORT_PART_MESSAGES_TO_RETRY,
             )
 
     return partition_id
