@@ -251,6 +251,11 @@ def insert_into_function(self):
     ):
         if check_clickhouse_version(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
+        elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
+            "<26.1"
+        )(self):
+            # 24.3–26.0: Parquet/S3 output differs from both pre-24.3 and 26.1+ baselines.
+            self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
         elif check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
             "<24.3"
         )(self):
@@ -294,6 +299,10 @@ def select_from_function_manual_cast_types(self):
     with Check("I check that the `s3` table function reads data correctly"):
         if check_clickhouse_version(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
+        elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
+            "<26.1"
+        )(self):
+            self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
         elif check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
             "<24.3"
         )(self):
@@ -343,6 +352,10 @@ def select_from_function_auto_cast_types(self):
     with Check("I check that the `s3` table function reads data correctly"):
         if check_clickhouse_version(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
+        elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
+            "<26.1"
+        )(self):
+            self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
         elif check_clickhouse_version(">=23.3")(self) and check_clickhouse_version(
             "<24.3"
         )(self):
