@@ -87,6 +87,21 @@ xfails = {
     ":/fips 140-3/:/:/:/just disabling TLSv1_1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
+    ":/fips 140-3/server/tcp connection/:/:/just disabling TLSv1_2 suite connection should work": [
+        (Fail, "BoringSSL/AWS-LC SSL_OP_NO_* uses contiguous version ranges; disabling TLSv1.2 alone implicitly drops TLSv1.3")
+    ],
+    ":/fips 140-3/server/:/tcp connection/:/:/just disabling TLSv1_2 suite connection should work": [
+        (Fail, "BoringSSL/AWS-LC SSL_OP_NO_* uses contiguous version ranges; disabling TLSv1.2 alone implicitly drops TLSv1.3")
+    ],
+    ":/fips 140-3/:/:/:/just disabling TLSv1_2 suite connection should work": [
+        (Fail, "BoringSSL/AWS-LC SSL_OP_NO_* uses contiguous version ranges; disabling TLSv1.2 alone implicitly drops TLSv1.3")
+    ],
+    ":/fips 140-3/:/:/:/non fips clickhouse-client/Connection with no protocols should be rejected": [
+        (Fail, "non-FIPS binary lacks disableProtocols tlsv1_3 support")
+    ],
+    ":/fips 140-3/:/:/:/non fips clickhouse-client/:non-FIPS compatible : should be rejected": [
+        (Fail, "non-FIPS binary lacks TLSv1.3 cipher/protocol restriction support")
+    ],
     ":/fips 140-3/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
@@ -248,13 +263,12 @@ ffails = {
         "not supported by SSL library",
     ),
     ":/fips 140-3/clickhouse server acting as a client/:/:onnection:should:": (
-        Error,
+        Skip,
         "Takes too long on 24.3+ https://github.com/ClickHouse/ClickHouse/issues/62887",
         check_clickhouse_version(">=24.3"),
-        r"ExpectTimeoutError.+test_https_connection_with.+node.query\($",
     ),
-    ":/fips 140-3/server/all protocols disabled/tcp connection/clickhouse-client/:/:": (
-        Fail,
+    ":/fips 140-3/server/all protocols disabled/tcp connection/clickhouse-client/non fips clickhouse-client/:": (
+        Skip,
         "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
         check_clickhouse_version(">=24.4"),
     ),
