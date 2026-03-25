@@ -16,6 +16,26 @@ fips_compatible_tlsv1_2_cipher_suites = [
     "AES256-GCM-SHA384",
 ]
 
+fips_140_3_compatible_tlsv1_2_cipher_suites = [
+    "ECDHE-RSA-AES128-GCM-SHA256",
+    "ECDHE-RSA-AES256-GCM-SHA384",
+    "ECDHE-ECDSA-AES128-GCM-SHA256",
+    "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "AES128-GCM-SHA256",
+    "AES256-GCM-SHA384",
+]
+
+fips_140_3_compatible_tlsv1_3_cipher_suites = [
+    "TLS_AES_128_GCM_SHA256",
+    "TLS_AES_256_GCM_SHA384",
+]
+
+all_tlsv1_3_ciphers = [
+    "TLS_AES_256_GCM_SHA384",
+    "TLS_CHACHA20_POLY1305_SHA256",
+    "TLS_AES_128_GCM_SHA256",
+]
+
 all_ciphers = [
     "TLS_AES_256_GCM_SHA384",
     "TLS_CHACHA20_POLY1305_SHA256",
