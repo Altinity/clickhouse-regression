@@ -180,6 +180,8 @@ allow_hyperscan = r"""'{"default":"1"}'"""
 
 allow_introspection_functions = r"""'{"default":"0"}'"""
 
+allow_local_data_lakes = r"""'{"default":"0"}'"""
+
 allow_materialized_view_with_bad_select = r"""'{"default":"0"}'"""
 
 allow_named_collection_override_by_default = r"""'{"default":"1"}'"""
@@ -696,6 +698,8 @@ enable_adaptive_memory_spill_scheduler = r"""'{"default":"0"}'"""
 
 enable_add_distinct_to_in_subqueries = r"""'{"default":"0"}'"""
 
+enable_alias_marker = r"""'{"default":"1"}'"""
+
 enable_analyzer = r"""'{"default":"1"}'"""
 
 enable_blob_storage_log = r"""'{"default":"1"}'"""
@@ -806,11 +810,17 @@ execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
+export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
+
 export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_overwrite_file_if_exists = r"""'{"default":"0"}'"""
+
+export_merge_tree_part_throw_on_pending_mutations = r"""'{"default":"1"}'"""
+
+export_merge_tree_part_throw_on_pending_patch_parts = r"""'{"default":"1"}'"""
 
 export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 
@@ -1075,6 +1085,8 @@ iceberg_engine_ignore_schema_evolution = r"""'{"default":"0"}'"""
 iceberg_metadata_compression_method = r"""'{"default":""}'"""
 
 iceberg_metadata_log_level = r"""'{"default":"none"}'"""
+
+iceberg_partition_timezone = r"""'{"default":""}'"""
 
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
@@ -2579,6 +2591,8 @@ send_progress_in_http_headers = r"""'{"default":"0"}'"""
 send_timeout = r"""'{"default":"300"}'"""
 
 serialize_query_plan = r"""'{"default":"0"}'"""
+
+serialize_string_in_memory_with_zero_byte = r"""'{"default":"1"}'"""
 
 session_timezone = r"""'{"default":""}'"""
 

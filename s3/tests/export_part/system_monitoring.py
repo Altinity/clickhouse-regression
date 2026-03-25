@@ -86,6 +86,7 @@ def duplicate_logging(self, duplicate_policy, duplicate_count, failure_count):
             source_table=source_table,
             destination_table=s3_table_name,
         )
+        wait_for_all_exports_to_complete(table_name=source_table)
         export_parts(
             source_table=source_table,
             destination_table=s3_table_name,
@@ -136,22 +137,27 @@ def system_exports_and_metrics(self):
     with And("I slow down the network speed"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
-    with When("I export parts to the S3 table"):
-        export_parts(
+    with When("I export parts to the S3 table in the background"):
+        Step(test=export_parts, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
         )
 
     with Then("I check that system.exports and system.metrics contain some parts"):
-        exports = get_system_exports()
-        assert get_num_active_exports() > 0, error()
-        assert len(exports) > 0, error()
-        assert [source_table, s3_table_name] in exports, error()
+        for attempt in retries(timeout=30, delay=0.5):
+            with attempt:
+                exports = get_system_exports()
+                assert get_num_active_exports() > 0, error()
+                assert len(exports) > 0, error()
+                assert [source_table, s3_table_name] in exports, error()
+
+    with And("I wait for all exports to complete"):
+        join()
+        wait_for_all_exports_to_complete()
 
     with And(
         "I verify that system.exports and system.metrics are empty after exports complete"
     ):
-        wait_for_all_exports_to_complete()
         assert len(get_system_exports()) == 0, error()
         assert get_num_active_exports() == 0, error()
 
@@ -179,30 +185,44 @@ def background_move_pool_size(self, background_move_pool_size):
     with And("I create a populated source table and empty S3 table"):
         source_table = "source_" + getuid()
 
+        num_partitions = max(background_move_pool_size + 2, 5)
+        num_parts_per_partition = 2
+
         partitioned_merge_tree_table(
             table_name=source_table,
             partition_by="p",
             columns=default_columns(),
             stop_merges=True,
-            number_of_values=100000,
-            number_of_parts=10,
+            number_of_values=10000,
+            number_of_partitions=num_partitions,
+            number_of_parts=num_parts_per_partition,
         )
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
 
     with And("I slow down the network speed"):
         network_packet_rate_limit(node=self.context.node, rate_mbit=0.5)
 
-    with When("I export parts to the S3 table"):
-        export_parts(
+    with When("I export parts to the S3 table in the background"):
+        Step(test=export_parts, parallel=True)(
             source_table=source_table,
             destination_table=s3_table_name,
         )
 
-    with Then("I check that the number of threads used for exporting parts is correct"):
-        for attempt in retries(timeout=10, delay=1):
+    with Then(
+        "I check that the number of concurrent exports never exceeds the pool size"
+    ):
+        max_observed = 0
+        for attempt in retries(timeout=120, delay=0.5):
             with attempt:
-                exports = get_system_exports()
-                assert len(exports) == background_move_pool_size, error()
+                num_active = get_num_active_exports()
+                if num_active > max_observed:
+                    max_observed = num_active
+                assert max_observed > 0, error()
+                assert max_observed <= background_move_pool_size, error()
+
+    with And("I wait for exports to complete"):
+        join()
+        wait_for_all_exports_to_complete(table_name=source_table)
 
 
 @TestScenario

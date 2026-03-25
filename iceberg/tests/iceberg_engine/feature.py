@@ -65,6 +65,9 @@ def feature(self, minio_root_user, minio_root_password):
         Feature(
             test=load("iceberg.tests.iceberg_engine.dot_separated_column_names", "feature"),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        Feature(
+            test=load("iceberg.tests.iceberg_engine.sort_key_timezone", "feature"),
+        )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     with Feature("glue catalog"):
         self.context.catalog = "glue"
