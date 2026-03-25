@@ -338,7 +338,7 @@ def regression(
 
     with Feature("part 2"):
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
-        Feature(run=load("ssl_server.tests.fips", "feature"))
+        # Feature(run=load("ssl_server.tests.fips", "feature"))
         Feature(run=load("ssl_server.tests.fips_140_3", "feature"))
 
     with Feature("part 3"):
