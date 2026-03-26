@@ -30,6 +30,12 @@ ffails = {
         "swarms work only with antalya",
         check_if_not_antalya_build,
     ),
+    "/swarms/feature/task rescheduling/*": (
+        Skip,
+        "task rescheduling fix was introduced in antalya-26.1 by PR #1493",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.1")(test),
+    ),
 }
 
 
