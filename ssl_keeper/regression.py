@@ -18,9 +18,6 @@ xfails = {
     "/ssl keeper/FIPS SSL/openssl check/port:%%%%/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
-    # "/ssl keeper/fips 140-3/openssl check/port﹕9444/connection using non-FIPS compatible TLSv1․2 cipher : should be rejected": [
-    #     (Fail, "Keeper Raft port (NuRaft) does not enforce cipherList restrictions from openSSL config")
-    # ],
     "/ssl keeper/fips 140-3/tcp connection check/port﹕9440/just disabling TLSv1․1 suite connection should work": [
         (Fail, "BoringSSL/AWS-LC requires contiguous TLS version range; disabling only TLSv1.1 creates a gap")
     ],

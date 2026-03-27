@@ -769,14 +769,27 @@ def log_check(self):
 def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPS compliant AWS-LC library."""
     node = self.context.node
-    with When("I read the system.build_options table"):
-        output = node.query(
-            "SELECT * FROM system.build_options FORMAT TabSeparated"
-        ).output
-        debug(output)
 
-    with Then("I check that FIPS mode is present"):
-        assert "fips" in output or "FIPS" in output, error()
+    with When("I check OPENSSL_VERSION is AWS-LC-FIPS"):
+        output = node.query(
+            "SELECT value FROM system.build_options WHERE name = 'OPENSSL_VERSION'"
+        ).output.strip()
+        with Then("value should indicate AWS-LC FIPS"):
+            assert "AWS-LC-FIPS" in output, error(f"Expected AWS-LC-FIPS in OPENSSL_VERSION, got: {output}")
+
+    with And("I check OPENSSL_IS_BORING_SSL is set"):
+        output = node.query(
+            "SELECT value FROM system.build_options WHERE name = 'OPENSSL_IS_BORING_SSL'"
+        ).output.strip()
+        with Then("value should be 1"):
+            assert output == "1", error(f"Expected OPENSSL_IS_BORING_SSL=1, got: {output}")
+
+    with And("I check FIPS_CLICKHOUSE is set"):
+        output = node.query(
+            "SELECT value FROM system.build_options WHERE name = 'FIPS_CLICKHOUSE'"
+        ).output.strip()
+        with Then("value should be 1"):
+            assert output == "1", error(f"Expected FIPS_CLICKHOUSE=1, got: {output}")
 
 
 @TestScenario
