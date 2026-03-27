@@ -890,6 +890,8 @@ execute_exists_as_scalar_subquery = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_file_already_exists_policy = r"""'{"default":"skip"}'"""
 
+export_merge_tree_part_filename_pattern = r"""'{"default":"{part_name}_{checksum}"}'"""
+
 export_merge_tree_part_max_bytes_per_file = r"""'{"default":"0"}'"""
 
 export_merge_tree_part_max_rows_per_file = r"""'{"default":"0"}'"""
@@ -1187,6 +1189,8 @@ iceberg_partition_timezone = r"""'{"default":""}'"""
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
 
 iceberg_timestamp_ms = r"""'{"default":"0"}'"""
+
+iceberg_timezone_for_timestamptz = r"""'{"default":"UTC"}'"""
 
 idle_connection_timeout = r"""'{"default":"3600"}'"""
 
@@ -2006,7 +2010,13 @@ number_of_mutations_to_delay = r"""'{"default":"0"}'"""
 
 number_of_mutations_to_throw = r"""'{"default":"0"}'"""
 
+object_storage_cluster = r"""'{"default":""}'"""
+
 object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
+
+object_storage_max_nodes = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator = r"""'{"default":"0"}'"""
 
 odbc_bridge_connection_pool_size = r"""'{"default":"16"}'"""
 
