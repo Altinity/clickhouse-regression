@@ -10,11 +10,19 @@ from base_58.requirements.requirements import *
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import check_clickhouse_version, experimental_analyzer, check_with_any_sanitizer
 
 pr_70846 = "https://github.com/ClickHouse/ClickHouse/pull/70846"
 
 xfails = {
+    # Memory usage tests fail with sanitizers due to test code issues and memory overhead
+    "/base58/memory usage/*": [
+        (
+            Error,
+            "Memory usage tests have issues with sanitizer builds",
+            check_with_any_sanitizer,
+        )
+    ],
     "alias input/alias instead of table and column": [(Fail, "not implemented")],
     "/base58/unsupported types constant/Nullable（FixedString（3））/*": [
         (

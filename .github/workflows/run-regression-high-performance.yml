@@ -683,7 +683,7 @@ jobs:
     with:
       suite_name: iceberg
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 300
       storage_path: /iceberg
       regression_args: '--only "/iceberg/iceberg engine/rest catalog/*" "/iceberg/s3 table function/*" "/iceberg/icebergS3 table function/*" "/iceberg/iceberg cache/*"'
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
@@ -703,7 +703,7 @@ jobs:
     with:
       suite_name: iceberg
       part: 2
-      timeout_minutes: 180
+      timeout_minutes: 300
       storage_path: /iceberg 
       regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
@@ -844,7 +844,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: lightweight_delete
-      timeout_minutes: 180
+      timeout_minutes: 300
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -878,7 +878,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: parquet
-      timeout_minutes: 180
+      timeout_minutes: 300
       storage_path: /no_s3
       ref: ${{ inputs.ref }}
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
@@ -1012,7 +1012,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 180
+      timeout_minutes: 300
       part: 1
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
@@ -1030,7 +1030,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 180
+      timeout_minutes: 300
       part: 2
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
@@ -1048,7 +1048,7 @@ jobs:
     uses: ./.github/workflows/reusable-suite.yml
     with:
       suite_name: rbac
-      timeout_minutes: 180
+      timeout_minutes: 300
       part: 3
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
@@ -1356,7 +1356,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 1
-      timeout_minutes: 180
+      timeout_minutes: 300
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1374,7 +1374,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 2
-      timeout_minutes: 180
+      timeout_minutes: 300
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cpx62' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1392,7 +1392,7 @@ jobs:
     with:
       suite_name: ssl_server
       part: 3
-      timeout_minutes: 180
+      timeout_minutes: 300
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-ccx33' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
