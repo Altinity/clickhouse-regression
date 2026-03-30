@@ -36,7 +36,7 @@ DEFAULTS = {
     "flags": "none",
     "suite": "all",
     "output_format": "classic",
-    "artifacts": "public",
+    "artifacts": "internal",
     "branch": "main",
     "arch": "x86",
 }
