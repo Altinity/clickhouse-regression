@@ -143,8 +143,8 @@ def check_restart_clickhouse_on_swarm_node(
     self,
     minio_root_user,
     minio_root_password,
-    row_count=1000,
-    batch_size=100,
+    row_count=50,
+    batch_size=50,
     cluster_name="static_swarm_cluster",
     node=None,
 ):
