@@ -231,41 +231,68 @@ export GITHUB_TOKEN="your_github_token"
 | `--debug`             | Enable debug mode with verbose output.                                                                                                                                     | `False`                                                           |
 | `--list-running`      | List all currently running workflows and exit.                                                                                                                             | `False`                                                           |
 
-### Available Test Suites
-
-`all`, `all_aws`, `all_gcs`, `aes_encryption`, `aggregate_functions`, `atomic_insert`, `alter_all`, `alter_replace_partition`, `alter_attach_partition`, `alter_move_partition`, `attach`, `base_58`, `benchmark_all`, `benchmark_aws`, `benchmark_gcs`, `benchmark_minio`, `clickhouse_keeper`, `clickhouse_keeper_failover`, `data_types`, `datetime64_extended_range`, `disk_level_encryption`, `dns`, `engines`, `example`, `extended_precision_data_types`, `functions`, `iceberg`, `jwt_authentication`, `kafka`, `kerberos`, `key_value`, `ldap`, `lightweight_delete`, `memory`, `oauth`, `parquet_all`, `parquet`, `parquet_minio`, `parquet_s3`, `parquet_native_v3`, `parquet_minio_native_v3`, `parquet_s3_native_v3`, `part_moves_between_shards`, `rbac`, `s3_all`, `s3_aws`, `s3_azure`, `s3_gcs`, `s3_minio`, `export_part`, `export_partition`, `selects`, `session_timezone`, `settings`, `ssl_server`, `swarms`, `tiered_storage_all`, `tiered_storage_aws`, `tiered_storage_gcs`, `tiered_storage_local`, `tiered_storage_minio`, `version`, `window_functions`, `hive_partitioning`
-
 ### Example Usage
 
+Run the example test suite on x86 (default):
+
 ```bash
-# Run the example test suite on x86 (default)
 python3 cicd-trigger.py --suite example
+```
 
-# Run the example test suite on ARM
+Run the example test suite on ARM:
+
+```bash
 python3 cicd-trigger.py --suite example --arch arm64
+```
 
-# Run s3_minio suite with ClickHouse Keeper enabled
+Run s3_minio suite with ClickHouse Keeper enabled:
+
+```bash
 python3 cicd-trigger.py --suite s3_minio --flags "--use-keeper"
+```
 
-# Run a specific version of ClickHouse
+Run a specific version of ClickHouse:
+
+```bash
 python3 cicd-trigger.py --suite example \
     --package docker://altinity/clickhouse-server:24.8.6.70.altinitystable \
     --version 24.8.6.70.altinitystable
+```
 
-# Run tests on a specific branch and wait for completion
+Run tests on a specific branch and wait for completion:
+
+```bash
 python3 cicd-trigger.py --suite example --branch my-feature-branch --wait
+```
 
-# Run with debug output to troubleshoot issues
+Run with debug output to troubleshoot issues:
+
+```bash
 python3 cicd-trigger.py --suite example --debug
+```
 
-# List all currently running workflows
+List all currently running workflows:
+
+```bash
 python3 cicd-trigger.py --list-running
+```
 
-# Run full regression with custom run name
+Run full regression with custom run name:
+
+```bash
 python3 cicd-trigger.py --suite all --custom-run-name "Nightly regression test"
+```
 
-# Run tests with extra arguments
+Run tests with extra arguments:
+
+```bash
 python3 cicd-trigger.py --suite rbac --extra-args "--only '/rbac/views/*'"
+```
+
+Run with an explicit GitHub token:
+
+```bash
+python3 cicd-trigger.py --suite example --token "ghp_your_personal_access_token"
 ```
 
 ## [CI/CD Secrets And Variables](#cicd-secrets-and-variables)
