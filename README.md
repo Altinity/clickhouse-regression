@@ -205,11 +205,20 @@ To trigger GitHub Actions workflows for running ClickHouse regression tests, use
 
 ### Prerequisites
 
-Set the `GITHUB_TOKEN` environment variable with a GitHub personal access token that has workflow scope:
+Set the `GITHUB_TOKEN` environment variable with a GitHub personal access token:
 
 ```bash
 export GITHUB_TOKEN="your_github_token"
 ```
+
+The token requires the following permissions:
+
+| Permission | Access | Purpose |
+|------------|--------|---------|
+| `repo` | Full | Access repository and trigger workflows |
+| `workflow` | Read and Write | Trigger and manage workflow runs |
+
+To create a token, go to **GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)** and generate a new token with the scopes above.
 
 ### Options
 

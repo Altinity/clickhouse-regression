@@ -17,11 +17,20 @@ cd clickhouse-regression
 
 ## Prerequisites
 
-The user must have a GitHub personal access token with workflow scope. Set it via environment variable or pass explicitly:
+The user must have a GitHub personal access token. Set it via environment variable or pass explicitly:
 
 ```bash
 export GITHUB_TOKEN="ghp_your_token"
 ```
+
+The token requires the following permissions:
+
+| Permission | Access         | Purpose                                 |
+|------------|----------------|-----------------------------------------|
+| `repo`     | Full           | Access repository and trigger workflows |
+| `workflow` | Read and Write | Trigger and manage workflow runs        |
+
+Create a token at **GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)**.
 
 ## Command Format
 
