@@ -569,15 +569,15 @@ def export_resumes_after_stop_start_moves(self):
 def feature(self):
     """Check that exports work correctly with various network conditions."""
 
-    # Scenario(test=packet_delay)(delay_ms=100)
-    # Scenario(test=packet_loss)(percent_loss=50)
-    # Scenario(test=packet_loss_gemodel)(
-    #     interruption_probability=40, recovery_probability=70
-    # )
-    # Scenario(test=packet_corruption)(percent_corrupt=50)
-    # Scenario(test=packet_duplication)(percent_duplicated=50)
-    # Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
-    # Scenario(test=packet_rate_limit)(rate_mbit=0.05)
-    # Scenario(run=minio_interruption)
-    # Scenario(run=clickhouse_interruption)
+    Scenario(test=packet_delay)(delay_ms=100)
+    Scenario(test=packet_loss)(percent_loss=50)
+    Scenario(test=packet_loss_gemodel)(
+        interruption_probability=40, recovery_probability=70
+    )
+    Scenario(test=packet_corruption)(percent_corrupt=50)
+    Scenario(test=packet_duplication)(percent_duplicated=50)
+    Scenario(test=packet_reordering)(delay_ms=100, percent_reordered=90)
+    Scenario(test=packet_rate_limit)(rate_mbit=0.05)
+    Scenario(run=minio_interruption)
+    Scenario(run=clickhouse_interruption)
     Scenario(run=export_resumes_after_stop_start_moves)
