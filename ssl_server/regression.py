@@ -111,6 +111,18 @@ xfails = {
     ":/fips 140-3/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
+    "/:/:/zookeeper fips 140-3/fips 140 3/:/ECDHE-ECDSA-:/:": [
+        (Fail, "ECDSA ciphers require ECDSA certificates; test infrastructure uses RSA certs")
+    ],
+    "/:/:/zookeeper fips 140-3/fips 140 3/:/ECDHE-ECDSA-:": [
+        (Fail, "ECDSA ciphers require ECDSA certificates; test infrastructure uses RSA certs")
+    ],
+    "/:/:/zookeeper fips 140-3/fips 140 3/:/AES:/:": [
+        (Fail, "RSA key exchange ciphers (non-ECDHE) not supported by Java ZooKeeper")
+    ],
+    "/:/:/zookeeper fips 140-3/fips 140 3/:/AES:": [
+        (Fail, "RSA key exchange ciphers (non-ECDHE) not supported by Java ZooKeeper")
+    ],
     # zookeeper ssl
     ":/zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256/:": [
         (
@@ -343,7 +355,8 @@ def regression(
 
     with Feature("part 3"):
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
-        Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
+        # Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper_fips.feature_140_3", "feature"))
         Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 
