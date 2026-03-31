@@ -387,6 +387,9 @@ def feature(self, node="clickhouse1", zookeeper_node="zookeeper-fips"):
     """Check configuring and using secure connection to ZooKeeper using
     FIPS 140-3 compatible SSL connections with AWS-LC cryptographic module."""
 
+    if not self.context.fips_mode:
+        skip("zookeeper fips 140-3 tests only apply to FIPS builds")
+
     self.context.node = self.context.cluster.node(node)
     self.context.zookeeper_node = self.context.cluster.node(zookeeper_node)
 
