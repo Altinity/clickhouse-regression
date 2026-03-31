@@ -210,6 +210,8 @@ allow_not_comparable_types_in_comparison_functions = r"""'{"default":"0"}'"""
 
 allow_not_comparable_types_in_order_by = r"""'{"default":"0"}'"""
 
+allow_nullable_tuple_in_extracted_subcolumns = r"""'{"default":"0"}'"""
+
 allow_prefetched_read_pool_for_local_filesystem = r"""'{"default":"0"}'"""
 
 allow_prefetched_read_pool_for_remote_filesystem = r"""'{"default":"1"}'"""
@@ -1183,6 +1185,8 @@ iceberg_insert_max_rows_in_data_file = r"""'{"default":"1000000"}'"""
 iceberg_metadata_compression_method = r"""'{"default":""}'"""
 
 iceberg_metadata_log_level = r"""'{"default":"none"}'"""
+
+iceberg_metadata_staleness_ms = r"""'{"default":"0"}'"""
 
 iceberg_partition_timezone = r"""'{"default":""}'"""
 
