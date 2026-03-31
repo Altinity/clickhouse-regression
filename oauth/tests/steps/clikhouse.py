@@ -134,7 +134,7 @@ def change_token_processors(
     if token_introspection_endpoint is not None:
         proc["token_introspection_endpoint"] = token_introspection_endpoint
 
-    entries = {"token_processor": {processor_name: proc}}
+    entries = {"token_processors": {processor_name: proc}}
 
     change_clickhouse_config(
         entries=entries,
