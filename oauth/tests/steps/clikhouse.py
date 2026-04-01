@@ -160,7 +160,7 @@ def change_user_directories_config(
     token_section = {"processor": processor}
 
     if common_roles is not None:
-        token_section["common_roles"] = common_roles
+        token_section["common_roles"] = {role: {} for role in common_roles}
 
     if roles_filter is not None:
         token_section["roles_filter"] = roles_filter

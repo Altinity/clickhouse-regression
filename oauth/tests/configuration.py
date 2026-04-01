@@ -15,8 +15,13 @@ def invalid_processor_type(self):
 
     with Given("I configure a token processor with an invalid type"):
         change_token_processors(
-            processor_name="keycloak_bad",
+            processor_name="keycloak",
             processor_type="invalid_type",
+        )
+
+    with And("I configure user directories to use the broken processor"):
+        change_user_directories_config(
+            processor="keycloak",
         )
 
     with And("I get a valid token"):
@@ -41,7 +46,12 @@ def missing_processor_type(self):
 
     with Given("I configure a token processor without a type"):
         change_token_processors(
-            processor_name="keycloak_no_type",
+            processor_name="keycloak_empty",
+        )
+
+    with And("I configure user directories to use the empty processor"):
+        change_user_directories_config(
+            processor="keycloak_empty",
         )
 
     with And("I get a valid token"):

@@ -89,6 +89,11 @@ def no_token_processor_configured(self):
             processor_name="empty_proc",
         )
 
+    with And("I configure user directories to use the empty processor"):
+        change_user_directories_config(
+            processor="empty_proc",
+        )
+
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 

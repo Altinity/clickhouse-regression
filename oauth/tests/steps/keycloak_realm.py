@@ -1,6 +1,5 @@
 import json
 import base64
-import requests
 from testflows.core import *
 from oauth.requirements.requirements import *
 from helpers.common import getuid

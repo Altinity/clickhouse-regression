@@ -46,11 +46,11 @@ def openid_discovery_mode(self):
 @Requirements(
     RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"),
 )
-def invalid_jwks_uri_rejected(self):
-    """ClickHouse SHALL reject tokens when jwks_uri points to a bad endpoint."""
+def openid_fallback_with_invalid_jwks(self):
+    """ClickHouse SHALL fall back to userinfo/introspection when jwks_uri is invalid."""
     client = self.context.provider_client
 
-    with Given("I configure a processor with an invalid jwks_uri"):
+    with Given("I configure a processor with an invalid jwks_uri but valid userinfo"):
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
@@ -74,7 +74,7 @@ def invalid_jwks_uri_rejected(self):
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token (bad JWKS endpoint)"):
+    with Then("ClickHouse accepts via userinfo fallback despite bad JWKS"):
         access_clickhouse(token=token, status_code=200)
 
 
@@ -207,7 +207,7 @@ def token_with_empty_signature(self):
 def feature(self):
     """Test Keycloak token validation and incorrect token handling."""
     Scenario(run=openid_discovery_mode)
-    Scenario(run=invalid_jwks_uri_rejected)
+    Scenario(run=openid_fallback_with_invalid_jwks)
     Scenario(run=token_with_modified_alg)
     Scenario(run=token_with_modified_typ)
     Scenario(run=token_with_expired_exp)
