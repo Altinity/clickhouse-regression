@@ -72,7 +72,7 @@ def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False)
 @TestStep(Then)
 def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse without authentication."""
-    access_clickhouse(token="", ip=ip, https=https, status_code=401)
+    access_clickhouse(token="", ip=ip, https=https, status_code=403)
 
 
 @TestStep(Given)

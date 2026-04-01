@@ -188,9 +188,9 @@ def remove_signature(self):
     RQ_SRS_042_OAuth_Authentication_TokenHandling_EmptyString("1.0"),
 )
 def empty_token(self):
-    """ClickHouse SHALL reject an empty token with HTTP 401."""
+    """ClickHouse SHALL reject an empty token with HTTP 403."""
     with Then("ClickHouse rejects the empty token"):
-        access_clickhouse(token="", status_code=401)
+        access_clickhouse(token="", status_code=403)
 
 
 @TestScenario
