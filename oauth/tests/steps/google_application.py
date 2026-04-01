@@ -42,11 +42,11 @@ def get_oauth_token(
 ):
     """
     Acquire an OAuth token from Google using refresh token.
-    
+
     Note: Google OAuth requires user interaction for initial authorization.
     For automated testing, you need to obtain a refresh token first through
     the OAuth consent flow, then use it here to get access tokens.
-    
+
     Alternatively, if you already have an access_token (e.g., from OAuth Playground),
     you can pass it directly and it will be returned as-is.
     """
@@ -62,8 +62,8 @@ def get_oauth_token(
         client_secret = self.context.client_secret
 
     if refresh_token is None:
-        refresh_token = getattr(self.context, 'refresh_token', None)
-    
+        refresh_token = getattr(self.context, "refresh_token", None)
+
     if refresh_token is None:
         raise ValueError(
             "No refresh_token provided. To get one:\n"
@@ -76,17 +76,17 @@ def get_oauth_token(
         )
 
     token_url = "https://oauth2.googleapis.com/token"
-    
+
     data = {
         "client_id": client_id,
         "client_secret": client_secret,
         "refresh_token": refresh_token,
         "grant_type": "refresh_token",
     }
-    
+
     response = requests.post(token_url, data=data)
     response.raise_for_status()
-    
+
     token_data = response.json()
     return token_data["access_token"]
 
@@ -94,10 +94,10 @@ def get_oauth_token(
 def get_refresh_token_interactive(client_id, client_secret):
     """
     Interactive helper to get a refresh token from Google.
-    
+
     This function guides the user through the OAuth flow to obtain a refresh token.
     Run this once to get a refresh token, then use it for automated testing.
-    
+
     Usage:
         from oauth.tests.steps.google_application import get_refresh_token_interactive
         refresh_token = get_refresh_token_interactive("your-client-id", "your-client-secret")
@@ -105,10 +105,10 @@ def get_refresh_token_interactive(client_id, client_secret):
     import webbrowser
     from urllib.parse import urlencode, urlparse, parse_qs
     import requests
-    
+
     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
     scopes = "openid email profile"
-    
+
     auth_params = {
         "client_id": client_id,
         "redirect_uri": redirect_uri,
@@ -117,19 +117,19 @@ def get_refresh_token_interactive(client_id, client_secret):
         "access_type": "offline",
         "prompt": "consent",
     }
-    
+
     auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(auth_params)}"
-    
+
     print(f"\nOpening browser for Google authorization...")
     print(f"If browser doesn't open, go to:\n{auth_url}\n")
-    
+
     try:
         webbrowser.open(auth_url)
     except Exception:
         pass
-    
+
     auth_code = input("Enter the authorization code from Google: ").strip()
-    
+
     token_data = {
         "client_id": client_id,
         "client_secret": client_secret,
@@ -137,32 +137,34 @@ def get_refresh_token_interactive(client_id, client_secret):
         "grant_type": "authorization_code",
         "redirect_uri": redirect_uri,
     }
-    
+
     response = requests.post("https://oauth2.googleapis.com/token", data=token_data)
     response.raise_for_status()
-    
+
     tokens = response.json()
     refresh_token = tokens.get("refresh_token")
-    
+
     if refresh_token:
         print(f"\nSuccess! Your refresh token:\n{refresh_token}\n")
         print("Add this to your .env file or pass via --refresh-token")
         return refresh_token
     else:
-        raise ValueError("No refresh token received. Make sure to request 'offline' access.")
+        raise ValueError(
+            "No refresh token received. Make sure to request 'offline' access."
+        )
 
 
 @TestStep(Given)
 def get_user_info(self, access_token):
     """Get user information from Google using access token."""
     import requests
-    
+
     userinfo_url = "https://openidconnect.googleapis.com/v1/userinfo"
     headers = {"Authorization": f"Bearer {access_token}"}
-    
+
     response = requests.get(userinfo_url, headers=headers)
     response.raise_for_status()
-    
+
     return response.json()
 
 
@@ -288,11 +290,11 @@ def no_token_processors_configuration(self, node=None):
 class OAuthProvider:
     get_oauth_token = get_oauth_token
     get_user_info = get_user_info
-    
+
     # Configuration steps
     default_configuration = default_configuration
     default_idp = default_idp
-    
+
     # Negative configuration test steps
     invalid_processor_type_configuration = invalid_processor_type_configuration
     missing_configuration_endpoint = missing_configuration_endpoint
@@ -300,8 +302,12 @@ class OAuthProvider:
     custom_username_claim_configuration = custom_username_claim_configuration
     custom_cache_lifetime_configuration = custom_cache_lifetime_configuration
     explicit_endpoints_configuration = explicit_endpoints_configuration
-    missing_processor_user_directory_configuration = missing_processor_user_directory_configuration
-    non_existent_processor_user_directory_configuration = non_existent_processor_user_directory_configuration
+    missing_processor_user_directory_configuration = (
+        missing_processor_user_directory_configuration
+    )
+    non_existent_processor_user_directory_configuration = (
+        non_existent_processor_user_directory_configuration
+    )
     invalid_common_roles_configuration = invalid_common_roles_configuration
     invalid_roles_filter_configuration = invalid_roles_filter_configuration
     no_token_processors_configuration = no_token_processors_configuration
