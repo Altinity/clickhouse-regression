@@ -211,12 +211,179 @@ def groups_claim_parameter(self):
         access_clickhouse(token=token, status_code=200)
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedIssuer("1.0"),
+)
+def expected_issuer_correct(self):
+    """ClickHouse SHALL accept a token when ``expected_issuer`` matches the JWT ``iss`` claim."""
+    client = self.context.provider_client
+
+    with Given(
+        "I configure the processor with expected_issuer matching the Keycloak realm"
+    ):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            expected_issuer=f"http://localhost:8080/realms/{self.context.realm_name}",
+            userinfo_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/userinfo"
+            ),
+            token_introspection_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/token/introspect"
+            ),
+            jwks_uri=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/certs"
+            ),
+        )
+
+    with And("I configure user directories"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse accepts the token"):
+        access_clickhouse(token=token, status_code=200)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedIssuer("1.0"),
+)
+def expected_issuer_wrong(self):
+    """ClickHouse SHALL reject a token when ``expected_issuer`` does not match the JWT ``iss`` claim."""
+    client = self.context.provider_client
+
+    with Given("I configure the processor with a wrong expected_issuer"):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            expected_issuer="https://wrong-issuer.example.com",
+            userinfo_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/userinfo"
+            ),
+            token_introspection_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/token/introspect"
+            ),
+            jwks_uri=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/certs"
+            ),
+        )
+
+    with And("I configure user directories"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token (issuer mismatch)"):
+        access_clickhouse(token=token, status_code=500)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedAudience("1.0"),
+)
+def expected_audience_missing_claim(self):
+    """ClickHouse SHALL reject a token when ``expected_audience`` is set but the JWT has no ``aud`` claim."""
+    client = self.context.provider_client
+
+    with Given(
+        "I configure the processor with expected_audience "
+        "even though Keycloak tokens have no aud claim"
+    ):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            expected_audience="account",
+            userinfo_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/userinfo"
+            ),
+            token_introspection_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/token/introspect"
+            ),
+            jwks_uri=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/certs"
+            ),
+        )
+
+    with And("I configure user directories"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token (aud claim missing from JWT)"):
+        access_clickhouse(token=token, status_code=500)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedAudience("1.0"),
+)
+def expected_audience_wrong(self):
+    """ClickHouse SHALL reject a token when ``expected_audience`` does not match the JWT ``aud`` claim."""
+    client = self.context.provider_client
+
+    with Given("I configure the processor with a wrong expected_audience"):
+        change_token_processors(
+            processor_name="keycloak",
+            processor_type="OpenID",
+            expected_audience="https://wrong-audience.example.com",
+            userinfo_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/userinfo"
+            ),
+            token_introspection_endpoint=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/token/introspect"
+            ),
+            jwks_uri=(
+                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
+                f"/protocol/openid-connect/certs"
+            ),
+        )
+
+    with And("I configure user directories"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token()["access_token"]
+
+    with Then("ClickHouse rejects the token (audience mismatch)"):
+        access_clickhouse(token=token, status_code=500)
+
+
 @TestFeature
 @Name("parameters and caching")
 @Requirements(
     RQ_SRS_042_OAuth_Common_Parameters_CacheLifetime("1.0"),
     RQ_SRS_042_OAuth_Common_Parameters_UsernameClaim("1.0"),
     RQ_SRS_042_OAuth_Common_Parameters_GroupsClaim("1.0"),
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedIssuer("1.0"),
+    RQ_SRS_042_OAuth_Common_Parameters_ExpectedAudience("1.0"),
     RQ_SRS_042_OAuth_Common_Configuration_Validation("1.0"),
 )
 def feature(self):
@@ -226,3 +393,7 @@ def feature(self):
     Scenario(run=token_cache_lifetime_honoured)
     Scenario(run=cache_disabled)
     Scenario(run=groups_claim_parameter)
+    Scenario(run=expected_issuer_correct)
+    Scenario(run=expected_issuer_wrong)
+    Scenario(run=expected_audience_missing_claim)
+    Scenario(run=expected_audience_wrong)

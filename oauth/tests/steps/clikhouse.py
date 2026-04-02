@@ -90,6 +90,8 @@ def change_token_processors(
     configuration_endpoint=None,
     userinfo_endpoint=None,
     token_introspection_endpoint=None,
+    expected_issuer=None,
+    expected_audience=None,
     processor_type=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
@@ -124,10 +126,10 @@ def change_token_processors(
         proc["jwks_uri"] = jwks_uri
 
     if jwks_cache_lifetime is not None:
-        proc["jwks_cache_lifetime"] = jwks_cache_lifetime
+        proc["jwks_cache_lifetime"] = str(jwks_cache_lifetime)
 
     if token_cache_lifetime is not None:
-        proc["token_cache_lifetime"] = token_cache_lifetime
+        proc["token_cache_lifetime"] = str(token_cache_lifetime)
 
     if username_claim is not None:
         proc["username_claim"] = username_claim
@@ -143,6 +145,12 @@ def change_token_processors(
 
     if token_introspection_endpoint is not None:
         proc["token_introspection_endpoint"] = token_introspection_endpoint
+
+    if expected_issuer is not None:
+        proc["expected_issuer"] = expected_issuer
+
+    if expected_audience is not None:
+        proc["expected_audience"] = expected_audience
 
     if replace:
         proc_key = KeyWithAttributes(processor_name, {"replace": "replace"})
