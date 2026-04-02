@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.8.16.20002.altinityantalya
-      version: '25.8.14.20001'
+      version: '25.8.16.20002'
       extra_args: '--with-analyzer'
       run_s3_suites: true
       arch: x86
@@ -21,7 +21,7 @@ jobs:
     uses: ./.github/workflows/run-regression.yml
     with:
       package: docker://altinity/clickhouse-server:25.8.16.20002.altinityantalya
-      version: '25.8.14.20001'
+      version: '25.8.16.20002'
       extra_args: '--with-analyzer'
       run_s3_suites: true
       arch: arm64
