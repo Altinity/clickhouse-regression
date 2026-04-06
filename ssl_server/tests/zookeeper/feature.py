@@ -336,4 +336,6 @@ def feature(self, node="clickhouse1", zookeeper_node="zookeeper"):
     for scenario in loads(current_module(), Scenario):
         scenario()
 
-    Feature(run=fips)
+    # Superseded by zookeeper_fips/feature_140_3.py which covers
+    # both TLSv1.2 and TLSv1.3 FIPS 140-3 ciphers.
+    # Feature(run=fips)
