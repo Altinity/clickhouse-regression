@@ -1122,16 +1122,18 @@ def server_as_client(self):
 def feature(self, node="clickhouse1"):
     """Check using SSL configuration to force only FIPS 140-3 compatible SSL connections
     using AWS-LC cryptographic module."""
+
+    if not self.context.fips_mode:
+        skip("fips 140-3 tests only apply to FIPS builds")
+
     self.context.node = self.context.cluster.node(node)
 
     with Given("I enable SSL"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
-    if self.context.fips_mode:
-        Feature(run=fips_check)
-        Scenario(run=break_hash)
-        Feature(run=awslc_test_suites)
-
+    Feature(run=fips_check)
+    Scenario(run=break_hash)
+    Feature(run=awslc_test_suites)
     Feature(run=server)
     Feature(run=clickhouse_client)
     Feature(run=server_as_client)
