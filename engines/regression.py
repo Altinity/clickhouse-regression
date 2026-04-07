@@ -13,7 +13,22 @@ from helpers.common import check_clickhouse_version, experimental_analyzer
 from engines.requirements import *
 
 
-xfails = {}
+xfails = {
+    "/engines/summing_merge_tree/zero row deletion with clear column": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/101953"
+            " — CLEAR COLUMN sets default state not recognized as zero by SummingSortedAlgorithm since 25.8",
+        )
+    ],
+    "/engines/summing_merge_tree/clear column validation consistency": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/101953"
+            " — CLEAR COLUMN allowed on auto-detected summing columns but blocked on explicit ones",
+        )
+    ],
+}
 xflags = {}
 
 
@@ -58,6 +73,12 @@ def regression(
     Feature(
         run=load(
             "engines.tests.replacing_merge_tree.replicated_replacing_merge_tree",
+            "feature",
+        )
+    )
+    Feature(
+        run=load(
+            "engines.tests.summing_merge_tree.summing_merge_tree",
             "feature",
         )
     )
