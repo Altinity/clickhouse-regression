@@ -196,6 +196,13 @@ xfails = {
             "Currently not supported",
         )
     ],
+    "/parquet/aws s3/s3/compression type/*/outline/function/*": [
+        (
+            Fail,
+            ">=24.1 snapshot files only contain MinIO entries, missing AWS S3 entries",
+            check_clickhouse_version(">=24.3"),
+        )
+    ],
 }
 
 
