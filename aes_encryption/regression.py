@@ -19,6 +19,7 @@ issue_24029 = "https://github.com/ClickHouse/ClickHouse/issues/24029"
 issue_39987 = "https://github.com/ClickHouse/ClickHouse/issues/39987"
 issue_40826 = "https://github.com/ClickHouse/ClickHouse/issues/40826"
 issue_65116 = "https://github.com/ClickHouse/ClickHouse/issues/65116"
+fips_build = "FIPS build with AWS-LC does not support cfb1/cfb8 modes"
 
 xfails = {
     # decrypt
@@ -99,6 +100,12 @@ xfails = {
     "performance/:/:": [(Fail, issue_65116, check_clickhouse_version(">=24.4"))],
     "/aes encryption/performance/*": [
         (Fail, "fails due to runners change, need to adjust thresholds")
+    ],
+    "/aes encryption/encrypt/invalid parameters/invalid mode value": [
+        (Fail, fips_build, check_clickhouse_version("~~.*fips.*"))
+    ],
+    "/aes encryption/decrypt/invalid parameters/invalid mode value": [
+        (Fail, fips_build, check_clickhouse_version("~~.*fips.*"))
     ],
 }
 
