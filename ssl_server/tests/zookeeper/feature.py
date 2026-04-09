@@ -80,6 +80,8 @@ def secure_connection_without_client_certificate(self):
     ):
         if check_clickhouse_version("<24.4")(self):
             message = "Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+        elif check_clickhouse_version("~~.*fips.*")(self):
+            message = "SSL Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
         else:
             message = "SSL Exception: error:0A000412:SSL routines::ssl/tls alert bad certificate"
 
@@ -131,6 +133,8 @@ def secure_connection_with_unsigned_client_certificate(self):
     ):
         if check_clickhouse_version("<24.4")(self):
             message = "Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
+        elif check_clickhouse_version("~~.*fips.*")(self):
+            message = "SSL Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
         else:
             message = "SSL Exception: error:0A000416:SSL routines::ssl/tls alert certificate unknown"
 
