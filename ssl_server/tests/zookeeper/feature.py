@@ -1,4 +1,5 @@
-from ssl_server.tests.common import fips_compatible_tlsv1_2_cipher_suites, check_is_boringssl_build
+from helpers.common import check_is_boringssl_build
+from ssl_server.tests.common import fips_compatible_tlsv1_2_cipher_suites
 from ssl_server.tests.zookeeper.steps import *
 
 

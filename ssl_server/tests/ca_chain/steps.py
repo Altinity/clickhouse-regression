@@ -1,3 +1,4 @@
+from helpers.common import check_is_boringssl_build
 from ssl_server.tests.common import *
 
 

@@ -8,18 +8,6 @@ from testflows.stash import stashed
 from helpers.common import *
 
 
-def check_is_boringssl_build(self):
-    """Return True if the ClickHouse node was built with BoringSSL/AWS-LC
-    instead of standard OpenSSL, by querying system.build_options."""
-    node = self.context.node
-    output = node.query(
-        "SELECT value FROM system.build_options WHERE name = 'OPENSSL_IS_BORING_SSL' FORMAT TabSeparated",
-        no_checks=1,
-        steps=False,
-    ).output.strip()
-    return output == "1"
-
-
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
     "ECDHE-RSA-AES256-GCM-SHA384",

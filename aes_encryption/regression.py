@@ -7,7 +7,11 @@ from testflows.core.name import clean
 
 append_path(sys.path, "..")
 
-from helpers.common import experimental_analyzer, check_with_any_sanitizer
+from helpers.common import (
+    experimental_analyzer,
+    check_with_any_sanitizer,
+    check_is_boringssl_build,
+)
 from helpers.cluster import create_cluster, check_clickhouse_version
 from helpers.argparser import argparser, CaptureClusterArgs
 from aes_encryption.requirements import *
@@ -101,11 +105,11 @@ xfails = {
     "/aes encryption/performance/*": [
         (Fail, "fails due to runners change, need to adjust thresholds")
     ],
-    "/aes encryption/encrypt/invalid parameters/invalid mode value": [
-        (Fail, fips_build, check_clickhouse_version("~~.*fips.*"))
+    "/aes encryption/encrypt/invalid parameters/invalid mode value*": [
+        (Fail, fips_build, check_is_boringssl_build)
     ],
-    "/aes encryption/decrypt/invalid parameters/invalid mode value": [
-        (Fail, fips_build, check_clickhouse_version("~~.*fips.*"))
+    "/aes encryption/decrypt/invalid parameters/invalid mode value*": [
+        (Fail, fips_build, check_is_boringssl_build)
     ],
 }
 

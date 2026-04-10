@@ -228,6 +228,22 @@ def check_clickhouse_version(version):
     return check
 
 
+def check_is_boringssl_build(test):
+    """Return True if ClickHouse was built with BoringSSL/AWS-LC (OPENSSL_IS_BORING_SSL=1).
+
+    Use this instead of matching ``fips`` in the version string: PR and CI builds often use
+    suffixes like ``altinitytest`` while still linking AWS-LC."""
+    node = getattr(test.context, "node", None)
+    if node is None:
+        return False
+    output = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'OPENSSL_IS_BORING_SSL' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    return output == "1"
+
+
 def check_is_altinity_build(node=None):
     """
     Check if the build is from Altinity.
