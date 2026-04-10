@@ -235,6 +235,17 @@ def check_is_boringssl_build(test):
     suffixes like ``altinitytest`` while still linking AWS-LC."""
     node = getattr(test.context, "node", None)
     if node is None:
+        node = getattr(current().context, "node", None)
+    if node is None:
+        cluster = getattr(test.context, "cluster", None) or getattr(
+            current().context, "cluster", None
+        )
+        if cluster is not None and "clickhouse" in getattr(cluster, "nodes", {}):
+            try:
+                node = cluster.node(cluster.nodes["clickhouse"][0])
+            except (AttributeError, IndexError, KeyError):
+                node = None
+    if node is None:
         return False
     output = node.query(
         "SELECT value FROM system.build_options WHERE name = 'OPENSSL_IS_BORING_SSL' FORMAT TabSeparated",
