@@ -618,8 +618,10 @@ def install_test_deps(self, node):
                 exitcode=0,
                 timeout=120,
             )
+            machine = node.command("uname -m", no_checks=True).output.strip()
+            go_arch = "arm64" if machine in ("aarch64", "arm64") else "amd64"
             node.command(
-                f"wget -q https://go.dev/dl/go{GO_VERSION}.linux-amd64.tar.gz -O /tmp/go.tar.gz && "
+                f"wget -q https://go.dev/dl/go{GO_VERSION}.linux-{go_arch}.tar.gz -O /tmp/go.tar.gz && "
                 "tar -xzf /tmp/go.tar.gz -C /usr/local && "
                 "rm /tmp/go.tar.gz",
                 exitcode=0,
