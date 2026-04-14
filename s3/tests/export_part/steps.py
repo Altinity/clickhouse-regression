@@ -1180,9 +1180,15 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
             flush_log(node=node, table_name="system.part_log")
             part_log = get_part_log(table_name=source_table, node=node)
             destination_parts = get_s3_parts(table_name=destination_table)
+            # part_log is historical: alters (e.g. REPLACE PARTITION) remove parts but
+            # leave old ExportPart rows; only parts still present on the source must
+            # appear under the destination prefix.
+            current_parts = set(get_parts(table_name=source_table, node=node))
 
             missing_parts = []
             for part_name in part_log:
+                if part_name not in current_parts:
+                    continue
                 if not any(
                     dest_part.startswith(part_name) for dest_part in destination_parts
                 ):

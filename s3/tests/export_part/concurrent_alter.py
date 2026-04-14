@@ -1,6 +1,6 @@
 from testflows.core import *
 import s3.tests.export_part.steps as steps
-import helpers.config.config_d as config_d
+import helpers.config.users_d as users_d
 from helpers.create import *
 from helpers.queries import *
 from s3.requirements.export_part import *
@@ -351,8 +351,16 @@ def during_minio_interruption(self, example):
     ]
 
     with Given("I lower s3_retry_attempts so stuck exports fail quickly"):
-        config_d.create_and_add(
-            entries={"s3_retry_attempts": "3"},
+        # User-level setting: must live in users.xml / users.d (not config.d), or
+        # 25.8+ rejects the config and the server becomes unhealthy.
+        users_d.create_and_add(
+            entries={
+                "profiles": {
+                    "default": {
+                        "s3_retry_attempts": "3",
+                    }
+                }
+            },
             config_file="s3_retry_attempts.xml",
             node=self.context.node,
         )
