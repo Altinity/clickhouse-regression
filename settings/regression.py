@@ -10,9 +10,24 @@ from helpers.argparser import (
     CaptureClusterArgs,
 )
 
-from helpers.common import check_clickhouse_version, check_if_head
+from helpers.common import check_clickhouse_version, check_if_head, check_with_any_sanitizer
 
 xfails = {
+    # Profiler settings have different defaults in sanitizer builds (profilers disabled)
+    "/settings/default values/query_profiler_cpu_time_period_ns": [
+        (
+            Fail,
+            "Profilers are disabled in sanitizer builds",
+            check_with_any_sanitizer,
+        )
+    ],
+    "/settings/default values/query_profiler_real_time_period_ns": [
+        (
+            Fail,
+            "Profilers are disabled in sanitizer builds",
+            check_with_any_sanitizer,
+        )
+    ],
     "/settings/default values/parallel_replicas_mark_segment_size": [
         (
             Fail,
