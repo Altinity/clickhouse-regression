@@ -13,7 +13,7 @@ services:
     healthcheck:
       interval: 3s
       timeout: 2s
-      retries: 5
+      retries: 8
       start_period: 2s
     security_opt:
       - label:disable
