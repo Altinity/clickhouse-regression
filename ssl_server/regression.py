@@ -284,8 +284,13 @@ ffails = {
         "needs workaround https://github.com/ClickHouse/ClickHouse/issues/65187",
         check_clickhouse_version(">=24.4"),
     ),
-    # skip zookeeper fips on ARM
+    # skip zookeeper fips on ARM (compose only starts `zookeeper`, not `zookeeper-fips`)
     ":/zookeeper fips": (Skip, "not supported on ARM", check_current_cpu("aarch64")),
+    ":/zookeeper fips 140-3": (
+        Skip,
+        "not supported on ARM; zookeeper-fips service is omitted from aarch64 compose",
+        check_current_cpu("aarch64"),
+    ),
 }
 
 

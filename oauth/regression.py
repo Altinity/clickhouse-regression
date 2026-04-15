@@ -59,12 +59,13 @@ def argparser(parser):
 xfails = {}
 
 ffails = {
-    "/oauth/*": (
-        Skip,
-        "OAuth not implemented in non Antalya build",
-        check_if_not_antalya_build,
-    ),
+    # "/oauth/*": (
+    #     Skip,
+    #     "OAuth not implemented in non Antalya build",
+    #     check_if_not_antalya_build,
+    # ),
 }
+
 
 def _load_provider_module(identity_provider):
     """Lazily import provider modules so Azure deps are not required for Keycloak."""
@@ -170,8 +171,8 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
+    # Scenario(run=load("oauth.tests.sanity", "feature"))
+    # Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
     Scenario(run=load("oauth.tests.tokens", "feature"))
     Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))

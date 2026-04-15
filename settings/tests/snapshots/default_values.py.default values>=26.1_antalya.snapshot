@@ -210,6 +210,8 @@ allow_not_comparable_types_in_comparison_functions = r"""'{"default":"0"}'"""
 
 allow_not_comparable_types_in_order_by = r"""'{"default":"0"}'"""
 
+allow_nullable_tuple_in_extracted_subcolumns = r"""'{"default":"0"}'"""
+
 allow_prefetched_read_pool_for_local_filesystem = r"""'{"default":"0"}'"""
 
 allow_prefetched_read_pool_for_remote_filesystem = r"""'{"default":"1"}'"""
@@ -1184,6 +1186,8 @@ iceberg_metadata_compression_method = r"""'{"default":""}'"""
 
 iceberg_metadata_log_level = r"""'{"default":"none"}'"""
 
+iceberg_metadata_staleness_ms = r"""'{"default":"0"}'"""
+
 iceberg_partition_timezone = r"""'{"default":""}'"""
 
 iceberg_snapshot_id = r"""'{"default":"0"}'"""
@@ -1412,7 +1416,7 @@ input_format_parquet_preserve_order = r"""'{"default":"0"}'"""
 
 input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference = r"""'{"default":"0"}'"""
 
-input_format_parquet_use_metadata_cache = r"""'{"default":"1"}'"""
+input_format_parquet_use_metadata_cache = r"""'{"default":"0"}'"""
 
 input_format_parquet_use_native_reader = r"""'{"default":"0"}'"""
 
@@ -2017,6 +2021,8 @@ object_storage_cluster_join_mode = r"""'{"default":"allow"}'"""
 object_storage_max_nodes = r"""'{"default":"0"}'"""
 
 object_storage_remote_initiator = r"""'{"default":"0"}'"""
+
+object_storage_remote_initiator_cluster = r"""'{"default":""}'"""
 
 odbc_bridge_connection_pool_size = r"""'{"default":"16"}'"""
 
@@ -2963,6 +2969,8 @@ use_page_cache_for_disks_without_file_cache = r"""'{"default":"0"}'"""
 use_page_cache_with_distributed_cache = r"""'{"default":"0"}'"""
 
 use_paimon_partition_pruning = r"""'{"default":"0"}'"""
+
+use_parquet_metadata_cache = r"""'{"default":"1"}'"""
 
 use_primary_key = r"""'{"default":"1"}'"""
 

@@ -1,5 +1,5 @@
 import json
-from helpers.common import getuid
+from helpers.common import getuid, KeyWithAttributes
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
@@ -72,7 +72,7 @@ def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False)
 @TestStep(Then)
 def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse without authentication."""
-    access_clickhouse(token="", ip=ip, https=https, status_code=401)
+    access_clickhouse(token="", ip=ip, https=https, status_code=403)
 
 
 @TestStep(Given)
@@ -90,11 +90,23 @@ def change_token_processors(
     configuration_endpoint=None,
     userinfo_endpoint=None,
     token_introspection_endpoint=None,
+    expected_issuer=None,
+    expected_audience=None,
     processor_type=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
+    replace=False,
+    replace_section=False,
 ):
-    """Change ClickHouse token processor configuration."""
+    """Change ClickHouse token processor configuration.
+
+    When ``replace=True``, the processor element gets ``replace="replace"``
+    so that it fully replaces the base processor definition.
+
+    When ``replace_section=True``, the entire ``<token_processors>`` section
+    gets ``replace="replace"`` so that ALL base processors are removed and
+    only the ones defined here remain.
+    """
 
     proc = {}
 
@@ -114,10 +126,10 @@ def change_token_processors(
         proc["jwks_uri"] = jwks_uri
 
     if jwks_cache_lifetime is not None:
-        proc["jwks_cache_lifetime"] = jwks_cache_lifetime
+        proc["jwks_cache_lifetime"] = str(jwks_cache_lifetime)
 
     if token_cache_lifetime is not None:
-        proc["token_cache_lifetime"] = token_cache_lifetime
+        proc["token_cache_lifetime"] = str(token_cache_lifetime)
 
     if username_claim is not None:
         proc["username_claim"] = username_claim
@@ -134,7 +146,23 @@ def change_token_processors(
     if token_introspection_endpoint is not None:
         proc["token_introspection_endpoint"] = token_introspection_endpoint
 
-    entries = {"token_processor": {processor_name: proc}}
+    if expected_issuer is not None:
+        proc["expected_issuer"] = expected_issuer
+
+    if expected_audience is not None:
+        proc["expected_audience"] = expected_audience
+
+    if replace:
+        proc_key = KeyWithAttributes(processor_name, {"replace": "replace"})
+    else:
+        proc_key = processor_name
+
+    if replace_section:
+        tp_key = KeyWithAttributes("token_processors", {"replace": "replace"})
+    else:
+        tp_key = "token_processors"
+
+    entries = {tp_key: {proc_key: proc}}
 
     change_clickhouse_config(
         entries=entries,
@@ -155,12 +183,18 @@ def change_user_directories_config(
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
 ):
-    """Change ClickHouse user directories configuration."""
+    """Change ClickHouse user directories configuration.
+
+    The config.d file merges with the base ``<user_directories>`` section.
+    For positive tests (overriding the processor or roles on the existing
+    token directory) this is sufficient because ClickHouse merges children
+    by element name.
+    """
 
     token_section = {"processor": processor}
 
     if common_roles is not None:
-        token_section["common_roles"] = common_roles
+        token_section["common_roles"] = {role: {} for role in common_roles}
 
     if roles_filter is not None:
         token_section["roles_filter"] = roles_filter

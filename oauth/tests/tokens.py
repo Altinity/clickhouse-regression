@@ -47,7 +47,7 @@ def openid_discovery_mode(self):
     RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"),
 )
 def invalid_jwks_uri_rejected(self):
-    """ClickHouse SHALL reject tokens when jwks_uri points to a bad endpoint."""
+    """ClickHouse SHALL reject tokens when jwks_uri points to a non-existent endpoint."""
     client = self.context.provider_client
 
     with Given("I configure a processor with an invalid jwks_uri"):
@@ -74,8 +74,8 @@ def invalid_jwks_uri_rejected(self):
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token (bad JWKS endpoint)"):
-        access_clickhouse(token=token, status_code=200)
+    with Then("ClickHouse rejects the token (AUTHENTICATION_FAILED)"):
+        access_clickhouse(token=token, status_code=403)
 
 
 @TestScenario

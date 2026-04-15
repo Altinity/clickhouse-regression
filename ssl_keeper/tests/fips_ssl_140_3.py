@@ -87,6 +87,7 @@ all_ciphers = [
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def mixed_keepers_3(self):
     """Check that 3 nodes ClickHouse Keeper cluster works in write mode
     with 1 node down and in read mode only with 2 nodes down,
@@ -156,6 +157,7 @@ def mixed_keepers_3(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def simple_check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
     """Check ClickHouse connection to ClickHouse Keeper."""
 
@@ -168,6 +170,7 @@ def simple_check_clickhouse_connection_to_keeper(self, node=None, message="keepe
 
 
 @TestFeature
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"))
 def openssl_check_simple(self, node=None, message="TLSv1."):
     """Check ClickHouse connection to ClickHouse Keeper on port is SSL."""
 
@@ -292,6 +295,13 @@ def server_connection_openssl_client(self, port, tls_enabled=True):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_HTTPS("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Interserver("1.0"),
+)
 def openssl_check(self, node=None):
     """Check ClickHouse connection on all ports is SSL with FIPS 140-3 ciphers."""
 
@@ -472,6 +482,10 @@ def tcp_connection_clickhouse_client(
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_TCP_ClickHouseClient_FIPS("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"),
+)
 def tcp_connection_check(self, node=None):
     """Check ClickHouse Keeper FIPS 140-3 compatible TCP connections."""
 
@@ -489,6 +503,7 @@ def tcp_connection_check(self, node=None):
 
 @TestFeature
 @Name("fips 140-3")
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def feature(self):
     """Check ClickHouse Keeper with FIPS 140-3 compatible SSL connections
     using AWS-LC cryptographic module."""

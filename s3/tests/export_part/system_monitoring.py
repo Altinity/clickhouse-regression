@@ -222,6 +222,7 @@ def background_move_pool_size(self, background_move_pool_size):
 
     with And("I wait for exports to complete"):
         join()
+        network_packet_rate_limit_replace(node=self.context.node, rate_mbit=20)
         wait_for_all_exports_to_complete(table_name=source_table)
 
 

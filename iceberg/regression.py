@@ -268,6 +268,12 @@ ffails = {
             and check_clickhouse_version("<26.2")(test)
         ),
     ),
+    "/iceberg/iceberg engine/: catalog/show_data_lake_catalogs hint/*": (
+        Skip,
+        "Pending https://github.com/ClickHouse/ClickHouse/pull/100452 — Antalya 26.1+ for now; revise when merged",
+        lambda test: check_clickhouse_version("<26.1")(test)
+        or check_if_not_antalya_build(),
+    ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
     #     "https://github.com/clickhouse/clickhouse/issues/86024",

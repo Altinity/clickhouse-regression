@@ -618,8 +618,10 @@ def install_test_deps(self, node):
                 exitcode=0,
                 timeout=120,
             )
+            machine = node.command("uname -m", no_checks=True).output.strip()
+            go_arch = "arm64" if machine in ("aarch64", "arm64") else "amd64"
             node.command(
-                f"wget -q https://go.dev/dl/go{GO_VERSION}.linux-amd64.tar.gz -O /tmp/go.tar.gz && "
+                f"wget -q https://go.dev/dl/go{GO_VERSION}.linux-{go_arch}.tar.gz -O /tmp/go.tar.gz && "
                 "tar -xzf /tmp/go.tar.gz -C /usr/local && "
                 "rm /tmp/go.tar.gz",
                 exitcode=0,
@@ -653,6 +655,7 @@ def create_symlinks(self, node, clickhouse_binary, names):
 
 @TestScenario
 @Name("aws-lc ssl")
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSLTests("1.0"))
 def awslc_ssl_tests(self):
     """Run the AWS-LC SSL test suite (8037 tests) against the ClickHouse
     ssl-shim and ssl-handshaker binary modes."""
@@ -689,6 +692,7 @@ def awslc_ssl_tests(self):
 
 @TestScenario
 @Name("aws-lc acvp")
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_ACVP_CheckExpectedTests("1.0"))
 def awslc_acvp_tests(self):
     """Run the AWS-LC ACVP test suite (31 algorithm suites) against the
     ClickHouse acvp-server binary mode."""
@@ -764,7 +768,8 @@ def log_check(self):
 @TestScenario
 @Name("check build options")
 @Requirements(
-    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SystemTable_BuildOptions("1.0")
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SystemTable_BuildOptions("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Version("1.0"),
 )
 def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPS compliant AWS-LC library."""
@@ -863,9 +868,99 @@ def clickhouse_client_tcp(self, tls_enabled=True):
     )
 
 
+@TestOutline
+def python_client_tcp_connection(self, port, tls_enabled=True):
+    """Check that server accepts only FIPS 140-3 compatible secure connections
+    from a Python TCP client using the ssl module."""
+    hostname = self.context.node.name
+    bash_tools = self.context.cluster.node("bash-tools")
+    tls_status = "work" if tls_enabled else "be rejected"
+
+    with Check(f"TLSv1.2 connection should {tls_status}"):
+        python_ssl_client_connection(
+            hostname=hostname,
+            port=port,
+            tls_version="1.2",
+            ciphers=":".join(fips_140_3_compatible_tlsv1_2_cipher_suites),
+            success=tls_enabled,
+            node=bash_tools,
+        )
+
+    with Check(f"TLSv1.3 connection should {tls_status}"):
+        python_ssl_client_connection(
+            hostname=hostname,
+            port=port,
+            tls_version="1.3",
+            success=tls_enabled,
+            node=bash_tools,
+        )
+
+    with Check("TLSv1 connection should be rejected"):
+        python_ssl_client_connection(
+            hostname=hostname,
+            port=port,
+            tls_version="1.0",
+            success=False,
+            node=bash_tools,
+        )
+
+    with Check("TLSv1.1 connection should be rejected"):
+        python_ssl_client_connection(
+            hostname=hostname,
+            port=port,
+            tls_version="1.1",
+            success=False,
+            node=bash_tools,
+        )
+
+    for cipher in fips_140_3_compatible_tlsv1_2_cipher_suites:
+        with Check(
+            f"connection using FIPS compatible cipher {cipher} should {tls_status}"
+        ):
+            python_ssl_client_connection(
+                hostname=hostname,
+                port=port,
+                tls_version="1.2",
+                ciphers=cipher,
+                success=tls_enabled,
+                node=bash_tools,
+            )
+
+    for cipher in all_ciphers:
+        if cipher in fips_140_3_compatible_tlsv1_2_cipher_suites:
+            continue
+        if cipher.startswith("TLS_"):
+            continue
+        with Check(
+            f"connection using non-FIPS compatible cipher {cipher} should be rejected"
+        ):
+            python_ssl_client_connection(
+                hostname=hostname,
+                port=port,
+                tls_version="1.2",
+                ciphers=cipher,
+                success=False,
+                node=bash_tools,
+            )
+
+
+@TestScenario
+@Name("python tcp client")
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_TCP_Python("1.0")
+)
+def python_tcp_client(self, tls_enabled=True):
+    """Check that a Python test client can connect to ClickHouse's secure TCP port
+    using only FIPS 140-3 compatible SSL connections."""
+    python_client_tcp_connection(
+        port=self.context.secure_tcp_port,
+        tls_enabled=tls_enabled,
+    )
+
+
 @TestFeature
 @Name("tcp connection")
-@Requirements()
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"))
 def server_tcp_connection(self, tls_enabled=True):
     """Check that server accepts only FIPS 140-3 compatible secure TCP connections."""
     Scenario(name="openssl s_client", test=server_connection_openssl_client)(
@@ -877,10 +972,15 @@ def server_tcp_connection(self, tls_enabled=True):
         tls_enabled=tls_enabled
     )
 
+    Scenario(test=python_tcp_client)(tls_enabled=tls_enabled)
+
 
 @TestFeature
 @Name("https connection")
-@Requirements()
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_HTTPS("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_HTTPS_Curl("1.0"),
+)
 def server_https_connection(self, tls_enabled=True):
     """Check that server accepts only FIPS 140-3 compatible HTTPS connections."""
     Scenario("openssl s_client", test=server_connection_openssl_client)(
@@ -891,7 +991,7 @@ def server_https_connection(self, tls_enabled=True):
 
 @TestFeature
 @Name("all protocols disabled")
-@Requirements()
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"))
 def server_all_protocols_disabled(self):
     """Check that the server accepts no connections."""
     with Given("I set SSL server to not accept any connections"):
@@ -910,7 +1010,7 @@ def server_all_protocols_disabled(self):
 
 
 @TestFeature
-@Requirements()
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"))
 def server(self, node=None):
     """Check forcing server to use only FIPS 140-3 compatible cipher suites."""
     if node is None:
@@ -968,7 +1068,10 @@ def clickhouse_client(self):
 
 @TestFeature
 @Name("fips check")
-@Requirements()
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Client_Config_Settings_FIPS("1.0"),
+)
 def fips_check(self):
     """Run checks that ClickHouse is in FIPS 140-3 mode."""
     Scenario(run=log_check)
@@ -1021,16 +1124,18 @@ def server_as_client(self):
 def feature(self, node="clickhouse1"):
     """Check using SSL configuration to force only FIPS 140-3 compatible SSL connections
     using AWS-LC cryptographic module."""
+
+    if not self.context.fips_mode:
+        skip("fips 140-3 tests only apply to FIPS builds")
+
     self.context.node = self.context.cluster.node(node)
 
     with Given("I enable SSL"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
-    if self.context.fips_mode:
-        Feature(run=fips_check)
-        Scenario(run=break_hash)
-        Feature(run=awslc_test_suites)
-
+    Feature(run=fips_check)
+    Scenario(run=break_hash)
+    Feature(run=awslc_test_suites)
     Feature(run=server)
     Feature(run=clickhouse_client)
     Feature(run=server_as_client)

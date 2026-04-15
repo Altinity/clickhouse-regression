@@ -9,6 +9,7 @@ from ssl_server.requirements import *
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def secure_connection(self):
     """Check secure ZooKeeper connection using client certificate and
     strict verification mode with FIPS 140-3 compatible ciphers.
@@ -53,6 +54,7 @@ def secure_connection(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def secure_connection_without_client_certificate(self):
     """Check secure ZooKeeper connection without using client certificate
     with FIPS 140-3 compatible ciphers.
@@ -103,6 +105,7 @@ def secure_connection_without_client_certificate(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def secure_connection_with_unsigned_client_certificate(self):
     """Check secure ZooKeeper connection using unsigned client certificate
     with FIPS 140-3 compatible ciphers.
@@ -159,6 +162,7 @@ def secure_connection_with_unsigned_client_certificate(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def secure_connection_with_empty_truststore(self):
     """Check secure ZooKeeper connection when ClickHouse uses client certificate and
     strict verification mode with FIPS 140-3 compatible ciphers but ZooKeeper
@@ -250,6 +254,7 @@ def secure_connection_with_empty_truststore(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"))
 def secure_connection_to_invalid_zookeeper_port(self):
     """Check that secure ZooKeeper connection fails when trying to connect
     to invalid zookeeper port with FIPS 140-3 compatible ciphers."""
@@ -381,6 +386,9 @@ def fips_140_3(self):
 def feature(self, node="clickhouse1", zookeeper_node="zookeeper-fips"):
     """Check configuring and using secure connection to ZooKeeper using
     FIPS 140-3 compatible SSL connections with AWS-LC cryptographic module."""
+
+    if not self.context.fips_mode:
+        skip("zookeeper fips 140-3 tests only apply to FIPS builds")
 
     self.context.node = self.context.cluster.node(node)
     self.context.zookeeper_node = self.context.cluster.node(zookeeper_node)

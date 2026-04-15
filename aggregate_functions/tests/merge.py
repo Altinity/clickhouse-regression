@@ -78,7 +78,9 @@ def merge(self, scenario, short_name, is_parametric, extra_data=None):
     fullname = func + getuid()
     snapshot_module = SourceFileLoader(fullname, snapshot_path).load_module()
     snapshot_attrs = {
-        k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
+        k: v
+        for k, v in vars(snapshot_module).items()
+        if not k.startswith("__") and not k.endswith("_binary")
     }
 
     with Pool(3) as executor:

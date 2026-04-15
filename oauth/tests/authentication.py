@@ -84,16 +84,17 @@ def no_token_processor_configured(self):
     """ClickHouse SHALL reject auth when no valid token processor is defined."""
     client = self.context.provider_client
 
-    with Given("I configure a token processor with no type"):
+    with Given("I replace the keycloak processor with an empty one"):
         change_token_processors(
-            processor_name="empty_proc",
+            processor_name="keycloak",
+            replace=True,
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=token, status_code=500)
+    with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()

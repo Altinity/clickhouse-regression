@@ -7,6 +7,7 @@ from testflows.asserts import error
 from testflows.stash import stashed
 from helpers.common import *
 
+
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
     "ECDHE-RSA-AES256-GCM-SHA384",
@@ -925,6 +926,68 @@ def openssl_client_connection(
         f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
         message=message,
         messages=messages,
+        exitcode=exitcode,
+    )
+
+
+@TestStep(Then)
+def python_ssl_client_connection(
+    self,
+    hostname,
+    port,
+    success=True,
+    tls_version=None,
+    ciphers=None,
+    node=None,
+):
+    """Check SSL connection using Python ssl module as a TCP client.
+
+    :param hostname: target ClickHouse hostname
+    :param port: target secure TCP port
+    :param success: whether the connection is expected to succeed
+    :param tls_version: TLS version string ("1.0", "1.1", "1.2", "1.3")
+    :param ciphers: OpenSSL cipher string for TLSv1.2
+    :param node: node to run the Python script on (default: bash-tools)
+    """
+    if node is None:
+        node = self.context.cluster.node("bash-tools")
+
+    lines = [
+        "import ssl, socket",
+        "ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)",
+        "ctx.check_hostname = False",
+        "ctx.verify_mode = ssl.CERT_NONE",
+    ]
+
+    version_map = {
+        "1.0": "ssl.TLSVersion.TLSv1",
+        "1.1": "ssl.TLSVersion.TLSv1_1",
+        "1.2": "ssl.TLSVersion.TLSv1_2",
+        "1.3": "ssl.TLSVersion.TLSv1_3",
+    }
+
+    if tls_version and tls_version in version_map:
+        v = version_map[tls_version]
+        lines.append(f"ctx.minimum_version = {v}")
+        lines.append(f"ctx.maximum_version = {v}")
+
+    if ciphers:
+        lines.append(f"ctx.set_ciphers('{ciphers}')")
+
+    lines.extend(
+        [
+            f"sock = socket.create_connection(('{hostname}', {port}), timeout=10)",
+            f"ssock = ctx.wrap_socket(sock, server_hostname='{hostname}')",
+            "print('CONNECTED', ssock.version(), ssock.cipher()[0])",
+            "ssock.close()",
+        ]
+    )
+
+    script = "\n".join(lines)
+    exitcode = 0 if success else "!= 0"
+
+    node.command(
+        f"python3 << 'PYEOF'\n{script}\nPYEOF",
         exitcode=exitcode,
     )
 

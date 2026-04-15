@@ -15,15 +15,20 @@ def invalid_processor_type(self):
 
     with Given("I configure a token processor with an invalid type"):
         change_token_processors(
-            processor_name="keycloak_bad",
+            processor_name="keycloak",
             processor_type="invalid_type",
+        )
+
+    with And("I configure user directories to use the broken processor"):
+        change_user_directories_config(
+            processor="keycloak",
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=token, status_code=500)
+    with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()
@@ -39,16 +44,17 @@ def missing_processor_type(self):
     """ClickHouse SHALL reject auth when token processor type is missing."""
     client = self.context.provider_client
 
-    with Given("I configure a token processor without a type"):
+    with Given("I replace the keycloak processor with one that has no type"):
         change_token_processors(
-            processor_name="keycloak_no_type",
+            processor_name="keycloak",
+            replace=True,
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=token, status_code=500)
+    with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()
@@ -64,16 +70,20 @@ def non_existent_processor_in_user_directory(self):
     """ClickHouse SHALL reject auth when user_directories references a processor that does not exist."""
     client = self.context.provider_client
 
-    with Given("I configure user directories pointing to a non-existent processor"):
-        change_user_directories_config(
-            processor="does_not_exist",
+    with Given(
+        "I replace all token processors with one named differently than 'keycloak'"
+    ):
+        change_token_processors(
+            processor_name="not_keycloak",
+            processor_type="OpenID",
+            replace_section=True,
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=token, status_code=500)
+    with Then("ClickHouse rejects (base user_directories still references 'keycloak')"):
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()
@@ -86,19 +96,20 @@ def non_existent_processor_in_user_directory(self):
     ),
 )
 def empty_processor_in_user_directory(self):
-    """ClickHouse SHALL reject auth when user_directories processor is empty."""
+    """ClickHouse SHALL reject auth when no token processors are available."""
     client = self.context.provider_client
 
-    with Given("I configure user directories with an empty processor"):
-        change_user_directories_config(
-            processor="",
+    with Given("I replace all token processors with an empty/typeless one"):
+        change_token_processors(
+            processor_name="placeholder",
+            replace_section=True,
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
-    with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=token, status_code=500)
+    with Then("ClickHouse rejects (no valid processor for 'keycloak' reference)"):
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()
