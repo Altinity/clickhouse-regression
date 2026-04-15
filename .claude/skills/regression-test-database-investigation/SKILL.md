@@ -1,3 +1,8 @@
+---
+name: regression-test-database-investigation
+description: Use the internal CI database to determine whether an Altinity regression test failure is flaky, a likely regression, or a new/unknown failure.
+---
+
 # Skill: Database Failure Investigation (MVP)
 
 ## Purpose
@@ -145,7 +150,7 @@ ORDER BY start_time DESC
 FORMAT Vertical
 ```
 
-For additional query patterns, see [.github/database.README.md](../../.github/database.README.md).
+For additional query patterns, see [.github/database.README.md](../../../.github/database.README.md).
 
 ---
 

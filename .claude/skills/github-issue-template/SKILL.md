@@ -1,3 +1,8 @@
+---
+name: github-issue-template
+description: Write well-formatted GitHub issues for the Altinity ClickHouse repository following team conventions. Covers bug reports for regressions, upstream bugs, and flaky test tracking.
+---
+
 # Skill: GitHub Issue Writing
 
 ## Purpose
@@ -206,6 +211,6 @@ Good examples of well-formatted issues in the Altinity repo:
 
 ## Related Skills
 
-- **`pr-ci-failure-triage.md`** — Identifies which failures need issues filed
-- **`upstream-test-investigation.md`** — Gathers the data needed for the issue body
-- **`upstream-ci-database-queries.md`** — Provides upstream CI history for cross-referencing
+- **`pr-ci-failure-triage`** — Identifies which failures need issues filed
+- **`upstream-test-investigation`** — Gathers the data needed for the issue body
+- **`upstream-ci-database-queries`** — Provides upstream CI history for cross-referencing

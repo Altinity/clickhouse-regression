@@ -1,3 +1,8 @@
+---
+name: upstream-test-investigation
+description: Deep investigation of a specific upstream ClickHouse test failure - query history, analyze logs, find root cause, search for existing upstream issues and fixes.
+---
+
 # Skill: Upstream Test Failure Investigation
 
 ## Purpose
@@ -60,7 +65,7 @@ Collect from user or context:
 
 ## Step 2: Query Failure History
 
-Use queries from `upstream-ci-database-queries.md`.
+Use queries from the `upstream-ci-database-queries` skill.
 
 ### Key Questions to Answer
 
@@ -280,7 +285,7 @@ When the failure requires `allow_experimental_*` settings (visible in fuzzer's `
 2. On **release builds**: returns error code 1001 (`LOGICAL_ERROR` / `STD_EXCEPTION`), server stays up
 3. On **debug/sanitizer builds**: triggers `abortOnFailedAssertion()` → SIGABRT, server crashes
 4. These are real bugs but lower priority — still worth reporting if no upstream issue exists
-5. Cross-reference with upstream CI to confirm it's not Altinity-specific (see `upstream-ci-database-queries.md`)
+5. Cross-reference with upstream CI to confirm it's not Altinity-specific (see `upstream-ci-database-queries` skill)
 
 ---
 
@@ -335,10 +340,10 @@ When the failure requires `allow_experimental_*` settings (visible in fuzzer's `
 
 ## Related Skills
 
-- **`pr-ci-failure-triage.md`** - PR-wide failure analysis
-- **`upstream-ci-database-queries.md`** - CI database query reference (Altinity + upstream), including cross-referencing
-- **`regression-test-database-investigation.md`** - For Altinity regression tests (different from upstream)
-- **`github-issue-template.md`** - Templates for writing GitHub issues after investigation
+- **`pr-ci-failure-triage`** - PR-wide failure analysis
+- **`upstream-ci-database-queries`** - CI database query reference (Altinity + upstream), including cross-referencing
+- **`regression-test-database-investigation`** - For Altinity regression tests (different from upstream)
+- **`github-issue-template`** - Templates for writing GitHub issues after investigation
 
 ---
 

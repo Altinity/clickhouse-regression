@@ -1,3 +1,8 @@
+---
+name: pr-ci-failure-triage
+description: Analyze all CI failures in a Pull Request and categorize them as regressions, pre-existing flaky tests, infrastructure issues, or cascade failures.
+---
+
 # Skill: PR CI Failure Triage
 
 ## Purpose
@@ -158,9 +163,9 @@ For each test identified as potentially PR-caused, use the appropriate skill:
 
 | Test Type | Skill to Use |
 |-----------|--------------|
-| **Stateless tests** (`NNNNN_test_name`) | `upstream-test-investigation.md` |
-| **Integration tests** (`test_*/test.py::test_*`) | `upstream-test-investigation.md` |
-| **Regression tests** (`/suite/subsuite/test`) | `regression-test-database-investigation.md` |
+| **Stateless tests** (`NNNNN_test_name`) | `upstream-test-investigation` |
+| **Integration tests** (`test_*/test.py::test_*`) | `upstream-test-investigation` |
+| **Regression tests** (`/suite/subsuite/test`) | `regression-test-database-investigation` |
 
 Then:
 1. Check if test is related to PR changes
@@ -221,10 +226,10 @@ are cascade failures from server crash.
 
 ## Related Skills
 
-- **`upstream-test-investigation.md`** - Deep investigation of upstream test (Stateless/Integration/Fuzzer/Stress)
-- **`upstream-ci-database-queries.md`** - CI database query reference (Altinity + upstream)
-- **`regression-test-database-investigation.md`** - Altinity regression test database investigation
-- **`github-issue-template.md`** - Templates for writing GitHub issues after investigation
+- **`upstream-test-investigation`** - Deep investigation of upstream test (Stateless/Integration/Fuzzer/Stress)
+- **`upstream-ci-database-queries`** - CI database query reference (Altinity + upstream)
+- **`regression-test-database-investigation`** - Altinity regression test database investigation
+- **`github-issue-template`** - Templates for writing GitHub issues after investigation
 
 ---
 

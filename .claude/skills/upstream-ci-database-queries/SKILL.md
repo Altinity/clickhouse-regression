@@ -1,3 +1,8 @@
+---
+name: upstream-ci-database-queries
+description: Reference for querying CI databases that store upstream test results (Stateless and Integration tests), including cross-referencing Altinity CI vs upstream CI.
+---
+
 # Skill: Upstream CI Database Queries
 
 ## Purpose
@@ -79,7 +84,7 @@ Both `explorer` (native) and `play` (HTTP) users work with no password.
 
 ### Fuzzer/Stress Test Notes
 
-- **AST fuzzer** randomly mutates SQL queries to find server crashes. The `test_name` in the database contains the error message, not a test file name. The `fatal.log` contains the crashing query and stack trace. The `Changed settings` line at the end of `fatal.log` lists all non-default settings needed to reproduce.
+- **AST fuzzer** randomly mutates SQL queries from existing tests to find server crashes. The `test_name` in the database contains the error message, not a test file name. The `fatal.log` contains the crashing query and stack trace. The `Changed settings` line at the end of `fatal.log` lists all non-default settings needed to reproduce.
 - **Stress tests** run the server under load for extended periods. If the server crashes, check `clickhouse-server.err.log` for the root cause. `application_errors.txt` lists all exceptions during the run.
 - **BuzzHouse** is similar to AST fuzzer but generates more complex query sequences. Same log structure as AST fuzzer.
 
