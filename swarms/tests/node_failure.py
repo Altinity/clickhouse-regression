@@ -9,7 +9,7 @@ import iceberg.tests.steps.iceberg_engine as iceberg_engine
 from testflows.core import *
 from testflows.asserts import error
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
@@ -163,21 +163,27 @@ def check_restart_clickhouse_on_swarm_node(
     with Then(
         "run long select from iceberg table and restart clickhouse on random swarm node"
     ):
+        if check_clickhouse_version("<26.1")(self):
+            exitcode = 32
+            message = "DB::Exception: Attempt to read after eof"
+        else:
+            exitcode, message = 0, None
+
         with Pool() as pool:
             Step("run long query", test=run_long_query, parallel=True, executor=pool)(
                 node=node,
                 clickhouse_iceberg_table_name=clickhouse_iceberg_table_name,
-                exitcode=32,
-                message="DB::Exception: Attempt to read after eof",
                 cluster_name=cluster_name,
                 delay_before_execution=0,
+                exitcode=exitcode,
+                message=message,
             )
             Step(
                 "restart clickhouse on random swarm node",
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
-            )(delay=30, signal="KILL", delay_before_execution=5)
+            )(delay=50, signal="KILL", delay_before_execution=5)
             join()
 
 
