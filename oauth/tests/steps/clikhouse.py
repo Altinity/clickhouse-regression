@@ -18,8 +18,9 @@ def access_clickhouse(
     if node is None:
         node = self.context.bash_tools
 
+    port = 8443 if https else 8123
     http_prefix = "https" if https else "http"
-    url = f"{http_prefix}://{ip}:8123/"
+    url = f"{http_prefix}://{ip}:{port}/"
 
     if query is None:
         query = "SELECT currentUser()"
@@ -207,6 +208,76 @@ def change_user_directories_config(
         preprocessed_name="config.xml",
         restart=True,
         config_file=f"user_directory_{processor}.xml",
+        node=node,
+    )
+
+
+@TestStep(Then)
+def access_clickhouse_connection_refused(
+    self, token, ip="clickhouse1", https=False, node=None
+):
+    """Assert that a TCP connection to ClickHouse is refused.
+
+    Used when the target port (HTTP or HTTPS) has been disabled via config.
+    curl returns exit code 7 when the connection is refused.
+    """
+    if node is None:
+        node = self.context.bash_tools
+
+    port = 8443 if https else 8123
+    http_prefix = "https" if https else "http"
+    url = f"{http_prefix}://{ip}:{port}/"
+
+    curl_command = (
+        f"curl -s -o /dev/null -w '%{{http_code}}' "
+        f"--connect-timeout 5 "
+        f"--location '{url}?query=SELECT%201' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
+
+    if https:
+        curl_command += " -k"
+
+    curl_command += "; echo exit_code=$?"
+
+    result = node.command(command=curl_command)
+    output = result.output.strip()
+
+    assert "exit_code=7" in output or "exit_code=28" in output, error(
+        f"Expected connection refused (exit code 7 or 28), got: {output}"
+    )
+
+
+@TestStep(Given)
+def change_ports_config(
+    self,
+    http_port=None,
+    https_port=None,
+    remove_http=False,
+    node=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+):
+    """Override ClickHouse listening ports via config.d.
+
+    When ``remove_http=True`` the HTTP port is removed so that only
+    HTTPS is available.
+    """
+    entries = {}
+
+    if remove_http:
+        entries[KeyWithAttributes("http_port", {"remove": "remove"})] = ""
+    elif http_port is not None:
+        entries["http_port"] = str(http_port)
+
+    if https_port is not None:
+        entries["https_port"] = str(https_port)
+
+    change_clickhouse_config(
+        entries=entries,
+        config_d_dir=config_d_dir,
+        preprocessed_name="config.xml",
+        restart=True,
+        config_file="ports_override.xml",
         node=node,
     )
 

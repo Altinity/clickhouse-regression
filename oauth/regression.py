@@ -178,6 +178,8 @@ def regression(
     Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
     Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+    Scenario(run=load("oauth.tests.tls", "feature"))
+    Scenario(run=load("oauth.tests.security_audit", "feature"))
 
 
 if main():

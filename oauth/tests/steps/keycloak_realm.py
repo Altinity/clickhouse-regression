@@ -14,6 +14,8 @@ def get_oauth_token(self, node=None, username=None, password=None):
     """Get an OAuth token from Keycloak for a user via bash_tools curl.
 
     Yields the full JSON response dict (caller should extract ``["access_token"]``).
+    Raises a clear error when Keycloak returns an error response (e.g.
+    disabled user, wrong password) so callers don't get an opaque KeyError.
     """
     if node is None:
         node = self.context.bash_tools
@@ -35,7 +37,20 @@ def get_oauth_token(self, node=None, username=None, password=None):
     )
 
     result = node.command(command=curl_command)
-    response = json.loads(result.output)
+
+    try:
+        response = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak token response for user '{username}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if "error" in response:
+        raise Exception(
+            f"Keycloak token request failed for user '{username}': "
+            f"{response.get('error')} — {response.get('error_description', '')}"
+        )
 
     yield response
 
@@ -59,7 +74,22 @@ def get_admin_token(self):
     )
 
     result = node.command(command=curl_command)
-    token_data = json.loads(result.output)
+
+    try:
+        token_data = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak admin token response: {e}. "
+            f"Raw output: {result.output[:500]}"
+        )
+
+    if "access_token" not in token_data:
+        raise Exception(
+            f"Keycloak admin token request failed: "
+            f"{token_data.get('error', 'unknown')} — "
+            f"{token_data.get('error_description', result.output[:200])}"
+        )
+
     return token_data["access_token"]
 
 
@@ -74,9 +104,11 @@ def keycloak_admin_request(self, method, path, json_data=None, expected_statuses
     admin_token = get_admin_token()
 
     url = f"{self.context.keycloak_url}{path}"
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/kc_resp_{uid}.txt"
 
     curl_cmd = (
-        f"curl -s -o /tmp/kc_resp.txt -w '%{{http_code}}' "
+        f"curl -s -o {tmp_file} -w '%{{http_code}}' "
         f"-X {method.upper()} "
         f"'{url}' "
         f"-H 'Authorization: Bearer {admin_token}' "
@@ -88,9 +120,17 @@ def keycloak_admin_request(self, method, path, json_data=None, expected_statuses
         curl_cmd += f" -d '{payload}'"
 
     result = node.command(command=curl_cmd)
-    status = int(result.output.strip()[-3:])
 
-    body_result = node.command(command="cat /tmp/kc_resp.txt")
+    output = result.output.strip()
+    try:
+        status = int(output[-3:])
+    except (ValueError, IndexError):
+        raise Exception(
+            f"Keycloak API {method} {path}: could not parse HTTP status "
+            f"from curl output: {output[:200]}"
+        )
+
+    body_result = node.command(command=f"cat {tmp_file}")
     body = body_result.output.strip()
 
     if expected_statuses is not None:
@@ -112,7 +152,12 @@ def create_user(
     email=None,
     realm_name=None,
 ):
-    """Create a user in Keycloak. Returns the user ID."""
+    """Create a user in Keycloak. Returns the user ID.
+
+    Uses the Keycloak Admin REST API to create the user. Extracts the
+    user ID from the ``Location`` response header returned by Keycloak
+    on successful creation (HTTP 201).
+    """
     if realm_name is None:
         realm_name = self.context.realm_name
 
@@ -140,11 +185,15 @@ def create_user(
     node = self.context.bash_tools
     admin_token = get_admin_token()
 
+    uid = getuid()[:8]
+    headers_file = f"/tmp/kc_headers_{uid}.txt"
+    resp_file = f"/tmp/kc_resp_{uid}.txt"
+
     url = f"{self.context.keycloak_url}/admin/realms/{realm_name}/users"
     payload = json.dumps(user_data).replace("'", "'\\''")
 
     curl_cmd = (
-        f"curl -s -D /tmp/kc_headers.txt -o /tmp/kc_resp.txt -w '%{{http_code}}' "
+        f"curl -s -D {headers_file} -o {resp_file} -w '%{{http_code}}' "
         f"-X POST '{url}' "
         f"-H 'Authorization: Bearer {admin_token}' "
         f"-H 'Content-Type: application/json' "
@@ -152,16 +201,29 @@ def create_user(
     )
 
     result = node.command(command=curl_cmd)
-    status = int(result.output.strip()[-3:])
-    assert status == 201, f"Failed to create user {username}: HTTP {status}"
 
-    headers_result = node.command(command="cat /tmp/kc_headers.txt")
+    output = result.output.strip()
+    try:
+        status = int(output[-3:])
+    except (ValueError, IndexError):
+        raise Exception(
+            f"Failed to parse HTTP status creating user '{username}': {output[:200]}"
+        )
+
+    if status != 201:
+        body_result = node.command(command=f"cat {resp_file}")
+        raise Exception(
+            f"Failed to create user '{username}': HTTP {status}. "
+            f"Body: {body_result.output.strip()[:500]}"
+        )
+
+    headers_result = node.command(command=f"cat {headers_file}")
     for line in headers_result.output.split("\n"):
         if line.lower().startswith("location:"):
             user_id = line.strip().split("/")[-1]
             return user_id
 
-    raise Exception(f"No Location header in create-user response for {username}")
+    raise Exception(f"No Location header in create-user response for '{username}'")
 
 
 @TestStep(Given)
@@ -231,10 +293,18 @@ def get_user_by_username(self, username, realm_name=None):
         f"?username={username}&exact=true"
     )
 
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
 
     result = node.command(command=curl_cmd)
-    users = json.loads(result.output)
+
+    try:
+        users = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak user lookup response for '{username}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
     if users:
         return users[0]
     return None
@@ -279,7 +349,11 @@ def delete_group(self, group_name, realm_name=None):
 
 @TestStep(Given)
 def get_group_by_name(self, group_name, realm_name=None):
-    """Look up a Keycloak group by name. Returns dict or None."""
+    """Look up a Keycloak group by exact name. Returns dict or None.
+
+    Uses Keycloak's ``?search=`` parameter (substring match) then filters
+    results for an exact name match on the client side.
+    """
     if realm_name is None:
         realm_name = self.context.realm_name
 
@@ -288,13 +362,21 @@ def get_group_by_name(self, group_name, realm_name=None):
 
     url = (
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/groups"
-        f"?search={group_name}"
+        f"?search={group_name}&exact=true"
     )
 
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
 
     result = node.command(command=curl_cmd)
-    groups = json.loads(result.output)
+
+    try:
+        groups = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak group lookup response for '{group_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
     for g in groups:
         if g["name"] == group_name:
             return g
@@ -340,10 +422,19 @@ def disable_client(self, client_id_name, realm_name=None):
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
         f"?clientId={client_id_name}"
     )
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
     result = node.command(command=curl_cmd)
-    clients = json.loads(result.output)
-    assert clients, f"Client '{client_id_name}' not found"
+
+    try:
+        clients = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak client lookup for '{client_id_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if not clients:
+        raise Exception(f"Client '{client_id_name}' not found in realm '{realm_name}'")
 
     internal_id = clients[0]["id"]
     keycloak_admin_request(
@@ -367,10 +458,19 @@ def enable_client(self, client_id_name, realm_name=None):
         f"{self.context.keycloak_url}/admin/realms/{realm_name}/clients"
         f"?clientId={client_id_name}"
     )
-    curl_cmd = f"curl -s '{url}' " f"-H 'Authorization: Bearer {admin_token}'"
+    curl_cmd = f"curl -s '{url}' -H 'Authorization: Bearer {admin_token}'"
     result = node.command(command=curl_cmd)
-    clients = json.loads(result.output)
-    assert clients, f"Client '{client_id_name}' not found"
+
+    try:
+        clients = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise Exception(
+            f"Failed to parse Keycloak client lookup for '{client_id_name}': "
+            f"{e}. Raw output: {result.output[:500]}"
+        )
+
+    if not clients:
+        raise Exception(f"Client '{client_id_name}' not found in realm '{realm_name}'")
 
     internal_id = clients[0]["id"]
     keycloak_admin_request(

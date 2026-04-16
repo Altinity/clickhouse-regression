@@ -382,9 +382,7 @@ def authorization_header_exposed_in_sql(self):
             ),
         )
 
-    with And(
-        "the response contains the raw bearer token — confirming the leak defect"
-    ):
+    with And("the response contains the raw bearer token — confirming the leak defect"):
         assert token in body, error(
             "Expected the raw bearer token to be present in the response "
             "(confirming defect F7/LEAK-03), but it was not found. "
@@ -402,8 +400,7 @@ def authorization_header_blocked_by_default_setting(self):
         token = client.OAuthProvider.get_oauth_token()["access_token"]
 
     with Then(
-        "the query fails with HTTP 500 because the function is "
-        "disabled by default"
+        "the query fails with HTTP 500 because the function is " "disabled by default"
     ):
         body = access_clickhouse(
             token=token,
