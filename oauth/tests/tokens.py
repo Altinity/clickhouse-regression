@@ -95,7 +95,7 @@ def token_with_modified_alg(self):
         )
 
     with Then("ClickHouse rejects the modified token"):
-        access_clickhouse(token=modified, status_code=500)
+        access_clickhouse(token=modified, status_code=403)
 
 
 @TestScenario

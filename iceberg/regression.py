@@ -22,6 +22,26 @@ from helpers.common import (
 
 
 xfails = {
+    "/iceberg/export partition/*/manifest integrity/value_counts across data files sum to source row count": [
+        (
+            Fail,
+            "ClickHouse EXPORT PARTITION never populates `value_counts` in "
+            "manifest entries (IcebergWrites.cpp / IcebergDataFileEntry.h "
+            "only track column_sizes / null_value_counts / lower_bounds / "
+            "upper_bounds). The Avro field is left null.",
+        )
+    ],
+    "/iceberg/export partition/*/manifest integrity/data file paths live under the table prefix": [
+        (
+            Fail,
+            "ClickHouse EXPORT PARTITION writes `path_in_storage` (bucket-"
+            "relative path) to manifest entry `file_path`, ignoring "
+            "`write_full_path_in_iceberg_metadata`. Per Iceberg spec the "
+            "field is a 'Location URI with FS scheme' and should be "
+            "`path_in_metadata` (e.g. s3://<bucket>/...). See "
+            "MultipleFileWriter::startNewFile in MultipleFileWriter.cpp.",
+        )
+    ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
@@ -362,6 +382,10 @@ def regression(
 
     Feature(
         test=load("iceberg.tests.cache.feature", "feature"),
+    )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+
+    Feature(
+        test=load("iceberg.tests.export_partition.feature", "feature"),
     )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     # Feature(

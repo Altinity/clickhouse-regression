@@ -1872,6 +1872,8 @@ object_storage_max_nodes = r"""'{"default":"0"}'"""
 
 object_storage_remote_initiator = r"""'{"default":"0"}'"""
 
+object_storage_remote_initiator_cluster = r"""'{"default":""}'"""
+
 odbc_bridge_connection_pool_size = r"""'{"default":"16"}'"""
 
 odbc_bridge_use_connection_pooling = r"""'{"default":"1"}'"""

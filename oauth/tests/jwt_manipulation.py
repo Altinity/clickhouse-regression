@@ -20,7 +20,7 @@ def modify_alg_to_none(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        access_clickhouse(token=modified, status_code=403)
 
 
 @TestScenario
