@@ -1481,8 +1481,9 @@ class Cluster(object):
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
             cmd = bash(f"{self.docker_compose} --version")
-            version = cmd.output.split()[-1].strip("v").split(".")
-            if version < MINIMUM_COMPOSE_VERSION.split("."):
+            version = tuple(int(x) for x in cmd.output.split()[-1].strip("v").split("."))
+            min_version = tuple(int(x) for x in MINIMUM_COMPOSE_VERSION.split("."))
+            if version < min_version:
                 raise RuntimeError(f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}")
 
         # auto set configs directory
