@@ -42,6 +42,18 @@ xfails = {
             "MultipleFileWriter::startNewFile in MultipleFileWriter.cpp.",
         )
     ],
+    "/iceberg/export partition/*/manifest integrity/external iceberg reader round-trips exported data": [
+        (
+            Fail,
+            "User-visible impact of the same MultipleFileWriter::startNewFile "
+            "bug: any Iceberg reader that dispatches FileIO by URI scheme "
+            "(PyIceberg, Spark, Trino, duckdb) cannot open the exported "
+            "data files because `data_file.file_path` lacks the `s3://` "
+            "scheme and falls back to the local filesystem. Remove this "
+            "xfail together with the `data file paths live under the "
+            "table prefix` entry above.",
+        )
+    ],
     "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
         (
             Fail,

@@ -21,6 +21,14 @@ Scenarios:
   summed across data files equal the source row count.
 * :func:`data_file_paths_under_table_prefix` - every data file path lives
   under the expected IcebergS3 prefix.
+* :func:`external_reader_round_trips_exported_data` - a standalone
+  (non-ClickHouse) Iceberg reader can follow ``data_file.file_path``
+  through its own FileIO and actually read the rows back. Demonstrates
+  the user-visible impact of the ``path_in_storage`` vs
+  ``path_in_metadata`` regression: ClickHouse can read its own output
+  because it resolves bucket-relative paths against its configured S3
+  endpoint, but Spark / Trino / PyIceberg dispatch FileIO by URI scheme
+  and fall back to the local filesystem when the scheme is missing.
 """
 
 from testflows.core import *
@@ -49,6 +57,7 @@ from iceberg.tests.export_partition.steps.manifest_validation import (
     assert_snapshot_advanced,
     assert_snapshot_row_count,
     assert_value_counts_sum_to,
+    get_data_files,
     get_snapshots,
     load_pyiceberg_table,
 )
@@ -412,6 +421,118 @@ def data_file_paths_under_table_prefix(
         )
 
 
+@TestScenario
+@Name("external iceberg reader round-trips exported data")
+def external_reader_round_trips_exported_data(
+    self, minio_root_user, minio_root_password
+):
+    """A standalone Iceberg reader can actually read back the exported rows.
+
+    The sibling scenario :func:`data_file_paths_under_table_prefix` catches
+    the ``path_in_storage`` vs ``path_in_metadata`` regression by static
+    inspection of the manifest entries. This scenario exercises the
+    **user-visible impact** of that same bug: anything that dispatches
+    FileIO by URI scheme (Spark, Trino, PyIceberg, duckdb) cannot find the
+    parquet files when ``data_file.file_path`` is missing a scheme.
+
+    ClickHouse itself is immune because it resolves bucket-relative paths
+    against the IcebergS3 engine's configured bucket — which is why the
+    bug slipped past self-round-trip tests like
+    ``assert_source_and_destination_match``. Here we go around ClickHouse:
+    we load the table via PyIceberg (whose FileIO *is* registered for
+    ``s3://`` via the ``StaticTable`` properties in
+    :func:`load_pyiceberg_table`) and ask it to materialise the rows.
+
+    Pre-fix failure mode: ``table.scan().to_arrow()`` walks the manifest,
+    tries to open each ``data_file.file_path``, finds no URI scheme, falls
+    back to PyArrow's local filesystem, and raises
+    ``FileNotFoundError: Failed to open local file '/data/<dest>/data/...parquet'``.
+    Post-fix: paths come back as ``s3://warehouse/...``, the S3 FileIO
+    resolves them against MinIO, and the scan returns the exported rows.
+
+    Registered as XFail in ``regression.py`` alongside the static
+    companion; remove both entries at the same time once
+    ``MultipleFileWriter::startNewFile`` pushes ``path_in_metadata``
+    instead of ``path_in_storage`` into ``data_file_names``.
+    """
+    source_table = f"mt_{getuid()}"
+    expected_values = [(1, 2020), (2, 2020), (3, 2020)]
+    values_sql = ", ".join(f"({id_}, {year})" for id_, year in expected_values)
+
+    with Given("create source table and insert a known partition"):
+        create_replicated_mergetree(
+            table_name=source_table,
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+        )
+        insert_data(table_name=source_table, values=values_sql)
+
+    with And("create the Iceberg destination with full paths in metadata"):
+        # write_full_path_in_iceberg_metadata = 1 is required infrastructure:
+        # without it the manifest-list pointer in metadata.json is also
+        # bucket-relative and PyIceberg fails before we ever reach a
+        # data_file.file_path. We want the failure to be about the data
+        # files, not the manifest list.
+        destination = create_iceberg_destination(
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            query_settings=FULL_PATHS_SETTING,
+        )
+
+    with When("export the partition with full paths in metadata"):
+        export_partition(
+            source_table=source_table,
+            destination_table=as_destination_name(destination),
+            partition_id="2020",
+            extra_settings=FULL_PATHS_SETTING,
+        )
+
+    with And("load the destination via PyIceberg (external reader)"):
+        table = load_pyiceberg_table(
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with Then("PyIceberg can scan the table and materialise the rows"):
+        # PyIceberg's ProjectedSchema.to_arrow() walks every manifest
+        # entry and asks its FileIO to open each data file. FileIO is
+        # dispatched by URI scheme: "s3://..." -> the S3FileIO we
+        # registered in load_pyiceberg_table; anything else -> the
+        # default PyArrowFileIO which treats the string as a local
+        # filesystem path. The latter is what happens today — we catch
+        # that and rewrite the exception into an assertion that names
+        # the offending data_file.file_path so the failure points
+        # straight at the spec violation.
+        try:
+            arrow_table = table.scan().to_arrow()
+        except (FileNotFoundError, OSError) as exc:
+            offending = [df.file_path for df in get_data_files(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )]
+            assert False, error(
+                f"External reader (PyIceberg) failed to open a data file "
+                f"written by EXPORT PARTITION. This is the user-visible "
+                f"effect of data_file.file_path being bucket-relative "
+                f"instead of an absolute URI — FileIO dispatch falls back "
+                f"to the local filesystem. Underlying error: "
+                f"{type(exc).__name__}: {exc}. "
+                f"data_file.file_path values in this snapshot: {offending!r}"
+            )
+
+    with And("scanned rows match the exported rows exactly"):
+        rows = arrow_table.sort_by("id").to_pylist()
+        observed = [(row["id"], row["year"]) for row in rows]
+        assert observed == expected_values, error(
+            f"PyIceberg scan returned the wrong rows. "
+            f"Expected {expected_values!r}, got {observed!r}"
+        )
+
+
 SCENARIOS = (
     snapshot_advances_per_export,
     snapshot_summary_records_match,
@@ -419,6 +540,7 @@ SCENARIOS = (
     column_stats_are_populated,
     value_counts_sum_to_row_count,
     data_file_paths_under_table_prefix,
+    external_reader_round_trips_exported_data,
 )
 
 
