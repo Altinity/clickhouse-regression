@@ -1973,8 +1973,8 @@ class Cluster(object):
                                 no_checks=True,
                                 timeout=timeout,
                             )
-                            if cmd.exitcode != 0 or "Error" in cmd.output:
-                                raise Exception(f"docker-compose pull failed: {cmd.output[-200:]}")
+                            assert cmd.exitcode == 0, error(cmd.output)
+                            assert "Error" not in cmd.output, error(cmd.output)
                             break
                     else:
                         return False
@@ -2017,8 +2017,7 @@ class Cluster(object):
                             no_checks=True,
                             timeout=timeout,
                         )
-                        if cmd.exitcode != 0:
-                            raise Exception(f"docker build failed: {cmd.output[-200:]}")
+                        assert cmd.exitcode == 0, error(cmd.output)
                         break
                 else:
                     return False
@@ -2039,8 +2038,7 @@ class Cluster(object):
                                 no_checks=True,
                                 timeout=timeout,
                             )
-                            if cmd.exitcode != 0:
-                                raise Exception(f"docker build failed: {cmd.output[-200:]}")
+                            assert cmd.exitcode == 0, error(cmd.output)
                             break
                     else:
                         return False
