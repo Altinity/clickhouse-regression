@@ -42,6 +42,23 @@ xfails = {
             "MultipleFileWriter::startNewFile in MultipleFileWriter.cpp.",
         )
     ],
+    "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
+        (
+            Fail,
+            "ClickHouse EXPORT PARTITION does not propagate format-level "
+            "settings from the `ALTER ... EXPORT PARTITION ... SETTINGS` "
+            "clause to the background export task. "
+            "ExportReplicatedMergeTreePartitionManifest has no generic "
+            "settings blob and "
+            "ExportPartitionUtils::getContextCopyWithTaskSettings uses a "
+            "hardcoded allowlist that omits format settings, so "
+            "`output_format_parquet_compression_method` is dropped before "
+            "ExportPartTask::executeStep calls getFormatSettings and the "
+            "Parquet writer always falls back to the server-profile "
+            "default codec. Intentional for now per dev; remove this "
+            "entry once the manifest carries format settings end-to-end.",
+        )
+    ],
     "/iceberg/icebergS3 table function/recreate table/scan and display data with pyiceberg, expect empty table": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/87574")
     ],
