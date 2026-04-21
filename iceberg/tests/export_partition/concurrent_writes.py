@@ -45,6 +45,7 @@ from iceberg.tests.export_partition.steps.export_operations import (
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
+    wait_for_exports_to_settle,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
@@ -198,6 +199,23 @@ def duplicate_export_inside_one_alter(
             exitcode=BAD_ARGUMENTS,
             message="Export with key",
             ignore_exception=True,
+        )
+
+    with And("drain any background export tasks the ALTER left running"):
+        # The parser/scheduler rejects the duplicate entry with
+        # BAD_ARGUMENTS but the first entry's background task may still be
+        # in flight when the client's ALTER returns. If we inspect the
+        # destination now we race PyIceberg's metadata.json read against
+        # the snapshot commit and can observe "0 snapshots but 3 rows" -
+        # PyIceberg loaded the pre-commit metadata.json while CH's
+        # IcebergS3 storage refreshed metadata on SELECT a moment later.
+        # Waiting for every matching row in
+        # ``system.replicated_partition_exports`` to reach a terminal
+        # state (COMPLETED / FAILED / CANCELLED) removes the race.
+        wait_for_exports_to_settle(
+            source_table=source_table,
+            destination_table=dest_name,
+            partition_id="2020",
         )
 
     with Then("at most one snapshot was committed (the duplicate was rejected)"):

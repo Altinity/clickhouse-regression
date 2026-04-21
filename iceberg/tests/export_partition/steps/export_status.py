@@ -140,6 +140,61 @@ def wait_for_export_to_start(
 
 
 @TestStep(When)
+def wait_for_exports_to_settle(
+    self,
+    source_table,
+    partition_id,
+    destination_table=None,
+    timeout=120,
+    delay=3,
+    node=None,
+):
+    """Wait until every row matching the filter reaches a terminal status.
+
+    A terminal status is one of ``COMPLETED``, ``FAILED`` or ``CANCELLED``:
+    once all matching rows are there the underlying background task has
+    either committed its snapshot or given up. Useful for scenarios that
+    issue an ALTER expected to fail at parse/schedule time but still leave
+    one of the EXPORT entries running in the background (e.g. the
+    duplicate-EXPORT-inside-one-ALTER scenario in ``concurrent_writes.py``
+    - the client sees ``BAD_ARGUMENTS`` for the second entry while the
+    first entry's commit is still in flight, which races PyIceberg against
+    the snapshot being written and produces a "snapshots=0, rows=3"
+    inconsistency on the next assertion).
+
+    If no row ever appears within ``timeout`` the step also succeeds - the
+    absence of any scheduled task is itself a terminal state as far as the
+    destination is concerned.
+    """
+    if node is None:
+        node = self.context.node
+
+    where = [
+        f"source_table = '{source_table}'",
+        f"partition_id = '{partition_id}'",
+    ]
+    if destination_table is not None:
+        where.append(f"destination_table = '{destination_table}'")
+    where_clause = " AND ".join(where)
+
+    settings = _prefer_remote_settings()
+    last_pending = None
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            last_pending = node.query(
+                f"SELECT count() FROM system.replicated_partition_exports "
+                f"WHERE {where_clause} "
+                f"  AND status NOT IN ('COMPLETED', 'FAILED', 'CANCELLED')",
+                settings=settings,
+            ).output.strip()
+            assert last_pending == "0", error(
+                f"Export rows for source_table='{source_table}' "
+                f"partition_id='{partition_id}' still pending: "
+                f"{last_pending} row(s) not in a terminal state"
+            )
+
+
+@TestStep(When)
 def get_exception_count(
     self,
     source_table,

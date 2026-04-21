@@ -111,38 +111,65 @@ def create_iceberg_s3_destination(
 
 
 @TestStep(Given)
-def create_iceberg_catalog_destination(
+def create_pyiceberg_catalog_destination(
     self,
-    columns,
-    partition_by,
+    schema,
+    partition_spec,
     minio_root_user,
     minio_root_password,
     namespace=None,
     table_name=None,
     database_name=None,
     storage_endpoint=None,
+    warehouse_bucket=None,
+    pyiceberg_s3_endpoint="http://localhost:9002",
+    table_properties=None,
     node=None,
     cleanup=True,
 ):
-    """Create an Iceberg destination that lives in an external catalog
-    (REST or Glue depending on ``self.context.catalog``).
+    """Create a catalog-backed Iceberg destination for ``EXPORT PARTITION``.
 
-    The destination is created in two steps:
+    Unlike :func:`create_iceberg_s3_destination`, the Iceberg table is
+    materialised through PyIceberg's ``catalog.create_table(...)`` rather than
+    through ClickHouse DDL. This mirrors the upstream pattern in
+    ``test_export_partition_iceberg_catalog.py`` and is required because
+    ``DataLakeCatalog`` databases are read-only for DDL on the ClickHouse side:
+    ``CREATE TABLE ... ENGINE = Iceberg`` inside a ``DataLakeCatalog`` database
+    is rejected by the server, so the catalog-registered table has to exist
+    *before* the ClickHouse database is wired up to it.
 
-    1. A ``DataLakeCatalog`` database is registered in ClickHouse.
-    2. A native MergeTree table is created **inside** the catalog database
-       with the same ``PARTITION BY`` as the source; ClickHouse forwards the
-       DDL to the catalog, which materialises the Iceberg table.
+    The returned dict carries both the ClickHouse qualified name (for
+    ``ALTER TABLE ... EXPORT PARTITION ... TO TABLE <name>``) and the live
+    PyIceberg ``Catalog`` handle, so scenarios can assert on the catalog
+    directly after each commit (``current_snapshot()``, ``table.scan()``, etc.).
 
     Args:
-        columns: Column list for the ``CREATE TABLE`` body.
-        partition_by: Expression used for ``PARTITION BY``.
-        minio_root_user / minio_root_password: S3 credentials.
-        namespace: Iceberg namespace. Defaults to a unique name.
-        table_name: Iceberg table name. Defaults to a unique name.
-        database_name: ClickHouse database name backed by the catalog.
-        storage_endpoint: Value passed through to
-            :func:`iceberg_engine.create_experimental_iceberg_database`.
+        schema: A ``pyiceberg.schema.Schema``. Field types, ids and
+            ``required`` flags must line up with the RMT source columns that
+            ``EXPORT PARTITION`` will write. CH ``Int64`` -> ``LongType``,
+            CH non-nullable primitive -> ``required=True``.
+        partition_spec: A ``pyiceberg.partitioning.PartitionSpec``. Only
+            identity transforms are tested end-to-end; other transforms live
+            in :mod:`iceberg.tests.export_partition.partition_spec_evolution`.
+        minio_root_user / minio_root_password: MinIO credentials used by both
+            PyIceberg FileIO (via ``pyiceberg_s3_endpoint``) and the CH-side
+            ``DataLakeCatalog`` database (via ``storage_endpoint``).
+        namespace / table_name / database_name: Optional overrides, default
+            to uniquely-generated names.
+        storage_endpoint: S3 endpoint that ClickHouse uses to resolve the
+            table's ``location``. Must be reachable from inside the CH
+            containers and the bucket segment must match ``warehouse_bucket``
+            (i.e. ``http://minio:9000/warehouse`` when ``warehouse_bucket=warehouse``).
+        warehouse_bucket: S3 bucket that hosts the table data; inserted into
+            the ``s3://<bucket>/data/<table>`` ``location`` passed to
+            ``catalog.create_table``.
+        pyiceberg_s3_endpoint: S3 endpoint used by PyIceberg on the test
+            host (defaults to the MinIO port-forward on ``localhost:9002``).
+        table_properties: Extra Iceberg ``properties`` for ``create_table``.
+            ``format-version = 2`` is always set so snapshot management uses
+            the current spec revision.
+        cleanup: When true (default), drop the CH database and the PyIceberg
+            table in the finaliser.
     """
     if node is None:
         node = self.context.node
@@ -152,20 +179,37 @@ def create_iceberg_catalog_destination(
         table_name = f"iceberg_{getuid()}"
     if database_name is None:
         database_name = f"datalake_{getuid()}"
+    if warehouse_bucket is None:
+        warehouse_bucket = DEFAULT_S3_WAREHOUSE_BUCKET
     if storage_endpoint is None:
-        storage_endpoint = f"{DEFAULT_S3_ENDPOINT_HOST}/{DEFAULT_S3_WAREHOUSE_BUCKET}"
+        storage_endpoint = f"{DEFAULT_S3_ENDPOINT_HOST}/{warehouse_bucket}"
 
-    with Given("ensure namespace exists via PyIceberg"):
+    properties = dict(table_properties or {})
+    properties.setdefault("format-version", "2")
+
+    with Given("connect to the external Iceberg catalog via PyIceberg"):
         pyiceberg_catalog = catalog_steps.create_catalog(
-            s3_endpoint="http://localhost:9002",
+            s3_endpoint=pyiceberg_s3_endpoint,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
+            clean_up_minio_bucket=False,
         )
+
+    with And(f"ensure namespace {namespace!r} exists"):
         catalog_steps.create_namespace(
             catalog=pyiceberg_catalog, namespace=namespace
         )
 
-    with And("create DataLakeCatalog database in ClickHouse"):
+    with And(f"materialise iceberg table {namespace}.{table_name} through the catalog"):
+        pyiceberg_catalog.create_table(
+            identifier=f"{namespace}.{table_name}",
+            schema=schema,
+            location=f"s3://{warehouse_bucket}/data/{table_name}",
+            partition_spec=partition_spec,
+            properties=properties,
+        )
+
+    with And(f"create DataLakeCatalog database {database_name!r} in ClickHouse"):
         iceberg_engine.create_experimental_iceberg_database(
             database_name=database_name,
             s3_access_key_id=minio_root_user,
@@ -173,20 +217,11 @@ def create_iceberg_catalog_destination(
             storage_endpoint=storage_endpoint,
         )
 
-    pclause = f"PARTITION BY {partition_by}" if partition_by else ""
-
+    # Backticks need to survive the bash pipeline that `node.query` uses to
+    # feed the statement to ``clickhouse client``; otherwise bash interprets
+    # them as command substitution and the SQL arrives as fragments. The rest
+    # of the iceberg suite escapes them the same way.
     qualified = f"{database_name}.\\`{namespace}.{table_name}\\`"
-
-    with And(f"create iceberg table {qualified} through catalog"):
-        node.query(
-            textwrap.dedent(
-                f"""
-                CREATE TABLE {qualified} ({columns})
-                ENGINE = Iceberg
-                {pclause}
-                """
-            ).strip()
-        )
 
     try:
         yield {
@@ -198,8 +233,7 @@ def create_iceberg_catalog_destination(
         }
     finally:
         if cleanup:
-            with Finally(f"drop catalog destination {qualified}"):
-                node.query(f"DROP TABLE IF EXISTS {qualified} SYNC")
+            with Finally(f"drop catalog-backed table {namespace}.{table_name}"):
                 catalog_steps.drop_iceberg_table(
                     catalog=pyiceberg_catalog,
                     namespace=namespace,
@@ -220,14 +254,21 @@ def create_iceberg_destination(
 
     Dispatches on ``self.context.catalog``:
 
-    * ``"no_catalog"`` -> :func:`create_iceberg_s3_destination` (returns a
+    * ``"no"``           -> :func:`create_iceberg_s3_destination` (returns a
       string ``table_name``).
-    * ``"rest"`` / ``"glue"`` -> :func:`create_iceberg_catalog_destination`
-      (returns a dict with ``destination_table`` and catalog metadata).
+    * ``"rest"`` / ``"glue"`` -> skipped: see note below.
 
-    For uniform access, scenarios should call :func:`as_destination_name`
-    on the return value to get a string usable in
-    ``ALTER TABLE ... TO TABLE <name>``.
+    Catalog-backed scenarios cannot use this dispatcher because the Iceberg
+    table has to be materialised through PyIceberg (see
+    :func:`create_pyiceberg_catalog_destination`), which needs an explicit
+    ``pyiceberg.schema.Schema`` and ``PartitionSpec`` — neither of which can
+    be derived from the CH-style ``columns`` / ``partition_by`` strings used
+    by the generic modules. :mod:`iceberg.tests.export_partition.catalogs`
+    therefore calls :func:`create_pyiceberg_catalog_destination` directly.
+
+    For uniform access downstream, scenarios should always funnel the return
+    value through :func:`as_destination_name` to obtain a ``ALTER TABLE ...
+    TO TABLE <name>``-compatible string.
     """
     catalog = self.context.catalog
     if catalog == "no":
@@ -239,11 +280,17 @@ def create_iceberg_destination(
             **kwargs,
         )
     elif catalog in ("rest", "glue"):
-        # TODO: catalog-backed destinations need the Iceberg table to be
-        # created through PyIceberg (DataLakeCatalog is read-only for DDL,
-        # see iceberg_engine/alter.py). Until we have a ClickHouse -> PyIceberg
-        # schema/partition-spec translator, skip these modes.
-        skip(f"catalog mode {catalog!r} not yet implemented for export_partition")
+        # Generic module-level scenarios (sanity, datatypes, …) express the
+        # destination as CH DDL-style strings. We don't have a CH → PyIceberg
+        # schema/partition-spec translator in this suite, so those scenarios
+        # stay skipped under catalog modes. Tests that actually want to drive
+        # the catalog commit path live in `catalogs.py` and reach for
+        # `create_pyiceberg_catalog_destination` directly with a hand-written
+        # schema + PartitionSpec.
+        skip(
+            f"catalog mode {catalog!r} requires an explicit PyIceberg "
+            f"Schema/PartitionSpec; see create_pyiceberg_catalog_destination"
+        )
     else:
         raise ValueError(f"Unsupported catalog mode: {catalog!r}")
 

@@ -54,6 +54,18 @@ xfails = {
             "table prefix` entry above.",
         )
     ],
+    "/iceberg/export partition/*/catalogs/catalog: external reader round-trips exported data": [
+        (
+            Fail,
+            "Same MultipleFileWriter::startNewFile bug as the no_catalog "
+            "external-reader scenario, but reached through a catalog-backed "
+            "destination (REST / Glue). PyIceberg loads the table via the "
+            "catalog, walks the manifest, and FileIO dispatches by URI "
+            "scheme — data_file.file_path has no scheme so it falls back to "
+            "the local filesystem and raises FileNotFoundError. Remove this "
+            "xfail alongside the manifest-integrity one above.",
+        )
+    ],
     "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
         (
             Fail,
