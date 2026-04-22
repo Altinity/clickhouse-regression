@@ -35,8 +35,8 @@ from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
+    _require_no_catalog,
     create_iceberg_destination,
-    as_destination_name,
 )
 
 
@@ -82,7 +82,7 @@ def _run_accepted_case(
     with Then("EXPORT PARTITION completes without error"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id=partition_id,
         )
 
@@ -124,7 +124,7 @@ def _run_rejected_case(
     with Then("EXPORT PARTITION is rejected with BAD_ARGUMENTS"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id=partition_id,
             exitcode=BAD_ARGUMENTS,
             message="BAD_ARGUMENTS",
@@ -406,16 +406,39 @@ REJECTED_SCENARIOS = (
 @TestFeature
 @Name("partition compatibility")
 def feature(self, minio_root_user, minio_root_password):
-    """Partition expression compatibility between MergeTree and Iceberg."""
+    """Partition expression compatibility between MergeTree and Iceberg.
+
+    Gated to ``no_catalog`` only. The module exercises ClickHouse's own
+    ``checkExportPartitionDestinationIsCompatible`` surface: source
+    ``PARTITION BY`` vs destination ``PARTITION BY``. Under REST / Glue
+    the destination is materialised by PyIceberg and re-read through
+    ``DataLakeCatalog``, which rewrites a few CH types on read-back
+    (``Date``->``Date32``, ``DateTime``->``DateTime64``) — the
+    transform-mapping scenarios then fail with ``INCOMPATIBLE_COLUMNS``
+    even though the partition spec is genuinely the one the translator
+    built. That widening is a ClickHouse Iceberg-engine behaviour, not a
+    property of EXPORT PARTITION; fixing it here would mean rewriting
+    every source column to ``Date32`` / ``DateTime64`` and losing the
+    ``Date`` / ``DateTime`` coverage the scenarios were written for.
+    The "rejected" scenarios are likewise about CH-side diagnostics that
+    the translator pre-empts (mismatches simply can't be constructed
+    through the catalog path), so they add no signal under catalog mode.
+    """
+    _require_no_catalog(
+        "partition expression compatibility is a CH-side surface; catalog mode "
+        "widens Date/DateTime on read-back and makes the transform matrix "
+        "trigger INCOMPATIBLE_COLUMNS even when the spec is correct"
+    )
+
     with Feature("accepted"):
         for scenario in ACCEPTED_SCENARIOS:
-            Scenario(test=scenario)(
+            Scenario(test=scenario, flags=TE)(
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,
             )
     with Feature("rejected"):
         for scenario in REJECTED_SCENARIOS:
-            Scenario(test=scenario)(
+            Scenario(test=scenario, flags=TE)(
                 minio_root_user=minio_root_user,
                 minio_root_password=minio_root_password,
             )

@@ -20,14 +20,42 @@ from iceberg.tests.export_partition.steps.common import (
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
 )
+from iceberg.tests.export_partition.steps.export_status import (
+    _destination_where_pieces,
+)
+from iceberg.tests.export_partition.steps.iceberg_destination import (
+    as_destination_name,
+)
+
+
+def _resolve_destination(destination, destination_table):
+    """Collapse ``destination`` / ``destination_table`` into the pair of
+    values the export helpers need:
+
+    * ``name`` — the fully-qualified SQL identifier suitable for
+      ``ALTER TABLE ... TO TABLE <name>`` and ``KILL EXPORT PARTITION
+      WHERE destination_table = '<name>'`` (which CH then parses through
+      its own StorageID splitter).
+    * ``filter_obj`` — the object to hand to
+      :func:`iceberg.tests.export_partition.steps.export_status.get_export_row`
+      (and friends). Prefer the dict form when available so the filter
+      splits ``destination_database`` / ``destination_table`` correctly
+      under catalog mode; fall back to the SQL identifier string for the
+      no_catalog case.
+    """
+    if destination is not None:
+        name = as_destination_name(destination)
+        return name, destination
+    return destination_table, destination_table
 
 
 @TestStep(When)
 def export_partition(
     self,
     source_table,
-    destination_table,
     partition_id,
+    destination=None,
+    destination_table=None,
     node=None,
     settings=None,
     extra_settings=None,
@@ -40,8 +68,19 @@ def export_partition(
 
     Args:
         source_table: ReplicatedMergeTree source.
-        destination_table: Iceberg destination (either an IcebergS3 table or
-            a DataLakeCatalog-backed table).
+        destination: Preferred way to identify the Iceberg destination —
+            either the dict returned by
+            :func:`iceberg.tests.export_partition.steps.iceberg_destination.create_iceberg_destination`
+            or a plain unqualified string. Callers that already hold the
+            destination object should pass it here so the completion poll
+            under catalog mode can split ``destination_database`` /
+            ``destination_table`` correctly (see
+            :func:`iceberg.tests.export_partition.steps.export_status._destination_where_pieces`).
+        destination_table: Legacy path that accepts the SQL identifier
+            string directly (e.g. the result of ``as_destination_name``).
+            Still supported for callers that have already serialised the
+            destination to a string; exactly one of
+            ``destination`` / ``destination_table`` must be provided.
         partition_id: Partition ID string (as stored in ``system.parts``).
         settings: Full settings list passed directly to ``node.query``; the
             default ``None`` sends the statement without any per-query
@@ -61,6 +100,12 @@ def export_partition(
     if node is None:
         node = self.context.node
 
+    if destination is None and destination_table is None:
+        raise ValueError(
+            "export_partition requires either destination= or destination_table="
+        )
+    name, filter_obj = _resolve_destination(destination, destination_table)
+
     if settings is None and extra_settings:
         settings = list(extra_settings)
 
@@ -68,12 +113,12 @@ def export_partition(
 
     with By(
         f"running EXPORT PARTITION id '{partition_id}' from "
-        f"{source_table} to {destination_table}"
+        f"{source_table} to {name}"
     ):
         result = node.query(
             f"ALTER TABLE {source_table} "
             f"EXPORT PARTITION ID '{partition_id}' "
-            f"TO TABLE {destination_table}",
+            f"TO TABLE {name}",
             settings=settings,
             exitcode=exitcode,
             message=message,
@@ -84,7 +129,7 @@ def export_partition(
         with And(f"waiting for export of partition '{partition_id}' to complete"):
             wait_for_export_status(
                 source_table=source_table,
-                destination_table=destination_table,
+                destination=filter_obj,
                 partition_id=partition_id,
                 expected_status="COMPLETED",
                 timeout=wait_timeout,
@@ -98,7 +143,8 @@ def export_partition(
 def export_all_partitions(
     self,
     source_table,
-    destination_table,
+    destination=None,
+    destination_table=None,
     node=None,
     settings=None,
     extra_settings=None,
@@ -109,6 +155,9 @@ def export_all_partitions(
 
     Returns the list of partition IDs that were exported (useful for follow-up
     assertions against the destination).
+
+    Accepts the same ``destination`` / ``destination_table`` split as
+    :func:`export_partition`.
     """
     if node is None:
         node = self.context.node
@@ -118,6 +167,7 @@ def export_all_partitions(
     for pid in partition_ids:
         export_partition(
             source_table=source_table,
+            destination=destination,
             destination_table=destination_table,
             partition_id=pid,
             node=node,
@@ -134,21 +184,46 @@ def export_all_partitions(
 def kill_export_partition(
     self,
     source_table,
-    destination_table,
     partition_id,
+    destination=None,
+    destination_table=None,
     node=None,
     exitcode=0,
 ):
-    """Run ``KILL EXPORT PARTITION WHERE ...``."""
+    """Run ``KILL EXPORT PARTITION WHERE ...``.
+
+    Accepts the same ``destination`` / ``destination_table`` split as
+    :func:`export_partition`. The ``WHERE`` clause is built via
+    :func:`iceberg.tests.export_partition.steps.export_status._destination_where_pieces`
+    so the ``destination_database`` / ``destination_table`` filter is
+    aligned with what ``system.replicated_partition_exports`` actually
+    stores — an unqualified ``ns.tbl`` split out from the catalog-mode
+    identifier ``datalake_xxx.\\`ns.tbl\\``` (see the helper's docstring
+    for the rationale). Using the fully-qualified SQL identifier here
+    would match no row under REST / Glue and silently leave the target
+    PENDING, which is the Phase 3 regression this fixed.
+    """
     if node is None:
         node = self.context.node
+    if destination is None and destination_table is None:
+        raise ValueError(
+            "kill_export_partition requires either destination= or destination_table="
+        )
     no_checks = exitcode != 0
 
+    where = [
+        f"partition_id = '{partition_id}'",
+        f"source_table = '{source_table}'",
+    ]
+    where.extend(
+        _destination_where_pieces(
+            destination=destination, destination_table=destination_table
+        )
+    )
+    where_clause = " AND ".join(where)
+
     return node.query(
-        f"KILL EXPORT PARTITION WHERE "
-        f"partition_id = '{partition_id}' "
-        f"AND source_table = '{source_table}' "
-        f"AND destination_table = '{destination_table}'",
+        f"KILL EXPORT PARTITION WHERE {where_clause}",
         exitcode=exitcode,
         no_checks=no_checks,
     )

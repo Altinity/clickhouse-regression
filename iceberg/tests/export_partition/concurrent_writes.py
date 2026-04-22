@@ -123,7 +123,7 @@ def multi_statement_alter_commits_each_partition(
         for pid in partitions:
             wait_for_export_status(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id=pid,
                 expected_status="COMPLETED",
             )
@@ -214,7 +214,7 @@ def duplicate_export_inside_one_alter(
         # state (COMPLETED / FAILED / CANCELLED) removes the race.
         wait_for_exports_to_settle(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
@@ -266,12 +266,11 @@ def insert_after_scheduled_export_is_isolated(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
 
     with When("schedule EXPORT PARTITION 2020 without waiting"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             wait_for_completion=False,
         )
@@ -285,7 +284,7 @@ def insert_after_scheduled_export_is_isolated(
     with And("wait for the scheduled export to complete"):
         wait_for_export_status(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             expected_status="COMPLETED",
         )
@@ -308,7 +307,7 @@ def insert_after_scheduled_export_is_isolated(
     with And("a follow-up export of 2021 recovers the new rows"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2021",
         )
         assert_destination_row_count(

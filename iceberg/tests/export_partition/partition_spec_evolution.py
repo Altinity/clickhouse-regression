@@ -32,7 +32,6 @@ from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
-    as_destination_name,
     create_iceberg_destination,
 )
 from iceberg.tests.export_partition.steps.manifest_validation import (
@@ -91,7 +90,7 @@ def single_spec_for_multiple_partitions(
     with When("export every partition"):
         export_all_partitions(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             extra_settings=FULL_PATHS_SETTING,
         )
 
@@ -162,7 +161,7 @@ def partition_tuple_matches_partition_id(
         for pid in partition_ids:
             export_partition(
                 source_table=source_table,
-                destination_table=as_destination_name(destination),
+                destination=destination,
                 partition_id=pid,
                 extra_settings=FULL_PATHS_SETTING,
             )
@@ -228,7 +227,7 @@ def multi_column_partition_spec_preserved(
     with When("export every partition"):
         export_all_partitions(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             extra_settings=FULL_PATHS_SETTING,
         )
 

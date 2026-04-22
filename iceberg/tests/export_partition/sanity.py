@@ -69,7 +69,7 @@ def single_partition(self, minio_root_user, minio_root_password):
     with When("export the 2020 partition"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
         )
 
@@ -122,7 +122,7 @@ def all_partitions(self, minio_root_user, minio_root_password):
     with When("export every partition"):
         exported = export_all_partitions(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
         )
         assert sorted(exported) == ["2020", "2021", "2022"], error()
 
@@ -190,13 +190,13 @@ def multi_partition_alter(self, minio_root_user, minio_root_password):
     with And("wait for both exports to complete"):
         wait_for_export_status(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             expected_status="COMPLETED",
         )
         wait_for_export_status(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2021",
             expected_status="COMPLETED",
         )
@@ -244,7 +244,7 @@ def empty_partition(self, minio_root_user, minio_root_password):
     with Then("export the remaining partition"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2021",
         )
 
@@ -304,7 +304,7 @@ def cross_replica_export(self, minio_root_user, minio_root_password):
     with When("export from replica2"):
         export_partition(
             source_table=table_name,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
             node=replica2,
         )
@@ -323,18 +323,18 @@ def cross_replica_export(self, minio_root_user, minio_root_password):
 @Name("sanity")
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for EXPORT PARTITION to Iceberg."""
-    Scenario(test=single_partition)(
+    Scenario(test=single_partition, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=all_partitions)(
+    Scenario(test=all_partitions, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=multi_partition_alter)(
+    Scenario(test=multi_partition_alter, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=empty_partition)(
+    Scenario(test=empty_partition, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
-    Scenario(test=cross_replica_export)(
+    Scenario(test=cross_replica_export, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

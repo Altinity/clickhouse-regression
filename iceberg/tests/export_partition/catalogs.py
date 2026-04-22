@@ -321,27 +321,18 @@ def catalog_export_appends_snapshot_visible_via_catalog(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
 
     with When("export the single partition through the catalog"):
-        # ``dest_name`` is ``datalake_xxx.\`ns.tbl\`` — CH splits that into
-        # ``destination_database='datalake_xxx'`` and ``destination_table='ns.tbl'``
-        # in ``system.replicated_partition_exports``, so the default
-        # ``wait_for_completion`` filter (which uses ``dest_name`` verbatim as
-        # ``destination_table``) never finds the row. Wait separately using
-        # the (source_table, partition_id) pair instead.
+        # Pass the destination dict so wait_for_export_status can split the
+        # catalog-backed qualified name into (destination_database,
+        # destination_table) for its filter against
+        # ``system.replicated_partition_exports``. See
+        # ``_destination_where_pieces`` in ``steps/export_status.py``.
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
-            wait_for_completion=False,
-        )
-        wait_for_export_status(
-            source_table=source_table,
-            partition_id="2020",
-            expected_status="COMPLETED",
-            destination_table=None,
         )
 
     with Then("ClickHouse reads the committed rows through DataLakeCatalog"):
@@ -409,25 +400,17 @@ def catalog_external_reader_round_trips_exported_data(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
 
     with When("export the single partition"):
-        # See note in catalog_export_appends_snapshot_visible_via_catalog:
-        # CH splits the backticked qualified name into separate columns in
-        # ``system.replicated_partition_exports`` so we can't use it verbatim
-        # as a status filter.
+        # ``destination=`` dispatches the catalog-aware split of
+        # (destination_database, destination_table) when waiting for the
+        # status to flip to ``COMPLETED``; see Phase 2 notes in
+        # ``steps/export_status.py``.
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
-            wait_for_completion=False,
-        )
-        wait_for_export_status(
-            source_table=source_table,
-            partition_id="2020",
-            expected_status="COMPLETED",
-            destination_table=None,
         )
 
     with Then("PyIceberg (external reader) can materialise the exported rows"):

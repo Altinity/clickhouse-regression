@@ -55,7 +55,6 @@ from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
-    as_destination_name,
     create_iceberg_destination,
 )
 from iceberg.tests.export_partition.steps.manifest_validation import (
@@ -129,19 +128,17 @@ def sequential_exports_append_snapshots(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("export partition 2020"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
     with And("export partition 2021"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2021",
         )
 
@@ -207,12 +204,10 @@ def duplicate_export_within_ttl_rejected(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("first export succeeds"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[("export_merge_tree_partition_manifest_ttl", 300)],
         )
@@ -220,7 +215,7 @@ def duplicate_export_within_ttl_rejected(
     with Then("second export is rejected with duplicate-export error"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[("export_merge_tree_partition_manifest_ttl", 300)],
             exitcode=BAD_ARGUMENTS,
@@ -260,12 +255,10 @@ def force_export_bypasses_ttl_gate(self, minio_root_user, minio_root_password):
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("first export establishes the ZK idempotency entry"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[("export_merge_tree_partition_manifest_ttl", 300)],
         )
@@ -273,7 +266,7 @@ def force_export_bypasses_ttl_gate(self, minio_root_user, minio_root_password):
     with And("re-export inside the TTL window with force_export = 1"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[
                 ("export_merge_tree_partition_manifest_ttl", 300),
@@ -313,12 +306,10 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When(f"first export with {ttl_seconds}s manifest TTL"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[
                 ("export_merge_tree_partition_manifest_ttl", ttl_seconds),
@@ -331,7 +322,7 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
     with And("second export is accepted after TTL expiry"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             extra_settings=[
                 ("export_merge_tree_partition_manifest_ttl", ttl_seconds),
@@ -374,8 +365,6 @@ def commit_survives_pre_publish_failure(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     try:
         with And(f"arm the {failpoint} failpoint"):
             _enable_failpoint(failpoint, node=node)
@@ -383,7 +372,7 @@ def commit_survives_pre_publish_failure(
         with When("run EXPORT PARTITION under the failpoint"):
             export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
 
@@ -442,8 +431,6 @@ def commit_durable_across_post_publish_exception(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     try:
         with And(f"arm the {failpoint} failpoint"):
             _enable_failpoint(failpoint, node=node)
@@ -451,7 +438,7 @@ def commit_durable_across_post_publish_exception(
         with When("run EXPORT PARTITION under the failpoint"):
             export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
 
@@ -461,7 +448,7 @@ def commit_durable_across_post_publish_exception(
         ):
             wait_for_export_status(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 expected_status="COMPLETED",
             )

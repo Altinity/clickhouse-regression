@@ -97,7 +97,6 @@ def stop_moves_holds_export_pending(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
 
     with When("SYSTEM STOP MOVES before scheduling the export"):
         node.query(f"SYSTEM STOP MOVES {source_table}")
@@ -106,7 +105,7 @@ def stop_moves_holds_export_pending(
         with And("schedule EXPORT PARTITION without waiting"):
             export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 wait_for_completion=False,
                 extra_settings=[
@@ -117,14 +116,14 @@ def stop_moves_holds_export_pending(
         with And("the system table reports PENDING for several cycles"):
             wait_for_export_to_start(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
             time.sleep(5)
             status = get_export_row(
                 source_table=source_table,
                 partition_id="2020",
-                destination_table=dest_name,
+                destination=destination,
                 columns="status",
             )
             assert status == "PENDING", error(
@@ -145,7 +144,7 @@ def stop_moves_holds_export_pending(
     with Then("the export completes now that moves are allowed"):
         wait_for_export_status(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             expected_status="COMPLETED",
         )
@@ -190,7 +189,6 @@ def kill_export_while_stopped_marks_killed(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
 
     with When("SYSTEM STOP MOVES before scheduling the export"):
         node.query(f"SYSTEM STOP MOVES {source_table}")
@@ -200,7 +198,7 @@ def kill_export_while_stopped_marks_killed(
         with And("schedule EXPORT PARTITION without waiting"):
             export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 wait_for_completion=False,
                 extra_settings=[
@@ -211,21 +209,21 @@ def kill_export_while_stopped_marks_killed(
         with And("wait for the PENDING row to appear"):
             wait_for_export_to_start(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
 
         with And("KILL EXPORT PARTITION for this triple"):
             kill_export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
 
         with And("status transitions to KILLED within the poll interval"):
             wait_for_export_status(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 expected_status="KILLED",
                 timeout=30,
@@ -240,7 +238,7 @@ def kill_export_while_stopped_marks_killed(
             status = get_export_row(
                 source_table=source_table,
                 partition_id="2020",
-                destination_table=dest_name,
+                destination=destination,
                 columns="status",
             )
             assert status == "KILLED", error(

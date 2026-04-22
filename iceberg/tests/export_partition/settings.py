@@ -63,7 +63,6 @@ from iceberg.tests.export_partition.steps.export_status import (
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     DEFAULT_S3_WAREHOUSE_BUCKET,
-    as_destination_name,
     create_iceberg_destination,
 )
 from iceberg.tests.export_partition.steps.manifest_validation import (
@@ -122,19 +121,17 @@ def prefer_remote_information_returns_same_status(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("run EXPORT PARTITION to completion"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
     with Then("query system.replicated_partition_exports via local cache"):
         local_row = get_export_row(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             columns="status, exception_count",
             prefer_remote=False,
@@ -143,7 +140,7 @@ def prefer_remote_information_returns_same_status(
     with And("query the same row preferring ZooKeeper"):
         remote_row = get_export_row(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
             columns="status, exception_count",
             prefer_remote=True,
@@ -281,7 +278,7 @@ def parquet_compression_method_flows_to_data_files(
         with When(f"export partition 2020 with {ch_codec} compression"):
             export_partition(
                 source_table=source_table,
-                destination_table=as_destination_name(destination),
+                destination=destination,
                 partition_id="2020",
                 extra_settings=FULL_PATHS_SETTING + [
                     ("output_format_parquet_compression_method", ch_codec),

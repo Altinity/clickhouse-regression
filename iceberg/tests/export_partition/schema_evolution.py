@@ -38,6 +38,7 @@ from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
+    _require_no_catalog,
     as_destination_name,
     create_iceberg_destination,
 )
@@ -501,7 +502,22 @@ SCENARIOS = (
 @TestFeature
 @Name("schema evolution")
 def feature(self, minio_root_user, minio_root_password):
-    """Schema evolution between EXPORT PARTITION calls."""
+    """Schema evolution between EXPORT PARTITION calls.
+
+    All scenarios drive ``ALTER TABLE <iceberg-destination> ...`` on the CH
+    side, which is only accepted when the destination is a locally-managed
+    ``IcebergS3(...)`` storage. ``DataLakeCatalog`` databases are read-only
+    for DDL, so evolving a catalog-backed Iceberg table from ClickHouse is
+    not currently possible — an equivalent catalog-mode module would have
+    to drive ``table.update_schema()`` through PyIceberg instead. Gate the
+    whole feature on ``no_catalog`` so the test tree is explicit about
+    what isn't covered.
+    """
+    _require_no_catalog(
+        "schema evolution drives `ALTER TABLE <iceberg-destination>` on "
+        "the CH side; DataLakeCatalog databases are read-only for DDL so "
+        "these scenarios only run against IcebergS3 destinations."
+    )
     for scenario in SCENARIOS:
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,

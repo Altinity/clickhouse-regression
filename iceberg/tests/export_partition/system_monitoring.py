@@ -40,7 +40,7 @@ from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_to_start,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
-    as_destination_name,
+    as_system_destination_table,
     create_iceberg_destination,
 )
 
@@ -95,12 +95,17 @@ def system_table_columns_populated_on_success(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
+    # ``dest_table_in_system`` is what CH stores in
+    # ``system.replicated_partition_exports.destination_table`` — under
+    # no_catalog mode that's the bare CH-side identifier, under catalog
+    # mode it's ``<namespace>.<table>`` because CH's StorageID pops the
+    # database off. See ``as_system_destination_table`` for details.
+    dest_table_in_system = as_system_destination_table(destination)
 
     with When("export partition 2020 and wait for completion"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
@@ -112,7 +117,7 @@ def system_table_columns_populated_on_success(
         row = get_export_row(
             source_table=source_table,
             partition_id="2020",
-            destination_table=dest_name,
+            destination=destination,
             columns=(
                 "source_table, destination_table, partition_id, status, "
                 "parts_count, parts_to_do, source_replica, "
@@ -144,8 +149,9 @@ def system_table_columns_populated_on_success(
         assert src_tab == source_table, error(
             f"source_table mismatch: {src_tab!r} vs {source_table!r}"
         )
-        assert dest_tab == dest_name, error(
-            f"destination_table mismatch: {dest_tab!r} vs {dest_name!r}"
+        assert dest_tab == dest_table_in_system, error(
+            f"destination_table mismatch: {dest_tab!r} vs "
+            f"{dest_table_in_system!r}"
         )
         assert partition_id == "2020", error(
             f"partition_id mismatch: {partition_id!r}"
@@ -206,15 +212,13 @@ def part_log_records_exported_parts(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("snapshot the part-log count before the export"):
         before = len(get_exported_part_log())
 
     with And("run the export and wait for completion"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
         # part_log is buffered; flush it to guarantee the row is visible.
@@ -227,7 +231,7 @@ def part_log_records_exported_parts(
             get_export_row(
                 source_table=source_table,
                 partition_id="2020",
-                destination_table=dest_name,
+                destination=destination,
                 columns="parts_count",
             )
         )
@@ -255,15 +259,13 @@ def profile_events_increment_on_success(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("sample profile events before the export"):
         before = get_export_events()
 
     with And("run the export and wait for completion"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
@@ -273,7 +275,7 @@ def profile_events_increment_on_success(
             get_export_row(
                 source_table=source_table,
                 partition_id="2020",
-                destination_table=dest_name,
+                destination=destination,
                 columns="parts_count",
             )
         )
@@ -332,8 +334,6 @@ def kill_export_preserves_provenance(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("SYSTEM STOP MOVES to keep the export PENDING"):
         node.query(f"SYSTEM STOP MOVES {source_table}")
 
@@ -342,7 +342,7 @@ def kill_export_preserves_provenance(
         with And("schedule EXPORT PARTITION without waiting"):
             export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 wait_for_completion=False,
                 extra_settings=[
@@ -353,13 +353,13 @@ def kill_export_preserves_provenance(
         with And("sample source_replica/create_time in PENDING"):
             wait_for_export_to_start(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
             pending_row = get_export_row(
                 source_table=source_table,
                 partition_id="2020",
-                destination_table=dest_name,
+                destination=destination,
                 columns="source_replica, toUnixTimestamp(create_time)",
             )
             pending_replica, pending_create_time = pending_row.split("\t")
@@ -372,12 +372,12 @@ def kill_export_preserves_provenance(
         with And("KILL EXPORT PARTITION"):
             kill_export_partition(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
             )
             wait_for_export_status(
                 source_table=source_table,
-                destination_table=dest_name,
+                destination=destination,
                 partition_id="2020",
                 expected_status="KILLED",
                 timeout=30,
@@ -391,7 +391,7 @@ def kill_export_preserves_provenance(
         killed_row = get_export_row(
             source_table=source_table,
             partition_id="2020",
-            destination_table=dest_name,
+            destination=destination,
             columns="source_replica, toUnixTimestamp(create_time)",
         )
         killed_replica, killed_create_time = killed_row.split("\t")

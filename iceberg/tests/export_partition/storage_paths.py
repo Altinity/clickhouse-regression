@@ -33,6 +33,7 @@ from iceberg.tests.export_partition.steps.export_operations import (
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     DEFAULT_S3_WAREHOUSE_BUCKET,
+    _require_no_catalog,
     as_destination_name,
     create_iceberg_destination,
 )
@@ -329,7 +330,24 @@ SCENARIOS = (
 @TestFeature
 @Name("storage paths")
 def feature(self, minio_root_user, minio_root_password):
-    """Storage location and path-writing behaviour for EXPORT PARTITION."""
+    """Storage location and path-writing behaviour for EXPORT PARTITION.
+
+    Every scenario either sets ``write_full_path_in_iceberg_metadata`` at
+    CREATE-TABLE time, asserts on a specific ``location_prefix`` layout,
+    or inspects bucket-relative vs. absolute paths in ``metadata.json`` —
+    all of which are ``IcebergS3(...)`` table-engine concerns. Under
+    ``DataLakeCatalog`` the Iceberg table's location is owned by the
+    catalog (via PyIceberg's ``catalog.create_table(location=...)``) so
+    these assertions do not transfer. Gate the whole feature on
+    no_catalog so the test tree surfaces the scope rather than silently
+    skipping on the "IcebergS3-only kwargs" check in the dispatcher.
+    """
+    _require_no_catalog(
+        "storage_paths asserts on IcebergS3-specific layout concerns "
+        "(write_full_path_in_iceberg_metadata, location_prefix, "
+        "bucket-relative vs s3:// URIs in metadata.json); DataLakeCatalog "
+        "owns the table location so these assertions don't transfer."
+    )
     for scenario in SCENARIOS:
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,

@@ -47,7 +47,6 @@ from iceberg.tests.export_partition.steps.export_operations import (
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     DEFAULT_S3_WAREHOUSE_BUCKET,
-    as_destination_name,
     create_iceberg_destination,
 )
 from iceberg.tests.export_partition.steps.manifest_validation import (
@@ -114,12 +113,10 @@ def snapshot_advances_per_export(self, minio_root_user, minio_root_password):
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
-    dest_name = as_destination_name(destination)
-
     with When("export the first partition"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2020",
         )
 
@@ -136,7 +133,7 @@ def snapshot_advances_per_export(self, minio_root_user, minio_root_password):
     with When("export the second partition"):
         export_partition(
             source_table=source_table,
-            destination_table=dest_name,
+            destination=destination,
             partition_id="2021",
         )
 
@@ -178,7 +175,7 @@ def snapshot_summary_records_match(self, minio_root_user, minio_root_password):
     with When("export the partition"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
         )
 
@@ -228,7 +225,7 @@ def manifest_partition_spec_matches_source(
     with When("export the partition"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id=partition_id,
         )
 
@@ -276,7 +273,7 @@ def column_stats_are_populated(self, minio_root_user, minio_root_password):
     with When("export the partition with full paths in metadata"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
         )
@@ -337,7 +334,7 @@ def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
     with When("export the partition with full paths in metadata"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
         )
@@ -397,7 +394,7 @@ def data_file_paths_under_table_prefix(
     with When("export the partition with full paths in metadata"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
         )
@@ -484,7 +481,7 @@ def external_reader_round_trips_exported_data(
     with When("export the partition with full paths in metadata"):
         export_partition(
             source_table=source_table,
-            destination_table=as_destination_name(destination),
+            destination=destination,
             partition_id="2020",
             extra_settings=FULL_PATHS_SETTING,
         )
@@ -549,7 +546,7 @@ SCENARIOS = (
 def feature(self, minio_root_user, minio_root_password):
     """Iceberg manifest and metadata correctness after EXPORT PARTITION."""
     for scenario in SCENARIOS:
-        Scenario(test=scenario)(
+        Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )

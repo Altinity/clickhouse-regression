@@ -30,6 +30,13 @@ from helpers.common import getuid
 import iceberg.tests.steps.catalog as catalog_steps
 import iceberg.tests.steps.iceberg_engine as iceberg_engine
 
+from iceberg.tests.export_partition.steps.pyiceberg_schema import (
+    UnsupportedCHPartitionExprError,
+    UnsupportedCHTypeError,
+    ch_columns_to_pyiceberg_schema,
+    ch_partition_by_to_pyiceberg_spec,
+)
+
 
 DEFAULT_S3_ENDPOINT_HOST = "http://minio:9000"
 DEFAULT_S3_WAREHOUSE_BUCKET = "warehouse"
@@ -125,6 +132,7 @@ def create_pyiceberg_catalog_destination(
     pyiceberg_s3_endpoint="http://localhost:9002",
     table_properties=None,
     node=None,
+    cluster_name=None,
     cleanup=True,
 ):
     """Create a catalog-backed Iceberg destination for ``EXPORT PARTITION``.
@@ -215,6 +223,8 @@ def create_pyiceberg_catalog_destination(
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
             storage_endpoint=storage_endpoint,
+            node=node,
+            cluster_name=cluster_name,
         )
 
     # Backticks need to survive the bash pipeline that `node.query` uses to
@@ -241,6 +251,72 @@ def create_pyiceberg_catalog_destination(
                 )
 
 
+# Kwargs that only make sense for ``create_iceberg_s3_destination``. Under
+# catalog mode PyIceberg owns the Iceberg layout so none of these have an
+# analogue; scenarios that rely on them must stay no_catalog-only (e.g.
+# :mod:`iceberg.tests.export_partition.storage_paths`).
+_ICEBERG_S3_ONLY_KWARGS = (
+    "storage_endpoint",
+    "location_prefix",
+    "extra_settings",
+    "query_settings",
+)
+
+
+# Individual ``query_settings`` / ``extra_settings`` entries that exist only
+# as workarounds for PyIceberg's ``StaticTable`` code path used under
+# ``no_catalog`` mode. REST / Glue read table layout through the catalog
+# instead of re-parsing ``metadata.json``, so these entries are irrelevant
+# under catalog mode and can be dropped silently:
+#
+# * ``write_full_path_in_iceberg_metadata`` — forces CH to write absolute
+#   ``s3://`` URIs for ``metadata.json`` ``location`` and every
+#   ``manifest-list`` entry. ``StaticTable`` treats bucket-relative paths
+#   as local-FS paths and blows up; the catalog path gets the table
+#   location directly from the REST service. Dropping this setting does
+#   not change what the catalog-mode scenario is asserting.
+#
+# Any other setting keeps its IcebergS3-only classification and forces a
+# skip with a reason naming the offending setting.
+_NO_CATALOG_STATICTABLE_WORKAROUND_SETTING_KEYS = frozenset(
+    {"write_full_path_in_iceberg_metadata"}
+)
+
+
+def _strip_no_catalog_workarounds(settings):
+    """Return a new settings list with known no_catalog-only workaround
+    entries removed.
+
+    ``settings`` is the list-of-2-tuples form used throughout the suite
+    (e.g. ``[("write_full_path_in_iceberg_metadata", 1)]``). ``None`` is
+    returned unchanged so callers don't need to probe for empty lists.
+    """
+    if not settings:
+        return settings
+    return [
+        (key, value)
+        for key, value in settings
+        if key not in _NO_CATALOG_STATICTABLE_WORKAROUND_SETTING_KEYS
+    ]
+
+
+def _require_no_catalog(reason):
+    """Skip the current scenario unless ``self.context.catalog == "no"``.
+
+    Intended for scenarios and modules that are fundamentally about
+    ``IcebergS3(...)`` semantics (CREATE-time settings that only live in
+    the table engine, bucket layout assertions, ALTER DDL on the CH-side
+    destination, …). ``reason`` is appended to the standard skip message
+    so the test tree explains why the scenario is no_catalog-only.
+    """
+    catalog = current().context.catalog
+    if catalog != "no":
+        skip(
+            f"scenario is no_catalog-only: {reason} "
+            f"(current catalog mode: {catalog!r})"
+        )
+
+
 @TestStep(Given)
 def create_iceberg_destination(
     self,
@@ -255,20 +331,27 @@ def create_iceberg_destination(
     Dispatches on ``self.context.catalog``:
 
     * ``"no"``           -> :func:`create_iceberg_s3_destination` (returns a
-      string ``table_name``).
-    * ``"rest"`` / ``"glue"`` -> skipped: see note below.
+      ``table_name`` string).
+    * ``"rest"`` / ``"glue"`` -> :func:`create_pyiceberg_catalog_destination`
+      after translating ``columns`` / ``partition_by`` into an explicit
+      PyIceberg ``Schema`` + ``PartitionSpec`` via
+      :mod:`iceberg.tests.export_partition.steps.pyiceberg_schema`.
 
-    Catalog-backed scenarios cannot use this dispatcher because the Iceberg
-    table has to be materialised through PyIceberg (see
-    :func:`create_pyiceberg_catalog_destination`), which needs an explicit
-    ``pyiceberg.schema.Schema`` and ``PartitionSpec`` — neither of which can
-    be derived from the CH-style ``columns`` / ``partition_by`` strings used
-    by the generic modules. :mod:`iceberg.tests.export_partition.catalogs`
-    therefore calls :func:`create_pyiceberg_catalog_destination` directly.
+    Under catalog modes, the destination dict returned by
+    :func:`create_pyiceberg_catalog_destination` carries both the CH-side
+    qualified name (for ``ALTER TABLE ... TO TABLE <name>``) and a live
+    PyIceberg catalog handle — :func:`as_destination_name` /
+    :func:`as_pyiceberg_handle` normalise access across both branches.
 
-    For uniform access downstream, scenarios should always funnel the return
-    value through :func:`as_destination_name` to obtain a ``ALTER TABLE ...
-    TO TABLE <name>``-compatible string.
+    Catalog mode cannot emulate a few ``IcebergS3(...)``-only kwargs
+    (``storage_endpoint``, ``location_prefix``, ``query_settings``,
+    ``extra_settings``). Passing any of them with a non-no_catalog mode
+    skips the scenario with a reason that names the kwarg, rather than
+    silently dropping settings the test depends on. If the underlying
+    translator can't express the CH type / partition expression under
+    test, the scenario is likewise skipped with the translator's own
+    error message so the reason is specific to the untranslatable
+    fragment.
     """
     catalog = self.context.catalog
     if catalog == "no":
@@ -279,20 +362,68 @@ def create_iceberg_destination(
             minio_root_password=minio_root_password,
             **kwargs,
         )
-    elif catalog in ("rest", "glue"):
-        # Generic module-level scenarios (sanity, datatypes, …) express the
-        # destination as CH DDL-style strings. We don't have a CH → PyIceberg
-        # schema/partition-spec translator in this suite, so those scenarios
-        # stay skipped under catalog modes. Tests that actually want to drive
-        # the catalog commit path live in `catalogs.py` and reach for
-        # `create_pyiceberg_catalog_destination` directly with a hand-written
-        # schema + PartitionSpec.
-        skip(
-            f"catalog mode {catalog!r} requires an explicit PyIceberg "
-            f"Schema/PartitionSpec; see create_pyiceberg_catalog_destination"
-        )
-    else:
+
+    if catalog not in ("rest", "glue"):
         raise ValueError(f"Unsupported catalog mode: {catalog!r}")
+
+    # ``query_settings`` / ``extra_settings`` that only hold the PyIceberg
+    # StaticTable workaround keys (see
+    # :data:`_NO_CATALOG_STATICTABLE_WORKAROUND_SETTING_KEYS`) get dropped
+    # here so that catalog-mode scenarios can keep passing the same
+    # no_catalog-friendly defaults without paying a false skip. Any
+    # *other* entry keeps its IcebergS3-only status and triggers the
+    # skip below with the offending key named in the reason.
+    for key in ("query_settings", "extra_settings"):
+        remaining = _strip_no_catalog_workarounds(kwargs.get(key))
+        if remaining is None:
+            continue
+        if remaining:
+            kwargs[key] = remaining
+        else:
+            kwargs.pop(key)
+
+    s3_only_used = [key for key in _ICEBERG_S3_ONLY_KWARGS if key in kwargs]
+    if s3_only_used:
+        skip(
+            f"catalog mode {catalog!r} cannot honour IcebergS3-only "
+            f"kwargs: {s3_only_used!r}; scenario stays no_catalog-only"
+        )
+
+    try:
+        schema, column_id_map = ch_columns_to_pyiceberg_schema(columns)
+    except UnsupportedCHTypeError as e:
+        skip(f"catalog mode {catalog!r}: {e}")
+
+    try:
+        partition_spec = ch_partition_by_to_pyiceberg_spec(
+            partition_by, column_id_map
+        )
+    except UnsupportedCHPartitionExprError as e:
+        skip(f"catalog mode {catalog!r}: {e}")
+
+    forwarded = {
+        key: value
+        for key, value in kwargs.items()
+        if key in ("table_name", "cleanup", "node", "cluster_name")
+    }
+    unknown = set(kwargs) - set(forwarded) - set(_ICEBERG_S3_ONLY_KWARGS)
+    if unknown:
+        # Surface unexpected kwargs loudly rather than silently dropping them —
+        # every supported kwarg should be listed in one of the allow-lists
+        # above. If a new kwarg is added to ``create_iceberg_s3_destination``,
+        # this branch reminds us to classify it for the catalog path too.
+        raise ValueError(
+            f"create_iceberg_destination received unknown kwargs under "
+            f"catalog mode {catalog!r}: {sorted(unknown)!r}"
+        )
+
+    return create_pyiceberg_catalog_destination(
+        schema=schema,
+        partition_spec=partition_spec,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        **forwarded,
+    )
 
 
 def as_destination_name(destination):
@@ -314,4 +445,43 @@ def as_pyiceberg_handle(destination):
     """
     if isinstance(destination, dict):
         return destination
+    return None
+
+
+def as_system_destination_table(destination):
+    """Return the value ClickHouse stores in
+    ``system.replicated_partition_exports.destination_table`` for this
+    destination.
+
+    CH splits the destination identifier through ``StorageID`` when the
+    manifest is written, so the ``destination_table`` column always holds
+    the *unqualified* table name — even when the CH-side identifier is a
+    backtick-escaped compound like ``datalake_xxx.\\`ns.tbl\\``` (see
+    ``StorageSystemReplicatedPartitionExports.cpp`` and the
+    ``destination_storage_id.table_name`` assignments in
+    ``MergeTreeData.cpp`` / ``ExportList.cpp``).
+
+    In ``no_catalog`` mode that's the same string as ``as_destination_name``
+    (a bare identifier like ``iceberg_xxx``). Under ``rest`` / ``glue`` the
+    identifier is qualified via ``<database>.\\`<namespace>.<table>\\```
+    and CH stores ``"<namespace>.<table>"`` here.
+    """
+    if isinstance(destination, dict):
+        return f"{destination['namespace']}.{destination['table_name']}"
+    return destination
+
+
+def as_system_destination_database(destination):
+    """Return the value ClickHouse stores in
+    ``system.replicated_partition_exports.destination_database`` for this
+    destination.
+
+    ``no_catalog`` mode returns ``None`` because the destination is a bare
+    table name in the *current* database (CH's own default), which varies
+    per test run — callers should not assert on it. ``rest`` / ``glue``
+    return the PyIceberg-backed ``DataLakeCatalog`` database wired up in
+    :func:`create_pyiceberg_catalog_destination`.
+    """
+    if isinstance(destination, dict):
+        return destination["database_name"]
     return None
