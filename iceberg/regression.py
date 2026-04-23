@@ -66,6 +66,30 @@ xfails = {
             "xfail alongside the manifest-integrity one above.",
         )
     ],
+    "/iceberg/export partition/rest catalog/truncate/export after truncate repopulates destination": [
+        (
+            Fail,
+            "ClickHouse bug: TRUNCATE and EXPORT disagree on the Iceberg "
+            "metadata path format under REST. EXPORT commits manifest / "
+            "manifest-list entries as bucket-relative paths "
+            "(`/data/<table>/metadata/snap-...avro`). "
+            "`IcebergMetadata::truncate` instead serialises those same "
+            "entries as full `s3://bucket/...` URIs. When the next "
+            "EXPORT runs after a TRUNCATE, IcebergWrites.cpp refuses "
+            "to commit with `Paths in Iceberg must use a consistent "
+            "format — either /your/path or s3://your/path. Use the "
+            "write_full_path_in_iceberg_metadata setting to control "
+            "this behavior`, and the background scheduler retries "
+            "forever (task stuck in PENDING). Glue does not trip this "
+            "because `apply_glue_metadata_path_workaround` already "
+            "forces `write_full_path_in_iceberg_metadata=1` on both "
+            "EXPORT and TRUNCATE there, so both sides write full "
+            "URIs. Fix is upstream: either `IcebergMetadata::truncate` "
+            "must honour the same path-format default as EXPORT, or "
+            "the consistency check in IcebergWrites needs to look at "
+            "new writes only instead of the inherited snapshot chain.",
+        )
+    ],
     "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
         (
             Fail,

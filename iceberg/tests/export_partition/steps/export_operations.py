@@ -244,6 +244,130 @@ def export_all_partitions(
 
 
 @TestStep(When)
+def insert_into_iceberg_destination(
+    self,
+    destination,
+    values,
+    node=None,
+    settings=None,
+    extra_settings=None,
+    exitcode=0,
+    message=None,
+):
+    """Run ``INSERT INTO <iceberg_dest> VALUES ...`` against the
+    destination created by :func:`iceberg.tests.export_partition.steps.iceberg_destination.create_iceberg_destination`.
+
+    Writing directly to an Iceberg table is gated server-side by the
+    ``allow_experimental_insert_into_iceberg`` setting (see
+    ``IcebergMetadata::write`` in ClickHouse), and goes through the same
+    ``IcebergWrites.cpp`` commit path as EXPORT PARTITION, so the Glue
+    double-slash workaround in
+    :func:`apply_glue_metadata_path_workaround` applies here too — we
+    bake both in by default and let callers override either through
+    ``settings`` / ``extra_settings``.
+
+    Args:
+        destination: The dict or string returned by
+            :func:`create_iceberg_destination`. Same semantics as
+            :func:`export_partition`.
+        values: The literal ``VALUES`` payload (e.g. ``"(1, 2020), (2, 2021)"``).
+        settings: Full settings list passed to ``node.query``; when
+            provided, it is honoured as-is *modulo* the glue workaround
+            (``write_full_path_in_iceberg_metadata`` is left alone if
+            the caller already set it). The
+            ``allow_experimental_insert_into_iceberg`` gate is injected
+            unless already present.
+        extra_settings: Appended to ``settings`` when ``settings`` is
+            not provided.
+        exitcode / message: Pass-through assertion knobs for negative
+            tests. Default ``0`` expects success.
+    """
+    if node is None:
+        node = self.context.node
+
+    name = as_destination_name(destination)
+
+    if settings is None:
+        settings = list(extra_settings) if extra_settings else []
+    else:
+        settings = list(settings)
+
+    if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
+        settings.append(("allow_experimental_insert_into_iceberg", 1))
+
+    settings = _apply_glue_metadata_path_workaround(
+        self.context.catalog, settings
+    )
+
+    expect_failure = exitcode != 0 or message is not None
+
+    with By(f"inserting into iceberg destination {name}"):
+        return node.query(
+            f"INSERT INTO {name} VALUES {values}",
+            settings=settings,
+            exitcode=exitcode,
+            message=message,
+            ignore_exception=expect_failure,
+        )
+
+
+@TestStep(When)
+def truncate_iceberg_destination(
+    self,
+    destination,
+    node=None,
+    settings=None,
+    extra_settings=None,
+    exitcode=0,
+    message=None,
+):
+    """Run ``TRUNCATE TABLE <iceberg_dest>`` against the destination.
+
+    ``IcebergMetadata::truncate`` in ClickHouse is gated by the same
+    ``allow_experimental_insert_into_iceberg`` setting as INSERT (it
+    reuses the write path), and commits a fresh metadata.json through
+    the catalog the same way, so we reuse the same two defaults:
+
+    * ``allow_experimental_insert_into_iceberg = 1``
+    * Glue double-slash workaround via
+      :func:`apply_glue_metadata_path_workaround`.
+
+    Note that ``IcebergMetadata.cpp`` builds the ``catalog_filename``
+    for TRUNCATE separately from ``IcebergWrites.cpp``. If TRUNCATE
+    fails under Glue with the same double-slash symptom we saw on
+    EXPORT, that's a *second* instance of the same class of bug and
+    should be reported rather than papered over here.
+    """
+    if node is None:
+        node = self.context.node
+
+    name = as_destination_name(destination)
+
+    if settings is None:
+        settings = list(extra_settings) if extra_settings else []
+    else:
+        settings = list(settings)
+
+    if not any(key == "allow_experimental_insert_into_iceberg" for key, _ in settings):
+        settings.append(("allow_experimental_insert_into_iceberg", 1))
+
+    settings = _apply_glue_metadata_path_workaround(
+        self.context.catalog, settings
+    )
+
+    expect_failure = exitcode != 0 or message is not None
+
+    with By(f"truncating iceberg destination {name}"):
+        return node.query(
+            f"TRUNCATE TABLE {name}",
+            settings=settings,
+            exitcode=exitcode,
+            message=message,
+            ignore_exception=expect_failure,
+        )
+
+
+@TestStep(When)
 def kill_export_partition(
     self,
     source_table,
