@@ -42,6 +42,7 @@ from iceberg.tests.export_partition.steps.common import (
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
+    apply_glue_metadata_path_workaround,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
@@ -117,7 +118,12 @@ def multi_statement_alter_commits_each_partition(
             f"EXPORT PARTITION ID '{pid}' TO TABLE {dest_name}"
             for pid in partitions
         )
-        node.query(f"ALTER TABLE {source_table}\n  {export_clauses}")
+        node.query(
+            f"ALTER TABLE {source_table}\n  {export_clauses}",
+            settings=apply_glue_metadata_path_workaround(
+                self.context.catalog, None
+            ),
+        )
 
     with And("wait for every export row to report COMPLETED"):
         for pid in partitions:
@@ -196,6 +202,9 @@ def duplicate_export_inside_one_alter(
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name}",
+            settings=apply_glue_metadata_path_workaround(
+                self.context.catalog, None
+            ),
             exitcode=BAD_ARGUMENTS,
             message="Export with key",
             ignore_exception=True,

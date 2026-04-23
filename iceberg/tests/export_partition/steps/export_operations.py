@@ -28,6 +28,65 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
 )
 
 
+# ClickHouse bug workaround (Glue only).
+#
+# ``IcebergWrites.cpp`` builds the ``metadata_location`` it commits to the
+# external catalog with:
+#
+#     if (!catalog_filename.starts_with(blob_storage_type_name))
+#         catalog_filename = blob_storage_type_name + "://"
+#                          + blob_storage_namespace_name + "/" + metadata_name;
+#
+# With ``write_full_path_in_iceberg_metadata = 0`` (the server default),
+# ``metadata_name`` already begins with ``/`` (e.g.
+# ``/data/iceberg_xxx/metadata/v1.metadata.json``), so the concat produces
+# ``s3://warehouse//data/...`` — the double slash between bucket and key.
+#
+# REST catalogs survive this: ``RestCatalog::updateMetadata`` ignores the
+# ``new_metadata_path`` argument and commits via the REST snapshot request
+# instead. ``GlueCatalog::updateMetadata`` stores the URI verbatim as
+# ``Parameters['metadata_location']``, so every downstream reader
+# (DataLakeCatalog SELECTs, PyIceberg ``load_table``, external engines) gets
+# the malformed URI and blows up on pyarrow S3 path parsing.
+#
+# Setting ``write_full_path_in_iceberg_metadata = 1`` makes
+# ``metadata_name`` start with ``s3://...`` which takes the
+# ``starts_with(blob_storage_type_name)`` branch and keeps the URI clean.
+# Force-inject it on every EXPORT under Glue so scenarios that do not
+# otherwise care about this setting still commit well-formed URIs.
+# Remove this helper once ``IcebergWrites.cpp`` stops prepending ``/`` when
+# ``metadata_name`` already begins with one.
+_GLUE_FULL_PATHS_SETTING_KEY = "write_full_path_in_iceberg_metadata"
+
+
+def apply_glue_metadata_path_workaround(context_catalog, settings):
+    """Return ``settings`` with the Glue double-slash workaround applied.
+
+    Public because a handful of scenarios build the ``ALTER TABLE ...
+    EXPORT PARTITION ..., EXPORT PARTITION ...`` multi-entry form by hand
+    (for example :mod:`iceberg.tests.export_partition.sanity` and
+    :mod:`iceberg.tests.export_partition.concurrent_writes`) and therefore
+    bypass :func:`export_partition`. Those call sites pass their own
+    ``settings=`` through here so the same workaround is honoured.
+
+    Only touches settings when ``context_catalog == "glue"``. Honours an
+    explicit value already present in ``settings`` so scenarios that
+    deliberately toggle the knob (e.g. ``storage_paths``) keep control.
+    """
+    if context_catalog != "glue":
+        return settings
+    if settings is None:
+        return [(_GLUE_FULL_PATHS_SETTING_KEY, 1)]
+    for key, _ in settings:
+        if key == _GLUE_FULL_PATHS_SETTING_KEY:
+            return settings
+    return list(settings) + [(_GLUE_FULL_PATHS_SETTING_KEY, 1)]
+
+
+# Alias kept for internal call sites that want the module-private spelling.
+_apply_glue_metadata_path_workaround = apply_glue_metadata_path_workaround
+
+
 def _resolve_destination(destination, destination_table):
     """Collapse ``destination`` / ``destination_table`` into the pair of
     values the export helpers need:
@@ -108,6 +167,10 @@ def export_partition(
 
     if settings is None and extra_settings:
         settings = list(extra_settings)
+
+    settings = _apply_glue_metadata_path_workaround(
+        self.context.catalog, settings
+    )
 
     expect_failure = exitcode != 0 or message is not None
 

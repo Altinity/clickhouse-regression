@@ -34,6 +34,7 @@ MODULES = (
     "partition_spec_evolution",
     "storage_paths",
     "disaster_recovery",
+    "multi_replica_recovery",
     "system_monitoring",
     "settings",
 )
