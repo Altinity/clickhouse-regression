@@ -12,7 +12,7 @@ re-tested here:
   :mod:`iceberg.tests.export_partition.transactions`
   (``force_export_bypasses_ttl_gate``, ``ttl_expiry_permits_reexport``,
   ``duplicate_export_within_ttl_rejected``).
-* ``enable_experimental_export_merge_tree_partition_feature`` is a
+* ``allow_experimental_export_merge_tree_partition`` is a
   ``ServerSetting`` that is resolved at node startup; toggling it at
   runtime is impossible, and the disabled-feature path is exercised
   upstream by ``test_export_partition_feature_is_disabled`` (which
