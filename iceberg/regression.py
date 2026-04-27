@@ -287,8 +287,7 @@ xfails = {
         (
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/103542",
-            lambda test: check_clickhouse_version("<26.4")(test)
-            and check_if_not_antalya_build(test),
+            lambda test: check_clickhouse_version("<26.4")(test),
         )
     ],
 }
