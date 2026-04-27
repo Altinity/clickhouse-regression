@@ -218,6 +218,13 @@ xfails = {
             check_clickhouse_version(">=26.1"),
         )
     ],
+    "/iceberg/iceberg engine/: catalog/feature/select from system databases/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/103542",
+            check_clickhouse_version("<26.4") and check_if_not_antalya_build(),
+        )
+    ],
 }
 
 ffails = {
@@ -277,7 +284,8 @@ ffails = {
     "/iceberg/iceberg engine/: catalog/sort key timezone/*": (
         Skip,
         "iceberg_partition_timezone sort key support introduced in antalya-26.1",
-        lambda test: check_if_not_antalya_build(test) or check_clickhouse_version("<26.1")(test),
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.1")(test),
     ),
     "/iceberg/iceberg engine/: catalog/dot separated column names/*": (
         Skip,
@@ -304,7 +312,6 @@ ffails = {
     #     "https://github.com/clickhouse/clickhouse/issues/86024",
     #     check_clickhouse_version(">=25.8"),
     # ),
-
 }
 
 
@@ -325,7 +332,9 @@ def regression(
     minio_args=None,
 ):
     """Run tests for Iceberg tables."""
-    warnings.filterwarnings("ignore", message="Delete operation did not match any records")
+    warnings.filterwarnings(
+        "ignore", message="Delete operation did not match any records"
+    )
 
     nodes = {
         "clickhouse": (

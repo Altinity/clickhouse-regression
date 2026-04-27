@@ -850,6 +850,47 @@ def show_databases_queries(self, minio_root_user, minio_root_password, node=None
 
 
 @TestScenario
+def select_from_system_databases(self, minio_root_user, minio_root_password):
+    """Check that system.databases table is not affected by
+    show_data_lake_catalogs_in_system_tables setting."""
+    node = self.context.node
+    namespace = f"iceberg_namespace_{getuid()}"
+    table_name = f"table_name_{getuid()}"
+    database_name = f"iceberg_database_name_{getuid()}"
+
+    with Given("create catalog and namespace"):
+        catalog = catalog_steps.create_catalog(
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+        catalog_steps.create_namespace(catalog=catalog, namespace=namespace)
+
+    with And(f"define schema and create {namespace}.{table_name} table"):
+        catalog_steps.create_iceberg_table_with_three_columns(
+            catalog=catalog, namespace=namespace, table_name=table_name, with_data=True
+        )
+
+    with When("create database with Iceberg engine"):
+        iceberg_engine.create_experimental_iceberg_database(
+            database_name=database_name,
+            s3_access_key_id=minio_root_user,
+            s3_secret_access_key=minio_root_password,
+        )
+
+    with Then(
+        "check that system.databases table is not affected by show_data_lake_catalogs_in_system_tables setting"
+    ):
+        result_with_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 1; SELECT name FROM system.databases WHERE name = '{database_name}';"
+        )
+        assert result_with_setting.output == f"{database_name}", error()
+        result_without_setting = node.query(
+            f"SET show_data_lake_catalogs_in_system_tables = 0; SELECT name FROM system.databases WHERE name = '{database_name}';"
+        )
+        assert result_without_setting.output == f"{database_name}", error()
+
+
+@TestScenario
 def boolean_issue(self, minio_root_user, minio_root_password):
     """Reproduce https://github.com/Altinity/ClickHouse/issues/1251."""
     table_name = f"table_{getuid()}"
@@ -974,3 +1015,9 @@ def feature(self, minio_root_user, minio_root_password):
     Scenario(test=boolean_issue)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )
+    Scenario(test=select_from_system_databases)(
+        minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    )
+    # Scenario(test=partition_by_time_type)(
+    #     minio_root_user=minio_root_user, minio_root_password=minio_root_password
+    # )
