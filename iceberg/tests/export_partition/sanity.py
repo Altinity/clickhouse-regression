@@ -10,6 +10,8 @@ Every scenario runs under all three catalog modes (see ``feature.py``).
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Sanity
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -21,7 +23,7 @@ from iceberg.tests.export_partition.steps.common import (
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
     export_all_partitions,
-    apply_glue_metadata_path_workaround,
+    prepare_export_partition_settings,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
@@ -186,7 +188,7 @@ def multi_partition_alter(self, minio_root_user, minio_root_password):
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2021' TO TABLE {dest_name}",
-            settings=apply_glue_metadata_path_workaround(
+            settings=prepare_export_partition_settings(
                 self.context.catalog, None
             ),
         )
@@ -324,6 +326,7 @@ def cross_replica_export(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_Sanity("1.0"))
 @Name("sanity")
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for EXPORT PARTITION to Iceberg."""

@@ -6,10 +6,25 @@ Adapted from the s3 export_partition steps. The main adjustments are:
   ``PENDING`` state first).
 * Supports a list of destination tables per call (useful for fan-out tests).
 
-The experimental feature is enabled server-side via
-``configs/clickhouse/config.d/export_partition.xml``, so no per-query
-settings are required unless a scenario explicitly exercises a tunable
-(retries, TTL, etc.) through ``settings`` / ``extra_settings``.
+EXPORT PARTITION needs two ClickHouse experimental flags enabled, and
+they live in different layers:
+
+* ``allow_experimental_export_merge_tree_partition`` is a *server*
+  setting (declared in ``ServerSettings.cpp``) and is enabled via
+  ``configs/clickhouse/config.d/export_partition.xml``.
+* ``allow_experimental_insert_into_iceberg`` is a regular per-query
+  ``Setting``. The commit/write phase runs on a background context
+  that ClickHouse builds from the server context plus a small manifest
+  whitelist (see ``ExportPartitionUtils::getContextCopyWithTaskSettings``
+  in ``ClickHouse``), and the whitelist does NOT carry this flag —
+  so it must be set in the default user profile to take effect on the
+  background scheduler. That happens via
+  ``configs/clickhouse/users.d/allow_experimental_insert_into_iceberg.xml``.
+  We additionally inject it per-query in :func:`export_partition` so
+  scenarios that pass an explicit ``settings=`` list keep the
+  synchronous gate (``StorageReplicatedMergeTree::exportPartitionToTable``)
+  satisfied, matching what :func:`insert_into_iceberg_destination` and
+  :func:`truncate_iceberg_destination` already do.
 """
 
 from testflows.core import *
@@ -85,6 +100,43 @@ def apply_glue_metadata_path_workaround(context_catalog, settings):
 
 # Alias kept for internal call sites that want the module-private spelling.
 _apply_glue_metadata_path_workaround = apply_glue_metadata_path_workaround
+
+
+_INSERT_INTO_ICEBERG_SETTING_KEY = "allow_experimental_insert_into_iceberg"
+
+
+def prepare_export_partition_settings(context_catalog, settings):
+    """Return ``settings`` with every per-query gate EXPORT PARTITION needs.
+
+    ClickHouse gates the Iceberg commit side of ``ALTER TABLE ... EXPORT
+    PARTITION ... TO TABLE <iceberg_dest>`` on
+    ``allow_experimental_insert_into_iceberg`` at query time (see
+    ``StorageReplicatedMergeTree::exportPartitionToTable`` / the
+    ``IcebergMetadata::write`` path). The feature itself is enabled
+    server-side via ``allow_experimental_export_merge_tree_partition``
+    from ``configs/clickhouse/config.d/export_partition.xml``, but that
+    setting alone is no longer enough because the commit path is shared
+    with INSERT/TRUNCATE.
+
+    Layered on top, ``apply_glue_metadata_path_workaround`` may add
+    ``write_full_path_in_iceberg_metadata = 1`` under Glue to sidestep
+    the double-slash URI bug.
+
+    Both injections honour an explicit caller-supplied value so
+    scenarios that deliberately toggle either knob (e.g.
+    :mod:`iceberg.tests.export_partition.settings` or
+    :mod:`iceberg.tests.export_partition.storage_paths`) keep full
+    control.
+    """
+    if settings is None:
+        settings = []
+    else:
+        settings = list(settings)
+
+    if not any(key == _INSERT_INTO_ICEBERG_SETTING_KEY for key, _ in settings):
+        settings.append((_INSERT_INTO_ICEBERG_SETTING_KEY, 1))
+
+    return apply_glue_metadata_path_workaround(context_catalog, settings)
 
 
 def _resolve_destination(destination, destination_table):
@@ -168,9 +220,7 @@ def export_partition(
     if settings is None and extra_settings:
         settings = list(extra_settings)
 
-    settings = _apply_glue_metadata_path_workaround(
-        self.context.catalog, settings
-    )
+    settings = prepare_export_partition_settings(self.context.catalog, settings)
 
     expect_failure = exitcode != 0 or message is not None
 

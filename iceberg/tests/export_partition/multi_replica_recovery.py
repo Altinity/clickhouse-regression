@@ -79,6 +79,8 @@ the health probe is orthogonal to how the container was restarted.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_MultiReplicaRecovery
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -839,6 +841,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery("1.0"))
 @Name("multi replica recovery")
 def feature(self, minio_root_user, minio_root_password):
     """Multi-replica EXPORT PARTITION concurrency and ZooKeeper recovery."""

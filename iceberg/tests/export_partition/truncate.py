@@ -29,6 +29,8 @@ path in ``IcebergMetadata::truncate``.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Truncate
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -301,6 +303,7 @@ def truncate_after_insert(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_Truncate("1.0"))
 @Name("truncate")
 def feature(self, minio_root_user, minio_root_password):
     """TRUNCATE after / around EXPORT PARTITION."""

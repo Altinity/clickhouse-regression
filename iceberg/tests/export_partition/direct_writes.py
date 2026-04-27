@@ -31,6 +31,8 @@ for a Glue-only regression.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DirectWrites
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -292,6 +294,7 @@ def alternating_export_insert(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_DirectWrites("1.0"))
 @Name("direct writes")
 def feature(self, minio_root_user, minio_root_password):
     """Direct INSERT after / around EXPORT PARTITION."""
