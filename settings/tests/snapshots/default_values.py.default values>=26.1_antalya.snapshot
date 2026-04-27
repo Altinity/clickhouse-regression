@@ -908,11 +908,13 @@ export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 
 export_merge_tree_partition_lock_inside_the_task = r"""'{"default":"0"}'"""
 
-export_merge_tree_partition_manifest_ttl = r"""'{"default":"180"}'"""
+export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
 
 export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
 
-export_merge_tree_partition_system_table_prefer_remote_information = r"""'{"default":"1"}'"""
+export_merge_tree_partition_system_table_prefer_remote_information = r"""'{"default":"0"}'"""
+
+export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"3600"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
