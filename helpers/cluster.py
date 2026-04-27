@@ -1481,8 +1481,9 @@ class Cluster(object):
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
             cmd = bash(f"{self.docker_compose} --version")
-            version = cmd.output.split()[-1].strip("v").split(".")
-            if version < MINIMUM_COMPOSE_VERSION.split("."):
+            version = tuple(int(x) for x in cmd.output.split()[-1].strip("v").split("."))
+            min_version = tuple(int(x) for x in MINIMUM_COMPOSE_VERSION.split("."))
+            if version < min_version:
                 raise RuntimeError(f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}")
 
         # auto set configs directory
@@ -1972,8 +1973,8 @@ class Cluster(object):
                                 no_checks=True,
                                 timeout=timeout,
                             )
-                            if cmd.exitcode != 0 or "Error" in cmd.output:
-                                raise Exception(f"docker-compose pull failed: {cmd.output[-200:]}")
+                            assert cmd.exitcode == 0, error(cmd.output)
+                            assert "Error" not in cmd.output, error(cmd.output)
                             break
                     else:
                         return False
@@ -2016,8 +2017,7 @@ class Cluster(object):
                             no_checks=True,
                             timeout=timeout,
                         )
-                        if cmd.exitcode != 0:
-                            raise Exception(f"docker build failed: {cmd.output[-200:]}")
+                        assert cmd.exitcode == 0, error(cmd.output)
                         break
                 else:
                     return False
@@ -2038,8 +2038,7 @@ class Cluster(object):
                                 no_checks=True,
                                 timeout=timeout,
                             )
-                            if cmd.exitcode != 0:
-                                raise Exception(f"docker build failed: {cmd.output[-200:]}")
+                            assert cmd.exitcode == 0, error(cmd.output)
                             break
                     else:
                         return False

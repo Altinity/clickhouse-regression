@@ -9,7 +9,7 @@ The utilities here cover:
 
 The experimental feature itself is enabled server-side via
 ``configs/clickhouse/config.d/export_partition.xml``
-(``enable_experimental_export_merge_tree_partition_feature``), so scenarios
+(``allow_experimental_export_merge_tree_partition``), so scenarios
 don't need to pass per-query settings to use EXPORT PARTITION.
 """
 

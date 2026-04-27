@@ -254,7 +254,7 @@ def engine_select_output_to_file(self, compression_type):
 def insert_into_function(self):
     """Check that when data is inserted into `url` table function with manually defined structure,
     it is written into the source file correctly."""
-    if check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     elif check_clickhouse_version(">=24.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
@@ -318,7 +318,7 @@ def insert_into_function(self):
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `url` table function with manually cast column types,
     it is read correctly."""
-    if check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     elif check_clickhouse_version(">=24.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
@@ -340,7 +340,7 @@ def select_from_function_manual_cast_types(self):
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `url` table function with automatic cast column types,
     it is read correctly."""
-    if check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
     elif check_clickhouse_version("<22.6")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")

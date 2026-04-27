@@ -159,10 +159,10 @@ def add_config(
 
 def create_export_partition_config(
     config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="enable_experimental_export_merge_tree_partition.xml",
+    config_file="allow_experimental_export_merge_tree_partition.xml",
 ):
     """Create export partition config content.."""
-    entries = {"enable_experimental_export_merge_tree_partition_feature": "1"}
+    entries = {"allow_experimental_export_merge_tree_partition": "1"}
 
     return create_xml_config_content(
         entries, config_file=config_file, config_d_dir=config_d_dir
@@ -173,7 +173,7 @@ def create_export_partition_config(
 def enable_export_partition(
     self,
     config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="enable_experimental_export_merge_tree_partition.xml",
+    config_file="allow_experimental_export_merge_tree_partition.xml",
     timeout=300,
     restart=True,
     config=None,

@@ -146,6 +146,50 @@ def error_message(self):
 
 
 @TestScenario
+def no_clickhouse_cloud_url_in_binary(self):
+    """Check that the binary does not embed any https://clickhouse.cloud URL."""
+
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("grepping the binary for https://clickhouse.cloud"):
+        result = node.command(
+            "grep --color=never -a -F 'https://clickhouse.cloud' /usr/bin/clickhouse",
+            no_checks=True,
+        )
+
+    with Then("no occurrences should be found"):
+        assert result.output == "", error(
+            f"unexpected https://clickhouse.cloud references found in the binary:\n{result.output}"
+        )
+
+
+@TestScenario
+def no_clickhouse_cloud_url_in_auth_error(self):
+    """Check that the authentication error message does not contain https://clickhouse.cloud."""
+
+    with Given("a ClickHouse instance"):
+        node = self.context.cluster.node("clickhouse1")
+
+    with When("triggering an authentication failure with a wrong password"):
+        result = node.command(
+            "clickhouse client --user default --password wrong -q 'SELECT 1'",
+            no_checks=True,
+        )
+
+    with Then("the error output mentions AUTHENTICATION_FAILED"):
+        combined = (result.output or "") + "\n" + (getattr(result, "stderr", "") or "")
+        assert "AUTHENTICATION_FAILED" in combined or "Code: 516" in combined, error(
+            f"expected an authentication failure, got:\n{combined}"
+        )
+
+    with Then("the error output does not contain https://clickhouse.cloud"):
+        assert "https://clickhouse.cloud" not in combined, error(
+            f"unexpected https://clickhouse.cloud reference in auth error output:\n{combined}"
+        )
+
+
+@TestScenario
 def embedded_logos(self):
     """Check that the embedded logos are correct."""
 

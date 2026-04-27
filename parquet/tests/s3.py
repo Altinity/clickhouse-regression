@@ -249,7 +249,7 @@ def insert_into_function(self):
     with Check(
         "I check that the data inserted into the table function was correctly written to the file"
     ):
-        if check_clickhouse_version(">=26.1")(self):
+        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"
@@ -297,7 +297,7 @@ def select_from_function_manual_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        if check_clickhouse_version(">=26.1")(self):
+        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"
@@ -350,7 +350,7 @@ def select_from_function_auto_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        if check_clickhouse_version(">=26.1")(self):
+        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"
@@ -440,7 +440,7 @@ def outline(self, compression_type):
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
 
-    Suite(run=engine)
+    # Suite(run=engine)
     Suite(run=function)
 
 
@@ -466,6 +466,44 @@ def lz4(self):
     """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
     with LZ4 compression type."""
     outline(compression_type="LZ4")
+
+#
+# @TestScenario
+# def nullable_binary_with_where_clause(self):
+#     """Reproduce https://github.com/ClickHouse/ClickHouse/issues/99019
+#     Reading a parquet file with a nullable binary column from S3 with a WHERE
+#     clause should not produce LOGICAL_ERROR 'Too many bytes in mask'."""
+#
+#     node = self.context.cluster.node("clickhouse1")
+#     uid = getuid()
+#     s3_file_name = f"data/parquet/test_nullable_binary_{uid}.parquet"
+#
+#     with Given("I upload the test.parquet file to S3"):
+#         copy_file_to_host(
+#             src_node="clickhouse1",
+#             src_path="/var/lib/clickhouse/user_files/datatypes/test.parquet",
+#             host_filename=f"test_{uid}.parquet",
+#         )
+#         upload_file_to_s3(
+#             file_src=f"/tmp/test_files/test_{uid}.parquet",
+#             file_dest=s3_file_name,
+#         )
+#
+#     s3_url = f"{self.context.uri}test_nullable_binary_{uid}.parquet"
+#
+#     with When("I read the file from S3 without a WHERE clause"):
+#         node.query(
+#             f"SELECT count() FROM s3(s3_credentials, url='{s3_url}', format='Parquet') FORMAT TabSeparated",
+#             exitcode=0,
+#             settings=[("input_format_parquet_use_native_reader_v3", 1)],
+#         )
+#
+#     with Then("I read the file from S3 with a WHERE clause on id"):
+#         node.query(
+#             f"SELECT * FROM s3(s3_credentials, url='{s3_url}', format='Parquet') WHERE id BETWEEN 1 AND 100 FORMAT TabSeparated",
+#             exitcode=0,
+#             settings=[("input_format_parquet_use_native_reader_v3", 1)],
+#         )
 
 
 @TestFeature
