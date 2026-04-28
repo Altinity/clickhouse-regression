@@ -371,7 +371,7 @@ ffails = {
         Skip,
         "EXPORT PARTITION TO Apache Iceberg is only supported on Antalya builds > 26.1",
         lambda test: check_if_not_antalya_build(test)
-        or check_clickhouse_version("<=26.1")(test),
+        or check_clickhouse_version("<26.1")(test),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
