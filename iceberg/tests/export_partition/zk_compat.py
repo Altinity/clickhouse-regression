@@ -46,6 +46,8 @@ exercising any new code paths.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_ZooKeeperCompat
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -261,6 +263,7 @@ def restart_heals_operator_deletion(
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_ZooKeeperCompat("1.0"))
 @Name("zk compat")
 def feature(self, minio_root_user, minio_root_password):
     """Backward compatibility with pre-EXPORT-feature ZooKeeper layouts

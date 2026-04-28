@@ -24,6 +24,8 @@ support matrix visible at a glance.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_PartitionCompatibility
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -404,6 +406,7 @@ REJECTED_SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility("1.0"))
 @Name("partition compatibility")
 def feature(self, minio_root_user, minio_root_password):
     """Partition expression compatibility between MergeTree and Iceberg.

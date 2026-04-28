@@ -789,8 +789,8 @@ def show_tables_queries(self, minio_root_user, minio_root_password, node=None):
     with Then("compare results"):
         if (
             check_clickhouse_version(">=25.10")(self)
-            or check_if_antalya_build()
-            or check_if_25_8_altinity_build()
+            or check_if_antalya_build(self)
+            or check_if_25_8_altinity_build(self)
         ):
             assert f"{namespace}.{table_name}" in result_with_setting, error()
             assert result_with_setting == result_without_setting, error()

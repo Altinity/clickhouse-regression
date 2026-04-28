@@ -42,6 +42,8 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Transactions
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -499,6 +501,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_Transactions("1.0"))
 @Name("transactions")
 def feature(self, minio_root_user, minio_root_password):
     """Atomicity / idempotency / snapshot-linearity scenarios."""

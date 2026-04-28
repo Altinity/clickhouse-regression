@@ -22,6 +22,8 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_SystemMonitoring
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -414,6 +416,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring("1.0"))
 @Name("system monitoring")
 def feature(self, minio_root_user, minio_root_password):
     """System-table and profile-event visibility of EXPORT PARTITION."""

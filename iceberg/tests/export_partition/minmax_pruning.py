@@ -31,6 +31,8 @@ fail bubbles up during triage instead of being papered over.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_MinMaxPruning
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -241,6 +243,7 @@ def pruning_range_predicate(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_MinMaxPruning("1.0"))
 @Name("minmax pruning")
 def feature(self, minio_root_user, minio_root_password):
     """Min/max pruning on Iceberg destinations populated by EXPORT PARTITION."""

@@ -49,6 +49,8 @@ import io
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Settings
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -327,6 +329,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_Settings("1.0"))
 @Name("settings")
 def feature(self, minio_root_user, minio_root_password):
     """Behaviour of each export_merge_tree_partition_* setting."""

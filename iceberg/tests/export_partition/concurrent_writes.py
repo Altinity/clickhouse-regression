@@ -33,6 +33,8 @@ exposes to end users.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_ConcurrentWrites
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -42,7 +44,7 @@ from iceberg.tests.export_partition.steps.common import (
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
-    apply_glue_metadata_path_workaround,
+    prepare_export_partition_settings,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
@@ -120,7 +122,7 @@ def multi_statement_alter_commits_each_partition(
         )
         node.query(
             f"ALTER TABLE {source_table}\n  {export_clauses}",
-            settings=apply_glue_metadata_path_workaround(
+            settings=prepare_export_partition_settings(
                 self.context.catalog, None
             ),
         )
@@ -202,7 +204,7 @@ def duplicate_export_inside_one_alter(
             f"ALTER TABLE {source_table}\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name},\n"
             f"  EXPORT PARTITION ID '2020' TO TABLE {dest_name}",
-            settings=apply_glue_metadata_path_workaround(
+            settings=prepare_export_partition_settings(
                 self.context.catalog, None
             ),
             exitcode=BAD_ARGUMENTS,
@@ -358,6 +360,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_ConcurrentWrites("1.0"))
 @Name("concurrent writes")
 def feature(self, minio_root_user, minio_root_password):
     """Concurrent / interleaved EXPORT PARTITION scenarios."""

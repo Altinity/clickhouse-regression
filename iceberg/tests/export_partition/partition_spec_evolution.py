@@ -20,6 +20,8 @@ snapshots remain individually readable.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_PartitionSpecEvolution
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -272,6 +274,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("partition spec evolution")
 def feature(self, minio_root_user, minio_root_password):
     """Partition spec behaviour across sequential exports.

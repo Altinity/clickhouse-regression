@@ -117,24 +117,64 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
+def full_clickhouse_version_string(test=None):
+    """Return ``test.context.full_clickhouse_version`` when available.
+
+    XFail / FFail / Skip predicates and helpers may run before
+    :func:`testflows.core.current` is bound to an active test (for example
+    while building module-level ``xfails`` / ``ffails`` dicts, or when a
+    tuple accidentally calls ``check_if_*()`` at import time). Prefer the
+    explicit ``test`` object when the caller has it; otherwise fall back to
+    ``current().context``. Missing both yields ``""`` so substring checks
+    return False for "is antalya / is altinity" style questions instead of
+    raising ``AttributeError``.
+    """
+    if test is not None:
+        ctx = getattr(test, "context", None)
+        if ctx is not None:
+            v = getattr(ctx, "full_clickhouse_version", None)
+            if v:
+                return v
+    c = current()
+    if c is not None:
+        ctx = getattr(c, "context", None)
+        if ctx is not None:
+            v = getattr(ctx, "full_clickhouse_version", None)
+            if v:
+                return v
+    return ""
+
+
 def check_if_antalya_build(test=None):
     """True if build is Antalya build."""
-    return "antalya" in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "antalya" in v
 
 
 def check_if_not_antalya_build(test=None):
     """True if build is not Antalya build."""
-    return "antalya" not in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "antalya" not in v
 
 
 def check_if_altinity_build(test=None):
     """True if build is Altinity build."""
-    return "altinity" in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "altinity" in v
 
 
 def check_if_25_8_altinity_build(test=None):
     """True if build is 25.8 Altinity build."""
-    return "25.8" in current().context.full_clickhouse_version and check_if_altinity_build() and check_if_not_antalya_build()
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
 
 
 def check_if_head(test):

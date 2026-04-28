@@ -50,6 +50,8 @@ power the ``rejected_*`` scenarios.
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DataTypes
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -637,6 +639,7 @@ REJECTED_SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes("1.0"))
 @Name("datatypes")
 def feature(self, minio_root_user, minio_root_password):
     """ClickHouse -> Iceberg data type coverage for EXPORT PARTITION.

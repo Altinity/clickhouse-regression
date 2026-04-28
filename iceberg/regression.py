@@ -201,7 +201,7 @@ xfails = {
             Fail,
             "https://github.com/Altinity/clickhouse-regression/issues/86",
             lambda test: check_clickhouse_version(">=25.8")(test)
-            and check_if_antalya_build(),
+            and check_if_antalya_build(test),
         )
     ],
     "/iceberg/iceberg table engine/write min max pruning/*": [
@@ -209,10 +209,12 @@ xfails = {
             Fail,
             "https://github.com/ClickHouse/ClickHouse/issues/91363",
             lambda test: (
-                check_if_not_antalya_build() and check_clickhouse_version("<26.1")(test)
+                check_if_not_antalya_build(test)
+                and check_clickhouse_version("<26.1")(test)
             )
             or (
-                check_if_antalya_build() and check_clickhouse_version("<=25.8.9")(test)
+                check_if_antalya_build(test)
+                and check_clickhouse_version("<=25.8.9")(test)
             ),
         )
     ],
@@ -228,7 +230,7 @@ xfails = {
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
             lambda test: check_clickhouse_version(">=25.3")(test)
-            and check_if_antalya_build(),
+            and check_if_antalya_build(test),
         )
     ],
     "/iceberg/iceberg cache/rest catalog/icebergS3 table function/cache": [
@@ -236,7 +238,7 @@ xfails = {
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
             lambda test: check_clickhouse_version(">=25.3")(test)
-            and check_if_antalya_build(),
+            and check_if_antalya_build(test),
         )
     ],
     "/iceberg/iceberg cache/glue catalog/iceberg database engine/cache": [
@@ -244,7 +246,7 @@ xfails = {
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
             lambda test: check_clickhouse_version(">=25.3")(test)
-            and check_if_antalya_build(),
+            and check_if_antalya_build(test),
         )
     ],
     "/iceberg/iceberg cache/glue catalog/icebergS3 table function/cache": [
@@ -252,7 +254,7 @@ xfails = {
             Fail,
             "https://github.com/Altinity/ClickHouse/issues/1277",
             lambda test: check_clickhouse_version(">=25.3")(test)
-            and check_if_antalya_build(),
+            and check_if_antalya_build(test),
         )
     ],
     "/iceberg/iceberg engine/: catalog/iceberg partition pruning/check iceberg partition pruning with integer type": [
@@ -345,7 +347,7 @@ ffails = {
         Skip,
         "namespace filtering is supported only in antalya build from >= 25.8",
         lambda test: check_clickhouse_version("<=25.8.15")(test)
-        or check_if_not_antalya_build(),
+        or check_if_not_antalya_build(test),
     ),
     "/iceberg/iceberg engine/: catalog/sort key timezone/*": (
         Skip,
@@ -366,7 +368,7 @@ ffails = {
         Skip,
         "Pending https://github.com/ClickHouse/ClickHouse/pull/100452 — Antalya 26.1+ for now; revise when merged",
         lambda test: check_clickhouse_version("<26.1")(test)
-        or check_if_not_antalya_build(),
+        or check_if_not_antalya_build(test),
     ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,

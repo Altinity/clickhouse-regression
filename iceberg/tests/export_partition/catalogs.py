@@ -40,6 +40,8 @@ the pattern used in the upstream
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_CatalogIntegration
+
 from pyiceberg.partitioning import PartitionField, PartitionSpec
 from pyiceberg.schema import Schema
 from pyiceberg.transforms import IdentityTransform
@@ -461,6 +463,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration("1.0"))
 @Name("catalogs")
 def feature(self, minio_root_user, minio_root_password):
     """Catalog-specific export paths (no_catalog today, REST/Glue pending)."""

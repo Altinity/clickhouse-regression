@@ -25,6 +25,8 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DisasterRecovery
+
 from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
@@ -35,6 +37,7 @@ from iceberg.tests.export_partition.steps.common import (
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
     kill_export_partition,
+    prepare_export_partition_settings,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     get_export_row,
@@ -333,6 +336,9 @@ def missing_partition_id_rejected(self, minio_root_user, minio_root_password):
         self.context.node.query(
             f"ALTER TABLE {source_table} "
             f"EXPORT PARTITION ID '1900' TO TABLE {dest_name}",
+            settings=prepare_export_partition_settings(
+                self.context.catalog, None
+            ),
             no_checks=True,
         )
         # Give the scheduler a moment to see there are no parts.
@@ -366,6 +372,7 @@ SCENARIOS = (
 
 
 @TestFeature
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery("1.0"))
 @Name("disaster recovery")
 def feature(self, minio_root_user, minio_root_password):
     """Failure-injection and recovery scenarios for EXPORT PARTITION."""
