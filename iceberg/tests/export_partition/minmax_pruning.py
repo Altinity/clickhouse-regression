@@ -1,31 +1,9 @@
 """Min/max pruning for Iceberg destinations populated by EXPORT PARTITION.
 
-ClickHouse writes per-column lower/upper bound stats into every manifest
-entry emitted during ``ALTER ... EXPORT PARTITION ... TO TABLE ...``
-(via ``IcebergWrites.cpp``). When the destination is subsequently read
-back through the Iceberg reader, those bounds are used to prune whole
-data files that cannot possibly match the query's predicate.
-
-This module exercises that round-trip end to end:
-
-1. Populate a ``ReplicatedMergeTree`` source partitioned by ``year``
-   such that each partition lands in a distinct, non-overlapping ``id``
-   range on disk (small, medium, large).
-2. Export every partition to the Iceberg destination. Each export
-   commit produces its own data file with its own min/max stats on the
-   ``id`` column.
-3. Query the destination with an ``id = <value>`` predicate that falls
-   inside exactly one of the per-partition ranges.
-4. Assert both ``IcebergMinMaxIndexPrunedFiles`` and the ``read_rows``
-   metric shrink the way they should — only the file containing the
-   matching ``id`` should actually be opened.
-
-Reader coverage under ``rest`` / ``glue`` goes through
-``DataLakeCatalog``; the reader is the same ``StorageObjectStorage``
-path, so the profile events line up across catalog modes. Glue is
-included here; if pruning stats round-trip breaks under Glue
-specifically, xfail the offending scenario with a clear message so the
-fail bubbles up during triage instead of being papered over.
+Verifies that the per-column lower/upper bound stats ClickHouse writes
+during ``EXPORT PARTITION`` round-trip through the reader: a predicate
+that fits inside one partition's ``id`` range prunes the other data
+files (``IcebergMinMaxIndexPrunedFiles`` and ``read_rows`` confirm).
 """
 
 from testflows.core import *
@@ -85,9 +63,8 @@ def _int(result):
 @TestScenario
 @Name("minmax pruning on exported data")
 def pruning_predicate_narrows_read_rows(self, minio_root_user, minio_root_password):
-    """``WHERE id = <value>`` on a destination with 3 non-overlapping
-    per-partition files must prune down to exactly 1 file's worth of
-    rows.
+    """``WHERE id = <value>`` on a destination with three non-overlapping
+    per-partition files prunes to exactly one file's worth of rows.
     """
     node = self.context.node
     source_table = f"mt_{getuid()}"
@@ -179,8 +156,8 @@ def pruning_predicate_narrows_read_rows(self, minio_root_user, minio_root_passwo
 @TestScenario
 @Name("minmax pruning on range predicate")
 def pruning_range_predicate(self, minio_root_user, minio_root_password):
-    """A range predicate that straddles exactly one partition's
-    ``id`` range should also prune the other two files out.
+    """A range predicate fitting inside one partition's ``id`` range
+    prunes the other two files.
     """
     node = self.context.node
     source_table = f"mt_{getuid()}"

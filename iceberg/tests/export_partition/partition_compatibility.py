@@ -1,24 +1,8 @@
 """Partition expression / transform compatibility between MergeTree and Iceberg.
 
-Ports three integration tests from the PR:
-
-* ``test_partition_transform_compatibility_accepted`` - every supported
-  transform pairing is accepted when the MergeTree ``PARTITION BY`` and the
-  Iceberg partition spec agree.
-* ``test_partition_transform_compatibility_rejected`` - mismatched specs
-  are rejected synchronously with ``BAD_ARGUMENTS``.
-* ``test_partition_key_compatibility_check`` - simple identity-key mismatch
-  is rejected.
-
-Adds two extensions on top of the PR integration tests:
-
-* ``toRelativeDayNum`` / ``toRelativeHourNum`` -> ``day`` / ``hour``. ClickHouse
-  maps these to the Iceberg ``day`` / ``hour`` transforms (see
-  ``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp``), but the PR tests
-  don't exercise them.
-
-Each compatibility case is its own ``@TestScenario`` so the test tree makes the
-support matrix visible at a glance.
+Each scenario asserts a single source/destination ``PARTITION BY``
+pairing is either accepted or rejected with ``BAD_ARGUMENTS``, so the
+support matrix is visible at a glance in the test tree.
 """
 
 from testflows.core import *
@@ -53,10 +37,8 @@ def _run_accepted_case(
     dest_partition_by,
     values,
 ):
-    """Assert that the MergeTree/Iceberg partition-spec pair is accepted.
-
-    Creates a single-partition RMT, inserts ``values``, creates the matching
-    Iceberg destination, and runs ``EXPORT PARTITION`` expecting success.
+    """Run an end-to-end ``EXPORT PARTITION`` against a matching
+    source/destination spec and expect success.
     """
     source_table = f"mt_{getuid()}"
 
@@ -97,8 +79,8 @@ def _run_rejected_case(
     dest_partition_by,
     values,
 ):
-    """Assert that the MergeTree/Iceberg partition-spec pair is rejected
-    synchronously with ``BAD_ARGUMENTS``.
+    """Run ``EXPORT PARTITION`` against a mismatched source/destination
+    spec and expect synchronous ``BAD_ARGUMENTS`` rejection.
     """
     source_table = f"mt_{getuid()}"
 
@@ -184,11 +166,7 @@ def accepted_month_transform(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("accepted: day transform (toRelativeDayNum)")
 def accepted_day_transform(self, minio_root_user, minio_root_password):
-    """``toRelativeDayNum(Date)`` maps to the Iceberg ``day`` transform.
-
-    Not covered by the PR integration tests but the mapping is declared in
-    ``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp``.
-    """
+    """``toRelativeDayNum(Date)`` maps to the Iceberg ``day`` transform."""
     _run_accepted_case(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
@@ -410,22 +388,9 @@ REJECTED_SCENARIOS = (
 @Name("partition compatibility")
 def feature(self, minio_root_user, minio_root_password):
     """Partition expression compatibility between MergeTree and Iceberg.
-
-    Gated to ``no_catalog`` only. The module exercises ClickHouse's own
-    ``checkExportPartitionDestinationIsCompatible`` surface: source
-    ``PARTITION BY`` vs destination ``PARTITION BY``. Under Ice / Glue
-    the destination is materialised by PyIceberg and re-read through
-    ``DataLakeCatalog``, which rewrites a few CH types on read-back
-    (``Date``->``Date32``, ``DateTime``->``DateTime64``) — the
-    transform-mapping scenarios then fail with ``INCOMPATIBLE_COLUMNS``
-    even though the partition spec is genuinely the one the translator
-    built. That widening is a ClickHouse Iceberg-engine behaviour, not a
-    property of EXPORT PARTITION; fixing it here would mean rewriting
-    every source column to ``Date32`` / ``DateTime64`` and losing the
-    ``Date`` / ``DateTime`` coverage the scenarios were written for.
-    The "rejected" scenarios are likewise about CH-side diagnostics that
-    the translator pre-empts (mismatches simply can't be constructed
-    through the catalog path), so they add no signal under catalog mode.
+    ``no_catalog`` only — under Ice / Glue the catalog read-back widens
+    ``Date`` / ``DateTime``, masking the matrix this module wants to
+    cover.
     """
     _require_no_catalog(
         "partition expression compatibility is a CH-side surface; catalog mode "

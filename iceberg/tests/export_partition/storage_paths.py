@@ -1,22 +1,8 @@
-"""Storage path / location-related behaviour for EXPORT PARTITION.
+"""Storage path / location behaviour for EXPORT PARTITION.
 
-Covers the ``write_full_path_in_iceberg_metadata`` setting and the way
-ClickHouse lays out Iceberg destinations on S3:
-
-* ``full_path_metadata_has_absolute_s3_uri`` — with
-  ``write_full_path_in_iceberg_metadata = 1`` the ``location`` in
-  ``metadata.json`` is a full ``s3://bucket/prefix/table/`` URI so external
-  readers (Trino, Athena, PyIceberg's StaticTable) can open the table.
-* ``default_metadata_has_relative_location`` — the default behaviour
-  ``write_full_path_in_iceberg_metadata = 0`` stores a bucket-relative
-  ``location``, which Trino/Athena *cannot* resolve; we assert the path
-  starts without an FS scheme so the contrast is explicit.
-* ``deep_prefix_hierarchy`` — a destination with a deep
-  ``location_prefix`` (``warehouse/a/b/c/d``) round-trips cleanly;
-  ClickHouse must not truncate or lose prefix segments.
-* ``multiple_destinations_share_bucket`` — two separate destinations
-  under the same bucket but different prefixes end up fully isolated and
-  both read back correctly.
+Covers ``write_full_path_in_iceberg_metadata`` (absolute vs.
+bucket-relative ``location``), deep ``location_prefix`` round-trips,
+and isolation across multiple destinations sharing one bucket.
 """
 
 from testflows.core import *
@@ -78,11 +64,8 @@ def _seed_source(minio_root_user, minio_root_password):
 def full_path_metadata_has_absolute_s3_uri(
     self, minio_root_user, minio_root_password
 ):
-    """``write_full_path_in_iceberg_metadata = 1`` writes absolute URIs.
-
-    The freshly created ``metadata.json`` must expose an ``s3://`` URL in
-    its ``location`` field so external engines can resolve the table
-    without knowing the S3 endpoint.
+    """With ``write_full_path_in_iceberg_metadata = 1`` the
+    ``metadata.json`` ``location`` is an absolute ``s3://`` URI.
     """
     source_table = _seed_source(minio_root_user, minio_root_password)
 
@@ -125,12 +108,8 @@ def full_path_metadata_has_absolute_s3_uri(
 def default_metadata_has_relative_location(
     self, minio_root_user, minio_root_password
 ):
-    """Default behaviour leaves ``location`` relative to the S3 bucket.
-
-    This mirrors what ClickHouse has always done; the scenario exists to
-    catch silent regressions where ClickHouse would start writing absolute
-    URIs unconditionally (which would change the on-disk format for
-    existing catalog-backed tables).
+    """The default ``write_full_path_in_iceberg_metadata = 0`` keeps
+    ``location`` bucket-relative (no FS scheme).
     """
     source_table = _seed_source(minio_root_user, minio_root_password)
 
@@ -170,10 +149,9 @@ def default_metadata_has_relative_location(
 @TestScenario
 @Name("deep prefix hierarchy round-trips cleanly")
 def deep_prefix_hierarchy(self, minio_root_user, minio_root_password):
-    """A destination under ``warehouse/a/b/c/d`` must round-trip intact.
-
-    Regression-guard for prefix segment loss: ClickHouse splits the URL
-    at ``/`` in several places; deep prefixes exercise each of them.
+    """A destination under a deep ``location_prefix``
+    (``warehouse/a/b/c/d``) round-trips cleanly with every segment
+    preserved in the metadata location.
     """
     source_table = _seed_source(minio_root_user, minio_root_password)
 
@@ -230,10 +208,8 @@ def deep_prefix_hierarchy(self, minio_root_user, minio_root_password):
 def multiple_destinations_share_bucket(
     self, minio_root_user, minio_root_password
 ):
-    """Two destinations with different prefixes must not cross-contaminate.
-
-    We export **different** data into each and verify each destination
-    still reads back exactly its own rows.
+    """Two destinations under different prefixes of the same bucket
+    receive distinct data and read back only their own rows.
     """
     source_a = f"mt_a_{getuid()}"
     source_b = f"mt_b_{getuid()}"
@@ -334,16 +310,8 @@ SCENARIOS = (
 @Name("storage paths")
 def feature(self, minio_root_user, minio_root_password):
     """Storage location and path-writing behaviour for EXPORT PARTITION.
-
-    Every scenario either sets ``write_full_path_in_iceberg_metadata`` at
-    CREATE-TABLE time, asserts on a specific ``location_prefix`` layout,
-    or inspects bucket-relative vs. absolute paths in ``metadata.json`` —
-    all of which are ``IcebergS3(...)`` table-engine concerns. Under
-    ``DataLakeCatalog`` the Iceberg table's location is owned by the
-    catalog (via PyIceberg's ``catalog.create_table(location=...)``) so
-    these assertions do not transfer. Gate the whole feature on
-    no_catalog so the test tree surfaces the scope rather than silently
-    skipping on the "IcebergS3-only kwargs" check in the dispatcher.
+    ``no_catalog`` only — under ``DataLakeCatalog`` the table location
+    is owned by the catalog so these assertions do not transfer.
     """
     _require_no_catalog(
         "storage_paths asserts on IcebergS3-specific layout concerns "

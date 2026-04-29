@@ -1,28 +1,10 @@
 """Schema evolution between EXPORT PARTITION calls.
 
-These scenarios exercise the Antalya-specific
-``IcebergMetadata::alter`` path (``Mutations.cpp``) to evolve the Iceberg
-destination's schema in lock-step with the MergeTree source, then verify
-that subsequent ``EXPORT PARTITION`` calls pick up the new schema:
-
-* ``add_column_between_exports`` - ``ADD COLUMN`` on both sides, export a
-  second partition whose rows use the new column.
-* ``drop_column_between_exports`` - ``DROP COLUMN`` on both sides, export
-  the "narrower" partition.
-* ``modify_column_widen`` - ``MODIFY COLUMN Int32 -> Int64`` on both sides,
-  export new data that needs the widened range.
-* ``rejected_rename_column`` - ``RENAME COLUMN`` on the Iceberg destination
-  is rejected by ``IcebergMetadata::checkAlterIsPossible``.
-* ``source_change_only_is_rejected`` - altering *only* the source while
-  the destination keeps its older schema must fail at EXPORT time, not
-  silently truncate/extend rows.
-* ``iceberg_schema_history_advances`` - ``table.schemas()`` grows by at
-  least one entry after an ADD COLUMN.
-
-Every ALTER on the Iceberg destination is issued with
-``allow_experimental_insert_into_iceberg = 1`` (required by
-``IcebergMetadata::alter``). The ``EXPORT PARTITION`` statement itself is
-enabled server-side via ``configs/clickhouse/config.d/export_partition.xml``.
+Drives the ``IcebergMetadata::alter`` path to evolve the Iceberg
+destination's schema in lock-step with the MergeTree source (ADD /
+DROP / MODIFY column) and verifies subsequent exports pick up the new
+schema. Also covers the rejected ALTERs (``RENAME COLUMN``,
+source-only drift) and the Iceberg schema-history bookkeeping.
 """
 
 from testflows.core import *
@@ -78,11 +60,9 @@ def alter_iceberg_destination(
     message=None,
     node=None,
 ):
-    """Run ``ALTER TABLE <iceberg_dest> <clause>``.
-
-    Iceberg writes require ``allow_experimental_insert_into_iceberg = 1``
-    (``IcebergMetadata::alter`` rejects the ALTER otherwise with
-    ``SUPPORT_IS_DISABLED``).
+    """Run ``ALTER TABLE <iceberg_dest> <clause>`` with
+    ``allow_experimental_insert_into_iceberg = 1`` (required by
+    ``IcebergMetadata::alter``).
     """
     if node is None:
         node = self.context.node
@@ -105,12 +85,9 @@ def alter_iceberg_destination(
 @TestScenario
 @Name("add column between exports")
 def add_column_between_exports(self, minio_root_user, minio_root_password):
-    """Two sequential exports with an ``ADD COLUMN`` in between.
-
-    Both sides grow a nullable ``score`` column before the second export;
-    the destination must end up with both partitions, the Iceberg schema
-    must contain the new field, and the pre-ADD rows must read back with
-    ``score = NULL``.
+    """``ADD COLUMN score Nullable(Int32)`` on both sides between two
+    exports; the destination has both partitions and pre-ADD rows read
+    back with ``score = NULL``.
     """
     source_table = f"mt_{getuid()}"
     initial_columns = "id Int64, year Int32"
@@ -207,11 +184,9 @@ def add_column_between_exports(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("drop column between exports")
 def drop_column_between_exports(self, minio_root_user, minio_root_password):
-    """Two sequential exports with a ``DROP COLUMN`` in between.
-
-    Before the drop the destination has a ``note`` column; after the drop
-    new rows are written without it, but the older snapshot's ``note``
-    values should still be readable when selecting the remaining columns.
+    """``DROP COLUMN note`` on both sides between two exports; the
+    destination has both partitions and remaining columns read back
+    byte-identically.
     """
     source_table = f"mt_{getuid()}"
     initial_columns = "id Int64, year Int32, note String"
@@ -287,12 +262,8 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("modify column widen Int32 -> Int64")
 def modify_column_widen(self, minio_root_user, minio_root_password):
-    """``MODIFY COLUMN val Int64`` on both sides and export values that
-    require the wider range.
-
-    Iceberg allows the ``int -> long`` widening without rewriting data;
-    we verify that after the MODIFY a ``Int64``-sized value round-trips
-    unchanged.
+    """``MODIFY COLUMN val Int64`` on both sides; an Int64-only value
+    round-trips through a subsequent export.
     """
     source_table = f"mt_{getuid()}"
     initial_columns = "id Int64, year Int32, val Int32"
@@ -368,11 +339,8 @@ def modify_column_widen(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("rejected: RENAME COLUMN on iceberg destination")
 def rejected_rename_column(self, minio_root_user, minio_root_password):
-    """``RENAME COLUMN`` is not accepted by ``IcebergMetadata::checkAlterIsPossible``.
-
-    Iceberg preserves field identity through ids, so a rename would be a
-    metadata-only operation; the C++ side still rejects it today. We
-    assert the rejection with ``NOT_IMPLEMENTED`` (exit code 48).
+    """``RENAME COLUMN`` on the Iceberg destination is rejected with
+    ``NOT_IMPLEMENTED`` by ``IcebergMetadata::checkAlterIsPossible``.
     """
     with Given("create the Iceberg destination"):
         destination = create_iceberg_destination(
@@ -396,10 +364,9 @@ def rejected_rename_column(self, minio_root_user, minio_root_password):
 def source_only_schema_drift_rejected(
     self, minio_root_user, minio_root_password
 ):
-    """Alter the source but leave the destination schema alone.
-
-    The EXPORT PARTITION planner compares schemas and must reject the
-    mismatch rather than write truncated / extended rows.
+    """Altering only the source schema leaves the destination behind;
+    the next ``EXPORT PARTITION`` is rejected with
+    ``INCOMPATIBLE_COLUMNS`` instead of silently truncating.
     """
     source_table = f"mt_{getuid()}"
     initial_columns = "id Int64, year Int32"
@@ -440,12 +407,9 @@ def source_only_schema_drift_rejected(
 def iceberg_schema_history_advances(
     self, minio_root_user, minio_root_password
 ):
-    """``table.schemas()`` gains at least one new entry after an ADD COLUMN.
-
-    PyIceberg tracks every schema version the table has ever held; this
-    scenario asserts that an ADD COLUMN on the Iceberg destination
-    produces a new entry, so downstream readers can resolve rows written
-    under each schema version.
+    """``ADD COLUMN`` on the Iceberg destination grows
+    ``table.schemas()`` by at least one entry, and the latest schema
+    contains the new field.
     """
     initial_columns = "id Int64, year Int32"
 
@@ -505,16 +469,10 @@ SCENARIOS = (
 @Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution("1.0"))
 @Name("schema evolution")
 def feature(self, minio_root_user, minio_root_password):
-    """Schema evolution between EXPORT PARTITION calls.
-
-    All scenarios drive ``ALTER TABLE <iceberg-destination> ...`` on the CH
-    side, which is only accepted when the destination is a locally-managed
-    ``IcebergS3(...)`` storage. ``DataLakeCatalog`` databases are read-only
-    for DDL, so evolving a catalog-backed Iceberg table from ClickHouse is
-    not currently possible — an equivalent catalog-mode module would have
-    to drive ``table.update_schema()`` through PyIceberg instead. Gate the
-    whole feature on ``no_catalog`` so the test tree is explicit about
-    what isn't covered.
+    """Schema evolution between EXPORT PARTITION calls. ``no_catalog``
+    only: ``DataLakeCatalog`` databases are read-only for DDL, so
+    evolving a catalog-backed Iceberg table from ClickHouse is not
+    currently possible.
     """
     _require_no_catalog(
         "schema evolution drives `ALTER TABLE <iceberg-destination>` on "

@@ -1,33 +1,10 @@
 """Concurrent / interleaved EXPORT PARTITION scenarios.
 
-ClickHouse serialises Iceberg snapshot commits through ZooKeeper, so even
-when several EXPORT PARTITIONs are scheduled at the same time the
-destination must end up with a single linear chain of ``append`` snapshots.
-These scenarios exercise that property through the interfaces the feature
-actually exposes:
-
-* The ``ALTER TABLE ... EXPORT PARTITION ..., EXPORT PARTITION ...``
-  multi-statement form - ClickHouse schedules the entries concurrently via
-  its internal task queue; each one must still commit an independent
-  snapshot.
-* Back-to-back ALTERs for the same ``(source, destination, partition)``
-  triple - the ZooKeeper idempotency lock rejects everything except the
-  winner. The ``duplicate_export_within_ttl_rejected`` scenario in
-  ``transactions.py`` covers the single-query variant; here we additionally
-  cover the multi-statement variant where the ``(partition, destination)``
-  pair is repeated inside one ALTER.
-* An asynchronous EXPORT interleaved with an INSERT that lands on the
-  source table *after* the ALTER was scheduled but *before* the snapshot
-  is committed. The new part must not be pulled into the running export;
-  it only shows up on a subsequent export.
-
-The scenarios deliberately avoid TestFlows' ``Pool``-based parallelism
-against the same ClickHouse container - TestFlows' pty management is
-sensitive to two concurrent bash sessions on the same node and segfaults
-the test runner intermittently. The multi-statement ALTER form achieves
-the same "several exports in flight simultaneously" effect inside a
-single client call, which is the only surface area the feature actually
-exposes to end users.
+Verifies that several exports scheduled simultaneously through the
+multi-statement ``ALTER`` form linearise into a single chain of
+``append`` snapshots, that the ZooKeeper idempotency lock rejects
+duplicates inside one ALTER, and that an interleaved INSERT does not
+leak into a running export.
 """
 
 from testflows.core import *
@@ -88,14 +65,9 @@ def _seed_source(values, partition_by=SIMPLE_PARTITION_BY, columns=SIMPLE_COLUMN
 def multi_statement_alter_commits_each_partition(
     self, minio_root_user, minio_root_password
 ):
-    """Fire three EXPORT PARTITIONs from a single ALTER statement.
-
-    ClickHouse dispatches the individual EXPORT entries to its export
-    task queue concurrently; the Iceberg commit protocol linearises
-    them through ZooKeeper. The destination must end up with exactly
-    three append snapshots (one per partition), every snapshot must
-    carry an ``append`` operation, and the final row count must equal
-    the source.
+    """A single ALTER with three EXPORT PARTITION clauses produces three
+    linearised append snapshots and a destination row count matching the
+    source.
     """
     node = self.context.node
     partitions = ["2020", "2021", "2022"]
@@ -177,15 +149,9 @@ def multi_statement_alter_commits_each_partition(
 def duplicate_export_inside_one_alter(
     self, minio_root_user, minio_root_password
 ):
-    """A single ALTER that lists the same partition twice still linearises.
-
-    The multi-statement ALTER form schedules each EXPORT PARTITION entry
-    through the same ZooKeeper idempotency lock that guards sequential
-    ALTERs: the first entry installs the ZK manifest and commits its
-    snapshot, the duplicate entry is rejected with ``BAD_ARGUMENTS``
-    ("Export with key ..."). The destination must therefore end up with
-    at most one append snapshot (the lock exists precisely to prevent
-    the partition's rows from being committed twice).
+    """An ALTER that lists the same partition twice is rejected with
+    ``BAD_ARGUMENTS`` / "Export with key ..."; the destination ends with
+    at most one append snapshot.
     """
     node = self.context.node
     source_table = _seed_source(values="(1, 2020), (2, 2020), (3, 2020)")
@@ -257,14 +223,9 @@ def duplicate_export_inside_one_alter(
 def insert_after_scheduled_export_is_isolated(
     self, minio_root_user, minio_root_password
 ):
-    """EXPORT snapshots the active parts at ALTER time.
-
-    Schedule an export with ``wait_for_completion=False``, then
-    immediately INSERT a new row into a *different* partition. When the
-    original export eventually reports ``COMPLETED`` the destination
-    must still only hold the rows that existed at ALTER time; the newly
-    inserted partition stays in the source and is only reachable via a
-    subsequent export.
+    """An INSERT that lands after the EXPORT is scheduled but before it
+    commits does not leak into the running export's snapshot; the new
+    rows only appear after a follow-up export.
     """
     source_table = _seed_source(
         values="(1, 2020), (2, 2020), (3, 2020)"

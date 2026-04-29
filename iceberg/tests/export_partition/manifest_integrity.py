@@ -1,34 +1,9 @@
 """Iceberg metadata / manifest integrity after EXPORT PARTITION.
 
-These scenarios drive the PyIceberg-based validators in
-:mod:`steps.manifest_validation`. They independently verify the metadata
-files ClickHouse commits, catching regressions that the ClickHouse reader
-would not notice when reading back its own files.
-
-Scenarios:
-
-* :func:`snapshot_advances_per_export` - each successful export appends
-  exactly one snapshot.
-* :func:`snapshot_summary_records_match` - ``summary.total-records`` on the
-  current snapshot matches the number of rows written.
-* :func:`manifest_partition_spec_matches_source` - the table's partition
-  spec references the same source columns (in order) that the source table
-  was partitioned by.
-* :func:`column_stats_are_populated` - every data file has populated
-  ``value_counts``, ``null_value_counts``, ``lower_bounds`` and
-  ``upper_bounds`` (without these, predicate push-down silently breaks).
-* :func:`value_counts_sum_to_row_count` - per-column ``value_counts``
-  summed across data files equal the source row count.
-* :func:`data_file_paths_under_table_prefix` - every data file path lives
-  under the expected IcebergS3 prefix.
-* :func:`external_reader_round_trips_exported_data` - a standalone
-  (non-ClickHouse) Iceberg reader can follow ``data_file.file_path``
-  through its own FileIO and actually read the rows back. Demonstrates
-  the user-visible impact of the ``path_in_storage`` vs
-  ``path_in_metadata`` regression: ClickHouse can read its own output
-  because it resolves bucket-relative paths against its configured S3
-  endpoint, but Spark / Trino / PyIceberg dispatch FileIO by URI scheme
-  and fall back to the local filesystem when the scheme is missing.
+PyIceberg-based validators that independently verify the metadata
+ClickHouse commits (snapshot list, summary, partition spec, column
+stats, data-file paths, external-reader round-trip), catching
+regressions that ClickHouse would not notice reading back its own files.
 """
 
 from testflows.core import *
@@ -67,27 +42,12 @@ from iceberg.tests.export_partition.steps.manifest_validation import (
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
 
-# Scenarios that walk the manifest list / fetch data files via PyIceberg need
-# ClickHouse to write absolute ``s3://`` URLs into the Iceberg metadata. The
-# default is ``write_full_path_in_iceberg_metadata = 0`` which stores paths
-# relative to the bucket; when PyIceberg's StaticTable (no-catalog mode) reads
-# those, PyArrowFileIO treats them as local paths and fails.
-#
-# The setting is consulted at TWO separate queries:
-#
-# 1. ``CREATE TABLE ... ENGINE = IcebergS3(...)`` - decides what goes into the
-#    ``location`` field of the initial ``metadata.json``.
-#    (see ClickHouse: IcebergMetadata.cpp, ``location_path`` branch).
-# 2. ``ALTER TABLE ... EXPORT PARTITION`` - reads ``location`` from metadata
-#    and uses it as the prefix for every path it writes (manifest list,
-#    manifest entries, data files).
-#    (see ClickHouse: IcebergWrites.cpp, ``FileNamesGenerator`` branch).
-#
-# Both need the setting enabled; enabling only the second leaves ``location``
-# unset to ``s3://...`` and everything still resolves against a local path.
-# Scenarios that only read fields from ``metadata.json`` (snapshot list,
-# summary, spec) work without this override. ``storage_paths.py`` is where
-# both modes are exercised deliberately.
+# Required for any scenario that walks the manifest list or fetches data
+# files via PyIceberg: without absolute ``s3://`` URLs in the metadata
+# (table ``location`` and ``data_file.file_path``), PyArrowFileIO treats
+# the bucket-relative paths as local files and fails. Must be set on both
+# CREATE TABLE and EXPORT PARTITION; ``storage_paths.py`` covers both
+# modes deliberately.
 FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 
 
@@ -243,12 +203,9 @@ def manifest_partition_spec_matches_source(
 @TestScenario
 @Name("data files have all required column stats")
 def column_stats_are_populated(self, minio_root_user, minio_root_password):
-    """Each data file has non-empty column_sizes / null_value_counts / bounds.
-
-    ``value_counts`` is covered by a separate (currently XFail) scenario —
-    the current ClickHouse EXPORT PARTITION implementation does not write
-    it; see ``assert_column_stats_present`` and
-    ``value_counts_sum_to_row_count`` for details.
+    """Every data file has non-empty ``column_sizes`` /
+    ``null_value_counts`` / ``lower_bounds`` / ``upper_bounds``.
+    ``value_counts`` is covered separately (currently XFail).
     """
     source_table = f"mt_{getuid()}"
 
@@ -291,18 +248,9 @@ def column_stats_are_populated(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("value_counts across data files sum to source row count")
 def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
-    """Per-column value_counts over all data files equal the exported row count.
-
-    End-to-end numeric correctness check for ``value_counts``: if
-    ClickHouse writes bad statistics, predicate push-down breaks silently
-    at read time.
-
-    Currently registered as XFail in ``regression.py`` — the EXPORT
-    PARTITION write path in ``IcebergWrites.cpp`` populates
-    ``column_sizes`` / ``null_value_counts`` / ``lower_bounds`` /
-    ``upper_bounds`` but never ``value_counts`` (the field is declared in
-    the Avro schema but left null). The scenario will flip to a pass
-    automatically once ClickHouse starts writing ``value_counts``.
+    """Per-column ``value_counts`` summed across data files equal the
+    exported row count. Currently XFail (``IcebergWrites.cpp`` leaves
+    ``value_counts`` null); flips to pass once it's populated.
     """
     source_table = f"mt_{getuid()}"
 
@@ -355,24 +303,10 @@ def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
 def data_file_paths_under_table_prefix(
     self, minio_root_user, minio_root_password
 ):
-    """Every ``data_file.file_path`` starts with the table's storage location.
-
-    Per the Iceberg spec the ``file_path`` field on a manifest entry is a
-    "Location URI with FS scheme", and with
-    ``write_full_path_in_iceberg_metadata = 1`` ClickHouse correctly sets
-    the table ``location`` in ``metadata.json`` to an absolute
-    ``s3://<bucket>/<prefix>/`` URI — we reuse that as the expected prefix
-    so this scenario is catalog-mode-agnostic.
-
-    Currently registered as XFail in ``regression.py``:
-    ``MultipleFileWriter.cpp`` (``startNewFile``) pushes
-    ``filename.path_in_storage`` into ``data_file_names``, which ends up
-    in the manifest entry's ``file_path``. The spec (and the sibling
-    ``location`` field) require the URI form from
-    ``filename.path_in_metadata`` — without it, Iceberg clients (PyIceberg,
-    Spark, Trino) that rely on the scheme to pick a FileIO will mis-route
-    reads. Scenario flips to pass as soon as ClickHouse writes the full
-    URI there.
+    """Every ``data_file.file_path`` starts with the table's storage
+    location (absolute ``s3://`` URI per the Iceberg spec). Currently
+    XFail: ``MultipleFileWriter::startNewFile`` writes
+    ``path_in_storage`` instead of ``path_in_metadata``.
     """
     source_table = f"mt_{getuid()}"
 
@@ -425,34 +359,12 @@ def data_file_paths_under_table_prefix(
 def external_reader_round_trips_exported_data(
     self, minio_root_user, minio_root_password
 ):
-    """A standalone Iceberg reader can actually read back the exported rows.
-
-    The sibling scenario :func:`data_file_paths_under_table_prefix` catches
-    the ``path_in_storage`` vs ``path_in_metadata`` regression by static
-    inspection of the manifest entries. This scenario exercises the
-    **user-visible impact** of that same bug: anything that dispatches
-    FileIO by URI scheme (Spark, Trino, PyIceberg, duckdb) cannot find the
-    parquet files when ``data_file.file_path`` is missing a scheme.
-
-    ClickHouse itself is immune because it resolves bucket-relative paths
-    against the IcebergS3 engine's configured bucket — which is why the
-    bug slipped past self-round-trip tests like
-    ``assert_source_and_destination_match``. Here we go around ClickHouse:
-    we load the table via PyIceberg (whose FileIO *is* registered for
-    ``s3://`` via the ``StaticTable`` properties in
-    :func:`load_pyiceberg_table`) and ask it to materialise the rows.
-
-    Pre-fix failure mode: ``table.scan().to_arrow()`` walks the manifest,
-    tries to open each ``data_file.file_path``, finds no URI scheme, falls
-    back to PyArrow's local filesystem, and raises
-    ``FileNotFoundError: Failed to open local file '/data/<dest>/data/...parquet'``.
-    Post-fix: paths come back as ``s3://warehouse/...``, the S3 FileIO
-    resolves them against MinIO, and the scan returns the exported rows.
-
-    Registered as XFail in ``regression.py`` alongside the static
-    companion; remove both entries at the same time once
-    ``MultipleFileWriter::startNewFile`` pushes ``path_in_metadata``
-    instead of ``path_in_storage`` into ``data_file_names``.
+    """PyIceberg (a non-ClickHouse reader) can scan the destination and
+    materialise the exported rows. Companion to
+    :func:`data_file_paths_under_table_prefix`: exercises the user-visible
+    impact of bucket-relative ``data_file.file_path`` for clients that
+    dispatch FileIO by URI scheme. Currently XFail; flips with the same
+    ``MultipleFileWriter::startNewFile`` fix.
     """
     source_table = f"mt_{getuid()}"
     expected_values = [(1, 2020), (2, 2020), (3, 2020)]

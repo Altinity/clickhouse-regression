@@ -1,49 +1,18 @@
 """ClickHouse -> Iceberg data type coverage for EXPORT PARTITION.
 
-Every supported primitive / nested type in
-``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp::getIcebergType`` has an
-``accepted_*`` scenario that:
+Round-trips every supported primitive / nested type in
+``getIcebergType`` (``accepted_*``) and asserts every type the switch
+omits is rejected at CREATE-TABLE or EXPORT time (``rejected_*``).
 
-1. Creates a MergeTree source with one partition column (``year Int32``) and
-   one value column of the type under test.
-2. Inserts a small, type-representative payload.
-3. Creates a matching Iceberg destination with the same column list.
-4. Exports the single partition.
-5. Reads the destination back through ClickHouse and asserts byte-identical
-   output against the source for that partition.
-
-Additionally, a ``rejected_*`` scenario exists for every ClickHouse type that
-``getIcebergType`` does **not** handle in its ``switch``: those must fail
-either at ``CREATE TABLE`` of the IcebergS3 destination (when ClickHouse
-materialises the initial ``metadata.json`` schema) *or* at ``EXPORT
-PARTITION`` time, but never silently accept and lose data. A small helper
-captures "rejected at either step" so it doesn't matter which layer catches
-the unsupported type.
-
-The ClickHouse -> Iceberg primitive mapping exercised here (from
-``Utils.cpp``):
-
-================= =========== ================
-ClickHouse type   Iceberg     required?
-================= =========== ================
-Int16/UInt16      int         true
-Int32/UInt32      int         true
-Int64/UInt64      long        true
-Float32           float       true
-Float64           double      true
-Date / Date32     date        true
-DateTime/DT64     timestamp   true
-Time              time        true
-String            string      true
-UUID              uuid        true
-Tuple(...)        struct      true
-Array(T)          list        non-required
-Map(K, V)         map         true
-Nullable(T)       <T>         false
-================= =========== ================
-
-Types deliberately absent from that switch — ``Int8`` / ``UInt8`` / ``Bool``
-/ ``FixedString`` / ``Decimal`` / ``Enum8`` / ``LowCardinality(String)`` —
+ClickHouse -> Iceberg primitive mapping exercised here:
+``Int16/UInt16`` / ``Int32/UInt32`` / ``Int64/UInt64`` -> ``int`` /
+``int`` / ``long``; ``Float32`` / ``Float64`` -> ``float`` / ``double``;
+``Date`` / ``Date32`` -> ``date``; ``DateTime`` / ``DateTime64`` ->
+``timestamp``; ``Time`` -> ``time``; ``String`` -> ``string``; ``UUID``
+-> ``uuid``; ``Tuple`` -> ``struct``; ``Array(T)`` -> ``list``;
+``Map(K, V)`` -> ``map``; ``Nullable(T)`` -> required=false. Types
+absent from the switch (``Int8`` / ``UInt8`` / ``Bool`` /
+``FixedString`` / ``Decimal`` / ``Enum8`` / ``LowCardinality(String)``)
 power the ``rejected_*`` scenarios.
 """
 
@@ -86,25 +55,10 @@ def _run_accepted_type(
     select_expr="*",
 ):
     """Round-trip a partition through a destination whose value column has
-    the type under test.
-
-    The fixed partition column is ``year Int32`` so this function exercises
-    *only* the non-partition column type.
-
-    Args:
-        value_column: Column definition under test, e.g. ``"v Int64"``.
-        values: Row payload for the source. Must land in partition ``year =
-            2020`` and be ordered deterministically by ``id`` for the
-            source/destination byte-compare to work.
-        expected_rows: Optional override for the row count assertion.
-            Defaults to the number of rows in ``values``.
-        select_expr: SELECT expression applied to *both* the source and the
-            destination when computing the byte-compare. Use this to
-            normalise types whose default ``TabSeparated`` formatting
-            differs between ClickHouse's native representation and
-            ClickHouse's read-back from Iceberg (e.g. ``DateTime`` prints
-            seconds but comes back from Iceberg ``timestamp`` as
-            ``DateTime64(6)`` microseconds). Defaults to ``"*"``.
+    the type under test (partition column is fixed at ``year Int32``).
+    ``select_expr`` lets the caller normalise type-specific
+    ``TabSeparated`` formatting differences between source and Iceberg
+    read-back.
     """
     columns = f"id Int64, year Int32, {value_column}"
     partition_by = "year"
@@ -264,11 +218,8 @@ def accepted_int64(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("accepted: UInt32")
 def accepted_uint32(self, minio_root_user, minio_root_password):
-    """ClickHouse UInt32 -> Iceberg int (required).
-
-    Iceberg ints are 32-bit signed; UInt32 values above 2^31-1 are out of
-    range for the target type, so this scenario stays strictly inside the
-    signed range and exercises the "UInt32 maps to int" half of the mapping.
+    """ClickHouse UInt32 -> Iceberg int (values pinned to the signed 32-bit
+    range since Iceberg ``int`` is 32-bit signed).
     """
     _run_accepted_type(
         minio_root_user=minio_root_user,
@@ -329,12 +280,9 @@ def accepted_date32(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("accepted: DateTime")
 def accepted_datetime(self, minio_root_user, minio_root_password):
-    """ClickHouse DateTime -> Iceberg timestamp.
-
-    Iceberg ``timestamp`` is microsecond-precision, so ClickHouse reads the
-    destination back as ``DateTime64(6)`` — its TabSeparated output prints
-    six fractional digits while the source ``DateTime`` prints seconds.
-    Both sides are normalised to ``DateTime64(6)`` for the byte-compare.
+    """ClickHouse DateTime -> Iceberg timestamp; both sides normalised
+    to ``DateTime64(6)`` for the byte-compare (Iceberg timestamps are
+    microsecond-precision).
     """
     _run_accepted_type(
         minio_root_user=minio_root_user,
@@ -352,12 +300,8 @@ def accepted_datetime(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("accepted: DateTime64(3)")
 def accepted_datetime64(self, minio_root_user, minio_root_password):
-    """ClickHouse DateTime64(3) -> Iceberg timestamp.
-
-    Iceberg ``timestamp`` is microsecond-precision; the destination reads
-    back as ``DateTime64(6)``. Both sides are normalised to ``DateTime64(6)``
-    for the byte-compare (the underlying microsecond values are identical;
-    only the printed precision differs).
+    """ClickHouse DateTime64(3) -> Iceberg timestamp; both sides
+    normalised to ``DateTime64(6)`` for the byte-compare.
     """
     _run_accepted_type(
         minio_root_user=minio_root_user,
@@ -408,10 +352,8 @@ def accepted_uuid(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("accepted: Nullable(Int64) with explicit NULLs")
 def accepted_nullable_int64(self, minio_root_user, minio_root_password):
-    """``Nullable(Int64)`` maps to Iceberg ``long`` with ``required = false``.
-
-    The payload mixes NULLs and non-NULLs so we verify both the mapping and
-    the null propagation end-to-end.
+    """``Nullable(Int64)`` -> Iceberg ``long`` with ``required = false``;
+    payload mixes NULLs and non-NULLs.
     """
     _run_accepted_type(
         minio_root_user=minio_root_user,
@@ -522,10 +464,8 @@ def rejected_uint8(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("rejected: Bool")
 def rejected_bool(self, minio_root_user, minio_root_password):
-    """``Bool`` is not handled by ``getIcebergType`` — must be rejected.
-
-    Iceberg does have a ``boolean`` primitive, so this is a known mapping
-    gap worth surfacing: a follow-up could add the case to ``Utils.cpp``.
+    """``Bool`` is not handled by ``getIcebergType`` — must be rejected
+    (Iceberg has ``boolean``, so this is a known mapping gap).
     """
     _run_rejected_type(
         minio_root_user=minio_root_user,
@@ -554,11 +494,8 @@ def rejected_fixed_string(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("rejected: Decimal(10, 2)")
 def rejected_decimal(self, minio_root_user, minio_root_password):
-    """``Decimal`` is not handled by ``getIcebergType`` — must be rejected.
-
-    Iceberg ``decimal(P, S)`` is a first-class type, so this is another
-    known mapping gap (the Iceberg reader side supports it; the writer
-    side in ``Utils.cpp`` does not yet).
+    """``Decimal`` is not handled by ``getIcebergType`` — must be rejected
+    (Iceberg has ``decimal``, so this is another known mapping gap).
     """
     _run_rejected_type(
         minio_root_user=minio_root_user,
@@ -571,10 +508,8 @@ def rejected_decimal(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("rejected: Enum8")
 def rejected_enum8(self, minio_root_user, minio_root_password):
-    """``Enum8`` has no ``getIcebergType`` mapping — must be rejected.
-
-    Iceberg has no native enum type; the pragmatic mapping would be
-    ``string``, but today ClickHouse refuses rather than coerce.
+    """``Enum8`` has no ``getIcebergType`` mapping — must be rejected
+    (Iceberg has no native enum; ClickHouse refuses to coerce to string).
     """
     _run_rejected_type(
         minio_root_user=minio_root_user,
@@ -587,11 +522,8 @@ def rejected_enum8(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("rejected: LowCardinality(String)")
 def rejected_low_cardinality(self, minio_root_user, minio_root_password):
-    """``LowCardinality(String)`` is not unwrapped by ``getIcebergType`` —
-    must be rejected.
-
-    A natural fix would be to pass through to the wrapped type (like
-    ``Nullable``), but today the mapping is missing.
+    """``LowCardinality(String)`` is not unwrapped by ``getIcebergType``
+    — must be rejected.
     """
     _run_rejected_type(
         minio_root_user=minio_root_user,
@@ -643,25 +575,9 @@ REJECTED_SCENARIOS = (
 @Name("datatypes")
 def feature(self, minio_root_user, minio_root_password):
     """ClickHouse -> Iceberg data type coverage for EXPORT PARTITION.
-
-    Every scenario runs with ``flags=TE`` so a single data-type mismatch
-    (expected in early iterations of the Antalya feature) does not mask
-    the rest of the matrix.
-
-    Gated to ``no_catalog`` only. The module exercises the CH -> Iceberg
-    write-side mapping defined in
-    ``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp::getIcebergType``,
-    plus a round-trip byte-compare against the source. Under Ice / Glue
-    the destination is re-read through ``DataLakeCatalog``, whose
-    Iceberg-engine reader widens a few primitives on read-back
-    (``date`` -> ``Date32``, ``timestamp`` -> ``DateTime64``) — the
-    ``accepted: Date`` / ``accepted: DateTime`` byte-compares then fail
-    even though the Iceberg file itself is correct. The widening is a
-    property of the CH Iceberg *reader*, not of ``EXPORT PARTITION``;
-    the write-side mapping is identical in both modes, so the test
-    carries no additional signal under catalog mode. The ``rejected_*``
-    scenarios likewise target CH-side diagnostics that the catalog
-    translator pre-empts.
+    ``no_catalog`` only — under Ice / Glue the catalog reader widens
+    ``Date`` / ``DateTime`` on read-back and breaks the byte-compare
+    even though the Iceberg file is correct.
     """
     _require_no_catalog(
         "CH -> Iceberg write-side type mapping is identical across modes; "

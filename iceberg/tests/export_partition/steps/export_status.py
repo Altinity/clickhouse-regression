@@ -18,6 +18,10 @@ import json
 from testflows.core import *
 from testflows.asserts import error
 
+from iceberg.tests.export_partition.steps.iceberg_destination import (
+    as_system_destination_table,
+)
+
 
 def _prefer_remote_settings():
     """Setting applied to queries against ``system.replicated_partition_exports``
@@ -223,11 +227,15 @@ def wait_for_exports_to_settle(
 ):
     """Wait until every row matching the filter reaches a terminal status.
 
-    A terminal status is one of ``COMPLETED``, ``FAILED`` or ``CANCELLED``:
-    once all matching rows are there the underlying background task has
-    either committed its snapshot or given up. Useful for scenarios that
-    issue an ALTER expected to fail at parse/schedule time but still leave
-    one of the EXPORT entries running in the background (e.g. the
+    A terminal status is one of ``COMPLETED``, ``FAILED`` or ``KILLED``
+    (the four-state enum the design specifies for
+    ``system.replicated_partition_exports`` is ``PENDING`` /
+    ``COMPLETED`` / ``FAILED`` / ``KILLED``; there is no ``CANCELLED``
+    state). Once all matching rows are in a terminal state the
+    underlying background task has either committed its snapshot or
+    given up. Useful for scenarios that issue an ALTER expected to fail
+    at parse/schedule time but still leave one of the EXPORT entries
+    running in the background (e.g. the
     duplicate-EXPORT-inside-one-ALTER scenario in ``concurrent_writes.py``
     - the client sees ``BAD_ARGUMENTS`` for the second entry while the
     first entry's commit is still in flight, which races PyIceberg against
@@ -258,7 +266,7 @@ def wait_for_exports_to_settle(
             last_pending = node.query(
                 f"SELECT count() FROM system.replicated_partition_exports "
                 f"WHERE {where_clause} "
-                f"  AND status NOT IN ('COMPLETED', 'FAILED', 'CANCELLED')",
+                f"  AND status NOT IN ('COMPLETED', 'FAILED', 'KILLED')",
                 settings=settings,
             ).output.strip()
             assert last_pending == "0", error(
@@ -330,3 +338,106 @@ def get_exported_part_log(self, node=None):
         "SELECT part_name FROM system.part_log WHERE event_type = 'ExportPart'"
     ).output
     return [line.strip() for line in output.splitlines() if line.strip()]
+
+
+def _export_zk_path(source_table, destination, partition_id, ch_database="default"):
+    """Construct the ZK path that holds the export task entry for one
+    ``(source_table, partition_id, destination)`` triple.
+
+    Mirrors the ``{partition_id}_{database}.{destination_table}`` export
+    key convention ClickHouse stores under
+    ``/clickhouse/tables/{source_table}/exports/`` (see e.g.
+    ``ExportPartitionUtils::commit`` and the integration helpers shipped
+    with the upstream EXPORT PARTITION PR).
+
+    ``ch_database`` defaults to ``default`` because the regression suite
+    runs all scenarios against ClickHouse's default database.
+
+    Note that the destination side of the key is the *unqualified* table
+    name CH stores in ``system.replicated_partition_exports.destination_table``,
+    not the catalog-qualified identifier passed to ``ALTER TABLE``;
+    :func:`as_system_destination_table` already implements that split.
+    """
+    dest_table = as_system_destination_table(destination)
+    export_key = f"{partition_id}_{ch_database}.{dest_table}"
+    return f"/clickhouse/tables/{source_table}/exports/{export_key}"
+
+
+@TestStep(When)
+def get_export_commit_attempts(
+    self,
+    source_table,
+    destination,
+    partition_id,
+    node=None,
+    ch_database="default",
+):
+    """Read the ``commit_attempts`` znode value for an export task.
+
+    Returns the integer value, or ``None`` if the znode does not exist
+    (the export hasn't reached the commit stage yet, or has not failed
+    once).
+
+    This is the authoritative "is the commit retry loop active?"
+    signal: ``ExportPartitionUtils::handleCommitFailure`` increments
+    this znode on every failed commit attempt. The
+    ``system.replicated_partition_exports.exception_count`` column does
+    *not* aggregate these failures reliably as of the EXPORT PARTITION
+    implementation PR (see the upstream test
+    ``test_export_task_timeout_kills_stuck_pending_task`` and its TODO),
+    so commit-failpoint scenarios poll this znode directly.
+    """
+    if node is None:
+        node = self.context.node
+    path = _export_zk_path(source_table, destination, partition_id, ch_database)
+    output = node.query(
+        f"SELECT value FROM system.zookeeper "
+        f"WHERE path = '{path}' AND name = 'commit_attempts'"
+    ).output.strip()
+    return int(output) if output else None
+
+
+@TestStep(When)
+def get_export_zk_last_exception(
+    self,
+    source_table,
+    destination,
+    partition_id,
+    replica_name="replica1",
+    node=None,
+    ch_database="default",
+):
+    """Read the per-replica ``last_exception`` znode for an export task.
+
+    Returns the exception text or ``""`` when the znode is empty / absent.
+
+    The znode lives under
+    ``.../exports/{export_key}/exceptions_per_replica/{replica}/last_exception``
+    and exposes the most recent commit-side failure recorded by that
+    replica. We read it directly because the system table aggregation
+    over ``exceptions_per_replica`` is currently incomplete (same caveat
+    as :func:`get_export_commit_attempts`).
+
+    Caveat for KILL-path scenarios
+    ------------------------------
+    The first commit attempt fires synchronously in
+    ``handlePartExportSuccess``, but the manifest-updating task only
+    flushes ``exceptions_per_replica`` on its ~30s poll cycle. A
+    KILL that lands inside that window leaves the znode empty, so
+    callers that issue a user-initiated KILL during commit retry
+    should not assume this helper returns a non-empty string.
+    Scenarios that *can* assume it (e.g. timeout-based FAILED/KILLED
+    where the engine itself waited a poll cycle) are the natural
+    callers; otherwise, drop the assertion.
+    """
+    if node is None:
+        node = self.context.node
+    path = (
+        f"{_export_zk_path(source_table, destination, partition_id, ch_database)}"
+        f"/exceptions_per_replica/{replica_name}/last_exception"
+    )
+    output = node.query(
+        f"SELECT value FROM system.zookeeper "
+        f"WHERE path = '{path}' AND name = 'exception'"
+    ).output.strip()
+    return output
