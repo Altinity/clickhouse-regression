@@ -413,7 +413,7 @@ def feature(self, minio_root_user, minio_root_password):
 
     Gated to ``no_catalog`` only. The module exercises ClickHouse's own
     ``checkExportPartitionDestinationIsCompatible`` surface: source
-    ``PARTITION BY`` vs destination ``PARTITION BY``. Under REST / Glue
+    ``PARTITION BY`` vs destination ``PARTITION BY``. Under Ice / Glue
     the destination is materialised by PyIceberg and re-read through
     ``DataLakeCatalog``, which rewrites a few CH types on read-back
     (``Date``->``Date32``, ``DateTime``->``DateTime64``) — the

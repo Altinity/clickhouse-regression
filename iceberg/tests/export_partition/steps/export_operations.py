@@ -437,7 +437,7 @@ def kill_export_partition(
     stores — an unqualified ``ns.tbl`` split out from the catalog-mode
     identifier ``datalake_xxx.\\`ns.tbl\\``` (see the helper's docstring
     for the rationale). Using the fully-qualified SQL identifier here
-    would match no row under REST / Glue and silently leave the target
+    would match no row under Ice / Glue and silently leave the target
     PENDING, which is the Phase 3 regression this fixed.
     """
     if node is None:

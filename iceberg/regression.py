@@ -66,12 +66,13 @@ xfails = {
             "xfail alongside the manifest-integrity one above.",
         )
     ],
-    "/iceberg/export partition/rest catalog/truncate/export after truncate repopulates destination": [
+    "/iceberg/export partition/ice catalog/truncate/export after truncate repopulates destination": [
         (
             Fail,
             "ClickHouse bug: TRUNCATE and EXPORT disagree on the Iceberg "
-            "metadata path format under REST. EXPORT commits manifest / "
-            "manifest-list entries as bucket-relative paths "
+            "metadata path format under Ice (ice-rest-catalog / Iceberg REST "
+            "Catalog Spec). EXPORT commits manifest / manifest-list entries "
+            "as bucket-relative paths "
             "(`/data/<table>/metadata/snap-...avro`). "
             "`IcebergMetadata::truncate` instead serialises those same "
             "entries as full `s3://bucket/...` URIs. When the next "

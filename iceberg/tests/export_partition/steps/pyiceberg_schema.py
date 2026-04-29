@@ -6,7 +6,7 @@ mode those strings go straight into ``CREATE TABLE ... ENGINE = IcebergS3(...)``
 and ClickHouse builds the Iceberg schema server-side from ``getIcebergType`` in
 ``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp``.
 
-In REST / Glue mode the Iceberg table has to pre-exist in the external catalog
+In Ice / Glue mode the Iceberg table has to pre-exist in the external catalog
 before ClickHouse can point a ``DataLakeCatalog`` database at it (catalog-
 backed databases are read-only for DDL on the CH side). We therefore need to
 reproduce the same CH -> Iceberg mapping on the Python side so that

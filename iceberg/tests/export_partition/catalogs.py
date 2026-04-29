@@ -109,12 +109,12 @@ def _require_mode(expected):
 def _require_external_catalog():
     """Skip the scenario in ``no_catalog`` mode.
 
-    REST and Glue both exercise the ``catalog->updateMetadata`` commit path,
+    Ice and Glue both exercise the ``catalog->updateMetadata`` commit path,
     so scenarios that target that path run under either mode; only ``no`` is
     meaningfully different (no external catalog to talk to).
     """
     actual = current().context.catalog
-    if actual not in ("rest", "glue"):
+    if actual not in ("ice", "glue"):
         skip(
             f"scenario targets catalog-backed destinations; current mode is "
             f"{actual!r} (no external catalog)"
@@ -291,7 +291,7 @@ def catalog_export_appends_snapshot_visible_via_catalog(
 
     Steps:
         1. Materialise an empty Iceberg table through PyIceberg's
-           ``catalog.create_table`` (REST or Glue, selected by the outer
+           ``catalog.create_table`` (Ice or Glue, selected by the outer
            feature loop). This mirrors how users would bootstrap a
            catalog-managed destination.
         2. Wire ClickHouse to the same catalog via a ``DataLakeCatalog``
@@ -384,7 +384,7 @@ def catalog_external_reader_round_trips_exported_data(
     Mirrors
     :func:`iceberg.tests.export_partition.manifest_integrity.external_reader_round_trips_exported_data`
     but for catalog-managed tables: here the metadata pointer comes from
-    the catalog (REST / Glue) rather than from scanning an S3 warehouse
+    the catalog (Ice / Glue) rather than from scanning an S3 warehouse
     prefix. Catching a regression in which ``EXPORT PARTITION`` mutates the
     catalog pointer but leaves the data files unreadable would surface
     here — if it fires in the wild, users of Spark / Trino / duckdb / dbt
@@ -466,7 +466,7 @@ SCENARIOS = (
 @Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration("1.0"))
 @Name("catalogs")
 def feature(self, minio_root_user, minio_root_password):
-    """Catalog-specific export paths (no_catalog today, REST/Glue pending)."""
+    """Catalog-specific export paths (no_catalog today, Ice/Glue pending)."""
     for scenario in SCENARIOS:
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,

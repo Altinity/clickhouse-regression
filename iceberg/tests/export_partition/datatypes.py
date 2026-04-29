@@ -651,7 +651,7 @@ def feature(self, minio_root_user, minio_root_password):
     Gated to ``no_catalog`` only. The module exercises the CH -> Iceberg
     write-side mapping defined in
     ``Storages/ObjectStorage/DataLakes/Iceberg/Utils.cpp::getIcebergType``,
-    plus a round-trip byte-compare against the source. Under REST / Glue
+    plus a round-trip byte-compare against the source. Under Ice / Glue
     the destination is re-read through ``DataLakeCatalog``, whose
     Iceberg-engine reader widens a few primitives on read-back
     (``date`` -> ``Date32``, ``timestamp`` -> ``DateTime64``) — the
