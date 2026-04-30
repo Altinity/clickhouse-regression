@@ -126,22 +126,18 @@ def date_datetime_column_types(self):
         )
 
         if check_clickhouse_version("<=26.1")(self):
-            clickhouse_local(
-                query=f"create table {table_name} (d DateTime) Engine=Memory as select "
-                "toDateTime('2000-01-01 00:00:00', 'UTC');"
-                f" select *, timezone() from {table_name} where d = '2000-01-01 00:00:00' "
-                "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;",
-                message="2000-01-01 00:00:00\tAsia/Novosibirsk",
-            )
+            message = "2000-01-01 00:00:00\tAsia/Novosibirsk"
         else:
             # https://github.com/ClickHouse/ClickHouse/issues/103732
-            clickhouse_local(
-                query=f"create table {table_name} (d DateTime) Engine=Memory as select "
-                "toDateTime('2000-01-01 00:00:00', 'UTC');"
-                f" select *, timezone() from {table_name} where d = '2000-01-01 00:00:00' "
-                "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;",
-                message="",
-            )
+            message = ""
+
+        clickhouse_local(
+            query=f"create table {table_name} (d DateTime) Engine=Memory as select "
+            "toDateTime('2000-01-01 00:00:00', 'UTC');"
+            f" select *, timezone() from {table_name} where d = '2000-01-01 00:00:00' "
+            "settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;",
+            message=message,
+        )
 
 
 @TestScenario
