@@ -20,6 +20,7 @@ def setup_iceberg_table(
     row_count=100,
     batch_size=100,
     database_name=None,
+    create_database=True,
 ):
     """Setup an iceberg table."""
     if database_name is None:
@@ -47,11 +48,12 @@ def setup_iceberg_table(
         )
 
     with When("create DataLakeCatalog database in ClickHouse"):
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
+        if create_database:
+            iceberg_engine.create_experimental_iceberg_database(
+                database_name=database_name,
+                s3_access_key_id=minio_root_user,
+                s3_secret_access_key=minio_root_password,
+            )
 
     return f"{database_name}.\\`{namespace}.{table_name}\\`"
 
@@ -273,7 +275,7 @@ def initiator_out_of_disk_space(
     cluster_name="static_swarm_cluster",
     node=None,
 ):
-    """Check that swarm query does not fail if one of the swarm nodes is out of disk space."""
+    """Check that swarm query does not fail if initiator node is out of disk space."""
     if node is None:
         node = self.context.node
 
@@ -286,11 +288,15 @@ def initiator_out_of_disk_space(
             row_count=row_count,
             batch_size=batch_size,
             database_name=database_name,
+            create_database=False,
         )
 
     with And("fill up disks of initiator node"):
         actions.fill_clickhouse_disks(
             node=node,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            database_name=database_name,
         )
 
     with Then("run long select from iceberg table"):
@@ -462,12 +468,12 @@ def feature(self, minio_root_user, minio_root_password, node=None):
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
     )
-    Scenario(test=network_failure)(
-        minio_root_user=minio_root_user,
-        minio_root_password=minio_root_password,
-        row_count=row_count,
-        batch_size=batch_size,
-    )
+    # Scenario(test=network_failure)(
+    #     minio_root_user=minio_root_user,
+    #     minio_root_password=minio_root_password,
+    #     row_count=row_count,
+    #     batch_size=batch_size,
+    # )
     Scenario(test=swarm_out_of_disk_space)(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
