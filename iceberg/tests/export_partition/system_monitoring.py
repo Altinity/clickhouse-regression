@@ -1,20 +1,8 @@
 """``system.replicated_partition_exports`` / profile event monitoring.
 
-These scenarios verify that an observer can reconstruct "what happened"
-from the system tables alone:
-
-* :func:`system_table_columns_populated_on_success` - every column that
-  the Iceberg PR adds to ``system.replicated_partition_exports`` carries
-  a meaningful value once the export reaches ``COMPLETED`` and
-  ``parts_to_do`` converges to zero.
-* :func:`part_log_records_exported_parts` - ``system.part_log`` gains one
-  ``ExportPart`` entry per exported part and no duplicate entries.
-* :func:`profile_events_increment_on_success` - ``PartsExports`` and the
-  ``ExportPartitionZooKeeper*`` counters increase by a plausible amount
-  around a successful export.
-* :func:`kill_export_preserves_provenance` - ``KILL EXPORT PARTITION``
-  transitions the row to ``KILLED`` and preserves ``source_replica`` and
-  ``create_time`` instead of clearing them.
+Verifies that an observer can reconstruct "what happened" from the system
+tables alone (column population, part-log entries, profile events) and
+that provenance fields survive ``KILL EXPORT PARTITION``.
 """
 
 import time
@@ -40,6 +28,7 @@ from iceberg.tests.export_partition.steps.export_status import (
     get_exported_part_log,
     wait_for_export_status,
     wait_for_export_to_start,
+    wait_for_exports_to_settle,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_system_destination_table,
@@ -72,20 +61,9 @@ def _seed_source_two_partitions():
 def system_table_columns_populated_on_success(
     self, minio_root_user, minio_root_password
 ):
-    """Once ``status = COMPLETED`` every observable column is meaningful.
-
-    We explicitly assert:
-
-    * ``source_database`` / ``source_table`` / ``destination_table`` match
-      the values in the ALTER;
-    * ``partition_id`` is the ID we asked for;
-    * ``parts_count`` equals the number of parts that made up the partition
-      and ``parts_to_do`` has converged to zero;
-    * ``source_replica`` is non-empty (it identifies which node scheduled
-      the export);
-    * ``create_time`` is a real timestamp (not the epoch);
-    * ``exception_count`` is zero and ``last_exception`` is empty on a
-      clean run.
+    """After a clean export, every column in ``system.replicated_partition_exports``
+    carries a meaningful value (identifiers match, ``parts_to_do`` converged,
+    provenance populated, no exceptions).
     """
     node = self.context.node
     source_table = _seed_source_two_partitions()
@@ -197,12 +175,8 @@ def system_table_columns_populated_on_success(
 def part_log_records_exported_parts(
     self, minio_root_user, minio_root_password
 ):
-    """Each exported part must produce exactly one ``ExportPart`` part-log
-    row on the replica that drove the export.
-
-    We keep the partition small (one part) to avoid fighting background
-    merges; the assertion is ``>= 1`` with ``parts_count`` from the
-    system table as an upper bound.
+    """Each exported part produces an ``ExportPart`` row in
+    ``system.part_log`` on the replica that drove the export.
     """
     node = self.context.node
     source_table = _seed_source_two_partitions()
@@ -247,10 +221,8 @@ def part_log_records_exported_parts(
 def profile_events_increment_on_success(
     self, minio_root_user, minio_root_password
 ):
-    """A clean export moves the ``PartsExports`` counter up by at least
-    the number of exported parts and the ZooKeeper counter by a positive
-    amount (the exact number depends on retries and manifest layout).
-    ``PartsExportFailures`` must not move during a happy-path run.
+    """``PartsExports`` and ``ExportPartitionZooKeeperRequests`` increase
+    around a clean export; ``PartsExportFailures`` does not move.
     """
     source_table = _seed_source_two_partitions()
 
@@ -309,12 +281,9 @@ def profile_events_increment_on_success(
 def kill_export_preserves_provenance(
     self, minio_root_user, minio_root_password
 ):
-    """After ``KILL EXPORT`` the system table still knows who scheduled
-    the export and when: ``source_replica`` and ``create_time`` stay
-    identical to the values observed in the PENDING row.
-
-    We park the scheduler with ``SYSTEM STOP MOVES`` so the PENDING row
-    is observable without a racing completion.
+    """``KILL EXPORT PARTITION`` transitions the row to ``KILLED`` and
+    preserves ``source_replica`` and ``create_time`` from the PENDING row.
+    The export is parked with ``SYSTEM STOP MOVES`` to keep PENDING observable.
     """
     node = self.context.node
     source_table = f"mt_{getuid()}"
@@ -407,11 +376,167 @@ def kill_export_preserves_provenance(
         )
 
 
+@TestScenario
+@Name("KILL EXPORT during commit preserves provenance and diagnostic fields")
+def kill_during_commit_preserves_provenance(
+    self, minio_root_user, minio_root_password
+):
+    """Provenance (``source_replica`` / ``create_time``) survives a KILL
+    issued while the export is retrying through the
+    ``export_partition_commit_always_throw`` failpoint, which keeps it
+    wedged in PENDING. Complements :func:`kill_export_preserves_provenance`
+    by exercising the in-flight commit path rather than STOP MOVES.
+
+    The terminal status decides assert-vs-skip: ``KILLED`` runs the
+    provenance asserts; ``COMPLETED`` / ``FAILED`` ``skip()`` (failpoint
+    ineffective or retries exhausted before we could KILL).
+    """
+    node = self.context.node
+    failpoint = "export_partition_commit_always_throw"
+    source_table = f"mt_{getuid()}"
+    with Given("create the source ReplicatedMergeTree"):
+        create_replicated_mergetree(
+            table_name=source_table,
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+        )
+    with And("insert one part into partition 2020"):
+        insert_data(
+            table_name=source_table, values="(1, 2020), (2, 2020), (3, 2020)"
+        )
+
+    with Given("create the Iceberg destination"):
+        destination = create_iceberg_destination(
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    failpoint_armed = False
+    in_flight_replica = None
+    in_flight_create_time = None
+    try:
+        with When(f"arm the {failpoint} REGULAR failpoint"):
+            node.query(f"SYSTEM ENABLE FAILPOINT {failpoint}")
+            failpoint_armed = True
+
+        with And("schedule EXPORT PARTITION with very high max_retries"):
+            export_partition(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+                wait_for_completion=False,
+                extra_settings=[
+                    ("export_merge_tree_partition_max_retries", 1000000),
+                ],
+            )
+
+        with And("wait for the export to appear in the system table"):
+            wait_for_export_to_start(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+            )
+
+        with And(
+            "sample provenance fields from the system table while the "
+            "export is still PENDING"
+        ):
+            in_flight_row = get_export_row(
+                source_table=source_table,
+                partition_id="2020",
+                destination=destination,
+                columns="source_replica, toUnixTimestamp(create_time)",
+            )
+            assert in_flight_row, error(
+                "Expected a system.replicated_partition_exports row "
+                "after wait_for_export_to_start"
+            )
+            in_flight_replica, in_flight_create_time = (
+                in_flight_row.split("\t")
+            )
+            assert in_flight_replica, error(
+                "source_replica empty in the in-flight row"
+            )
+            assert int(in_flight_create_time) > 0, error(
+                f"create_time should be populated in the in-flight row, "
+                f"got {in_flight_create_time!r}"
+            )
+
+        with When("KILL EXPORT PARTITION immediately while still PENDING"):
+            kill_export_partition(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+            )
+
+        with And(
+            "wait for any terminal status; treat the result as the "
+            "branch selector for assert-vs-skip"
+        ):
+            wait_for_exports_to_settle(
+                source_table=source_table,
+                destination=destination,
+                partition_id="2020",
+                timeout=120,
+            )
+            terminal_status = get_export_row(
+                source_table=source_table,
+                partition_id="2020",
+                destination=destination,
+                columns="status",
+            )
+            if terminal_status == "COMPLETED":
+                skip(
+                    f"Build registers {failpoint!r} but the export "
+                    f"committed cleanly before our KILL took effect; "
+                    f"the failpoint is not effective on the commit "
+                    f"path in this build, so the KILL-during-commit "
+                    f"surface cannot be exercised."
+                )
+            if terminal_status == "FAILED":
+                skip(
+                    f"export reached FAILED before we KILLed it "
+                    f"(status={terminal_status!r}); cannot run the "
+                    f"KILL-path provenance assertions."
+                )
+            assert terminal_status == "KILLED", error(
+                f"Expected terminal status KILLED, COMPLETED, or "
+                f"FAILED; got {terminal_status!r}"
+            )
+    finally:
+        if failpoint_armed:
+            with Finally(f"disable {failpoint}"):
+                node.query(f"SYSTEM DISABLE FAILPOINT {failpoint}")
+
+    with Then(
+        "KILLED row preserves source_replica + create_time observed "
+        "while the export was still in-flight"
+    ):
+        killed_row = get_export_row(
+            source_table=source_table,
+            partition_id="2020",
+            destination=destination,
+            columns="source_replica, toUnixTimestamp(create_time)",
+        )
+        killed_replica, killed_create_time = killed_row.split("\t")
+        assert killed_replica == in_flight_replica, error(
+            f"source_replica changed across KILL: "
+            f"{in_flight_replica!r} -> {killed_replica!r}"
+        )
+        assert killed_create_time == in_flight_create_time, error(
+            f"create_time changed across KILL: "
+            f"{in_flight_create_time!r} -> {killed_create_time!r}"
+        )
+
+
 SCENARIOS = (
     system_table_columns_populated_on_success,
     part_log_records_exported_parts,
     profile_events_increment_on_success,
     kill_export_preserves_provenance,
+    kill_during_commit_preserves_provenance,
 )
 
 

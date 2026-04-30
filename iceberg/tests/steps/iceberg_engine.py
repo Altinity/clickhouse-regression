@@ -177,7 +177,11 @@ def create_experimental_iceberg_database(
     self,
     **kwargs,
 ):
-    if self.context.catalog == "rest":
+    # ``"rest"`` and ``"ice"`` both route through the same helper because
+    # ``ice-rest-catalog`` is the only REST catalog wired up in
+    # ``iceberg/iceberg_env``. See :func:`iceberg.tests.steps.catalog.create_catalog`
+    # for the rationale on the two labels.
+    if self.context.catalog in ("rest", "ice"):
         return create_experimental_iceberg_database_with_rest_catalog(
             **kwargs,
         )

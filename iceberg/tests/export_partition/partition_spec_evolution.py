@@ -1,20 +1,9 @@
 """Partition spec behaviour across sequential EXPORT PARTITION calls.
 
-ClickHouse's Iceberg ``ALTER`` path (``IcebergMetadata::checkAlterIsPossible``)
-only accepts ``ADD_COLUMN`` / ``DROP_COLUMN`` / ``MODIFY_COLUMN`` today, so
-partition-spec *evolution* cannot be triggered through ClickHouse DDL. That
-leaves two testable properties for this module:
-
-* Multiple sequential exports of **different** partitions under the same
-  ``PARTITION BY`` must all land in a single Iceberg partition spec
-  (``table.specs()`` stays size-1, ``default-spec-id`` never advances).
-* Per-partition manifest entries must tag each data file with the correct
-  partition-tuple values, so Iceberg readers can prune by partition.
-
-When ClickHouse learns to emit ``ALTER TABLE ... UPDATE SPEC ...`` this
-module should grow a third class of scenarios: exporting under spec v1,
-evolving the spec, exporting again under spec v2, and verifying both
-snapshots remain individually readable.
+ClickHouse cannot evolve the Iceberg partition spec via DDL today, so
+this module verifies the two testable invariants instead: a single
+``default-spec-id`` is preserved across exports, and per-partition
+manifest entries tag each data file with the correct partition tuple.
 """
 
 from testflows.core import *
@@ -45,14 +34,9 @@ from iceberg.tests.export_partition.steps.verification import (
 )
 
 
-# ClickHouse defaults to writing bucket-relative paths into the Iceberg
-# manifest-list ``manifest_path`` and snapshot ``manifest-list`` entries.
-# PyIceberg's StaticTable (no-catalog mode) then interprets those as local
-# paths and fails when the scenario tries to open them. Scenarios that
-# inspect manifest contents must flip ``write_full_path_in_iceberg_metadata``
-# on for both the ``CREATE TABLE`` (so the initial ``metadata.json``'s
-# ``location`` holds an ``s3://`` URI) and the ``EXPORT PARTITION``
-# (so every new snapshot's ``manifest-list`` location is absolute).
+# Required for any scenario that reads manifest contents via PyIceberg:
+# without ``s3://`` URIs in the metadata the StaticTable falls back to the
+# local filesystem.
 FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 
 
@@ -61,11 +45,8 @@ FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 def single_spec_for_multiple_partitions(
     self, minio_root_user, minio_root_password
 ):
-    """Export three distinct partitions one by one and verify the Iceberg
-    destination still advertises exactly one partition spec.
-
-    ``table.specs()`` is a ``Dict[int, PartitionSpec]``; ClickHouse should
-    keep writing under ``default-spec-id = 0`` for every export.
+    """Three sequential exports keep ``table.specs()`` size-1 with
+    ``default-spec-id = 0`` (no spec evolution).
     """
     source_table = f"mt_{getuid()}"
     columns = "id Int64, year Int32"
@@ -126,12 +107,8 @@ def single_spec_for_multiple_partitions(
 def partition_tuple_matches_partition_id(
     self, minio_root_user, minio_root_password
 ):
-    """For every partition we export, the manifest entry's partition tuple
-    must carry the same scalar value we used as ``partition_id``.
-
-    This is the basic Iceberg-readable promise: metadata pruning by
-    partition value can only work if the writer populated the partition
-    struct correctly.
+    """Every manifest entry's partition tuple matches the
+    ``partition_id`` we used when exporting that partition.
     """
     source_table = f"mt_{getuid()}"
     columns = "id Int64, year Int32"
@@ -200,9 +177,9 @@ def partition_tuple_matches_partition_id(
 def multi_column_partition_spec_preserved(
     self, minio_root_user, minio_root_password
 ):
-    """Source partitioned by ``(year, region)`` — the resulting Iceberg
-    partition spec must carry both identity fields (in order) and exports
-    must populate both positions of the partition tuple.
+    """A source partitioned by ``(year, region)`` produces an Iceberg
+    spec with both identity fields in declared order; every data file
+    carries a two-value partition tuple.
     """
     source_table = f"mt_{getuid()}"
     columns = "id Int64, year Int32, region String"
@@ -277,14 +254,7 @@ SCENARIOS = (
 @Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("partition spec evolution")
 def feature(self, minio_root_user, minio_root_password):
-    """Partition spec behaviour across sequential exports.
-
-    ClickHouse cannot evolve the Iceberg partition spec through DDL today
-    (see ``IcebergMetadata::checkAlterIsPossible``), so this module
-    verifies that the spec stays consistent across every export and that
-    per-partition tuples are preserved; true spec-evolution coverage is
-    TODO until the ClickHouse side gains ``UPDATE SPEC`` support.
-    """
+    """Partition spec behaviour across sequential exports."""
     for scenario in SCENARIOS:
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,

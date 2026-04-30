@@ -1,31 +1,9 @@
 """Direct INSERT scenarios against destinations previously populated by EXPORT PARTITION.
 
-Exercises the end-to-end path where ClickHouse first commits data through
-the new ``ALTER TABLE ... EXPORT PARTITION ... TO TABLE ...`` primitive
-and then keeps writing to the same Iceberg destination through the
-experimental ``INSERT INTO <iceberg_table>`` code path
-(``IcebergMetadata::write`` / ``IcebergWrites.cpp`` — same write path,
-different entrypoint).
-
-Gaps this fills:
-
-* Ensures INSERT commits see and extend the snapshot chain produced by
-  EXPORT instead of diverging / overwriting it.
-* Checks the destination stays readable through both ``IcebergS3`` (no
-  catalog) and ``DataLakeCatalog`` (rest / glue) after the mixed
-  commit sequence.
-* Under catalog mode, also confirms PyIceberg sees one strictly-growing
-  snapshot history (EXPORT → INSERT both appear as ``append`` ops).
-
-Glue notes:
-The ``apply_glue_metadata_path_workaround`` helper already forces
-``write_full_path_in_iceberg_metadata=1`` for every ``ALTER ... EXPORT
-PARTITION`` under Glue (see ``steps/export_operations.py``). Because
-the INSERT helper here goes through the same workaround, these
-scenarios are expected to pass on Glue too. If a new fail shows up
-under Glue specifically, xfail it here with a message that makes the
-bug obvious to triage — the rest of the suite should not be held back
-for a Glue-only regression.
+Verifies that ``INSERT INTO <iceberg_table>`` extends rather than
+overwrites the snapshot chain a previous ``EXPORT PARTITION`` produced,
+across catalog modes, and that PyIceberg sees a strictly-growing
+append-only history.
 """
 
 from testflows.core import *
@@ -63,13 +41,8 @@ SIMPLE_PARTITION_BY = "year"
 
 
 def _assert_snapshot_history_grows(destination, minio_root_user, minio_root_password, expected_at_least):
-    """PyIceberg sanity: snapshot history must be monotonically growing.
-
-    Only runs under catalog mode (``as_pyiceberg_handle`` returns the
-    catalog-backed dict). Under ``no_catalog`` the destination is an
-    ``IcebergS3`` table with no catalog handle; the row-count / data
-    parity checks in the scenario already cover the same invariant
-    there.
+    """Catalog-mode-only: assert PyIceberg sees a monotonically growing
+    snapshot history of at least ``expected_at_least`` entries.
     """
     if as_pyiceberg_handle(destination) is None:
         return
@@ -92,9 +65,8 @@ def _assert_snapshot_history_grows(destination, minio_root_user, minio_root_pass
 @TestScenario
 @Name("insert after export")
 def insert_after_export(self, minio_root_user, minio_root_password):
-    """Export one partition, then INSERT extra rows directly into the
-    same Iceberg destination. The destination must expose both sets of
-    rows on subsequent reads.
+    """``EXPORT PARTITION`` followed by ``INSERT INTO`` against the
+    same destination exposes both sets of rows on read.
     """
     source_table = f"mt_{getuid()}"
 
@@ -169,15 +141,10 @@ def insert_after_export(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("alternating export and insert")
 def alternating_export_insert(self, minio_root_user, minio_root_password):
-    """Interleave EXPORT PARTITION and INSERT statements against the
-    same destination to confirm the append-only snapshot chain stays
-    well-formed.
-
-    Sequence:
-        EXPORT 2020 -> INSERT {2021 rows} -> EXPORT 2022 -> INSERT {2023 rows}
-
-    Every stage is checked for the correct running row count so a
-    regression is localised to the exact transition that broke.
+    """Interleaved sequence ``EXPORT 2020 -> INSERT 2021 -> EXPORT 2022 ->
+    INSERT 2023`` keeps the append-only snapshot chain well-formed; the
+    running row count and per-partition projections are checked at every
+    stage.
     """
     source_table = f"mt_{getuid()}"
 

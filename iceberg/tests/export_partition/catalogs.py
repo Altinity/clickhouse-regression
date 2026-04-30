@@ -1,40 +1,9 @@
 """Catalog-specific scenarios for EXPORT PARTITION.
 
-The outer feature in :mod:`iceberg.tests.export_partition.feature` loops over
-``no``, ``rest`` and ``glue``; this module focuses on behaviour that only
-becomes interesting once the destination is viewed *through* a specific
-catalog integration.
-
-no_catalog (``ENGINE = IcebergS3``):
-    * :func:`no_catalog_read_via_icebergS3_table_function` - a committed
-      export is readable via the ``icebergS3`` table function (i.e. without
-      the destination CH table), confirming the metadata layout on disk.
-    * :func:`no_catalog_drop_destination_keeps_metadata` - dropping the CH
-      destination table does *not* erase the Iceberg metadata in MinIO;
-      recreating the IcebergS3 table against the same URL exposes the same
-      rows.
-
-rest / glue (``DataLakeCatalog`` + PyIceberg-materialised tables):
-    * :func:`catalog_export_appends_snapshot_visible_via_catalog` - driving
-      the ``IcebergMetadata::commitExportPartitionTransaction ->
-      catalog->updateMetadata`` path: ClickHouse sees the rows through the
-      ``DataLakeCatalog`` database *and* a fresh PyIceberg catalog handle
-      reports the new snapshot with the expected row count in its summary.
-    * :func:`catalog_external_reader_round_trips_exported_data` - PyIceberg
-      ``table.scan().to_arrow()`` against the catalog-backed table reads back
-      the committed rows through its own S3 FileIO, mirroring what Spark /
-      Trino / duckdb would do. This is the catalog-mode analogue of the
-      no-catalog external-reader scenario in
-      :mod:`iceberg.tests.export_partition.manifest_integrity`.
-
-Catalog-backed destinations can't reuse
-:func:`iceberg_destination.create_iceberg_destination` because
-``DataLakeCatalog`` databases in ClickHouse are read-only for DDL — the
-Iceberg table has to pre-exist in the catalog. We materialise it via
-PyIceberg's ``catalog.create_table`` through
-:func:`iceberg_destination.create_pyiceberg_catalog_destination`, matching
-the pattern used in the upstream
-``test_export_partition_iceberg_catalog.py`` integration test.
+Behaviour that only becomes interesting through a specific catalog
+integration: ``no_catalog`` (icebergS3 table function, drop-and-reattach)
+and ``rest`` / ``glue`` (``DataLakeCatalog`` commit path, external-reader
+round-trip via PyIceberg).
 """
 
 from testflows.core import *
@@ -107,14 +76,10 @@ def _require_mode(expected):
 
 
 def _require_external_catalog():
-    """Skip the scenario in ``no_catalog`` mode.
-
-    REST and Glue both exercise the ``catalog->updateMetadata`` commit path,
-    so scenarios that target that path run under either mode; only ``no`` is
-    meaningfully different (no external catalog to talk to).
-    """
+    """Skip the scenario in ``no_catalog`` mode (no external catalog to
+    commit to)."""
     actual = current().context.catalog
-    if actual not in ("rest", "glue"):
+    if actual not in ("ice", "glue"):
         skip(
             f"scenario targets catalog-backed destinations; current mode is "
             f"{actual!r} (no external catalog)"
@@ -141,15 +106,9 @@ def _seed_source():
 def no_catalog_read_via_icebergS3_table_function(
     self, minio_root_user, minio_root_password
 ):
-    """After an export the destination is readable through the ``icebergS3``
-    table function (i.e. bypassing the CH destination table).
-
-    This confirms two things that a catalog would otherwise hide:
-
-    1. ``metadata.json`` at the committed path parses without help from
-       ClickHouse's own storage entry.
-    2. The manifest layout resolves data files correctly when only the
-       storage URL is known.
+    """A committed export is readable via the ``icebergS3`` table
+    function (without the CH destination table), confirming the
+    on-disk metadata is self-contained.
     """
     _require_mode("no")
     source_table = _seed_source()
@@ -191,19 +150,9 @@ def no_catalog_read_via_icebergS3_table_function(
 def no_catalog_drop_destination_keeps_metadata(
     self, minio_root_user, minio_root_password
 ):
-    """In ``no_catalog`` mode the Iceberg metadata lives entirely in MinIO.
-
-    Dropping the ClickHouse ``IcebergS3`` table must not remove data files or
-    metadata; a fresh ``IcebergS3`` storage attached to the same URL via
-    ``CREATE TABLE IF NOT EXISTS`` must therefore see the previously
-    committed rows without the server having to rewrite any metadata.
-
-    The ``IF NOT EXISTS`` form is the documented way to re-open an existing
-    Iceberg location: a plain ``CREATE TABLE`` is deliberately rejected with
-    ``TABLE_ALREADY_EXISTS`` by ``IcebergMetadata::createIcebergTable``
-    whenever the prefix already contains ``metadata/*.metadata.json`` — the
-    safety check that prevents a fresh CREATE from silently overwriting an
-    unrelated table at the same URL.
+    """Dropping the ClickHouse ``IcebergS3`` destination keeps the
+    Iceberg metadata in MinIO; reattaching with ``CREATE TABLE IF NOT
+    EXISTS`` on the same URL exposes the previously committed rows.
     """
     _require_mode("no")
     node = self.context.node
@@ -287,31 +236,10 @@ def catalog_export_appends_snapshot_visible_via_catalog(
     self, minio_root_user, minio_root_password
 ):
     """``EXPORT PARTITION`` against a catalog-backed table drives the
-    ``catalog->updateMetadata`` commit path end-to-end.
-
-    Steps:
-        1. Materialise an empty Iceberg table through PyIceberg's
-           ``catalog.create_table`` (REST or Glue, selected by the outer
-           feature loop). This mirrors how users would bootstrap a
-           catalog-managed destination.
-        2. Wire ClickHouse to the same catalog via a ``DataLakeCatalog``
-           database so ``ALTER TABLE ... EXPORT PARTITION ... TO TABLE
-           <db>.`<ns.tbl>``` resolves the destination.
-        3. Seed a ``ReplicatedMergeTree`` source and export one partition.
-
-    Assertions (complementary sources, both must be satisfied):
-        * ClickHouse's own read path through the ``DataLakeCatalog`` DB
-          returns the 3 exported rows. This fails if the commit didn't land
-          in the catalog or if the catalog returned stale metadata.
-        * A **fresh** PyIceberg catalog handle (reloaded, not the one used
-          for creation) reports ``current_snapshot()`` with
-          ``summary['total-records'] == '3'``. This fails if the commit
-          went through CH's in-memory cache but the external catalog never
-          saw the update — the exact regression class that makes
-          catalog-managed setups undetectable from CH alone.
-
-    Scenario is skipped in ``no_catalog`` mode (there is no external
-    catalog to commit to).
+    ``catalog->updateMetadata`` path end-to-end. Both ClickHouse (via
+    ``DataLakeCatalog``) and a freshly reloaded PyIceberg handle must
+    see the new snapshot with ``total-records = 3``. Skipped under
+    ``no_catalog``.
     """
     _require_external_catalog()
     source_table = _seed_source()
@@ -378,19 +306,10 @@ def catalog_export_appends_snapshot_visible_via_catalog(
 def catalog_external_reader_round_trips_exported_data(
     self, minio_root_user, minio_root_password
 ):
-    """A non-ClickHouse Iceberg reader can follow the catalog's metadata
-    pointer and read the rows back byte-exact.
-
-    Mirrors
-    :func:`iceberg.tests.export_partition.manifest_integrity.external_reader_round_trips_exported_data`
-    but for catalog-managed tables: here the metadata pointer comes from
-    the catalog (REST / Glue) rather than from scanning an S3 warehouse
-    prefix. Catching a regression in which ``EXPORT PARTITION`` mutates the
-    catalog pointer but leaves the data files unreadable would surface
-    here — if it fires in the wild, users of Spark / Trino / duckdb / dbt
-    with an Iceberg catalog would hit the same failure.
-
-    Scenario is skipped in ``no_catalog`` mode.
+    """PyIceberg, following the catalog's metadata pointer, reads back
+    the exported rows byte-exact. Catalog-mode analogue of the
+    ``manifest_integrity`` external-reader scenario; skipped under
+    ``no_catalog``.
     """
     _require_external_catalog()
     source_table = _seed_source()
@@ -466,7 +385,7 @@ SCENARIOS = (
 @Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration("1.0"))
 @Name("catalogs")
 def feature(self, minio_root_user, minio_root_password):
-    """Catalog-specific export paths (no_catalog today, REST/Glue pending)."""
+    """Catalog-specific export paths (no_catalog today, Ice/Glue pending)."""
     for scenario in SCENARIOS:
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,

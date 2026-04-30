@@ -1,29 +1,9 @@
 """TRUNCATE scenarios against destinations previously populated by EXPORT PARTITION.
 
-Covers the experimental ``TRUNCATE TABLE <iceberg_dest>`` code path
-(``IcebergMetadata::truncate`` in ClickHouse) in the specific sequence
-the new EXPORT feature creates: a destination that already has one or
-more snapshots committed by ``ALTER ... EXPORT PARTITION`` is truncated
-and then re-exercised.
-
-Gaps this fills:
-
-* ``TRUNCATE`` after EXPORT: the destination goes back to zero rows and
-  subsequent reads do not see any exported data.
-* EXPORT after TRUNCATE: the destination can be populated again with
-  a fresh EXPORT and the snapshot chain stays append-only.
-
-Glue notes:
-``IcebergMetadata.cpp`` constructs the ``catalog_filename`` that gets
-committed to the external catalog separately from the one in
-``IcebergWrites.cpp`` we patched around for EXPORT. If TRUNCATE under
-Glue fails with the same double-slash symptom we saw earlier, that is
-a **second, distinct bug** — the per-scenario xfail here must call
-that out so we can triage whether to fix it upstream or leave it
-xfailed. The ``apply_glue_metadata_path_workaround`` default already
-forces ``write_full_path_in_iceberg_metadata=1`` for TRUNCATE just like
-EXPORT; if that is not enough, the fail is on the TRUNCATE-specific
-path in ``IcebergMetadata::truncate``.
+Verifies that ``TRUNCATE TABLE <iceberg_dest>`` against a destination
+already populated by EXPORT (or a mix of EXPORT and INSERT) drops to
+zero rows, that a follow-up EXPORT repopulates cleanly, and that the
+snapshot chain advances past the pre-truncate snapshot.
 """
 
 from testflows.core import *
@@ -61,10 +41,9 @@ SIMPLE_PARTITION_BY = "year"
 
 
 def _current_snapshot_id(destination, minio_root_user, minio_root_password):
-    """Return the current snapshot id for catalog-backed destinations, or
-    ``None`` for ``no_catalog`` mode (StaticTable has no live catalog
-    handle to refresh against, and the other row-count assertions cover
-    the invariant).
+    """Return the current snapshot id for catalog-backed destinations,
+    or ``None`` for ``no_catalog`` mode (no live catalog handle to
+    refresh against).
     """
     if as_pyiceberg_handle(destination) is None:
         return None
@@ -80,8 +59,8 @@ def _current_snapshot_id(destination, minio_root_user, minio_root_password):
 @TestScenario
 @Name("truncate after export")
 def truncate_after_export(self, minio_root_user, minio_root_password):
-    """Export a partition, TRUNCATE the destination, and confirm the
-    row count drops to zero.
+    """``TRUNCATE`` after ``EXPORT PARTITION`` drops the destination
+    back to zero rows.
     """
     source_table = f"mt_{getuid()}"
 
@@ -157,9 +136,8 @@ def truncate_after_export(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("export after truncate repopulates destination")
 def export_after_truncate(self, minio_root_user, minio_root_password):
-    """After TRUNCATE, a fresh EXPORT must populate the destination
-    again and leave a well-formed snapshot chain (truncate snapshot,
-    then the new append).
+    """After ``TRUNCATE`` a fresh ``EXPORT`` repopulates the destination
+    and the snapshot id advances past the pre-truncate one.
     """
     source_table = f"mt_{getuid()}"
 
@@ -245,8 +223,8 @@ def export_after_truncate(self, minio_root_user, minio_root_password):
 @TestScenario
 @Name("truncate after insert")
 def truncate_after_insert(self, minio_root_user, minio_root_password):
-    """Mix EXPORT and INSERT, then TRUNCATE; destination must drop
-    everything regardless of which write path committed the rows.
+    """``TRUNCATE`` drops a destination populated by both ``EXPORT
+    PARTITION`` and ``INSERT INTO``.
     """
     source_table = f"mt_{getuid()}"
 

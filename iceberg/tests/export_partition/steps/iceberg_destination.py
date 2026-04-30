@@ -7,13 +7,14 @@ Three destination modes are supported and selected via ``self.context.catalog``:
   catalog service. The destination is always referenced through the IcebergS3
   table that was created by the same node.
 
-* ``"rest"`` - ClickHouse talks to the ice-rest-catalog service. A
-  ``DataLakeCatalog`` database is created, the Iceberg table is created
-  server-side by PyIceberg using the REST catalog helpers in
-  ``iceberg.tests.steps.catalog``, and the destination referenced by EXPORT
-  PARTITION is the ``<database>.`<namespace.table>``` view.
+* ``"ice"`` - ClickHouse talks to the Altinity ``ice-rest-catalog`` service
+  (an Iceberg REST Catalog Spec implementation). A ``DataLakeCatalog``
+  database is created, the Iceberg table is created server-side by PyIceberg
+  using the REST catalog helpers in ``iceberg.tests.steps.catalog``, and the
+  destination referenced by EXPORT PARTITION is the
+  ``<database>.`<namespace.table>``` view.
 
-* ``"glue"`` - Same pattern as ``rest`` but against the LocalStack glue
+* ``"glue"`` - Same pattern as ``ice`` but against the LocalStack glue
   service.
 
 The module exposes a single :func:`create_iceberg_destination` step that the
@@ -252,9 +253,9 @@ def create_pyiceberg_catalog_destination(
 
 
 # Kwargs that only make sense for ``create_iceberg_s3_destination``. Under
-# catalog mode PyIceberg owns the Iceberg layout so none of these have an
-# analogue; scenarios that rely on them must stay no_catalog-only (e.g.
-# :mod:`iceberg.tests.export_partition.storage_paths`).
+# catalog mode (``ice`` / ``glue``) PyIceberg owns the Iceberg layout so none
+# of these have an analogue; scenarios that rely on them must stay
+# no_catalog-only (e.g. :mod:`iceberg.tests.export_partition.storage_paths`).
 _ICEBERG_S3_ONLY_KWARGS = (
     "storage_endpoint",
     "location_prefix",
@@ -265,15 +266,15 @@ _ICEBERG_S3_ONLY_KWARGS = (
 
 # Individual ``query_settings`` / ``extra_settings`` entries that exist only
 # as workarounds for PyIceberg's ``StaticTable`` code path used under
-# ``no_catalog`` mode. REST / Glue read table layout through the catalog
-# instead of re-parsing ``metadata.json``, so these entries are irrelevant
-# under catalog mode and can be dropped silently:
+# ``no_catalog`` mode. ``ice`` / ``glue`` read table layout through the
+# catalog instead of re-parsing ``metadata.json``, so these entries are
+# irrelevant under catalog mode and can be dropped silently:
 #
 # * ``write_full_path_in_iceberg_metadata`` — forces CH to write absolute
 #   ``s3://`` URIs for ``metadata.json`` ``location`` and every
 #   ``manifest-list`` entry. ``StaticTable`` treats bucket-relative paths
 #   as local-FS paths and blows up; the catalog path gets the table
-#   location directly from the REST service. Dropping this setting does
+#   location directly from the catalog service. Dropping this setting does
 #   not change what the catalog-mode scenario is asserting.
 #
 # Any other setting keeps its IcebergS3-only classification and forces a
@@ -332,7 +333,7 @@ def create_iceberg_destination(
 
     * ``"no"``           -> :func:`create_iceberg_s3_destination` (returns a
       ``table_name`` string).
-    * ``"rest"`` / ``"glue"`` -> :func:`create_pyiceberg_catalog_destination`
+    * ``"ice"`` / ``"glue"`` -> :func:`create_pyiceberg_catalog_destination`
       after translating ``columns`` / ``partition_by`` into an explicit
       PyIceberg ``Schema`` + ``PartitionSpec`` via
       :mod:`iceberg.tests.export_partition.steps.pyiceberg_schema`.
@@ -363,7 +364,7 @@ def create_iceberg_destination(
             **kwargs,
         )
 
-    if catalog not in ("rest", "glue"):
+    if catalog not in ("ice", "glue"):
         raise ValueError(f"Unsupported catalog mode: {catalog!r}")
 
     # ``query_settings`` / ``extra_settings`` that only hold the PyIceberg
@@ -462,7 +463,7 @@ def as_system_destination_table(destination):
     ``MergeTreeData.cpp`` / ``ExportList.cpp``).
 
     In ``no_catalog`` mode that's the same string as ``as_destination_name``
-    (a bare identifier like ``iceberg_xxx``). Under ``rest`` / ``glue`` the
+    (a bare identifier like ``iceberg_xxx``). Under ``ice`` / ``glue`` the
     identifier is qualified via ``<database>.\\`<namespace>.<table>\\```
     and CH stores ``"<namespace>.<table>"`` here.
     """
@@ -478,7 +479,7 @@ def as_system_destination_database(destination):
 
     ``no_catalog`` mode returns ``None`` because the destination is a bare
     table name in the *current* database (CH's own default), which varies
-    per test run — callers should not assert on it. ``rest`` / ``glue``
+    per test run — callers should not assert on it. ``ice`` / ``glue``
     return the PyIceberg-backed ``DataLakeCatalog`` database wired up in
     :func:`create_pyiceberg_catalog_destination`.
     """

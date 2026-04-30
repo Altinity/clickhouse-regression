@@ -1,47 +1,9 @@
 """Per-setting behaviour tests for EXPORT PARTITION.
 
-The scenarios here isolate a single setting at a time and verify it does
-what its description promises. Behaviour that is already exercised by
-other modules (or by ClickHouse's own dev tests) is explicitly not
-re-tested here:
-
-* ``write_full_path_in_iceberg_metadata`` has four dedicated scenarios in
-  :mod:`iceberg.tests.export_partition.storage_paths`.
-* ``export_merge_tree_partition_force_export`` and
-  ``export_merge_tree_partition_manifest_ttl`` are covered end-to-end in
-  :mod:`iceberg.tests.export_partition.transactions`
-  (``force_export_bypasses_ttl_gate``, ``ttl_expiry_permits_reexport``,
-  ``duplicate_export_within_ttl_rejected``).
-* ``allow_experimental_export_merge_tree_partition`` is a
-  ``ServerSetting`` that is resolved at node startup; toggling it at
-  runtime is impossible, and the disabled-feature path is exercised
-  upstream by ``test_export_partition_feature_is_disabled`` (which
-  spins up a dedicated ``replica_with_export_disabled`` node using
-  ``disable_experimental_export_partition.xml``).
-* ``export_merge_tree_partition_max_retries`` — the commit-budget /
-  FAILED transition when every commit attempt throws is covered
-  upstream by ``test_commit_attempts_budget_transitions_to_failed`` in
-  ``tests/integration/test_storage_iceberg_with_spark/test_export_partition_iceberg.py``,
-  which arms the same ``export_partition_commit_always_throw``
-  REGULAR failpoint.
-
-What this module adds on top:
-
-* :func:`prefer_remote_information_returns_same_status` — a completed
-  export must look the same whether the system table is read from the
-  local cache (``export_merge_tree_partition_system_table_prefer_remote_information
-  = 0``) or via ZooKeeper (``= 1``). This catches drift between the two
-  code paths in ``StorageSystemReplicatedPartitionExports.cpp``.
-* :func:`parquet_compression_method_flows_to_data_files` — format-level
-  settings (``output_format_parquet_compression_method``) must flow
-  through ``getFormatSettings(local_context)`` in ``ExportPartTask.cpp``
-  down to the Parquet writer. Writing with ``zstd`` and then inspecting
-  the data file with pyarrow is the simplest way to catch a regression
-  where the export path stopped honouring format settings. Currently
-  expected to fail (registered in ``iceberg/regression.py``'s ``xfails``
-  map): the partition manifest and ``getContextCopyWithTaskSettings``
-  forward only a hand-picked list of settings, and format settings are
-  not on it — see the scenario docstring for the full chain.
+Settings already exercised elsewhere (``write_full_path_in_iceberg_metadata``
+in ``storage_paths``; ``force_export`` / ``manifest_ttl`` in
+``transactions``; ``allow_experimental_export_merge_tree_partition`` and
+``export_merge_tree_partition_max_retries`` upstream) are not re-tested here.
 """
 
 import io
@@ -105,14 +67,10 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
 def prefer_remote_information_returns_same_status(
     self, minio_root_user, minio_root_password
 ):
-    """Local cache and ZooKeeper views of an export must agree post-commit.
-
-    ``export_merge_tree_partition_system_table_prefer_remote_information``
-    in ``StorageSystemReplicatedPartitionExports.cpp`` switches between
-    the per-replica cached state and a MULTI_READ of the ZooKeeper
-    manifest. After ``status = COMPLETED`` both paths must report the
-    same ``status`` and the same transaction id, otherwise callers see a
-    different version of the world depending on which replica they hit.
+    """``system.replicated_partition_exports`` returns the same row
+    whether read from the per-replica cache or via ZooKeeper
+    (``export_merge_tree_partition_system_table_prefer_remote_information``
+    set to 0 vs 1) once the export has completed.
     """
     source_table = _seed_source()
 
@@ -175,10 +133,6 @@ def _read_parquet_compression_codecs(
 ):
     """Return the set of compression codecs used across all column chunks
     of the given parquet object.
-
-    pyarrow exposes per-column compression on each row-group metadata
-    entry; we collect every value so the assertion works for files with
-    multiple row-groups or columns.
     """
     import boto3
     import pyarrow.parquet as pq
@@ -202,13 +156,9 @@ def _read_parquet_compression_codecs(
 
 
 def _parse_s3_file_path(file_path, expected_bucket):
-    """Split an Iceberg ``data_file.file_path`` into ``(bucket, key)``.
-
-    ``write_full_path_in_iceberg_metadata`` only affects the top-level
-    ``location`` in ``metadata.json`` — individual ``data_file.file_path``
-    entries in the manifests are still written bucket-relative (e.g.
-    ``/data/<table>/data/data-<uuid>.parquet``) regardless of the setting.
-    Accept both forms so the caller doesn't have to care.
+    """Split an Iceberg ``data_file.file_path`` into ``(bucket, key)``,
+    accepting both ``s3://...`` and bucket-relative forms (the latter is
+    what ``write_full_path_in_iceberg_metadata`` writes for data files).
     """
     if file_path.startswith("s3://"):
         without_scheme = file_path[len("s3://"):]
@@ -230,34 +180,10 @@ def _parse_s3_file_path(file_path, expected_bucket):
 def parquet_compression_method_flows_to_data_files(
     self, minio_root_user, minio_root_password
 ):
-    """Format-level settings must reach the Parquet writer.
-
-    ``ExportPartTask.cpp`` resolves format settings via
-    ``getFormatSettings(local_context)`` right before handing the block
-    off to the destination writer. If the resolution ever stops
-    picking up query-level overrides, the Parquet file ClickHouse
-    writes would silently fall back to the server-wide default (``zstd``
-    in recent versions). We export one partition with the setting
-    pinned to ``zstd`` and another (against a fresh destination) with
-    ``snappy``, then read the resulting Parquet data files via pyarrow
-    and assert each row-group column actually reports the expected
-    codec.
-
-    Currently expected to fail: format-level settings are not carried
-    into the background export task.
-    ``ExportReplicatedMergeTreePartitionManifest`` persists only a
-    hand-picked list of fields in ZK (``max_threads``,
-    ``parallel_formatting``, ``parquet_parallel_encoding``,
-    ``write_full_path_in_iceberg_metadata``, ...) and
-    ``ExportPartitionUtils::getContextCopyWithTaskSettings`` applies an
-    allowlist of the same shape; neither includes
-    ``output_format_parquet_compression_method``. Whatever the user
-    sets in ``ALTER ... EXPORT PARTITION ... SETTINGS`` is dropped
-    before ``ExportPartTask::executeStep`` calls ``getFormatSettings``
-    and the Parquet writer falls back to the server-profile default.
-    Tracked as an ``xfails`` entry in ``iceberg/regression.py``; once
-    the manifest carries format settings end-to-end the scenario will
-    XPass and the entry can be removed.
+    """``output_format_parquet_compression_method`` set on ``ALTER ...
+    EXPORT PARTITION`` reaches the Parquet writer (codec inspected via
+    pyarrow). Currently XFail: the export-task settings allowlist drops
+    format settings before ``getFormatSettings`` runs.
     """
     source_table = _seed_source()
 

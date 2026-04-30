@@ -4,7 +4,8 @@ Each scenario module inside ``export_partition/`` is parameterised three ways
 by running the same feature under three different catalog contexts:
 
 * ``"no_catalog"`` - pure Iceberg writes via ``ENGINE = IcebergS3(...)``.
-* ``"rest"``       - REST DataLakeCatalog (the ``ice-rest-catalog`` service).
+* ``"ice"``        - DataLakeCatalog backed by the Altinity ``ice-rest-catalog``
+  service (an Iceberg REST Catalog Spec implementation).
 * ``"glue"``       - Glue DataLakeCatalog (LocalStack).
 
 Scenarios read ``self.context.catalog`` to choose the right helpers (see
@@ -19,7 +20,7 @@ therefore still loaded here for completeness.
 from testflows.core import *
 
 
-CATALOG_MODES = ("no", "rest", "glue")
+CATALOG_MODES = ("no", "ice", "glue")
 
 
 MODULES = (

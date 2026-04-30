@@ -1,46 +1,9 @@
 """Backward-compatibility: ReplicatedMergeTree without the ``/exports`` znode.
 
-The EXPORT PARTITION feature added a new persistent znode,
-``/clickhouse/tables/<table>/exports``, under every RMT table's ZK
-path. Tables created on CH builds that predate the feature do not
-have that node, and neither do replicas whose ZK state was restored
-from a pre-feature backup.
-
-``StorageReplicatedMergeTree`` heals this on *every* replica attach,
-not just on CREATE TABLE:
-
-* ``createNewZooKeeperNodesAttempt()`` asynchronously creates
-  ``zookeeper_path + "/exports"`` alongside ``/quorum``, ``/mutations``,
-  and the rest of the legacy back-compat bag
-  (``StorageReplicatedMergeTree.cpp`` line 968).
-* ``ReplicatedMergeTreeAttachThread::runImpl`` at line 199 calls
-  ``storage.createNewZooKeeperNodes(...)`` as part of the normal
-  replica-attach flow — so a cold server start, a ``DETACH``+``ATTACH``,
-  or ``SYSTEM RESTART REPLICA`` all re-create the missing znode before
-  the replica is promoted out of readonly mode.
-
-That means the realistic upgrade / restore-from-backup path — boot
-the server against the old ZK state — is self-healing: by the time
-any user query can reach the replica, ``/exports`` is back. The
-EXPORT PARTITION code itself does *not* issue a ``CreateIfNotExists``
-for the parent as part of its commit multi-op (it only creates
-``/exports/<key>``), so deleting ``/exports`` under a running table
-without a subsequent attach does block EXPORT — but that is an
-operator-foot-gun scenario, not an upgrade scenario, and it too is
-cleared by ``SYSTEM RESTART REPLICA``.
-
-Scenarios here exercise the real contract: legacy or missing
-``/exports`` plus a replica attach recovers EXPORT. Both scenarios
-explicitly use ``SYSTEM RESTART REPLICA`` to force the attach-thread
-to run; that matches what a CH server restart would do without
-having to cycle the container.
-
-Scope:
-This module is ``no_catalog``-only. The legacy-ZK question is about
-RMT itself (the source side of EXPORT), which is identical across
-catalog modes — running this scenario once per destination catalog
-would just multiply the same ZooKeeper assertions by three without
-exercising any new code paths.
+Verifies the self-healing contract: a missing or deleted
+``/clickhouse/tables/<table>/exports`` znode is recreated on replica
+attach (``SYSTEM RESTART REPLICA``) and EXPORT works again. ``no_catalog``
+only — this is a ReplicatedMergeTree concern, not a destination concern.
 """
 
 from testflows.core import *
@@ -77,14 +40,9 @@ SIMPLE_PARTITION_BY = "year"
 
 @TestStep(When)
 def restart_replica(self, table_name, node=None):
-    """Run ``SYSTEM RESTART REPLICA`` against ``table_name``.
-
-    This re-enters the table through ``LoadingStrictnessLevel::ATTACH``
-    and therefore triggers ``ReplicatedMergeTreeAttachThread::runImpl``
-    → ``storage.createNewZooKeeperNodes(...)``, which is what re-creates
-    the ``/exports`` znode on upgraded / restored ZK state.
-    Used here instead of a full server restart so the test stays quick
-    while exercising the same recovery code path.
+    """``SYSTEM RESTART REPLICA``: re-enters the attach thread so
+    ``createNewZooKeeperNodes`` runs (same recovery path as a server
+    restart, without cycling the container).
     """
     if node is None:
         node = self.context.node
@@ -96,13 +54,9 @@ def restart_replica(self, table_name, node=None):
 def export_after_restart_recreates_exports_znode(
     self, minio_root_user, minio_root_password
 ):
-    """Pre-feature / restored-from-backup layout: ``/exports`` absent
-    at session start. ``SYSTEM RESTART REPLICA`` must recreate it via
-    the attach thread, and the subsequent EXPORT must succeed.
-
-    This is the realistic upgrade path — on a real server restart the
-    attach thread runs before any user query can reach the replica,
-    so ``/exports`` is always back by the time EXPORT is issued.
+    """Pre-feature / restored-from-backup layout (``/exports`` absent):
+    ``SYSTEM RESTART REPLICA`` recreates it via the attach thread and
+    the subsequent EXPORT succeeds.
     """
     _require_no_catalog(
         "legacy ZK layout is a ReplicatedMergeTree concern, not a "
@@ -184,13 +138,9 @@ def export_after_restart_recreates_exports_znode(
 def restart_heals_operator_deletion(
     self, minio_root_user, minio_root_password
 ):
-    """Operator-foot-gun path: ``/exports`` is deleted out from under
-    a live, already-exported RMT. A subsequent ``SYSTEM RESTART REPLICA``
-    must bring EXPORT back online. Unlike scenario 1, the znode had
-    per-export children before deletion, so this also confirms the
-    recovery is idempotent with respect to prior EXPORT history stored
-    elsewhere in the replica state (the EXPORT completion records live
-    under the replica path, not under ``/exports``).
+    """Deleting ``/exports`` mid-session (operator foot-gun) is healed
+    by ``SYSTEM RESTART REPLICA`` and a fresh EXPORT against a new
+    partition still works.
     """
     _require_no_catalog(
         "legacy ZK layout is a ReplicatedMergeTree concern, not a "
