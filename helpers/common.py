@@ -1342,7 +1342,12 @@ def set_envs_on_node(self, envs, node=None):
                 node.command(f"unset {key}", exitcode=0)
 
 
-def get_snapshot_id(snapshot_id=None, clickhouse_version=None, or_antalya=False):
+def get_snapshot_id(
+    snapshot_id=None,
+    clickhouse_version=None,
+    or_antalya=False,
+    antalya_suffix=False,
+):
     """Return snapshot id based on the current test's name
     and ClickHouse server version.
 
@@ -1350,7 +1355,14 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None, or_antalya=False)
     ``clickhouse_version`` so they pick up the version-suffixed snapshot id
     even though their semver string (e.g. 25.8.x) does not satisfy the
     ``check_clickhouse_version`` predicate. This keeps Antalya snapshots
-    separate from the unsuffixed (regular 25.8) ones."""
+    separate from the unsuffixed (regular 25.8) ones.
+
+    When ``antalya_suffix=True`` and the build is Antalya, an additional
+    ``_antalya`` suffix is appended to the snapshot id so Antalya loads
+    a dedicated snapshot file. This is needed for behaviours that differ
+    on Antalya from both regular 25.8 and regular 26.1 (e.g. Parquet
+    reader v3 schema inference always wraps inferred columns in
+    ``Nullable``)."""
     id_postfix = ""
     if clickhouse_version:
         matches = check_clickhouse_version(clickhouse_version)(current())
@@ -1359,9 +1371,25 @@ def get_snapshot_id(snapshot_id=None, clickhouse_version=None, or_antalya=False)
         if matches:
             id_postfix = clickhouse_version
 
+    if antalya_suffix and check_if_antalya_build(current()):
+        id_postfix = id_postfix + "_antalya"
+
     if snapshot_id is None:
         return unclean(name.basename(current().name)) + id_postfix
     return snapshot_id
+
+
+def antalya_snapshot_name(snapshot_name, test=None):
+    """Append ``_antalya`` suffix to ``snapshot_name`` when running on an
+    Antalya build, otherwise return it unchanged.
+
+    Useful for tests that select a snapshot variable inside a snapshot file
+    (rather than by snapshot id / file name) and need a dedicated value on
+    Antalya because the Parquet reader v3 (default on Antalya) infers
+    types differently from the legacy reader used on regular 25.8 / 26.1."""
+    if check_if_antalya_build(test if test is not None else current()):
+        return snapshot_name + "_antalya"
+    return snapshot_name
 
 
 def get_settings_value(
