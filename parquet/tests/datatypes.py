@@ -869,10 +869,13 @@ def selectdatewithfilter(self):
                     else "import_using_filter_structure"
                 )
 
+                snapshot_id = "antalya" if check_if_antalya_build(self) else None
+
                 assert that(
                     snapshot(
                         import_column_structure.output.strip(),
                         name=snapshot_name,
+                        id=snapshot_id,
                     )
                 ), error()
 
