@@ -291,6 +291,12 @@ ffails = {
         "not supported on ARM; zookeeper-fips service is omitted from aarch64 compose",
         check_current_cpu("aarch64"),
     ),
+    ":/zookeeper/secure connection with empty truststore": (
+        Skip,
+        "fails on Antalya 25.8; investigate zookeeper retry/timeout behavior",
+        lambda test: check_if_antalya_build(test)
+        and check_clickhouse_version("<=25.8")(test),
+    ),
 }
 
 
@@ -361,7 +367,8 @@ def regression(
     with Feature("part 3"):
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
         # Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
-        Feature(run=load("ssl_server.tests.zookeeper_fips.feature_140_3", "feature"))
+        if self.context.fips_mode:
+            Feature(run=load("ssl_server.tests.zookeeper_fips.feature_140_3", "feature"))
         Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 

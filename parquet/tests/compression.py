@@ -16,8 +16,8 @@ def lz4_raw(self):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
 
     snapshot_id = (
-        get_snapshot_id(clickhouse_version=">=26.1")
-        if check_clickhouse_version(">=26.1")(self)
+        get_snapshot_id(clickhouse_version=">=26.1", or_antalya=True)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else None
     )
 
@@ -36,8 +36,8 @@ def lz4_raw_large(self):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
     snapshot_id = (
-        get_snapshot_id(clickhouse_version=">=26.1")
-        if check_clickhouse_version(">=26.1")(self)
+        get_snapshot_id(clickhouse_version=">=26.1", or_antalya=True)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else None
     )
 
@@ -56,8 +56,8 @@ def lz4_hadoop(self):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
     snapshot_id = (
-        get_snapshot_id(clickhouse_version=">=26.1")
-        if check_clickhouse_version(">=26.1")(self)
+        get_snapshot_id(clickhouse_version=">=26.1", or_antalya=True)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else None
     )
 
@@ -76,8 +76,8 @@ def lz4_hadoop_large(self):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
     snapshot_id = (
-        get_snapshot_id(clickhouse_version=">=26.1")
-        if check_clickhouse_version(">=26.1")(self)
+        get_snapshot_id(clickhouse_version=">=26.1", or_antalya=True)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else None
     )
 
@@ -96,8 +96,8 @@ def lz4_non_hadoop(self):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
     snapshot_id = (
-        get_snapshot_id(clickhouse_version=">=26.1")
-        if check_clickhouse_version(">=26.1")(self)
+        get_snapshot_id(clickhouse_version=">=26.1", or_antalya=True)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else None
     )
 
