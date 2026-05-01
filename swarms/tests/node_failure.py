@@ -145,7 +145,7 @@ def check_restart_clickhouse_on_swarm_node(
     self,
     minio_root_user,
     minio_root_password,
-    row_count=50,
+    row_count=100,
     batch_size=50,
     cluster_name="static_swarm_cluster",
     node=None,
@@ -185,7 +185,7 @@ def check_restart_clickhouse_on_swarm_node(
                 test=actions.restart_clickhouse_on_random_swarm_node,
                 parallel=True,
                 executor=pool,
-            )(delay=50, signal="KILL", delay_before_execution=5)
+            )(delay=50, signal="KILL", delay_before_execution=10)
             join()
 
 
