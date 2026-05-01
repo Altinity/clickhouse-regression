@@ -249,7 +249,7 @@ def insert_into_function(self):
     with Check(
         "I check that the data inserted into the table function was correctly written to the file"
     ):
-        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
+        if check_clickhouse_version_or_antalya(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"
@@ -297,7 +297,7 @@ def select_from_function_manual_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
+        if check_clickhouse_version_or_antalya(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"
@@ -350,7 +350,7 @@ def select_from_function_auto_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
+        if check_clickhouse_version_or_antalya(">=26.1")(self):
             self.context.snapshot_id = "parquet_s3_after_26_1"
         elif check_clickhouse_version(">=24.3")(self) and check_clickhouse_version(
             "<26.1"

@@ -13,7 +13,7 @@ def import_export(
 ):
     """Import parquet file into a clickhouse table and export it back."""
 
-    if check_clickhouse_version(">=26.1")(self):
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
         settings = [("max_memory_usage", 20000000000)]
 
     node = self.context.node

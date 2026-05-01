@@ -249,7 +249,7 @@ def parquetgo(self):
 
     snapshot_name = (
         "parquet_go_structure_above_26"
-        if check_clickhouse_version(">=26.1")(self)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else "parquet_go_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
@@ -302,7 +302,7 @@ def enum(self):
 
     snapshot_name = (
         "enum_structure_above_26"
-        if check_clickhouse_version(">=26.1")(self)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else "enum_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
@@ -459,7 +459,7 @@ def fixedstring(self):
 
     snapshot_name = (
         "fixed_structure_above_26"
-        if check_clickhouse_version(">=26.1")(self)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else "fixed_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
@@ -544,7 +544,7 @@ def nullsinid(self):
 
     snapshot_name = (
         "int64_nulls_structure_above_26"
-        if check_clickhouse_version(">=26.1")(self)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else "int64_nulls_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
@@ -820,7 +820,7 @@ def large_string_map(self):
 
     snapshot_name = (
         "large_string_map_structure_above_26"
-        if check_clickhouse_version(">=26.1")(self)
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
         else "large_string_map_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
@@ -865,7 +865,7 @@ def selectdatewithfilter(self):
 
                 snapshot_name = (
                     "import_using_filter_structure_above_26"
-                    if check_clickhouse_version(">=26.1")(self)
+                    if check_clickhouse_version_or_antalya(">=26.1")(self)
                     else "import_using_filter_structure"
                 )
 
@@ -912,7 +912,7 @@ def unsupportednull(self):
     for number in range(1, 3):
         table_name = "table_" + getuid()
 
-        if check_clickhouse_version(">=26.1")(self):
+        if check_clickhouse_version_or_antalya(">=26.1")(self):
             message, exitcode = (None, 0)
         elif check_clickhouse_version("<24.2")(self):
             message, exitcode = ("DB::Exception: Unsupported Parquet type", 50)

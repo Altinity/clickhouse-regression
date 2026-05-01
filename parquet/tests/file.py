@@ -319,8 +319,10 @@ def engine_select_output_to_file(self, compression_type):
 def insert_into_function_manual_cast_types(self):
     """Check that when data is inserted into `file` table function with manually defined structure,
     it is written into the source file correctly."""
-    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(
+            clickhouse_version=">=26.1", or_antalya=True
+        )
     elif check_clickhouse_version(">=24.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
     else:
@@ -376,8 +378,10 @@ def insert_into_function_manual_cast_types(self):
 def insert_into_function_auto_cast_types(self):
     """Check that when data is inserted into `file` table function with automatically defined structure,
     it is written into the source file correctly."""
-    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(
+            clickhouse_version=">=26.1", or_antalya=True
+        )
     elif check_clickhouse_version(">=24.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
     else:
@@ -445,8 +449,10 @@ def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `file` table function with manually cast column types,
     it is read correctly."""
 
-    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(
+            clickhouse_version=">=26.1", or_antalya=True
+        )
     elif check_clickhouse_version(">=24.1")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=24.1")
     else:
@@ -474,8 +480,10 @@ def select_from_function_manual_cast_types(self):
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `file` table function with automatic cast column types,
     it is read correctly."""
-    if check_clickhouse_version(">=26.1")(self) or check_if_antalya_build(self):
-        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=26.1")
+    if check_clickhouse_version_or_antalya(">=26.1")(self):
+        self.context.snapshot_id = get_snapshot_id(
+            clickhouse_version=">=26.1", or_antalya=True
+        )
     elif check_clickhouse_version("<22.6")(self):
         self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     else:
@@ -519,7 +527,7 @@ def date_as_uint16(self):
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
 
@@ -547,7 +555,7 @@ def date_as_uint16_multiple_dates(self):
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
 
@@ -589,7 +597,7 @@ def date_as_uint16_nullable(self):
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('/var/lib/clickhouse/user_files/{file_name}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
 
@@ -684,7 +692,7 @@ def date_as_uint16_file_engine(self):
 
         r = node.query(f"DESC file('{parquet_file}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
 
@@ -712,7 +720,7 @@ def date_as_uint16_edge_cases(self):
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
 
@@ -739,7 +747,7 @@ def date_as_uint16_with_other_columns(self):
     with And("I describe the parquet file to check the schema"):
         r = node.query(f"DESC file('{file_name}')")
         expected_date_type = (
-            "UInt16" if check_clickhouse_version(">=26.1")(self) else "Nullable(UInt16)"
+            "UInt16" if check_clickhouse_version_or_antalya(">=26.1")(self) else "Nullable(UInt16)"
         )
         assert "d" in r.output and expected_date_type in r.output, error()
         assert "i" in r.output, error()
