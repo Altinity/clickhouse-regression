@@ -878,7 +878,7 @@ def select_from_system_databases(self, minio_root_user, minio_root_password):
         )
 
     with Then(
-        "check that system.databases table is not affected by show_data_lake_catalogs_in_system_tables setting"
+        "check system.databases visibility with show_data_lake_catalogs_in_system_tables setting"
     ):
         result_with_setting = node.query(
             f"SET show_data_lake_catalogs_in_system_tables = 1; SELECT name FROM system.databases WHERE name = '{database_name}';"
@@ -887,7 +887,14 @@ def select_from_system_databases(self, minio_root_user, minio_root_password):
         result_without_setting = node.query(
             f"SET show_data_lake_catalogs_in_system_tables = 0; SELECT name FROM system.databases WHERE name = '{database_name}';"
         )
-        assert result_without_setting.output == f"{database_name}", error()
+        if (
+            check_if_antalya_build(self) and check_clickhouse_version(">=26.1")(self)
+        ) or check_clickhouse_version(">=26.4")(self):
+            # On antalya 26.1 and >=26.4 the setting does not affect system.databases
+            assert result_without_setting.output == f"{database_name}", error()
+        else:
+            # On older versions the setting hides iceberg databases from system.databases when disabled
+            assert result_without_setting.output == "", error()
 
 
 @TestScenario
