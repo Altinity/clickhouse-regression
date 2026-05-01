@@ -177,6 +177,23 @@ def check_if_25_8_altinity_build(test=None):
     return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
 
 
+def check_clickhouse_version_or_antalya(version):
+    """Return a predicate that is True when either ``check_clickhouse_version(version)``
+    matches *or* the build is an Antalya build.
+
+    Antalya is currently based on ClickHouse 25.8 but ships parquet behavior that
+    matches upstream >=26.1, so version-gated branches that select snapshots /
+    settings for >=26.1 must also fire for Antalya.
+    """
+
+    def check(test):
+        return bool(
+            check_clickhouse_version(version)(test) or check_if_antalya_build(test)
+        )
+
+    return check
+
+
 def check_if_head(test):
     """True if build is head build."""
     binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
@@ -1325,12 +1342,21 @@ def set_envs_on_node(self, envs, node=None):
                 node.command(f"unset {key}", exitcode=0)
 
 
-def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
+def get_snapshot_id(snapshot_id=None, clickhouse_version=None, or_antalya=False):
     """Return snapshot id based on the current test's name
-    and ClickHouse server version."""
+    and ClickHouse server version.
+
+    When ``or_antalya=True``, Antalya builds are treated as matching
+    ``clickhouse_version`` so they pick up the version-suffixed snapshot id
+    even though their semver string (e.g. 25.8.x) does not satisfy the
+    ``check_clickhouse_version`` predicate. This keeps Antalya snapshots
+    separate from the unsuffixed (regular 25.8) ones."""
     id_postfix = ""
     if clickhouse_version:
-        if check_clickhouse_version(clickhouse_version)(current()):
+        matches = check_clickhouse_version(clickhouse_version)(current())
+        if or_antalya and not matches:
+            matches = check_if_antalya_build(current())
+        if matches:
             id_postfix = clickhouse_version
 
     if snapshot_id is None:
