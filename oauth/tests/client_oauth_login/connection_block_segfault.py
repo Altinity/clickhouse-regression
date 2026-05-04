@@ -25,25 +25,32 @@ from oauth.tests.steps.client_login import (
 def login_with_connection_no_segfault(self):
     """Check that ``--login=device --connection X`` does not crash on empty hosts list."""
 
-    reset_client_state()
-    write_client_config_xml(contents=connection_only_config_xml())
-    write_oauth_credentials_file()
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client_no_host(
-        args=[
-            "--config",
-            DEFAULT_CONFIG_PATH,
-            "--connection",
-            "ch_test",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=10,
-    )
+    with And("I write a connection-only client config"):
+        write_client_config_xml(contents=connection_only_config_xml())
 
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with And("I write a valid OAuth credentials file"):
+        write_oauth_credentials_file()
+
+    with When("I run clickhouse-client with --connection and --login=device"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_test",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+        )
+
+    with Then("the client did not crash"):
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -55,25 +62,30 @@ def login_with_connection_no_segfault(self):
 def bare_login_with_connection_no_segfault(self):
     """Check that bare ``--login`` with ``--connection`` does not crash."""
 
-    reset_client_state()
-    write_client_config_xml(contents=connection_only_config_xml())
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client_no_host(
-        args=[
-            "--config",
-            DEFAULT_CONFIG_PATH,
-            "--connection",
-            "ch_test",
-            "--login",
-            "--oauth-url=http://keycloak:8080/realms/grafana",
-            "--oauth-client-id=grafana-client",
-            "--oauth-audience=http://localhost",
-        ],
-        query="SELECT 1",
-        timeout=10,
-    )
+    with And("I write a connection-only client config"):
+        write_client_config_xml(contents=connection_only_config_xml())
 
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with When("I run clickhouse-client with bare --login and --connection"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_test",
+                "--login",
+                "--oauth-url=http://keycloak:8080/realms/grafana",
+                "--oauth-client-id=grafana-client",
+                "--oauth-audience=http://localhost",
+            ],
+            query="SELECT 1",
+            timeout=10,
+        )
+
+    with Then("the client did not crash"):
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -82,23 +94,28 @@ def bare_login_with_connection_no_segfault(self):
 def login_with_explicit_host_still_works(self):
     """Check that explicit ``--host`` still drives the original code path without crashing."""
 
-    reset_client_state()
-    write_oauth_credentials_file()
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=8,
-        expect_error=True,
-    )
+    with And("I write a valid OAuth credentials file"):
+        write_oauth_credentials_file()
 
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with When("I run clickhouse-client with explicit --host and --login=device"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=8,
+            expect_error=True,
+        )
+
+    with Then("the client did not crash"):
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestFeature

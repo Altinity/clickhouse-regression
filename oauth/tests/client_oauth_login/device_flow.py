@@ -26,34 +26,39 @@ from oauth.tests.steps.client_login import (
 def device_flow_token_endpoint_eventually_times_out(self):
     """Check that device flow exits without ``std::bad_cast`` when no approval comes."""
 
-    reset_client_state()
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
-        device_authorization_uri=(
-            "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
-        ),
-    )
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=20,
-        expect_error=True,
-    )
+    with And("I write a credentials file pointing at the Keycloak realm"):
+        write_oauth_credentials_file(
+            client_id="grafana-client",
+            client_secret="grafana-secret",
+            token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+            device_authorization_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+            ),
+        )
 
-    assert exit_code != 0, error()
-    assert_no_segfault(output=output, exit_code=exit_code)
-    assert "bad_cast" not in output and "std::bad_cast" not in output, (
-        f"Device flow leaked Poco bad_cast:\n---\n{output}\n---"
-    )
+    with When("I run clickhouse-client with --login=device and never approve"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=20,
+            expect_error=True,
+        )
+
+    with Then("the client exits cleanly without a Poco bad_cast"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            "bad_cast" not in output and "std::bad_cast" not in output
+        ), f"Device flow leaked Poco bad_cast:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -62,31 +67,38 @@ def device_flow_token_endpoint_eventually_times_out(self):
 def device_flow_invalid_token_endpoint(self):
     """Check that an unreachable ``token_uri`` fails cleanly without a crash."""
 
-    reset_client_state()
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        token_uri="http://keycloak:8080/realms/does-not-exist/protocol/openid-connect/token",
-        device_authorization_uri=(
-            "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
-        ),
-    )
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=20,
-        expect_error=True,
-    )
+    with And("I write a credentials file with an unreachable token_uri"):
+        write_oauth_credentials_file(
+            client_id="grafana-client",
+            client_secret="grafana-secret",
+            token_uri="http://keycloak:8080/realms/does-not-exist/protocol/openid-connect/token",
+            device_authorization_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+            ),
+        )
 
-    assert exit_code != 0, error()
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with When(
+        "I run clickhouse-client with --login=device against the unreachable token endpoint"
+    ):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=20,
+            expect_error=True,
+        )
+
+    with Then("the client exits with a recognisable error and no crash"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestFeature

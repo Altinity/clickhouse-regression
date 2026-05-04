@@ -24,28 +24,32 @@ from oauth.tests.steps.client_login import (
 def missing_credentials_file(self):
     """Check that a missing ``--oauth-credentials`` file produces a clear error."""
 
-    reset_client_state()
+    with Given("I reset the client state"):
+        reset_client_state()
+
     missing_path = "/root/.clickhouse-client/does-not-exist.json"
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            missing_path,
-        ],
-        query="SELECT 1",
-        timeout=10,
-        expect_error=True,
-    )
+    with When("I run clickhouse-client pointing at a missing credentials file"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                missing_path,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
 
-    assert exit_code != 0, error()
-    assert (
-        missing_path in output
-        or "open" in output.lower()
-        or "BAD_ARGUMENTS" in output
-    ), f"Expected file-not-found diagnostic, got:\n---\n{output}\n---"
+    with Then("the client exits with a file-not-found diagnostic"):
+        assert exit_code != 0, error()
+        assert (
+            missing_path in output
+            or "open" in output.lower()
+            or "BAD_ARGUMENTS" in output
+        ), f"Expected file-not-found diagnostic, got:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -54,29 +58,32 @@ def missing_credentials_file(self):
 def malformed_credentials_json(self):
     """Check that malformed credentials JSON produces a clean parse error."""
 
-    reset_client_state()
-    write_oauth_credentials_file(raw_contents="{ this is not json")
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=10,
-        expect_error=True,
-    )
+    with And("I write a credentials file containing malformed JSON"):
+        write_oauth_credentials_file(raw_contents="{ this is not json")
 
-    assert exit_code != 0, error()
-    assert_no_segfault(output=output, exit_code=exit_code)
-    assert (
-        "BAD_ARGUMENTS" in output
-        or "JSON" in output
-        or "parse" in output.lower()
-    ), f"Expected JSON-parse diagnostic, got:\n---\n{output}\n---"
+    with When("I run clickhouse-client with the malformed credentials file"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client exits with a parse diagnostic and no crash"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            "BAD_ARGUMENTS" in output or "JSON" in output or "parse" in output.lower()
+        ), f"Expected JSON-parse diagnostic, got:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -85,29 +92,34 @@ def malformed_credentials_json(self):
 def credentials_missing_client_id(self):
     """Check that a credentials file without ``client_id`` is rejected."""
 
-    reset_client_state()
-    write_oauth_credentials_file(
-        raw_contents='{"installed":{"auth_uri":"http://x","token_uri":"http://x"}}'
-    )
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=10,
-        expect_error=True,
-    )
+    with And("I write a credentials file missing client_id"):
+        write_oauth_credentials_file(
+            raw_contents='{"installed":{"auth_uri":"http://x","token_uri":"http://x"}}'
+        )
 
-    assert exit_code != 0, error()
-    assert_no_segfault(output=output, exit_code=exit_code)
-    assert "client_id" in output or "BAD_ARGUMENTS" in output, (
-        f"Expected 'client_id' diagnostic, got:\n---\n{output}\n---"
-    )
+    with When("I run clickhouse-client with the incomplete credentials file"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client exits naming the missing client_id"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            "client_id" in output or "BAD_ARGUMENTS" in output
+        ), f"Expected 'client_id' diagnostic, got:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -116,31 +128,36 @@ def credentials_missing_client_id(self):
 def credentials_top_level_web(self):
     """Check that the ``web`` top-level key is accepted alongside ``installed``."""
 
-    reset_client_state()
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        top_level_key="web",
-    )
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=8,
-        expect_error=True,
-    )
+    with And("I write a credentials file with top-level 'web' key"):
+        write_oauth_credentials_file(
+            client_id="grafana-client",
+            client_secret="grafana-secret",
+            top_level_key="web",
+        )
 
-    assert exit_code != 0, error()
-    assert "missing 'installed' or 'web'" not in output, (
-        f"Top-level 'web' key was rejected unexpectedly:\n---\n{output}\n---"
-    )
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with When("I run clickhouse-client with the 'web'-keyed credentials file"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=8,
+            expect_error=True,
+        )
+
+    with Then("the client did not reject the top-level 'web' key"):
+        assert exit_code != 0, error()
+        assert (
+            "missing 'installed' or 'web'" not in output
+        ), f"Top-level 'web' key was rejected unexpectedly:\n---\n{output}\n---"
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestFeature

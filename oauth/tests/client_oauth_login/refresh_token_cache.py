@@ -24,24 +24,31 @@ from oauth.tests.steps.client_login import (
 def corrupted_cache_is_ignored(self):
     """Check that a corrupted ``oauth_cache.json`` is ignored rather than crashing the client."""
 
-    reset_client_state()
-    write_oauth_cache(raw_contents="garbage that is not json {][")
-    write_oauth_credentials_file()
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    exit_code, output = run_clickhouse_client(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT 1",
-        timeout=10,
-        expect_error=True,
-    )
+    with And("I pre-seed a corrupted oauth_cache.json"):
+        write_oauth_cache(raw_contents="garbage that is not json {][")
 
-    assert_no_segfault(output=output, exit_code=exit_code)
+    with And("I write a valid OAuth credentials file"):
+        write_oauth_credentials_file()
+
+    with When("I run clickhouse-client with the corrupted cache present"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client did not crash"):
+        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -50,11 +57,15 @@ def corrupted_cache_is_ignored(self):
 def cache_file_mode_is_strict(self):
     """Check that ``oauth_cache.json`` ends up with mode 0600."""
 
-    reset_client_state()
-    write_oauth_cache(mapping={"abc123": "refresh-token-placeholder"}, mode="600")
+    with Given("I reset the client state"):
+        reset_client_state()
 
-    mode = stat_file_mode(path=DEFAULT_CACHE_PATH)
-    assert mode == "600", f"Expected oauth_cache.json mode 600, got {mode!r}"
+    with And("I pre-seed an oauth_cache.json with mode 0600"):
+        write_oauth_cache(mapping={"abc123": "refresh-token-placeholder"}, mode="600")
+
+    with Then("the cache file mode is 0600"):
+        mode = stat_file_mode(path=DEFAULT_CACHE_PATH)
+        assert mode == "600", f"Expected oauth_cache.json mode 600, got {mode!r}"
 
 
 @TestFeature

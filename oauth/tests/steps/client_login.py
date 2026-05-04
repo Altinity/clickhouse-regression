@@ -347,7 +347,9 @@ def file_exists(self, path, node=None):
 
     # ``test -f`` exits 1 on missing file, which would trip the default
     # exitcode=0 assertion; ``no_checks`` defers the decision to the caller.
-    result = node.command(command=f"test -f {_shell_quote(path)}; echo $?", no_checks=True)
+    result = node.command(
+        command=f"test -f {_shell_quote(path)}; echo $?", no_checks=True
+    )
     return result.output.strip().endswith("0")
 
 
