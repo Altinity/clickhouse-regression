@@ -1,83 +1,81 @@
 # QA-STP009 ClickHouse 25.8 Long-Term Support Release  
 # Software Test Plan
 
-(c) 2025 Altinity Inc. All Rights Reserved.
+(c) 2026 Altinity Inc. All Rights Reserved.
 
 **Author:** vzakaznikov
 
-**Date:** [TBD]
+**Date:** Feb 1, 2026
 
 ## Execution Summary
 
-**Completed:** [TBD]
+**Completed:** Feb 18, 2026
 
 **Test Results:**
 
 * https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/
 
 **Build Report:**
-
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/v25.8.16.10001.altinitystable/50d19e9216a5e7d6b48ee263986e7ccae8cb2f18/22144652887/ci_run_report.html (release run)
+* https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/50d19e9216a5e7d6b48ee263986e7ccae8cb2f18/22142718052/ci_run_report.html (merge run)
 * https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 **Summary:**
 
-Not approved for release.
+**🏅 Approved for release.**
 
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
 * 2 [Timeline](#timeline)
 * 3 [Human Resources And Assignments](#human-resources-and-assignments)
-* 4 [End User Recommendations](#end-user-recommendations)
-    * 4.1 [Release Notes](#release-notes)
+* 4 [Release Notes](#release-notes)
 * 5 [Known Issues](#known-issues)
     * 5.1 [Open Issues](#open-issues)
     * 5.2 [Summary](#summary)
 * 6 [Scope](#scope)
     * 6.1 [Automated Regression Tests](#automated-regression-tests)
         * 6.1.1 [Stateless](#stateless)
-        * 6.1.2 [Stateful](#stateful)
-        * 6.1.3 [Stress](#stress)
-        * 6.1.4 [Integration](#integration)
-        * 6.1.5 [Altinity TestFlows Integration](#altinity-testflows-integration)
-            * 6.1.5.1 [AES Encryption](#aes-encryption)
-            * 6.1.5.2 [Aggregate Functions](#aggregate-functions)
-            * 6.1.5.3 [Alter](#alter)
-            * 6.1.5.4 [Atomic Insert](#atomic-insert)
-            * 6.1.5.5 [Attach](#attach)
-            * 6.1.5.6 [Base58](#base58)
-            * 6.1.5.7 [Ontime Benchmark](#ontime-benchmark)
-            * 6.1.5.8 [ClickHouse Keeper](#clickhouse-keeper)
-            * 6.1.5.9 [ClickHouse Keeper Failover](#clickhouse-keeper-failover)
-            * 6.1.5.10 [Data Types](#data-types)
-            * 6.1.5.11 [DateTime64 Extended Range](#datetime64-extended-range)
-            * 6.1.5.12 [Disk Level Encryption](#disk-level-encryption)
-            * 6.1.5.13 [DNS](#dns)
-            * 6.1.5.14 [Engines](#engines)
-            * 6.1.5.15 [Example](#example)
-            * 6.1.5.16 [Extended Precision Data Types](#extended-precision-data-types)
-            * 6.1.5.17 [Functions](#functions)
-            * 6.1.5.18 [Hive Partitioning](#hive-partitioning)
-            * 6.1.5.19 [Iceberg](#iceberg)
-            * 6.1.5.20 [JWT Authentication](#jwt-authentication)
-            * 6.1.5.21 [Kafka](#kafka)
-            * 6.1.5.22 [Kerberos](#kerberos)
-            * 6.1.5.23 [Key Value](#key-value)
-            * 6.1.5.24 [LDAP](#ldap)
-            * 6.1.5.25 [Lightweight Delete](#lightweight-delete)
-            * 6.1.5.26 [Memory](#memory)
-            * 6.1.5.27 [Parquet](#parquet)
-            * 6.1.5.28 [Part Moves Between Shards](#part-moves-between-shards)
-            * 6.1.5.29 [RBAC](#rbac)
-            * 6.1.5.30 [S3](#s3)
-            * 6.1.5.31 [Selects](#selects)
-            * 6.1.5.32 [Session Timezone](#session-timezone)
-            * 6.1.5.33 [Settings](#settings)
-            * 6.1.5.34 [SSL Server](#ssl-server)
-            * 6.1.5.35 [Swarms](#swarms)
-            * 6.1.5.36 [Tiered Storage](#tiered-storage)
-            * 6.1.5.37 [Version](#version)
-            * 6.1.5.38 [Window Functions](#window-functions)
+        * 6.1.2 [Stress](#stress)
+        * 6.1.3 [Integration](#integration)
+        * 6.1.4 [Altinity TestFlows Integration](#altinity-testflows-integration)
+            * 6.1.4.1 [AES Encryption](#aes-encryption)
+            * 6.1.4.2 [Aggregate Functions](#aggregate-functions)
+            * 6.1.4.3 [Alter](#alter)
+            * 6.1.4.4 [Atomic Insert](#atomic-insert)
+            * 6.1.4.5 [Attach](#attach)
+            * 6.1.4.6 [Base58](#base58)
+            * 6.1.4.7 [Ontime Benchmark](#ontime-benchmark)
+            * 6.1.4.8 [ClickHouse Keeper](#clickhouse-keeper)
+            * 6.1.4.9 [ClickHouse Keeper Failover](#clickhouse-keeper-failover)
+            * 6.1.4.10 [Data Types](#data-types)
+            * 6.1.4.11 [DateTime64 Extended Range](#datetime64-extended-range)
+            * 6.1.4.12 [Disk Level Encryption](#disk-level-encryption)
+            * 6.1.4.13 [DNS](#dns)
+            * 6.1.4.14 [Engines](#engines)
+            * 6.1.4.15 [Example](#example)
+            * 6.1.4.16 [Extended Precision Data Types](#extended-precision-data-types)
+            * 6.1.4.17 [Functions](#functions)
+            * 6.1.4.18 [Iceberg](#iceberg)
+            * 6.1.4.19 [JWT Authentication](#jwt-authentication)
+            * 6.1.4.20 [Kafka](#kafka)
+            * 6.1.4.21 [Kerberos](#kerberos)
+            * 6.1.4.22 [Key Value](#key-value)
+            * 6.1.4.23 [LDAP](#ldap)
+            * 6.1.4.24 [Lightweight Delete](#lightweight-delete)
+            * 6.1.4.25 [Memory](#memory)
+            * 6.1.4.26 [Parquet](#parquet)
+            * 6.1.4.27 [Part Moves Between Shards](#part-moves-between-shards)
+            * 6.1.4.28 [RBAC](#rbac)
+            * 6.1.4.29 [S3](#s3)
+            * 6.1.4.30 [Selects](#selects)
+            * 6.1.4.31 [Session Timezone](#session-timezone)
+            * 6.1.4.32 [Settings](#settings)
+            * 6.1.4.33 [SSL Server](#ssl-server)
+            * 6.1.4.34 [Swarms](#swarms)
+            * 6.1.4.35 [Tiered Storage](#tiered-storage)
+            * 6.1.4.36 [Version](#version)
+            * 6.1.4.37 [Window Functions](#window-functions)
     * 6.2 [Regression Tests with Sanitizers](#regression-tests-with-sanitizers)
         * 6.2.1 [ASAN](#asan)
         * 6.2.2 [MSAN](#msan)
@@ -110,34 +108,35 @@ This test plan covers testing of ClickHouse 25.8 LTS (long-term support) Altinit
 
 ## Timeline
 
-The testing of 25.8.x binaries SHALL be started on [TBD] and be completed by [TBD].
+The testing of 25.8.16.10001 binaries SHALL be started on February 6, 2026 and be completed by February 18, 2026.
 
 ## Human Resources And Assignments
 
 The following team members SHALL be dedicated to the release:
 
 * Vitaliy Zakaznikov (manager)
-* Davit Mnatobishvili (regression, clickhouse-odbc, grafana, superset, DBeaver)
+* Davit Mnatobishvili (clickhouse-odbc, grafana, superset, DBeaver)
 * Alsu Giliazova (regression, clickhouse-jdbc, sqlalchemy, clickhouse-driver)
+* Carlos Raymundo (regression)
 * Saba Momtselidze (clickhouse-operator)
-* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
-* Dima Borovstov (Tableau)
-* Eugene Klimov (Superset)
+* Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup, ACM upgrade and downgrade)
+* Julian Huang (Tableau)
 * Mikhail Filimonov (production clusters, support team feedback)
 
-### Release Notes
+## Release Notes
 
 * [TBD]
 
 ## Known Issues
 
+* [FIXED] [distributed_ddl replicas_path mismatch causing ON CLUSTER DDL to hang](https://github.com/Altinity/ClickHouse/issues/1391) - results in 12 scenario failures
+
 ### Open Issues
 
-* [distributed_ddl replicas_path mismatch causing ON CLUSTER DDL to hang](https://github.com/Altinity/ClickHouse/issues/1391) - results in 12 scenario failures
-
+* No open issues
 
 ### Summary
-Build report: [TBD]
+Build report: https://s3.amazonaws.com/altinity-build-artifacts/REFs/releases/25.8.16/dba4ab3dbd1680ab8620fcc4c1f9209c1e2f8272/21752809609/ci_run_report.html
 
 > [!NOTE]
 > **\*Pass** - tests passed with known fails
@@ -145,7 +144,6 @@ Build report: [TBD]
 | Test Suite  | Result                                        | Comments |
 | --- |-----------------------------------------------| --- |
 | Stateless | [Pass](#stateless)                     |   |
-| Stateful | [Pass](#stateful)                      |   |
 | Stress | [Pass](#stress)                        |   |
 | Integration | [Pass](#integration)                   |   |
 | AES Encryption | [Pass](#aes-encryption)                |   |
@@ -165,7 +163,6 @@ Build report: [TBD]
 | Example | [Pass](#example)                       |   |
 | Extended Precision Data Types | [Pass](#extended-precision-data-types) |   |
 | Functions | [Pass](#functions)                     |   |
-| Hive Partitioning | [Pass](#hive-partitioning)           |   |
 | Iceberg | [Pass](#iceberg)                       |   |
 | JWT Authentication | [Pass](#jwt-authentication)           |   |
 | Kafka | [Pass](#kafka)                         |   |
@@ -192,9 +189,9 @@ Build report: [TBD]
 | Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)                 |  Tests run: 232, Failures: 0, Errors: 0, Skipped: 0 |
 | Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)          |   |
 | Backup `clickhouse-backup` | [Pass](#backup-clickhouse-backup)             |   |
-| Kubernetes `clickhouse-operator` | [Fail](#kubernetes-clickhouse-operator)       | 12 Fails, related to: [issue](https://github.com/Altinity/ClickHouse/issues/1391)  |
+| Kubernetes `clickhouse-operator` | [*Pass](#kubernetes-clickhouse-operator)       | Tests run: 80, 1 XFail, 2 Fails (expected)  |
 | Altinity.Cloud | [Pass](#altinitycloud)                        |   |
-| Production Cluster Operation | [TBD](#production-cluster-operation)         |   |
+| Production Cluster Operation | [Pass](#production-cluster-operation)         |   |
 | Upgrade And Downgrade | [Pass](#upgrade-and-downgrade)                |   |
 | Grafana | [Pass](#grafana)                              |   |
 | Tableau | [*Pass](#tableau)                     | 849 passed, 24 failed (97%). Expected fails. |
@@ -838,11 +835,15 @@ Compatibility with the [clickhouse-backup](https://github.com/altinity/clickhous
 
 #### Kubernetes `clickhouse-operator`
 
+Note:
+the build tag used for final run: altinityinfra/clickhouse-server:1403-25.8.16.10001.altinitytest-alpine
+
 clickhouse-operator version: 
 * 0.25.2
 
 Results: 
-* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator/ - before fix
+* https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/25.8.16-lts/clickhouse-operator-ddl-fix/ - after ddl-fix
 
 
 Compatibility with [clickhouse-operator](https://github.com/altinity/clickhouse-operator).

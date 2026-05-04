@@ -10,12 +10,12 @@ on:
         description: "📦 Package. Either 'docker://' or 'https://'. Example: 'https://.../clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://altinity/clickhouse-server:23.8.8'"
         required: true
         type: string
-        default: docker://altinity/clickhouse-server:25.3.8.10041.altinitystable
+        default: docker://altinity/clickhouse-server:25.3.8.10042.altinitystable
       version:
-        description: "🎯 Expected version. Example: 25.3.8.10041"
+        description: "🎯 Expected version. Example: 25.3.8.10042"
         type: string
         required: true
-        default: 25.3.8.10041.altinitystable
+        default: 25.3.8.10042.altinitystable
       arch:
         description: "🖥 Architecture"
         type: choice
@@ -696,7 +696,23 @@ jobs:
       part: 2
       timeout_minutes: 180
       storage_path: /iceberg 
-      regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*"'
+      regression_args: '--only "/iceberg/iceberg engine/glue catalog/*" "/iceberg/iceberg table engine/*" "/iceberg/export partition/*"'
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  ice:
+    if: false  # ice suite disabled in CI
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: ice
+      timeout_minutes: 180
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}
@@ -904,66 +920,6 @@ jobs:
       storage_path: /aws_s3
       regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*"'
       artifact_name: parquet-aws-artifacts
-      ref: ${{ inputs.ref }}
-      package: ${{ inputs.package }}
-      version: ${{ inputs.version }}
-      flags: ${{ inputs.flags }}
-      output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
-      artifacts: ${{ inputs.artifacts }}
-      runner_arch: ${{ inputs.arch }}
-    secrets: inherit
-
-  parquet_native_v3:
-    if: ${{ inputs.parquet_native_v3 == true && (inputs.suite == 'all' || inputs.suite == 'parquet_native_v3' || inputs.suite == 'parquet_all') }}
-    uses: ./.github/workflows/reusable-suite.yml
-    with:
-      suite_name: parquet
-      job_name: parquet_native_v3
-      timeout_minutes: 180
-      storage_path: /no_s3
-      regression_args: '--native-parquet-reader-v3'
-      artifact_name: parquet-artifacts-native-reader-v3
-      ref: ${{ inputs.ref }}
-      package: ${{ inputs.package }}
-      version: ${{ inputs.version }}
-      flags: ${{ inputs.flags }}
-      output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
-      artifacts: ${{ inputs.artifacts }}
-      runner_arch: ${{ inputs.arch }}
-    secrets: inherit
-
-  parquet_minio_native_v3:
-    if: ${{ inputs.parquet_native_v3 == true && (inputs.suite == 'all' || inputs.suite == 'parquet_minio_native_v3' || inputs.suite == 'parquet_all') }}
-    uses: ./.github/workflows/reusable-suite.yml
-    with:
-      suite_name: parquet
-      job_name: parquet_minio_native_v3
-      timeout_minutes: 180
-      storage_path: /minio
-      regression_args: '--storage minio --only "/parquet/minio/*" --native-parquet-reader-v3'
-      artifact_name: parquet-minio-artifacts-native-reader-v3
-      ref: ${{ inputs.ref }}
-      package: ${{ inputs.package }}
-      version: ${{ inputs.version }}
-      flags: ${{ inputs.flags }}
-      output_format: ${{ inputs.output_format }}
-      extra_args: ${{ inputs.extra_args }}
-      artifacts: ${{ inputs.artifacts }}
-      runner_arch: ${{ inputs.arch }}
-    secrets: inherit
-
-  parquet_aws_s3_native_v3:
-    if: ${{ inputs.parquet_native_v3 == true && (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'parquet_s3_native_v3' || inputs.suite == 'parquet_all' || inputs.suite == 'all_aws' || inputs.suite == 'all') }}
-    uses: ./.github/workflows/reusable-suite.yml
-    with:
-      suite_name: parquet
-      job_name: parquet_aws_s3_native_v3
-      timeout_minutes: 180
-      storage_path: /aws_s3
-      regression_args: '--storage aws_s3 --aws-s3-bucket {{AWS_BUCKET}} --aws-s3-region {{AWS_REGION}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-access-key {{AWS_ACCESS_KEY}} --only "/parquet/aws s3/*" --native-parquet-reader-v3'
-      artifact_name: parquet-aws-artifacts-native-reader-v3
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
       version: ${{ inputs.version }}

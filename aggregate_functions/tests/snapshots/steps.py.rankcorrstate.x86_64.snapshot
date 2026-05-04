@@ -703,6 +703,11 @@ _aggregate_functions_state_rankCorrState_with_group_by = r"""
 {"hex(rankCorrState(sin(number), exp(number)))":"0505EE0C098F54EDEA3F5BD5B66D3810C23F3399E0F581AFEEBF080A6DC20806E53F912F0C362660DA3F5165148B0ABF054035B76FBFE51534401C237099388D62402EEEAE5A88229140452B477C15A7BF40","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
+_aggregate_functions_state_rankCorrState_with_group_by_binary = r"""
+{"hex(rankCorrState(sin(number), exp(number)))":"0505000000000000000046B4D1EAF618ED3FAE1EDCDDB937E8BFC0A2B08AF1E1D1BF7BCF28A0D2A8EF3F000000000000F03FE9C0D4B8648E1D404550272E904C4B40A4BF9056DC367940C0F8467DEA49A740","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+{"hex(rankCorrState(sin(number), exp(number)))":"0505EE0C098F54EDEA3F5BD5B66D3810C23F3399E0F581AFEEBF080A6DC20806E53F912F0C362660DA3F5065148B0ABF054035B76FBFE51534401C237099388D62402EEEAE5A88229140452B477C15A7BF40","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
 _aggregate_functions_state_rankCorrState_zero_rows = r"""
 {"hex(rankCorrState(number, number))":"0000","any(toTypeName(number))":"","any(toTypeName(number))":""}
 """

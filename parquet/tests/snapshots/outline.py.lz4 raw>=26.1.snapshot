@@ -1,0 +1,2 @@
+lz4_raw_structure = r"""'c0\tInt64\t\t\t\t\t\nc1\tString\t\t\t\t\t\nv11\tNullable(Float64)'"""
+

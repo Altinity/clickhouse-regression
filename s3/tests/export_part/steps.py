@@ -8,7 +8,12 @@ from helpers.create import *
 from helpers.queries import *
 from s3.tests.common import temporary_bucket_path, s3_storage
 from helpers.alter import *
+from helpers.cluster import MESSAGES_TO_RETRY
 from platform import processor
+
+# Stress/concurrent scenarios can hit ClickHouse 745 SERVER_OVERLOADED (CPU wait ratio);
+# extend default client retries for partition setup INSERTs only.
+_EXPORT_PART_MESSAGES_TO_RETRY = list(MESSAGES_TO_RETRY) + ["(SERVER_OVERLOADED)"]
 
 MINIO_CONTAINER = (
     "s3_env-minio1-1" if processor() == "x86_64" else "s3_env_arm64-minio1-1"
@@ -230,6 +235,7 @@ def create_new_partition(
                 f"INSERT INTO {table_name} (p, i) SELECT {partition_id}, rand64() FROM numbers({number_of_values})",
                 exitcode=0,
                 steps=True,
+                messages_to_retry=_EXPORT_PART_MESSAGES_TO_RETRY,
             )
 
     return partition_id
@@ -673,8 +679,15 @@ def export_parts(
     exitcode=0,
     settings=None,
     inline_settings=True,
+    retry_on_busy=True,
 ):
-    """Export parts from a source table to a destination table on the same node. If parts are not provided, all parts will be exported."""
+    """Export parts from a source table to a destination table on the same node.
+    If parts are not provided, all parts will be exported.
+    When retry_on_busy is True (default) and exitcode=0, retries exports that
+    fail with 'Background executor is busy' until a slot becomes available.
+    Parts that become outdated (e.g. merged away) during export are skipped,
+    and any new successor parts are exported in a follow-up pass.
+    """
     if node is None:
         node = self.context.node
 
@@ -686,10 +699,28 @@ def export_parts(
 
     no_checks = exitcode != 0
     output = []
+    exported = set()
 
-    for part in parts:
-        output.append(
-            node.query(
+    def _export_part(part):
+        if retry_on_busy and exitcode == 0:
+            for attempt in retries(timeout=300, delay=0.1):
+                with attempt:
+                    r = node.query(
+                        f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
+                        no_checks=True,
+                        steps=True,
+                        settings=settings,
+                        inline_settings=inline_settings,
+                    )
+                    if r.exitcode != 0 and "Background executor is busy" in r.output:
+                        fail("Background executor is busy, retrying")
+                    if r.exitcode != 0 and "outdated state" in r.output:
+                        note(f"Part '{part}' is outdated (merged away), skipping")
+                        return None
+                    assert r.exitcode == 0, error()
+            return r
+        else:
+            return node.query(
                 f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE {destination_table}",
                 exitcode=exitcode,
                 no_checks=no_checks,
@@ -697,7 +728,21 @@ def export_parts(
                 settings=settings,
                 inline_settings=inline_settings,
             )
-        )
+
+    for part in parts:
+        r = _export_part(part)
+        if r is not None:
+            output.append(r)
+            exported.add(part)
+
+    if retry_on_busy and exitcode == 0 and len(exported) < len(parts):
+        current_parts = get_parts(table_name=source_table, node=node)
+        new_parts = [p for p in current_parts if p not in exported]
+        for part in new_parts:
+            r = _export_part(part)
+            if r is not None:
+                output.append(r)
+                exported.add(part)
 
     return output
 
@@ -715,8 +760,12 @@ def export_parts_to_table_function(
     structure=None,
     partition_by=None,
     uri=None,
+    retry_on_busy=True,
 ):
-    """Export parts from a source table to a table function destination."""
+    """Export parts from a source table to a table function destination.
+    When retry_on_busy is True (default) and exitcode=0, retries exports that
+    fail with 'Background executor is busy' until a slot becomes available.
+    """
     if node is None:
         node = self.context.node
 
@@ -744,7 +793,9 @@ def export_parts_to_table_function(
         )
         partition_by = partition_key_result.output.strip()
 
-    for part in parts:
+    exported = set()
+
+    def _export_part_tf(part):
         if structure:
             table_function_params = f"s3_credentials, url='{uri}{filename}', format='Parquet', structure='{structure}', partition_strategy='hive'"
         else:
@@ -752,8 +803,25 @@ def export_parts_to_table_function(
 
         query = f"ALTER TABLE {source_table} EXPORT PART '{part}' TO TABLE FUNCTION s3({table_function_params}) PARTITION BY {partition_by}"
 
-        output.append(
-            node.query(
+        if retry_on_busy and exitcode == 0:
+            for attempt in retries(timeout=300, delay=0.1):
+                with attempt:
+                    r = node.query(
+                        query,
+                        no_checks=True,
+                        steps=True,
+                        settings=settings,
+                        inline_settings=inline_settings,
+                    )
+                    if r.exitcode != 0 and "Background executor is busy" in r.output:
+                        fail("Background executor is busy, retrying")
+                    if r.exitcode != 0 and "outdated state" in r.output:
+                        note(f"Part '{part}' is outdated (merged away), skipping")
+                        return None
+                    assert r.exitcode == 0, error()
+            return r
+        else:
+            return node.query(
                 query,
                 exitcode=exitcode,
                 no_checks=no_checks,
@@ -761,7 +829,21 @@ def export_parts_to_table_function(
                 settings=settings,
                 inline_settings=inline_settings,
             )
-        )
+
+    for part in parts:
+        r = _export_part_tf(part)
+        if r is not None:
+            output.append(r)
+            exported.add(part)
+
+    if retry_on_busy and exitcode == 0 and len(exported) < len(parts):
+        current_parts = get_parts(table_name=source_table, node=node)
+        new_parts = [p for p in current_parts if p not in exported]
+        for part in new_parts:
+            r = _export_part_tf(part)
+            if r is not None:
+                output.append(r)
+                exported.add(part)
 
     return output
 
@@ -1098,9 +1180,15 @@ def part_log_matches_destination(self, source_table, destination_table, node=Non
             flush_log(node=node, table_name="system.part_log")
             part_log = get_part_log(table_name=source_table, node=node)
             destination_parts = get_s3_parts(table_name=destination_table)
+            # part_log is historical: alters (e.g. REPLACE PARTITION) remove parts but
+            # leave old ExportPart rows; only parts still present on the source must
+            # appear under the destination prefix.
+            current_parts = set(get_parts(table_name=source_table, node=node))
 
             missing_parts = []
             for part_name in part_log:
+                if part_name not in current_parts:
+                    continue
                 if not any(
                     dest_part.startswith(part_name) for dest_part in destination_parts
                 ):

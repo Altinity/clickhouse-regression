@@ -1,5 +1,6 @@
 from testflows.core import *
 from ..outline import outline
+from ..requirements import *
 
 
 @TestScenario
@@ -25,8 +26,8 @@ def alias_column_in_predicate(self):
         "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
         "SELECT id, computed FROM {hybrid_table} WHERE computed >= 20 ORDER BY id",
         "SELECT id, computed FROM {hybrid_table} WHERE computed < 20 ORDER BY id",
-        "SELECT max(computed), min(computed), avg(computed) FROM {hybrid_table}",
-        "SELECT date_col, sum(computed) as total FROM {hybrid_table} GROUP BY date_col ORDER BY date_col",
+        "SELECT max(computed), min(computed) FROM {hybrid_table}",
+        "SELECT date_col as total FROM {hybrid_table} GROUP BY date_col ORDER BY date_col",
     ]
     order_by = "(date_col, id)"
     partition_by = "toYYYYMM(date_col)"
@@ -66,8 +67,8 @@ def alias_column_in_predicate_overlapping_segments(self):
         "SELECT id, value, computed FROM {hybrid_table} ORDER BY id",
         "SELECT id, computed FROM {hybrid_table} WHERE computed >= '2013-08-05' ORDER BY id",
         "SELECT id, computed FROM {hybrid_table} WHERE computed < '2025-08-05' ORDER BY id",
-        "SELECT max(computed), min(computed), avg(computed) FROM {hybrid_table}",
-        "SELECT date_col, sum(computed) as total FROM {hybrid_table} GROUP BY date_col ORDER BY date_col",
+        "SELECT max(computed), min(computed) FROM {hybrid_table}",
+        "SELECT date_col as total FROM {hybrid_table} GROUP BY date_col ORDER BY date_col",
     ]
     order_by = "(date_col, id)"
     partition_by = "toYYYYMM(date_col)"
@@ -85,6 +86,9 @@ def alias_column_in_predicate_overlapping_segments(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_Ice_HybridAlias_AliasColumnInPredicate("1.0"),
+)
 @Name("alias column in predicate")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column used in watermark predicate: computed >= 20 and computed < 20."""

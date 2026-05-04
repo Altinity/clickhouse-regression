@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -44,6 +45,7 @@ def default_uint256(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Constants("1.0"))
 @Name("default uint256")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: default_uint256 ALIAS 115792089237316195423570985008687907853269984665640564039457584007913129639935."""

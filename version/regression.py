@@ -56,6 +56,18 @@ xfails = {
             == "HEAD",
         ),
     ],
+    "/version/altinity/no clickhouse cloud url in binary/": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1670",
+        ),
+    ],
+    "/version/altinity/no clickhouse cloud url in auth error/": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1670",
+        ),
+    ],
 }
 
 

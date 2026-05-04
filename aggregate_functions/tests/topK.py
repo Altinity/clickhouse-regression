@@ -14,7 +14,9 @@ from aggregate_functions.tests.any import scenario as checks
 def scenario(self, func="topK({params})", table=None, snapshot_id=None):
     """Check topK aggregate function by using the same checks as for any
     as well as functions specific checks."""
-    if check_clickhouse_version(">=24.8")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.8")(self):
         clickhouse_version = (
             ">=24.8"  # https://github.com/ClickHouse/ClickHouse/issues/69518
         )

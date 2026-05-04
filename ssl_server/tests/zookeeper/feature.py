@@ -1,3 +1,4 @@
+from helpers.common import check_is_boringssl_build
 from ssl_server.tests.common import fips_compatible_tlsv1_2_cipher_suites
 from ssl_server.tests.zookeeper.steps import *
 
@@ -80,6 +81,8 @@ def secure_connection_without_client_certificate(self):
     ):
         if check_clickhouse_version("<24.4")(self):
             message = "Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+        elif check_is_boringssl_build(self):
+            message = "SSL Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
         else:
             message = "SSL Exception: error:0A000412:SSL routines::ssl/tls alert bad certificate"
 
@@ -131,6 +134,8 @@ def secure_connection_with_unsigned_client_certificate(self):
     ):
         if check_clickhouse_version("<24.4")(self):
             message = "Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
+        elif check_is_boringssl_build(self):
+            message = "SSL Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
         else:
             message = "SSL Exception: error:0A000416:SSL routines::ssl/tls alert certificate unknown"
 
@@ -336,4 +341,6 @@ def feature(self, node="clickhouse1", zookeeper_node="zookeeper"):
     for scenario in loads(current_module(), Scenario):
         scenario()
 
-    Feature(run=fips)
+    # Superseded by zookeeper_fips/feature_140_3.py which covers
+    # both TLSv1.2 and TLSv1.3 FIPS 140-3 ciphers.
+    # Feature(run=fips)

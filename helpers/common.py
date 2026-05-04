@@ -117,24 +117,81 @@ def check_msan_in_binary_link(test):
     return "msan" in binary_path
 
 
+def full_clickhouse_version_string(test=None):
+    """Return ``test.context.full_clickhouse_version`` when available.
+
+    XFail / FFail / Skip predicates and helpers may run before
+    :func:`testflows.core.current` is bound to an active test (for example
+    while building module-level ``xfails`` / ``ffails`` dicts, or when a
+    tuple accidentally calls ``check_if_*()`` at import time). Prefer the
+    explicit ``test`` object when the caller has it; otherwise fall back to
+    ``current().context``. Missing both yields ``""`` so substring checks
+    return False for "is antalya / is altinity" style questions instead of
+    raising ``AttributeError``.
+    """
+    if test is not None:
+        ctx = getattr(test, "context", None)
+        if ctx is not None:
+            v = getattr(ctx, "full_clickhouse_version", None)
+            if v:
+                return v
+    c = current()
+    if c is not None:
+        ctx = getattr(c, "context", None)
+        if ctx is not None:
+            v = getattr(ctx, "full_clickhouse_version", None)
+            if v:
+                return v
+    return ""
+
+
 def check_if_antalya_build(test=None):
     """True if build is Antalya build."""
-    return "antalya" in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "antalya" in v
 
 
 def check_if_not_antalya_build(test=None):
     """True if build is not Antalya build."""
-    return "antalya" not in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "antalya" not in v
 
 
 def check_if_altinity_build(test=None):
     """True if build is Altinity build."""
-    return "altinity" in current().context.full_clickhouse_version
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "altinity" in v
 
 
 def check_if_25_8_altinity_build(test=None):
     """True if build is 25.8 Altinity build."""
-    return "25.8" in current().context.full_clickhouse_version and check_if_altinity_build() and check_if_not_antalya_build()
+    v = full_clickhouse_version_string(test)
+    if not v:
+        return False
+    return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
+
+
+def check_clickhouse_version_or_antalya(version):
+    """Return a predicate that is True when either ``check_clickhouse_version(version)``
+    matches *or* the build is an Antalya build.
+
+    Antalya is currently based on ClickHouse 25.8 but ships parquet behavior that
+    matches upstream >=26.1, so version-gated branches that select snapshots /
+    settings for >=26.1 must also fire for Antalya.
+    """
+
+    def check(test):
+        return bool(
+            check_clickhouse_version(version)(test) or check_if_antalya_build(test)
+        )
+
+    return check
 
 
 def check_if_head(test):
@@ -226,6 +283,33 @@ def check_clickhouse_version(version):
             return clickhouse_version_list == version_list
 
     return check
+
+
+def check_is_boringssl_build(test):
+    """Return True if ClickHouse was built with BoringSSL/AWS-LC (OPENSSL_IS_BORING_SSL=1).
+
+    Use this instead of matching ``fips`` in the version string: PR and CI builds often use
+    suffixes like ``altinitytest`` while still linking AWS-LC."""
+    node = getattr(test.context, "node", None)
+    if node is None:
+        node = getattr(current().context, "node", None)
+    if node is None:
+        cluster = getattr(test.context, "cluster", None) or getattr(
+            current().context, "cluster", None
+        )
+        if cluster is not None and "clickhouse" in getattr(cluster, "nodes", {}):
+            try:
+                node = cluster.node(cluster.nodes["clickhouse"][0])
+            except (AttributeError, IndexError, KeyError):
+                node = None
+    if node is None:
+        return False
+    output = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'OPENSSL_IS_BORING_SSL' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    return output == "1"
 
 
 def check_is_altinity_build(node=None):
@@ -1258,17 +1342,54 @@ def set_envs_on_node(self, envs, node=None):
                 node.command(f"unset {key}", exitcode=0)
 
 
-def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
+def get_snapshot_id(
+    snapshot_id=None,
+    clickhouse_version=None,
+    or_antalya=False,
+    antalya_suffix=False,
+):
     """Return snapshot id based on the current test's name
-    and ClickHouse server version."""
+    and ClickHouse server version.
+
+    When ``or_antalya=True``, Antalya builds are treated as matching
+    ``clickhouse_version`` so they pick up the version-suffixed snapshot id
+    even though their semver string (e.g. 25.8.x) does not satisfy the
+    ``check_clickhouse_version`` predicate. This keeps Antalya snapshots
+    separate from the unsuffixed (regular 25.8) ones.
+
+    When ``antalya_suffix=True`` and the build is Antalya, an additional
+    ``_antalya`` suffix is appended to the snapshot id so Antalya loads
+    a dedicated snapshot file. This is needed for behaviours that differ
+    on Antalya from both regular 25.8 and regular 26.1 (e.g. Parquet
+    reader v3 schema inference always wraps inferred columns in
+    ``Nullable``)."""
     id_postfix = ""
     if clickhouse_version:
-        if check_clickhouse_version(clickhouse_version)(current()):
+        matches = check_clickhouse_version(clickhouse_version)(current())
+        if or_antalya and not matches:
+            matches = check_if_antalya_build(current())
+        if matches:
             id_postfix = clickhouse_version
+
+    if antalya_suffix and check_if_antalya_build(current()):
+        id_postfix = id_postfix + "_antalya"
 
     if snapshot_id is None:
         return unclean(name.basename(current().name)) + id_postfix
     return snapshot_id
+
+
+def antalya_snapshot_name(snapshot_name, test=None):
+    """Append ``_antalya`` suffix to ``snapshot_name`` when running on an
+    Antalya build, otherwise return it unchanged.
+
+    Useful for tests that select a snapshot variable inside a snapshot file
+    (rather than by snapshot id / file name) and need a dedicated value on
+    Antalya because the Parquet reader v3 (default on Antalya) infers
+    types differently from the legacy reader used on regular 25.8 / 26.1."""
+    if check_if_antalya_build(test if test is not None else current()):
+        return snapshot_name + "_antalya"
+    return snapshot_name
 
 
 def get_settings_value(

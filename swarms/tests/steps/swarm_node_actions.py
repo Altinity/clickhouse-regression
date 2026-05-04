@@ -39,7 +39,9 @@ def restart_random_swarm_node(self, delay=None):
 
 
 @TestStep(Given)
-def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
+def restart_clickhouse_on_random_swarm_node(
+    self, signal="SEGV", delay=None, delay_before_execution=0
+):
     """
     Send a kill signal to a random clickhouse swarm instance, wait, and restart.
     """
@@ -48,29 +50,31 @@ def restart_clickhouse_on_random_swarm_node(self, signal="SEGV", delay=None):
     if delay is None:
         delay = random.random() * 10 + 1
 
+    if delay_before_execution > 0:
+        with When(f"I wait {delay_before_execution}s"):
+            time.sleep(delay_before_execution)
+
     with interrupt_clickhouse(clickhouse_node, safe=False, signal=signal):
-        with When(f"I wait {delay:.2}s"):
+        with When(f"I wait {delay}s"):
             time.sleep(delay)
 
 
 @TestStep(Given)
-@Retry(timeout=step_retry_timeout, delay=step_retry_delay)
 def restart_network_on_random_swarm_node(
-    self, restart_node_after=True, delay_before_disconnect=2
+    self, restart_node_after=True, delay_before_disconnect=5, delay=100
 ):
     """
     Stop the network on a random instance, wait, and restart.
     This simulates a short outage.
     """
     node = random.choice(self.context.swarm_nodes)
-    delay = random.random() * 5 + 1
 
     if delay_before_disconnect:
         with When(f"I wait {delay_before_disconnect}s before disconnecting"):
             time.sleep(delay_before_disconnect)
 
     with interrupt_network(self.context.cluster, node, "swarms"):
-        with When(f"I wait {delay:.2}s"):
+        with When(f"I wait {delay}s"):
             time.sleep(delay)
 
     if restart_node_after:
@@ -82,7 +86,13 @@ def restart_network_on_random_swarm_node(
 def fill_clickhouse_disks(
     self, node=None, database_name=None, minio_root_user=None, minio_root_password=None
 ):
-    """Force clickhouse to run out of disk space."""
+    """Force ClickHouse data (and limited log) volumes to run out of free space.
+
+    The initiator's ``<path>`` is redirected to a small tmpfs (see
+    ``clickhouse_limited_disk_config``). Swarm / object_storage_cluster work is
+    scheduled on swarm nodes; the initiator mainly coordinates and uses RAM,
+    so queries can still succeed while the initiator's data volume is full.
+    """
     if node is None:
         node = self.context.node
 
@@ -96,12 +106,13 @@ def fill_clickhouse_disks(
     with Given("apply limited disk config"):
         clickhouse_limited_disk_config(node=node)
 
-    if database_name is not None:
-        iceberg_engine.create_experimental_iceberg_database(
-            database_name=database_name,
-            s3_access_key_id=minio_root_user,
-            s3_secret_access_key=minio_root_password,
-        )
+    with When("create database if not exists"):
+        if database_name is not None:
+            iceberg_engine.create_experimental_iceberg_database(
+                database_name=database_name,
+                s3_access_key_id=minio_root_user,
+                s3_secret_access_key=minio_root_password,
+            )
 
     try:
         for disk_mount in clickhouse_disk_mounts:
@@ -123,7 +134,7 @@ def fill_clickhouse_disks(
 
         with And("check that disk is actually full"):
             result = node.query(
-                f"SELECT total_space, free_space FROM system.disks FORMAT TabSeparated"
+                "SELECT total_space, free_space FROM system.disks FORMAT TabSeparated"
             )
             assert result.output == "1073740800	0", error()
 
@@ -132,9 +143,15 @@ def fill_clickhouse_disks(
     finally:
         with Finally(f"I delete the large file on {node.name}"):
             for disk_mount in clickhouse_disk_mounts:
-                node.command(f"rm {disk_mount}/{file_name}")
+                node.command(f"rm -f {disk_mount}/{file_name}")
 
-        with And(f"I restart {node.name} in case it crashed"):
+        override = getattr(self.context, "limited_disk_override_path", None)
+        if override:
+            with And("remove limited-disk override config"):
+                node.command(f"rm -f {override}", no_checks=True, steps=False)
+                self.context.limited_disk_override_path = None
+
+        with And(f"I restart {node.name} to restore default paths"):
             node.restart_clickhouse(safe=False)
 
 

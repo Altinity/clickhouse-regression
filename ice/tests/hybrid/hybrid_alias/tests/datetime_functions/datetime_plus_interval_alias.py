@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -84,6 +85,7 @@ def datetime_plus_interval_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_DateTimeFunction("1.0"))
 @Name("datetime plus interval alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: datetime_plus_interval ALIAS datetime_col + INTERVAL 1 HOUR."""

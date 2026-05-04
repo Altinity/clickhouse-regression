@@ -519,12 +519,32 @@ ffails = {
     "/:/:/export tests/export part/*": (
         Skip,
         "Export part introduced in Antalya build",
-        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<25.8")(test),
     ),
     "/:/:/export tests/export partition/*": (
         Skip,
         "Export partition introduced in Antalya build",
-        check_if_not_antalya_build or check_clickhouse_version("<25.8"),
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<25.8")(test),
+    ),
+    "/:/:/export tests/export part/filename pattern/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.1")(test),
+    ),
+    "/:/:/export tests/export partition/sanity/partition export tight pool lock inside task/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.1")(test),
+    ),
+    "/:/:/export tests/export partition/sanity/replicated partition exports local mode peer replica/*": (
+        Skip,
+        "Export partition introduced in Antalya build",
+        lambda test: check_if_not_antalya_build(test)
+        or check_clickhouse_version("<26.1")(test),
     ),
 }
 

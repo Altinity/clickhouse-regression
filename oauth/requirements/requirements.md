@@ -10,8 +10,10 @@
     * 3.1 [Access Token Processors](#access-token-processors)
     * 3.2 [Authentication Modes with OAuth Tokens](#authentication-modes-with-oauth-tokens)
 * 4 [Authentication with OAuth](#authentication-with-oauth)
-    * 4.1 [Forward OAuth Identity](#forward-oauth-identity)
-        * 4.1.1 [RQ.SRS-042.OAuth.Grafana.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaforwardoauthidentity)
+    * 4.1 [Enable Token Auth Setting](#enable-token-auth-setting)
+        * 4.1.1 [RQ.SRS-042.OAuth.EnableTokenAuth](#rqsrs-042oauthenabletokenauth)
+    * 4.2 [Forward OAuth Identity](#forward-oauth-identity)
+        * 4.2.1 [RQ.SRS-042.OAuth.Grafana.ForwardOAuthIdentity](#rqsrs-042oauthgrafanaforwardoauthidentity)
 * 5 [Identity Providers](#identity-providers)
     * 5.1 [Number of Identity Providers That Can Be Used Concurrently](#number-of-identity-providers-that-can-be-used-concurrently)
         * 5.1.1 [RQ.SRS-042.OAuth.IdentityProviders.Concurrent](#rqsrs-042oauthidentityprovidersconcurrent)
@@ -135,92 +137,102 @@
             * 8.6.3.2 [RQ.SRS-042.OAuth.Keycloak.Actions.ConsentRevoked](#rqsrs-042oauthkeycloakactionsconsentrevoked)
         * 8.6.4 [Keycloak Token and Session Management](#keycloak-token-and-session-management)
             * 8.6.4.1 [RQ.SRS-042.OAuth.Keycloak.Actions.TokenInvalid](#rqsrs-042oauthkeycloakactionstokeninvalid)
-* 9 [Static Key](#static-key)
-    * 9.1 [Access Token Processors For Static Key](#access-token-processors-for-static-key)
-        * 9.1.1 [RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors](#rqsrs-042oauthstatickeyaccesstokenprocessors)
-    * 9.2 [Static Key as an External User Directory](#static-key-as-an-external-user-directory)
-        * 9.2.1 [RQ.SRS-042.OAuth.StaticKey.UserDirectory](#rqsrs-042oauthstatickeyuserdirectory)
-    * 9.3 [Static Key Algorithm Support](#static-key-algorithm-support)
-        * 9.3.1 [RQ.SRS-042.OAuth.StaticKey.Algorithms](#rqsrs-042oauthstatickeyalgorithms)
-            * 9.3.1.1 [RQ.SRS-042.OAuth.StaticKey.Algorithm.None](#rqsrs-042oauthstatickeyalgorithmnone)
-    * 9.4 [Static Key Configuration Parameters](#static-key-configuration-parameters)
-        * 9.4.1 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKey](#rqsrs-042oauthstatickeyparametersstatickey)
-        * 9.4.2 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKeyBase64](#rqsrs-042oauthstatickeyparametersstatickeybase64)
-        * 9.4.3 [RQ.SRS-042.OAuth.StaticKey.Parameters.PublicKey](#rqsrs-042oauthstatickeyparameterspublickey)
-        * 9.4.4 [RQ.SRS-042.OAuth.StaticKey.Parameters.PrivateKey](#rqsrs-042oauthstatickeyparametersprivatekey)
-        * 9.4.5 [RQ.SRS-042.OAuth.StaticKey.Parameters.PublicKeyPassword](#rqsrs-042oauthstatickeyparameterspublickeypassword)
-        * 9.4.6 [RQ.SRS-042.OAuth.StaticKey.Parameters.PrivateKeyPassword](#rqsrs-042oauthstatickeyparametersprivatekeypassword)
-        * 9.4.7 [RQ.SRS-042.OAuth.StaticKey.Parameters.Claims](#rqsrs-042oauthstatickeyparametersclaims)
-    * 9.5 [Static Key Configuration Validation](#static-key-configuration-validation)
-        * 9.5.1 [RQ.SRS-042.OAuth.StaticKey.Configuration.Validation](#rqsrs-042oauthstatickeyconfigurationvalidation)
-* 10 [Static JWKS](#static-jwks)
-    * 10.1 [Access Token Processors For Static JWKS](#access-token-processors-for-static-jwks)
-        * 10.1.1 [RQ.SRS-042.OAuth.StaticJWKS.AccessTokenProcessors](#rqsrs-042oauthstaticjwksaccesstokenprocessors)
-    * 10.2 [Static JWKS as an External User Directory](#static-jwks-as-an-external-user-directory)
-        * 10.2.1 [RQ.SRS-042.OAuth.StaticJWKS.UserDirectory](#rqsrs-042oauthstaticjwksuserdirectory)
-    * 10.3 [Static JWKS Configuration Parameters](#static-jwks-configuration-parameters)
-        * 10.3.1 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.StaticJwks](#rqsrs-042oauthstaticjwksparametersstaticjwks)
-        * 10.3.2 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.StaticJwksFile](#rqsrs-042oauthstaticjwksparametersstaticjwksfile)
-        * 10.3.3 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.Claims](#rqsrs-042oauthstaticjwksparametersclaims)
-        * 10.3.4 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.VerifierLeeway](#rqsrs-042oauthstaticjwksparametersverifierleeway)
-    * 10.4 [Static JWKS Configuration Validation](#static-jwks-configuration-validation)
-        * 10.4.1 [RQ.SRS-042.OAuth.StaticJWKS.Configuration.Validation](#rqsrs-042oauthstaticjwksconfigurationvalidation)
-    * 10.5 [Static JWKS Algorithm Support](#static-jwks-algorithm-support)
-        * 10.5.1 [RQ.SRS-042.OAuth.StaticJWKS.Algorithms](#rqsrs-042oauthstaticjwksalgorithms)
-* 11 [Remote JWKS](#remote-jwks)
-    * 11.1 [Access Token Processors For Remote JWKS](#access-token-processors-for-remote-jwks)
-        * 11.1.1 [RQ.SRS-042.OAuth.RemoteJWKS.AccessTokenProcessors](#rqsrs-042oauthremotejwksaccesstokenprocessors)
-    * 11.2 [Setting up Remote JWKS](#setting-up-remote-jwks)
-        * 11.2.1 [RQ.SRS-042.OAuth.RemoteJWKS.Setup](#rqsrs-042oauthremotejwkssetup)
-    * 11.3 [Remote JWKS Configuration Parameters](#remote-jwks-configuration-parameters)
-        * 11.3.1 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksUri](#rqsrs-042oauthremotejwksparametersjwksuri)
-        * 11.3.2 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksRefreshTimeout](#rqsrs-042oauthremotejwksparametersjwksrefreshtimeout)
-        * 11.3.3 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.Claims](#rqsrs-042oauthremotejwksparametersclaims)
-        * 11.3.4 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.VerifierLeeway](#rqsrs-042oauthremotejwksparametersverifierleeway)
-    * 11.4 [Remote JWKS Configuration Validation](#remote-jwks-configuration-validation)
-        * 11.4.1 [RQ.SRS-042.OAuth.RemoteJWKS.Configuration.Validation](#rqsrs-042oauthremotejwksconfigurationvalidation)
-    * 11.5 [Remote JWKS Network Handling](#remote-jwks-network-handling)
-        * 11.5.1 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Timeout](#rqsrs-042oauthremotejwksnetworktimeout)
-        * 11.5.2 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Retry](#rqsrs-042oauthremotejwksnetworkretry)
-        * 11.5.3 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Cache](#rqsrs-042oauthremotejwksnetworkcache)
-    * 11.6 [Remote JWKS Error Handling](#remote-jwks-error-handling)
-        * 11.6.1 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.NetworkFailure](#rqsrs-042oauthremotejwkserrorhandlingnetworkfailure)
-        * 11.6.2 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.InvalidResponse](#rqsrs-042oauthremotejwkserrorhandlinginvalidresponse)
-        * 11.6.3 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.ExpiredCache](#rqsrs-042oauthremotejwkserrorhandlingexpiredcache)
-* 12 [Token Processor](#token-processor)
-    * 12.1 [Common Configuration Parameters](#common-configuration-parameters)
-        * 12.1.1 [RQ.SRS-042.OAuth.Common.Parameters.CacheLifetime](#rqsrs-042oauthcommonparameterscachelifetime)
-        * 12.1.2 [RQ.SRS-042.OAuth.Common.Parameters.UsernameClaim](#rqsrs-042oauthcommonparametersusernameclaim)
-        * 12.1.3 [RQ.SRS-042.OAuth.Common.Parameters.GroupsClaim](#rqsrs-042oauthcommonparametersgroupsclaim)
-        * 12.1.4 [RQ.SRS-042.OAuth.Common.Parameters.Unfiltered](#rqsrs-042oauthcommonparametersunfiltered)
-    * 12.2 [Token Cache Behavior](#token-cache-behavior)
-        * 12.2.1 [RQ.SRS-042.OAuth.Common.Cache.Behavior](#rqsrs-042oauthcommoncachebehavior)
-    * 12.3 [Configuration Validation](#configuration-validation)
-        * 12.3.1 [RQ.SRS-042.OAuth.Common.Configuration.Validation](#rqsrs-042oauthcommonconfigurationvalidation)
-* 13 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
-    * 13.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
-        * 13.1.1 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthauthenticationincorrectrequestsheaderalg)
-        * 13.1.2 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthauthenticationincorrectrequestsheadertyp)
-        * 13.1.3 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthauthenticationincorrectrequestsheadersignature)
-        * 13.1.4 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthauthenticationincorrectrequestsbodysub)
-        * 13.1.5 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthauthenticationincorrectrequestsbodyaud)
-        * 13.1.6 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthauthenticationincorrectrequestsbodyexp)
-    * 13.2 [Token Handling](#token-handling)
-        * 13.2.1 [RQ.SRS-042.OAuth.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthauthenticationtokenhandlingincorrect)
-        * 13.2.2 [RQ.SRS-042.OAuth.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthauthenticationtokenhandlingemptystring)
-    * 13.3 [Caching](#caching)
-        * 13.3.1 [RQ.SRS-042.OAuth.Authentication.Caching](#rqsrs-042oauthauthenticationcaching)
-        * 13.3.2 [Disable Caching](#disable-caching)
-            * 13.3.2.1 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthauthenticationcachingcacheevictionnocache)
-        * 13.3.3 [Cache Lifetime](#cache-lifetime)
-            * 13.3.3.1 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthauthenticationcachingcacheevictioncachelifetime)
-        * 13.3.4 [Cache Eviction Policy](#cache-eviction-policy)
-            * 13.3.4.1 [RQ.SRS-042.OAuth.Authentication.Caching.TokensPerUser](#rqsrs-042oauthauthenticationcachingtokensperuser)
-            * 13.3.4.2 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEntryRefresh](#rqsrs-042oauthauthenticationcachingcacheentryrefresh)
-            * 13.3.4.3 [RQ.SRS-042.OAuth.Authentication.Caching.LazyCleanup](#rqsrs-042oauthauthenticationcachinglazycleanup)
-    * 13.4 [Authentication and Login](#authentication-and-login)
-        * 13.4.1 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication](#rqsrs-042oauthauthenticationactionsauthentication)
-        * 13.4.2 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication.Client](#rqsrs-042oauthauthenticationactionsauthenticationclient)
+* 9 [Google](#google)
+    * 9.1 [Access Token Processor for Google](#access-token-processor-for-google)
+        * 9.1.1 [RQ.SRS-042.OAuth.Google.AccessTokenProcessor](#rqsrs-042oauthgoogleaccesstokenprocessor)
+    * 9.2 [Google as an External User Directory](#google-as-an-external-user-directory)
+        * 9.2.1 [RQ.SRS-042.OAuth.Google.UserDirectory](#rqsrs-042oauthgoogleuserdirectory)
+    * 9.3 [Google OpenID Configuration](#google-openid-configuration)
+        * 9.3.1 [RQ.SRS-042.OAuth.Google.OpenIDConfiguration](#rqsrs-042oauthgoogleopenidconfiguration)
+* 10 [Static Key](#static-key)
+    * 10.1 [Access Token Processors For Static Key](#access-token-processors-for-static-key)
+        * 10.1.1 [RQ.SRS-042.OAuth.StaticKey.AccessTokenProcessors](#rqsrs-042oauthstatickeyaccesstokenprocessors)
+    * 10.2 [Static Key as an External User Directory](#static-key-as-an-external-user-directory)
+        * 10.2.1 [RQ.SRS-042.OAuth.StaticKey.UserDirectory](#rqsrs-042oauthstatickeyuserdirectory)
+    * 10.3 [Static Key Algorithm Support](#static-key-algorithm-support)
+        * 10.3.1 [RQ.SRS-042.OAuth.StaticKey.Algorithms](#rqsrs-042oauthstatickeyalgorithms)
+            * 10.3.1.1 [RQ.SRS-042.OAuth.StaticKey.Algorithm.None](#rqsrs-042oauthstatickeyalgorithmnone)
+    * 10.4 [Static Key Configuration Parameters](#static-key-configuration-parameters)
+        * 10.4.1 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKey](#rqsrs-042oauthstatickeyparametersstatickey)
+        * 10.4.2 [RQ.SRS-042.OAuth.StaticKey.Parameters.StaticKeyBase64](#rqsrs-042oauthstatickeyparametersstatickeybase64)
+        * 10.4.3 [RQ.SRS-042.OAuth.StaticKey.Parameters.PublicKey](#rqsrs-042oauthstatickeyparameterspublickey)
+        * 10.4.4 [RQ.SRS-042.OAuth.StaticKey.Parameters.PrivateKey](#rqsrs-042oauthstatickeyparametersprivatekey)
+        * 10.4.5 [RQ.SRS-042.OAuth.StaticKey.Parameters.PublicKeyPassword](#rqsrs-042oauthstatickeyparameterspublickeypassword)
+        * 10.4.6 [RQ.SRS-042.OAuth.StaticKey.Parameters.PrivateKeyPassword](#rqsrs-042oauthstatickeyparametersprivatekeypassword)
+        * 10.4.7 [RQ.SRS-042.OAuth.StaticKey.Parameters.Claims](#rqsrs-042oauthstatickeyparametersclaims)
+    * 10.5 [Static Key Configuration Validation](#static-key-configuration-validation)
+        * 10.5.1 [RQ.SRS-042.OAuth.StaticKey.Configuration.Validation](#rqsrs-042oauthstatickeyconfigurationvalidation)
+* 11 [Static JWKS](#static-jwks)
+    * 11.1 [Access Token Processors For Static JWKS](#access-token-processors-for-static-jwks)
+        * 11.1.1 [RQ.SRS-042.OAuth.StaticJWKS.AccessTokenProcessors](#rqsrs-042oauthstaticjwksaccesstokenprocessors)
+    * 11.2 [Static JWKS as an External User Directory](#static-jwks-as-an-external-user-directory)
+        * 11.2.1 [RQ.SRS-042.OAuth.StaticJWKS.UserDirectory](#rqsrs-042oauthstaticjwksuserdirectory)
+    * 11.3 [Static JWKS Configuration Parameters](#static-jwks-configuration-parameters)
+        * 11.3.1 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.StaticJwks](#rqsrs-042oauthstaticjwksparametersstaticjwks)
+        * 11.3.2 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.StaticJwksFile](#rqsrs-042oauthstaticjwksparametersstaticjwksfile)
+        * 11.3.3 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.Claims](#rqsrs-042oauthstaticjwksparametersclaims)
+        * 11.3.4 [RQ.SRS-042.OAuth.StaticJWKS.Parameters.VerifierLeeway](#rqsrs-042oauthstaticjwksparametersverifierleeway)
+    * 11.4 [Static JWKS Configuration Validation](#static-jwks-configuration-validation)
+        * 11.4.1 [RQ.SRS-042.OAuth.StaticJWKS.Configuration.Validation](#rqsrs-042oauthstaticjwksconfigurationvalidation)
+    * 11.5 [Static JWKS Algorithm Support](#static-jwks-algorithm-support)
+        * 11.5.1 [RQ.SRS-042.OAuth.StaticJWKS.Algorithms](#rqsrs-042oauthstaticjwksalgorithms)
+* 12 [Remote JWKS](#remote-jwks)
+    * 12.1 [Access Token Processors For Remote JWKS](#access-token-processors-for-remote-jwks)
+        * 12.1.1 [RQ.SRS-042.OAuth.RemoteJWKS.AccessTokenProcessors](#rqsrs-042oauthremotejwksaccesstokenprocessors)
+    * 12.2 [Setting up Remote JWKS](#setting-up-remote-jwks)
+        * 12.2.1 [RQ.SRS-042.OAuth.RemoteJWKS.Setup](#rqsrs-042oauthremotejwkssetup)
+    * 12.3 [Remote JWKS Configuration Parameters](#remote-jwks-configuration-parameters)
+        * 12.3.1 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksUri](#rqsrs-042oauthremotejwksparametersjwksuri)
+        * 12.3.2 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksRefreshTimeout](#rqsrs-042oauthremotejwksparametersjwksrefreshtimeout)
+        * 12.3.3 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.Claims](#rqsrs-042oauthremotejwksparametersclaims)
+        * 12.3.4 [RQ.SRS-042.OAuth.RemoteJWKS.Parameters.VerifierLeeway](#rqsrs-042oauthremotejwksparametersverifierleeway)
+    * 12.4 [Remote JWKS Configuration Validation](#remote-jwks-configuration-validation)
+        * 12.4.1 [RQ.SRS-042.OAuth.RemoteJWKS.Configuration.Validation](#rqsrs-042oauthremotejwksconfigurationvalidation)
+    * 12.5 [Remote JWKS Network Handling](#remote-jwks-network-handling)
+        * 12.5.1 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Timeout](#rqsrs-042oauthremotejwksnetworktimeout)
+        * 12.5.2 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Retry](#rqsrs-042oauthremotejwksnetworkretry)
+        * 12.5.3 [RQ.SRS-042.OAuth.RemoteJWKS.Network.Cache](#rqsrs-042oauthremotejwksnetworkcache)
+    * 12.6 [Remote JWKS Error Handling](#remote-jwks-error-handling)
+        * 12.6.1 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.NetworkFailure](#rqsrs-042oauthremotejwkserrorhandlingnetworkfailure)
+        * 12.6.2 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.InvalidResponse](#rqsrs-042oauthremotejwkserrorhandlinginvalidresponse)
+        * 12.6.3 [RQ.SRS-042.OAuth.RemoteJWKS.ErrorHandling.ExpiredCache](#rqsrs-042oauthremotejwkserrorhandlingexpiredcache)
+* 13 [Token Processor](#token-processor)
+    * 13.1 [Common Configuration Parameters](#common-configuration-parameters)
+        * 13.1.1 [RQ.SRS-042.OAuth.Common.Parameters.CacheLifetime](#rqsrs-042oauthcommonparameterscachelifetime)
+        * 13.1.2 [RQ.SRS-042.OAuth.Common.Parameters.UsernameClaim](#rqsrs-042oauthcommonparametersusernameclaim)
+        * 13.1.3 [RQ.SRS-042.OAuth.Common.Parameters.GroupsClaim](#rqsrs-042oauthcommonparametersgroupsclaim)
+        * 13.1.4 [RQ.SRS-042.OAuth.Common.Parameters.ExpectedIssuer](#rqsrs-042oauthcommonparametersexpectedissuer)
+        * 13.1.5 [RQ.SRS-042.OAuth.Common.Parameters.ExpectedAudience](#rqsrs-042oauthcommonparametersexpectedaudience)
+        * 13.1.6 [RQ.SRS-042.OAuth.Common.Parameters.AllowNoExpiration](#rqsrs-042oauthcommonparametersallownoexpiration)
+        * 13.1.7 [RQ.SRS-042.OAuth.Common.Parameters.Unfiltered](#rqsrs-042oauthcommonparametersunfiltered)
+    * 13.2 [Token Cache Behavior](#token-cache-behavior)
+        * 13.2.1 [RQ.SRS-042.OAuth.Common.Cache.Behavior](#rqsrs-042oauthcommoncachebehavior)
+    * 13.3 [Configuration Validation](#configuration-validation)
+        * 13.3.1 [RQ.SRS-042.OAuth.Common.Configuration.Validation](#rqsrs-042oauthcommonconfigurationvalidation)
+* 14 [ClickHouse Actions After Token Validation](#clickhouse-actions-after-token-validation)
+    * 14.1 [Incorrect Requests to ClickHouse](#incorrect-requests-to-clickhouse)
+        * 14.1.1 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Alg](#rqsrs-042oauthauthenticationincorrectrequestsheaderalg)
+        * 14.1.2 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Typ](#rqsrs-042oauthauthenticationincorrectrequestsheadertyp)
+        * 14.1.3 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Header.Signature](#rqsrs-042oauthauthenticationincorrectrequestsheadersignature)
+        * 14.1.4 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Sub](#rqsrs-042oauthauthenticationincorrectrequestsbodysub)
+        * 14.1.5 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Aud](#rqsrs-042oauthauthenticationincorrectrequestsbodyaud)
+        * 14.1.6 [RQ.SRS-042.OAuth.Authentication.IncorrectRequests.Body.Exp](#rqsrs-042oauthauthenticationincorrectrequestsbodyexp)
+    * 14.2 [Token Handling](#token-handling)
+        * 14.2.1 [RQ.SRS-042.OAuth.Authentication.TokenHandling.Incorrect](#rqsrs-042oauthauthenticationtokenhandlingincorrect)
+        * 14.2.2 [RQ.SRS-042.OAuth.Authentication.TokenHandling.EmptyString](#rqsrs-042oauthauthenticationtokenhandlingemptystring)
+    * 14.3 [Caching](#caching)
+        * 14.3.1 [RQ.SRS-042.OAuth.Authentication.Caching](#rqsrs-042oauthauthenticationcaching)
+        * 14.3.2 [Disable Caching](#disable-caching)
+            * 14.3.2.1 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.NoCache](#rqsrs-042oauthauthenticationcachingcacheevictionnocache)
+        * 14.3.3 [Cache Lifetime](#cache-lifetime)
+            * 14.3.3.1 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEviction.CacheLifetime](#rqsrs-042oauthauthenticationcachingcacheevictioncachelifetime)
+        * 14.3.4 [Cache Eviction Policy](#cache-eviction-policy)
+            * 14.3.4.1 [RQ.SRS-042.OAuth.Authentication.Caching.TokensPerUser](#rqsrs-042oauthauthenticationcachingtokensperuser)
+            * 14.3.4.2 [RQ.SRS-042.OAuth.Authentication.Caching.CacheEntryRefresh](#rqsrs-042oauthauthenticationcachingcacheentryrefresh)
+            * 14.3.4.3 [RQ.SRS-042.OAuth.Authentication.Caching.LazyCleanup](#rqsrs-042oauthauthenticationcachinglazycleanup)
+    * 14.4 [Authentication and Login](#authentication-and-login)
+        * 14.4.1 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication](#rqsrs-042oauthauthenticationactionsauthentication)
+        * 14.4.2 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication.Client](#rqsrs-042oauthauthenticationactionsauthenticationclient)
 
     
 ## Introduction
@@ -266,6 +278,17 @@ OAuth 2.0 typically issues two types of tokens:
 
 To enable OAuth 2.0 authentication in [ClickHouse], one must define Access Token Processors, which allow [ClickHouse] to validate and trust OAuth 2.0 access tokens issued by external Identity Providers (IdPs), such as [Azure] AD.
 
+Token-based authentication is enabled by default. To disable it, set `enable_token_auth` to `0` in `config.xml`:
+
+```xml
+<enable_token_auth>0</enable_token_auth>
+```
+
+When disabled:
+- Token processors from the `token_processors` section are not parsed.
+- `TokenAccessStorage` (token user directory) is not added.
+- Authentication via tokens (`--jwt` option in `clickhouse-client` or `Authorization: Bearer` HTTP header) is rejected.
+
 OAuth-based authentication works by allowing users to authenticate using an access token issued by the IdP. [ClickHouse] supports two modes of operation with these tokens:
 
 **Locally Defined Users:** If a user is already defined in [ClickHouse] (via `users.xml`), their authentication method can be set to jwt, enabling token-based authentication.
@@ -278,13 +301,19 @@ All OAuth 2.0 access tokens must be validated through one of the configured `tok
 
 Key Parameters:
 
-- **type:** Defines type of token processing workflow (acceptable values: `jwt`, `openid`, `azure`).
+- **type:** Defines type of token processing workflow (acceptable values: `jwt_static_key`, `jwt_static_jwks`, `jwt_dynamic_jwks`, `openid`, `azure`, `google`). Mandatory. Case-insensitive.
 
-- **token_cache_lifetime:** maximum lifetime of cached token (in seconds). Optional, default: 3600
+- **token_cache_lifetime:** maximum lifetime of cached token (in seconds). Optional, default: 3600.
 
 - **username_claim:** name of claim (field) that will be treated as ClickHouse username. Optional, default: "sub".
 
 - **groups_claim:** Name of claim (field) that contains list of groups user belongs to. This claim will be looked up in the token itself (in case token is a valid JWT, e.g. in Keycloak) or in response from `/userinfo`. Optional, default: "groups".
+
+- **expected_issuer:** Expected value of the `iss` (issuer) claim in the JWT. If specified, tokens with a different issuer will be rejected. Optional.
+
+- **expected_audience:** Expected value of the `aud` (audience) claim in the JWT. If specified, tokens with a different audience will be rejected. Optional.
+
+- **allow_no_expiration:** If `true`, tokens without the `exp` (expiration) claim are accepted. Otherwise they are rejected. Optional, default: `false`.
 
 ### Authentication Modes with OAuth Tokens
 
@@ -301,7 +330,13 @@ Users defined in `users.xml` can authenticate using tokens if `jwt` is specified
 </clickhouse>
 ```
 
-`claims` is an optional parameter. If defined, presense of these claims in token is required, i.e. if a token is valid but does not have these claims - authentication will fail. 
+Parameters:
+- `claims` — An optional string containing a JSON object that should be contained in the token payload. If defined, presence of these claims in the token is required, i.e. if a token is valid but does not have these claims - authentication will fail. Per-user `claims` are enforced only when the token is a JWT (validated by a JWT processor such as `jwt_static_key` or `jwt_dynamic_jwks`). When the user authenticates with an opaque token (e.g. via `azure`, `openid`, or `google` token processors), claims are not checked.
+- `processor` — An optional parameter to bind the user to a specific named token processor. If specified, only that processor will be used for validation.
+
+> **Note:** A user cannot have JWT authentication together with any other authentication method. The presence of any other sections like `password` alongside `jwt` will force [ClickHouse] to shut down.
+
+> **Note:** Users with JWT authentication type cannot be created using SQL. `CREATE USER ... IDENTIFIED WITH jwt` is explicitly blocked. JWT users must be defined in `users.xml` or auto-provisioned via the `token` user directory.
 
 2. **External Identity Provider as a User Directory**
 
@@ -321,17 +356,42 @@ When a user is not defined locally, [ClickHouse] can use the `IdP` as a dynamic 
             <common_roles>
                 <token_test_role_1 />
             </common_roles>
+            <default_profile>my_profile</default_profile>
             <roles_filter>
                 \bclickhouse-[a-zA-Z0-9]+\b
             </roles_filter>
+            <roles_transform>s/-/_/g</roles_transform>
         </token>
     </user_directories>
 </clickhouse>
 ```
 
+> **Note:** For now, no more than one `<token>` section can be defined inside `user_directories`.
+
+> **Note:** Users with JWT authentication type cannot be created using SQL. `CREATE USER ... IDENTIFIED WITH jwt` is explicitly blocked. JWT users must be defined in `users.xml` or auto-provisioned via the `token` user directory.
+
 ## Authentication with OAuth
 
 To authenticate with OAuth, an access token must be obtained from the identity provider and presented to [ClickHouse].
+
+### Enable Token Auth Setting
+
+#### RQ.SRS-042.OAuth.EnableTokenAuth
+version: 1.0
+
+[ClickHouse] SHALL support the `enable_token_auth` server setting to control whether token-based (JWT/OAuth) authentication is enabled. When set to `0` (disabled):
+
+- Token processors from the `token_processors` section SHALL NOT be parsed.
+- `TokenAccessStorage` (token user directory) SHALL NOT be added.
+- Authentication via tokens (`--jwt` option in `clickhouse-client` or `Authorization: Bearer` HTTP header) SHALL be rejected.
+
+When set to `1` (enabled, the default), token-based authentication SHALL function normally.
+
+```xml
+<clickhouse>
+    <enable_token_auth>0</enable_token_auth>
+</clickhouse>
+```
 
 ### Forward OAuth Identity
 
@@ -346,9 +406,10 @@ When the `Forward OAuth Identity` option is enabled in [Grafana], [Grafana] SHAL
 
 [ClickHouse] SHALL support OAuth 2.0 authentication with various identity providers, including but not limited to:
 
-- [Azure] Active Directory
-- Google Identity
-- OpenID-compatible providers (e.g. Keycloak)
+- [Azure] Active Directory (via `azure` token processor type)
+- Google Identity (via `google` token processor type or `openid` with Google's discovery endpoint)
+- OpenID-compatible providers such as Keycloak (via `openid` token processor type)
+- Custom JWT issuers (via `jwt_static_key`, `jwt_static_jwks`, or `jwt_dynamic_jwks` token processor types)
 
 ### Number of Identity Providers That Can Be Used Concurrently
 
@@ -397,6 +458,14 @@ version: 1.0
 
 When a user is not defined locally, [ClickHouse] SHALL use the external provider as a dynamic source of user information. This requires configuring the `<token>` section in `users_directories` and assigning appropriate roles.
 
+**Parameters:**
+
+- `processor` — Name of one of processors defined in `token_processors` config section. This parameter is mandatory and cannot be empty.
+- `common_roles` — Section with a list of locally defined roles that will be assigned to each user retrieved from the IdP. Optional.
+- `default_profile` — Name of a locally defined settings profile that will be assigned to each user retrieved from the IdP. If the profile does not exist, a warning will be logged and the user will be created without a profile. Optional.
+- `roles_filter` — Regex string for groups filtering. Only groups matching this regex will be mapped to roles. Optional.
+- `roles_transform` — Sed-style transform pattern to apply to group names before mapping to roles. Format: `s/pattern/replacement/flags`. The `g` flag applies the replacement globally (all occurrences). Example: `s/-/_/g` converts `clickhouse-grp-dba` to `clickhouse_grp_dba`. Optional.
+
 For example,
 
 ```xml
@@ -412,13 +481,17 @@ For example,
             <common_roles>
                 <token_test_role_1 />
             </common_roles>
+            <default_profile>default</default_profile>
             <roles_filter>
                 \bclickhouse-[a-zA-Z0-9]+\b
             </roles_filter>
+            <roles_transform>s/-/_/g</roles_transform>
         </token>
     </user_directories>
 </clickhouse>
 ```
+
+> **Note:** For now, no more than one `<token>` section can be defined inside `user_directories`. This may change in future.
 
 ##### Incorrect Configuration in User Directories
 
@@ -947,7 +1020,7 @@ docker run --name keycloak \
 #### RQ.SRS-042.OAuth.Keycloak.AccessTokenSupport
 version: 1.0
 
-[ClickHouse] SHALL support validating access access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
+[ClickHouse] SHALL support validating access tokens issued by Keycloak using an Access Token Processor configured for OpenID. The processor SHALL be defined in config.xml as follows:
 
 ```xml
 <clickhouse>
@@ -956,6 +1029,7 @@ version: 1.0
             <type>openid</type>
             <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
             <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
             <token_cache_lifetime>600</token_cache_lifetime>
             <username_claim>sub</username_claim>
             <groups_claim>groups</groups_claim>
@@ -1278,6 +1352,74 @@ version: 1.0
 
 If user's token becomes invalidated (for various reasons other than token expiration), [ClickHouse] SHALL reject authentication attempts with that token. However, if [ClickHouse] has a valid token cache entry for the corresponding user, [ClickHouse] SHALL accept authentication requests while corresponding cache entries are valid.
 
+## Google
+
+[ClickHouse] SHALL support OAuth 2.0 authentication with Google Identity as an identity provider using the `google` token processor type.
+
+### Access Token Processor for Google
+
+#### RQ.SRS-042.OAuth.Google.AccessTokenProcessor
+version: 1.0
+
+[ClickHouse] SHALL support validating opaque access tokens issued by Google using a dedicated token processor. The `google` processor type SHALL validate tokens by calling Google's `userinfo` (`googleapis.com/oauth2/v3/userinfo`) and `tokeninfo` endpoints. No additional parameters beyond the common ones are required.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <google_processor>
+            <type>google</type>
+            <token_cache_lifetime>3600</token_cache_lifetime>
+            <username_claim>email</username_claim>
+        </google_processor>
+    </token_processors>
+</clickhouse>
+```
+
+### Google as an External User Directory
+
+#### RQ.SRS-042.OAuth.Google.UserDirectory
+version: 1.0
+
+When a user is not defined locally, [ClickHouse] SHALL use a Google-validated token as a dynamic source of user information, with the user's email extracted via the Google `userinfo` endpoint.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <google_processor>
+            <type>google</type>
+            <username_claim>email</username_claim>
+        </google_processor>
+    </token_processors>
+    <user_directories>
+        <token>
+            <processor>google_processor</processor>
+            <common_roles>
+                <reader />
+            </common_roles>
+        </token>
+    </user_directories>
+</clickhouse>
+```
+
+### Google OpenID Configuration
+
+#### RQ.SRS-042.OAuth.Google.OpenIDConfiguration
+version: 1.0
+
+As an alternative to the `google` type, [ClickHouse] SHALL support Google authentication using the `openid` type with Google's OpenID Connect discovery endpoint. This allows local JWT validation via Google's JWKS.
+
+```xml
+<clickhouse>
+    <token_processors>
+        <google_openid>
+            <type>openid</type>
+            <configuration_endpoint>https://accounts.google.com/.well-known/openid-configuration</configuration_endpoint>
+            <username_claim>email</username_claim>
+        </google_openid>
+    </token_processors>
+</clickhouse>
+```
+
 ## Static Key
 
 ### Access Token Processors For Static Key
@@ -1291,7 +1433,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_key_validator>
-          <type>jwt</type>
+          <type>jwt_static_key</type>
           <algo>HS256</algo>
           <static_key>my_static_secret</static_key>
         </my_static_key_validator>
@@ -1310,7 +1452,7 @@ When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with 
 <clickhouse>
     <token_processors>
         <my_static_key_validator>
-          <type>jwt</type>
+          <type>jwt_static_key</type>
           <algo>HS256</algo>
           <static_key>my_static_secret</static_key>
         </my_static_key_validator>
@@ -1357,7 +1499,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_hs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <static_key>my_secret_key_for_jwt_signing</static_key>
         </my_hs256_validator>
@@ -1375,7 +1517,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_hs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <static_key>bXlfc2VjcmV0X2tleV9mb3Jfand0X3NpZ25pbmc=</static_key>
             <static_key_in_base64>true</static_key_in_base64>
@@ -1396,7 +1538,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1416,7 +1558,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1439,7 +1581,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN ENCRYPTED PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1460,7 +1602,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1485,7 +1627,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <static_key>my_secret_key_for_jwt_signing</static_key>
             <claims>{"iss": "https://my-auth-server.com", "aud": "clickhouse-app"}</claims>
@@ -1513,7 +1655,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <hs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <static_key>my_secret_key</static_key>
         </hs256_validator>
@@ -1526,7 +1668,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <public_key>-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
@@ -1543,7 +1685,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <clickhouse>
     <token_processors>
         <invalid_hs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <!-- Missing static_key - will be rejected -->
         </invalid_hs256_validator>
@@ -1556,7 +1698,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 <clickhouse>
     <token_processors>
         <invalid_rs256_validator>
-            <type>jwt</type>
+            <type>jwt_static_key</type>
             <algo>RS256</algo>
             <!-- Missing public_key - will be rejected -->
         </invalid_rs256_validator>
@@ -1578,7 +1720,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-          <type>jwt</type>
+          <type>jwt_static_jwks</type>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </my_static_jwks_validator>
     </token_processors>
@@ -1596,7 +1738,7 @@ When a user is not defined locally, [ClickHouse] SHALL use a JWT validated with 
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-          <type>jwt</type>
+          <type>jwt_static_jwks</type>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </my_static_jwks_validator>
     </token_processors>
@@ -1623,7 +1765,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{
                 "keys": [
                     {
@@ -1651,7 +1793,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
         </my_static_jwks_validator>
     </token_processors>
@@ -1692,7 +1834,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <claims>{"iss": "https://my-auth-server.com", "aud": "clickhouse-app"}</claims>
         </my_static_jwks_validator>
@@ -1712,7 +1854,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_static_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <verifier_leeway>30</verifier_leeway>
         </my_static_jwks_validator>
@@ -1731,7 +1873,7 @@ version: 1.0
 
 * Only one of `static_jwks` or `static_jwks_file` SHALL be present in one verifier
 * If both or neither are specified, [ClickHouse] SHALL reject the configuration as invalid
-* Only RS* family algorithms SHALL be supported for static JWKS validation
+* Only RS* and ES* family algorithms SHALL be supported for JWKS-based validation
 * The JWKS content SHALL be valid JSON format
 * If `static_jwks_file` is specified, the file SHALL exist and be readable
 
@@ -1742,7 +1884,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
         </valid_jwks_validator>
     </token_processors>
@@ -1754,7 +1896,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_jwks_file_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
         </valid_jwks_file_validator>
     </token_processors>
@@ -1768,7 +1910,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <static_jwks_file>/etc/clickhouse-server/jwks.json</static_jwks_file>
             <!-- Both specified - will be rejected -->
@@ -1782,7 +1924,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <!-- Neither specified - will be rejected -->
         </invalid_jwks_validator>
     </token_processors>
@@ -1794,7 +1936,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_static_jwks</type>
             <static_jwks>{"keys": [{"kty": "RSA", "alg": "HS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
             <!-- HS256 not supported for JWKS - will be rejected -->
         </invalid_jwks_validator>
@@ -1807,13 +1949,16 @@ version: 1.0
 #### RQ.SRS-042.OAuth.StaticJWKS.Algorithms
 version: 1.0
 
-[ClickHouse] SHALL support only RS* family algorithms for static JWKS validation:
+[ClickHouse] SHALL support RS* and ES* family algorithms for JWKS-based validation (`jwt_static_jwks` and `jwt_dynamic_jwks`):
 
-* RS256
-* RS384  
-* RS512
+| RSA   | ECDSA  |
+|-------|--------|
+| RS256 | ES256  |
+| RS384 | ES384  |
+| RS512 | ES512  |
+|       | ES256K |
 
-[ClickHouse] SHALL reject JWKS entries with unsupported algorithms.
+[ClickHouse] SHALL reject JWKS entries with unsupported algorithms (e.g. HS* family).
 
 **Supported Algorithm Examples:**
 
@@ -1894,9 +2039,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <basic_auth_server>
-          <type>jwt</type>
+          <type>jwt_dynamic_jwks</type>
           <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
-          <jwks_refresh_timeout>300</jwks_refresh_timeout>
+          <jwks_cache_lifetime>300</jwks_cache_lifetime>
         </basic_auth_server>
     </token_processors>
 </clickhouse>
@@ -1950,9 +2095,9 @@ https://auth.example.com/.well-known/jwks.json
 <clickhouse>
   <token_processors>
     <my_service>
-      <type>jwt</type>
+      <type>jwt_dynamic_jwks</type>
       <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-      <jwks_refresh_timeout>300</jwks_refresh_timeout>
+      <jwks_cache_lifetime>300</jwks_cache_lifetime>
       <!-- Optional: claims / verifier_leeway -->
     </my_service>
   </token_processors>
@@ -1973,7 +2118,7 @@ Your token issuer must:
 * `n` and `e` are the RSA public key params, base64url-encoded
 * You can generate that JSON with a tiny script using cryptography/pyjwt, or any JWK tool
 * The specifics aren't ClickHouse-specific; ClickHouse only needs the public JWKS
-* `jwks_uri`, `jwks_refresh_timeout`, `claims`, and `verifier_leeway` are exactly the supported params
+* `jwks_uri`, `jwks_cache_lifetime`, `claims`, and `verifier_leeway` are exactly the supported params
 
 ### Remote JWKS Configuration Parameters
 
@@ -1987,9 +2132,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>300</jwks_refresh_timeout>
+            <jwks_cache_lifetime>300</jwks_cache_lifetime>
         </my_remote_jwks_validator>
     </token_processors>
 </clickhouse>
@@ -2003,16 +2148,16 @@ version: 1.0
 #### RQ.SRS-042.OAuth.RemoteJWKS.Parameters.JwksRefreshTimeout
 version: 1.0
 
-[ClickHouse] SHALL support the `jwks_refresh_timeout` parameter to specify the period for resending requests to refresh the JWKS. This parameter SHALL be optional with a default value of 300 seconds.
+[ClickHouse] SHALL support the `jwks_cache_lifetime` parameter to specify the period for resending requests to refresh the JWKS. This parameter SHALL be optional with a default value of 300 seconds.
 
 **Example:**
 ```xml
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>600</jwks_refresh_timeout>
+            <jwks_cache_lifetime>600</jwks_cache_lifetime>
         </my_remote_jwks_validator>
     </token_processors>
 </clickhouse>
@@ -2030,7 +2175,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
             <claims>{"iss": "https://auth.example.com", "aud": "clickhouse-app", "azp": "clickhouse-client"}</claims>
         </my_remote_jwks_validator>
@@ -2050,7 +2195,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <my_remote_jwks_validator>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
             <verifier_leeway>60</verifier_leeway>
         </my_remote_jwks_validator>
@@ -2069,7 +2214,7 @@ version: 1.0
 
 * `jwks_uri` parameter SHALL be mandatory and SHALL contain a valid URI
 * The URI SHALL be accessible and return valid JWKS content
-* If `jwks_refresh_timeout` is specified, it SHALL be a positive integer value
+* If `jwks_cache_lifetime` is specified, it SHALL be a positive integer value
 * [ClickHouse] SHALL validate the JWKS content format when fetched from the URI
 
 **Valid Configuration Examples:**
@@ -2079,7 +2224,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <valid_remote_jwks>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
         </valid_remote_jwks>
     </token_processors>
@@ -2091,9 +2236,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <complete_remote_jwks>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>600</jwks_refresh_timeout>
+            <jwks_cache_lifetime>600</jwks_cache_lifetime>
             <claims>{"iss": "https://auth.example.com"}</claims>
             <verifier_leeway>30</verifier_leeway>
         </complete_remote_jwks>
@@ -2108,9 +2253,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <!-- Missing jwks_uri - will be rejected -->
-            <jwks_refresh_timeout>300</jwks_refresh_timeout>
+            <jwks_cache_lifetime>300</jwks_cache_lifetime>
         </invalid_remote_jwks>
     </token_processors>
 </clickhouse>
@@ -2121,7 +2266,7 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>not-a-valid-uri</jwks_uri>
             <!-- Invalid URI format - will be rejected -->
         </invalid_remote_jwks>
@@ -2134,9 +2279,9 @@ version: 1.0
 <clickhouse>
     <token_processors>
         <invalid_remote_jwks>
-            <type>jwt</type>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
-            <jwks_refresh_timeout>-1000</jwks_refresh_timeout>
+            <jwks_cache_lifetime>-1000</jwks_cache_lifetime>
             <!-- Negative value - will be rejected -->
         </invalid_remote_jwks>
     </token_processors>
@@ -2179,10 +2324,10 @@ version: 1.0
 #### RQ.SRS-042.OAuth.RemoteJWKS.Network.Cache
 version: 1.0
 
-[ClickHouse] SHALL cache the fetched JWKS content for the duration specified by `jwks_refresh_timeout` to reduce network requests and improve performance.
+[ClickHouse] SHALL cache the fetched JWKS content for the duration specified by `jwks_cache_lifetime` to reduce network requests and improve performance.
 
 **Caching behavior:**
-* JWKS content SHALL be cached for the duration of `jwks_refresh_timeout`
+* JWKS content SHALL be cached for the duration of `jwks_cache_lifetime`
 * Cache SHALL be shared across all token validation requests
 * Cache SHALL be refreshed in the background when the timeout expires
 * If refresh fails, the old cached content SHALL continue to be used
@@ -2368,6 +2513,61 @@ In this example, the `roles` claim from the token will be used to determine user
 * `resource_access` - Resource access permissions
 * `wids` - Windows Identity Foundation claims (Azure AD)
 
+#### RQ.SRS-042.OAuth.Common.Parameters.ExpectedIssuer
+version: 1.0
+
+[ClickHouse] SHALL support the `expected_issuer` parameter for JWT-based token processor types (`jwt_static_key`, `jwt_static_jwks`, `jwt_dynamic_jwks`, `openid`). This parameter SHALL specify the expected value of the `iss` (issuer) claim in the JWT. If specified, tokens with a different issuer SHALL be rejected. This parameter SHALL be optional.
+
+**Example:**
+```xml
+<clickhouse>
+    <token_processors>
+        <my_token_processor>
+            <type>jwt_dynamic_jwks</type>
+            <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
+            <expected_issuer>https://auth.example.com</expected_issuer>
+        </my_token_processor>
+    </token_processors>
+</clickhouse>
+```
+
+#### RQ.SRS-042.OAuth.Common.Parameters.ExpectedAudience
+version: 1.0
+
+[ClickHouse] SHALL support the `expected_audience` parameter for JWT-based token processor types (`jwt_static_key`, `jwt_static_jwks`, `jwt_dynamic_jwks`, `openid`). This parameter SHALL specify the expected value of the `aud` (audience) claim in the JWT. If specified, tokens with a different audience SHALL be rejected. This parameter SHALL be optional.
+
+**Example:**
+```xml
+<clickhouse>
+    <token_processors>
+        <my_token_processor>
+            <type>jwt_dynamic_jwks</type>
+            <jwks_uri>https://auth.example.com/.well-known/jwks.json</jwks_uri>
+            <expected_audience>clickhouse-app</expected_audience>
+        </my_token_processor>
+    </token_processors>
+</clickhouse>
+```
+
+#### RQ.SRS-042.OAuth.Common.Parameters.AllowNoExpiration
+version: 1.0
+
+[ClickHouse] SHALL support the `allow_no_expiration` parameter for all JWT-based token processor types. If `true`, tokens without the `exp` (expiration) claim SHALL be accepted. Otherwise they SHALL be rejected. This parameter SHALL be optional with a default value of `false`.
+
+**Example:**
+```xml
+<clickhouse>
+    <token_processors>
+        <my_token_processor>
+            <type>jwt_static_key</type>
+            <algo>HS256</algo>
+            <static_key>my_secret</static_key>
+            <allow_no_expiration>true</allow_no_expiration>
+        </my_token_processor>
+    </token_processors>
+</clickhouse>
+```
+
 #### RQ.SRS-042.OAuth.Common.Parameters.Unfiltered
 version: 1.0
 
@@ -2383,11 +2583,14 @@ For example,
           <static_key>my_static_secret</static_key>
           <static_jwks>{"keys": [{"kty": "RSA", "alg": "RS256", "kid": "mykid", "n": "_public_key_mod_", "e": "AQAB"}]}</static_jwks>
           <jwks_uri>http://localhost:8000/.well-known/jwks.json</jwks_uri>
-          <jwks_refresh_timeout>300</jwks_refresh_timeout>
+          <jwks_cache_lifetime>300</jwks_cache_lifetime>
           <type>openid</type>
           <token_cache_lifetime>600</token_cache_lifetime>
           <username_claim>sub</username_claim>
           <groups_claim>groups</groups_claim>
+          <expected_issuer>https://auth.example.com</expected_issuer>
+          <expected_audience>clickhouse-app</expected_audience>
+          <allow_no_expiration>true</allow_no_expiration>
           <configuration_endpoint></configuration_endpoint>
           <userinfo_endpoint></userinfo_endpoint>
           <token_introspection_endpoint></token_introspection_endpoint>
@@ -2477,6 +2680,7 @@ version: 1.0
             <token_introspection_endpoint>https://keycloak.example.com/introspect</token_introspection_endpoint>
         </keycloak_processor>
         <static_key_processor>
+            <type>jwt_static_key</type>
             <algo>HS256</algo>
             <static_key>my-secret-key</static_key>
         </static_key_processor>

@@ -1481,8 +1481,9 @@ class Cluster(object):
         # Check docker compose version >= MINIMUM_COMPOSE_VERSION
         with Shell() as bash:
             cmd = bash(f"{self.docker_compose} --version")
-            version = cmd.output.split()[-1].strip("v").split(".")
-            if version < MINIMUM_COMPOSE_VERSION.split("."):
+            version = tuple(int(x) for x in cmd.output.split()[-1].strip("v").split("."))
+            min_version = tuple(int(x) for x in MINIMUM_COMPOSE_VERSION.split("."))
+            if version < min_version:
                 raise RuntimeError(f"docker-compose version must be >= {MINIMUM_COMPOSE_VERSION}")
 
         # auto set configs directory
@@ -1972,8 +1973,9 @@ class Cluster(object):
                                 no_checks=True,
                                 timeout=timeout,
                             )
-                            if cmd.exitcode == 0:
-                                break
+                            assert cmd.exitcode == 0, error(cmd.output)
+                            assert "Error" not in cmd.output, error(cmd.output)
+                            break
                     else:
                         return False
 
@@ -2001,31 +2003,45 @@ class Cluster(object):
                     )
 
             with By("building the clickhouse image"):
-                self.command(
-                    None,
-                    f"docker build "
-                    f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
-                    f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
-                    f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
-                    f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]} '
-                    f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
-                    f"{current_dir()}/../",
-                    exitcode=0,
-                )
+                for build_attempt in retries(count=3, delay=10):
+                    with build_attempt:
+                        cmd = self.command(
+                            None,
+                            f"docker build "
+                            f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
+                            f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
+                            f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
+                            f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]} '
+                            f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
+                            f"{current_dir()}/../",
+                            no_checks=True,
+                            timeout=timeout,
+                        )
+                        assert cmd.exitcode == 0, error(cmd.output)
+                        break
+                else:
+                    return False
 
             if self.clickhouse_docker_image_name != self.keeper_docker_image_name:
                 with By("building the keeper image"):
-                    self.command(
-                        None,
-                        f"docker build "
-                        f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
-                        f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
-                        f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
-                        f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"]} '
-                        f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
-                        f"{current_dir()}/../",
-                        exitcode=0,
-                    )
+                    for build_attempt in retries(count=3, delay=10):
+                        with build_attempt:
+                            cmd = self.command(
+                                None,
+                                f"docker build "
+                                f'--build-arg CLICKHOUSE_DOCKER_IMAGE_NAME="{self.environ["CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME"]}" '
+                                f'--build-arg CLICKHOUSE_PACKAGE="{self.environ["CLICKHOUSE_TESTS_SERVER_BIN_PATH"]}" '
+                                f'--build-arg BASE_OS="{self.environ["CLICKHOUSE_TESTS_BASE_OS"]}" '
+                                f'-t clickhouse-regression/{self.environ["CLICKHOUSE_TESTS_KEEPER_DOCKER_IMAGE"]} '
+                                f'-f {current_dir()}/../docker-compose/base_os/{self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] if self.environ["CLICKHOUSE_TESTS_KEEPER_BASE_OS_NAME"] else "clickhouse"}.Dockerfile '
+                                f"{current_dir()}/../",
+                                no_checks=True,
+                                timeout=timeout,
+                            )
+                            assert cmd.exitcode == 0, error(cmd.output)
+                            break
+                    else:
+                        return False
 
             with By("executing docker-compose up"):
                 up_args = "" if self.reuse_env else "--renew-anon-volumes --force-recreate"
@@ -2070,7 +2086,7 @@ class Cluster(object):
             all_running = False
             try:
                 with When(f"starting the cluster"):
-                    all_running = start_cluster(max_up_attempts=1)
+                    all_running = start_cluster(max_up_attempts=2)
 
             except:
                 with When("making sure any running containers are stopped"):

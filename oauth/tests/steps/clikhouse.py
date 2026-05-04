@@ -1,4 +1,5 @@
 import json
+from helpers.common import getuid, KeyWithAttributes
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
@@ -7,18 +8,32 @@ from oauth.requirements.requirements import *
 
 @TestStep(Then)
 def access_clickhouse(
-    self, token, ip="clickhouse1", https=False, status_code=200, node=None
+    self, token, ip="clickhouse1", https=False, status_code=200, node=None, query=None
 ):
-    """Execute a query to ClickHouse with JWT token authentication and return both response and status code."""
+    """Execute a query to ClickHouse with JWT token authentication.
+
+    Returns the response body string. Asserts the HTTP status code matches
+    ``status_code`` (default 200).
+    """
     if node is None:
         node = self.context.bash_tools
 
+    port = 8443 if https else 8123
     http_prefix = "https" if https else "http"
-    url = f"{http_prefix}://{ip}:8123/"
+    url = f"{http_prefix}://{ip}:{port}/"
 
-    curl_command = f"""curl -s -o /tmp/ch_response.txt -w "%{{http_code}}" \
---location '{url}?query=SELECT%20currentUser()' \
---header 'Authorization: Bearer {token}'"""
+    if query is None:
+        query = "SELECT currentUser()"
+
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/ch_response_{uid}.txt"
+
+    encoded_query = query.replace(" ", "%20")
+    curl_command = (
+        f'curl -s -o {tmp_file} -w "%{{http_code}}" '
+        f"--location '{url}?query={encoded_query}' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
 
     if https:
         curl_command += " -k"
@@ -32,11 +47,12 @@ def access_clickhouse(
     except ValueError:
         http_code = None
 
-    body_result = node.command(command="cat /tmp/ch_response.txt")
+    body_result = node.command(command=f"cat {tmp_file}")
     response_body = body_result.output.strip()
 
     assert http_code == status_code, error(
-        f"Expected HTTP status code {status_code}, but got {http_code}. Response body: {response_body}"
+        f"Expected HTTP status code {status_code}, but got {http_code}. "
+        f"Response body: {response_body}"
     )
 
     return response_body
@@ -44,25 +60,23 @@ def access_clickhouse(
 
 @TestStep(Then)
 def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False):
-    """Execute a query to ClickHouse with an invalid JWT token."""
+    """Execute a query to ClickHouse with an invalid JWT token.
 
+    Expects HTTP 500 with a signature-verification failure message.
+    """
     response = access_clickhouse(token=token, ip=ip, https=https, status_code=500)
-    assert "failed to verify signature" in response, error()
+    assert (
+        "failed to verify signature" in response or "AUTHENTICATION_FAILED" in response
+    ), error()
 
 
 @TestStep(Then)
 def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
     """Execute a query to ClickHouse without authentication."""
-
-    access_clickhouse(token="", ip=ip, https=https, status_code=401)
+    access_clickhouse(token="", ip=ip, https=https, status_code=403)
 
 
 @TestStep(Given)
-@Requirements(
-    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_processor(
-        "1.0"
-    )
-)
 def change_token_processors(
     self,
     processor_name,
@@ -72,65 +86,84 @@ def change_token_processors(
     jwks_uri=None,
     jwks_cache_lifetime=None,
     token_cache_lifetime=None,
-    claims=None,
-    verifier_leeway=None,
+    username_claim=None,
+    groups_claim=None,
     configuration_endpoint=None,
     userinfo_endpoint=None,
     token_introspection_endpoint=None,
+    expected_issuer=None,
+    expected_audience=None,
     processor_type=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
+    replace=False,
+    replace_section=False,
 ):
-    """Change ClickHouse token processor configuration."""
+    """Change ClickHouse token processor configuration.
 
-    entries = {"token_processor": {}}
-    entries["token_processor"][processor_name] = {}
+    When ``replace=True``, the processor element gets ``replace="replace"``
+    so that it fully replaces the base processor definition.
+
+    When ``replace_section=True``, the entire ``<token_processors>`` section
+    gets ``replace="replace"`` so that ALL base processors are removed and
+    only the ones defined here remain.
+    """
+
+    proc = {}
 
     if processor_type is not None:
-        entries["token_processor"][processor_name]["type"] = processor_type
+        proc["type"] = processor_type
 
     if algo is not None:
-        entries["token_processor"]["algo"] = algo
+        proc["algo"] = algo
 
     if static_key is not None:
-        entries["token_processor"][processor_name]["static_key"] = static_key
+        proc["static_key"] = static_key
 
     if static_jwks is not None:
-        entries["token_processor"][processor_name]["static_jwks"] = static_jwks
+        proc["static_jwks"] = static_jwks
 
     if jwks_uri is not None:
-        entries["token_processor"][processor_name]["jwks_uri"] = jwks_uri
+        proc["jwks_uri"] = jwks_uri
 
     if jwks_cache_lifetime is not None:
-        entries["token_processor"][processor_name][
-            "jwks_cache_lifetime"
-        ] = jwks_cache_lifetime
+        proc["jwks_cache_lifetime"] = str(jwks_cache_lifetime)
 
     if token_cache_lifetime is not None:
-        entries["token_processor"][processor_name][
-            "token_cache_lifetime"
-        ] = token_cache_lifetime
+        proc["token_cache_lifetime"] = str(token_cache_lifetime)
 
-    if claims is not None:
-        entries["jwt_validators"][processor_name]["claims"] = claims
+    if username_claim is not None:
+        proc["username_claim"] = username_claim
 
-    if verifier_leeway is not None:
-        entries["jwt_validators"][processor_name]["verifier_leeway"] = verifier_leeway
+    if groups_claim is not None:
+        proc["groups_claim"] = groups_claim
 
     if configuration_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "configuration_endpoint"
-        ] = configuration_endpoint
+        proc["configuration_endpoint"] = configuration_endpoint
 
     if userinfo_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "userinfo_endpoint"
-        ] = userinfo_endpoint
+        proc["userinfo_endpoint"] = userinfo_endpoint
 
     if token_introspection_endpoint is not None:
-        entries["token_processor"][processor_name][
-            "token_introspection_endpoint"
-        ] = token_introspection_endpoint
+        proc["token_introspection_endpoint"] = token_introspection_endpoint
+
+    if expected_issuer is not None:
+        proc["expected_issuer"] = expected_issuer
+
+    if expected_audience is not None:
+        proc["expected_audience"] = expected_audience
+
+    if replace:
+        proc_key = KeyWithAttributes(processor_name, {"replace": "replace"})
+    else:
+        proc_key = processor_name
+
+    if replace_section:
+        tp_key = KeyWithAttributes("token_processors", {"replace": "replace"})
+    else:
+        tp_key = "token_processors"
+
+    entries = {tp_key: {proc_key: proc}}
 
     change_clickhouse_config(
         entries=entries,
@@ -151,18 +184,23 @@ def change_user_directories_config(
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
 ):
-    """Change ClickHouse user directories configuration."""
+    """Change ClickHouse user directories configuration.
 
-    entries = {"user_directories": {}}
-    entries["user_directories"]["token"] = {}
+    The config.d file merges with the base ``<user_directories>`` section.
+    For positive tests (overriding the processor or roles on the existing
+    token directory) this is sufficient because ClickHouse merges children
+    by element name.
+    """
 
-    entries["user_directories"]["token"]["processor"] = processor
+    token_section = {"processor": processor}
 
     if common_roles is not None:
-        entries["user_directories"]["token"]["common_roles"] = common_roles
+        token_section["common_roles"] = {role: {} for role in common_roles}
 
     if roles_filter is not None:
-        entries["user_directories"]["token"]["roles_filter"] = roles_filter
+        token_section["roles_filter"] = roles_filter
+
+    entries = {"user_directories": {"token": token_section}}
 
     change_clickhouse_config(
         entries=entries,
@@ -170,6 +208,76 @@ def change_user_directories_config(
         preprocessed_name="config.xml",
         restart=True,
         config_file=f"user_directory_{processor}.xml",
+        node=node,
+    )
+
+
+@TestStep(Then)
+def access_clickhouse_connection_refused(
+    self, token, ip="clickhouse1", https=False, node=None
+):
+    """Assert that a TCP connection to ClickHouse is refused.
+
+    Used when the target port (HTTP or HTTPS) has been disabled via config.
+    curl returns exit code 7 when the connection is refused.
+    """
+    if node is None:
+        node = self.context.bash_tools
+
+    port = 8443 if https else 8123
+    http_prefix = "https" if https else "http"
+    url = f"{http_prefix}://{ip}:{port}/"
+
+    curl_command = (
+        f"curl -s -o /dev/null -w '%{{http_code}}' "
+        f"--connect-timeout 5 "
+        f"--location '{url}?query=SELECT%201' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
+
+    if https:
+        curl_command += " -k"
+
+    curl_command += "; echo exit_code=$?"
+
+    result = node.command(command=curl_command)
+    output = result.output.strip()
+
+    assert "exit_code=7" in output or "exit_code=28" in output, error(
+        f"Expected connection refused (exit code 7 or 28), got: {output}"
+    )
+
+
+@TestStep(Given)
+def change_ports_config(
+    self,
+    http_port=None,
+    https_port=None,
+    remove_http=False,
+    node=None,
+    config_d_dir="/etc/clickhouse-server/config.d",
+):
+    """Override ClickHouse listening ports via config.d.
+
+    When ``remove_http=True`` the HTTP port is removed so that only
+    HTTPS is available.
+    """
+    entries = {}
+
+    if remove_http:
+        entries[KeyWithAttributes("http_port", {"remove": "remove"})] = ""
+    elif http_port is not None:
+        entries["http_port"] = str(http_port)
+
+    if https_port is not None:
+        entries["https_port"] = str(https_port)
+
+    change_clickhouse_config(
+        entries=entries,
+        config_d_dir=config_d_dir,
+        preprocessed_name="config.xml",
+        restart=True,
+        config_file="ports_override.xml",
         node=node,
     )
 

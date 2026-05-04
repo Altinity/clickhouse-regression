@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -40,6 +41,7 @@ def erfc_alias(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_MathFunction("1.0"))
 @Name("erfc alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: erfc_value ALIAS erfc(value)."""

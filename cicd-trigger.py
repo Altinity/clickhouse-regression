@@ -31,19 +31,19 @@ PROGRESS = "\u2591"
 
 # Default values and choices
 DEFAULTS = {
-    "package": "docker://altinity/clickhouse-server:24.3.12.76.altinitystable",
-    "version": "24.3.12.76.altinitystable",
-    "flags": "none",
+    "package": "docker://altinity/clickhouse-server:25.3.8.10042.altinitystable",
+    "version": "25.3.8.10042.altinitystable",
+    "flags": "--use-keeper --with-analyzer",
     "suite": "all",
     "output_format": "classic",
-    "artifacts": "public",
+    "artifacts": "internal",
     "branch": "main",
     "arch": "x86",
 }
 
 # Available choices for arguments
 CHOICES = {
-    "architectures": ["x86", "arm"],
+    "architectures": ["x86", "arm64"],
     "flags": [
         "--use-keeper --with-analyzer",
         "--use-keeper",
@@ -81,7 +81,7 @@ CHOICES = {
         "progress",
         "raw",
     ],
-    "artifact_locations": ["internal", "public"],
+    "artifact_locations": ["internal"],
     "suites": [
         "all",
         "all_aws",
@@ -117,10 +117,14 @@ CHOICES = {
         "ldap",
         "lightweight_delete",
         "memory",
+        "oauth",
         "parquet_all",
         "parquet",
         "parquet_minio",
         "parquet_s3",
+        "parquet_native_v3",
+        "parquet_minio_native_v3",
+        "parquet_s3_native_v3",
         "part_moves_between_shards",
         "rbac",
         "s3_all",
@@ -128,15 +132,21 @@ CHOICES = {
         "s3_azure",
         "s3_gcs",
         "s3_minio",
+        "export_part",
+        "export_partition",
         "selects",
         "session_timezone",
+        "settings",
         "ssl_server",
+        "swarms",
         "tiered_storage_all",
         "tiered_storage_aws",
         "tiered_storage_gcs",
         "tiered_storage_local",
         "tiered_storage_minio",
+        "version",
         "window_functions",
+        "hive_partitioning",
     ],
 }
 

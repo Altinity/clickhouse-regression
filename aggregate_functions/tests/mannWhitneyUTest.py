@@ -20,7 +20,11 @@ from aggregate_functions.tests.steps import (
 def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=26.1")(self):
+        clickhouse_version = ">=26.1"
+    elif check_clickhouse_version(">=24.9")(self):
+        clickhouse_version = ">=24.9"
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.2")(self):
         clickhouse_version = ">=23.2"
@@ -71,11 +75,18 @@ def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=No
             )
 
         with Check("single NULL value"):
-            execute_query(
-                f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
-                exitcode=exitcode,
-                message=message,
-            )
+            if check_clickhouse_version(">=26.1")(
+                self
+            ):
+                execute_query(
+                    f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                )
+            else:
+                execute_query(
+                    f"SELECT {func.format(params='x,w')}, any(toTypeName(x)), any(toTypeName(w))  FROM values('x Nullable(Int8), w Nullable(UInt8)', (NULL,NULL) )",
+                    exitcode=exitcode,
+                    message=message,
+                )
 
     with Check("with group by"):
         execute_query(

@@ -1,0 +1,57 @@
+{
+  "format-version": 2,
+  "table-uuid": "outside-read-uuid",
+  "location": "/var/lib/clickhouse/user_files/iceberg_local_basic",
+  "last-sequence-number": 2,
+  "last-updated-ms": 1773339098453,
+  "last-column-id": 1,
+  "current-schema-id": 0,
+  "schemas": [
+    {
+      "type": "struct",
+      "schema-id": 0,
+      "fields": [
+        {
+          "id": 1,
+          "name": "data",
+          "required": false,
+          "type": "binary"
+        }
+      ]
+    }
+  ],
+  "default-spec-id": 0,
+  "partition-specs": [
+    {
+      "spec-id": 0,
+      "fields": []
+    }
+  ],
+  "last-partition-id": 999,
+  "default-sort-order-id": 0,
+  "sort-orders": [
+    {
+      "order-id": 0,
+      "fields": []
+    }
+  ],
+  "current-snapshot-id": 2,
+  "snapshots": [
+    {
+      "sequence-number": 2,
+      "snapshot-id": 2,
+      "timestamp-ms": 1773339098453,
+      "summary": {
+        "operation": "append"
+      },
+      "manifest-list": "/var/lib/clickhouse/user_files/iceberg_local_basic/metadata/manifest_list_outside.avro",
+      "schema-id": 0
+    }
+  ],
+  "snapshot-log": [
+    {
+      "timestamp-ms": 1773339098453,
+      "snapshot-id": 2
+    }
+  ]
+}

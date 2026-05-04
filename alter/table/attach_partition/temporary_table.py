@@ -33,6 +33,7 @@ def check_attach_partition_detached_with_temporary_tables(self, table, engine):
                     engine=engine,
                     partition_by="a",
                     node=client,
+                    order_by="a"
                 )
 
                 table_before = client.query(
@@ -125,12 +126,14 @@ def check_attach_partition_from_with_temporary_tables(
                 table_name=source_table_name,
                 engine=source_table_engine,
                 partition_by="a",
+                order_by="a"
             )
         if "replicated" in destination_table.__name__:
             destination_table(
                 table_name=destination_table_name,
                 engine=destination_table_engine,
                 partition_by="a",
+                order_by="a"
             )
 
     with Given("I open a single clickhouse instance"):
@@ -152,6 +155,8 @@ def check_attach_partition_from_with_temporary_tables(
                         engine=source_table_engine,
                         partition_by="a",
                         node=client,
+                        order_by="a"
+
                     )
                 if "replicated" not in destination_table.__name__:
                     destination_table(
@@ -159,6 +164,8 @@ def check_attach_partition_from_with_temporary_tables(
                         engine=destination_table_engine,
                         partition_by="a",
                         node=client,
+                        order_by="a"
+
                     )
 
             with And(

@@ -138,3 +138,26 @@ def network_packet_rate_limit(
     """Rate limit network packets."""
     rule = f"rate {rate_mbit}mbit {packet_overhead_bytes}"
     return run_netem(node=node, device=device, rule=rule)
+
+
+@TestStep(When)
+@Name("packet rate limit replace")
+def network_packet_rate_limit_replace(
+    self,
+    node,
+    rate_mbit=20,
+    packet_overhead_bytes=0,
+    device="eth0",
+):
+    """Change rate on an existing root netem qdisc.
+
+    Use this after :func:`network_packet_rate_limit` when that step is still
+    active. A second :func:`network_packet_rate_limit` would run ``tc qdisc add``
+    and fail with errors such as "Exclusivity flag on, cannot modify" because
+    only one root qdisc may exist; ``tc qdisc replace`` updates it in place.
+    """
+    rule = f"rate {rate_mbit}mbit {packet_overhead_bytes}"
+    node.command(
+        f"tc qdisc replace dev {device} root netem {rule}",
+        exitcode=0,
+    )

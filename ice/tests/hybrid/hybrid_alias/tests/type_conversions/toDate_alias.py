@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -79,6 +80,7 @@ def toDate_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_TypeConversion("1.0"))
 @Name("toDate alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: value_date ALIAS toDate(toString(date_col))."""

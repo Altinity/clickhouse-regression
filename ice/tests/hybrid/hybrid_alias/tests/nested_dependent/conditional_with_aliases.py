@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -83,6 +84,7 @@ def conditional_with_aliases_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_NestedDependent("1.0"))
 @Name("conditional with aliases")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: conditional_result ALIAS if(doubled > 100, quadrupled, doubled) (conditional with aliases)."""

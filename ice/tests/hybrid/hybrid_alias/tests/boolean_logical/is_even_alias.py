@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -79,6 +80,7 @@ def is_even_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_BooleanLogical("1.0"))
 @Name("is even alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: is_even ALIAS value % 2 = 0."""

@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -83,6 +84,7 @@ def multiple_dependencies_sum_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_NestedDependent("1.0"))
 @Name("multiple dependencies sum")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: sum_all ALIAS id + value + doubled + quadrupled (multiple dependencies)."""

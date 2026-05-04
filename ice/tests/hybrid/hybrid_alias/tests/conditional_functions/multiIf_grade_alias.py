@@ -1,5 +1,6 @@
 from testflows.core import *
 from ...outline import outline
+from ...requirements import *
 
 
 @TestScenario
@@ -87,6 +88,7 @@ def multiIf_grade_alias_in_watermark(self):
 
 
 @TestScenario
+@Requirements(RQ_Ice_HybridAlias_Conditional("1.0"))
 @Name("multiIf grade alias")
 def feature(self, minio_root_user=None, minio_root_password=None):
     """Test alias column: grade ALIAS multiIf(score >= 90, 'A', score >= 80, 'B', score >= 70, 'C', 'F')."""

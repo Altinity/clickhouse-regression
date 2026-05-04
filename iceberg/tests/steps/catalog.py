@@ -151,7 +151,14 @@ def create_glue_catalog(
 
 @TestStep(Given)
 def create_catalog(self, **kwargs):
-    if self.context.catalog == "rest":
+    # ``"rest"`` and ``"ice"`` both route to ``ice-rest-catalog`` (the
+    # Altinity REST Catalog implementation that the existing REST
+    # configuration in ``iceberg/iceberg_env`` runs against). The two labels
+    # exist so that the export_partition suite, which ONLY exercises
+    # ice-rest-catalog under its "rest" mode today, can self-document by
+    # spelling its mode ``"ice"`` while sibling iceberg suites that talk
+    # generically to "a REST catalog" keep using ``"rest"``.
+    if self.context.catalog in ("rest", "ice"):
         return create_rest_catalog(**kwargs)
     elif self.context.catalog == "glue":
         return create_glue_catalog(**kwargs)
