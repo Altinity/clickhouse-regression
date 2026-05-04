@@ -1,7 +1,13 @@
 # OAuth suite — agent guide
 
-Living reference for anyone (human or AI) working in `oauth/`. Keep it
-short, accurate, and updated as the suite evolves.
+Living reference for anyone (human or AI) working in `oauth/`. Follows
+the [AGENTS.md](https://www.agents.md/) convention: this file is the
+agent-facing equivalent of `README.md`. The closest `AGENTS.md` to a
+file being edited wins, so feel free to add nested ones inside
+`tests/security_audit/` or `tests/client_oauth_login/` if those
+sub-suites grow their own conventions.
+
+Keep this short, accurate, and updated as the suite evolves.
 
 ---
 
@@ -51,8 +57,7 @@ oauth/
 │   ├── security_audit/                   # H-/M-/L- audit-finding regressions
 │   └── client_oauth_login/               # `clickhouse-client --login` (PR #1606+)
 ├── README.md                             # how to provision Azure (manual)
-├── AGENTS.md                             # this file
-└── audit-suite-review.md                 # internal audit; pair-read with this file
+└── AGENTS.md                             # this file
 ```
 
 ---
@@ -429,32 +434,112 @@ automatically; the rest run unchanged.
 
 ---
 
-## 6. Common pitfalls
+## 6. Code style
 
-| Symptom | Cause | Fix |
-|---|---|---|
-| `ImportError: cannot import name X from oauth.tests.steps.clikhouse` | Step helper referenced by tests but never added/restored. | Add it in `clikhouse.py`. The `keycloak_openid_processor_args`/`change_user_jwt_auth`/etc. precedent is in §3.2 of `audit-suite-review.md`. |
-| `ValueError: too many values to unpack (expected 2)` | `@TestStep` called outside a `with` block. | Wrap the call: `with When("…"): exit_code, output = run_…(…)`. |
-| `TypeError: string indices must be integers` on `token["access_token"]` | Test still using the legacy dict accessor against a non-Keycloak provider. | Switch to `.access_token`. |
-| `UnsupportedByProvider: 'create_user' is not implemented for this OAuth provider` | Scenario hit an optional method on a provider that doesn't have it. | Wrap in `try/except UnsupportedByProvider as e: skip(str(e))`. |
-| Scenario passes but assertion never fires | Common with `try: ... except Exception: note(...)` patterns. | Don't swallow. If a step *should* succeed, let exceptions propagate. |
-| Wrong `iss` / `aud` mismatch on a fresh box | Keycloak hostname-vs-issuer mismatch — `--hostname=localhost` puts `localhost:8080` in `iss` while ClickHouse hits `keycloak:8080` for JWKS. | Use `client.OAuthProvider.openid_endpoints().issuer` for issuer pinning, never hardcode. |
+The repo does not run a formatter in CI for this folder, but new code
+should match what's already there:
+
+- **Python 3.10+**, four-space indent, double-quoted strings.
+- **Imports**: stdlib first, then `testflows.*`, then `helpers.*`,
+  then `oauth.*`. Group `oauth.tests.steps.*` together.
+- **Step helpers** (`@TestStep(Given|When|Then)`) live in
+  `tests/steps/*.py`. Tests never call `node.command(...)` directly —
+  go through a step helper so cleanup and `Skip` semantics work.
+- **Scenarios**: every helper call MUST be inside a
+  `with Given/And/When/Then("…"):` block. See §7 pitfall #1 for the
+  symptom when this rule is violated.
+- **Provider access**: always
+  `client = self.context.provider_client` →
+  `client.OAuthProvider.<method>(...)`. Never import provider modules
+  directly inside test files.
+- **Tokens**: read `.access_token`, never `["access_token"]`. The
+  dict-style accessor on `OAuthToken` exists only for backwards
+  compatibility and will be removed.
+- **HTTP queries**: route through `access_clickhouse(...)` — it POSTs
+  the query body so quoting works. Don't hand-roll `curl` URL
+  encoding.
+- **Comments**: explain non-obvious intent only. Don't narrate code
+  (`# Get the token`).
+- **Docstrings**: short (1–3 lines) on every scenario, describing what
+  ClickHouse SHALL do — these often become the assertion message.
+- **No emojis** in test code, comments, or commit messages.
+
+## 7. Security considerations
+
+This suite *tests* an authentication subsystem. A few hard rules:
+
+- **Never commit real OAuth tokens, refresh tokens, client secrets, or
+  Azure tenant IDs.** Pass them via CLI flags (`--client-secret`,
+  `--refresh-token`, `--tenant-id`) or environment, not via files
+  checked into git. The `.gitignore` covers the obvious paths but
+  `git diff` your changes before committing.
+- **The Keycloak realm-export.json** at
+  `envs/keycloak/keycloak_env/keycloak-config/realm-export.json` is
+  intentionally pre-populated with weak credentials (`demo:demo`,
+  `grafana-secret`). They are safe because they only exist inside the
+  ephemeral docker-compose network. Do not reuse these values in any
+  other environment.
+- **Generated test users** must use `helpers.common.getuid()` suffixes
+  to avoid colliding with the seeded `demo` user. Always clean up in
+  a `Finally:` block (see `groups.py` for the pattern).
+- **Negative tests assert *failure modes*.** If a scenario passes
+  while swallowing exceptions (`except: note(...)`), it is a false
+  positive — file it, don't ship it. `audit-suite-review.md` §2.3 /
+  §3.7 describes the exact pattern to avoid.
+- **`assert_no_segfault(...)`** in `tests/steps/client_login.py` is
+  load-bearing: any new client-side scenario MUST call it after every
+  `clickhouse-client` invocation, because half the bugs covered by
+  PR #1606+ are crashes that exit non-zero with otherwise innocuous
+  output.
+- **Logs may contain tokens.** When adding a new step that captures
+  output (`node.command(...)`), make sure it doesn't leak the
+  `Authorization: Bearer …` header into the testflows log. The
+  existing helpers already redact; copy them, don't reinvent.
+
+## 8. Commits and PRs
+
+- One concern per commit; keep diffs reviewable.
+- Commit message format: imperative subject ≤ 72 chars
+  (`oauth: fix dynamic_group_membership_update cache observation`),
+  blank line, then a body explaining *why* (the *what* is in the
+  diff). No emojis.
+- A change that touches `tests/steps/provider_protocol.py` MUST update
+  every concrete provider in the same commit and re-run the contract
+  smoke test (§5.4).
+- A change that adds a step helper used by `tests/security_audit/*`
+  MUST verify imports across the package — see the
+  `python -c "import oauth.tests.security_audit.feature"`
+  one-liner that we use as a smoke test.
+- PRs touching the suite should reference the upstream
+  PR/issue number(s) being verified (e.g. `Altinity/ClickHouse#1606`,
+  `ClickHouse/ClickHouse#103603`) so the test↔fix mapping stays
+  searchable.
+- If you change a CLI flag, update §3 of this file in the same PR.
+- If you change the provider contract, update §4 of this file in the
+  same PR.
 
 ---
 
-## 7. Where to look when changes are requested
+## 9. Common pitfalls
+
+| Symptom                                                                           | Cause                                                                                                                                        | Fix                                                                                                                                         |
+|-----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `ImportError: cannot import name X from oauth.tests.steps.clikhouse`              | Step helper referenced by tests but never added/restored.                                                                                    | Add it in `clikhouse.py`. The `keycloak_openid_processor_args`/`change_user_jwt_auth`/etc. precedent is in §3.2 of `audit-suite-review.md`. |
+| `ValueError: too many values to unpack (expected 2)`                              | `@TestStep` called outside a `with` block.                                                                                                   | Wrap the call: `with When("…"): exit_code, output = run_…(…)`.                                                                              |
+| `TypeError: string indices must be integers` on `token["access_token"]`           | Test still using the legacy dict accessor against a non-Keycloak provider.                                                                   | Switch to `.access_token`.                                                                                                                  |
+| `UnsupportedByProvider: 'create_user' is not implemented for this OAuth provider` | Scenario hit an optional method on a provider that doesn't have it.                                                                          | Wrap in `try/except UnsupportedByProvider as e: skip(str(e))`.                                                                              |
+| Scenario passes but assertion never fires                                         | Common with `try: ... except Exception: note(...)` patterns.                                                                                 | Don't swallow. If a step *should* succeed, let exceptions propagate.                                                                        |
+| Wrong `iss` / `aud` mismatch on a fresh box                                       | Keycloak hostname-vs-issuer mismatch — `--hostname=localhost` puts `localhost:8080` in `iss` while ClickHouse hits `keycloak:8080` for JWKS. | Use `client.OAuthProvider.openid_endpoints().issuer` for issuer pinning, never hardcode.                                                    |
+
+---
+
+## 10. Where to look when changes are requested
 
 - **"Add a test for behaviour X"** → pick the right file under `tests/`
   by topic (authn vs authz vs caching vs client-side); copy a sibling
   scenario and adapt; never reach into provider modules directly,
   always go through `client.OAuthProvider.*`.
 - **"Test against a new IdP"** → §5 above.
-- **"Failing in CI but not locally"** → `audit-suite-review.md` lists
-  the known false-positive patterns and the contract-violation modes.
-- **"What does PR #X test?"** → `tests/client_oauth_login/` is keyed
-  to PR #1606 / #1696 / #1697 / #1698; `tests/security_audit/` is keyed
-  to the new audit findings catalogued in
-  `tests/defects_catalogue.py` and `new_audit_review/`.
 
 Keep this file accurate. If you change the contract, update §4. If you
 add a CLI flag, update §3. If you tear out a sub-suite, fix §2.
