@@ -150,6 +150,9 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
                 ):
                     use_verion = ">=24.3"
 
+                if check_clickhouse_version(">=26.3")(self) and "date" in column.name:
+                    use_verion = ">=26.3"
+
                 Check(
                     test=execute_query_step,
                     name=f"{column.name}",
