@@ -77,6 +77,7 @@ def bare_login_with_connection_no_segfault(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Connection_HostFallback("1.0"))
 @Name("login with explicit --host preserves existing behaviour")
 def login_with_explicit_host_still_works(self):
     """Check that explicit ``--host`` still drives the original code path without crashing."""

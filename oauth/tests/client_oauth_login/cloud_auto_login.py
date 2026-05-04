@@ -3,6 +3,9 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost,
+)
 from oauth.tests.steps.client_login import (
     assert_no_segfault,
     reset_client_state,
@@ -11,6 +14,7 @@ from oauth.tests.steps.client_login import (
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost("1.0"))
 @Name("cloud auto-login is NOT triggered for non-cloud hostnames")
 def cloud_auto_login_off_for_non_cloud_host(self):
     """Check that bare ``--login`` against a non-cloud host requires explicit OAuth args."""

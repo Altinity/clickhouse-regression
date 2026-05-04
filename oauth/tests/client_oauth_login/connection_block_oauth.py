@@ -2,6 +2,11 @@
 
 from testflows.core import *
 
+from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride,
+    RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort,
+    RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields,
+)
 from oauth.tests.client_oauth_login.common import oauth_connection_config_xml
 from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
@@ -13,6 +18,7 @@ from oauth.tests.steps.client_login import (
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
 @Name("connection block configures device-flow OAuth")
 def connection_block_oauth_device(self):
     """Check that a ``<connection>`` with ``<login>device</login>`` drives device flow."""
@@ -37,6 +43,7 @@ def connection_block_oauth_device(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride("1.0"))
 @Name("--oauth-* CLI flags override connection block")
 def cli_overrides_connection_block(self):
     """Check that CLI ``--oauth-client-id`` overrides ``<oauth-client-id>`` from the block."""
@@ -66,6 +73,7 @@ def cli_overrides_connection_block(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
 @Name("connection block with invalid oauth-callback-port is rejected")
 def invalid_callback_port_rejected(self):
     """Check that an out-of-range ``<oauth-callback-port>`` fails fast without crashing."""

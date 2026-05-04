@@ -3,6 +3,11 @@
 from testflows.core import *
 from testflows.asserts import error
 
+from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication,
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse,
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint,
+)
 from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
     assert_no_segfault,
@@ -13,6 +18,10 @@ from oauth.tests.steps.client_login import (
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"),
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse("1.0"),
+)
 @Name("device flow times out cleanly when token endpoint never returns id_token")
 def device_flow_token_endpoint_eventually_times_out(self):
     """Check that device flow exits without ``std::bad_cast`` when no approval comes."""
@@ -48,6 +57,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow handles invalid token endpoint URL")
 def device_flow_invalid_token_endpoint(self):
     """Check that an unreachable ``token_uri`` fails cleanly without a crash."""

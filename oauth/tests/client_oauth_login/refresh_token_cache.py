@@ -2,6 +2,10 @@
 
 from testflows.core import *
 
+from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored,
+    RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions,
+)
 from oauth.tests.steps.client_login import (
     DEFAULT_CACHE_PATH,
     DEFAULT_CREDS_PATH,
@@ -15,6 +19,7 @@ from oauth.tests.steps.client_login import (
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored("1.0"))
 @Name("corrupted oauth_cache.json does not crash login flow")
 def corrupted_cache_is_ignored(self):
     """Check that a corrupted ``oauth_cache.json`` is ignored rather than crashing the client."""
@@ -40,6 +45,7 @@ def corrupted_cache_is_ignored(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions("1.0"))
 @Name("oauth_cache.json is created with mode 0600")
 def cache_file_mode_is_strict(self):
     """Check that ``oauth_cache.json`` ends up with mode 0600."""
