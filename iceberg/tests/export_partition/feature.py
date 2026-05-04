@@ -74,7 +74,7 @@ def feature(self, minio_root_user, minio_root_password):
                 },
                 config_file="allow_experimental_insert_into_iceberg.xml",
                 node=node,
-                restart=False,
+                modify=True,
             )
 
     for mode in CATALOG_MODES:
