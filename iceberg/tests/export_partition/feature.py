@@ -19,6 +19,8 @@ therefore still loaded here for completeness.
 
 from testflows.core import *
 
+from helpers.config import users_d
+
 
 CATALOG_MODES = ("no", "ice", "glue")
 
@@ -60,6 +62,21 @@ def _load_modules(self, minio_root_user, minio_root_password):
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
     """Run export-partition tests across every supported catalog mode."""
+    with Given("enable allow_experimental_insert_into_iceberg in the default profile"):
+        for node in self.context.nodes:
+            users_d.create_and_add(
+                entries={
+                    "profiles": {
+                        "default": {
+                            "allow_experimental_insert_into_iceberg": "1",
+                        }
+                    }
+                },
+                config_file="allow_experimental_insert_into_iceberg.xml",
+                node=node,
+                restart=False,
+            )
+
     for mode in CATALOG_MODES:
         with Feature(f"{mode} catalog"):
             self.context.catalog = mode
