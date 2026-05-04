@@ -23,8 +23,7 @@ def scenario_1(self):
     client = self.context.provider_client
 
     with Given(
-        "I configure OpenID with a non-routable jwks_uri "
-        "and valid userinfo_endpoint"
+        "I configure OpenID with a non-routable jwks_uri " "and valid userinfo_endpoint"
     ):
         kc = keycloak_openid_processor_args()
         change_token_processors(
@@ -42,7 +41,7 @@ def scenario_1(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("I send an auth request and measure how long it takes"):
         start = time.time()
@@ -89,7 +88,7 @@ def scenario_2(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("I send an auth request and measure how long it takes"):
         start = time.time()

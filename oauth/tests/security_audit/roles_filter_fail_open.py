@@ -7,7 +7,7 @@ from oauth.tests.steps.clikhouse import (
     access_clickhouse,
     change_user_directories_config,
 )
-from oauth.tests.steps.keycloak_realm import create_user, delete_user
+from oauth.tests.steps.provider_protocol import UnsupportedByProvider
 
 
 @TestScenario
@@ -18,8 +18,13 @@ def scenario_1(self):
     uid = getuid()[:8]
     username = f"u_{uid}"
 
-    with Given(f"I create a Keycloak user '{username}' with no groups"):
-        create_user(username=username, password="testpass123")
+    with Given(f"I create a user '{username}' with no groups"):
+        try:
+            client.OAuthProvider.create_user(
+                username=username, password="testpass123"
+            )
+        except UnsupportedByProvider as e:
+            skip(str(e))
 
     try:
         with And("I configure user directories with a malformed roles_filter regex"):
@@ -32,14 +37,17 @@ def scenario_1(self):
         with And(f"I get a token for '{username}'"):
             token = client.OAuthProvider.get_oauth_token(
                 username=username, password="testpass123"
-            )["access_token"]
+            ).access_token
 
         with Then("[H-06]"):
             access_clickhouse(token=token, status_code=200)
 
     finally:
         with Finally("I clean up"):
-            delete_user(username=username)
+            try:
+                client.OAuthProvider.delete_user(username=username)
+            except UnsupportedByProvider:
+                pass
 
 
 @TestScenario
@@ -50,13 +58,17 @@ def scenario_2(self):
     uid = getuid()[:8]
     username = f"u_{uid}"
 
-    with Given(f"I create a Keycloak user '{username}'"):
-        create_user(username=username, password="testpass123")
+    with Given(f"I create a user '{username}'"):
+        try:
+            client.OAuthProvider.create_user(
+                username=username, password="testpass123"
+            )
+        except UnsupportedByProvider as e:
+            skip(str(e))
 
     try:
         with And(
-            "I configure user directories with a filter that "
-            "excludes the user's groups"
+            "I configure user directories with a filter that excludes the user's groups"
         ):
             change_user_directories_config(
                 processor="keycloak",
@@ -67,7 +79,7 @@ def scenario_2(self):
         with And(f"I get a token for '{username}'"):
             token = client.OAuthProvider.get_oauth_token(
                 username=username, password="testpass123"
-            )["access_token"]
+            ).access_token
 
         with Then("baseline"):
             access_clickhouse(token=token, status_code=200)
@@ -82,14 +94,17 @@ def scenario_2(self):
         with And("I get a fresh token"):
             token2 = client.OAuthProvider.get_oauth_token(
                 username=username, password="testpass123"
-            )["access_token"]
+            ).access_token
 
         with Then("[H-06]"):
             access_clickhouse(token=token2, status_code=200)
 
     finally:
         with Finally("I clean up"):
-            delete_user(username=username)
+            try:
+                client.OAuthProvider.delete_user(username=username)
+            except UnsupportedByProvider:
+                pass
 
 
 @TestFeature

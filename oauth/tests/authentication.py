@@ -12,8 +12,8 @@ def valid_token_accepted(self):
     """ClickHouse SHALL accept a valid Keycloak access token over HTTP."""
     client = self.context.provider_client
 
-    with Given("I get a valid OAuth token from Keycloak"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+    with Given("I get a valid OAuth token from the provider"):
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse accepts the token and returns the current user"):
         body = access_clickhouse(token=token, status_code=200)
@@ -40,7 +40,7 @@ def tampered_signature_rejected(self):
     client = self.context.provider_client
 
     with Given("I get a valid token and tamper with the signature"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
         token = token[:-4] + "7b39"
 
     with Then("ClickHouse rejects the tampered token"):
@@ -69,7 +69,7 @@ def valid_token_on_all_nodes(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
         with Then(f"node {i} ({ip}) accepts the token"):
@@ -91,7 +91,7 @@ def no_token_processor_configured(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
         access_clickhouse(token=token, status_code=400)

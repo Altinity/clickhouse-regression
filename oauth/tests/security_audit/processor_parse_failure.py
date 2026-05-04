@@ -31,7 +31,7 @@ def scenario_1(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("[H-07]"):
         access_clickhouse(token=token, status_code=200)
@@ -53,7 +53,7 @@ def scenario_2(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS"):
         access_clickhouse(token=token, status_code=400)

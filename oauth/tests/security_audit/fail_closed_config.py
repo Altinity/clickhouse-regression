@@ -175,7 +175,7 @@ def scenario_4(self):
         )
 
     with And("I get a valid token from Keycloak (user 'demo')"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("baseline auth succeeds with the valid transform"):
         access_clickhouse(token=token, status_code=200)
@@ -188,7 +188,7 @@ def scenario_4(self):
         )
 
     with And("I refresh the token"):
-        token2 = client.OAuthProvider.get_oauth_token()["access_token"]
+        token2 = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("[M-13]"):
         access_clickhouse(token=token2, status_code=200)

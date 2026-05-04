@@ -31,7 +31,7 @@ def scenario_1(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with And("I authenticate to populate the cache"):
         access_clickhouse(token=token, status_code=200)

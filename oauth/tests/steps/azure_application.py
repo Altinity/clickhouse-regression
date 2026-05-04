@@ -11,6 +11,12 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
 )
+from oauth.tests.steps.provider_protocol import (
+    OAuthToken,
+    OpenIDEndpoints,
+    modify_jwt_token as _shared_modify_jwt_token,
+    unsupported,
+)
 from testflows.core import *
 from oauth.requirements.requirements import *
 
@@ -46,17 +52,22 @@ def get_oauth_token(
     client_id=None,
     client_secret=None,
     scope="https://graph.microsoft.com/.default",
+    username=None,
+    password=None,
 ):
-    """
-    Acquire an OAuth token from Azure AD using client credentials.
+    """Acquire an Azure AD access token via client-credentials grant.
+
+    Returns an :class:`OAuthToken` so call sites can use the same
+    ``token["access_token"]`` / ``token.access_token`` pattern as
+    Keycloak. ``username``/``password`` are accepted for signature
+    compatibility with the Keycloak provider but are ignored — Azure
+    automation uses the app registration secret.
     """
 
     if tenant_id is None:
         tenant_id = self.context.tenant_id
-
     if client_id is None:
         client_id = self.context.client_id
-
     if client_secret is None:
         client_secret = self.context.client_secret
 
@@ -64,7 +75,27 @@ def get_oauth_token(
         tenant_id=tenant_id, client_id=client_id, client_secret=client_secret
     )
     token = credential.get_token(scope)
-    return token.token
+    return OAuthToken(
+        access_token=token.token,
+        expires_in=int(token.expires_on) if hasattr(token, "expires_on") else None,
+        raw={"access_token": token.token},
+    )
+
+
+@TestStep(Given)
+def openid_endpoints(self, tenant_id=None):
+    """Return Azure AD v2.0 OpenID endpoints for the active tenant."""
+    if tenant_id is None:
+        tenant_id = self.context.tenant_id
+    base = f"https://login.microsoftonline.com/{tenant_id}"
+    return OpenIDEndpoints(
+        issuer=f"{base}/v2.0",
+        jwks_uri=f"{base}/discovery/v2.0/keys",
+        userinfo_endpoint="https://graph.microsoft.com/oidc/userinfo",
+        token_introspection_endpoint=None,
+        configuration_endpoint=f"{base}/v2.0/.well-known/openid-configuration",
+        expected_audience=getattr(self.context, "client_id", None),
+    )
 
 
 @TestStep(Given)
@@ -994,7 +1025,21 @@ def mixed_valid_invalid_configuration(self, node=None):
 
 
 class OAuthProvider:
+    """Provider implementation for Azure AD.
+
+    Implements the contract defined in
+    ``oauth.tests.steps.provider_protocol``. Methods that Azure cannot
+    cleanly automate (``disable_user``, ``invalidate_user_sessions``,
+    ``get_oauth_token_for_client`` with arbitrary client/realm) are
+    explicitly marked unsupported so scenarios that depend on them
+    ``Skip`` rather than crash.
+    """
+
     get_oauth_token = get_oauth_token
+    openid_endpoints = openid_endpoints
+    default_idp = default_idp
+    modify_jwt_token = staticmethod(_shared_modify_jwt_token)
+
     create_application = create_azure_application
     create_application_with_secret = create_azure_application_with_secret
     create_user = create_user
@@ -1015,6 +1060,18 @@ class OAuthProvider:
     create_group_with_matching_role_name = create_group_with_matching_role_name
     create_group_with_non_matching_role_name = create_group_with_non_matching_role_name
     setup_azure_application = setup_azure_application
+
+    delete_user = unsupported("delete_user")
+    disable_user = unsupported("disable_user")
+    enable_user = unsupported("enable_user")
+    invalidate_user_sessions = unsupported("invalidate_user_sessions")
+    disable_client = unsupported("disable_client")
+    enable_client = unsupported("enable_client")
+    delete_group = unsupported("delete_group")
+    remove_user_from_group = unsupported("remove_user_from_group")
+    get_user_by_username = unsupported("get_user_by_username")
+    get_group_by_name = unsupported("get_group_by_name")
+    get_oauth_token_for_client = unsupported("get_oauth_token_for_client")
 
     # Negative configuration test steps
     invalid_processor_type_configuration = invalid_processor_type_configuration

@@ -25,7 +25,7 @@ def invalid_processor_type(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
         access_clickhouse(token=token, status_code=400)
@@ -51,7 +51,7 @@ def missing_processor_type(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
         access_clickhouse(token=token, status_code=400)
@@ -80,7 +80,7 @@ def non_existent_processor_in_user_directory(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects (base user_directories still references 'keycloak')"):
         access_clickhouse(token=token, status_code=400)
@@ -106,7 +106,7 @@ def empty_processor_in_user_directory(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects (no valid processor for 'keycloak' reference)"):
         access_clickhouse(token=token, status_code=400)
@@ -124,21 +124,13 @@ def valid_openid_processor_type(self):
     client = self.context.provider_client
 
     with Given("I configure a token processor with type OpenID"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
-            userinfo_endpoint=(
-                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
-                f"/protocol/openid-connect/userinfo"
-            ),
-            token_introspection_endpoint=(
-                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
-                f"/protocol/openid-connect/token/introspect"
-            ),
-            jwks_uri=(
-                f"{self.context.keycloak_url}/realms/{self.context.realm_name}"
-                f"/protocol/openid-connect/certs"
-            ),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
 
     with And("I configure user directories to use the processor"):
@@ -148,7 +140,7 @@ def valid_openid_processor_type(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse accepts the token"):
         access_clickhouse(token=token, status_code=200)
