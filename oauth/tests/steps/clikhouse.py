@@ -81,6 +81,70 @@ def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
     access_clickhouse(token="", ip=ip, https=https, status_code=403)
 
 
+@TestStep(Then)
+def assert_token_rejected(self, token, ip="clickhouse1", https=False, node=None):
+    """Assert ClickHouse refuses ``token`` for any credential-validity reason.
+
+    "Rejected" can surface as either:
+
+    - HTTP 403 (``AUTHENTICATION_FAILED``) — token validated against
+      JWKS but the audience/issuer/etc. didn't match what the
+      processor expected, or
+    - HTTP 500 with ``token_verification_exception`` — the JWT
+      structure itself was rejected (missing required claim, bad
+      signature, unknown ``kid``, etc.).
+
+    Use this when the *exact* failure code depends on which claim is
+    wrong / missing, but the test only cares that ClickHouse said no.
+    For tests that want to pin a specific status, call
+    ``access_clickhouse(..., status_code=...)`` directly.
+    """
+    if node is None:
+        node = self.context.bash_tools
+
+    port = 8443 if https else 8123
+    http_prefix = "https" if https else "http"
+    url = f"{http_prefix}://{ip}:{port}/"
+
+    uid = getuid()[:8]
+    tmp_file = f"/tmp/ch_response_{uid}.txt"
+
+    curl_command = (
+        f'curl -s -o {tmp_file} -w "%{{http_code}}" '
+        f"--location -X POST '{url}' "
+        f"--data-binary 'SELECT currentUser()' "
+        f"--header 'Authorization: Bearer {token}'"
+    )
+    if https:
+        curl_command += " -k"
+
+    result = node.command(command=curl_command)
+    output = result.output.strip()
+    try:
+        http_code = int(output[-3:])
+    except ValueError:
+        http_code = None
+
+    body = node.command(command=f"cat {tmp_file}").output.strip()
+
+    rejected_markers = (
+        "AUTHENTICATION_FAILED",
+        "token_verification_exception",
+        "failed to verify signature",
+        "missing required claim",
+        "ACCESS_DENIED",
+    )
+    matched_marker = next((m for m in rejected_markers if m in body), None)
+
+    assert http_code in (401, 403, 500) and matched_marker is not None, error(
+        f"Expected token rejection (HTTP 401/403/500 with a rejection "
+        f"marker), got HTTP {http_code}. "
+        f"Body: {body[:500]}"
+    )
+
+    return http_code, body
+
+
 @TestStep(Given)
 def change_token_processors(
     self,

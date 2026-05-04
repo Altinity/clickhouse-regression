@@ -87,7 +87,7 @@ def token_from_other_realm_rejected(self):
             ).access_token
 
         with Then("ClickHouse rejects the cross-realm token"):
-            access_clickhouse(token=outsider_token, status_code=403)
+            assert_token_rejected(token=outsider_token)
     finally:
         with Finally("I clean up the other realm"):
             try:
@@ -106,9 +106,23 @@ def token_from_wrong_client_rejected(self):
     be rejected by an audience-pinned ClickHouse.
 
     "Same IdP, different application." The user has a perfectly valid
-    SSO identity, but their token's ``aud`` / ``azp`` is for a different
+    SSO identity, but their token's ``aud`` claim is for a different
     OAuth client — say, the marketing dashboard — and ClickHouse is
-    pinned to ``expected_audience=clickhouse-client``.
+    pinned to ``expected_audience=our-client``.
+
+    Status-code note: depending on how Keycloak shapes the token, the
+    other client's token may either:
+
+    - have an ``aud`` claim but with a different value → ClickHouse
+      returns HTTP 403 (AUTHENTICATION_FAILED), or
+    - have no ``aud`` claim at all (Keycloak default for a vanilla
+      client without an Audience protocol mapper) → ClickHouse returns
+      HTTP 500 with ``token_verification_exception: decoded JWT is
+      missing required claim(s)``.
+
+    Both outcomes prove the gate works. We assert on the body marker
+    rather than only on the status code so the test isn't fragile
+    against either shape.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -155,7 +169,7 @@ def token_from_wrong_client_rejected(self):
                 skip(str(e))
 
         with Then("ClickHouse rejects the wrong-audience token"):
-            access_clickhouse(token=other_app_token, status_code=403)
+            assert_token_rejected(token=other_app_token)
     finally:
         with Finally("I clean up the second client"):
             try:
