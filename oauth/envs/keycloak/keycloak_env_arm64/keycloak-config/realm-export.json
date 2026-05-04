@@ -8,10 +8,17 @@
       "protocol": "openid-connect",
       "publicClient": true,
       "secret": "grafana-secret",
-      "redirectUris": ["http://localhost:3000/login/generic_oauth"],
+      "redirectUris": [
+        "http://localhost:3000/login/generic_oauth",
+        "http://localhost:*",
+        "http://127.0.0.1:*"
+      ],
       "baseUrl": "http://localhost:3000",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": true,
+      "attributes": {
+        "oauth2.device.authorization.grant.enabled": "true"
+      },
       "protocolMappers": [
         {
           "name": "groups",

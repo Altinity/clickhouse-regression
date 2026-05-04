@@ -180,6 +180,7 @@ def regression(
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
     Scenario(run=load("oauth.tests.security_audit", "feature"))
+    Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
 
 if main():
