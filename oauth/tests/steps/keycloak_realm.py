@@ -45,9 +45,7 @@ def _keycloak_issuer_for_token_validation(self):
     return f"http://localhost:8080/realms/{realm}"
 
 
-@TestStep(Given)
 def keycloak_openid_processor_args(
-    self,
     realm_name=None,
     keycloak_url=None,
     expected_audience=None,
@@ -56,15 +54,19 @@ def keycloak_openid_processor_args(
     """Return ``change_token_processors``-compatible kwargs for the
     standard Keycloak OpenID processor.
 
+    NOT a ``@TestStep`` — this is a pure context-read that returns a
+    dict. Decorating it would force callers into a ``with Given(...)``
+    block just to compute four URLs and surface them as the wrapped
+    step-result ``'OK'`` object instead of the dict tests expect.
     Centralised here so every security_audit / configuration scenario
     that wires up an OpenID processor against Keycloak doesn't repeat
-    the same 4 URLs inline. The function returns a plain ``dict`` so
-    callers can ``**spread`` it into ``change_token_processors``.
+    the same 4 URLs inline.
     """
+    ctx = current().context
     if realm_name is None:
-        realm_name = self.context.realm_name
+        realm_name = ctx.realm_name
     if keycloak_url is None:
-        keycloak_url = self.context.keycloak_url
+        keycloak_url = ctx.keycloak_url
 
     base = f"{keycloak_url}/realms/{realm_name}/protocol/openid-connect"
 
@@ -81,24 +83,26 @@ def keycloak_openid_processor_args(
     return args
 
 
-@TestStep(Given)
-def openid_endpoints(self, realm_name=None):
+def openid_endpoints(realm_name=None):
     """Return an ``OpenIDEndpoints`` bundle for the active Keycloak realm.
 
-    Tests should use this instead of constructing URLs inline so that
-    swapping ``--identity-provider`` switches every endpoint at once.
+    NOT a ``@TestStep`` — see ``keycloak_openid_processor_args`` for
+    the rationale. Tests use this instead of constructing URLs inline
+    so swapping ``--identity-provider`` switches every endpoint at
+    once.
     """
+    ctx = current().context
     if realm_name is None:
-        realm_name = self.context.realm_name
+        realm_name = ctx.realm_name
 
-    base = f"{self.context.keycloak_url}/realms/{realm_name}/protocol/openid-connect"
+    base = f"{ctx.keycloak_url}/realms/{realm_name}/protocol/openid-connect"
     return OpenIDEndpoints(
-        issuer=_keycloak_issuer_for_token_validation(self),
+        issuer=f"http://localhost:8080/realms/{realm_name}",
         jwks_uri=f"{base}/certs",
         userinfo_endpoint=f"{base}/userinfo",
         token_introspection_endpoint=f"{base}/token/introspect",
         configuration_endpoint=(
-            f"{self.context.keycloak_url}/realms/{realm_name}"
+            f"{ctx.keycloak_url}/realms/{realm_name}"
             f"/.well-known/openid-configuration"
         ),
         expected_audience="account",
@@ -779,7 +783,7 @@ class OAuthProvider:
     get_oauth_token_for_client = get_oauth_token_for_client
     get_admin_token = get_admin_token
 
-    openid_endpoints = openid_endpoints
+    openid_endpoints = staticmethod(openid_endpoints)
     default_idp = default_idp
 
     modify_jwt_token = staticmethod(_shared_modify_jwt_token)

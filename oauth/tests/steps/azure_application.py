@@ -82,11 +82,15 @@ def get_oauth_token(
     )
 
 
-@TestStep(Given)
-def openid_endpoints(self, tenant_id=None):
-    """Return Azure AD v2.0 OpenID endpoints for the active tenant."""
+def openid_endpoints(tenant_id=None):
+    """Return Azure AD v2.0 OpenID endpoints for the active tenant.
+
+    NOT a ``@TestStep`` — see ``keycloak_realm.openid_endpoints`` for
+    the rationale.
+    """
+    ctx = current().context
     if tenant_id is None:
-        tenant_id = self.context.tenant_id
+        tenant_id = ctx.tenant_id
     base = f"https://login.microsoftonline.com/{tenant_id}"
     return OpenIDEndpoints(
         issuer=f"{base}/v2.0",
@@ -94,7 +98,7 @@ def openid_endpoints(self, tenant_id=None):
         userinfo_endpoint="https://graph.microsoft.com/oidc/userinfo",
         token_introspection_endpoint=None,
         configuration_endpoint=f"{base}/v2.0/.well-known/openid-configuration",
-        expected_audience=getattr(self.context, "client_id", None),
+        expected_audience=getattr(ctx, "client_id", None),
     )
 
 
@@ -1036,7 +1040,7 @@ class OAuthProvider:
     """
 
     get_oauth_token = get_oauth_token
-    openid_endpoints = openid_endpoints
+    openid_endpoints = staticmethod(openid_endpoints)
     default_idp = default_idp
     modify_jwt_token = staticmethod(_shared_modify_jwt_token)
 

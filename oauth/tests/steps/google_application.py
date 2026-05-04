@@ -102,9 +102,13 @@ def get_oauth_token(
     )
 
 
-@TestStep(Given)
-def openid_endpoints(self):
-    """Return Google's standard OpenID-Connect endpoints."""
+def openid_endpoints():
+    """Return Google's standard OpenID-Connect endpoints.
+
+    NOT a ``@TestStep`` — see ``keycloak_realm.openid_endpoints`` for
+    the rationale.
+    """
+    ctx = current().context
     return OpenIDEndpoints(
         issuer="https://accounts.google.com",
         jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
@@ -113,9 +117,7 @@ def openid_endpoints(self):
         configuration_endpoint=(
             "https://accounts.google.com/.well-known/openid-configuration"
         ),
-        expected_audience=getattr(self, "client_id", None) or getattr(
-            getattr(self, "context", None), "client_id", None
-        ),
+        expected_audience=getattr(ctx, "client_id", None),
     )
 
 
@@ -327,7 +329,7 @@ class OAuthProvider:
 
     get_oauth_token = get_oauth_token
     get_user_info = get_user_info
-    openid_endpoints = openid_endpoints
+    openid_endpoints = staticmethod(openid_endpoints)
     default_idp = default_idp
     modify_jwt_token = staticmethod(_shared_modify_jwt_token)
 
