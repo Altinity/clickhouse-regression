@@ -33,18 +33,22 @@ lts/
 ├── superset/                 # Apache Superset integration tests
 │   ├── __init__.py
 │   ├── feature.py            # @TestFeature loaded by regression.py
-│   ├── configs/              # Dockerfiles, bootstrap scripts, TLS certs
+│   ├── configs/              # docker-compose.yml, Dockerfile.superset, TLS certs
+│   │   ├── docker-compose.yml
+│   │   ├── Dockerfile.superset
+│   │   ├── config.xml
+│   │   ├── default_user.xml
+│   │   ├── server.crt / server.key / dhparam.pem
 │   ├── requirements/
 │   │   ├── requirements.md
 │   │   └── requirements.py
 │   ├── steps/
-│   │   ├── environment.py    # Docker Compose setup/teardown
-│   │   └── ui.py             # Selenium-based UI interaction steps
+│   │   ├── environment.py    # Docker Compose setup/teardown + health checks
+│   │   └── ui.py             # Selenium WebDriver helpers + REST seeding fixture
 │   └── tests/
-│       ├── connection.py     # Database connection scenarios
-│       ├── sql_lab.py        # SQL Lab query/schema scenarios
-│       ├── charts.py         # Chart creation scenarios
-│       └── dashboards.py     # Dashboard creation/refresh scenarios
+│       └── ui_smoke.py       # End-to-end browser smoke test
+│                             # (login -> verify DB -> SQL Lab query, with
+│                             #  screenshots saved to ../screenshots/)
 │
 └── grafana/                  # Altinity Grafana ClickHouse plugin tests
     ├── __init__.py

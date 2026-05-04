@@ -16,6 +16,8 @@ services:
       GF_UNIFIED_ALERTING_ENABLED: "true"
       GF_ALERTING_ENABLED: "false"
       GF_PLUGINS_ANGULAR_SUPPORT_ENABLED: "true"
+    ports:
+      - "0:3000"
     volumes:
       - ./provisioning/datasources/:/etc/grafana/provisioning/datasources/
     depends_on:

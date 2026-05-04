@@ -1,6 +1,7 @@
 """Reusable steps for building and running the ODBC Docker test environment."""
 
 import os
+import re
 import subprocess
 
 from testflows.core import *
@@ -27,6 +28,13 @@ def build_odbc_runner_image(self, configs_dir, clickhouse_image):
 @TestStep(When)
 def run_odbc_tests_in_container(self, configs_dir, packages_dir, odbc_release):
     """Run clickhouse-odbc tests inside the Docker container."""
+    # Clear any stale logs from a previous run so verify_test_results
+    # doesn't accidentally read old data when the container fails early.
+    for stale in ("test.log", "test_detailed.log"):
+        path = os.path.join(packages_dir, stale)
+        if os.path.exists(path):
+            os.remove(path)
+
     run_cmd = [
         "docker",
         "run",
@@ -45,7 +53,11 @@ def run_odbc_tests_in_container(self, configs_dir, packages_dir, odbc_release):
 
 @TestStep(Then)
 def verify_test_results(self, packages_dir):
-    """Verify that the test log shows no failures."""
+    """Verify that the test log shows no failures.
+
+    Parses ctest summary lines such as
+    ``100% tests passed, 0 tests failed out of N`` to determine pass/fail.
+    """
     test_log = os.path.join(packages_dir, "test.log")
     if not os.path.exists(test_log):
         fail(f"test.log not found at {test_log}")
@@ -53,7 +65,22 @@ def verify_test_results(self, packages_dir):
     with open(test_log) as f:
         log_content = f.read()
 
-    if "tests failed" in log_content and "0 tests failed" not in log_content:
-        fail(f"Tests failed. See {test_log}:\n{log_content[-2000:]}")
+    summary = re.search(
+        r"(\d+)% tests passed,\s+(\d+) tests failed out of\s+(\d+)",
+        log_content,
+    )
+    if summary is None:
+        fail(
+            f"Could not find ctest summary line in {test_log}. "
+            f"Tail of log:\n{log_content[-2000:]}"
+        )
 
-    note(f"Tests passed. Log: {test_log}")
+    failed = int(summary.group(2))
+    total = int(summary.group(3))
+    if failed > 0:
+        fail(
+            f"{failed}/{total} ODBC tests failed. See {test_log}:\n"
+            f"{log_content[-2000:]}"
+        )
+
+    note(f"All {total} ODBC tests passed. Log: {test_log}")
