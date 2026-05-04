@@ -243,7 +243,32 @@ with Given(f"I create user '{username}'"):
 ValueError: too many values to unpack (expected 2)
 ```
 
-…because the testflows step wrapper re-shapes return values.
+…because the testflows step wrapper re-shapes return values into an
+`'OK'` step-result object. A related variant of the same bug:
+
+```
+AttributeError: 'OK' object has no attribute 'issuer'
+```
+
+…happens when a `@TestStep` returns a dataclass and the caller tries
+to read a field on the wrapped result.
+
+**Rule of thumb**: only decorate with `@TestStep(Given|When|Then)`
+helpers that produce *side effects* (configuration writes, container
+commands, server restarts, identity-provider mutations). Pure
+context-reads that just compute a value — `openid_endpoints()`,
+`keycloak_openid_processor_args()` — must be plain functions so they
+can be called from anywhere and return their actual value.
+
+When attaching a plain function to an `OAuthProvider` class, wrap it
+in `staticmethod(...)` so Python doesn't try to bind `self` on
+attribute access:
+
+```python
+class OAuthProvider:
+    openid_endpoints = staticmethod(openid_endpoints)   # plain function
+    default_idp = default_idp                           # @TestStep(Given) — real step
+```
 
 ---
 
@@ -526,6 +551,7 @@ This suite *tests* an authentication subsystem. A few hard rules:
 |-----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | `ImportError: cannot import name X from oauth.tests.steps.clikhouse`              | Step helper referenced by tests but never added/restored.                                                                                    | Add it in `clikhouse.py`. The `keycloak_openid_processor_args`/`change_user_jwt_auth`/etc. precedent is in §3.2 of `audit-suite-review.md`. |
 | `ValueError: too many values to unpack (expected 2)`                              | `@TestStep` called outside a `with` block.                                                                                                   | Wrap the call: `with When("…"): exit_code, output = run_…(…)`.                                                                              |
+| `AttributeError: 'OK' object has no attribute '<field>'`                          | Same root cause: `@TestStep`-decorated helper returning a dataclass; caller got the step-result wrapper instead of the value.                | If the helper has no side effects, drop `@TestStep`; see §4.4. Otherwise call it inside a `with Given/When(...)` block.                     |
 | `TypeError: string indices must be integers` on `token["access_token"]`           | Test still using the legacy dict accessor against a non-Keycloak provider.                                                                   | Switch to `.access_token`.                                                                                                                  |
 | `UnsupportedByProvider: 'create_user' is not implemented for this OAuth provider` | Scenario hit an optional method on a provider that doesn't have it.                                                                          | Wrap in `try/except UnsupportedByProvider as e: skip(str(e))`.                                                                              |
 | Scenario passes but assertion never fires                                         | Common with `try: ... except Exception: note(...)` patterns.                                                                                 | Don't swallow. If a step *should* succeed, let exceptions propagate.                                                                        |
