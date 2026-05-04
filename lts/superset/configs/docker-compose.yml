@@ -1,0 +1,69 @@
+services:
+  clickhouse:
+    image: ${CLICKHOUSE_IMAGE:-clickhouse/clickhouse-server}:${CLICKHOUSE_VERSION:-latest}
+    environment:
+      - CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS=true
+    volumes:
+      - ./config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ./default_user.xml:/etc/clickhouse-server/users.d/default_user.xml
+      - ./server.crt:/etc/clickhouse-server/server.crt
+      - ./server.key:/etc/clickhouse-server/server.key
+      - ./dhparam.pem:/etc/clickhouse-server/dhparam.pem
+      - ./init_schema.sql:/docker-entrypoint-initdb.d/init_schema.sql
+    ports:
+      - "0:8123"
+      - "0:8443"
+      - "0:9000"
+      - "0:9440"
+
+  superset:
+    image: lts-superset:${SUPERSET_VERSION:-4.1.1}-${CLICKHOUSE_PYTHON_DRIVER:-clickhouse-connect}
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
+      args:
+        SUPERSET_VERSION: "${SUPERSET_VERSION:-4.1.1}"
+        CLICKHOUSE_PYTHON_DRIVER: "${CLICKHOUSE_PYTHON_DRIVER:-clickhouse-connect}"
+    environment:
+      SUPERSET_SECRET_KEY: "lts-test-not-for-production-do-not-use"
+      SUPERSET_LOAD_EXAMPLES: "no"
+      FLASK_DEBUG: "0"
+      ADMIN_USERNAME: "admin"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "admin"
+    ports:
+      - "0:8088"
+    depends_on:
+      - clickhouse
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -eu
+        superset db upgrade
+        superset fab create-admin \
+          --username "$${ADMIN_USERNAME}" \
+          --firstname Admin \
+          --lastname User \
+          --email "$${ADMIN_EMAIL}" \
+          --password "$${ADMIN_PASSWORD}" || true
+        superset init
+        exec gunicorn \
+          --bind 0.0.0.0:8088 \
+          --workers 2 \
+          --timeout 120 \
+          --access-logfile - \
+          --error-logfile - \
+          "superset.app:create_app()"
+
+  selenium:
+    image: selenium/standalone-chrome:${SELENIUM_VERSION:-4.40.0}
+    environment:
+      - SE_ENABLE_TRACING=false
+      - SE_ENABLE_TLS=false
+    ports:
+      - "0:4444"
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - superset

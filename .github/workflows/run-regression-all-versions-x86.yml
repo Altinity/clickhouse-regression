@@ -76,8 +76,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - clickhouse_package: docker://altinity/clickhouse-server:22.8.15.25.altinitystable
-            artifact_name: altinitystable-22-8-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:23.3.19.33.altinitystable
             artifact_name: altinitystable-23-3-x86-zookeeper
           - clickhouse_package: docker://altinity/clickhouse-server:23.8.16.43.altinitystable
