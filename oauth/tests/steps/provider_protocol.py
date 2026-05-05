@@ -48,12 +48,24 @@ class OAuthToken:
     raw: Dict[str, Any] = field(default_factory=dict)
 
     def __getitem__(self, key):
-        if key in {"access_token", "refresh_token", "id_token", "token_type", "expires_in"}:
+        if key in {
+            "access_token",
+            "refresh_token",
+            "id_token",
+            "token_type",
+            "expires_in",
+        }:
             return getattr(self, key)
         return self.raw[key]
 
     def __contains__(self, key):
-        if key in {"access_token", "refresh_token", "id_token", "token_type", "expires_in"}:
+        if key in {
+            "access_token",
+            "refresh_token",
+            "id_token",
+            "token_type",
+            "expires_in",
+        }:
             return getattr(self, key) is not None
         return key in self.raw
 
@@ -150,9 +162,9 @@ def assert_provider_contract(provider_module):
     instead of later in a confusing test step.
     """
     provider = getattr(provider_module, "OAuthProvider", None)
-    assert provider is not None, (
-        f"{provider_module.__name__!r} does not expose OAuthProvider"
-    )
+    assert (
+        provider is not None
+    ), f"{provider_module.__name__!r} does not expose OAuthProvider"
 
     missing_required = [m for m in REQUIRED_METHODS if not hasattr(provider, m)]
     assert not missing_required, (

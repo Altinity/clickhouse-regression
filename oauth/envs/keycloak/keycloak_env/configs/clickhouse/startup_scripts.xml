@@ -13,6 +13,18 @@
             <query>GRANT SELECT ON default.* TO `general-role`</query>
         </scripts>
         <scripts>
+            <query>CREATE ROLE OR REPLACE `grafana-admins`</query>
+        </scripts>
+        <scripts>
+            <query>GRANT SELECT ON system.users TO `grafana-admins`</query>
+        </scripts>
+        <scripts>
+            <query>CREATE ROLE OR REPLACE `can-read`</query>
+        </scripts>
+        <scripts>
+            <query>GRANT SELECT ON system.roles TO `can-read`</query>
+        </scripts>
+        <scripts>
             <query>CREATE TABLE IF NOT EXISTS default.test_table_1 (id UInt64) ENGINE=TinyLog</query>
         </scripts>
         <scripts>

@@ -20,9 +20,7 @@ def scenario_1(self):
 
     with Given(f"I create a user '{username}' with no groups"):
         try:
-            client.OAuthProvider.create_user(
-                username=username, password="testpass123"
-            )
+            client.OAuthProvider.create_user(username=username, password="testpass123")
         except UnsupportedByProvider as e:
             skip(str(e))
 
@@ -60,9 +58,7 @@ def scenario_2(self):
 
     with Given(f"I create a user '{username}'"):
         try:
-            client.OAuthProvider.create_user(
-                username=username, password="testpass123"
-            )
+            client.OAuthProvider.create_user(username=username, password="testpass123")
         except UnsupportedByProvider as e:
             skip(str(e))
 
