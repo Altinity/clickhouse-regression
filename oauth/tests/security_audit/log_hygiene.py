@@ -56,7 +56,7 @@ def scenario_2(self):
             token_cache_lifetime=0,
             **keycloak_openid_processor_args(),
         )
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I authenticate"):
         access_clickhouse(token=token)

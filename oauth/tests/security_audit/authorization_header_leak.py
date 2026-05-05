@@ -13,7 +13,7 @@ def scenario_1(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then(
         "I query ClickHouse for the Authorization header via bearer auth "
@@ -39,7 +39,7 @@ def scenario_2(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then(
         "the query fails with HTTP 500 because the function is disabled by default"

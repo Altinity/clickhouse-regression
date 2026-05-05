@@ -13,7 +13,7 @@ def scenario_1(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("[H-02]"):
         body = access_clickhouse(token=token, https=False, status_code=200)
@@ -30,7 +30,7 @@ def scenario_2(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
         with Then(f"[H-02] node {i} ({ip})"):
@@ -44,7 +44,7 @@ def scenario_3(self):
     client = self.context.provider_client
 
     with Given("I get a valid token and modify the signature"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
         modified = client.OAuthProvider.modify_jwt_token(
             token=token, signature_change="modified-signature"
         )

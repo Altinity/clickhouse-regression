@@ -9,7 +9,7 @@ def token_auth_over_https(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse accepts the token over HTTPS"):
         body = access_clickhouse(token=token, https=True, status_code=200)
@@ -22,7 +22,7 @@ def token_auth_over_https_multinode(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
         with Then(f"node {i} ({ip}) accepts the token over HTTPS"):
@@ -39,7 +39,7 @@ def token_auth_http_disabled(self):
         change_ports_config(remove_http=True, https_port=8443)
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("plain HTTP connection is refused"):
         access_clickhouse_connection_refused(token=token, https=False)
@@ -55,7 +55,7 @@ def invalid_token_over_https(self):
     client = self.context.provider_client
 
     with Given("I get a valid token and tamper with it"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
         modified = client.OAuthProvider.modify_jwt_token(
             token=token, payload_changes={"sub": "invalid-subject-id"}
         )

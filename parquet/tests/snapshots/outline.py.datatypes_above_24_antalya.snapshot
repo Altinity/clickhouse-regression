@@ -106,3 +106,5 @@ unsigned_structure = r"""'a\tNullable(UInt8)\t\t\t\t\t\nb\tNullable(UInt16)\t\t\
 
 unsigned_stats_structure = r"""'utiny\tNullable(UInt8)\t\t\t\t\t\nusmall\tNullable(UInt16)\t\t\t\t\t\nuint\tNullable(Int64)\t\t\t\t\t\nubig\tNullable(UInt64)'"""
 
+uuid_2_structure_above_26 = r"""'u\tNullable(UUID)'"""
+

@@ -35,9 +35,12 @@ def scenario_1(self):
         )
 
     with When("I open a native TCP session on clickhouse1 with --jwt"):
-        session = open_native_jwt_session(
-            token=token, container_node="clickhouse1", target_host="clickhouse1"
-        )
+        try:
+            session = open_native_jwt_session(
+                token=token, container_node="clickhouse1", target_host="clickhouse1"
+            )
+        except NotImplementedError as e:
+            skip(str(e))
 
     with And("the session is live"):
         body = session.query("SELECT currentUser()")
@@ -88,9 +91,12 @@ def scenario_2(self):
         )
 
     with When("I open a TCP session"):
-        session = open_native_jwt_session(
-            token=token, container_node="clickhouse1", target_host="clickhouse1"
-        )
+        try:
+            session = open_native_jwt_session(
+                token=token, container_node="clickhouse1", target_host="clickhouse1"
+            )
+        except NotImplementedError as e:
+            skip(str(e))
 
     with And("the session is live"):
         body = session.query("SELECT currentUser()")

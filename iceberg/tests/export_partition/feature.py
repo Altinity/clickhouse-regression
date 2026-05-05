@@ -19,6 +19,8 @@ therefore still loaded here for completeness.
 
 from testflows.core import *
 
+from helpers.config import users_d
+
 
 CATALOG_MODES = ("no", "ice", "glue")
 
@@ -38,18 +40,9 @@ MODULES = (
     "multi_replica_recovery",
     "system_monitoring",
     "settings",
-    # Post-EXPORT interactions with the Iceberg destination (direct
-    # INSERT / TRUNCATE / min-max reader round-trip) — these exercise
-    # the same IcebergWrites.cpp / IcebergMetadata.cpp write paths as
-    # EXPORT PARTITION so parity across the three catalog modes
-    # matters here as much as in the original suite.
     "direct_writes",
     "truncate",
     "minmax_pruning",
-    # Backward-compat: ReplicatedMergeTree tables that predate the
-    # EXPORT feature and therefore do not have the /exports znode.
-    # no_catalog-only (the invariant is on the source RMT, not on
-    # any particular destination catalog).
     "zk_compat",
 )
 
@@ -69,6 +62,21 @@ def _load_modules(self, minio_root_user, minio_root_password):
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
     """Run export-partition tests across every supported catalog mode."""
+    with Given("enable allow_experimental_insert_into_iceberg in the default profile"):
+        for node in self.context.nodes:
+            users_d.create_and_add(
+                entries={
+                    "profiles": {
+                        "default": {
+                            "allow_experimental_insert_into_iceberg": "1",
+                        }
+                    }
+                },
+                config_file="allow_experimental_insert_into_iceberg.xml",
+                node=node,
+                modify=True,
+            )
+
     for mode in CATALOG_MODES:
         with Feature(f"{mode} catalog"):
             self.context.catalog = mode

@@ -3718,6 +3718,440 @@ RQ_SRS_042_OAuth_Authentication_Actions_Authentication_Client = Requirement(
     description=(
         "[ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an access token via the `clickhouse client --jwt <token>` command.\n"
         "\n"
+    ),
+    link=None,
+    level=3,
+    num="14.4.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Mode = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Mode",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`clickhouse-client` SHALL accept only the following values for `--login=<mode>`:\n"
+        "\n"
+        "- the empty string (bare `--login`) — cloud auto-login;\n"
+        "- `browser` — Authorization Code + PKCE flow;\n"
+        "- `device` — Device Authorization Grant flow.\n"
+        "\n"
+        "Any other value SHALL be rejected with a `BAD_ARGUMENTS` error before any network traffic is initiated. The error message SHALL name the offending value.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.1.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Conflict_User = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Conflict.User",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`clickhouse-client` SHALL reject the combination of `--login` and `--user` with a `BAD_ARGUMENTS` error. The two options identify the user via mutually exclusive mechanisms (interactive OAuth flow vs. an explicit username) and SHALL NOT both be specified on the same invocation.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.1.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Conflict_JWT = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Conflict.JWT",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`clickhouse-client` SHALL reject the combination of `--login` and `--jwt` with a `BAD_ARGUMENTS` error. A JWT supplied via `--jwt` is a pre-issued bearer token, while `--login` initiates a fresh OAuth flow; allowing both would silently let the OAuth-issued token overwrite the user-supplied JWT.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.1.3",
+)
+
+RQ_SRS_042_OAuth_Client_Login_OAuthCredentials_RequiresLogin = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.OAuthCredentials.RequiresLogin",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`clickhouse-client` SHALL reject `--oauth-credentials <path>` when it is not accompanied by `--login=browser` or `--login=device`. The credentials file is meaningful only for the custom-OIDC login modes; using it without `--login=*` SHALL produce a `BAD_ARGUMENTS` error.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.1.4",
+)
+
+RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Format",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '`clickhouse-client` SHALL read OAuth credentials from a JSON file in the format produced by the Google Cloud Console ("OAuth 2.0 Client IDs" → "Download JSON"):\n'
+        "\n"
+        "```json\n"
+        "{\n"
+        '  "installed": {\n'
+        '    "client_id": "YOUR_CLIENT_ID",\n'
+        '    "client_secret": "YOUR_CLIENT_SECRET",\n'
+        '    "auth_uri": "https://idp.example.com/oauth2/auth",\n'
+        '    "token_uri": "https://idp.example.com/oauth2/token",\n'
+        '    "device_authorization_uri": "https://idp.example.com/oauth2/device",\n'
+        '    "issuer": "https://idp.example.com",\n'
+        '    "redirect_uris": ["http://127.0.0.1"]\n'
+        "  }\n"
+        "}\n"
+        "```\n"
+        "\n"
+        "The top-level key SHALL be either `installed` (desktop/CLI public clients) or `web` (confidential clients). The required inner fields SHALL be `client_id`, `auth_uri`, and `token_uri`. The optional inner fields SHALL be `client_secret`, `device_authorization_uri`, `issuer`, and `redirect_uris`.\n"
+        "\n"
+        "The default path SHALL be `~/.clickhouse-client/oauth_client.json`. The path MAY be overridden with `--oauth-credentials <path>`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.2.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Missing",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the file referenced by `--oauth-credentials` does not exist, `clickhouse-client` SHALL fail with a clear, actionable error naming the missing path. The error SHALL be raised before any OAuth network traffic begins.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.2.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Malformed",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the file referenced by `--oauth-credentials` does not contain valid JSON (or contains JSON whose top-level structure is not an object with an `installed` or `web` key), `clickhouse-client` SHALL fail with a `BAD_ARGUMENTS` error and SHALL NOT crash, leak a low-level parser exception, or open a network connection.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.2.3",
+)
+
+RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.MissingClientId",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the credentials JSON is structurally valid but is missing one of the required inner fields (`client_id`, `auth_uri`, `token_uri`), `clickhouse-client` SHALL fail with a `BAD_ARGUMENTS` error naming the missing field. The error SHALL be raised before any OAuth network traffic begins.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.2.4",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Connection_NoSegfault = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Connection.NoSegfault",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `--login` (in any mode) is invoked together with `--connection <name>` and the connection's hostname comes from `<connections_credentials>` in `~/.clickhouse-client/config.xml` rather than from an explicit `--host` flag, `clickhouse-client` SHALL NOT crash with a segmentation fault, abort signal, or libc++ hardening trap before reaching the OAuth flow.\n"
+        "\n"
+        "For example, the following invocation SHALL reach the OAuth flow without crashing even when no `--host` is supplied on the command line:\n"
+        "\n"
+        "```bash\n"
+        "clickhouse client --connection my-server --login=device \\\n"
+        "    --oauth-credentials ~/.clickhouse-client/oauth_client.json \\\n"
+        "    --query 'SELECT 1'\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.3.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Connection_HostFallback = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Connection.HostFallback",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `--login` is invoked and `hosts_and_ports` is empty (i.e. no `--host` was supplied), `clickhouse-client` SHALL fall back to the hostname stored in the client configuration (resolved from `--connection`, `<host>` in the config file, or the `CLICKHOUSE_HOST` environment variable). Behaviour with explicit `--host` SHALL be unchanged.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.3.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When invoked with `--login=device`, `clickhouse-client` SHALL:\n"
+        "\n"
+        "1. Initiate a device-authorization request against the configured `device_authorization_uri`.\n"
+        "2. Print the `verification_uri` (or `verification_uri_complete`) and `user_code` from the device-endpoint response to standard error.\n"
+        "3. Poll the configured `token_uri` for a token at the cadence dictated by the `interval` field of the device-endpoint response, applying RFC 8628 §3.5 `slow_down` back-off when requested.\n"
+        "4. Stop polling once an `id_token` (or `access_token`) is returned and use it to authenticate the subsequent ClickHouse query.\n"
+        "5. Stop polling and exit cleanly with an authentication error when the `expires_in` deadline elapses without user approval.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.4.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the token endpoint returns a non-JSON body (for example, an HTML error page from a misconfigured proxy or an empty body on a transient TCP/TLS failure) during device-flow polling, `clickhouse-client` SHALL treat the response as a transient error, continue polling at the next interval, and SHALL NOT abort the device flow with a `std::bad_cast` or other low-level parser exception.\n"
+        "\n"
+        "The device flow SHALL still terminate cleanly when the `expires_in` deadline elapses; the resulting error SHALL be a recognisable authentication failure and SHALL NOT include a stack trace.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.4.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the configured `token_uri` or `device_authorization_uri` is unreachable (DNS failure, connection refused, HTTP 404), `clickhouse-client` SHALL fail with a clear network or authentication error and SHALL NOT crash.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.4.3",
+)
+
+RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When invoked with `--login=browser`, `clickhouse-client` SHALL:\n"
+        "\n"
+        "1. Generate a 128-bit random `state` value and a PKCE `code_verifier`/`code_challenge` pair as defined by [RFC 7636](https://datatracker.ietf.org/doc/html/rfc7636).\n"
+        "2. Bind a loopback HTTP server on `127.0.0.1` to receive the redirect; the listening port MAY be either kernel-assigned (RFC 8252 §7.3) or pinned via `--oauth-callback-port` / `<oauth-callback-port>`.\n"
+        "3. Open the user's default browser at the configured `auth_uri` with the appropriate query parameters (`response_type=code`, `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge`, `code_challenge_method=S256`).\n"
+        "4. Wait for a request matching `GET /callback?code=<code>&state=<state>`; reject any request whose `state` does not match the generated value.\n"
+        "5. Exchange the authorization code for tokens at the configured `token_uri` using the `code_verifier`.\n"
+        "6. Use the resulting `id_token` (or `access_token`) to authenticate the subsequent ClickHouse query.\n"
+        "\n"
+        "If the browser callback is not received within the configured timeout, `clickhouse-client` SHALL exit with a clear timeout error.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.5.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Cache_Reuse = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Cache.Reuse",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "After a successful OAuth login, `clickhouse-client` SHALL persist the issued refresh token to `~/.clickhouse-client/oauth_cache.json`. On subsequent invocations with the same `client_id`, the client SHALL attempt to obtain a fresh `id_token` via the `refresh_token` grant before falling back to the interactive browser or device flow.\n"
+        "\n"
+        "When the cached refresh token is rejected by the identity provider (e.g. `invalid_grant`), `clickhouse-client` SHALL fall back to the interactive flow without crashing.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.6.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Cache.FilePermissions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`~/.clickhouse-client/oauth_cache.json` SHALL be created with file mode `0600` (owner read/write only). Refresh tokens are bearer credentials, and a wider permission mask SHALL NOT be used at any point during the read–modify–write cycle.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.6.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Cache.CorruptedIgnored",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `~/.clickhouse-client/oauth_cache.json` cannot be parsed as JSON (corruption, truncated write, foreign content), `clickhouse-client` SHALL emit a single warning to standard error, ignore the cached entry, and proceed to the interactive login flow. The client SHALL NOT crash, refuse to start, or delete the existing cache file silently.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.6.3",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Cloud.AutoLogin",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `clickhouse-client` is invoked with bare `--login` (no `=<mode>`) and the target hostname is a `*.clickhouse.cloud` endpoint, the client SHALL automatically resolve the OAuth provider parameters from the ClickHouse Cloud endpoint metadata and run the appropriate flow without requiring the user to supply `--oauth-url`, `--oauth-client-id`, `--oauth-audience`, or `--oauth-credentials`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.7.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.Cloud.NonCloudHost",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When `clickhouse-client` is invoked with bare `--login` (no `=<mode>`) and the target hostname is NOT a `*.clickhouse.cloud` endpoint, the client SHALL require explicit OAuth parameters (via `--oauth-url`, `--oauth-client-id`, `--oauth-audience` on the CLI, or the equivalent fields in the connection block). When these parameters are absent the client SHALL fail with a clear error and SHALL NOT silently fall through to non-OAuth authentication.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.7.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.OAuthFields",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "`clickhouse-client` SHALL read OAuth configuration from `<connections_credentials>/<connection>` blocks in `~/.clickhouse-client/config.xml`, with the following fields:\n"
+        "\n"
+        "| XML field | Equivalent CLI flag |\n"
+        "| --- | --- |\n"
+        '| `<login>` | `--login=browser\\|device\\|""` |\n'
+        "| `<oauth-url>` | `--oauth-url` |\n"
+        "| `<oauth-client-id>` | `--oauth-client-id` |\n"
+        "| `<oauth-audience>` | `--oauth-audience` |\n"
+        "| `<oauth-client-secret>` | `--oauth-client-secret` |\n"
+        "| `<oauth-callback-port>` | `--oauth-callback-port` |\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <connections_credentials>\n"
+        "        <connection>\n"
+        "            <name>my-server</name>\n"
+        "            <hostname>db.example.com</hostname>\n"
+        "            <port>9440</port>\n"
+        "            <secure>1</secure>\n"
+        "            <login>browser</login>\n"
+        "            <oauth-url>https://idp.example.com</oauth-url>\n"
+        "            <oauth-client-id>my-client-id</oauth-client-id>\n"
+        "            <oauth-audience>https://db.example.com</oauth-audience>\n"
+        "            <oauth-callback-port>49152</oauth-callback-port>\n"
+        "        </connection>\n"
+        "    </connections_credentials>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+        "When `<oauth-url>` is set, `clickhouse-client` SHALL discover `authorization_endpoint`, `token_endpoint`, and `device_authorization_endpoint` automatically from the OIDC discovery document at `<oauth-url>/.well-known/openid-configuration`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.8.1",
+)
+
+RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.CLIOverride",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the same OAuth field is specified in both the connection block and on the command line, the command-line value SHALL take precedence. This applies to every `--oauth-*` flag listed above.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.8.2",
+)
+
+RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.InvalidCallbackPort",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        'When `<oauth-callback-port>` (or `--oauth-callback-port`) is set to a value outside the valid TCP port range `[0, 65535]`, `clickhouse-client` SHALL fail with a clear configuration error before attempting to bind the loopback callback socket. The value `0` SHALL be accepted and SHALL mean "ask the kernel for an ephemeral port" per RFC 8252 §7.3.\n'
+        "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[Grafana]: https://grafana.com\n"
         "[Keycloak]: https://www.keycloak.org\n"
@@ -3725,7 +4159,7 @@ RQ_SRS_042_OAuth_Authentication_Actions_Authentication_Client = Requirement(
     ),
     link=None,
     level=3,
-    num="14.4.2",
+    num="15.8.3",
 )
 
 SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
@@ -4453,6 +4887,113 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=3,
             num="14.4.2",
         ),
+        Heading(name="Client-Side OAuth Login", level=1, num="15"),
+        Heading(name="Argument Validation", level=2, num="15.1"),
+        Heading(name="RQ.SRS-042.OAuth.Client.Login.Mode", level=3, num="15.1.1"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Conflict.User", level=3, num="15.1.2"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Conflict.JWT", level=3, num="15.1.3"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.OAuthCredentials.RequiresLogin",
+            level=3,
+            num="15.1.4",
+        ),
+        Heading(name="Credentials File", level=2, num="15.2"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Format",
+            level=3,
+            num="15.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Missing",
+            level=3,
+            num="15.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Malformed",
+            level=3,
+            num="15.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.CredentialsFile.MissingClientId",
+            level=3,
+            num="15.2.4",
+        ),
+        Heading(name="Connection Block Segfault Resilience", level=2, num="15.3"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Connection.NoSegfault",
+            level=3,
+            num="15.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Connection.HostFallback",
+            level=3,
+            num="15.3.2",
+        ),
+        Heading(name="Device Flow", level=2, num="15.4"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication",
+            level=3,
+            num="15.4.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse",
+            level=3,
+            num="15.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint",
+            level=3,
+            num="15.4.3",
+        ),
+        Heading(name="Browser Flow", level=2, num="15.5"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication",
+            level=3,
+            num="15.5.1",
+        ),
+        Heading(name="Refresh Token Cache", level=2, num="15.6"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Cache.Reuse", level=3, num="15.6.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Cache.FilePermissions",
+            level=3,
+            num="15.6.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Cache.CorruptedIgnored",
+            level=3,
+            num="15.6.3",
+        ),
+        Heading(name="Cloud Auto-Login", level=2, num="15.7"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Cloud.AutoLogin", level=3, num="15.7.1"
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.Cloud.NonCloudHost",
+            level=3,
+            num="15.7.2",
+        ),
+        Heading(name="Connection Block OAuth Configuration", level=2, num="15.8"),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.OAuthFields",
+            level=3,
+            num="15.8.1",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.CLIOverride",
+            level=3,
+            num="15.8.2",
+        ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.InvalidCallbackPort",
+            level=3,
+            num="15.8.3",
+        ),
     ),
     requirements=(
         RQ_SRS_042_OAuth_EnableTokenAuth,
@@ -4586,6 +5127,28 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Authentication_Caching_LazyCleanup,
         RQ_SRS_042_OAuth_Authentication_Actions_Authentication,
         RQ_SRS_042_OAuth_Authentication_Actions_Authentication_Client,
+        RQ_SRS_042_OAuth_Client_Login_Mode,
+        RQ_SRS_042_OAuth_Client_Login_Conflict_User,
+        RQ_SRS_042_OAuth_Client_Login_Conflict_JWT,
+        RQ_SRS_042_OAuth_Client_Login_OAuthCredentials_RequiresLogin,
+        RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format,
+        RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing,
+        RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed,
+        RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId,
+        RQ_SRS_042_OAuth_Client_Login_Connection_NoSegfault,
+        RQ_SRS_042_OAuth_Client_Login_Connection_HostFallback,
+        RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication,
+        RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse,
+        RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint,
+        RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication,
+        RQ_SRS_042_OAuth_Client_Login_Cache_Reuse,
+        RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions,
+        RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored,
+        RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin,
+        RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost,
+        RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields,
+        RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride,
+        RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort,
     ),
     content=r"""
 # SRS-042 OAuth Authentication in ClickHouse
@@ -4823,6 +5386,37 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
     * 14.4 [Authentication and Login](#authentication-and-login)
         * 14.4.1 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication](#rqsrs-042oauthauthenticationactionsauthentication)
         * 14.4.2 [RQ.SRS-042.OAuth.Authentication.Actions.Authentication.Client](#rqsrs-042oauthauthenticationactionsauthenticationclient)
+* 15 [Client-Side OAuth Login](#client-side-oauth-login)
+    * 15.1 [Argument Validation](#argument-validation)
+        * 15.1.1 [RQ.SRS-042.OAuth.Client.Login.Mode](#rqsrs-042oauthclientloginmode)
+        * 15.1.2 [RQ.SRS-042.OAuth.Client.Login.Conflict.User](#rqsrs-042oauthclientloginconflictuser)
+        * 15.1.3 [RQ.SRS-042.OAuth.Client.Login.Conflict.JWT](#rqsrs-042oauthclientloginconflictjwt)
+        * 15.1.4 [RQ.SRS-042.OAuth.Client.Login.OAuthCredentials.RequiresLogin](#rqsrs-042oauthclientloginoauthcredentialsrequireslogin)
+    * 15.2 [Credentials File](#credentials-file)
+        * 15.2.1 [RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Format](#rqsrs-042oauthclientlogincredentialsfileformat)
+        * 15.2.2 [RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Missing](#rqsrs-042oauthclientlogincredentialsfilemissing)
+        * 15.2.3 [RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Malformed](#rqsrs-042oauthclientlogincredentialsfilemalformed)
+        * 15.2.4 [RQ.SRS-042.OAuth.Client.Login.CredentialsFile.MissingClientId](#rqsrs-042oauthclientlogincredentialsfilemissingclientid)
+    * 15.3 [Connection Block Segfault Resilience](#connection-block-segfault-resilience)
+        * 15.3.1 [RQ.SRS-042.OAuth.Client.Login.Connection.NoSegfault](#rqsrs-042oauthclientloginconnectionnosegfault)
+        * 15.3.2 [RQ.SRS-042.OAuth.Client.Login.Connection.HostFallback](#rqsrs-042oauthclientloginconnectionhostfallback)
+    * 15.4 [Device Flow](#device-flow)
+        * 15.4.1 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication](#rqsrs-042oauthclientlogindeviceflowauthentication)
+        * 15.4.2 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse](#rqsrs-042oauthclientlogindeviceflownonjsonresponse)
+        * 15.4.3 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint](#rqsrs-042oauthclientlogindeviceflowunreachableendpoint)
+    * 15.5 [Browser Flow](#browser-flow)
+        * 15.5.1 [RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication](#rqsrs-042oauthclientloginbrowserflowauthentication)
+    * 15.6 [Refresh Token Cache](#refresh-token-cache)
+        * 15.6.1 [RQ.SRS-042.OAuth.Client.Login.Cache.Reuse](#rqsrs-042oauthclientlogincachereuse)
+        * 15.6.2 [RQ.SRS-042.OAuth.Client.Login.Cache.FilePermissions](#rqsrs-042oauthclientlogincachefilepermissions)
+        * 15.6.3 [RQ.SRS-042.OAuth.Client.Login.Cache.CorruptedIgnored](#rqsrs-042oauthclientlogincachecorruptedignored)
+    * 15.7 [Cloud Auto-Login](#cloud-auto-login)
+        * 15.7.1 [RQ.SRS-042.OAuth.Client.Login.Cloud.AutoLogin](#rqsrs-042oauthclientlogincloudautologin)
+        * 15.7.2 [RQ.SRS-042.OAuth.Client.Login.Cloud.NonCloudHost](#rqsrs-042oauthclientlogincloudnoncloudhost)
+    * 15.8 [Connection Block OAuth Configuration](#connection-block-oauth-configuration)
+        * 15.8.1 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.OAuthFields](#rqsrs-042oauthclientloginconnectionblockoauthfields)
+        * 15.8.2 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.CLIOverride](#rqsrs-042oauthclientloginconnectionblockclioverride)
+        * 15.8.3 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.InvalidCallbackPort](#rqsrs-042oauthclientloginconnectionblockinvalidcallbackport)
 
     
 ## Introduction
@@ -7446,6 +8040,223 @@ curl 'http://localhost:8080/?' Client
 version: 1.0
 
 [ClickHouse] SHALL allow a [ClickHouse] user to log in directly using an access token via the `clickhouse client --jwt <token>` command.
+
+## Client-Side OAuth Login
+
+`clickhouse-client` SHALL support OAuth 2.0 login flows via the `--login` option, allowing users to authenticate against an OpenID Connect identity provider (such as Keycloak, Auth0, Google, or Microsoft Entra ID) without supplying a static `--jwt` token. Two flow modes SHALL be supported:
+
+- `--login=browser` — Authorization Code + PKCE flow ([RFC 7636](https://datatracker.ietf.org/doc/html/rfc7636)). The client opens the user's default browser, runs an ephemeral loopback HTTP server to receive the redirect, and exchanges the authorization code for an access token plus an optional refresh token.
+- `--login=device` — Device Authorization Grant flow ([RFC 8628](https://datatracker.ietf.org/doc/html/rfc8628)). The client prints a verification URL and a short user code to stderr, then polls the token endpoint until the user approves the request on a separate device.
+
+Bare `--login` (without `=<mode>`) SHALL trigger ClickHouse Cloud auto-login: when the target hostname is a `*.clickhouse.cloud` endpoint, the client SHALL fetch the OAuth parameters from the cloud endpoint metadata; otherwise the user MUST supply explicit `--oauth-url`, `--oauth-client-id`, and `--oauth-audience` flags (or the equivalent fields in `~/.clickhouse-client/config.xml`).
+
+### Argument Validation
+
+#### RQ.SRS-042.OAuth.Client.Login.Mode
+version: 1.0
+
+`clickhouse-client` SHALL accept only the following values for `--login=<mode>`:
+
+- the empty string (bare `--login`) — cloud auto-login;
+- `browser` — Authorization Code + PKCE flow;
+- `device` — Device Authorization Grant flow.
+
+Any other value SHALL be rejected with a `BAD_ARGUMENTS` error before any network traffic is initiated. The error message SHALL name the offending value.
+
+#### RQ.SRS-042.OAuth.Client.Login.Conflict.User
+version: 1.0
+
+`clickhouse-client` SHALL reject the combination of `--login` and `--user` with a `BAD_ARGUMENTS` error. The two options identify the user via mutually exclusive mechanisms (interactive OAuth flow vs. an explicit username) and SHALL NOT both be specified on the same invocation.
+
+#### RQ.SRS-042.OAuth.Client.Login.Conflict.JWT
+version: 1.0
+
+`clickhouse-client` SHALL reject the combination of `--login` and `--jwt` with a `BAD_ARGUMENTS` error. A JWT supplied via `--jwt` is a pre-issued bearer token, while `--login` initiates a fresh OAuth flow; allowing both would silently let the OAuth-issued token overwrite the user-supplied JWT.
+
+#### RQ.SRS-042.OAuth.Client.Login.OAuthCredentials.RequiresLogin
+version: 1.0
+
+`clickhouse-client` SHALL reject `--oauth-credentials <path>` when it is not accompanied by `--login=browser` or `--login=device`. The credentials file is meaningful only for the custom-OIDC login modes; using it without `--login=*` SHALL produce a `BAD_ARGUMENTS` error.
+
+### Credentials File
+
+#### RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Format
+version: 1.0
+
+`clickhouse-client` SHALL read OAuth credentials from a JSON file in the format produced by the Google Cloud Console ("OAuth 2.0 Client IDs" → "Download JSON"):
+
+```json
+{
+  "installed": {
+    "client_id": "YOUR_CLIENT_ID",
+    "client_secret": "YOUR_CLIENT_SECRET",
+    "auth_uri": "https://idp.example.com/oauth2/auth",
+    "token_uri": "https://idp.example.com/oauth2/token",
+    "device_authorization_uri": "https://idp.example.com/oauth2/device",
+    "issuer": "https://idp.example.com",
+    "redirect_uris": ["http://127.0.0.1"]
+  }
+}
+```
+
+The top-level key SHALL be either `installed` (desktop/CLI public clients) or `web` (confidential clients). The required inner fields SHALL be `client_id`, `auth_uri`, and `token_uri`. The optional inner fields SHALL be `client_secret`, `device_authorization_uri`, `issuer`, and `redirect_uris`.
+
+The default path SHALL be `~/.clickhouse-client/oauth_client.json`. The path MAY be overridden with `--oauth-credentials <path>`.
+
+#### RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Missing
+version: 1.0
+
+When the file referenced by `--oauth-credentials` does not exist, `clickhouse-client` SHALL fail with a clear, actionable error naming the missing path. The error SHALL be raised before any OAuth network traffic begins.
+
+#### RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Malformed
+version: 1.0
+
+When the file referenced by `--oauth-credentials` does not contain valid JSON (or contains JSON whose top-level structure is not an object with an `installed` or `web` key), `clickhouse-client` SHALL fail with a `BAD_ARGUMENTS` error and SHALL NOT crash, leak a low-level parser exception, or open a network connection.
+
+#### RQ.SRS-042.OAuth.Client.Login.CredentialsFile.MissingClientId
+version: 1.0
+
+When the credentials JSON is structurally valid but is missing one of the required inner fields (`client_id`, `auth_uri`, `token_uri`), `clickhouse-client` SHALL fail with a `BAD_ARGUMENTS` error naming the missing field. The error SHALL be raised before any OAuth network traffic begins.
+
+### Connection Block Segfault Resilience
+
+#### RQ.SRS-042.OAuth.Client.Login.Connection.NoSegfault
+version: 1.0
+
+When `--login` (in any mode) is invoked together with `--connection <name>` and the connection's hostname comes from `<connections_credentials>` in `~/.clickhouse-client/config.xml` rather than from an explicit `--host` flag, `clickhouse-client` SHALL NOT crash with a segmentation fault, abort signal, or libc++ hardening trap before reaching the OAuth flow.
+
+For example, the following invocation SHALL reach the OAuth flow without crashing even when no `--host` is supplied on the command line:
+
+```bash
+clickhouse client --connection my-server --login=device \
+    --oauth-credentials ~/.clickhouse-client/oauth_client.json \
+    --query 'SELECT 1'
+```
+
+#### RQ.SRS-042.OAuth.Client.Login.Connection.HostFallback
+version: 1.0
+
+When `--login` is invoked and `hosts_and_ports` is empty (i.e. no `--host` was supplied), `clickhouse-client` SHALL fall back to the hostname stored in the client configuration (resolved from `--connection`, `<host>` in the config file, or the `CLICKHOUSE_HOST` environment variable). Behaviour with explicit `--host` SHALL be unchanged.
+
+### Device Flow
+
+#### RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication
+version: 1.0
+
+When invoked with `--login=device`, `clickhouse-client` SHALL:
+
+1. Initiate a device-authorization request against the configured `device_authorization_uri`.
+2. Print the `verification_uri` (or `verification_uri_complete`) and `user_code` from the device-endpoint response to standard error.
+3. Poll the configured `token_uri` for a token at the cadence dictated by the `interval` field of the device-endpoint response, applying RFC 8628 §3.5 `slow_down` back-off when requested.
+4. Stop polling once an `id_token` (or `access_token`) is returned and use it to authenticate the subsequent ClickHouse query.
+5. Stop polling and exit cleanly with an authentication error when the `expires_in` deadline elapses without user approval.
+
+#### RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse
+version: 1.0
+
+When the token endpoint returns a non-JSON body (for example, an HTML error page from a misconfigured proxy or an empty body on a transient TCP/TLS failure) during device-flow polling, `clickhouse-client` SHALL treat the response as a transient error, continue polling at the next interval, and SHALL NOT abort the device flow with a `std::bad_cast` or other low-level parser exception.
+
+The device flow SHALL still terminate cleanly when the `expires_in` deadline elapses; the resulting error SHALL be a recognisable authentication failure and SHALL NOT include a stack trace.
+
+#### RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint
+version: 1.0
+
+When the configured `token_uri` or `device_authorization_uri` is unreachable (DNS failure, connection refused, HTTP 404), `clickhouse-client` SHALL fail with a clear network or authentication error and SHALL NOT crash.
+
+### Browser Flow
+
+#### RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication
+version: 1.0
+
+When invoked with `--login=browser`, `clickhouse-client` SHALL:
+
+1. Generate a 128-bit random `state` value and a PKCE `code_verifier`/`code_challenge` pair as defined by [RFC 7636](https://datatracker.ietf.org/doc/html/rfc7636).
+2. Bind a loopback HTTP server on `127.0.0.1` to receive the redirect; the listening port MAY be either kernel-assigned (RFC 8252 §7.3) or pinned via `--oauth-callback-port` / `<oauth-callback-port>`.
+3. Open the user's default browser at the configured `auth_uri` with the appropriate query parameters (`response_type=code`, `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge`, `code_challenge_method=S256`).
+4. Wait for a request matching `GET /callback?code=<code>&state=<state>`; reject any request whose `state` does not match the generated value.
+5. Exchange the authorization code for tokens at the configured `token_uri` using the `code_verifier`.
+6. Use the resulting `id_token` (or `access_token`) to authenticate the subsequent ClickHouse query.
+
+If the browser callback is not received within the configured timeout, `clickhouse-client` SHALL exit with a clear timeout error.
+
+### Refresh Token Cache
+
+#### RQ.SRS-042.OAuth.Client.Login.Cache.Reuse
+version: 1.0
+
+After a successful OAuth login, `clickhouse-client` SHALL persist the issued refresh token to `~/.clickhouse-client/oauth_cache.json`. On subsequent invocations with the same `client_id`, the client SHALL attempt to obtain a fresh `id_token` via the `refresh_token` grant before falling back to the interactive browser or device flow.
+
+When the cached refresh token is rejected by the identity provider (e.g. `invalid_grant`), `clickhouse-client` SHALL fall back to the interactive flow without crashing.
+
+#### RQ.SRS-042.OAuth.Client.Login.Cache.FilePermissions
+version: 1.0
+
+`~/.clickhouse-client/oauth_cache.json` SHALL be created with file mode `0600` (owner read/write only). Refresh tokens are bearer credentials, and a wider permission mask SHALL NOT be used at any point during the read–modify–write cycle.
+
+#### RQ.SRS-042.OAuth.Client.Login.Cache.CorruptedIgnored
+version: 1.0
+
+When `~/.clickhouse-client/oauth_cache.json` cannot be parsed as JSON (corruption, truncated write, foreign content), `clickhouse-client` SHALL emit a single warning to standard error, ignore the cached entry, and proceed to the interactive login flow. The client SHALL NOT crash, refuse to start, or delete the existing cache file silently.
+
+### Cloud Auto-Login
+
+#### RQ.SRS-042.OAuth.Client.Login.Cloud.AutoLogin
+version: 1.0
+
+When `clickhouse-client` is invoked with bare `--login` (no `=<mode>`) and the target hostname is a `*.clickhouse.cloud` endpoint, the client SHALL automatically resolve the OAuth provider parameters from the ClickHouse Cloud endpoint metadata and run the appropriate flow without requiring the user to supply `--oauth-url`, `--oauth-client-id`, `--oauth-audience`, or `--oauth-credentials`.
+
+#### RQ.SRS-042.OAuth.Client.Login.Cloud.NonCloudHost
+version: 1.0
+
+When `clickhouse-client` is invoked with bare `--login` (no `=<mode>`) and the target hostname is NOT a `*.clickhouse.cloud` endpoint, the client SHALL require explicit OAuth parameters (via `--oauth-url`, `--oauth-client-id`, `--oauth-audience` on the CLI, or the equivalent fields in the connection block). When these parameters are absent the client SHALL fail with a clear error and SHALL NOT silently fall through to non-OAuth authentication.
+
+### Connection Block OAuth Configuration
+
+#### RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.OAuthFields
+version: 1.0
+
+`clickhouse-client` SHALL read OAuth configuration from `<connections_credentials>/<connection>` blocks in `~/.clickhouse-client/config.xml`, with the following fields:
+
+| XML field | Equivalent CLI flag |
+| --- | --- |
+| `<login>` | `--login=browser\|device\|""` |
+| `<oauth-url>` | `--oauth-url` |
+| `<oauth-client-id>` | `--oauth-client-id` |
+| `<oauth-audience>` | `--oauth-audience` |
+| `<oauth-client-secret>` | `--oauth-client-secret` |
+| `<oauth-callback-port>` | `--oauth-callback-port` |
+
+For example,
+
+```xml
+<clickhouse>
+    <connections_credentials>
+        <connection>
+            <name>my-server</name>
+            <hostname>db.example.com</hostname>
+            <port>9440</port>
+            <secure>1</secure>
+            <login>browser</login>
+            <oauth-url>https://idp.example.com</oauth-url>
+            <oauth-client-id>my-client-id</oauth-client-id>
+            <oauth-audience>https://db.example.com</oauth-audience>
+            <oauth-callback-port>49152</oauth-callback-port>
+        </connection>
+    </connections_credentials>
+</clickhouse>
+```
+
+When `<oauth-url>` is set, `clickhouse-client` SHALL discover `authorization_endpoint`, `token_endpoint`, and `device_authorization_endpoint` automatically from the OIDC discovery document at `<oauth-url>/.well-known/openid-configuration`.
+
+#### RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.CLIOverride
+version: 1.0
+
+When the same OAuth field is specified in both the connection block and on the command line, the command-line value SHALL take precedence. This applies to every `--oauth-*` flag listed above.
+
+#### RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.InvalidCallbackPort
+version: 1.0
+
+When `<oauth-callback-port>` (or `--oauth-callback-port`) is set to a value outside the valid TCP port range `[0, 65535]`, `clickhouse-client` SHALL fail with a clear configuration error before attempting to bind the loopback callback socket. The value `0` SHALL be accepted and SHALL mean "ask the kernel for an ephemeral port" per RFC 8252 §7.3.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com

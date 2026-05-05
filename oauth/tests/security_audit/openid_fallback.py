@@ -36,7 +36,7 @@ def scenario_1(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("[M-05]"):
         access_clickhouse(token=token, status_code=403)
@@ -67,7 +67,7 @@ def scenario_2(self):
         )
 
     with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse accepts the token via userinfo"):
         access_clickhouse(token=token, status_code=200)

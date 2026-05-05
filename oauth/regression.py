@@ -13,6 +13,7 @@ from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
 from oauth.requirements.requirements import *
 from oauth.tests.steps import keycloak_realm as keycloak
+from oauth.tests.steps.provider_protocol import assert_provider_contract
 
 
 def argparser(parser):
@@ -55,6 +56,15 @@ def argparser(parser):
         default="Keycloak",
     )
 
+    parser.add_argument(
+        "--refresh-token",
+        type=str,
+        dest="refresh_token",
+        help="Refresh token for Google OAuth (obtained out of band)",
+        metavar="string",
+        default=None,
+    )
+
 
 xfails = {}
 
@@ -68,15 +78,27 @@ ffails = {
 
 
 def _load_provider_module(identity_provider):
-    """Lazily import provider modules so Azure deps are not required for Keycloak."""
+    """Lazily import provider modules so Azure/Google deps are not required for Keycloak.
+
+    Each loaded module is checked against the contract in
+    ``provider_protocol`` so a missing/renamed method fails fast at
+    suite startup rather than mid-scenario.
+    """
     if identity_provider == "keycloak":
-        return keycloak
+        module = keycloak
     elif identity_provider == "azure":
         from oauth.tests.steps import azure_application as azure
 
-        return azure
+        module = azure
+    elif identity_provider == "google":
+        from oauth.tests.steps import google_application as google
+
+        module = google
     else:
         raise ValueError(f"Unknown identity provider: {identity_provider}")
+
+    assert_provider_contract(module)
+    return module
 
 
 @TestFeature
@@ -96,6 +118,7 @@ def regression(
     tenant_id=None,
     client_id=None,
     client_secret=None,
+    refresh_token=None,
 ):
     """Run tests for OAuth in ClickHouse."""
 
@@ -145,6 +168,10 @@ def regression(
             self.context.client_secret = "grafana-secret"
             self.context.client_id = "grafana-client"
             self.context.realm_name = "grafana"
+        elif identity_provider_lower == "google":
+            self.context.client_id = client_id
+            self.context.client_secret = client_secret
+            self.context.refresh_token = refresh_token
 
         cluster = create_cluster(
             **cluster_args,
@@ -171,15 +198,17 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    # Scenario(run=load("oauth.tests.sanity", "feature"))
-    # Scenario(run=load("oauth.tests.configuration", "feature"))
+    Scenario(run=load("oauth.tests.sanity", "feature"))
+    Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
     Scenario(run=load("oauth.tests.tokens", "feature"))
     Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    Scenario(run=load("oauth.tests.access_control", "feature"))
     Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.security_audit", "feature"))
+    Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
+    Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
 
 if main():

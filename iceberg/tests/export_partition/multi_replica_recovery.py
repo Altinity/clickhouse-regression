@@ -4,11 +4,17 @@ Covers two surfaces that the single-replica modules cannot exercise:
 concurrent exports from different replicas (same source, same
 destination) and recoverability when ZooKeeper bounces mid-flight
 (graceful ``zkServer.sh restart`` and harsh SIGKILL + ``docker start``).
+A small ``stress``-only sub-suite layers randomised replica kill / restart
+loops on top of the same setup primitives to exercise timing-dependent
+recovery paths beyond the single-shot scenarios.
 
 The multi-replica scenarios skip under ``no_catalog`` because that mode
 does not give two replicas a shared Iceberg destination; the
 single-replica ZK-restart scenarios run in every catalog mode.
 """
+
+import random
+import time
 
 from testflows.core import *
 from testflows.asserts import error
@@ -828,6 +834,613 @@ def cross_replica_exports_survive_zookeeper_docker_kill(
     )
 
 
+# =============================================================================
+# Stress-only randomised replica chaos
+# =============================================================================
+#
+# The scenarios below are gated by ``self.context.stress`` (set via the
+# ``--stress`` regression flag) because every iteration costs at least one
+# ClickHouse restart (~10-30s) and the randomised loops compound that.
+# Each iteration seeds its PRNG from :func:`getuid` so a failure is
+# reproducible: rerun against the same getuid-derived value to replay the
+# exact phase / kill mode / restart-policy choices.
+
+# Iterations per stress scenario. Bumped via the constant rather than via a
+# CLI flag so callers can ratchet pressure up without changing infra.
+STRESS_ITERATIONS = 3
+
+# Wall-clock budget for the multi-partition chaos loop. Calibrated so most
+# scheduled exports get at least one disruption but the scenario still
+# settles within :data:`wait_for_exports_to_settle`'s timeout afterwards.
+STRESS_CHAOS_DURATION_S = 30.0
+
+
+def _kill_clickhouse_sigkill(victim):
+    """SIGKILL ClickHouse inside the (still-running) container.
+
+    Fastest disruption mode: skips the ``SYSTEM STOP MOVES`` /
+    ``SYSTEM FLUSH LOGS`` / ``sync`` quiesce dance ``stop_clickhouse(safe=True)``
+    runs, so any in-flight export task observes an instantaneous process
+    death and the surviving replica must drive the work forward without
+    on-disk hand-off from the victim.
+    """
+    victim.stop_clickhouse(safe=False, signal="KILL")
+
+
+def _kill_container_stop(victim):
+    """Stop the entire docker container.
+
+    Mirrors a host-level outage: the CH process AND the userspace it ran
+    in disappear together. Slower to recover than :func:`_kill_clickhouse_sigkill`
+    because :func:`_ensure_alive` has to wait for the container to come
+    back up before CH can boot.
+    """
+    victim.stop()
+
+
+# (label, kill_fn) pairs the stress scenarios pick from at random. Revival
+# is uniformly handled by :func:`_ensure_alive` regardless of which kill
+# mode was used, so the pair only carries the kill side.
+_KILL_MODES = (
+    ("sigkill", _kill_clickhouse_sigkill),
+    ("container_stop", _kill_container_stop),
+)
+
+
+def _ensure_alive(victim):
+    """Bring ``victim`` back online if it is currently down. Idempotent.
+
+    Probes the container before deciding which startup path to take so the
+    helper handles every kill mode uniformly:
+
+    * If the container is up but CH is dead, ``start_clickhouse()`` boots
+      the CH process directly (matches :func:`_kill_clickhouse_sigkill`).
+    * If the container itself is down, ``start()`` brings it back up; the
+      ClickHouseNode entrypoint then starts CH on its own (matches
+      :func:`_kill_container_stop`).
+
+    Wrapping both probes in ``try/except`` keeps the helper safe to call
+    from a Finally even when the container is in an awkward intermediate
+    state (e.g. mid-stop), at the cost of an extra start attempt the
+    follow-up call will short-circuit on.
+    """
+    try:
+        if victim.clickhouse_pid() is not None:
+            return
+    except Exception:
+        # ``clickhouse_pid`` shells into the container; if the container
+        # is currently down the call raises, which we treat as "not alive".
+        pass
+
+    container_running = False
+    try:
+        result = victim.command("true", no_checks=True, steps=False)
+        container_running = (result.exitcode == 0)
+    except Exception:
+        container_running = False
+
+    if container_running:
+        victim.start_clickhouse()
+    else:
+        victim.start()
+
+
+def _assert_snapshot_chain_valid(snapshots, *, where):
+    """Assert that ``snapshots`` (in metadata order) form a single linear
+    chain of EXPORT PARTITION append commits.
+
+    Mirrors the per-scenario checks already inlined in
+    :func:`concurrent_cross_replica_different_partitions` /
+    :func:`initiator_dies_mid_commit_peer_finalizes_exactly_once` and adds
+    the txn-id-marker check that
+    :func:`initiator_dies_mid_commit_peer_finalizes_exactly_once` runs
+    (every snapshot must carry
+    ``clickhouse.export-partition-transaction-id`` so a survivor's retry
+    can detect a prior commit by the dead initiator). Empty input is
+    vacuously valid — destinations where every export was killed before
+    landing a snapshot are an expected outcome under chaos.
+    """
+    txn_id_key = "clickhouse.export-partition-transaction-id"
+
+    for snap in snapshots:
+        operation = getattr(snap.summary, "operation", None)
+        op_str = str(getattr(operation, "value", operation))
+        assert op_str == "append", error(
+            f"{where}: expected append snapshot, got {op_str!r} for "
+            f"snapshot_id={snap.snapshot_id}"
+        )
+        props = dict(snap.summary.additional_properties or {})
+        assert txn_id_key in props, error(
+            f"{where}: expected {txn_id_key!r} in snapshot summary so "
+            f"survivor retries are idempotent; got keys "
+            f"{sorted(props.keys())!r}"
+        )
+
+    for prev, curr in zip(snapshots, snapshots[1:]):
+        assert curr.parent_snapshot_id == prev.snapshot_id, error(
+            f"{where}: snapshot chain must be linear; "
+            f"snapshot_id={curr.snapshot_id} parent={curr.parent_snapshot_id}, "
+            f"expected parent={prev.snapshot_id}"
+        )
+
+
+def _require_stress(self):
+    """Skip the scenario unless the regression was launched with ``--stress``.
+
+    Stress scenarios run randomised disruption loops that cost minutes
+    each; defaulting them off keeps every other CI run fast. Pair this
+    with :func:`_require_multi_replica_catalog_mode` for chaos scenarios
+    that also need a shared Iceberg destination.
+    """
+    if not getattr(self.context, "stress", False):
+        skip("stress-only scenario; pass --stress to enable")
+
+
+def _setup_chaos_table_with_destination(
+    self,
+    replicas,
+    rows,
+    minio_root_user,
+    minio_root_password,
+):
+    """Shared setup for the stress scenarios: replicated source on every
+    ``replicas`` node populated with ``rows`` (a SQL VALUES tail), and a
+    catalog-backed Iceberg destination wired up via ``ON CLUSTER`` so any
+    replica can resolve the same identifier.
+
+    Returns ``(table_name, destination)``.
+    """
+    table_name = f"mt_{getuid()}"
+
+    with Given("create the replicated source on every replica"):
+        _setup_replicated_source(table_name, replicas)
+
+    with And("seed the source with the chaos workload"):
+        insert_data(
+            table_name=table_name,
+            values=rows,
+            node=replicas[0],
+        )
+
+    with And("wait for peer replicas to pick up the parts"):
+        for peer in replicas[1:]:
+            sync_replica(table_name=table_name, node=peer)
+
+    with Given("create a catalog-backed destination wired up on every replica"):
+        destination = create_iceberg_destination(
+            columns=SIMPLE_COLUMNS,
+            partition_by=SIMPLE_PARTITION_BY,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            node=replicas[0],
+            cluster_name=REPLICATED_CLUSTER,
+        )
+
+    return table_name, destination
+
+
+@TestStep(When)
+def _run_chaos_loop(self, kill_candidates, duration_s, rng):
+    """Pick random victims from ``kill_candidates`` and bounce each once
+    with random kill mode + downtime, looping until ``duration_s`` has
+    elapsed.
+
+    The caller is responsible for excluding the survivor it intends to
+    use for observation queries from ``kill_candidates`` — this step does
+    not enforce a "leave one alive" rule itself, so the contract is
+    simpler and the caller can opt into more aggressive policies.
+    """
+    deadline = time.monotonic() + duration_s
+    while time.monotonic() < deadline:
+        kill_label, kill_fn = rng.choice(_KILL_MODES)
+        victim = rng.choice(kill_candidates)
+        sleep_before = rng.uniform(0.0, 2.0)
+        sleep_down = rng.uniform(0.5, 3.0)
+
+        with By(
+            f"chaos: sleep {sleep_before:.2f}s, then {kill_label} on "
+            f"{victim.name}, leave down for {sleep_down:.2f}s"
+        ):
+            time.sleep(sleep_before)
+            kill_fn(victim)
+            time.sleep(sleep_down)
+            _ensure_alive(victim)
+
+
+def _phased_kill_iteration(
+    self,
+    iteration,
+    phase,
+    victim,
+    survivor,
+    kill_label,
+    kill_fn,
+    restart_policy,
+    rng,
+    minio_root_user,
+    minio_root_password,
+):
+    """One iteration of :func:`stress_replica_kill_at_random_phase`.
+
+    ``phase`` selects when the kill fires relative to the export:
+
+    * ``"post_schedule_pre_commit"`` — schedule, sleep [0, 1)s, kill.
+      Targets the brief window between the synchronous ALTER returning
+      and the background commit task starting work.
+    * ``"during_commit_phase"`` — schedule, sleep [1, 5)s, kill. Targets
+      the manifest-install / snapshot-commit window.
+    * ``"post_complete"`` — schedule, wait for ``COMPLETED``, kill. Tests
+      no-op invariance: the surviving replica must not double-commit
+      after seeing the dead initiator's stash, and the destination state
+      must remain unchanged.
+
+    ``restart_policy`` decides when the victim comes back:
+
+    * ``"immediate"`` — revive right after the kill.
+    * ``"delayed_short"`` — revive after 1s.
+    * ``"delayed_long"`` — revive after 5s.
+    * ``"end_of_iteration"`` — leave down until the iteration's Finally
+      so :func:`wait_for_exports_to_settle` exercises the survivor-only
+      recovery path end-to-end.
+    """
+    rows = "(1, 2020), (2, 2020), (3, 2020)"
+    _ensure_alive(victim)
+    _ensure_alive(survivor)
+
+    table_name, destination = _setup_chaos_table_with_destination(
+        self,
+        replicas=[victim, survivor],
+        rows=rows,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
+
+    pre_kill_snapshot_id = None
+    revived_inline = False
+
+    try:
+        if phase == "post_complete":
+            with When("schedule EXPORT and wait for COMPLETED"):
+                export_partition(
+                    source_table=table_name,
+                    destination=destination,
+                    partition_id="2020",
+                    node=victim,
+                    wait_timeout=180,
+                )
+            with And("capture the pre-kill snapshot id"):
+                snapshots = get_snapshots(
+                    destination=destination,
+                    minio_root_user=minio_root_user,
+                    minio_root_password=minio_root_password,
+                )
+                assert len(snapshots) == 1, error(
+                    f"iter {iteration} {phase}: expected 1 snapshot before "
+                    f"kill, got {len(snapshots)}: "
+                    f"{[s.snapshot_id for s in snapshots]!r}"
+                )
+                pre_kill_snapshot_id = snapshots[0].snapshot_id
+        else:
+            sleep_for = (
+                rng.uniform(0.0, 1.0)
+                if phase == "post_schedule_pre_commit"
+                else rng.uniform(1.0, 5.0)
+            )
+            with When("schedule EXPORT PARTITION without waiting"):
+                export_partition(
+                    source_table=table_name,
+                    destination=destination,
+                    partition_id="2020",
+                    node=victim,
+                    wait_for_completion=False,
+                )
+            with And(f"sleep {sleep_for:.2f}s to advance into phase {phase!r}"):
+                time.sleep(sleep_for)
+
+        with When(f"kill {victim.name} via {kill_label}"):
+            kill_fn(victim)
+
+        if restart_policy == "immediate":
+            with And(f"revive {victim.name} immediately"):
+                _ensure_alive(victim)
+                revived_inline = True
+        elif restart_policy == "delayed_short":
+            with And(f"revive {victim.name} after 1s"):
+                time.sleep(1.0)
+                _ensure_alive(victim)
+                revived_inline = True
+        elif restart_policy == "delayed_long":
+            with And(f"revive {victim.name} after 5s"):
+                time.sleep(5.0)
+                _ensure_alive(victim)
+                revived_inline = True
+        # else: end_of_iteration — the Finally below revives the victim
+        # after the survivor has had a chance to drive the export to
+        # terminal status on its own.
+
+        with Then("export reaches terminal status (observed from survivor)"):
+            wait_for_exports_to_settle(
+                source_table=table_name,
+                destination=destination,
+                partition_id="2020",
+                node=survivor,
+                timeout=300,
+            )
+
+        with And("destination snapshot state is consistent with the kill"):
+            snapshots = get_snapshots(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+
+            if phase == "post_complete":
+                assert len(snapshots) == 1, error(
+                    f"iter {iteration} {phase}: kill+revive after success "
+                    f"must not change snapshot count; got {len(snapshots)}: "
+                    f"{[s.snapshot_id for s in snapshots]!r}"
+                )
+                assert snapshots[0].snapshot_id == pre_kill_snapshot_id, error(
+                    f"iter {iteration} {phase}: kill+revive after success "
+                    f"must not replace the snapshot; pre={pre_kill_snapshot_id} "
+                    f"post={snapshots[0].snapshot_id}"
+                )
+            else:
+                assert len(snapshots) <= 1, error(
+                    f"iter {iteration} {phase}: kill recovery must not "
+                    f"produce duplicate snapshots; got {len(snapshots)}: "
+                    f"{[s.snapshot_id for s in snapshots]!r}"
+                )
+
+            _assert_snapshot_chain_valid(
+                snapshots, where=f"iter {iteration} {phase}"
+            )
+
+    finally:
+        if not revived_inline:
+            with Finally(f"revive {victim.name} before the next iteration"):
+                _ensure_alive(victim)
+
+
+@TestScenario
+@Name("randomised replica kill at varied export-lifecycle phases")
+def stress_replica_kill_at_random_phase(
+    self, minio_root_user, minio_root_password
+):
+    """Repeat ``STRESS_ITERATIONS`` rounds of "schedule, kill, settle"
+    with random phase, kill mode, and restart policy. Each iteration must
+    converge to a terminal status with snapshot integrity preserved.
+    """
+    _require_stress(self)
+    _require_multi_replica_catalog_mode(self)
+
+    rng = random.Random(getuid())
+
+    initiator = self.context.nodes[0]
+    survivor = self.context.nodes[1]
+
+    phases = (
+        "post_schedule_pre_commit",
+        "during_commit_phase",
+        "post_complete",
+    )
+    restart_policies = (
+        "immediate",
+        "delayed_short",
+        "delayed_long",
+        "end_of_iteration",
+    )
+
+    for iteration in range(1, STRESS_ITERATIONS + 1):
+        phase = rng.choice(phases)
+        kill_label, kill_fn = rng.choice(_KILL_MODES)
+        restart_policy = rng.choice(restart_policies)
+
+        with When(
+            f"iteration {iteration}: phase={phase} kill={kill_label} "
+            f"restart={restart_policy}"
+        ):
+            _phased_kill_iteration(
+                self,
+                iteration=iteration,
+                phase=phase,
+                victim=initiator,
+                survivor=survivor,
+                kill_label=kill_label,
+                kill_fn=kill_fn,
+                restart_policy=restart_policy,
+                rng=rng,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+
+
+@TestScenario
+@Name("repeated initiator bounce during a single export")
+def stress_initiator_repeated_bounce(
+    self, minio_root_user, minio_root_password
+):
+    """Repeatedly stop+start the initiating replica during one export.
+
+    The export must converge to a terminal status from the survivor's
+    perspective, and the destination must hold at most one append
+    snapshot for the partition (no double-commit across bounce cycles).
+    """
+    _require_stress(self)
+    _require_multi_replica_catalog_mode(self)
+
+    rng = random.Random(getuid())
+
+    initiator = self.context.nodes[0]
+    survivor = self.context.nodes[1]
+
+    _ensure_alive(initiator)
+    _ensure_alive(survivor)
+
+    table_name, destination = _setup_chaos_table_with_destination(
+        self,
+        replicas=[initiator, survivor],
+        rows="(1, 2020), (2, 2020), (3, 2020)",
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
+
+    bounce_count = rng.randint(3, 8)
+
+    try:
+        with When("schedule EXPORT PARTITION on the initiator without waiting"):
+            export_partition(
+                source_table=table_name,
+                destination=destination,
+                partition_id="2020",
+                node=initiator,
+                wait_for_completion=False,
+            )
+
+        with And(f"bounce the initiator {bounce_count} times with random gaps"):
+            for i in range(1, bounce_count + 1):
+                kill_label, kill_fn = rng.choice(_KILL_MODES)
+                pre_kill_sleep = rng.uniform(0.0, 3.0)
+                post_kill_sleep = rng.uniform(0.5, 3.0)
+
+                with By(
+                    f"bounce {i}: sleep {pre_kill_sleep:.2f}s, "
+                    f"kill={kill_label}, down for {post_kill_sleep:.2f}s"
+                ):
+                    time.sleep(pre_kill_sleep)
+                    kill_fn(initiator)
+                    time.sleep(post_kill_sleep)
+                    _ensure_alive(initiator)
+
+        with Then("export reaches a terminal status (observed from survivor)"):
+            wait_for_exports_to_settle(
+                source_table=table_name,
+                destination=destination,
+                partition_id="2020",
+                node=survivor,
+                timeout=300,
+            )
+
+        with And("destination has at most one append snapshot for the partition"):
+            snapshots = get_snapshots(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+            assert len(snapshots) <= 1, error(
+                f"Repeated bounce must not produce duplicate snapshots; "
+                f"got {len(snapshots)}: {[s.snapshot_id for s in snapshots]!r}"
+            )
+            _assert_snapshot_chain_valid(
+                snapshots, where="repeated initiator bounce"
+            )
+
+    finally:
+        with Finally("ensure the initiator is online before the suite continues"):
+            _ensure_alive(initiator)
+
+
+@TestScenario
+@Name("multi-partition fleet under randomised replica chaos")
+def stress_multi_partition_chaos(
+    self, minio_root_user, minio_root_password
+):
+    """Schedule N partition exports concurrently from alternating replicas
+    and run a chaos thread that randomly bounces a victim replica for
+    :data:`STRESS_CHAOS_DURATION_S` seconds. After chaos exits, every
+    export must settle to a terminal status, the destination's snapshot
+    chain must be linear and txn-id-tagged, and the snapshot count must
+    not exceed the partition count (no double-commits).
+    """
+    _require_stress(self)
+    _require_multi_replica_catalog_mode(self)
+
+    rng = random.Random(getuid())
+
+    # Two replicas: one initiates exports + acts as chaos victim, the
+    # other is reserved as the survivor we observe through. The chaos
+    # loop only knows about ``victim`` so it can never accidentally take
+    # both nodes down at once. Bumping to 3 victims would require the
+    # caller to ensure the survivor is excluded from kill_candidates.
+    victim = self.context.nodes[0]
+    survivor = self.context.nodes[1]
+
+    _ensure_alive(victim)
+    _ensure_alive(survivor)
+
+    partitions = [2020, 2021, 2022, 2023, 2024]
+    rows = ", ".join(f"({i + 1}, {p})" for i, p in enumerate(partitions))
+
+    table_name, destination = _setup_chaos_table_with_destination(
+        self,
+        replicas=[victim, survivor],
+        rows=rows,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
+
+    try:
+        with When("schedule each partition's export from alternating replicas"):
+            initiators = [victim, survivor]
+            for i, partition_id in enumerate(partitions):
+                export_partition(
+                    source_table=table_name,
+                    destination=destination,
+                    partition_id=str(partition_id),
+                    node=initiators[i % len(initiators)],
+                    wait_for_completion=False,
+                )
+
+        with And(
+            f"bounce {victim.name} randomly for {STRESS_CHAOS_DURATION_S}s "
+            f"in parallel with the export fleet"
+        ):
+            with Pool(1) as pool:
+                Step(
+                    "chaos loop",
+                    test=_run_chaos_loop,
+                    parallel=True,
+                    executor=pool,
+                )(
+                    kill_candidates=[victim],
+                    duration_s=STRESS_CHAOS_DURATION_S,
+                    rng=rng,
+                )
+                join()
+
+        with Then("every export converges to a terminal status"):
+            for partition_id in partitions:
+                wait_for_exports_to_settle(
+                    source_table=table_name,
+                    destination=destination,
+                    partition_id=str(partition_id),
+                    node=survivor,
+                    timeout=300,
+                )
+
+        with And(
+            "destination snapshot chain is linear, txn-id-tagged, and bounded "
+            "by the partition count"
+        ):
+            snapshots = get_snapshots(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+            )
+            assert len(snapshots) <= len(partitions), error(
+                f"Snapshot count must not exceed partition count under chaos; "
+                f"got {len(snapshots)} snapshots for {len(partitions)} "
+                f"partitions: {[s.snapshot_id for s in snapshots]!r}"
+            )
+            _assert_snapshot_chain_valid(
+                snapshots, where="multi-partition chaos"
+            )
+
+    finally:
+        with Finally(f"ensure {victim.name} is online before the suite continues"):
+            _ensure_alive(victim)
+
+
 SCENARIOS = (
     concurrent_cross_replica_different_partitions,
     concurrent_cross_replica_same_partition_idempotent,
@@ -836,6 +1449,9 @@ SCENARIOS = (
     export_recovers_after_zookeeper_docker_kill,
     cross_replica_exports_survive_zookeeper_restart,
     cross_replica_exports_survive_zookeeper_docker_kill,
+    stress_replica_kill_at_random_phase,
+    stress_initiator_repeated_bounce,
+    stress_multi_partition_chaos,
 )
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import sys
 import warnings
 from testflows.core import *
@@ -390,6 +391,20 @@ ffails = {
 }
 
 
+_RUNTIME_USERS_D_FILES = (
+    "allow_experimental_insert_into_iceberg.xml",
+)
+
+
+def _sweep_runtime_users_d_overlays():
+    """Remove leftover runtime-pushed users.d files from a previous run."""
+    users_d_dir = os.path.join(current_dir(), "configs", "clickhouse", "users.d")
+    for name in _RUNTIME_USERS_D_FILES:
+        path = os.path.join(users_d_dir, name)
+        if os.path.exists(path):
+            os.remove(path)
+
+
 @TestModule
 @Name("iceberg")
 @FFails(ffails)
@@ -426,6 +441,9 @@ def regression(
 
     minio_root_user = minio_args["minio_root_user"].value
     minio_root_password = minio_args["minio_root_password"].value
+
+    with Given("sweep stale runtime users.d overlays"):
+        _sweep_runtime_users_d_overlays()
 
     with Given("docker-compose cluster"):
         cluster = create_cluster(

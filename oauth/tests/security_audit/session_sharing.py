@@ -29,7 +29,7 @@ def scenario_1(self):
         )
 
     with And("I get a valid Keycloak token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When(f"request 1 creates a temporary table '{tbl}' under session_id='{sid}'"):
         access_clickhouse(

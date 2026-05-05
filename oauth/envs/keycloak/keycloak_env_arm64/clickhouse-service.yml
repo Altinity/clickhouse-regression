@@ -1,3 +1,10 @@
+# NOTE: This file MUST stay in sync with
+#   ../keycloak_env/clickhouse-service.yml
+# The _arm64 directory is selected automatically by the cluster helper
+# on aarch64 hosts (see helpers/cluster.py:1504-1506); both copies
+# must otherwise stay byte-identical (apart from this sibling
+# reference) so any config / mount change applies on every host
+# architecture. Verify with envs/keycloak/check_envs_in_sync.sh.
 version: "2.3"
 
 services:
@@ -6,8 +13,17 @@ services:
       file: ../../../../docker-compose/clickhouse-service.yml
       service: clickhouse
     volumes:
-      - ./clickhouse-config/clickhouse-low-ram-config.xml:/etc/clickhouse-server/config.d/clickhouse-low-ram-config.xml:ro
-      - ./clickhouse-config/clickhouse-low-ram-user-profile.xml:/etc/clickhouse-server/users.d/clickhouse-low-ram-user-profile.xml:ro
-      - ./clickhouse-config/startup_scripts.xml:/etc/clickhouse-server/config.d/startup_scripts.xml:ro
-      - ./clickhouse-config/processor_directory.xml:/etc/clickhouse-server/config.d/processor_directory.xml:ro
-
+      - "./configs/clickhouse/startup_scripts.xml:/etc/clickhouse-server/config.d/startup_scripts.xml:ro"
+      - "./configs/clickhouse/users.d/:/etc/clickhouse-server/users.d"
+      - "./configs/clickhouse/config.d/jwt.xml:/etc/clickhouse-server/config.d/jwt.xml"
+      - "./configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
+      - "./configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
+      - "./configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
+      - "./configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
+      - "./configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
+      - "./configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+      - "./configs/clickhouse/config.d/common.xml:/etc/clickhouse-server/config.d/common.xml"
+      - "./configs/clickhouse/ssl/dhparam.pem:/etc/clickhouse-server/dhparam.pem"
+      - "./configs/clickhouse/ssl/server.crt:/etc/clickhouse-server/server.crt"
+      - "./configs/clickhouse/ssl/server.key:/etc/clickhouse-server/server.key"
+      - "./configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"

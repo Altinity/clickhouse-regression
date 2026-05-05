@@ -206,7 +206,12 @@ def supporteduuid(self):
     with Given("I have a Parquet file with uuid"):
         import_file = os.path.join("arrow", "uuid-arrow.parquet")
 
-    import_export(snapshot_name="uuid_2_structure", import_file=import_file)
+    snapshot_name = (
+        "uuid_2_structure_above_26"
+        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        else "uuid_2_structure"
+    )
+    import_export(snapshot_name=snapshot_name, import_file=import_file)
 
 
 @TestScenario

@@ -2,6 +2,12 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
 )
+from oauth.tests.steps.provider_protocol import (
+    OAuthToken,
+    OpenIDEndpoints,
+    modify_jwt_token as _shared_modify_jwt_token,
+    unsupported,
+)
 from testflows.core import *
 from oauth.requirements.requirements import *
 
@@ -39,44 +45,42 @@ def get_oauth_token(
     client_secret=None,
     refresh_token=None,
     access_token=None,
+    username=None,
+    password=None,
 ):
-    """
-    Acquire an OAuth token from Google using refresh token.
+    """Acquire a Google OAuth token via refresh-token grant.
 
-    Note: Google OAuth requires user interaction for initial authorization.
-    For automated testing, you need to obtain a refresh token first through
-    the OAuth consent flow, then use it here to get access tokens.
+    Returns an :class:`OAuthToken`. ``username``/``password`` are
+    accepted for signature compatibility with the Keycloak provider but
+    are ignored — Google does not allow ROPC.
 
-    Alternatively, if you already have an access_token (e.g., from OAuth Playground),
-    you can pass it directly and it will be returned as-is.
+    Google OAuth requires user interaction for *initial* authorization,
+    so this helper expects a long-lived refresh token to have been
+    obtained out of band (see ``get_refresh_token_interactive`` below)
+    and passed in via ``--refresh-token`` or
+    ``self.context.refresh_token``. Alternatively, callers may pass
+    ``access_token=`` directly when running ad-hoc.
     """
     import requests
 
     if access_token is not None:
-        return access_token
+        return OAuthToken(access_token=access_token, raw={"access_token": access_token})
 
     if client_id is None:
         client_id = self.context.client_id
-
     if client_secret is None:
         client_secret = self.context.client_secret
-
     if refresh_token is None:
         refresh_token = getattr(self.context, "refresh_token", None)
 
     if refresh_token is None:
         raise ValueError(
-            "No refresh_token provided. To get one:\n"
-            "1. Go to https://developers.google.com/oauthplayground\n"
-            "2. Click gear icon > 'Use your own OAuth credentials'\n"
-            "3. Enter your Client ID and Client Secret\n"
-            "4. Select scopes: openid, email, profile\n"
-            "5. Authorize and exchange code for tokens\n"
-            "6. Copy the refresh_token and pass it via --refresh-token"
+            "No refresh_token provided for Google. Either pass --refresh-token, "
+            "set self.context.refresh_token, or pass access_token= directly. "
+            "See get_refresh_token_interactive() for how to obtain one."
         )
 
     token_url = "https://oauth2.googleapis.com/token"
-
     data = {
         "client_id": client_id,
         "client_secret": client_secret,
@@ -86,9 +90,35 @@ def get_oauth_token(
 
     response = requests.post(token_url, data=data)
     response.raise_for_status()
-
     token_data = response.json()
-    return token_data["access_token"]
+
+    return OAuthToken(
+        access_token=token_data["access_token"],
+        refresh_token=token_data.get("refresh_token", refresh_token),
+        id_token=token_data.get("id_token"),
+        token_type=token_data.get("token_type"),
+        expires_in=token_data.get("expires_in"),
+        raw=token_data,
+    )
+
+
+def openid_endpoints():
+    """Return Google's standard OpenID-Connect endpoints.
+
+    NOT a ``@TestStep`` — see ``keycloak_realm.openid_endpoints`` for
+    the rationale.
+    """
+    ctx = current().context
+    return OpenIDEndpoints(
+        issuer="https://accounts.google.com",
+        jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
+        userinfo_endpoint="https://openidconnect.googleapis.com/v1/userinfo",
+        token_introspection_endpoint="https://oauth2.googleapis.com/tokeninfo",
+        configuration_endpoint=(
+            "https://accounts.google.com/.well-known/openid-configuration"
+        ),
+        expected_audience=getattr(ctx, "client_id", None),
+    )
 
 
 def get_refresh_token_interactive(client_id, client_secret):
@@ -288,14 +318,23 @@ def no_token_processors_configuration(self, node=None):
 
 
 class OAuthProvider:
+    """Provider implementation for Google Identity.
+
+    Implements the contract defined in
+    ``oauth.tests.steps.provider_protocol``. Most identity-management
+    operations (``create_user``, ``disable_user``, ...) are not
+    automated for Google, so they're explicitly marked unsupported
+    here. Scenarios that depend on them ``Skip`` rather than crash.
+    """
+
     get_oauth_token = get_oauth_token
     get_user_info = get_user_info
-
-    # Configuration steps
-    default_configuration = default_configuration
+    openid_endpoints = staticmethod(openid_endpoints)
     default_idp = default_idp
+    modify_jwt_token = staticmethod(_shared_modify_jwt_token)
 
-    # Negative configuration test steps
+    default_configuration = default_configuration
+
     invalid_processor_type_configuration = invalid_processor_type_configuration
     missing_configuration_endpoint = missing_configuration_endpoint
     invalid_configuration_endpoint = invalid_configuration_endpoint
@@ -311,3 +350,18 @@ class OAuthProvider:
     invalid_common_roles_configuration = invalid_common_roles_configuration
     invalid_roles_filter_configuration = invalid_roles_filter_configuration
     no_token_processors_configuration = no_token_processors_configuration
+
+    create_user = unsupported("create_user")
+    delete_user = unsupported("delete_user")
+    disable_user = unsupported("disable_user")
+    enable_user = unsupported("enable_user")
+    get_user_by_username = unsupported("get_user_by_username")
+    create_group = unsupported("create_group")
+    delete_group = unsupported("delete_group")
+    get_group_by_name = unsupported("get_group_by_name")
+    assign_user_to_group = unsupported("assign_user_to_group")
+    remove_user_from_group = unsupported("remove_user_from_group")
+    disable_client = unsupported("disable_client")
+    enable_client = unsupported("enable_client")
+    invalidate_user_sessions = unsupported("invalidate_user_sessions")
+    get_oauth_token_for_client = unsupported("get_oauth_token_for_client")

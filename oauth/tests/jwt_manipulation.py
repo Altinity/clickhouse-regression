@@ -12,7 +12,7 @@ def modify_alg_to_none(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change alg to 'none'"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -32,7 +32,7 @@ def modify_alg_to_hs256(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change alg to 'HS256'"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -52,7 +52,7 @@ def modify_typ_to_invalid(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change typ to 'INVALID'"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -72,7 +72,7 @@ def modify_kid_to_invalid(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change kid to a non-existent key ID"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -92,7 +92,7 @@ def modify_exp_to_past(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I set exp to epoch 1000000000 (2001)"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -112,7 +112,7 @@ def modify_sub_to_invalid(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change the sub claim"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -132,7 +132,7 @@ def modify_azp_to_invalid(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I change the azp claim"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -152,7 +152,7 @@ def replace_signature_entirely(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I replace the signature with garbage"):
         modified = client.OAuthProvider.modify_jwt_token(
@@ -172,7 +172,7 @@ def remove_signature(self):
     client = self.context.provider_client
 
     with Given("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token()["access_token"]
+        token = client.OAuthProvider.get_oauth_token().access_token
 
     with When("I remove the signature"):
         modified = client.OAuthProvider.modify_jwt_token(
