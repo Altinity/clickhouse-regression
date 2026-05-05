@@ -176,9 +176,7 @@ def expected_issuer_wrong(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a wrong expected_issuer"):
-        _configure_processor(
-            self, expected_issuer="https://wrong-issuer.example.com"
-        )
+        _configure_processor(self, expected_issuer="https://wrong-issuer.example.com")
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token

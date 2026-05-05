@@ -59,9 +59,7 @@ def token_from_other_realm_rejected(self):
             skip(str(e))
 
     try:
-        with And(
-            "I configure ClickHouse to expect tokens from OUR realm only"
-        ):
+        with And("I configure ClickHouse to expect tokens from OUR realm only"):
             endpoints = client.OAuthProvider.openid_endpoints()
             change_token_processors(
                 processor_name="keycloak",
@@ -141,9 +139,7 @@ def token_from_wrong_client_rejected(self):
             skip(str(e))
 
     try:
-        with And(
-            "I configure ClickHouse to require expected_audience=our-client"
-        ):
+        with And("I configure ClickHouse to require expected_audience=our-client"):
             endpoints = client.OAuthProvider.openid_endpoints()
             change_token_processors(
                 processor_name="keycloak",
@@ -173,9 +169,7 @@ def token_from_wrong_client_rejected(self):
     finally:
         with Finally("I clean up the second client"):
             try:
-                client.OAuthProvider.disable_client(
-                    client_id_name=other_client_id
-                )
+                client.OAuthProvider.disable_client(client_id_name=other_client_id)
             except UnsupportedByProvider:
                 pass
 
