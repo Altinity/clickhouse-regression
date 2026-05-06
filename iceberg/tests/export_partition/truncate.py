@@ -9,7 +9,11 @@ snapshot chain advances past the pre-truncate snapshot.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Truncate
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_Truncate,
+    RQ_Iceberg_ExportPartition_Truncate_RepopulateAfterTruncate,
+    RQ_Iceberg_ExportPartition_Truncate_AfterDirectInsert,
+)
 
 from helpers.common import getuid
 
@@ -57,6 +61,7 @@ def _current_snapshot_id(destination, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Truncate("1.0"))
 @Name("truncate after export")
 def truncate_after_export(self, minio_root_user, minio_root_password):
     """``TRUNCATE`` after ``EXPORT PARTITION`` drops the destination
@@ -134,6 +139,7 @@ def truncate_after_export(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Truncate_RepopulateAfterTruncate("1.0"))
 @Name("export after truncate repopulates destination")
 def export_after_truncate(self, minio_root_user, minio_root_password):
     """After ``TRUNCATE`` a fresh ``EXPORT`` repopulates the destination
@@ -221,6 +227,7 @@ def export_after_truncate(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Truncate_AfterDirectInsert("1.0"))
 @Name("truncate after insert")
 def truncate_after_insert(self, minio_root_user, minio_root_password):
     """``TRUNCATE`` drops a destination populated by both ``EXPORT

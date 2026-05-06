@@ -8,7 +8,12 @@ and isolation across multiple destinations sharing one bucket.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_StoragePaths
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_StoragePaths,
+    RQ_Iceberg_ExportPartition_StoragePaths_PathFormat,
+    RQ_Iceberg_ExportPartition_StoragePaths_DeepPrefix,
+    RQ_Iceberg_ExportPartition_StoragePaths_Isolation,
+)
 
 from helpers.common import getuid
 
@@ -60,6 +65,7 @@ def _seed_source(minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"))
 @Name("full path: metadata.json location is an absolute s3:// URI")
 def full_path_metadata_has_absolute_s3_uri(
     self, minio_root_user, minio_root_password
@@ -104,6 +110,10 @@ def full_path_metadata_has_absolute_s3_uri(
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_StoragePaths("1.0"),
+    RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"),
+)
 @Name("default: metadata.json location is bucket-relative (no FS scheme)")
 def default_metadata_has_relative_location(
     self, minio_root_user, minio_root_password
@@ -147,6 +157,7 @@ def default_metadata_has_relative_location(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_StoragePaths_DeepPrefix("1.0"))
 @Name("deep prefix hierarchy round-trips cleanly")
 def deep_prefix_hierarchy(self, minio_root_user, minio_root_password):
     """A destination under a deep ``location_prefix``
@@ -204,6 +215,7 @@ def deep_prefix_hierarchy(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_StoragePaths_Isolation("1.0"))
 @Name("multiple destinations share a bucket but stay isolated")
 def multiple_destinations_share_bucket(
     self, minio_root_user, minio_root_password

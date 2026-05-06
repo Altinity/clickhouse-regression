@@ -19,7 +19,13 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_MultiReplicaRecovery
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery,
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency,
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_InitiatorFailover,
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce,
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos,
+)
 
 from helpers.common import getuid
 
@@ -223,6 +229,7 @@ def _setup_replicated_source(table_name, nodes):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0"))
 @Name("concurrent exports from different replicas on different partitions")
 def concurrent_cross_replica_different_partitions(
     self, minio_root_user, minio_root_password
@@ -336,6 +343,7 @@ def concurrent_cross_replica_different_partitions(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency("1.0"))
 @Name("concurrent exports of the same partition from different replicas are idempotent")
 def concurrent_cross_replica_same_partition_idempotent(
     self, minio_root_user, minio_root_password
@@ -643,6 +651,7 @@ def _run_multi_replica_zk_recovery(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_InitiatorFailover("1.0"))
 @Name("initiator dies mid-commit and peer replica finalizes exactly once")
 def initiator_dies_mid_commit_peer_finalizes_exactly_once(
     self, minio_root_user, minio_root_password
@@ -770,6 +779,10 @@ def initiator_dies_mid_commit_peer_finalizes_exactly_once(
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery("1.0"),
+    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"),
+)
 @Name("export recovers after a ZooKeeper restart mid-flight")
 def export_recovers_after_zookeeper_restart(
     self, minio_root_user, minio_root_password
@@ -786,6 +799,7 @@ def export_recovers_after_zookeeper_restart(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"))
 @Name("export recovers after a ZooKeeper SIGKILL + docker start")
 def export_recovers_after_zookeeper_docker_kill(
     self, minio_root_user, minio_root_password
@@ -803,6 +817,7 @@ def export_recovers_after_zookeeper_docker_kill(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"))
 @Name("concurrent cross-replica exports survive a ZooKeeper restart")
 def cross_replica_exports_survive_zookeeper_restart(
     self, minio_root_user, minio_root_password
@@ -819,6 +834,7 @@ def cross_replica_exports_survive_zookeeper_restart(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"))
 @Name("concurrent cross-replica exports survive a ZooKeeper SIGKILL + docker start")
 def cross_replica_exports_survive_zookeeper_docker_kill(
     self, minio_root_user, minio_root_password
@@ -1203,6 +1219,7 @@ def _phased_kill_iteration(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("randomised replica kill at varied export-lifecycle phases")
 def stress_replica_kill_at_random_phase(
     self, minio_root_user, minio_root_password
@@ -1256,6 +1273,7 @@ def stress_replica_kill_at_random_phase(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("repeated initiator bounce during a single export")
 def stress_initiator_repeated_bounce(
     self, minio_root_user, minio_root_password
@@ -1341,6 +1359,7 @@ def stress_initiator_repeated_bounce(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_RandomisedChaos("1.0"))
 @Name("multi-partition fleet under randomised replica chaos")
 def stress_multi_partition_chaos(
     self, minio_root_user, minio_root_password

@@ -10,7 +10,11 @@ Every scenario runs under all three catalog modes (see ``feature.py``).
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Sanity
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_Sanity,
+    RQ_Iceberg_ExportPartition_Sanity_EmptyPartition,
+    RQ_Iceberg_ExportPartition_Sanity_CrossReplicaInitiator,
+)
 
 from helpers.common import getuid
 
@@ -43,6 +47,7 @@ SIMPLE_PARTITION_BY = "year"
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Sanity("1.0"))
 @Name("export single partition")
 def single_partition(self, minio_root_user, minio_root_password):
     """Export one partition and verify row count and content match the source."""
@@ -96,6 +101,7 @@ def single_partition(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Sanity("1.0"))
 @Name("export all partitions")
 def all_partitions(self, minio_root_user, minio_root_password):
     """Export every partition of the source table and verify parity."""
@@ -149,6 +155,7 @@ def all_partitions(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Sanity("1.0"))
 @Name("export multiple partitions in one ALTER")
 def multi_partition_alter(self, minio_root_user, minio_root_password):
     """Verify the comma-separated ``ALTER TABLE ... EXPORT PARTITION ..., EXPORT PARTITION ...`` form.
@@ -217,6 +224,7 @@ def multi_partition_alter(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Sanity_EmptyPartition("1.0"))
 @Name("export empty partition")
 def empty_partition(self, minio_root_user, minio_root_password):
     """Exporting after a partition has been dropped from the source must still
@@ -264,6 +272,7 @@ def empty_partition(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Sanity_CrossReplicaInitiator("1.0"))
 @Name("export across replicas")
 def cross_replica_export(self, minio_root_user, minio_root_password):
     """Insert on replica1, trigger the EXPORT PARTITION from replica2.
