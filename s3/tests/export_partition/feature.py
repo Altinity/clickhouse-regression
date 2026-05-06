@@ -1,6 +1,6 @@
 from testflows.core import *
 from s3.requirements.export_partition import *
-from s3.tests.common import enable_export_partition
+from s3.tests.common import enable_export_partition, export_partition_query_setting_name
 
 
 @TestFeature
@@ -12,7 +12,7 @@ def minio(self, uri, bucket_prefix):
 
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
-    self.context.default_settings = [("allow_experimental_export_merge_tree_part", "1")]
+    self.context.default_settings = [(export_partition_query_setting_name(), "1")]
 
     with Given("I enable export partition"):
         enable_export_partition()
