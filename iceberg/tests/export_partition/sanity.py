@@ -335,7 +335,6 @@ def cross_replica_export(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_Sanity("1.0"))
 @Name("sanity")
 def feature(self, minio_root_user, minio_root_password):
     """Sanity checks for EXPORT PARTITION to Iceberg."""

@@ -10,7 +10,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_CatalogIntegration,
     RQ_Iceberg_ExportPartition_CatalogIntegration_NoCatalog,
     RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue,
 )
@@ -70,24 +69,8 @@ CATALOG_PARTITION_SPEC = PartitionSpec(
 )
 
 
-def _require_mode(expected):
-    actual = current().context.catalog
-    if actual != expected:
-        skip(
-            f"scenario is only meaningful for catalog={expected!r}, "
-            f"current mode is {actual!r}"
-        )
-
-
-def _require_external_catalog():
-    """Skip the scenario in ``no_catalog`` mode (no external catalog to
-    commit to)."""
-    actual = current().context.catalog
-    if actual not in ("ice", "glue"):
-        skip(
-            f"scenario targets catalog-backed destinations; current mode is "
-            f"{actual!r} (no external catalog)"
-        )
+NO_CATALOG_MODES = ("no",)
+EXTERNAL_CATALOG_MODES = ("ice", "glue")
 
 
 def _seed_source():
@@ -115,7 +98,6 @@ def no_catalog_read_via_icebergS3_table_function(
     function (without the CH destination table), confirming the
     on-disk metadata is self-contained.
     """
-    _require_mode("no")
     source_table = _seed_source()
 
     with Given("create the IcebergS3 destination with absolute paths"):
@@ -160,7 +142,6 @@ def no_catalog_drop_destination_keeps_metadata(
     Iceberg metadata in MinIO; reattaching with ``CREATE TABLE IF NOT
     EXISTS`` on the same URL exposes the previously committed rows.
     """
-    _require_mode("no")
     node = self.context.node
     source_table = _seed_source()
 
@@ -237,10 +218,7 @@ def no_catalog_drop_destination_keeps_metadata(
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_CatalogIntegration("1.0"),
-    RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration_RestGlue("1.0"))
 @Name("catalog: export appends a snapshot visible through the external catalog")
 def catalog_export_appends_snapshot_visible_via_catalog(
     self, minio_root_user, minio_root_password
@@ -251,7 +229,6 @@ def catalog_export_appends_snapshot_visible_via_catalog(
     see the new snapshot with ``total-records = 3``. Skipped under
     ``no_catalog``.
     """
-    _require_external_catalog()
     source_table = _seed_source()
 
     with Given("materialise a catalog-backed Iceberg destination via PyIceberg"):
@@ -322,7 +299,6 @@ def catalog_external_reader_round_trips_exported_data(
     ``manifest_integrity`` external-reader scenario; skipped under
     ``no_catalog``.
     """
-    _require_external_catalog()
     source_table = _seed_source()
 
     with Given("materialise a catalog-backed Iceberg destination via PyIceberg"):
@@ -385,19 +361,26 @@ def catalog_external_reader_round_trips_exported_data(
 
 
 SCENARIOS = (
-    no_catalog_read_via_icebergS3_table_function,
-    no_catalog_drop_destination_keeps_metadata,
-    catalog_export_appends_snapshot_visible_via_catalog,
-    catalog_external_reader_round_trips_exported_data,
+    (no_catalog_read_via_icebergS3_table_function, NO_CATALOG_MODES),
+    (no_catalog_drop_destination_keeps_metadata, NO_CATALOG_MODES),
+    (catalog_export_appends_snapshot_visible_via_catalog, EXTERNAL_CATALOG_MODES),
+    (catalog_external_reader_round_trips_exported_data, EXTERNAL_CATALOG_MODES),
 )
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_CatalogIntegration("1.0"))
 @Name("catalogs")
 def feature(self, minio_root_user, minio_root_password):
-    """Catalog-specific export paths (no_catalog today, Ice/Glue pending)."""
-    for scenario in SCENARIOS:
+    """Catalog-specific export paths.
+
+    Per-scenario applicability is filtered at load time so scenarios
+    that don't apply to the current catalog mode are never registered;
+    this keeps the requirement-satisfaction count from being penalised
+    by not-applicable runtime ``skip()`` calls.
+    """
+    for scenario, applicable_modes in SCENARIOS:
+        if self.context.catalog not in applicable_modes:
+            continue
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,

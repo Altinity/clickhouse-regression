@@ -254,7 +254,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("partition spec evolution")
 def feature(self, minio_root_user, minio_root_password):
     """Partition spec behaviour across sequential exports."""

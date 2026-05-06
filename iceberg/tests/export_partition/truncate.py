@@ -288,7 +288,6 @@ def truncate_after_insert(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_Truncate("1.0"))
 @Name("truncate")
 def feature(self, minio_root_user, minio_root_password):
     """TRUNCATE after / around EXPORT PARTITION."""

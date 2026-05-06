@@ -222,7 +222,6 @@ def pruning_range_predicate(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_MinMaxPruning("1.0"))
 @Name("minmax pruning")
 def feature(self, minio_root_user, minio_root_password):
     """Min/max pruning on Iceberg destinations populated by EXPORT PARTITION."""

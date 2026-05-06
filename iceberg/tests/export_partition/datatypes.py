@@ -20,7 +20,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_DataTypes,
     RQ_Iceberg_ExportPartition_DataTypes_Primitives,
     RQ_Iceberg_ExportPartition_DataTypes_Nullable,
     RQ_Iceberg_ExportPartition_DataTypes_Composite,
@@ -212,10 +211,7 @@ def accepted_int32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_DataTypes("1.0"),
-    RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Int64")
 def accepted_int64(self, minio_root_user, minio_root_password):
     """ClickHouse Int64 -> Iceberg long (required)."""
@@ -605,7 +601,6 @@ REJECTED_SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_DataTypes("1.0"))
 @Name("datatypes")
 def feature(self, minio_root_user, minio_root_password):
     """ClickHouse -> Iceberg data type coverage for EXPORT PARTITION.
