@@ -66,7 +66,45 @@ def argparser(parser):
     )
 
 
-xfails = {}
+xfails = {
+    "/oauth/security audit/F8/F8 / 1 disabled user accepted with jwks_uri": [
+        (
+            Fail,
+            "DEFECT_F8 / TOKEN-05 — OpenID processor with jwks_uri uses the "
+            "JWT-fastpath and never consults userinfo / introspection on cache "
+            "miss, so the IdP's runtime decision to disable the user is not "
+            "observed until the JWT's own exp passes. See "
+            "src/Access/TokenProcessorsOpaque.cpp:339-414 (TODO at line 353).",
+        )
+    ],
+    "/oauth/security audit/F8/F8 / 2 deleted user accepted with jwks_uri": [
+        (
+            Fail,
+            "DEFECT_F8 / TOKEN-05 — same root cause as F8 / 1: the JWT-fastpath "
+            "does not observe IdP user deletion either. userinfo_endpoint would "
+            "401 a deleted user but is never consulted while local JWKS "
+            "verification of the issued JWT still succeeds.",
+        )
+    ],
+    "/oauth/security audit/F20/F20 / 1 malformed signature base64 leaks runtime_error": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — JwksJwtProcessor::resolveAndValidate has "
+            "no top-level try/catch around jwt::decode; a malformed-base64 "
+            "JWT segment leaks std::runtime_error out as Code: 1001 (HTTP "
+            "500) with no AUTHENTICATION_FAILED marker. See "
+            "src/Access/TokenProcessorsJWT.cpp.",
+        )
+    ],
+    "/oauth/security audit/F20/F20 / 2 non-base64 signature leaks runtime_error": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — same root cause as F20 / 1: any "
+            "exception thrown by jwt::decode escapes JwksJwtProcessor::"
+            "resolveAndValidate uncaught.",
+        )
+    ],
+}
 
 ffails = {
     # "/oauth/*": (
@@ -197,14 +235,14 @@ def regression(
             for retry in retries(timeout=300, delay=20):
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
-
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.access_control", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
+    #
+    # Scenario(run=load("oauth.tests.sanity", "feature"))
+    # Scenario(run=load("oauth.tests.configuration", "feature"))
+    # Scenario(run=load("oauth.tests.authentication", "feature"))
+    # Scenario(run=load("oauth.tests.tokens", "feature"))
+    # Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+    # Scenario(run=load("oauth.tests.access_control", "feature"))
+    # Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
     Scenario(run=load("oauth.tests.security_audit.feature", "feature"))

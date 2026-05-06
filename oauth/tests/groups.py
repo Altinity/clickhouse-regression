@@ -20,12 +20,44 @@ def _provider_or_skip(self):
     return self.context.provider_client
 
 
-def _configure_short_cache(self, *, token_cache_lifetime=3, common_roles=None):
+def _configure_short_cache(
+    self,
+    *,
+    token_cache_lifetime=3,
+    common_roles=None,
+    include_jwks_uri=True,
+):
     """Configure the standard Keycloak/OpenID processor with a short cache.
 
     Used by scenarios that need to observe cache eviction. The endpoint
     bundle comes from the provider so the URLs match whichever IdP is
     active.
+
+    ``include_jwks_uri`` (default ``True``) controls whether ``jwks_uri``
+    is written into the processor config. This is **load-bearing** for
+    the IdP-state cache-eviction scenarios:
+
+    Per ``OpenIdTokenProcessor::resolveAndValidate``
+    (``src/Access/TokenProcessorsOpaque.cpp`` in antalya-26.1), when
+    ``jwks_uri`` is set the processor decodes and verifies the JWT
+    locally against JWKS and reads ``exp`` straight off the token —
+    ``userinfo_endpoint`` is consulted only as a fallback when local
+    validation fails. The IdP's *runtime* user state (disabled,
+    deleted, removed from a group) is therefore invisible to ClickHouse
+    until the JWT itself expires, because every cache-miss re-validation
+    just re-decodes the same JWT with the same answer.
+
+    Tests that assert "user is disabled at the IdP → cached token is
+    rejected after cache lifetime" need the userinfo path active, so
+    they pass ``include_jwks_uri=False`` to drop the JWKS URI from the
+    processor. ``resolveAndValidate`` then falls through to
+    ``userinfo_endpoint``, which Keycloak makes 401 for a disabled or
+    deleted user, surfacing the rejection ClickHouse-side.
+
+    Tests that don't depend on this distinction (e.g. fresh-token
+    membership-change scenarios) keep ``include_jwks_uri=True`` so the
+    suite still exercises the JWT-fast-path that's the production
+    default.
     """
     client = _provider_or_skip(self)
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -35,7 +67,7 @@ def _configure_short_cache(self, *, token_cache_lifetime=3, common_roles=None):
         token_cache_lifetime=token_cache_lifetime,
         userinfo_endpoint=endpoints.userinfo_endpoint,
         token_introspection_endpoint=endpoints.token_introspection_endpoint,
-        jwks_uri=endpoints.jwks_uri,
+        jwks_uri=endpoints.jwks_uri if include_jwks_uri else None,
         replace=True,
     )
     change_user_directories_config(
@@ -488,7 +520,10 @@ def disabled_user_rejected_after_cache(self):
 
     Real test of the cache-eviction path:
 
-    1. Configure ``token_cache_lifetime=3``.
+    1. Configure ``token_cache_lifetime=3`` **without** ``jwks_uri`` so
+       cache misses re-validate via ``userinfo_endpoint`` rather than
+       re-decoding the JWT locally (see ``_configure_short_cache``
+       docstring for why ``jwks_uri`` would mask the IdP user state).
     2. User authenticates with a valid token; first request populates the
        cache.
     3. Disable the user at the IdP.
@@ -511,12 +546,25 @@ def disabled_user_rejected_after_cache(self):
             skip(str(e))
 
     try:
-        with And("I configure a short token-cache lifetime"):
-            _configure_short_cache(self, token_cache_lifetime=cache_lifetime)
+        with And(
+            "I configure a short token-cache lifetime with no jwks_uri so "
+            "cache misses re-validate against userinfo (which Keycloak "
+            "makes 401 for disabled users) rather than re-decoding the "
+            "JWT locally"
+        ):
+            _configure_short_cache(
+                self,
+                token_cache_lifetime=cache_lifetime,
+                include_jwks_uri=False,
+            )
 
-        with And("I get a token while the user is enabled"):
+        with And(
+            "I get a token while the user is enabled "
+            "(scope=openid is required for Keycloak's userinfo_endpoint to "
+            "honor the token; without jwks_uri we depend on userinfo)"
+        ):
             token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
+                username=username, password="testpass123", scope="openid"
             ).access_token
 
         with Then("first request succeeds (populates the cache)"):
@@ -557,6 +605,12 @@ def deleted_user_rejected_after_cache(self):
     Keycloak rejects the token-issuance request — that's a Keycloak
     invariant, not a ClickHouse one. This variant proves ClickHouse's
     cache-eviction path observes the deletion.
+
+    As with ``disabled_user_rejected_after_cache``, the processor is
+    configured **without** ``jwks_uri`` so cache misses re-validate via
+    ``userinfo_endpoint`` (which Keycloak makes 401 for deleted users)
+    instead of re-decoding the still-valid JWT locally; see
+    ``_configure_short_cache`` for the rationale.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -571,12 +625,24 @@ def deleted_user_rejected_after_cache(self):
 
     deleted = False
     try:
-        with And("I configure a short token-cache lifetime"):
-            _configure_short_cache(self, token_cache_lifetime=cache_lifetime)
+        with And(
+            "I configure a short token-cache lifetime with no jwks_uri so "
+            "cache misses re-validate against userinfo (Keycloak rejects "
+            "deleted users there) rather than re-decoding the JWT locally"
+        ):
+            _configure_short_cache(
+                self,
+                token_cache_lifetime=cache_lifetime,
+                include_jwks_uri=False,
+            )
 
-        with And(f"I get a token for '{username}'"):
+        with And(
+            f"I get a token for '{username}' "
+            "(scope=openid is required for Keycloak's userinfo_endpoint to "
+            "honor the token; without jwks_uri we depend on userinfo)"
+        ):
             token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
+                username=username, password="testpass123", scope="openid"
             ).access_token
 
         with Then("first request succeeds"):

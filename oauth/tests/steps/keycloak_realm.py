@@ -127,7 +127,7 @@ def default_idp(self, node=None, common_roles=None, roles_filter=None):
 
 
 @TestStep(Given)
-def get_oauth_token(self, node=None, username=None, password=None):
+def get_oauth_token(self, node=None, username=None, password=None, scope=None):
     """Acquire an access token from Keycloak via Resource-Owner-Password-Credentials.
 
     Returns an :class:`OAuthToken` that ``access_token`` and friends can
@@ -136,6 +136,18 @@ def get_oauth_token(self, node=None, username=None, password=None):
     to ``token.access_token``. Raises a clear ``Exception`` when Keycloak
     returns an error response (disabled user, wrong password, ...) so
     callers don't get an opaque ``KeyError``.
+
+    ``scope`` is an optional OAuth scope string requested at token-issue
+    time. Default ``None`` preserves Keycloak's client default scopes —
+    sufficient for ClickHouse's local JWT-fastpath validation when a
+    ``jwks_uri`` is configured. Pass ``scope="openid"`` for tests that
+    drop ``jwks_uri`` and rely on the ``userinfo_endpoint`` fallback —
+    Keycloak's userinfo endpoint requires the ``openid`` scope per OIDC
+    spec, so a token issued without it would 403 there even for a
+    perfectly valid user. This was the root cause of the runtime-
+    revocation cache-eviction tests failing on the very first request:
+    the userinfo path was reachable but the token had no ``openid``
+    scope, so Keycloak refused to honor it.
     """
     if node is None:
         node = self.context.bash_tools
@@ -153,6 +165,9 @@ def get_oauth_token(self, node=None, username=None, password=None):
         f"--data-urlencode 'password={password}' "
         f"--data-urlencode 'client_secret={self.context.client_secret}'"
     )
+
+    if scope is not None:
+        curl_command += f" --data-urlencode 'scope={scope}'"
 
     result = node.command(command=curl_command)
 
