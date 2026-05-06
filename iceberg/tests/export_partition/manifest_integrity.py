@@ -9,7 +9,14 @@ regressions that ClickHouse would not notice reading back its own files.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_ManifestIntegrity
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_ManifestIntegrity,
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain,
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec,
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats,
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_PathLayout,
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_ExternalReader,
+)
 
 from helpers.common import getuid
 
@@ -52,6 +59,10 @@ FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_ManifestIntegrity("1.0"),
+    RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain("1.0"),
+)
 @Name("each export advances the snapshot list by one")
 def snapshot_advances_per_export(self, minio_root_user, minio_root_password):
     """Two sequential exports of distinct partitions -> two snapshots."""
@@ -112,6 +123,7 @@ def snapshot_advances_per_export(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain("1.0"))
 @Name("snapshot summary total-records matches exported row count")
 def snapshot_summary_records_match(self, minio_root_user, minio_root_password):
     """``summary['total-records']`` equals the number of rows exported."""
@@ -156,6 +168,7 @@ def snapshot_summary_records_match(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec("1.0"))
 @Name("partition spec references source columns")
 def manifest_partition_spec_matches_source(
     self, minio_root_user, minio_root_password
@@ -201,6 +214,7 @@ def manifest_partition_spec_matches_source(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats("1.0"))
 @Name("data files have all required column stats")
 def column_stats_are_populated(self, minio_root_user, minio_root_password):
     """Every data file has non-empty ``column_sizes`` /
@@ -246,6 +260,7 @@ def column_stats_are_populated(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats("1.0"))
 @Name("value_counts across data files sum to source row count")
 def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
     """Per-column ``value_counts`` summed across data files equal the
@@ -299,6 +314,7 @@ def value_counts_sum_to_row_count(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_PathLayout("1.0"))
 @Name("data file paths live under the table prefix")
 def data_file_paths_under_table_prefix(
     self, minio_root_user, minio_root_password
@@ -355,6 +371,7 @@ def data_file_paths_under_table_prefix(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_ExternalReader("1.0"))
 @Name("external iceberg reader round-trips exported data")
 def external_reader_round_trips_exported_data(
     self, minio_root_user, minio_root_password

@@ -21,6 +21,10 @@ from testflows.core import *
 
 from helpers.config import users_d
 
+from iceberg.requirements.export_partition import (
+    SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg,
+)
+
 
 CATALOG_MODES = ("no", "ice", "glue")
 
@@ -59,6 +63,7 @@ def _load_modules(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
+@Specifications(SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg)
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
     """Run export-partition tests across every supported catalog mode."""

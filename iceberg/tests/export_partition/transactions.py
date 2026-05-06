@@ -12,7 +12,12 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Transactions
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_Transactions,
+    RQ_Iceberg_ExportPartition_Transactions_SnapshotChain,
+    RQ_Iceberg_ExportPartition_Transactions_Idempotency,
+    RQ_Iceberg_ExportPartition_Transactions_CrashRecovery,
+)
 
 from helpers.common import getuid
 
@@ -75,6 +80,10 @@ def _disable_failpoint(name, node=None):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_Transactions("1.0"),
+    RQ_Iceberg_ExportPartition_Transactions_SnapshotChain("1.0"),
+)
 @Name("sequential exports append one append-snapshot each")
 def sequential_exports_append_snapshots(
     self, minio_root_user, minio_root_password
@@ -145,6 +154,7 @@ def sequential_exports_append_snapshots(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_Idempotency("1.0"))
 @Name("duplicate export within TTL is rejected")
 def duplicate_export_within_ttl_rejected(
     self, minio_root_user, minio_root_password
@@ -194,6 +204,7 @@ def duplicate_export_within_ttl_rejected(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_Idempotency("1.0"))
 @Name("force_export overrides the idempotency gate")
 def force_export_bypasses_ttl_gate(self, minio_root_user, minio_root_password):
     """``export_merge_tree_partition_force_export = 1`` re-exports the
@@ -243,6 +254,7 @@ def force_export_bypasses_ttl_gate(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_Idempotency("1.0"))
 @Name("TTL expiry permits re-export of the same partition")
 def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
     """After the manifest TTL expires the gate is released and a re-export
@@ -294,6 +306,7 @@ def ttl_expiry_permits_reexport(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
 @Name("commit survives pre-publish failure (non-retry cleanup)")
 def commit_survives_pre_publish_failure(
     self, minio_root_user, minio_root_password
@@ -355,6 +368,7 @@ def commit_survives_pre_publish_failure(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
 @Name("commit idempotent after post-commit pre-status crash window")
 def commit_idempotent_after_post_commit_pre_status_crash(
     self, minio_root_user, minio_root_password
@@ -451,6 +465,7 @@ def commit_idempotent_after_post_commit_pre_status_crash(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
 @Name("manifest status transition failure is retried without duplicate commit")
 def manifest_status_transition_failure_retried_idempotently(
     self, minio_root_user, minio_root_password
@@ -532,6 +547,7 @@ def manifest_status_transition_failure_retried_idempotently(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_CrashRecovery("1.0"))
 @Name("commit durable across post-publish exception")
 def commit_durable_across_post_publish_exception(
     self, minio_root_user, minio_root_password

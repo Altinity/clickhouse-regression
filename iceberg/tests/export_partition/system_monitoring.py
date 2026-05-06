@@ -10,7 +10,13 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_SystemMonitoring
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_SystemMonitoring,
+    RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports,
+    RQ_Iceberg_ExportPartition_SystemMonitoring_PartLog,
+    RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents,
+    RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance,
+)
 
 from helpers.common import getuid
 
@@ -57,6 +63,10 @@ def _seed_source_two_partitions():
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_SystemMonitoring("1.0"),
+    RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0"),
+)
 @Name("every system.replicated_partition_exports column is populated on success")
 def system_table_columns_populated_on_success(
     self, minio_root_user, minio_root_password
@@ -171,6 +181,7 @@ def system_table_columns_populated_on_success(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_PartLog("1.0"))
 @Name("system.part_log records one ExportPart per exported part")
 def part_log_records_exported_parts(
     self, minio_root_user, minio_root_password
@@ -217,6 +228,7 @@ def part_log_records_exported_parts(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents("1.0"))
 @Name("PartsExports and ExportPartitionZooKeeper* profile events increment")
 def profile_events_increment_on_success(
     self, minio_root_user, minio_root_password
@@ -277,6 +289,7 @@ def profile_events_increment_on_success(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
 @Name("KILL EXPORT preserves source_replica and create_time")
 def kill_export_preserves_provenance(
     self, minio_root_user, minio_root_password
@@ -377,6 +390,7 @@ def kill_export_preserves_provenance(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance("1.0"))
 @Name("KILL EXPORT during commit preserves provenance and diagnostic fields")
 def kill_during_commit_preserves_provenance(
     self, minio_root_user, minio_root_password

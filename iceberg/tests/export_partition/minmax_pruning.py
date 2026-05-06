@@ -61,6 +61,7 @@ def _int(result):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MinMaxPruning("1.0"))
 @Name("minmax pruning on exported data")
 def pruning_predicate_narrows_read_rows(self, minio_root_user, minio_root_password):
     """``WHERE id = <value>`` on a destination with three non-overlapping
@@ -154,6 +155,7 @@ def pruning_predicate_narrows_read_rows(self, minio_root_user, minio_root_passwo
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_MinMaxPruning("1.0"))
 @Name("minmax pruning on range predicate")
 def pruning_range_predicate(self, minio_root_user, minio_root_password):
     """A range predicate fitting inside one partition's ``id`` range

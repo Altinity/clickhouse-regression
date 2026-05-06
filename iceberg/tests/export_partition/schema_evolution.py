@@ -10,7 +10,12 @@ source-only drift) and the Iceberg schema-history bookkeeping.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_SchemaEvolution
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_SchemaEvolution,
+    RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations,
+    RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations,
+    RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory,
+)
 
 from helpers.common import getuid
 
@@ -83,6 +88,10 @@ def alter_iceberg_destination(
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_SchemaEvolution("1.0"),
+    RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"),
+)
 @Name("add column between exports")
 def add_column_between_exports(self, minio_root_user, minio_root_password):
     """``ADD COLUMN score Nullable(Int32)`` on both sides between two
@@ -182,6 +191,7 @@ def add_column_between_exports(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"))
 @Name("drop column between exports")
 def drop_column_between_exports(self, minio_root_user, minio_root_password):
     """``DROP COLUMN note`` on both sides between two exports; the
@@ -260,6 +270,7 @@ def drop_column_between_exports(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"))
 @Name("modify column widen Int32 -> Int64")
 def modify_column_widen(self, minio_root_user, minio_root_password):
     """``MODIFY COLUMN val Int64`` on both sides; an Int64-only value
@@ -337,6 +348,7 @@ def modify_column_widen(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations("1.0"))
 @Name("rejected: RENAME COLUMN on iceberg destination")
 def rejected_rename_column(self, minio_root_user, minio_root_password):
     """``RENAME COLUMN`` on the Iceberg destination is rejected with
@@ -360,6 +372,7 @@ def rejected_rename_column(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations("1.0"))
 @Name("source-only schema drift is rejected at EXPORT")
 def source_only_schema_drift_rejected(
     self, minio_root_user, minio_root_password
@@ -403,6 +416,7 @@ def source_only_schema_drift_rejected(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory("1.0"))
 @Name("iceberg schema history grows after ADD COLUMN")
 def iceberg_schema_history_advances(
     self, minio_root_user, minio_root_password

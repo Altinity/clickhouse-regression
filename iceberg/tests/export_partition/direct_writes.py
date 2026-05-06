@@ -63,6 +63,7 @@ def _assert_snapshot_history_grows(destination, minio_root_user, minio_root_pass
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DirectWrites("1.0"))
 @Name("insert after export")
 def insert_after_export(self, minio_root_user, minio_root_password):
     """``EXPORT PARTITION`` followed by ``INSERT INTO`` against the
@@ -139,6 +140,7 @@ def insert_after_export(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DirectWrites("1.0"))
 @Name("alternating export and insert")
 def alternating_export_insert(self, minio_root_user, minio_root_password):
     """Interleaved sequence ``EXPORT 2020 -> INSERT 2021 -> EXPORT 2022 ->

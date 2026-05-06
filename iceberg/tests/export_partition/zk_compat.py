@@ -50,6 +50,7 @@ def restart_replica(self, table_name, node=None):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ZooKeeperCompat("1.0"))
 @Name("export after restart recreates missing exports znode")
 def export_after_restart_recreates_exports_znode(
     self, minio_root_user, minio_root_password
@@ -134,6 +135,7 @@ def export_after_restart_recreates_exports_znode(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_ZooKeeperCompat("1.0"))
 @Name("restart heals operator-deleted exports znode mid-session")
 def restart_heals_operator_deletion(
     self, minio_root_user, minio_root_password

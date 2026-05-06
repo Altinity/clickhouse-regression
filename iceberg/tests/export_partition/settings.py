@@ -11,7 +11,11 @@ import io
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_Settings
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_Settings,
+    RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote,
+    RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
+)
 
 from helpers.common import getuid
 
@@ -63,6 +67,10 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_Settings("1.0"),
+    RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote("1.0"),
+)
 @Name("system_table_prefer_remote_information returns the same status")
 def prefer_remote_information_returns_same_status(
     self, minio_root_user, minio_root_password
@@ -176,6 +184,7 @@ def _parse_s3_file_path(file_path, expected_bucket):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_Settings_ParquetCompression("1.0"))
 @Name("output_format_parquet_compression_method flows to data files")
 def parquet_compression_method_flows_to_data_files(
     self, minio_root_user, minio_root_password

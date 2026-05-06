@@ -41,6 +41,7 @@ FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("single spec for multiple partition exports")
 def single_spec_for_multiple_partitions(
     self, minio_root_user, minio_root_password
@@ -103,6 +104,7 @@ def single_spec_for_multiple_partitions(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("partition tuple matches partition_id across exports")
 def partition_tuple_matches_partition_id(
     self, minio_root_user, minio_root_password
@@ -173,6 +175,7 @@ def partition_tuple_matches_partition_id(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_PartitionSpecEvolution("1.0"))
 @Name("multi-column partition spec is preserved")
 def multi_column_partition_spec_preserved(
     self, minio_root_user, minio_root_password

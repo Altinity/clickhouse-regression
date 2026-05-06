@@ -19,7 +19,13 @@ power the ``rejected_*`` scenarios.
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DataTypes
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_DataTypes,
+    RQ_Iceberg_ExportPartition_DataTypes_Primitives,
+    RQ_Iceberg_ExportPartition_DataTypes_Nullable,
+    RQ_Iceberg_ExportPartition_DataTypes_Composite,
+    RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection,
+)
 
 from helpers.common import getuid
 
@@ -180,6 +186,7 @@ def _run_rejected_type(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Int16")
 def accepted_int16(self, minio_root_user, minio_root_password):
     """ClickHouse Int16 -> Iceberg int (required)."""
@@ -192,6 +199,7 @@ def accepted_int16(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Int32")
 def accepted_int32(self, minio_root_user, minio_root_password):
     """ClickHouse Int32 -> Iceberg int (required)."""
@@ -204,6 +212,10 @@ def accepted_int32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_DataTypes("1.0"),
+    RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"),
+)
 @Name("accepted: Int64")
 def accepted_int64(self, minio_root_user, minio_root_password):
     """ClickHouse Int64 -> Iceberg long (required)."""
@@ -216,6 +228,7 @@ def accepted_int64(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: UInt32")
 def accepted_uint32(self, minio_root_user, minio_root_password):
     """ClickHouse UInt32 -> Iceberg int (values pinned to the signed 32-bit
@@ -230,6 +243,7 @@ def accepted_uint32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Float32")
 def accepted_float32(self, minio_root_user, minio_root_password):
     """ClickHouse Float32 -> Iceberg float."""
@@ -242,6 +256,7 @@ def accepted_float32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Float64")
 def accepted_float64(self, minio_root_user, minio_root_password):
     """ClickHouse Float64 -> Iceberg double."""
@@ -254,6 +269,7 @@ def accepted_float64(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Date")
 def accepted_date(self, minio_root_user, minio_root_password):
     """ClickHouse Date -> Iceberg date."""
@@ -266,6 +282,7 @@ def accepted_date(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: Date32")
 def accepted_date32(self, minio_root_user, minio_root_password):
     """ClickHouse Date32 -> Iceberg date (wider range than Date)."""
@@ -278,6 +295,7 @@ def accepted_date32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: DateTime")
 def accepted_datetime(self, minio_root_user, minio_root_password):
     """ClickHouse DateTime -> Iceberg timestamp; both sides normalised
@@ -298,6 +316,7 @@ def accepted_datetime(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: DateTime64(3)")
 def accepted_datetime64(self, minio_root_user, minio_root_password):
     """ClickHouse DateTime64(3) -> Iceberg timestamp; both sides
@@ -317,6 +336,7 @@ def accepted_datetime64(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: String")
 def accepted_string(self, minio_root_user, minio_root_password):
     """ClickHouse String -> Iceberg string (UTF-8)."""
@@ -329,6 +349,7 @@ def accepted_string(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Primitives("1.0"))
 @Name("accepted: UUID")
 def accepted_uuid(self, minio_root_user, minio_root_password):
     """ClickHouse UUID -> Iceberg uuid."""
@@ -350,6 +371,7 @@ def accepted_uuid(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Nullable("1.0"))
 @Name("accepted: Nullable(Int64) with explicit NULLs")
 def accepted_nullable_int64(self, minio_root_user, minio_root_password):
     """``Nullable(Int64)`` -> Iceberg ``long`` with ``required = false``;
@@ -364,6 +386,7 @@ def accepted_nullable_int64(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Nullable("1.0"))
 @Name("accepted: Nullable(String) with explicit NULLs")
 def accepted_nullable_string(self, minio_root_user, minio_root_password):
     """``Nullable(String)`` maps to Iceberg ``string`` with ``required = false``."""
@@ -381,6 +404,7 @@ def accepted_nullable_string(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
 @Name("accepted: Array(Int32)")
 def accepted_array_int32(self, minio_root_user, minio_root_password):
     """``Array(Int32)`` maps to Iceberg ``list<int>`` (non-required)."""
@@ -393,6 +417,7 @@ def accepted_array_int32(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
 @Name("accepted: Array(String)")
 def accepted_array_string(self, minio_root_user, minio_root_password):
     """``Array(String)`` maps to Iceberg ``list<string>``."""
@@ -405,6 +430,7 @@ def accepted_array_string(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
 @Name("accepted: Map(String, Int64)")
 def accepted_map_string_int64(self, minio_root_user, minio_root_password):
     """``Map(String, Int64)`` maps to Iceberg ``map<string, long>``."""
@@ -421,6 +447,7 @@ def accepted_map_string_int64(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
 @Name("accepted: Tuple(Int32, String) -> struct")
 def accepted_tuple(self, minio_root_user, minio_root_password):
     """``Tuple(x Int32, y String)`` maps to Iceberg ``struct<x: int, y: string>``."""
@@ -438,6 +465,7 @@ def accepted_tuple(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Int8")
 def rejected_int8(self, minio_root_user, minio_root_password):
     """``Int8`` is not handled by ``getIcebergType`` — must be rejected."""
@@ -450,6 +478,7 @@ def rejected_int8(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: UInt8")
 def rejected_uint8(self, minio_root_user, minio_root_password):
     """``UInt8`` is not handled by ``getIcebergType`` — must be rejected."""
@@ -462,6 +491,7 @@ def rejected_uint8(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Bool")
 def rejected_bool(self, minio_root_user, minio_root_password):
     """``Bool`` is not handled by ``getIcebergType`` — must be rejected
@@ -476,6 +506,7 @@ def rejected_bool(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: FixedString(16)")
 def rejected_fixed_string(self, minio_root_user, minio_root_password):
     """``FixedString(N)`` is not mapped to an Iceberg type — must be rejected."""
@@ -492,6 +523,7 @@ def rejected_fixed_string(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Decimal(10, 2)")
 def rejected_decimal(self, minio_root_user, minio_root_password):
     """``Decimal`` is not handled by ``getIcebergType`` — must be rejected
@@ -506,6 +538,7 @@ def rejected_decimal(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: Enum8")
 def rejected_enum8(self, minio_root_user, minio_root_password):
     """``Enum8`` has no ``getIcebergType`` mapping — must be rejected
@@ -520,6 +553,7 @@ def rejected_enum8(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection("1.0"))
 @Name("rejected: LowCardinality(String)")
 def rejected_low_cardinality(self, minio_root_user, minio_root_password):
     """``LowCardinality(String)`` is not unwrapped by ``getIcebergType``

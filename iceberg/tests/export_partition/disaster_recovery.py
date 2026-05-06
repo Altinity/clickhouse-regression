@@ -10,7 +10,12 @@ import time
 from testflows.core import *
 from testflows.asserts import error
 
-from iceberg.requirements.export_partition import RQ_Iceberg_ExportPartition_DisasterRecovery
+from iceberg.requirements.export_partition import (
+    RQ_Iceberg_ExportPartition_DisasterRecovery,
+    RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl,
+    RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport,
+    RQ_Iceberg_ExportPartition_DisasterRecovery_InvalidInputs,
+)
 
 from helpers.common import getuid
 
@@ -64,6 +69,10 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
 
 
 @TestScenario
+@Requirements(
+    RQ_Iceberg_ExportPartition_DisasterRecovery("1.0"),
+    RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl("1.0"),
+)
 @Name("STOP MOVES holds the export PENDING, START MOVES resumes it")
 def stop_moves_holds_export_pending(
     self, minio_root_user, minio_root_password
@@ -153,6 +162,7 @@ def stop_moves_holds_export_pending(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport("1.0"))
 @Name("KILL EXPORT PARTITION while moves are stopped transitions to KILLED")
 def kill_export_while_stopped_marks_killed(
     self, minio_root_user, minio_root_password
@@ -242,6 +252,7 @@ def kill_export_while_stopped_marks_killed(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport("1.0"))
 @Name("KILL EXPORT PARTITION during commit transitions to KILLED")
 def kill_export_during_commit_marks_killed(
     self, minio_root_user, minio_root_password
@@ -363,6 +374,7 @@ def kill_export_during_commit_marks_killed(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_InvalidInputs("1.0"))
 @Name("EXPORT to a missing destination is rejected synchronously")
 def invalid_destination_rejected_synchronously(
     self, minio_root_user, minio_root_password
@@ -406,6 +418,7 @@ def invalid_destination_rejected_synchronously(
 
 
 @TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_InvalidInputs("1.0"))
 @Name("EXPORT of a non-existent partition id is a safe no-op")
 def missing_partition_id_rejected(self, minio_root_user, minio_root_password):
     """Exporting a ``partition_id`` the source does not have is harmless:
