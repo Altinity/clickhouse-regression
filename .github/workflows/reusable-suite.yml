@@ -129,6 +129,7 @@ jobs:
         ./*.log.txt
         ./*.log
         ./*.html
+        ./tiered_storage_s3_metrics.json
         ./*/_instances/*.log
         ./*/_instances/*/logs/*.log
         ./*/*/_instances/*/logs/*.log

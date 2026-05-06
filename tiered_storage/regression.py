@@ -13,6 +13,12 @@ from helpers.common import check_clickhouse_version, experimental_analyzer
 from s3.tests.common import temporary_bucket_path
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
+from tiered_storage.tests.s3_metrics import (
+    build_s3_metrics_payload,
+    format_s3_metrics_report,
+    snapshot_cluster_s3_events,
+    write_s3_metrics_payload,
+)
 
 
 def argparser(parser):
@@ -422,14 +428,43 @@ def regression(
         elif with_s3gcs:
             name = "with s3gcs"
 
-        Feature(name, test=feature)(
-            cluster=cluster,
-            with_minio=with_minio,
-            with_s3amazon=with_s3amazon,
-            with_s3gcs=with_s3gcs,
-            environ=environ,
-            base_uri=base_uri,
+        collect_s3_metrics = (with_minio or with_s3amazon or with_s3gcs) and (
+            check_clickhouse_version(">=22.8")(self)
         )
+        s3_metrics_before = None
+
+        if collect_s3_metrics:
+            with Given("I snapshot S3 metrics before the suite"):
+                s3_metrics_before = snapshot_cluster_s3_events(
+                    cluster=cluster, node_names=nodes["clickhouse"]
+                )
+
+        try:
+            Feature(name, test=feature)(
+                cluster=cluster,
+                with_minio=with_minio,
+                with_s3amazon=with_s3amazon,
+                with_s3gcs=with_s3gcs,
+                environ=environ,
+                base_uri=base_uri,
+            )
+        finally:
+            if collect_s3_metrics and s3_metrics_before is not None:
+                with Finally("I collect S3 metrics after the suite", flags=TE):
+                    s3_metrics_after = snapshot_cluster_s3_events(
+                        cluster=cluster, node_names=nodes["clickhouse"]
+                    )
+                    s3_metrics_payload = build_s3_metrics_payload(
+                        before=s3_metrics_before, after=s3_metrics_after
+                    )
+
+                    note(format_s3_metrics_report(s3_metrics_payload))
+
+                    try:
+                        path = write_s3_metrics_payload(s3_metrics_payload)
+                        note(f"S3 metrics JSON written to {path}")
+                    except Exception as e:
+                        note(f"Failed to write S3 metrics JSON: {e}")
 
 
 if main():
