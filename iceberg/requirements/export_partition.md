@@ -9,61 +9,49 @@
     * 2.2 [RQ.Iceberg.ExportPartition.Sanity.EmptyPartition](#rqicebergexportpartitionsanityemptypartition)
     * 2.3 [RQ.Iceberg.ExportPartition.Sanity.CrossReplicaInitiator](#rqicebergexportpartitionsanitycrossreplicainitiator)
 * 3 [Partition and schema compatibility](#partition-and-schema-compatibility)
-    * 3.1 [RQ.Iceberg.ExportPartition.PartitionCompatibility](#rqicebergexportpartitionpartitioncompatibility)
-    * 3.2 [RQ.Iceberg.ExportPartition.PartitionCompatibility.AcceptedTransforms](#rqicebergexportpartitionpartitioncompatibilityacceptedtransforms)
-    * 3.3 [RQ.Iceberg.ExportPartition.PartitionCompatibility.MismatchRejection](#rqicebergexportpartitionpartitioncompatibilitymismatchrejection)
-    * 3.4 [RQ.Iceberg.ExportPartition.DataTypes](#rqicebergexportpartitiondatatypes)
-    * 3.5 [RQ.Iceberg.ExportPartition.DataTypes.Primitives](#rqicebergexportpartitiondatatypesprimitives)
-    * 3.6 [RQ.Iceberg.ExportPartition.DataTypes.Nullable](#rqicebergexportpartitiondatatypesnullable)
-    * 3.7 [RQ.Iceberg.ExportPartition.DataTypes.Composite](#rqicebergexportpartitiondatatypescomposite)
-    * 3.8 [RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection](#rqicebergexportpartitiondatatypesunsupportedrejection)
+    * 3.1 [RQ.Iceberg.ExportPartition.PartitionCompatibility.AcceptedTransforms](#rqicebergexportpartitionpartitioncompatibilityacceptedtransforms)
+    * 3.2 [RQ.Iceberg.ExportPartition.PartitionCompatibility.MismatchRejection](#rqicebergexportpartitionpartitioncompatibilitymismatchrejection)
+    * 3.3 [RQ.Iceberg.ExportPartition.DataTypes.Primitives](#rqicebergexportpartitiondatatypesprimitives)
+    * 3.4 [RQ.Iceberg.ExportPartition.DataTypes.Nullable](#rqicebergexportpartitiondatatypesnullable)
+    * 3.5 [RQ.Iceberg.ExportPartition.DataTypes.Composite](#rqicebergexportpartitiondatatypescomposite)
+    * 3.6 [RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection](#rqicebergexportpartitiondatatypesunsupportedrejection)
 * 4 [Committed Iceberg metadata](#committed-iceberg-metadata)
-    * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity](#rqicebergexportpartitionmanifestintegrity)
-    * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
-    * 4.3 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
-    * 4.4 [RQ.Iceberg.ExportPartition.ManifestIntegrity.ColumnStats](#rqicebergexportpartitionmanifestintegritycolumnstats)
-    * 4.5 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PathLayout](#rqicebergexportpartitionmanifestintegritypathlayout)
-    * 4.6 [RQ.Iceberg.ExportPartition.ManifestIntegrity.ExternalReader](#rqicebergexportpartitionmanifestintegrityexternalreader)
-    * 4.7 [RQ.Iceberg.ExportPartition.CatalogIntegration](#rqicebergexportpartitioncatalogintegration)
-    * 4.8 [RQ.Iceberg.ExportPartition.CatalogIntegration.NoCatalog](#rqicebergexportpartitioncatalogintegrationnocatalog)
-    * 4.9 [RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue](#rqicebergexportpartitioncatalogintegrationrestglue)
+    * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
+    * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
+    * 4.3 [RQ.Iceberg.ExportPartition.ManifestIntegrity.ColumnStats](#rqicebergexportpartitionmanifestintegritycolumnstats)
+    * 4.4 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PathLayout](#rqicebergexportpartitionmanifestintegritypathlayout)
+    * 4.5 [RQ.Iceberg.ExportPartition.ManifestIntegrity.ExternalReader](#rqicebergexportpartitionmanifestintegrityexternalreader)
+    * 4.6 [RQ.Iceberg.ExportPartition.CatalogIntegration.NoCatalog](#rqicebergexportpartitioncatalogintegrationnocatalog)
+    * 4.7 [RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue](#rqicebergexportpartitioncatalogintegrationrestglue)
 * 5 [Transactions, idempotency, and concurrency](#transactions-idempotency-and-concurrency)
-    * 5.1 [RQ.Iceberg.ExportPartition.Transactions](#rqicebergexportpartitiontransactions)
-    * 5.2 [RQ.Iceberg.ExportPartition.Transactions.SnapshotChain](#rqicebergexportpartitiontransactionssnapshotchain)
-    * 5.3 [RQ.Iceberg.ExportPartition.Transactions.Idempotency](#rqicebergexportpartitiontransactionsidempotency)
-    * 5.4 [RQ.Iceberg.ExportPartition.Transactions.CrashRecovery](#rqicebergexportpartitiontransactionscrashrecovery)
-    * 5.5 [RQ.Iceberg.ExportPartition.ConcurrentWrites](#rqicebergexportpartitionconcurrentwrites)
-    * 5.6 [RQ.Iceberg.ExportPartition.ConcurrentWrites.MultiStatement](#rqicebergexportpartitionconcurrentwritesmultistatement)
-    * 5.7 [RQ.Iceberg.ExportPartition.ConcurrentWrites.Interleaving](#rqicebergexportpartitionconcurrentwritesinterleaving)
+    * 5.1 [RQ.Iceberg.ExportPartition.Transactions.SnapshotChain](#rqicebergexportpartitiontransactionssnapshotchain)
+    * 5.2 [RQ.Iceberg.ExportPartition.Transactions.Idempotency](#rqicebergexportpartitiontransactionsidempotency)
+    * 5.3 [RQ.Iceberg.ExportPartition.Transactions.CrashRecovery](#rqicebergexportpartitiontransactionscrashrecovery)
+    * 5.4 [RQ.Iceberg.ExportPartition.ConcurrentWrites.MultiStatement](#rqicebergexportpartitionconcurrentwritesmultistatement)
+    * 5.5 [RQ.Iceberg.ExportPartition.ConcurrentWrites.Interleaving](#rqicebergexportpartitionconcurrentwritesinterleaving)
 * 6 [Evolution and physical layout](#evolution-and-physical-layout)
-    * 6.1 [RQ.Iceberg.ExportPartition.SchemaEvolution](#rqicebergexportpartitionschemaevolution)
-    * 6.2 [RQ.Iceberg.ExportPartition.SchemaEvolution.AcceptedAlterations](#rqicebergexportpartitionschemaevolutionacceptedalterations)
-    * 6.3 [RQ.Iceberg.ExportPartition.SchemaEvolution.RejectedAlterations](#rqicebergexportpartitionschemaevolutionrejectedalterations)
-    * 6.4 [RQ.Iceberg.ExportPartition.SchemaEvolution.SchemaHistory](#rqicebergexportpartitionschemaevolutionschemahistory)
-    * 6.5 [RQ.Iceberg.ExportPartition.PartitionSpecEvolution](#rqicebergexportpartitionpartitionspecevolution)
-    * 6.6 [RQ.Iceberg.ExportPartition.StoragePaths](#rqicebergexportpartitionstoragepaths)
-    * 6.7 [RQ.Iceberg.ExportPartition.StoragePaths.PathFormat](#rqicebergexportpartitionstoragepathspathformat)
-    * 6.8 [RQ.Iceberg.ExportPartition.StoragePaths.DeepPrefix](#rqicebergexportpartitionstoragepathsdeepprefix)
-    * 6.9 [RQ.Iceberg.ExportPartition.StoragePaths.Isolation](#rqicebergexportpartitionstoragepathsisolation)
+    * 6.1 [RQ.Iceberg.ExportPartition.SchemaEvolution.AcceptedAlterations](#rqicebergexportpartitionschemaevolutionacceptedalterations)
+    * 6.2 [RQ.Iceberg.ExportPartition.SchemaEvolution.RejectedAlterations](#rqicebergexportpartitionschemaevolutionrejectedalterations)
+    * 6.3 [RQ.Iceberg.ExportPartition.SchemaEvolution.SchemaHistory](#rqicebergexportpartitionschemaevolutionschemahistory)
+    * 6.4 [RQ.Iceberg.ExportPartition.PartitionSpecEvolution](#rqicebergexportpartitionpartitionspecevolution)
+    * 6.5 [RQ.Iceberg.ExportPartition.StoragePaths.PathFormat](#rqicebergexportpartitionstoragepathspathformat)
+    * 6.6 [RQ.Iceberg.ExportPartition.StoragePaths.DeepPrefix](#rqicebergexportpartitionstoragepathsdeepprefix)
+    * 6.7 [RQ.Iceberg.ExportPartition.StoragePaths.Isolation](#rqicebergexportpartitionstoragepathsisolation)
 * 7 [Failure handling and multi-replica behaviour](#failure-handling-and-multi-replica-behaviour)
-    * 7.1 [RQ.Iceberg.ExportPartition.DisasterRecovery](#rqicebergexportpartitiondisasterrecovery)
-    * 7.2 [RQ.Iceberg.ExportPartition.DisasterRecovery.MovesControl](#rqicebergexportpartitiondisasterrecoverymovescontrol)
-    * 7.3 [RQ.Iceberg.ExportPartition.DisasterRecovery.KillExport](#rqicebergexportpartitiondisasterrecoverykillexport)
-    * 7.4 [RQ.Iceberg.ExportPartition.DisasterRecovery.InvalidInputs](#rqicebergexportpartitiondisasterrecoveryinvalidinputs)
-    * 7.5 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery](#rqicebergexportpartitionmultireplicarecovery)
-    * 7.6 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.CrossReplicaConcurrency](#rqicebergexportpartitionmultireplicarecoverycrossreplicaconcurrency)
-    * 7.7 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.InitiatorFailover](#rqicebergexportpartitionmultireplicarecoveryinitiatorfailover)
-    * 7.8 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.ZooKeeperBounce](#rqicebergexportpartitionmultireplicarecoveryzookeeperbounce)
-    * 7.9 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.RandomisedChaos](#rqicebergexportpartitionmultireplicarecoveryrandomisedchaos)
+    * 7.1 [RQ.Iceberg.ExportPartition.DisasterRecovery.MovesControl](#rqicebergexportpartitiondisasterrecoverymovescontrol)
+    * 7.2 [RQ.Iceberg.ExportPartition.DisasterRecovery.KillExport](#rqicebergexportpartitiondisasterrecoverykillexport)
+    * 7.3 [RQ.Iceberg.ExportPartition.DisasterRecovery.InvalidInputs](#rqicebergexportpartitiondisasterrecoveryinvalidinputs)
+    * 7.4 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.CrossReplicaConcurrency](#rqicebergexportpartitionmultireplicarecoverycrossreplicaconcurrency)
+    * 7.5 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.InitiatorFailover](#rqicebergexportpartitionmultireplicarecoveryinitiatorfailover)
+    * 7.6 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.ZooKeeperBounce](#rqicebergexportpartitionmultireplicarecoveryzookeeperbounce)
+    * 7.7 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.RandomisedChaos](#rqicebergexportpartitionmultireplicarecoveryrandomisedchaos)
 * 8 [Observability and export settings](#observability-and-export-settings)
-    * 8.1 [RQ.Iceberg.ExportPartition.SystemMonitoring](#rqicebergexportpartitionsystemmonitoring)
-    * 8.2 [RQ.Iceberg.ExportPartition.SystemMonitoring.ReplicatedPartitionExports](#rqicebergexportpartitionsystemmonitoringreplicatedpartitionexports)
-    * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog](#rqicebergexportpartitionsystemmonitoringpartlog)
-    * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
-    * 8.5 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
-    * 8.6 [RQ.Iceberg.ExportPartition.Settings](#rqicebergexportpartitionsettings)
-    * 8.7 [RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote](#rqicebergexportpartitionsettingssystemtablepreferremote)
-    * 8.8 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
+    * 8.1 [RQ.Iceberg.ExportPartition.SystemMonitoring.ReplicatedPartitionExports](#rqicebergexportpartitionsystemmonitoringreplicatedpartitionexports)
+    * 8.2 [RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog](#rqicebergexportpartitionsystemmonitoringpartlog)
+    * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
+    * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
+    * 8.5 [RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote](#rqicebergexportpartitionsettingssystemtablepreferremote)
+    * 8.6 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
 * 9 [Post-export destination operations](#post-export-destination-operations)
     * 9.1 [RQ.Iceberg.ExportPartition.DirectWrites](#rqicebergexportpartitiondirectwrites)
     * 9.2 [RQ.Iceberg.ExportPartition.Truncate](#rqicebergexportpartitiontruncate)
@@ -79,7 +67,7 @@ This specification defines requirements for **exporting partitions from `Replica
 
 The experimental feature SHALL be gated by the server-level setting `allow_experimental_export_merge_tree_partition_feature` (default `0`). Subsequent direct writes against an Iceberg destination further require `allow_experimental_insert_into_iceberg`. When either gate is disabled, the corresponding statements SHALL fail with the standard "experimental feature disabled" error.
 
-Regression tests live under the TestFlows package `iceberg.tests.export_partition`. The outer feature in `iceberg.tests.export_partition.feature` loads one sub-feature per Python module listed in its `MODULES` tuple and runs the same scenarios under multiple **catalog modes** (`no_catalog` / `rest` / `glue`) unless a module documents a narrower scope. Each top-level requirement names one such module; sub-requirements break that module down into the specific behaviours its scenarios verify, so traceability runs **module ↔ umbrella requirement ↔ scenario clusters** rather than module-only.
+Regression tests live under the TestFlows package `iceberg.tests.export_partition`. The outer feature in `iceberg.tests.export_partition.feature` loads one sub-feature per Python module listed in its `MODULES` tuple and runs the same scenarios under multiple **catalog modes** (`no_catalog` / `rest` / `glue`) unless a module documents a narrower scope. Each requirement is attached directly to one or more scenarios that exercise it; the regression module that owns those scenarios is named in the requirement body for traceability.
 
 [ClickHouse]: https://clickhouse.com
 
@@ -116,13 +104,6 @@ version: 1.0
 
 ## Partition and schema compatibility
 
-### RQ.Iceberg.ExportPartition.PartitionCompatibility
-version: 1.0
-
-[ClickHouse] SHALL enforce compatibility between the MergeTree `PARTITION BY` definition (including supported partition transforms) and the Iceberg destination's partition spec. Accepted pairings SHALL export successfully; mismatched or unsupported pairings SHALL be rejected with a clear error (typically `BAD_ARGUMENTS`) before any Iceberg metadata is committed.
-
-**Regression module:** `iceberg.tests.export_partition.partition_compatibility` (`partition_compatibility.py`).
-
 ### RQ.Iceberg.ExportPartition.PartitionCompatibility.AcceptedTransforms
 version: 1.0
 
@@ -135,6 +116,8 @@ version: 1.0
 * Compound specs that mix identity and a parametrised transform.
 
 In every accepted case the destination's partition spec stays stable across exports and partition values written by ClickHouse match what an external Iceberg reader expects.
+
+**Regression module:** `iceberg.tests.export_partition.partition_compatibility` (`partition_compatibility.py`).
 
 ### RQ.Iceberg.ExportPartition.PartitionCompatibility.MismatchRejection
 version: 1.0
@@ -151,13 +134,6 @@ version: 1.0
 
 In every rejected case no Iceberg snapshot is created and the destination remains in its prior state.
 
-### RQ.Iceberg.ExportPartition.DataTypes
-version: 1.0
-
-[ClickHouse] SHALL map ClickHouse column types used in the export to Iceberg types that preserve the intended values for every supported primitive and nested layout. Types with no supported Iceberg mapping SHALL fail explicitly at destination-creation or export time; the system SHALL NOT silently coerce, downcast, or drop data.
-
-**Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).
-
 ### RQ.Iceberg.ExportPartition.DataTypes.Primitives
 version: 1.0
 
@@ -167,6 +143,8 @@ version: 1.0
 * Floating-point types `Float32` and `Float64`.
 * Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.
 * `String` and `UUID`.
+
+**Regression module:** `iceberg.tests.export_partition.datatypes` (`datatypes.py`).
 
 ### RQ.Iceberg.ExportPartition.DataTypes.Nullable
 version: 1.0
@@ -191,7 +169,7 @@ Element ordering and key/value pairings SHALL match the source after a round-tri
 ### RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection
 version: 1.0
 
-[ClickHouse] SHALL reject `EXPORT PARTITION` for column types that have no supported Iceberg mapping in this release:
+[ClickHouse] SHALL fail explicitly — and SHALL NOT silently coerce, downcast, or drop data — when an exported column has no supported Iceberg mapping in this release:
 
 * Narrow integers `Int8` and `UInt8`.
 * `Bool`.
@@ -204,21 +182,16 @@ The rejection SHALL fire either when the destination is created or when the expo
 
 ## Committed Iceberg metadata
 
-### RQ.Iceberg.ExportPartition.ManifestIntegrity
-version: 1.0
-
-[ClickHouse] SHALL produce Iceberg metadata after each successful export such that an external Iceberg reader can confirm snapshot lineage, summary statistics, manifest stats, partition spec references, and physical file layout are all internally consistent with the rows and files written.
-
-**Regression module:** `iceberg.tests.export_partition.manifest_integrity` (`manifest_integrity.py`).
-
 ### RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain
 version: 1.0
 
-[ClickHouse] SHALL extend the destination's snapshot list by exactly one append snapshot per successful export:
+[ClickHouse] SHALL extend the destination's snapshot list by exactly one append snapshot per successful export, and the resulting Iceberg metadata SHALL be internally consistent with the rows and files written:
 
 * The new snapshot's `parent_snapshot_id` SHALL point at the previously current snapshot.
 * The snapshot summary's `total-records` SHALL match the row count contributed by the export.
 * Repeated exports SHALL form a single linear chain, never a branch.
+
+**Regression module:** `iceberg.tests.export_partition.manifest_integrity` (`manifest_integrity.py`).
 
 ### RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec
 version: 1.0
@@ -243,45 +216,35 @@ version: 1.0
 
 [ClickHouse]'s exported metadata SHALL be interoperable, not just self-consistent. An independent Iceberg reader (PyIceberg, in the regression suite) SHALL list the snapshots, read the data files, and return row counts and column values that match the source slice.
 
-### RQ.Iceberg.ExportPartition.CatalogIntegration
-version: 1.0
-
-[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive metastore compatible) catalogs, and SHALL preserve a usable on-disk layout in **no-catalog** mode where the warehouse `metadata.json` pointer is managed directly.
-
-**Regression module:** `iceberg.tests.export_partition.catalogs` (`catalogs.py`).
-
 ### RQ.Iceberg.ExportPartition.CatalogIntegration.NoCatalog
 version: 1.0
 
-[ClickHouse] SHALL produce a `no_catalog` (`IcebergS3`) destination whose committed data is independently readable:
+[ClickHouse] SHALL produce a `no_catalog` (`IcebergS3`) destination — where the warehouse `metadata.json` pointer is managed directly, with no external catalog — whose committed data is independently readable:
 
 * The committed slice can be read through the `icebergS3` table function pointed at the same warehouse prefix.
 * Dropping the destination table from ClickHouse SHALL NOT delete the committed data; the same files remain readable through `icebergS3`.
 
+**Regression module:** `iceberg.tests.export_partition.catalogs` (`catalogs.py`).
+
 ### RQ.Iceberg.ExportPartition.CatalogIntegration.RestGlue
 version: 1.0
 
-[ClickHouse] SHALL register the export with the configured external catalog:
+[ClickHouse] SHALL commit exports through the same catalog-aware metadata paths used in production for **REST** and **Glue** (Hive-metastore-compatible) catalogs, registering the export with the configured catalog:
 
 * After commit the new snapshot SHALL be visible through the same catalog object operators use for production (REST or Glue).
 * An external Iceberg reader connected to the same catalog SHALL list the snapshot and read the data files written by ClickHouse.
 
 ## Transactions, idempotency, and concurrency
 
-### RQ.Iceberg.ExportPartition.Transactions
-version: 1.0
-
-[ClickHouse] SHALL treat each successful Iceberg commit from `EXPORT PARTITION` as an **append** snapshot with monotonic snapshot / sequence semantics relative to the prior table state, and SHALL preserve atomicity of the commit even when the commit path is interrupted at documented failure-injection points.
-
-**Regression module:** `iceberg.tests.export_partition.transactions` (`transactions.py`).
-
 ### RQ.Iceberg.ExportPartition.Transactions.SnapshotChain
 version: 1.0
 
-[ClickHouse] SHALL append exactly one snapshot per successful `EXPORT PARTITION`, with no gaps or branches:
+[ClickHouse] SHALL treat each successful Iceberg commit from `EXPORT PARTITION` as an **append** snapshot with monotonic snapshot / sequence semantics relative to the prior table state, and SHALL append exactly one snapshot per successful `EXPORT PARTITION` with no gaps or branches:
 
 * Sequential exports of distinct partitions produce one append snapshot each, in order.
 * Each new snapshot points at the previous one as its parent.
+
+**Regression module:** `iceberg.tests.export_partition.transactions` (`transactions.py`).
 
 ### RQ.Iceberg.ExportPartition.Transactions.Idempotency
 version: 1.0
@@ -302,20 +265,15 @@ version: 1.0
 * `export_partition_status_change_throw` — a manifest status transition failure SHALL be retried internally without producing a duplicate commit.
 * `iceberg_writes_post_publish_throw` — an exception thrown after a successful publish SHALL not invalidate the committed snapshot; the next read still sees the data.
 
-### RQ.Iceberg.ExportPartition.ConcurrentWrites
-version: 1.0
-
-[ClickHouse] SHALL serialize concurrent export work so that multiple partition exports targeting the same Iceberg destination produce a **linear append-only** snapshot history without corrupting metadata, and SHALL keep direct writes (`INSERT`) interleaved with scheduled exports correctly attributed to their own snapshots.
-
-**Regression module:** `iceberg.tests.export_partition.concurrent_writes` (`concurrent_writes.py`).
-
 ### RQ.Iceberg.ExportPartition.ConcurrentWrites.MultiStatement
 version: 1.0
 
-[ClickHouse] SHALL handle multiple `EXPORT PARTITION` clauses chained in one client batch correctly:
+[ClickHouse] SHALL serialize concurrent export work — including multiple `EXPORT PARTITION` clauses chained in one client batch — so that the destination's snapshot history stays **linear append-only** without corrupting metadata:
 
 * Each distinct partition produces its own append snapshot; the snapshot chain remains linear.
 * A duplicate export of the same partition inside a single `ALTER` SHALL commit at most once — repeats are absorbed by the same idempotency key as the cross-statement guard in `Transactions.Idempotency`.
+
+**Regression module:** `iceberg.tests.export_partition.concurrent_writes` (`concurrent_writes.py`).
 
 ### RQ.Iceberg.ExportPartition.ConcurrentWrites.Interleaving
 version: 1.0
@@ -327,13 +285,6 @@ version: 1.0
 
 ## Evolution and physical layout
 
-### RQ.Iceberg.ExportPartition.SchemaEvolution
-version: 1.0
-
-[ClickHouse] SHALL allow documented schema evolution on the Iceberg destination and the `ReplicatedMergeTree` source such that subsequent `EXPORT PARTITION` operations succeed only when the schemas remain compatible per Iceberg metadata rules; unsupported alterations SHALL be rejected deterministically.
-
-**Regression module:** `iceberg.tests.export_partition.schema_evolution` (`schema_evolution.py`).
-
 ### RQ.Iceberg.ExportPartition.SchemaEvolution.AcceptedAlterations
 version: 1.0
 
@@ -342,6 +293,8 @@ version: 1.0
 * Adding a column on both sides; the new column receives null / default values for previously exported rows.
 * Dropping a column on both sides; subsequent exports omit the dropped column.
 * Widening a numeric column (verified for `Int32 → Int64`); already-exported rows remain readable, new exports use the wider type.
+
+**Regression module:** `iceberg.tests.export_partition.schema_evolution` (`schema_evolution.py`).
 
 ### RQ.Iceberg.ExportPartition.SchemaEvolution.RejectedAlterations
 version: 1.0
@@ -367,22 +320,17 @@ version: 1.0
 
 **Regression module:** `iceberg.tests.export_partition.partition_spec_evolution` (`partition_spec_evolution.py`).
 
-### RQ.Iceberg.ExportPartition.StoragePaths
-version: 1.0
-
-[ClickHouse] SHALL honour `write_full_path_in_iceberg_metadata` and related path rules when laying out Iceberg table locations and metadata on S3, including deep prefix hierarchies and multiple isolated destinations under one bucket, so committed paths remain consistent with the configured policy.
-
-**Regression module:** `iceberg.tests.export_partition.storage_paths` (`storage_paths.py`).
-
 ### RQ.Iceberg.ExportPartition.StoragePaths.PathFormat
 version: 1.0
 
-[ClickHouse] SHALL respect both path-format modes for `metadata.json` location strings:
+[ClickHouse] SHALL honour `write_full_path_in_iceberg_metadata` and respect both path-format modes for `metadata.json` location strings:
 
 * With `write_full_path_in_iceberg_metadata = 1` the `metadata.json` location SHALL be a fully-qualified `s3://…` URI.
 * With the default (`= 0`) the `metadata.json` location SHALL be bucket-relative (no scheme prefix).
 
 In both modes the destination remains readable through ClickHouse and through an external reader.
+
+**Regression module:** `iceberg.tests.export_partition.storage_paths` (`storage_paths.py`).
 
 ### RQ.Iceberg.ExportPartition.StoragePaths.DeepPrefix
 version: 1.0
@@ -399,17 +347,12 @@ version: 1.0
 
 ## Failure handling and multi-replica behaviour
 
-### RQ.Iceberg.ExportPartition.DisasterRecovery
-version: 1.0
-
-[ClickHouse] SHALL surface export lifecycle states through `system.replicated_partition_exports` and SHALL recover or fail cleanly under operator actions and invalid inputs without committing a partial Iceberg snapshot in success cases where the implementation promises all-or-nothing behaviour.
-
-**Regression module:** `iceberg.tests.export_partition.disaster_recovery` (`disaster_recovery.py`).
-
 ### RQ.Iceberg.ExportPartition.DisasterRecovery.MovesControl
 version: 1.0
 
-[ClickHouse] SHALL hold an in-flight export at `PENDING` while `SYSTEM STOP MOVES` is in effect and SHALL resume it to `COMPLETED` after `SYSTEM START MOVES`, with no rows lost or duplicated.
+[ClickHouse] SHALL surface export lifecycle states through `system.replicated_partition_exports` and SHALL hold an in-flight export at `PENDING` while `SYSTEM STOP MOVES` is in effect, resuming it to `COMPLETED` after `SYSTEM START MOVES`, with no rows lost or duplicated and no partial Iceberg snapshot left behind.
+
+**Regression module:** `iceberg.tests.export_partition.disaster_recovery` (`disaster_recovery.py`).
 
 ### RQ.Iceberg.ExportPartition.DisasterRecovery.KillExport
 version: 1.0
@@ -429,20 +372,15 @@ version: 1.0
 * `EXPORT PARTITION` to a destination table that does not exist SHALL fail synchronously with a clear error.
 * `EXPORT PARTITION ID '<missing>'` for a partition that has no parts SHALL be a safe no-op — no failed task row, no partial snapshot, no orphaned files.
 
-### RQ.Iceberg.ExportPartition.MultiReplicaRecovery
-version: 1.0
-
-[ClickHouse] SHALL preserve export idempotency and Iceberg snapshot linearity when exports are initiated from **different replicas** of the same `ReplicatedMergeTree` table, including under ZooKeeper restarts, replica process failure, and randomised replica chaos, converging to at most one successful commit per guarded export key.
-
-**Regression module:** `iceberg.tests.export_partition.multi_replica_recovery` (`multi_replica_recovery.py`).
-
 ### RQ.Iceberg.ExportPartition.MultiReplicaRecovery.CrossReplicaConcurrency
 version: 1.0
 
-[ClickHouse] SHALL coordinate concurrent exports issued by different replicas:
+[ClickHouse] SHALL coordinate concurrent exports issued by different replicas of the same `ReplicatedMergeTree` table, preserving idempotency and snapshot linearity and converging to at most one successful commit per guarded export key:
 
 * Two replicas exporting **different** partitions to the same destination SHALL produce two append snapshots in a linear chain with no row loss.
 * Two replicas issuing the **same** export key SHALL produce exactly one snapshot — the duplicate is rejected by the cross-replica idempotency guard.
+
+**Regression module:** `iceberg.tests.export_partition.multi_replica_recovery` (`multi_replica_recovery.py`).
 
 ### RQ.Iceberg.ExportPartition.MultiReplicaRecovery.InitiatorFailover
 version: 1.0
@@ -473,17 +411,12 @@ version: 1.0
 
 ## Observability and export settings
 
-### RQ.Iceberg.ExportPartition.SystemMonitoring
-version: 1.0
-
-[ClickHouse] SHALL populate `system.replicated_partition_exports`, `system.part_log` (where applicable), and relevant `ProfileEvents` counters so operators can audit export progress, provenance, and completion — including correct handling when an export is killed.
-
-**Regression module:** `iceberg.tests.export_partition.system_monitoring` (`system_monitoring.py`).
-
 ### RQ.Iceberg.ExportPartition.SystemMonitoring.ReplicatedPartitionExports
 version: 1.0
 
 [ClickHouse] SHALL fill every documented column of `system.replicated_partition_exports` for a successful export, so the row is sufficient on its own to identify the source, the destination, the partition, the initiating replica, and the resulting status without consulting other system tables.
+
+**Regression module:** `iceberg.tests.export_partition.system_monitoring` (`system_monitoring.py`).
 
 ### RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog
 version: 1.0
@@ -503,17 +436,12 @@ version: 1.0
 * `source_replica`, `create_time`, and identifying columns SHALL still match the original initiator and timing once the row has transitioned to `KILLED`.
 * When the kill lands during the commit window, the same provenance fields and any diagnostic counters that were already populated SHALL remain readable for post-mortem analysis.
 
-### RQ.Iceberg.ExportPartition.Settings
-version: 1.0
-
-[ClickHouse] SHALL honour documented `export_merge_tree_partition_*` settings and the format settings the writer forwards to Parquet, in a way observable from successful exports and system tables.
-
-**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`).
-
 ### RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote
 version: 1.0
 
 [ClickHouse] SHALL serve consistent status information from `system.replicated_partition_exports` whether the row is read from the local cache (`export_merge_tree_partition_system_table_prefer_remote_information = 0`, the new default) or refreshed directly from Keeper (`= 1`). The two modes SHALL return the same status for an already-completed export.
+
+**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`).
 
 ### RQ.Iceberg.ExportPartition.Settings.ParquetCompression
 version: 1.0

@@ -11,7 +11,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_DisasterRecovery,
     RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl,
     RQ_Iceberg_ExportPartition_DisasterRecovery_KillExport,
     RQ_Iceberg_ExportPartition_DisasterRecovery_InvalidInputs,
@@ -69,10 +68,7 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_DisasterRecovery("1.0"),
-    RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery_MovesControl("1.0"))
 @Name("STOP MOVES holds the export PENDING, START MOVES resumes it")
 def stop_moves_holds_export_pending(
     self, minio_root_user, minio_root_password
@@ -479,7 +475,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_DisasterRecovery("1.0"))
 @Name("disaster recovery")
 def feature(self, minio_root_user, minio_root_password):
     """Failure-injection and recovery scenarios for EXPORT PARTITION."""

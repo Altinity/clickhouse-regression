@@ -11,7 +11,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_ConcurrentWrites,
     RQ_Iceberg_ExportPartition_ConcurrentWrites_MultiStatement,
     RQ_Iceberg_ExportPartition_ConcurrentWrites_Interleaving,
 )
@@ -65,10 +64,7 @@ def _seed_source(values, partition_by=SIMPLE_PARTITION_BY, columns=SIMPLE_COLUMN
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_ConcurrentWrites("1.0"),
-    RQ_Iceberg_ExportPartition_ConcurrentWrites_MultiStatement("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_ConcurrentWrites_MultiStatement("1.0"))
 @Name("multi-statement ALTER commits each partition as its own snapshot")
 def multi_statement_alter_commits_each_partition(
     self, minio_root_user, minio_root_password
@@ -331,7 +327,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_ConcurrentWrites("1.0"))
 @Name("concurrent writes")
 def feature(self, minio_root_user, minio_root_password):
     """Concurrent / interleaved EXPORT PARTITION scenarios."""

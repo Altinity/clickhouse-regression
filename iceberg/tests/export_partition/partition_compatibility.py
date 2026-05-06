@@ -9,7 +9,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_PartitionCompatibility,
     RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms,
     RQ_Iceberg_ExportPartition_PartitionCompatibility_MismatchRejection,
 )
@@ -126,10 +125,7 @@ def _run_rejected_case(
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_PartitionCompatibility("1.0"),
-    RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility_AcceptedTransforms("1.0"))
 @Name("accepted: compound identity (year, region)")
 def accepted_compound_identity(self, minio_root_user, minio_root_password):
     """Two-column identity partitioning on mixed (Int, String) columns."""
@@ -407,7 +403,6 @@ REJECTED_SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_PartitionCompatibility("1.0"))
 @Name("partition compatibility")
 def feature(self, minio_root_user, minio_root_password):
     """Partition expression compatibility between MergeTree and Iceberg.

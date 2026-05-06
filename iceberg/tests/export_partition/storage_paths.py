@@ -9,7 +9,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_StoragePaths,
     RQ_Iceberg_ExportPartition_StoragePaths_PathFormat,
     RQ_Iceberg_ExportPartition_StoragePaths_DeepPrefix,
     RQ_Iceberg_ExportPartition_StoragePaths_Isolation,
@@ -110,10 +109,7 @@ def full_path_metadata_has_absolute_s3_uri(
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_StoragePaths("1.0"),
-    RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_StoragePaths_PathFormat("1.0"))
 @Name("default: metadata.json location is bucket-relative (no FS scheme)")
 def default_metadata_has_relative_location(
     self, minio_root_user, minio_root_password
@@ -318,7 +314,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_StoragePaths("1.0"))
 @Name("storage paths")
 def feature(self, minio_root_user, minio_root_password):
     """Storage location and path-writing behaviour for EXPORT PARTITION.

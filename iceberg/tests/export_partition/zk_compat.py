@@ -59,11 +59,6 @@ def export_after_restart_recreates_exports_znode(
     ``SYSTEM RESTART REPLICA`` recreates it via the attach thread and
     the subsequent EXPORT succeeds.
     """
-    _require_no_catalog(
-        "legacy ZK layout is a ReplicatedMergeTree concern, not a "
-        "destination concern; run it once via the no_catalog path"
-    )
-
     source_table = f"mt_{getuid()}"
     zk_path = f"/clickhouse/tables/{source_table}"
     exports_path = f"{zk_path}/exports"
@@ -144,11 +139,6 @@ def restart_heals_operator_deletion(
     by ``SYSTEM RESTART REPLICA`` and a fresh EXPORT against a new
     partition still works.
     """
-    _require_no_catalog(
-        "legacy ZK layout is a ReplicatedMergeTree concern, not a "
-        "destination concern; run it once via the no_catalog path"
-    )
-
     source_table = f"mt_{getuid()}"
     zk_path = f"/clickhouse/tables/{source_table}"
     exports_path = f"{zk_path}/exports"
@@ -215,11 +205,20 @@ def restart_heals_operator_deletion(
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_ZooKeeperCompat("1.0"))
 @Name("zk compat")
 def feature(self, minio_root_user, minio_root_password):
     """Backward compatibility with pre-EXPORT-feature ZooKeeper layouts
-    and operator-deletion recovery via replica attach."""
+    and operator-deletion recovery via replica attach.
+
+    ``no_catalog`` only — the ``/exports`` znode lives under the
+    ``ReplicatedMergeTree`` source path, so the destination's catalog
+    flavour is irrelevant. Filter at load time to avoid penalising the
+    requirement count with not-applicable runtime ``skip()``s.
+    """
+    _require_no_catalog(
+        "legacy ZK layout is a ReplicatedMergeTree concern, not a "
+        "destination concern; run it once via the no_catalog path"
+    )
     Scenario(test=export_after_restart_recreates_exports_znode, flags=TE)(
         minio_root_user=minio_root_user, minio_root_password=minio_root_password
     )

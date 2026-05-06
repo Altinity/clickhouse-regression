@@ -11,7 +11,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_SystemMonitoring,
     RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports,
     RQ_Iceberg_ExportPartition_SystemMonitoring_PartLog,
     RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents,
@@ -63,10 +62,7 @@ def _seed_source_two_partitions():
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_SystemMonitoring("1.0"),
-    RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring_ReplicatedPartitionExports("1.0"))
 @Name("every system.replicated_partition_exports column is populated on success")
 def system_table_columns_populated_on_success(
     self, minio_root_user, minio_root_password
@@ -555,7 +551,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_SystemMonitoring("1.0"))
 @Name("system monitoring")
 def feature(self, minio_root_user, minio_root_password):
     """System-table and profile-event visibility of EXPORT PARTITION."""

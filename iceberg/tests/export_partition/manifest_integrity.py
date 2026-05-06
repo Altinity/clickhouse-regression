@@ -10,7 +10,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_ManifestIntegrity,
     RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain,
     RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec,
     RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats,
@@ -59,10 +58,7 @@ FULL_PATHS_SETTING = [("write_full_path_in_iceberg_metadata", 1)]
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_ManifestIntegrity("1.0"),
-    RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain("1.0"))
 @Name("each export advances the snapshot list by one")
 def snapshot_advances_per_export(self, minio_root_user, minio_root_password):
     """Two sequential exports of distinct partitions -> two snapshots."""
@@ -473,7 +469,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_ManifestIntegrity("1.0"))
 @Name("manifest integrity")
 def feature(self, minio_root_user, minio_root_password):
     """Iceberg manifest and metadata correctness after EXPORT PARTITION."""
