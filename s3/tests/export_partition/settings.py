@@ -6,7 +6,6 @@ from testflows.core import *
 from helpers.common import getuid
 from helpers.create import partitioned_replicated_merge_tree_table
 from s3.requirements.export_partition import *
-from s3.tests.common import export_partition_query_setting_name
 from s3.tests.export_partition.steps import (
     export_partitions,
     create_s3_table,
@@ -70,7 +69,7 @@ def export_with_settings(
         )
 
     with When("export partitions"):
-        settings = [(export_partition_query_setting_name(), "1")]
+        settings = [("allow_experimental_export_merge_tree_part", "1")]
 
         if export_max_retries is not None:
             settings.append(

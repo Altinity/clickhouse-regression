@@ -173,23 +173,6 @@ def _export_partition_setting_name():
     return "allow_experimental_export_merge_tree_partition"
 
 
-def export_partition_query_setting_name():
-    """Return the right per-query setting name to gate ``EXPORT PARTITION``.
-
-    Antalya 25.8 / older builds accept the per-query setting
-    ``allow_experimental_export_merge_tree_part`` as the gate (the same
-    name as the EXPORT PART setting; both features were gated together
-    on that line). Antalya 26.1+ renamed the gate to
-    ``allow_experimental_export_merge_tree_partition`` alongside the
-    server-side rename in https://github.com/Altinity/ClickHouse/pull/1618.
-    Anything that does not advertise a clickhouse_version (or is otherwise
-    ``>=26.1``) defaults to the new name.
-    """
-    if check_clickhouse_version("<26.1")(current()):
-        return "allow_experimental_export_merge_tree_part"
-    return "allow_experimental_export_merge_tree_partition"
-
-
 def create_export_partition_config(
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file=None,

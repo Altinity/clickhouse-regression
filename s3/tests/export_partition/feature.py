@@ -1,6 +1,7 @@
 from testflows.core import *
+from helpers.common import check_clickhouse_version
 from s3.requirements.export_partition import *
-from s3.tests.common import enable_export_partition, export_partition_query_setting_name
+from s3.tests.common import enable_export_partition
 
 
 @TestFeature
@@ -12,10 +13,18 @@ def minio(self, uri, bucket_prefix):
 
     self.context.uri_base = uri
     self.context.bucket_prefix = bucket_prefix
-    self.context.default_settings = [(export_partition_query_setting_name(), "1")]
+    self.context.default_settings = [("allow_experimental_export_merge_tree_part", "1")]
 
-    with Given("I enable export partition"):
-        enable_export_partition()
+    # On Antalya 26.1+ the server-level gate is
+    # ``allow_experimental_export_merge_tree_partition`` and is preloaded via
+    # the ``configs/clickhouse/config.d/export_partition.xml`` bind-mount
+    # (mirrors the iceberg suite). Older Antalya builds still use the legacy
+    # ``enable_experimental_export_merge_tree_partition_feature`` name, which
+    # the static mount does not provide, so fall back to the dynamic
+    # ``enable_export_partition`` step for those.
+    if check_clickhouse_version("<26.1")(self):
+        with Given("I enable export partition"):
+            enable_export_partition()
 
     Feature(run=load("s3.tests.export_partition.sanity", "feature"))
     # Feature(run=load("s3.tests.export_partition.error_handling", "feature"))
