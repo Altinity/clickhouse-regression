@@ -1,0 +1,130 @@
+name: 🛑 Cancel queued workflows
+run-name: 🛑 Cancel queued workflows${{ inputs.dry_run && ' [dry-run]' || '' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "🔍 Dry run — list what would be cancelled without actually cancelling"
+        type: boolean
+        default: false
+
+permissions:
+  actions: write
+
+jobs:
+  cancel-queued:
+    name: Cancel queued / stalled runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel queued and stalled workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          cancelled=0
+          skipped=0
+
+          cancel_or_print() {
+            local run_id="$1"
+            local label="$2"
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "  [DRY-RUN] would cancel: $label"
+            else
+              status=$(gh api \
+                --method POST \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/actions/runs/${run_id}/cancel" \
+                --silent --include 2>&1 | head -1 | awk '{print $2}' || echo "error")
+              if [ "$status" = "202" ]; then
+                echo "  ✅ cancelled: $label"
+              elif [ "$status" = "409" ]; then
+                echo "  ⚠️  already finished (409): $label"
+              else
+                echo "  ❌ unexpected status ${status}: $label"
+              fi
+            fi
+            cancelled=$((cancelled + 1))
+          }
+
+          has_active_jobs() {
+            local run_id="$1"
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/runs/${run_id}/jobs?filter=latest&per_page=100" \
+              --jq '[.jobs[].status] | any(. == "in_progress")' 2>/dev/null || echo "false"
+          }
+
+          # ── Phase 1: fully queued runs ──────────────────────────────────────
+          echo ""
+          echo "=== Phase 1: queued runs ==="
+          page=1
+          while true; do
+            batch=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/runs?status=queued&per_page=100&page=${page}" \
+              --jq '.workflow_runs[] | "\(.id) \(.name) branch=\(.head_branch) started=\(.created_at) \(.html_url)"' \
+              2>/dev/null || true)
+
+            [ -z "$batch" ] && break
+
+            count=0
+            while IFS= read -r line; do
+              run_id=$(echo "$line" | awk '{print $1}')
+              label=$(echo "$line" | cut -d' ' -f2-)
+              cancel_or_print "$run_id" "$label"
+              count=$((count + 1))
+            done <<< "$batch"
+
+            [ "$count" -lt 100 ] && break
+            page=$((page + 1))
+          done
+
+          echo "Phase 1 done."
+
+          # ── Phase 2: in_progress runs with no actively running jobs ─────────
+          echo ""
+          echo "=== Phase 2: in_progress runs with no active jobs ==="
+          page=1
+          while true; do
+            batch=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/runs?status=in_progress&per_page=100&page=${page}" \
+              --jq '.workflow_runs[] | "\(.id) \(.name) branch=\(.head_branch) started=\(.created_at) \(.html_url)"' \
+              2>/dev/null || true)
+
+            [ -z "$batch" ] && break
+
+            count=0
+            while IFS= read -r line; do
+              run_id=$(echo "$line" | awk '{print $1}')
+              label=$(echo "$line" | cut -d' ' -f2-)
+              active=$(has_active_jobs "$run_id")
+              if [ "$active" = "true" ]; then
+                echo "  ⏭  skipping (has active jobs): $label"
+                skipped=$((skipped + 1))
+              else
+                cancel_or_print "$run_id" "$label"
+              fi
+              count=$((count + 1))
+            done <<< "$batch"
+
+            [ "$count" -lt 100 ] && break
+            page=$((page + 1))
+          done
+
+          echo "Phase 2 done."
+
+          # ── Summary ──────────────────────────────────────────────────────────
+          echo ""
+          echo "========================================"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Would cancel : $cancelled"
+          else
+            echo "Cancelled    : $cancelled"
+          fi
+          echo "Skipped      : $skipped  (still actively running)"
+          echo "========================================"
