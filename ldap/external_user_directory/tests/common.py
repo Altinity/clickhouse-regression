@@ -200,6 +200,16 @@ def invalid_ldap_external_user_directory_config(
         with When("I restart ClickHouse to apply the config changes"):
             node.restart(safe=False, wait_healthy=False)
 
+        with Then("error log should contain the expected error message"):
+            started = time.time()
+            command = f'grep -a "{message}" /var/log/clickhouse-server/clickhouse-server.err.log'
+            while time.time() - started < timeout:
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
+                if exitcode == 0:
+                    break
+                time.sleep(1)
+            assert exitcode == 0, error()
+
     finally:
         with Finally(f"I remove {config.name}"):
             with By("removing invalid configuration file"):
@@ -217,16 +227,6 @@ def invalid_ldap_external_user_directory_config(
 
             with And("restarting the node"):
                 node.restart(safe=False)
-
-    with Then("error log should contain the expected error message"):
-        started = time.time()
-        command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
-        while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False, no_checks=True).exitcode
-            if exitcode == 0:
-                break
-            time.sleep(1)
-        assert exitcode == 0, error()
 
 
 @contextmanager
