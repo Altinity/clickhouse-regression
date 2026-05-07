@@ -245,7 +245,18 @@ def empty_token(self):
     RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
 )
 def malformed_token_string(self):
-    """ClickHouse SHALL reject a garbage string that is not a valid JWT."""
+    """ClickHouse SHALL reject a garbage string that is not a valid JWT.
+
+    Currently expected to fail because ``"not.a.valid-jwt"`` triggers
+    the same uncaught-exception bug pinned by F20 / TOKEN-06: the
+    second segment ``"a"`` is not a valid base64url frame, so
+    ``jwt::decode`` raises ``std::runtime_error("Invalid input: too
+    much fill")`` and ``JwksJwtProcessor::resolveAndValidate`` lets
+    it leak as ``Code: 1001`` (HTTP 500) without an
+    ``AUTHENTICATION_FAILED`` marker.  Registered in
+    ``oauth/regression.py`` ``xfails`` against ``DEFECT_F20``;
+    pull the xfail entry once the fix lands.
+    """
     with Then("ClickHouse rejects the garbage token"):
         assert_token_rejected(token="not.a.valid-jwt")
 
