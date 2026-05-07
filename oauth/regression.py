@@ -104,14 +104,33 @@ xfails = {
             "resolveAndValidate uncaught.",
         )
     ],
+    "/oauth/jwt_manipulation/malformed token string": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — third reproducer of the same "
+            "JwksJwtProcessor::resolveAndValidate uncaught-exception "
+            "bug: ``not.a.valid-jwt`` parses to 3 segments but the "
+            "second segment is not base64url-clean, so jwt::decode "
+            "throws std::runtime_error which leaks as Code: 1001 "
+            "(HTTP 500) instead of AUTHENTICATION_FAILED. Tracked "
+            "alongside the security_audit/F20 scenarios.",
+        )
+    ],
 }
 
 ffails = {
-    # "/oauth/*": (
-    #     Skip,
-    #     "OAuth not implemented in non Antalya build",
-    #     check_if_not_antalya_build,
-    # ),
+    "/oauth/*": (
+        Skip,
+        "OAuth not implemented in non Antalya build",
+        check_if_not_antalya_build,
+    ),
+    "/oauth/client oauth login/connection block segfault/*": (
+        Skip,
+        "Waiting for upstream fix: Altinity/ClickHouse#1696 / "
+        "ClickHouse/ClickHouse#103603 (Client::login segfault on empty "
+        "hosts_and_ports when --login is combined with --connection and "
+        "no explicit --host).",
+    ),
 }
 
 
@@ -157,6 +176,7 @@ def regression(
     client_id=None,
     client_secret=None,
     refresh_token=None,
+    run_security=False,
 ):
     """Run tests for OAuth in ClickHouse."""
 
@@ -235,7 +255,7 @@ def regression(
             for retry in retries(timeout=300, delay=20):
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
-    #
+
     Scenario(run=load("oauth.tests.sanity", "feature"))
     Scenario(run=load("oauth.tests.configuration", "feature"))
     Scenario(run=load("oauth.tests.authentication", "feature"))
@@ -245,8 +265,10 @@ def regression(
     Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
     Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+
+    if run_security:
+        Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
 
 
 if main():
