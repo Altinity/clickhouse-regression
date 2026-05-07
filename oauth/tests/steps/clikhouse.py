@@ -1,6 +1,11 @@
 import json
+import time
 import urllib.parse
-from helpers.common import getuid, KeyWithAttributes
+from helpers.common import (
+    getuid,
+    KeyWithAttributes,
+    create_xml_config_content,
+)
 from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
@@ -287,6 +292,108 @@ def change_user_directories_config(
         config_file=f"user_directory_{processor}.xml",
         node=node,
     )
+
+
+@TestStep(Given)
+def apply_fatal_user_directories_config(
+    self,
+    entries,
+    expected_message,
+    config_file="user_directory_fatal.xml",
+    config_d_dir="/etc/clickhouse-server/config.d",
+    timeout=120,
+    tail=200,
+    node=None,
+):
+    """Write a config overlay that ClickHouse SHALL reject at startup,
+    and verify the rejection message.
+
+    Used for invariants that surface as ``Application: Caught exception
+    while setting up access control`` (e.g. an empty
+    ``<processor></processor>`` inside ``<user_directories>/<token>``,
+    which the docs flag as "mandatory and cannot be empty").
+    ``change_user_directories_config`` cannot test these cases because it
+    goes through ``add_config`` which expects the server to come back
+    healthy after restart and times out waiting for it.
+
+    Why we don't reuse ``helpers.common.add_invalid_config``: that helper
+    cleans up by ``rm -rf``-ing the bad config file on the **host**
+    (under ``CLICKHOUSE_TESTS_DIR/configs/<node>/config.d``). It assumes
+    the config.d directory is bind-mounted from the host. In the OAuth
+    suite ``configs/clickhouse/config.d/*`` is mounted file-by-file, not
+    as a directory, so files that ``node.command`` writes only exist
+    inside the container; a host-side ``rm`` would silently no-op and
+    leave the bad config in place, wedging every subsequent scenario.
+    This helper therefore writes and removes the file via ``node.command``
+    (in-container) and restarts ClickHouse twice on teardown — once to
+    pick up the removal, and a second time to recover from the still-
+    failed previous start (mirroring ``add_invalid_config``'s
+    double-restart contract).
+    """
+    if node is None:
+        node = self.context.node
+
+    config = create_xml_config_content(
+        entries,
+        config_file=config_file,
+        config_d_dir=config_d_dir,
+        preprocessed_name="config.xml",
+    )
+
+    try:
+        with Given("I prepare the error log so the message check can grep cleanly"):
+            node.command(
+                'echo -e "%s" > /var/log/clickhouse-server/clickhouse-server.err.log'
+                % ("-\\n" * tail)
+            )
+
+        with When(f"I write the bad config to {config.path}"):
+            node.command(
+                f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC",
+                steps=False,
+                exitcode=0,
+            )
+
+        with And(
+            "I restart ClickHouse without waiting for healthy "
+            "(the server is supposed to fail to start)"
+        ):
+            node.restart_clickhouse(safe=False, wait_healthy=False)
+
+        with Then(
+            "the error log should contain the expected rejection message",
+            description=f"timeout {timeout}",
+        ):
+            started = time.time()
+            grep_command = (
+                f"tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log "
+                f'| grep -F "{expected_message}"'
+            )
+            exitcode = 1
+            while time.time() - started < timeout:
+                exitcode = node.command(
+                    grep_command, steps=False, no_checks=True
+                ).exitcode
+                if exitcode == 0:
+                    break
+                time.sleep(1)
+            assert exitcode == 0, error(
+                f"Expected error message {expected_message!r} not found in "
+                f"clickhouse-server.err.log within {timeout}s"
+            )
+
+    finally:
+        with Finally(f"I remove {config.path} and restart ClickHouse"):
+            with By("removing the bad config file from inside the container"):
+                node.command(f"rm -rf {config.path}", steps=False, exitcode=0)
+
+            with And("restarting ClickHouse to recover from the failed start"):
+                # Two restarts mirrors ``helpers.common.add_invalid_config``:
+                # the first kicks any wedged process / clears stale pid
+                # state, the second comes up healthy now that the bad
+                # overlay is gone.
+                node.restart_clickhouse(safe=False)
+                node.restart_clickhouse(safe=False)
 
 
 @TestStep(Then)

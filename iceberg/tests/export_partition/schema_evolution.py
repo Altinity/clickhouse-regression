@@ -11,7 +11,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_SchemaEvolution,
     RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations,
     RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations,
     RQ_Iceberg_ExportPartition_SchemaEvolution_SchemaHistory,
@@ -88,10 +87,7 @@ def alter_iceberg_destination(
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_SchemaEvolution("1.0"),
-    RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"))
 @Name("add column between exports")
 def add_column_between_exports(self, minio_root_user, minio_root_password):
     """``ADD COLUMN score Nullable(Int32)`` on both sides between two
@@ -480,7 +476,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution("1.0"))
 @Name("schema evolution")
 def feature(self, minio_root_user, minio_root_password):
     """Schema evolution between EXPORT PARTITION calls. ``no_catalog``

@@ -13,7 +13,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_Transactions,
     RQ_Iceberg_ExportPartition_Transactions_SnapshotChain,
     RQ_Iceberg_ExportPartition_Transactions_Idempotency,
     RQ_Iceberg_ExportPartition_Transactions_CrashRecovery,
@@ -80,10 +79,7 @@ def _disable_failpoint(name, node=None):
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_Transactions("1.0"),
-    RQ_Iceberg_ExportPartition_Transactions_SnapshotChain("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_Transactions_SnapshotChain("1.0"))
 @Name("sequential exports append one append-snapshot each")
 def sequential_exports_append_snapshots(
     self, minio_root_user, minio_root_password
@@ -637,7 +633,6 @@ SCENARIOS = (
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_Transactions("1.0"))
 @Name("transactions")
 def feature(self, minio_root_user, minio_root_password):
     """Atomicity / idempotency / snapshot-linearity scenarios."""

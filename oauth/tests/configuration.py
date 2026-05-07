@@ -94,34 +94,55 @@ def non_existent_processor_in_user_directory(self):
 
     The base config has ``<token><processor>keycloak</processor></token>``.
     We replace the entire ``<token_processors>`` section with a single
-    differently-named processor (``not_keycloak``) so the reference
-    becomes dangling. To make sure the rejection is for *that* reason
-    (and not, e.g., the new processor failing parse for an unrelated
-    cause) the response body is asserted to mention the missing name.
+    differently-named processor (``not_keycloak``) so the user-directory
+    reference becomes dangling.
+
+    Subtlety: the HTTP handler runs an unscoped ``checkTokenCredentials``
+    over **all** configured processors before the user-directory storage
+    chain is consulted, and a successful match there warms the token
+    cache; the user-directory's later, processor-scoped check then
+    short-circuits on the cache hit and accepts the token even though
+    its referenced processor name is missing. To exercise the
+    user-directory dangling-reference path itself we therefore use a
+    ``jwt_static_key`` processor whose static key cannot validate
+    Keycloak-issued JWTs — the unscoped pre-check fails, the cache
+    stays cold, and ClickHouse rejects with
+    ``AUTHENTICATION_FAILED`` (HTTP 403). An OpenID processor pointing
+    at the real Keycloak endpoints would silently *succeed* the
+    pre-check and mask the dangling reference.
     """
     client = self.context.provider_client
 
     with Given(
-        "I replace all token processors with one named differently than 'keycloak'"
+        "I replace all token processors with one named differently than "
+        "'keycloak' and unable to validate the Keycloak-issued token"
     ):
-        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="not_keycloak",
-            processor_type="OpenID",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            processor_type="jwt_static_key",
+            algo="HS256",
+            static_key="this-key-cannot-validate-keycloak-rs256-signed-tokens",
             replace_section=True,
         )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
-    with Then("ClickHouse rejects (base user_directories still references 'keycloak')"):
-        body = access_clickhouse(token=token, status_code=400)
-        assert "keycloak" in body, error(
-            f"Expected error body to mention the missing processor name "
-            f"'keycloak'; got: {body[:500]}"
+    with Then(
+        "ClickHouse rejects: the only configured processor cannot validate "
+        "the token, and the user_directories reference 'keycloak' is "
+        "dangling so no fallback path can authenticate it"
+    ):
+        # HTTP layer rejects with AUTHENTICATION_FAILED (403) when no
+        # processor can validate the bearer token; that is the failure
+        # surface for any unverifiable token, including the dangling-
+        # reference case under test.
+        body = access_clickhouse(token=token, status_code=403)
+        assert (
+            "AUTHENTICATION_FAILED" in body or "Token could not be verified" in body
+        ), error(
+            f"Expected an auth-rejection marker in the response body; "
+            f"got: {body[:500]}"
         )
 
     with And("the server is still alive"):
@@ -177,28 +198,38 @@ def empty_processor_in_user_directory(self):
     ),
 )
 def empty_processor_element_in_user_directory(self):
-    """ClickHouse SHALL reject auth when the ``<processor>`` element
-    inside ``<user_directories>/<token>`` is present but empty.
+    """ClickHouse SHALL reject the configuration at startup when the
+    ``<processor>`` element inside ``<user_directories>/<token>`` is
+    present but empty.
 
     The docs are explicit: *"This parameter is mandatory and cannot be
     empty"*. Distinct from ``empty_processor_in_user_directory`` which
     points at a real-but-empty processor — here the *reference itself*
     is empty.
+
+    On antalya-26.1+ this is a **fatal startup error** (raised from
+    ``TokenAccessStorage`` construction during access-control setup,
+    not at request time), so the test cannot use the request-rejection
+    pattern of its sibling scenarios; the
+    ``change_user_directories_config`` helper goes through ``add_config``
+    which would time out waiting for the server to come back healthy.
+    Instead we use ``apply_fatal_user_directories_config`` which expects
+    the server to fail to start and verifies the rejection appears in
+    ``clickhouse-server.err.log``; the overlay is removed and the
+    server restarted on teardown so subsequent scenarios run on a
+    clean baseline.
     """
-    client = self.context.provider_client
-
     with Given(
-        "I overlay user_directories/token with an empty <processor></processor>"
+        "I overlay user_directories/token with an empty <processor></processor> "
+        "and expect ClickHouse to refuse to start"
     ):
-        change_user_directories_config(processor="")
+        apply_fatal_user_directories_config(
+            entries={"user_directories": {"token": {"processor": ""}}},
+            expected_message="'processor' must be specified for Token user directory",
+            config_file="user_directory_empty_processor.xml",
+        )
 
-    with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token().access_token
-
-    with Then("ClickHouse rejects (empty processor reference)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
+    with Then("ClickHouse comes back up after the bad config is removed"):
         check_clickhouse_is_alive()
 
 

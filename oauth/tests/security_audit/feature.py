@@ -19,6 +19,10 @@ def feature(self):
     Feature(run=load("oauth.tests.security_audit.openid_fallback", "feature"))
     Feature(run=load("oauth.tests.security_audit.authorization_header_leak", "feature"))
     Feature(run=load("oauth.tests.security_audit.introspection_endpoint", "feature"))
+    Feature(run=load("oauth.tests.security_audit.runtime_revocation_jwks", "feature"))
+    Feature(
+        run=load("oauth.tests.security_audit.jwt_decode_uncaught_exception", "feature")
+    )
     Feature(run=load("oauth.tests.security_audit.provider_availability", "feature"))
     Feature(run=load("oauth.tests.security_audit.cache_processor_binding", "feature"))
     Feature(run=load("oauth.tests.security_audit.processor_pin_bypass", "feature"))

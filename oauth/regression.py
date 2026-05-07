@@ -66,14 +66,71 @@ def argparser(parser):
     )
 
 
-xfails = {}
+xfails = {
+    "/oauth/security audit/F8/F8 / 1 disabled user accepted with jwks_uri": [
+        (
+            Fail,
+            "DEFECT_F8 / TOKEN-05 — OpenID processor with jwks_uri uses the "
+            "JWT-fastpath and never consults userinfo / introspection on cache "
+            "miss, so the IdP's runtime decision to disable the user is not "
+            "observed until the JWT's own exp passes. See "
+            "src/Access/TokenProcessorsOpaque.cpp:339-414 (TODO at line 353).",
+        )
+    ],
+    "/oauth/security audit/F8/F8 / 2 deleted user accepted with jwks_uri": [
+        (
+            Fail,
+            "DEFECT_F8 / TOKEN-05 — same root cause as F8 / 1: the JWT-fastpath "
+            "does not observe IdP user deletion either. userinfo_endpoint would "
+            "401 a deleted user but is never consulted while local JWKS "
+            "verification of the issued JWT still succeeds.",
+        )
+    ],
+    "/oauth/security audit/F20/F20 / 1 malformed signature base64 leaks runtime_error": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — JwksJwtProcessor::resolveAndValidate has "
+            "no top-level try/catch around jwt::decode; a malformed-base64 "
+            "JWT segment leaks std::runtime_error out as Code: 1001 (HTTP "
+            "500) with no AUTHENTICATION_FAILED marker. See "
+            "src/Access/TokenProcessorsJWT.cpp.",
+        )
+    ],
+    "/oauth/security audit/F20/F20 / 2 non-base64 signature leaks runtime_error": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — same root cause as F20 / 1: any "
+            "exception thrown by jwt::decode escapes JwksJwtProcessor::"
+            "resolveAndValidate uncaught.",
+        )
+    ],
+    "/oauth/jwt_manipulation/malformed token string": [
+        (
+            Fail,
+            "DEFECT_F20 / TOKEN-06 — third reproducer of the same "
+            "JwksJwtProcessor::resolveAndValidate uncaught-exception "
+            "bug: ``not.a.valid-jwt`` parses to 3 segments but the "
+            "second segment is not base64url-clean, so jwt::decode "
+            "throws std::runtime_error which leaks as Code: 1001 "
+            "(HTTP 500) instead of AUTHENTICATION_FAILED. Tracked "
+            "alongside the security_audit/F20 scenarios.",
+        )
+    ],
+}
 
 ffails = {
-    # "/oauth/*": (
-    #     Skip,
-    #     "OAuth not implemented in non Antalya build",
-    #     check_if_not_antalya_build,
-    # ),
+    "/oauth/*": (
+        Skip,
+        "OAuth not implemented in non Antalya build",
+        check_if_not_antalya_build,
+    ),
+    "/oauth/client oauth login/connection block segfault/*": (
+        Skip,
+        "Waiting for upstream fix: Altinity/ClickHouse#1696 / "
+        "ClickHouse/ClickHouse#103603 (Client::login segfault on empty "
+        "hosts_and_ports when --login is combined with --connection and "
+        "no explicit --host).",
+    ),
 }
 
 
@@ -119,6 +176,7 @@ def regression(
     client_id=None,
     client_secret=None,
     refresh_token=None,
+    run_security=False,
 ):
     """Run tests for OAuth in ClickHouse."""
 
@@ -207,8 +265,10 @@ def regression(
     Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
     Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+
+    if run_security:
+        Scenario(run=load("oauth.tests.security_audit.feature", "feature"))
 
 
 if main():

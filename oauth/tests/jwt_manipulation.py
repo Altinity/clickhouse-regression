@@ -3,6 +3,21 @@ from testflows.asserts import *
 from oauth.requirements.requirements import *
 
 
+def _split_jwt(token):
+    """Return ``(header, payload, signature)`` segments of a JWT.
+
+    Lightweight string-only split — does NOT base64-decode. Used by
+    scenarios that need to look at or replace one segment with another
+    string of the same length. Re-using
+    ``provider_protocol._decode_jwt_token`` would force a base64 round
+    trip we don't want here.
+    """
+    parts = token.split(".")
+    if len(parts) != 3:
+        raise ValueError(f"Expected a 3-part JWT, got {len(parts)} parts")
+    return parts[0], parts[1], parts[2]
+
+
 @TestScenario
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
@@ -28,7 +43,15 @@ def modify_alg_to_none(self):
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
 )
 def modify_alg_to_hs256(self):
-    """ClickHouse SHALL reject a token with alg changed to HS256 (algorithm confusion)."""
+    """ClickHouse SHALL reject a token with alg changed to HS256 (algorithm confusion).
+
+    Uses ``assert_token_rejected`` rather than a pinned status code: per
+    ``oauth/KNOWLEDGE.md`` §"HTTP Status Codes" the JWT-rejection path
+    consistently surfaces as ``AUTHENTICATION_FAILED`` → HTTP 403; the
+    helper accepts any of 401/403/500 with a recognizable rejection
+    marker so the test stays correct if upstream consolidates the
+    mapping further. See also ``audit-suite-review.md`` §3.2.
+    """
     client = self.context.provider_client
 
     with Given("I get a valid token"):
@@ -40,7 +63,7 @@ def modify_alg_to_hs256(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -60,7 +83,7 @@ def modify_typ_to_invalid(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -80,7 +103,7 @@ def modify_kid_to_invalid(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -100,7 +123,7 @@ def modify_exp_to_past(self):
         )
 
     with Then("ClickHouse rejects the expired token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -120,7 +143,7 @@ def modify_sub_to_invalid(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -140,7 +163,7 @@ def modify_azp_to_invalid(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -148,19 +171,43 @@ def modify_azp_to_invalid(self):
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Signature("1.0"),
 )
 def replace_signature_entirely(self):
-    """ClickHouse SHALL reject a token with a completely replaced signature."""
+    """ClickHouse SHALL reject a token with a completely replaced signature.
+
+    The replacement must be **base64url-valid** so that we exercise the
+    signature-verification path (which surfaces as
+    ``AUTHENTICATION_FAILED`` → HTTP 403). Earlier versions of this
+    scenario used the literal string ``"totally-invalid-signature"``;
+    that is base64url-clean by alphabet but the wrong length-modulo-4
+    after ``jwt-cpp`` pads it, which makes the underlying base64
+    decoder throw ``std::runtime_error("Invalid input: too much
+    fill")``. ``JwksJwtProcessor::resolveAndValidate`` does not wrap
+    ``jwt::decode`` in a top-level ``try/catch`` (unlike
+    ``StaticKeyJwtProcessor``), so the exception propagates out as
+    ``Code: 1001`` with no rejection marker — the bug is tracked
+    separately as F20 / TOKEN-06 in
+    ``oauth/tests/defects_catalogue.py`` and
+    ``security_audit/jwt_decode_uncaught_exception.py``. Using a
+    base64url-clean replacement of correct length here keeps this
+    scenario focused on its stated assertion (signature mismatch) and
+    avoids accidentally testing the same bug twice.
+    """
     client = self.context.provider_client
 
     with Given("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
-    with When("I replace the signature with garbage"):
+    with When(
+        "I replace the signature with base64url-valid garbage of "
+        "matching length (decodes cleanly, but verifies to nothing)"
+    ):
+        _, _, original_signature = _split_jwt(token)
+        garbage = "A" * len(original_signature)
         modified = client.OAuthProvider.modify_jwt_token(
-            token=token, signature_change="totally-invalid-signature"
+            token=token, signature_change=garbage
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -180,7 +227,7 @@ def remove_signature(self):
         )
 
     with Then("ClickHouse rejects the token"):
-        access_clickhouse(token=modified, status_code=500)
+        assert_token_rejected(token=modified)
 
 
 @TestScenario
@@ -198,9 +245,20 @@ def empty_token(self):
     RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
 )
 def malformed_token_string(self):
-    """ClickHouse SHALL reject a garbage string that is not a valid JWT."""
+    """ClickHouse SHALL reject a garbage string that is not a valid JWT.
+
+    Currently expected to fail because ``"not.a.valid-jwt"`` triggers
+    the same uncaught-exception bug pinned by F20 / TOKEN-06: the
+    second segment ``"a"`` is not a valid base64url frame, so
+    ``jwt::decode`` raises ``std::runtime_error("Invalid input: too
+    much fill")`` and ``JwksJwtProcessor::resolveAndValidate`` lets
+    it leak as ``Code: 1001`` (HTTP 500) without an
+    ``AUTHENTICATION_FAILED`` marker.  Registered in
+    ``oauth/regression.py`` ``xfails`` against ``DEFECT_F20``;
+    pull the xfail entry once the fix lands.
+    """
     with Then("ClickHouse rejects the garbage token"):
-        access_clickhouse(token="not.a.valid-jwt", status_code=500)
+        assert_token_rejected(token="not.a.valid-jwt")
 
 
 @TestFeature

@@ -263,7 +263,6 @@ def alternating_export_insert(self, minio_root_user, minio_root_password):
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_DirectWrites("1.0"))
 @Name("direct writes")
 def feature(self, minio_root_user, minio_root_password):
     """Direct INSERT after / around EXPORT PARTITION."""

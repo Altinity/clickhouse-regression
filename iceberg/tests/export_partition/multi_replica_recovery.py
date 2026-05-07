@@ -20,7 +20,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_MultiReplicaRecovery,
     RQ_Iceberg_ExportPartition_MultiReplicaRecovery_CrossReplicaConcurrency,
     RQ_Iceberg_ExportPartition_MultiReplicaRecovery_InitiatorFailover,
     RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce,
@@ -51,7 +50,6 @@ from iceberg.tests.export_partition.steps.manifest_validation import (
 from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
 )
-
 
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
@@ -193,19 +191,7 @@ def _disturb_zookeeper_docker_kill(self):
     _zk_wait_healthy(zk, timeout=120)
 
 
-def _require_multi_replica_catalog_mode(self):
-    """Gate scenarios that need >=2 CH replicas + a catalog-mode destination.
-
-    See the module docstring for why ``no_catalog`` is out of scope.
-    """
-    if not hasattr(self.context, "nodes") or len(self.context.nodes) < 2:
-        skip("need at least two ClickHouse replicas")
-    if self.context.catalog == "no":
-        skip(
-            "multi-replica EXPORT PARTITION needs a catalog-registered "
-            "destination shared across nodes; no_catalog mode has each "
-            "replica managing its own IcebergS3 table"
-        )
+CATALOG_MODES_FOR_MULTI_REPLICA = ("ice", "glue")
 
 
 def _setup_replicated_source(table_name, nodes):
@@ -238,8 +224,6 @@ def concurrent_cross_replica_different_partitions(
     table; the destination ends with two append snapshots chained
     head-to-tail and both partitions' rows reachable.
     """
-    _require_multi_replica_catalog_mode(self)
-
     replica1 = self.context.nodes[0]
     replica2 = self.context.nodes[1]
     table_name = f"mt_{getuid()}"
@@ -353,8 +337,6 @@ def concurrent_cross_replica_same_partition_idempotent(
     (``BAD_ARGUMENTS`` / "Export with key ..."), and the destination
     ends with exactly one append snapshot.
     """
-    _require_multi_replica_catalog_mode(self)
-
     replica1 = self.context.nodes[0]
     replica2 = self.context.nodes[1]
     table_name = f"mt_{getuid()}"
@@ -547,8 +529,6 @@ def _run_multi_replica_zk_recovery(
     is applied mid-flight, and both commits must converge with the
     destination ending in two linearised append snapshots and no row loss.
     """
-    _require_multi_replica_catalog_mode(self)
-
     replica1 = self.context.nodes[0]
     replica2 = self.context.nodes[1]
     table_name = f"mt_{getuid()}"
@@ -662,8 +642,6 @@ def initiator_dies_mid_commit_peer_finalizes_exactly_once(
     must prevent a double-commit. The destination ends with exactly one
     append snapshot carrying the transaction-id marker.
     """
-    _require_multi_replica_catalog_mode(self)
-
     replica1 = self.context.nodes[0]
     replica2 = self.context.nodes[1]
     table_name = f"mt_{getuid()}"
@@ -779,10 +757,7 @@ def initiator_dies_mid_commit_peer_finalizes_exactly_once(
 
 
 @TestScenario
-@Requirements(
-    RQ_Iceberg_ExportPartition_MultiReplicaRecovery("1.0"),
-    RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"),
-)
+@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery_ZooKeeperBounce("1.0"))
 @Name("export recovers after a ZooKeeper restart mid-flight")
 def export_recovers_after_zookeeper_restart(
     self, minio_root_user, minio_root_password
@@ -849,7 +824,6 @@ def cross_replica_exports_survive_zookeeper_docker_kill(
         minio_root_password=minio_root_password,
     )
 
-
 # =============================================================================
 # Stress-only randomised replica chaos
 # =============================================================================
@@ -892,7 +866,6 @@ def _kill_container_stop(victim):
     back up before CH can boot.
     """
     victim.stop()
-
 
 # (label, kill_fn) pairs the stress scenarios pick from at random. Revival
 # is uniformly handled by :func:`_ensure_alive` regardless of which kill
@@ -980,18 +953,6 @@ def _assert_snapshot_chain_valid(snapshots, *, where):
         )
 
 
-def _require_stress(self):
-    """Skip the scenario unless the regression was launched with ``--stress``.
-
-    Stress scenarios run randomised disruption loops that cost minutes
-    each; defaulting them off keeps every other CI run fast. Pair this
-    with :func:`_require_multi_replica_catalog_mode` for chaos scenarios
-    that also need a shared Iceberg destination.
-    """
-    if not getattr(self.context, "stress", False):
-        skip("stress-only scenario; pass --stress to enable")
-
-
 def _setup_chaos_table_with_destination(
     self,
     replicas,
@@ -1033,7 +994,6 @@ def _setup_chaos_table_with_destination(
         )
 
     return table_name, destination
-
 
 @TestStep(When)
 def _run_chaos_loop(self, kill_candidates, duration_s, rng):
@@ -1228,9 +1188,6 @@ def stress_replica_kill_at_random_phase(
     with random phase, kill mode, and restart policy. Each iteration must
     converge to a terminal status with snapshot integrity preserved.
     """
-    _require_stress(self)
-    _require_multi_replica_catalog_mode(self)
-
     rng = random.Random(getuid())
 
     initiator = self.context.nodes[0]
@@ -1284,9 +1241,6 @@ def stress_initiator_repeated_bounce(
     perspective, and the destination must hold at most one append
     snapshot for the partition (no double-commit across bounce cycles).
     """
-    _require_stress(self)
-    _require_multi_replica_catalog_mode(self)
-
     rng = random.Random(getuid())
 
     initiator = self.context.nodes[0]
@@ -1371,9 +1325,6 @@ def stress_multi_partition_chaos(
     chain must be linear and txn-id-tagged, and the snapshot count must
     not exceed the partition count (no double-commits).
     """
-    _require_stress(self)
-    _require_multi_replica_catalog_mode(self)
-
     rng = random.Random(getuid())
 
     # Two replicas: one initiates exports + acts as chaos victim, the
@@ -1461,25 +1412,41 @@ def stress_multi_partition_chaos(
 
 
 SCENARIOS = (
-    concurrent_cross_replica_different_partitions,
-    concurrent_cross_replica_same_partition_idempotent,
-    initiator_dies_mid_commit_peer_finalizes_exactly_once,
-    export_recovers_after_zookeeper_restart,
-    export_recovers_after_zookeeper_docker_kill,
-    cross_replica_exports_survive_zookeeper_restart,
-    cross_replica_exports_survive_zookeeper_docker_kill,
-    stress_replica_kill_at_random_phase,
-    stress_initiator_repeated_bounce,
-    stress_multi_partition_chaos,
+    # (scenario, requires_stress_flag)
+    (concurrent_cross_replica_different_partitions, False),
+    (concurrent_cross_replica_same_partition_idempotent, False),
+    (initiator_dies_mid_commit_peer_finalizes_exactly_once, False),
+    (export_recovers_after_zookeeper_restart, False),
+    (export_recovers_after_zookeeper_docker_kill, False),
+    (cross_replica_exports_survive_zookeeper_restart, False),
+    (cross_replica_exports_survive_zookeeper_docker_kill, False),
+    (stress_replica_kill_at_random_phase, True),
+    (stress_initiator_repeated_bounce, True),
+    (stress_multi_partition_chaos, True),
 )
 
 
 @TestFeature
-@Requirements(RQ_Iceberg_ExportPartition_MultiReplicaRecovery("1.0"))
 @Name("multi replica recovery")
 def feature(self, minio_root_user, minio_root_password):
-    """Multi-replica EXPORT PARTITION concurrency and ZooKeeper recovery."""
-    for scenario in SCENARIOS:
+    """Multi-replica EXPORT PARTITION concurrency and ZooKeeper recovery.
+
+    Catalog-mode and stress applicability are filtered at load time so
+    not-applicable scenarios are never registered (avoids penalising
+    requirement-satisfaction with not-applicable runtime ``skip()``s).
+    """
+    if not hasattr(self.context, "nodes") or len(self.context.nodes) < 2:
+        skip("need at least two ClickHouse replicas")
+    if self.context.catalog not in CATALOG_MODES_FOR_MULTI_REPLICA:
+        skip(
+            "multi-replica EXPORT PARTITION needs a catalog-registered "
+            "destination shared across nodes; no_catalog mode has each "
+            "replica managing its own IcebergS3 table"
+        )
+    is_stress = getattr(self.context, "stress", False)
+    for scenario, requires_stress in SCENARIOS:
+        if requires_stress and not is_stress:
+            continue
         Scenario(test=scenario, flags=TE)(
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
