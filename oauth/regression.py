@@ -148,6 +148,25 @@ xfails = {
             "rejecting duplicate <token> children.",
         )
     ],
+    "/oauth/cache semantics/cache entry capped at token exp when token expires first": [
+        (
+            Fail,
+            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL "
+            "on the StaticKeyJwtProcessor / JwksJwtProcessor fastpaths. "
+            "resolveAndValidate never calls "
+            "credentials.setExpiresAt(decoded_jwt.get_expires_at()) on "
+            "the JWT codepaths, so a token past its IdP-issued exp "
+            "keeps authenticating for up to token_cache_lifetime. The "
+            "opaque/OpenID-userinfo paths set it correctly; the bug "
+            "is specific to the JWT fastpath this scenario exercises "
+            "(OpenID processor with jwks_uri configured). Violates SRS "
+            "13.1.5 'Common.Cache.Behavior' which mandates "
+            "cache_entry_expires_at = min(token.exp, now + "
+            "token_cache_lifetime). Will go green once "
+            "TokenProcessorsJWT.cpp propagates exp to the cache write "
+            "in ExternalAuthenticators.cpp:624-640.",
+        )
+    ],
 }
 
 ffails = {
