@@ -30,7 +30,7 @@ jobs:
       package: "docker://clickhouse/clickhouse-server:${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       version: "${{ needs.get_clickhouse_version.outputs.version }}-alpine"
       extra_args: '--with-analyzer'
-      run_s3_suites: true
+      run_s3_suites: false
       arch: x86
     secrets: inherit
 

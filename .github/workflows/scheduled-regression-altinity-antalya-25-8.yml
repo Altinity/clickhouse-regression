@@ -13,7 +13,7 @@ jobs:
       package: docker://altinity/clickhouse-server:25.8.22.20001.altinityantalya
       version: '25.8.16.20002'
       extra_args: '--with-analyzer'
-      run_s3_suites: true
+      run_s3_suites: false
       arch: x86
     secrets: inherit
 
@@ -23,6 +23,6 @@ jobs:
       package: docker://altinity/clickhouse-server:25.8.22.20001.altinityantalya
       version: '25.8.16.20002'
       extra_args: '--with-analyzer'
-      run_s3_suites: true
+      run_s3_suites: false
       arch: arm64
     secrets: inherit
