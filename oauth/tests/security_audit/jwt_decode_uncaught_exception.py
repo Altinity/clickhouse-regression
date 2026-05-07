@@ -1,6 +1,8 @@
-"""[F20 / TOKEN-06] Uncaught std::runtime_error from jwt::decode.
+"""[H-16] Uncaught std::runtime_error from jwt::decode.
 
-See ``DEFECT_F20`` in ``oauth/tests/defects_catalogue.py``.
+See ``oauth/new_audit_review/all-issues.md`` (Series A, H-16) and
+``DEFECT_H16`` in ``oauth/tests/defects_catalogue.py``. Legacy aliases:
+F20 / TOKEN-06 used in earlier drafts of this suite — same defect.
 
 ``JwksJwtProcessor::resolveAndValidate``
 (``src/Access/TokenProcessorsJWT.cpp`` in antalya-26.1) calls
@@ -10,6 +12,12 @@ by JWT parsing therefore propagates out of the processor and out of
 ``ExternalAuthenticators::checkCredentialsAgainstProcessor``,
 ultimately surfacing in the HTTP response as a generic ``Code: 1001``
 ``std::runtime_error`` with the underlying library's error message.
+
+H-16 in ``all-issues.md`` is framed around the iteration-abort
+consequence (later processors never tried). The scenarios in this file
+pin the *exception-leak* consequence (HTTP 500 + library detail
+leakage) of the same root cause. Companion scenario in
+``fail_closed_config.py`` (H-16 / 1) pins the iteration-abort angle.
 
 Concrete consequences:
 
@@ -30,7 +38,7 @@ Concrete consequences:
    ``jwt::decode`` itself escapes.
 
 These scenarios are expected to FAIL on current antalya-26.1
-(``DEFECT_F20``). They are registered in ``oauth/regression.py`` under
+(``DEFECT_H16``). They are registered in ``oauth/regression.py`` under
 ``xfails`` so CI surfaces them as expected failures, not regressions.
 Remove the xfail entries once the upstream fix lands — the fix is a
 one-line ``try``/``catch`` wrapper around the body of
@@ -56,9 +64,9 @@ def _swap_jwt_segment(token, index, new_segment):
 
 
 @TestScenario
-@Name("F20 / 1 malformed signature base64 leaks runtime_error")
+@Name("H-16 / 2 malformed signature base64 leaks runtime_error")
 def malformed_signature_leaks_runtime_error(self):
-    """[F20 / TOKEN-06]
+    """[H-16]
     A token with a signature segment that is base64url-shaped but has a
     length that ``jwt-cpp``'s ``jwt::base::pad`` /
     ``jwt::base::decode<base64url>`` rejects with
@@ -91,10 +99,10 @@ def malformed_signature_leaks_runtime_error(self):
 
 
 @TestScenario
-@Name("F20 / 2 non-base64 signature leaks runtime_error")
+@Name("H-16 / 3 non-base64 signature leaks runtime_error")
 def non_base64_signature_leaks_runtime_error(self):
-    """[F20 / TOKEN-06]
-    Variant of F20 / 1 that uses obvious non-base64 characters in the
+    """[H-16]
+    Variant of H-16 / 2 that uses obvious non-base64 characters in the
     signature segment (``$`` is not in the base64url alphabet). The
     ``jwt::base::decode<base64url>`` call raises
     ``std::runtime_error("Invalid input")``, which escapes
@@ -120,9 +128,14 @@ def non_base64_signature_leaks_runtime_error(self):
 
 
 @TestFeature
-@Name("F20")
+@Name("H-16 jwt decode uncaught")
 def feature(self):
-    """[F20 / TOKEN-06] Uncaught std::runtime_error from jwt::decode in
-    JwksJwtProcessor::resolveAndValidate."""
+    """[H-16] Uncaught std::runtime_error from jwt::decode in
+    JwksJwtProcessor::resolveAndValidate.
+
+    Distinct feature name from ``fail_closed_config.py``'s feature
+    (which also covers H-16 from the iteration-abort angle) so
+    testflows can host both at the same level.
+    """
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)

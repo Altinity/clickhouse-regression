@@ -286,9 +286,20 @@ def user_with_no_groups_gets_common_roles(self):
 @TestScenario
 @Requirements(
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoDefaultRole("1.0"),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token_roles(
+        "1.0"
+    ),
 )
 def user_with_no_groups_and_no_common_roles(self):
-    """A user with no groups and no ``common_roles`` SHALL authenticate but have no privileges."""
+    """A user with no groups and no ``common_roles`` SHALL authenticate but have no privileges.
+
+    Doubles as the regression for SRS 6.2.1.2.6 — *"the roles section
+    is not defined in the token section of user_directories"*: no
+    privileges to access resources is the spec's "SHALL not allow …
+    to authenticate and access resources" outcome on a token user
+    directory whose ``<common_roles>`` is omitted and whose user has
+    no IdP-side group mappings.
+    """
     client = self.context.provider_client
     uid = getuid()[:8]
     username = f"norole_{uid}"
