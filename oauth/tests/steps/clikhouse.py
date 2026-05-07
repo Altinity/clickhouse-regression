@@ -167,6 +167,7 @@ def change_token_processors(
     token_introspection_endpoint=None,
     expected_issuer=None,
     expected_audience=None,
+    allow_no_expiration=None,
     processor_type=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
@@ -226,6 +227,15 @@ def change_token_processors(
 
     if expected_audience is not None:
         proc["expected_audience"] = expected_audience
+
+    if allow_no_expiration is not None:
+        # XML-friendly bool: ClickHouse parses 1 / 0 (or true / false)
+        # as a Boolean. The tests pass actual bools; serialise them to
+        # the canonical string form here.
+        if isinstance(allow_no_expiration, bool):
+            proc["allow_no_expiration"] = "true" if allow_no_expiration else "false"
+        else:
+            proc["allow_no_expiration"] = str(allow_no_expiration)
 
     if replace:
         proc_key = KeyWithAttributes(processor_name, {"replace": "replace"})
