@@ -429,6 +429,262 @@ def valid_openid_processor_type(self):
         access_clickhouse(token=token, status_code=200)
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_token_roles(
+        "1.0"
+    ),
+)
+def invalid_roles_filter_regex_in_user_directory(self):
+    """ClickHouse SHALL not allow the external user to authenticate when
+    the ``roles_filter`` inside ``user_directories/token`` is not a
+    valid regex.
+
+    Maps to SRS 6.2.1.1.3 — "incorrectly defined roles section".
+    The ``[invalid regex`` pattern has an unmatched ``[``; std::regex
+    rejects it at construction time. Either ClickHouse refuses to
+    apply the overlay (HTTP error on first auth) or the regex compiler
+    throws on first use; the spec only requires that the user is not
+    authenticated, so we accept any non-200 outcome with an auth /
+    config rejection marker.
+
+    **Currently xfailed** as ``DEFECT_H06`` (alias ``F16 / AUTHZ-02``) —
+    invalid ``roles_filter`` regex fails open on antalya-26.1: ClickHouse
+    silently tolerates the malformed pattern and grants the token's
+    ``<common_roles>`` as if no filter were configured. The sibling
+    ``security_audit/H-06`` scenarios pin the *buggy* behaviour
+    (``status_code=200``) so the regression alarms when the fix
+    flips it; this scenario pins the *spec-correct* behaviour
+    (``assert_token_rejected``) so the same fix flips this one
+    green from xfail.
+    """
+    client = self.context.provider_client
+
+    with Given("I configure user_directories with an invalid roles_filter regex"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+            roles_filter="[invalid regex",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then(
+        "ClickHouse does not authenticate the request (the invalid "
+        "regex prevents role mapping)"
+    ):
+        assert_token_rejected(token=token)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_TokenProcessors_multipleEntries(
+        "1.0"
+    ),
+)
+def multiple_token_entries_in_user_directories(self):
+    """ClickHouse SHALL not allow the external user to authenticate
+    when ``user_directories`` contains multiple ``<token>`` entries
+    that resolve to the same processor.
+
+    Maps to SRS 6.2.1.1.4 — "multiple entries that are the same".
+
+    The overlay swaps ``<user_directories>`` for one that contains
+    two ``<token>`` siblings both pointing at ``keycloak`` (the XML
+    writer in ``helpers.common._create_xml_tree`` materialises a
+    list-of-dicts as repeated sibling tags).
+
+    **Currently xfailed** as ``DEFECT_M33`` (alias ``CFG-04``) —
+    antalya-26.1 silently merges the duplicate siblings and auth
+    proceeds with whichever entry won the merge (HTTP 200,
+    ``currentUser()`` returns the IdP-issued user UUID). Same
+    fail-open family as ``H-06`` / ``H-07``. The scenario asserts the
+    spec-correct outcome (``assert_token_rejected``) so it will flip
+    green when the config parser starts rejecting duplicate
+    ``<token>`` children. New finding from runtime regression
+    testing — registered as next Series-A medium per
+    ``oauth/new_audit_review/all-issues.md`` §4 ("continue Series A
+    (H-30, M-33, L-22, …) for issues surfaced by the audit-review
+    skill workflow").
+    """
+    client = self.context.provider_client
+
+    with Given(
+        "I overlay <user_directories replace> with two <token> blocks "
+        "pointing at the same processor"
+    ):
+        # Pass the two <token> children as a list — the XML writer
+        # in helpers.common._create_xml_tree treats list-of-dicts as
+        # a request for sibling elements with the same tag.
+        entries = {
+            KeyWithAttributes("user_directories", {"replace": "replace"}): {
+                "token": [
+                    {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                    },
+                    {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                    },
+                ],
+            }
+        }
+        change_clickhouse_config(
+            entries=entries,
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+            restart=True,
+            config_file="user_directory_duplicate_token.xml",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then(
+        "ClickHouse refuses the auth (duplicate <token> binding is an "
+        "invalid configuration per SRS 6.2.1.1.4)"
+    ):
+        assert_token_rejected(token=token)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_AccessTokenProcessors(
+        "1.0"
+    ),
+)
+def empty_token_processors_section(self):
+    """ClickHouse SHALL not allow the external user to authenticate
+    when the ``token_processors`` section is present but empty (no
+    processors defined).
+
+    Maps to SRS 6.2.1.2.1 — "token_processors section is not defined".
+    We use ``replace_section=True`` to wipe the base ``<keycloak>``
+    processor and overlay an empty ``<token_processors/>`` element.
+    The user_directories block still references ``keycloak`` but
+    that name no longer resolves; auth SHALL fail.
+    """
+    client = self.context.provider_client
+
+    with Given("I overlay an empty <token_processors replace> section"):
+        entries = {KeyWithAttributes("token_processors", {"replace": "replace"}): {}}
+        change_clickhouse_config(
+            entries=entries,
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+            restart=True,
+            config_file="empty_token_processors.xml",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
+        access_clickhouse(token=token, status_code=400)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories(
+        "1.0"
+    ),
+)
+def empty_user_directories_section(self):
+    """ClickHouse SHALL not allow the external user to authenticate
+    when the ``user_directories`` section is empty (no ``<token>``
+    binding to any processor).
+
+    Maps to SRS 6.2.1.2.3 — "user_directories section is not defined".
+    The processor itself is intact and the unscoped HTTP-layer
+    pre-check would normally accept the token, but with no token
+    user-directory there is no storage to materialise the user, so
+    the request SHALL still be rejected.
+    """
+    client = self.context.provider_client
+
+    with Given("I overlay an empty <user_directories replace> section"):
+        entries = {KeyWithAttributes("user_directories", {"replace": "replace"}): {}}
+        change_clickhouse_config(
+            entries=entries,
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+            restart=True,
+            config_file="empty_user_directories.xml",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then(
+        "ClickHouse refuses the auth (no <token> user directory is "
+        "configured to back the IdP-issued user)"
+    ):
+        assert_token_rejected(token=token)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Authentication_UserDirectories_MissingConfiguration_UserDirectories_token(
+        "1.0"
+    ),
+)
+def user_directories_without_token_block(self):
+    """ClickHouse SHALL not allow the external user to authenticate
+    when ``user_directories`` is present but does not contain a
+    ``<token>`` block.
+
+    Maps to SRS 6.2.1.2.4 — "token section is not defined in
+    user_directories". We replace ``<user_directories>`` with a
+    section that has only a ``<users_xml>`` child (which references a
+    file that does not contain external IdP users), so there is no
+    storage that can materialise the Keycloak-issued user.
+    """
+    client = self.context.provider_client
+
+    with Given(
+        "I overlay <user_directories replace> with a non-token entry only "
+        "(users_xml pointing at the seeded local users file)"
+    ):
+        entries = {
+            KeyWithAttributes("user_directories", {"replace": "replace"}): {
+                "users_xml": {"path": "users.xml"},
+            }
+        }
+        change_clickhouse_config(
+            entries=entries,
+            config_d_dir="/etc/clickhouse-server/config.d",
+            preprocessed_name="config.xml",
+            restart=True,
+            config_file="user_directories_no_token.xml",
+        )
+
+    with And("I get a valid token"):
+        token = client.OAuthProvider.get_oauth_token().access_token
+
+    with Then(
+        "ClickHouse refuses the auth (the IdP-issued user has no "
+        "token user-directory to land in)"
+    ):
+        assert_token_rejected(token=token)
+
+    with And("the server is still alive"):
+        check_clickhouse_is_alive()
+
+
 @TestFeature
 @Name("configuration")
 @Requirements(
@@ -439,6 +695,8 @@ def valid_openid_processor_type(self):
         "1.0"
     ),
     RQ_SRS_042_OAuth_EnableTokenAuth("1.0"),
+    RQ_SRS_042_OAuth_Authentication_UserDirectories("1.0"),
+    RQ_SRS_042_OAuth_IdentityProviders_AccessTokenProcessors("1.0"),
 )
 def feature(self):
     """Test OAuth token processor and user directory configuration validation."""
@@ -450,6 +708,11 @@ def feature(self):
     Scenario(run=openid_processor_with_no_endpoints_rejected)
     Scenario(run=openid_processor_with_all_endpoints_rejected)
     Scenario(run=valid_openid_processor_type)
+    Scenario(run=invalid_roles_filter_regex_in_user_directory)
+    Scenario(run=multiple_token_entries_in_user_directories)
+    Scenario(run=empty_token_processors_section)
+    Scenario(run=empty_user_directories_section)
+    Scenario(run=user_directories_without_token_block)
     # enable_token_auth disabled at startup — placed last because it
     # restarts the server twice (disable + cleanup-restore).
     Scenario(run=enable_token_auth_disabled_rejects_tokens)

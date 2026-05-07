@@ -1,7 +1,8 @@
-"""[F8 / TOKEN-05] OpenID runtime revocation gap when ``jwks_uri`` is set.
+"""[M-06] OpenID runtime revocation gap when ``jwks_uri`` is set.
 
-See ``oauth/new_audit_review/combined-issues.md`` and ``DEFECT_F8`` in
-``oauth/tests/defects_catalogue.py``.
+See ``oauth/new_audit_review/all-issues.md`` (Series A, M-06) and
+``DEFECT_M06`` in ``oauth/tests/defects_catalogue.py``. Legacy aliases:
+F8 / TOKEN-05 in ``audit-gist.md`` — same defect.
 
 These scenarios exercise the production-default OpenID configuration
 (``jwks_uri`` + ``userinfo_endpoint`` + ``token_introspection_endpoint``
@@ -19,7 +20,7 @@ cache entries — neither of which observes the IdP's runtime decisions
 (disable, delete, force-revoke, group removal).
 
 These scenarios are expected to FAIL on current antalya-26.1
-(``DEFECT_F8``). They are registered in ``oauth/regression.py`` under
+(``DEFECT_M06``). They are registered in ``oauth/regression.py`` under
 ``xfails`` so CI surfaces them as expected failures, not regressions.
 Remove the xfail entries once the upstream fix lands.
 
@@ -28,6 +29,11 @@ Companion scenarios in ``oauth/tests/groups.py``
 ``deleted_user_rejected_after_cache``) exercise the same eviction path
 *without* ``jwks_uri`` — i.e. they prove the fallback path works. The
 scenarios here pin the bug on the production path.
+
+Companion scenarios in ``introspection_endpoint.py`` (M-06 / 1, M-06 / 2)
+pin the same defect from the config-time / endpoint-never-called angle;
+the scenarios in this file (M-06 / 3, M-06 / 4) pin the runtime
+security-impact angle (revocation / deletion not observed).
 """
 
 import time
@@ -50,7 +56,7 @@ def _configure_short_cache_with_jwks(self, *, token_cache_lifetime):
 
     Uses ``jwks_uri`` + ``userinfo_endpoint`` + ``token_introspection_endpoint``,
     which is the most common deployer configuration and the path on
-    which F8 / TOKEN-05 manifests.
+    which M-06 (alias F8 / TOKEN-05) manifests.
     """
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -70,9 +76,9 @@ def _configure_short_cache_with_jwks(self, *, token_cache_lifetime):
 
 
 @TestScenario
-@Name("F8 / 1 disabled user accepted with jwks_uri")
+@Name("M-06 / 3 disabled user accepted with jwks_uri")
 def disabled_user_accepted_after_cache_with_jwks(self):
-    """[F8 / TOKEN-05]
+    """[M-06]
     With ``jwks_uri`` set, a disabled IdP user's previously-cached
     token SHOULD be rejected after the token cache expires, but
     ClickHouse keeps accepting it because the JWT-fastpath re-decodes
@@ -80,11 +86,11 @@ def disabled_user_accepted_after_cache_with_jwks(self):
     ``userinfo_endpoint`` or ``token_introspection_endpoint``.
 
     Asserts the *correct* security behavior (rejection). Currently
-    expected to fail until F8 is fixed upstream.
+    expected to fail until M-06 is fixed upstream.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
-    username = f"f8disuser_{uid}"
+    username = f"m06disuser_{uid}"
     cache_lifetime = 3
 
     with Given(f"I create user '{username}'"):
@@ -135,10 +141,10 @@ def disabled_user_accepted_after_cache_with_jwks(self):
 
 
 @TestScenario
-@Name("F8 / 2 deleted user accepted with jwks_uri")
+@Name("M-06 / 4 deleted user accepted with jwks_uri")
 def deleted_user_accepted_after_cache_with_jwks(self):
-    """[F8 / TOKEN-05]
-    Same as scenario 1 but the IdP user is deleted rather than
+    """[M-06]
+    Same as scenario M-06 / 3 but the IdP user is deleted rather than
     disabled. The JWT-fastpath does not observe the deletion either —
     ``userinfo_endpoint`` would 401 for a deleted user, but it is never
     consulted while local JWKS verification still succeeds against the
@@ -146,7 +152,7 @@ def deleted_user_accepted_after_cache_with_jwks(self):
     """
     client = self.context.provider_client
     uid = getuid()[:8]
-    username = f"f8deluser_{uid}"
+    username = f"m06deluser_{uid}"
     cache_lifetime = 3
 
     with Given(f"I create user '{username}'"):
@@ -196,8 +202,13 @@ def deleted_user_accepted_after_cache_with_jwks(self):
 
 
 @TestFeature
-@Name("F8")
+@Name("M-06 runtime revocation")
 def feature(self):
-    """[F8 / TOKEN-05] OpenID runtime revocation gap with ``jwks_uri``."""
+    """[M-06] OpenID runtime revocation gap with ``jwks_uri`` set.
+
+    Distinct feature name from ``introspection_endpoint.py``'s
+    ``M-06`` feature so testflows can host both at the same level.
+    Both features pin the same defect from different angles.
+    """
     for scenario in loads(current_module(), Scenario):
         Scenario(run=scenario)
