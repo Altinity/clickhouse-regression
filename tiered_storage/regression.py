@@ -489,7 +489,7 @@ def regression(
         environ={"AWS_DEFAULT_REGION": aws_region},
     ) as cluster:
         cluster.with_minio = with_minio
-        cluster.with_s3amazon = with_s3amazon
+        cluster.with_s3amazon = with_s3amazon or with_s3hetzner
         cluster.with_s3hetzner = with_s3hetzner
         cluster.with_s3gcs = with_s3gcs
         self.context.cluster = cluster
