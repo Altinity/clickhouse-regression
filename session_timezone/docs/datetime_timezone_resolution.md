@@ -36,15 +36,23 @@ The same Unix timestamp displays differently in different timezones:
 CREATE TABLE t (d DateTime) ENGINE = MergeTree ...
 ```
 
-**No timezone is stored in the column metadata.** The column name in metadata is just
-`DateTime`. The effective timezone is resolved **at query time**:
+**No timezone name is stored in the column metadata.** The persisted type string is
+just `DateTime` (no argument), and `has_explicit_time_zone` is `false` in the type
+descriptor. However, the `DataTypeDateTime` object **always carries an associated
+timezone** — a `DateLUTImpl` reference obtained from `DateLUT::instance()` at the
+time the type object is constructed.
 
-- If `session_timezone` is set → uses session timezone
-- Otherwise → uses server timezone (configured in `config.xml` or inherited from OS)
+How that timezone is resolved depends on the version:
 
-> **Important:** The column does not "remember" the server timezone at the time of
-> `CREATE TABLE`. Any later change to the server timezone (or setting `session_timezone`
-> in a query) immediately affects how values in this column are parsed and displayed.
+- **≤ 26.1:** The type is constructed at server/table-load time when no query context
+  exists, so `DateLUT::instance()` returns the **server timezone**. The column
+  effectively "remembers" the server timezone from that construction moment;
+  `session_timezone` is ignored for string parsing in `WHERE` and `INSERT`.
+- **≥ 26.2.4:** The type is resolved at query parse time, so `DateLUT::instance()`
+  reads the current `session_timezone` from the query context if set, otherwise falls
+  back to the server timezone. This means:
+  - If `session_timezone` is set → uses session timezone
+  - Otherwise → uses server timezone
 
 ### `DateTime('TZ')` — explicit timezone
 
