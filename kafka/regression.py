@@ -7,9 +7,17 @@ append_path(sys.path, "..")
 
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import experimental_analyzer
+from helpers.common import check_clickhouse_version, experimental_analyzer
 
-xfails = {}
+xfails = {
+    "/kafka/non_replicated_clickhouse_restart/*": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/104305",
+            check_clickhouse_version(">=26.4"),
+        )
+    ],
+}
 
 
 @TestModule
