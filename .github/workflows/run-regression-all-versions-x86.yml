@@ -60,6 +60,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - window_functions

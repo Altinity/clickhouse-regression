@@ -125,10 +125,29 @@ else
 fi
 
 
-if [[ -z "$S3_ENDPOINT" ]]; then 
-  JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
+report_public_endpoint_url="${REPORT_S3_PUBLIC_ENDPOINT_URL:-${S3_PUBLIC_ENDPOINT_URL:-}}"
+report_endpoint="${REPORT_S3_ENDPOINT:-${S3_ENDPOINT:-}}"
+report_cli_endpoint_url="${REPORT_S3_CLI_ENDPOINT_URL:-${S3_CLI_ENDPOINT_URL:-${AWS_ENDPOINT_URL_S3:-${AWS_ENDPOINT_URL:-}}}}"
+
+report_public_endpoint_url="${report_public_endpoint_url%/}"
+report_endpoint="${report_endpoint%/}"
+report_cli_endpoint_url="${report_cli_endpoint_url%/}"
+
+if [[ -n "$report_public_endpoint_url" ]]; then
+  JOB_BUCKET_URL=$report_public_endpoint_url/$artifact_s3_bucket_path
+elif [[ -n "$report_endpoint" ]]; then
+  if [[ "$report_endpoint" == http://* || "$report_endpoint" == https://* ]]; then
+    JOB_BUCKET_URL=$report_endpoint/$artifact_s3_bucket_path
+  else
+    JOB_BUCKET_URL=https://$report_endpoint/$artifact_s3_bucket_path
+  fi
 else
-  JOB_BUCKET_URL=https://$S3_ENDPOINT/$artifact_s3_bucket_path
+  JOB_BUCKET_URL=https://$artifact_s3_bucket_path.s3.amazonaws.com
+fi
+
+if [[ -n "$report_cli_endpoint_url" ]]; then
+  echo "S3_CLI_ENDPOINT_URL=$report_cli_endpoint_url" >>$GITHUB_ENV
+  echo "AWS_ENDPOINT_URL_S3=$report_cli_endpoint_url" >>$GITHUB_ENV
 fi
 
 echo "confidential=$confidential" >>$GITHUB_ENV

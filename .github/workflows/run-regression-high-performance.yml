@@ -108,6 +108,7 @@ on:
           - tiered_storage_all
           - tiered_storage_aws
           - tiered_storage_gcs
+          - tiered_storage_hetzner
           - tiered_storage_local
           - tiered_storage_minio
           - version
@@ -1430,6 +1431,27 @@ jobs:
       storage_path: /aws
       regression_args: '--with-s3amazon --aws-s3-access-key {{AWS_ACCESS_KEY}} --aws-s3-key-id {{AWS_KEY_ID}} --aws-s3-uri https://s3.{{AWS_REGION}}.amazonaws.com/{{AWS_BUCKET}}/data/'
       artifact_name: tiered_storage-aws-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  tiered_storage_hetzner:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 'tiered_storage_hetzner' || inputs.suite == 'tiered_storage_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: tiered_storage
+      job_name: tiered_storage_hetzner
+      timeout_minutes: 180
+      storage_path: /hetzner
+      regression_args: '--with-s3hetzner --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}}'
+      artifact_name: tiered_storage-hetzner-artifacts
       runner_type: ${{ inputs.arch == 'arm64' && 'type-cax31-cax41' || 'type-cx53-cpx52' }}
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}

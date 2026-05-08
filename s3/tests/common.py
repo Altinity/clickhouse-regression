@@ -1191,6 +1191,7 @@ def temporary_bucket_path(
     secret_access_key=None,
     storage=None,
     aws_region=None,
+    s3_endpoint_url=None,
 ):
     """
     Return a temporary bucket sub-path which will be cleaned up.
@@ -1251,6 +1252,8 @@ def temporary_bucket_path(
                 cmd = f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
                 if aws_region:
                     cmd += f" --region {aws_region}"
+                if s3_endpoint_url:
+                    cmd += f" --endpoint-url {s3_endpoint_url}"
                 if secret_access_key:
                     cmd = f"AWS_SECRET_ACCESS_KEY={secret_access_key} {cmd}"
                 if access_key_id:

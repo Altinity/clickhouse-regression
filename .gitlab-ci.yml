@@ -149,13 +149,35 @@ variables:
           artifact_s3_bucket_path="altinity-test-reports";
           confidential="";
         fi
+    - report_public_endpoint_url="${REPORT_S3_PUBLIC_ENDPOINT_URL:-${S3_PUBLIC_ENDPOINT_URL:-}}";
+      report_endpoint="${REPORT_S3_ENDPOINT:-${S3_ENDPOINT:-}}";
+      report_cli_endpoint_url="${REPORT_S3_CLI_ENDPOINT_URL:-${S3_CLI_ENDPOINT_URL:-${AWS_ENDPOINT_URL_S3:-${AWS_ENDPOINT_URL:-}}}}";
+      report_public_endpoint_url="${report_public_endpoint_url%/}";
+      report_endpoint="${report_endpoint%/}";
+      report_cli_endpoint_url="${report_cli_endpoint_url%/}";
+      if [[ -n "$report_public_endpoint_url" ]]; then
+        report_bucket_url="$report_public_endpoint_url/$artifact_s3_bucket_path";
+      elif [[ -n "$report_endpoint" ]]; then
+        if [[ "$report_endpoint" == http://* || "$report_endpoint" == https://* ]]; then
+          report_bucket_url="$report_endpoint/$artifact_s3_bucket_path";
+        else
+          report_bucket_url="https://$report_endpoint/$artifact_s3_bucket_path";
+        fi;
+      else
+        report_bucket_url="https://$artifact_s3_bucket_path.s3.amazonaws.com";
+      fi;
+      aws_endpoint_args="";
+      if [[ -n "$report_cli_endpoint_url" ]]; then
+        aws_endpoint_args="--endpoint-url $report_cli_endpoint_url";
+        export AWS_ENDPOINT_URL_S3="$report_cli_endpoint_url";
+      fi
     - echo "$version" > version.log.txt
     - echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$CI_PIPELINE_ID" > pipeline_url.log.txt
     - tfs --debug --no-colors transform compact raw.log compact.log
     - tfs --debug --no-colors transform nice raw.log nice.log.txt 
     - tfs --debug --no-colors transform short raw.log short.log.txt
     - tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-    - tfs --debug --no-colors report results -a "https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$CI_PIPELINE_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+    - tfs --debug --no-colors report results -a "$report_bucket_url/index.html#clickhouse/$version/$CI_PIPELINE_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
     - tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
     - if [[ $upload_logs -ge 1 ]]; 
         then
@@ -163,17 +185,17 @@ variables:
            export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key;
            export AWS_DEFAULT_REGION=$aws_report_region;
            
-           aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
-           aws s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compact.log;
-           aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/nice.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/short.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/report.html;
-           aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compare.html;
-           aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/coverage.html;
+           aws $aws_endpoint_args s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8";
+           aws $aws_endpoint_args s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
+           aws $aws_endpoint_args s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
+           aws $aws_endpoint_args s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compact.log;
+           aws $aws_endpoint_args s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/nice.log.txt --content-type "text/plain; charset=utf-8";
+           aws $aws_endpoint_args s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/short.log.txt --content-type "text/plain; charset=utf-8";
+           aws $aws_endpoint_args s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/report.html;
+           aws $aws_endpoint_args s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compare.html;
+           aws $aws_endpoint_args s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/coverage.html;
            rm --recursive --force $FOLDER_PATH/_instances/*/database/;
-           aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8";
+           aws $aws_endpoint_args s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8";
         fi
     - exit $exitcode
 

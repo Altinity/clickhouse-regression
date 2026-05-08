@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+from urllib.parse import urlparse
 
 from testflows.core import *
 from testflows.connect import Shell
@@ -13,12 +14,6 @@ from helpers.common import check_clickhouse_version, experimental_analyzer
 from s3.tests.common import temporary_bucket_path
 from tiered_storage.requirements import *
 from tiered_storage.tests.common import add_storage_config
-from tiered_storage.tests.s3_metrics import (
-    build_s3_metrics_payload,
-    format_s3_metrics_report,
-    snapshot_cluster_s3_events,
-    write_s3_metrics_payload,
-)
 
 
 def argparser(parser):
@@ -47,6 +42,13 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--with-s3hetzner",
+        action="store_true",
+        help="use Hetzner S3-compatible storage for external disk",
+        default=False,
+    )
+
+    parser.add_argument(
         "--aws-s3-access-key",
         action="store",
         help="S3 Amazon access key",
@@ -68,6 +70,38 @@ def argparser(parser):
         help="S3 Amazon uri",
         type=Secret(name="aws_s3_uri"),
         default=os.getenv("S3_AMAZON_URI"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-access-key",
+        action="store",
+        help="Hetzner S3 access key",
+        type=Secret(name="hetzner_s3_access_key"),
+        default=os.getenv("HETZNER_S3_ACCESS_KEY"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-key-id",
+        action="store",
+        help="Hetzner S3 key id",
+        type=Secret(name="hetzner_s3_key_id"),
+        default=os.getenv("HETZNER_S3_KEY_ID"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-uri",
+        action="store",
+        help="Hetzner S3 URI including bucket and base prefix",
+        type=Secret(name="hetzner_s3_uri"),
+        default=os.getenv("HETZNER_S3_URI"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-region",
+        action="store",
+        help="Hetzner S3 signing region",
+        type=Secret(name="hetzner_s3_region"),
+        default=os.getenv("HETZNER_S3_REGION"),
     )
 
     parser.add_argument(
@@ -152,6 +186,19 @@ ffails = {
 }
 
 
+def parse_s3_uri(uri):
+    """Return endpoint URL, bucket, and prefix from a path-style S3 URI."""
+    parsed = urlparse(uri)
+    path = parsed.path.strip("/")
+    bucket, _, prefix = path.partition("/")
+
+    if not bucket:
+        raise ValueError(f"Could not parse bucket from S3 URI: {uri}")
+
+    endpoint_url = f"{parsed.scheme}://{parsed.netloc}"
+    return endpoint_url, bucket, prefix
+
+
 @TestOutline(Feature)
 @Requirements(
     RQ_SRS_004_MultipleStorageDevices("1.0"),
@@ -162,28 +209,36 @@ def feature(
     cluster,
     with_minio=False,
     with_s3amazon=False,
+    with_s3hetzner=False,
     with_s3gcs=False,
     environ=None,
     base_uri=None,
+    s3_region=None,
+    s3_endpoint_url=None,
 ):
     """Execute tests for tiered storage feature."""
 
     args = {"cluster": cluster}
     common_args = dict(args=args, flags=TE)
 
-    if with_s3amazon:
+    if with_s3amazon or with_s3hetzner:
         with Given("a temporary S3 path"):
-            bucket_name, bucket_prefix = (
-                base_uri.split(".amazonaws.com/")[-1].strip("/").split("/", maxsplit=1)
+            s3_endpoint_url, bucket_name, bucket_prefix = parse_s3_uri(base_uri)
+            cleanup_prefix = (
+                f"{bucket_prefix}/tiered_storage" if bucket_prefix else "tiered_storage"
             )
             temp_s3_path = temporary_bucket_path(
                 bucket_name=bucket_name,
-                bucket_prefix=f"{bucket_prefix}/tiered_storage",
+                bucket_prefix=cleanup_prefix,
                 secret_access_key=environ["S3_AMAZON_ACCESS_KEY"],
                 access_key_id=environ["S3_AMAZON_KEY_ID"],
                 storage="aws_s3",
+                aws_region=s3_region,
+                s3_endpoint_url=s3_endpoint_url,
             )
-            environ["S3_AMAZON_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}/"
+            environ["S3_AMAZON_URI"] = (
+                f"{base_uri.rstrip('/')}/tiered_storage/{temp_s3_path}/"
+            )
 
     if with_s3gcs:
         with Given("a temporary GCS path"):
@@ -201,7 +256,9 @@ def feature(
             )
             environ["GCS_URI"] = f"{base_uri}tiered_storage/{temp_s3_path}"
 
-    with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
+    with add_storage_config(
+        with_minio, with_s3amazon or with_s3hetzner, with_s3gcs, environ
+    ):
         Scenario(
             run=load("tiered_storage.tests.startup_and_queries", "scenario"),
             **common_args,
@@ -353,10 +410,15 @@ def regression(
     stress=None,
     with_minio=False,
     with_s3amazon=False,
+    with_s3hetzner=False,
     with_s3gcs=False,
     aws_s3_access_key=None,
     aws_s3_key_id=None,
     aws_s3_uri=None,
+    hetzner_s3_access_key=None,
+    hetzner_s3_key_id=None,
+    hetzner_s3_uri=None,
+    hetzner_s3_region=None,
     gcs_key_secret=None,
     gcs_key_id=None,
     gcs_uri=None,
@@ -367,7 +429,7 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if with_minio or with_s3amazon or with_s3gcs:
+    if with_minio or with_s3amazon or with_s3hetzner or with_s3gcs:
         if not self.skip:
             self.skip = []
         self.skip.append(The("/tiered storage/:/:/manual move with downtime"))
@@ -390,6 +452,23 @@ def regression(
             base_uri = aws_s3_uri.value
             aws_region = base_uri.split(".")[1]
 
+        if with_s3hetzner:
+            assert (
+                hetzner_s3_key_id.value is not None
+            ), "HETZNER_S3_KEY_ID env variable must be defined or passed through the command line"
+            assert (
+                hetzner_s3_access_key.value is not None
+            ), "HETZNER_S3_ACCESS_KEY env variable must be defined or passed through the command line"
+            assert (
+                hetzner_s3_uri.value is not None
+            ), "HETZNER_S3_URI env variable must be defined or passed through the command line"
+            environ["S3_AMAZON_KEY_ID"] = hetzner_s3_key_id.value
+            environ["S3_AMAZON_ACCESS_KEY"] = hetzner_s3_access_key.value
+            base_uri = hetzner_s3_uri.value
+            aws_region = (
+                hetzner_s3_region.value if hetzner_s3_region is not None else None
+            )
+
         if with_s3gcs:
             assert (
                 gcs_key_id.value is not None
@@ -411,6 +490,7 @@ def regression(
     ) as cluster:
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
+        cluster.with_s3hetzner = with_s3hetzner
         cluster.with_s3gcs = with_s3gcs
         self.context.cluster = cluster
 
@@ -425,46 +505,21 @@ def regression(
             name = "with minio"
         elif with_s3amazon:
             name = "with s3amazon"
+        elif with_s3hetzner:
+            name = "with s3hetzner"
         elif with_s3gcs:
             name = "with s3gcs"
 
-        collect_s3_metrics = (with_minio or with_s3amazon or with_s3gcs) and (
-            check_clickhouse_version(">=22.8")(self)
+        Feature(name, test=feature)(
+            cluster=cluster,
+            with_minio=with_minio,
+            with_s3amazon=with_s3amazon,
+            with_s3hetzner=with_s3hetzner,
+            with_s3gcs=with_s3gcs,
+            environ=environ,
+            base_uri=base_uri,
+            s3_region=aws_region,
         )
-        s3_metrics_before = None
-
-        if collect_s3_metrics:
-            with Given("I snapshot S3 metrics before the suite"):
-                s3_metrics_before = snapshot_cluster_s3_events(
-                    cluster=cluster, node_names=nodes["clickhouse"]
-                )
-
-        try:
-            Feature(name, test=feature)(
-                cluster=cluster,
-                with_minio=with_minio,
-                with_s3amazon=with_s3amazon,
-                with_s3gcs=with_s3gcs,
-                environ=environ,
-                base_uri=base_uri,
-            )
-        finally:
-            if collect_s3_metrics and s3_metrics_before is not None:
-                with Finally("I collect S3 metrics after the suite", flags=TE):
-                    s3_metrics_after = snapshot_cluster_s3_events(
-                        cluster=cluster, node_names=nodes["clickhouse"]
-                    )
-                    s3_metrics_payload = build_s3_metrics_payload(
-                        before=s3_metrics_before, after=s3_metrics_after
-                    )
-
-                    note(format_s3_metrics_report(s3_metrics_payload))
-
-                    try:
-                        path = write_s3_metrics_payload(s3_metrics_payload)
-                        note(f"S3 metrics JSON written to {path}")
-                    except Exception as e:
-                        note(f"Failed to write S3 metrics JSON: {e}")
 
 
 if main():
