@@ -392,7 +392,7 @@ def metadata(self):
     storage policy.
     """
     name = "table_" + getuid()
-    disk_name = "external"
+    disk_name = "s3_cache" if check_clickhouse_version(">=26.3")(self) else "external"
     disk_names = None
     disk_paths = None
     node = current().context.node
@@ -521,8 +521,13 @@ def multiple_storage(self):
             ).output.splitlines()
 
         with And("""I check the names to make sure both disks are used"""):
+            expected_first, expected_second = (
+                ("first_external_cached", "second_external_cached")
+                if check_clickhouse_version(">=26.3")(self)
+                else ("first_external", "second_external")
+            )
             assert (
-                "first_external" in disk_names and "second_external" in disk_names
+                expected_first in disk_names and expected_second in disk_names
             ), error()
 
     finally:
@@ -622,8 +627,13 @@ def multiple_storage_query(self):
             ).output.splitlines()
 
         with And("""I check the names to make sure both disks are used"""):
+            expected_first, expected_second = (
+                ("first_external_cached", "second_external_cached")
+                if check_clickhouse_version(">=26.3")(self)
+                else ("first_external", "second_external")
+            )
             assert (
-                "first_external" in disk_names and "second_external" in disk_names
+                expected_first in disk_names and expected_second in disk_names
             ), error()
 
         with Then("I check simple queries"):
@@ -1668,8 +1678,13 @@ def perform_ttl_move_on_insert_default(self):
             """The disk name should match the S3 disk, indicating that
                     the data parts were moved to S3 immediately as expected"""
         ):
+            expected_disk_name = (
+                f"{disk_name}_cached"
+                if check_clickhouse_version(">=26.3")(self)
+                else disk_name
+            )
             for _name in disk_names:
-                assert _name == f"{disk_name}", error()
+                assert _name == f"{expected_disk_name}", error()
 
     finally:
         with Finally("I drop the table"):
