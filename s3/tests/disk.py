@@ -392,7 +392,10 @@ def metadata(self):
     storage policy.
     """
     name = "table_" + getuid()
-    disk_name = "s3_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+    disk_name = "external"
+    expected_disk_name = (
+        "s3_cache" if check_clickhouse_version(">=26.3")(self) else disk_name
+    )
     disk_names = None
     disk_paths = None
     node = current().context.node
@@ -413,7 +416,7 @@ def metadata(self):
 
     with Then("The disk name should match the disk selected by the 'external' policy"):
         for _name in disk_names:
-            assert _name == f"{disk_name}", error()
+            assert _name == f"{expected_disk_name}", error()
 
     with When("I get the path for the parts added in this table"):
         disk_paths = node.query(
