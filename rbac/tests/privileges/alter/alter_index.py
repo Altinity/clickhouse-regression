@@ -33,6 +33,32 @@ aliases = {
 permutation_count = 1 << len(subprivileges)
 
 
+def _show_create_index_fragment(index, column="x"):
+    """Return legacy and new SHOW CREATE TABLE spellings for INDEX ... TYPE set(0) GRANULARITY 1.
+
+    ClickHouse 26.5+ parenthesizes the indexed expression: ``INDEX name (col)`` instead of
+    ``INDEX name col``.
+    """
+    suffix = " TYPE set(0) GRANULARITY 1"
+    legacy = f"INDEX {index} {column}{suffix}"
+    paren = f"INDEX {index} ({column}){suffix}"
+    return legacy, paren
+
+
+def _create_table_statement_has_index_definition(statement, index, column="x"):
+    legacy, paren = _show_create_index_fragment(index, column)
+    if check_clickhouse_version(">=26.5")(current()):
+        return paren in statement or legacy in statement
+    return legacy in statement
+
+
+def _create_table_statement_lacks_index_definition(statement, index, column="x"):
+    legacy, paren = _show_create_index_fragment(index, column)
+    if check_clickhouse_version(">=26.5")(current()):
+        return paren not in statement and legacy not in statement
+    return legacy not in statement
+
+
 def permutations(table_type):
     """Uses stress flag and table type, returns list of all permutations to run
 
@@ -210,8 +236,8 @@ def check_add_index_when_privilege_is_granted(table, user, node):
         output = json.loads(
             node.query(f"SHOW CREATE TABLE {table} FORMAT JSONEachRow").output
         )
-        assert (
-            f"INDEX {index} x TYPE set(0) GRANULARITY 1" in output["statement"]
+        assert _create_table_statement_has_index_definition(
+            output["statement"], index
         ), error()
 
     with Finally(f"I drop index {index}"):
@@ -237,8 +263,8 @@ def check_materialize_index_when_privilege_is_granted(table, user, node):
         output = json.loads(
             node.query(f"SHOW CREATE TABLE {table} FORMAT JSONEachRow").output
         )
-        assert (
-            f"INDEX {index} x TYPE set(0) GRANULARITY 1" in output["statement"]
+        assert _create_table_statement_has_index_definition(
+            output["statement"], index
         ), error()
 
     with Finally(f"I drop index {index}"):
@@ -261,8 +287,8 @@ def check_clear_index_when_privilege_is_granted(table, user, node):
         output = json.loads(
             node.query(f"SHOW CREATE TABLE {table} FORMAT JSONEachRow").output
         )
-        assert (
-            f"INDEX {index} x TYPE set(0) GRANULARITY 1" in output["statement"]
+        assert _create_table_statement_has_index_definition(
+            output["statement"], index
         ), error()
 
     with Finally(f"I drop index {index}"):
@@ -294,8 +320,8 @@ def check_drop_index_when_privilege_is_granted(table, user, node):
         output = json.loads(
             node.query(f"SHOW CREATE TABLE {table} FORMAT JSONEachRow").output
         )
-        assert (
-            f"INDEX {index} x TYPE set(0) GRANULARITY 1" not in output["statement"]
+        assert _create_table_statement_lacks_index_definition(
+            output["statement"], index
         ), error()
 
 
