@@ -583,7 +583,8 @@ def create_xml_config_content(
 
 
 def add_invalid_config(
-    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None
+    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None,
+    validate_during_invalid=None,
 ):
     """Check that ClickHouse errors when trying to load invalid configuration file."""
     cluster = current().context.cluster
@@ -616,6 +617,11 @@ def add_invalid_config(
         if restart:
             with When("I restart ClickHouse to apply the config changes"):
                 node.restart_clickhouse(safe=False, wait_healthy=False, user=user)
+        time.sleep(5)
+
+        if validate_during_invalid is not None:
+            with When("running validation while invalid config is active"):
+                validate_during_invalid()
 
     finally:
         if recover_config is None:
