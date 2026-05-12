@@ -90,6 +90,8 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      # Mount precreated Iceberg table files for icebergLocal() tests
+      - "../tests/icebergS3_table_function/iceberg_table/:/mnt/iceberg_table/"
     depends_on:
       zookeeper1:
         condition: service_healthy

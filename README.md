@@ -15,20 +15,21 @@ Results for **the latest** scheduled workflow runs.
 |-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **`head`**                          | [![Scheduled ClickHouse head](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-head.yml)                  |
 | **`latest`**                        | [![Scheduled ClickHouse latest Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-latest.yml) |
+| **`26.3`**                          | [![🗓 Scheduled ClickHouse 26.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-26-3.yml) |
 | **`25.8`**                          | [![🗓 Scheduled ClickHouse 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-8.yml.yml) |
 | **`25.3`**                          | [![Scheduled ClickHouse 25.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-25-3.yml) |
 | **`24.8`**                          | [![Scheduled ClickHouse 24.8 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-8.yml)       |
 | **`24.3`**                          | [![Scheduled ClickHouse 24.3 Regression](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-24-3.yml)       |
 | **`23.8`**                          | [![Scheduled ClickHouse 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-8.yml)                  |
 | **`23.3`**                          | [![Scheduled ClickHouse 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-clickhouse-23-3.yml)                  |
-| **`25.8.14.20001.altinityantalya`** | [![🗓 Scheduled Altinity 25.8 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml)      |
-| **`25.3.8.10041.altinitystable`**  | [![Scheduled Altinity 25.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml)                        |
-| **`24.8.14.10544.altinitystable`**  | [![Scheduled Altinity 24.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml)                        |
+| **`26.1.11.20001.altinityantalya`** | [![🗓 Scheduled Altinity 26.1 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-26-1.yml)      |
+| **`25.8.22.20001.altinityantalya`** | [![🗓 Scheduled Altinity 25.8 Antalya](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-antalya-25-8.yml)      |
+| **`25.8.16.10002.altinitystable`** | [![🗓 Scheduled Altinity 25.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-8.yml)      |
+| **`25.3.8.10042.altinitystable`**  | [![Scheduled Altinity 25.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-25-3.yml)                        |
+| **`24.8.14.10545.altinitystable`**  | [![Scheduled Altinity 24.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-8.yml)                        |
 | **`24.3.18.10426.altinitystable`**     | [![🗓 Scheduled Altinity 24.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-24-3.yml)                        |
 | **`23.8.16.43.altinitystable`**     | [![🗓 Scheduled Altinity 23.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-8.yml)                        |
 | **`23.3.19.33.altinitystable`**     | [![🗓 Scheduled Altinity 23.3](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-23-3.yml)                        |
-| **`22.8.15.25.altinitystable`**     | [![Scheduled Altinity 22.8](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml/badge.svg)](https://github.com/Altinity/clickhouse-regression/actions/workflows/scheduled-regression-altinity-22-8.yml)                        |                    |
-
 ## 📅 Timetable of Scheduled Regression Runs
 
 | Day           | latest & head | Every Other Version |
@@ -200,24 +201,108 @@ Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f746187225
 | `Variable` | `package_version_postfix` | By default `all` (supports older versions), specify `amd64` for newer PRs where all packages have `amd64` postfix.                                              |
 
 ## [Running CI/CD With CI/CD Trigger](#table-of-contents)
-To run the CI/CD pipline you can use cicd-trigger.py
-```./cicd-trigger.py```
-with following options
 
+To trigger GitHub Actions workflows for running ClickHouse regression tests, use `cicd-trigger.py`.
+
+### Prerequisites
+
+Set the `GITHUB_TOKEN` environment variable with a GitHub personal access token:
+
+```bash
+export GITHUB_TOKEN="your_github_token"
 ```
--w --wait             Wait for pipeline to finish.
---package             Specify docker:// or deb:// package.
---version             Specify clickhouse version.
---package-postfix     Postfix of the clickhouse-server and clickhouse-client deb package, default: 'amd64'. Choices 'amd64', 'all'.
---suite               Select test suite to run, default: 'all'. Choices "all", "aes_encryption", "aggregate_functions", "atomic_insert", "base_58", "clickhouse_keeper", "datetime64_extended_range", "disk_level_encryption", "dns", "example", "extended_precision_data_types", "kafka", "kerberos", "ldap", "lightweight_delete", "map_type", "parquet","parquet_minio", "parquet_s3", "part_moves_between_shards", "rbac", "s3", "s3_aws", "s3_gcs", "selects", "ssl_server", "tiered_storage", "tiered_storage_aws", "tiered_storage_gcs", "window_functions", "benchmark".
---output              Tests stdout output style, default: 'classic'. Choices 'nice', 'classic', 'short', etc.
---parallel            Enable or disable running tests in parallel, default: 'on'. Choices 'on', 'off'.
---token               Personal access token or private token with api access to the gitlab project, default: 'GITLAB_TOKEN' environment variable.
---options             Extra options that will be added to test run command.
---arch                Architecture to run the tests on, default: 'amd64'. Choices 'amd64', 'arm64'.
---branch              Specify which branch to run the tests on, default: 'main'.
---artifacts           Specify whether to upload artifacts internally or publically, default: 'internal'. Choices 'internal', 'public'. Bucket for internal upload: 'altinity-internal-test-reports'. Bucket for public upload 'altinity-test-reports'.
---debug               Enable script running in debug mode, default: 'False'. Choices 'True', 'False'.
+
+The token requires the following permissions:
+
+| Permission | Access | Purpose |
+|------------|--------|---------|
+| `repo` | Full | Access repository and trigger workflows |
+| `workflow` | Read and Write | Trigger and manage workflow runs |
+
+To create a token, go to **GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)** and generate a new token with the scopes above.
+
+### Options
+
+| Option                | Description                                                                                                                                                                | Default                                                           |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| `--arch`              | Architecture to run tests on. Choices: `x86`, `arm64`.                                                                                                                     | `x86`                                                             |
+| `--branch`            | Branch to run the tests on.                                                                                                                                                | `main`                                                            |
+| `--package`           | Package specifier. Either `docker://` or `https://`. Example: `docker://altinity/clickhouse-server:25.3.8.10042.altinitystable`                                            | `docker://altinity/clickhouse-server:25.3.8.10042.altinitystable` |
+| `--version`           | Expected ClickHouse version.                                                                                                                                               | `25.3.8.10042.altinitystable`                                     |
+| `--flags`             | Test flags. Choices: `--use-keeper --with-analyzer`, `--use-keeper`, `none`, `--as-binary`, `--thread-fuzzer`, `--with-analyzer`, and combinations.                        | `none`                                                            |
+| `-s, --suite`         | Test suite to run. See below for available suites.                                                                                                                         | `all`                                                             |
+| `-o, --output-format` | TestFlows output style. Choices: `nice-new-fails`, `brisk-new-fails`, `classic`, `nice`, `fails`, `slick`, `brisk`, `quiet`, `short`, `manual`, `dots`, `progress`, `raw`. | `classic`                                                         |
+| `--artifacts`         | Artifact S3 bucket location.                                                                                                                                               | `internal`                                                        |
+| `--ref`               | Commit SHA to checkout.                                                                                                                                                    | Current branch                                                    |
+| `--extra-args`        | Extra test program arguments.                                                                                                                                              | None                                                              |
+| `--custom-run-name`   | Custom workflow run name.                                                                                                                                                  | None                                                              |
+| `--token`             | GitHub personal access token with workflow scope.                                                                                                                          | `$GITHUB_TOKEN` env variable                                      |
+| `--wait`              | Wait for the workflow to finish.                                                                                                                                           | `False`                                                           |
+| `--debug`             | Enable debug mode with verbose output.                                                                                                                                     | `False`                                                           |
+| `--list-running`      | List all currently running workflows and exit.                                                                                                                             | `False`                                                           |
+
+### Example Usage
+
+Run the example test suite on x86 (default):
+
+```bash
+python3 cicd-trigger.py --suite example
+```
+
+Run the example test suite on ARM:
+
+```bash
+python3 cicd-trigger.py --suite example --arch arm64
+```
+
+Run s3_minio suite with ClickHouse Keeper enabled:
+
+```bash
+python3 cicd-trigger.py --suite s3_minio --flags "--use-keeper"
+```
+
+Run a specific version of ClickHouse:
+
+```bash
+python3 cicd-trigger.py --suite example \
+    --package docker://altinity/clickhouse-server:24.8.6.70.altinitystable \
+    --version 24.8.6.70.altinitystable
+```
+
+Run tests on a specific branch and wait for completion:
+
+```bash
+python3 cicd-trigger.py --suite example --branch my-feature-branch --wait
+```
+
+Run with debug output to troubleshoot issues:
+
+```bash
+python3 cicd-trigger.py --suite example --debug
+```
+
+List all currently running workflows:
+
+```bash
+python3 cicd-trigger.py --list-running
+```
+
+Run full regression with custom run name:
+
+```bash
+python3 cicd-trigger.py --suite all --custom-run-name "Nightly regression test"
+```
+
+Run tests with extra arguments:
+
+```bash
+python3 cicd-trigger.py --suite rbac --extra-args "--only '/rbac/views/*'"
+```
+
+Run with an explicit GitHub token:
+
+```bash
+python3 cicd-trigger.py --suite example --token "ghp_your_personal_access_token"
 ```
 
 ## [CI/CD Secrets And Variables](#cicd-secrets-and-variables)

@@ -19,6 +19,12 @@ def feature(self, minio_root_user, minio_root_password):
                 "several_iceberg_tables_in_one_dir",
             ),
         )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
+        # Feature(
+        #     test=load(
+        #         "iceberg.tests.icebergS3_table_function.iceberg_local",
+        #         "icebergLocal",
+        #     ),
+        # )(minio_root_user=minio_root_user, minio_root_password=minio_root_password)
 
     with Feature("glue catalog"):
         self.context.catalog = "glue"

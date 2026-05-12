@@ -360,8 +360,6 @@ def alter_clear_column_in_partition(self):
             node.query(f"SYSTEM START MERGES {table_name}")
             node.query(f"ALTER TABLE {table_name} CLEAR COLUMN c IN PARTITION 1")
 
-            node.query(f"OPTIMIZE TABLE {table_name} FINAL")
-
         with Then("I check column 'c' cleared in partition 1"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node(name).query, timeout=100, delay=1)(

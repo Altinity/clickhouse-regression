@@ -21,7 +21,8 @@ from helpers.common import (
     experimental_analyzer,
     check_current_cpu,
     allow_higher_cpu_wait_ratio,
-    check_if_not_antalya_build, check_if_antalya_build,
+    check_if_not_antalya_build,
+    check_if_antalya_build,
 )
 from parquet.tests.common import start_minio, parquet_test_columns
 
@@ -193,6 +194,13 @@ xfails = {
         (
             Fail,
             "Currently not supported",
+        )
+    ],
+    "/parquet/aws s3/s3/compression type/*/outline/function/*": [
+        (
+            Fail,
+            ">=24.1 snapshot files only contain MinIO entries, missing AWS S3 entries",
+            check_clickhouse_version(">=24.3"),
         )
     ],
 }
@@ -492,12 +500,6 @@ def regression(
                 min_os_cpu_wait_time_ratio_to_throw=10,
                 max_os_cpu_wait_time_ratio_to_throw=20,
             )
-    with And("I check if not antalya build"):
-        if check_if_antalya_build(self):
-            default_query_settings = getsattr(
-                current().context, "default_query_settings", []
-            )
-            default_query_settings.append(("input_format_parquet_use_native_reader_v3", 0))
 
     with And("I have a Parquet table definition"):
         columns = (

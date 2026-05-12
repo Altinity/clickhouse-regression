@@ -81,6 +81,20 @@ xfails = {
     "/aggregate functions/part */state/topKWeightedState/datatypes/permutations/:": [
         (Fail, issue_55997)
     ],
+    "/aggregate functions/part */state/quantileDeterministicState/*": [
+        (
+            Fail,
+            "use-of-uninitialized-value, https://github.com/ClickHouse/ClickHouse/pull/81062",
+            check_clickhouse_version(">=25.1") and check_clickhouse_version("<25.8"),
+        )
+    ],
+    "/aggregate functions/part */state/quantilesDeterministicState/*": [
+        (
+            Fail,
+            "use-of-uninitialized-value, https://github.com/ClickHouse/ClickHouse/pull/81062",
+            check_clickhouse_version(">=25.1") and check_clickhouse_version("<25.8"),
+        )
+    ],
     "/aggregate functions/part */state/maxIntersectionsState/:": [
         (
             Fail,
@@ -477,20 +491,6 @@ xfails = {
             check_clickhouse_version(">=24.11"),
         )
     ],
-    "/aggregate functions/part 2/finalizeAggregation/sumCount_finalizeAggregation_Merge/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/97370",
-            check_clickhouse_version(">=26.1"),
-        )
-    ],
-    "/aggregate functions/part 3/merge/sumCountMerge/*": [
-        (
-            Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/97370",
-            check_clickhouse_version(">=26.1"),
-        )
-    ],
 }
 
 
@@ -837,6 +837,7 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.clickhouse_path = cluster_args.get("clickhouse_path", "")
 
     if stress is not None:
         self.context.stress = stress

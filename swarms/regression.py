@@ -14,6 +14,7 @@ from helpers.common import (
     check_if_not_antalya_build,
     check_clickhouse_version,
     experimental_analyzer,
+    check_if_antalya_build,
 )
 
 from swarms.requirements.requirements import *
@@ -22,6 +23,14 @@ from swarms.requirements.requirements import *
 xfails = {
     "/swarms/feature/swarm joins/join clause/join 455 of 816480*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1244"),
+    ],
+    "/swarms/feature/node failure/check restart clickhouse on swarm node": [
+        (
+            Fail, 
+            "https://github.com/Altinity/clickhouse-regression/issues/124",
+            lambda test: check_clickhouse_version(">=26.1")(test)
+            and check_if_antalya_build(test),
+        )
     ],
 }
 ffails = {

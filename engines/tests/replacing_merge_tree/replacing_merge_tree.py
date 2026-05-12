@@ -452,6 +452,13 @@ def incorrect_data_insert(self, node=None):
         node = self.context.cluster.node("clickhouse1")
 
     name = f"incorrect_data_insert_{getuid()}"
+    expected_message = (
+        "Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0): "
+        "While executing WaitForAsyncInsert. (INCORRECT_DATA)"
+        if check_clickhouse_version(">=26.2")(self)
+        else "Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0).. "
+        "(INCORRECT_DATA)"
+    )
 
     try:
         with Given(
@@ -465,8 +472,7 @@ def incorrect_data_insert(self, node=None):
         with When("I insert data in this table"):
             node.query(
                 f"INSERT INTO {name} VALUES ('data1', 1, 6)",
-                message="Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0).."
-                " (INCORRECT_DATA)",
+                message=expected_message,
                 exitcode=117,
             )
 
