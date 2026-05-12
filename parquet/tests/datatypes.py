@@ -208,7 +208,7 @@ def supporteduuid(self):
 
     snapshot_name = (
         "uuid_2_structure_above_26"
-        if check_clickhouse_version_or_antalya(">=26.1")(self)
+        if check_clickhouse_version(">=26.4")(self) or check_if_antalya_build(self)
         else "uuid_2_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
