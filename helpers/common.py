@@ -177,13 +177,26 @@ def check_if_25_8_altinity_build(test=None):
     return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
 
 
+def check_if_antalya_pre_26_1(test=None):
+    """True if build is Antalya with version < 26.1 (i.e., antalya 25.8).
+
+    Antalya 25.8 wraps inferred Parquet columns in Nullable, while
+    antalya 26.1+ behaves like regular upstream >=26.1 (no extra Nullable).
+    """
+    if not check_if_antalya_build(test):
+        return False
+    return not check_clickhouse_version(">=26.1")(test)
+
+
 def check_clickhouse_version_or_antalya(version):
     """Return a predicate that is True when either ``check_clickhouse_version(version)``
     matches *or* the build is an Antalya build.
 
-    Antalya is currently based on ClickHouse 25.8 but ships parquet behavior that
-    matches upstream >=26.1, so version-gated branches that select snapshots /
-    settings for >=26.1 must also fire for Antalya.
+    Antalya 25.8 is based on ClickHouse 25.8 but ships parquet behavior that
+    matches upstream >=26.1 (e.g. schema inference, null type support), so
+    version-gated branches that select snapshots / settings for >=26.1 must
+    also fire for Antalya 25.8.  Antalya 26.1+ satisfies version checks
+    directly via its numeric version.
     """
 
     def check(test):
@@ -1377,7 +1390,7 @@ def get_snapshot_id(
         if matches:
             id_postfix = clickhouse_version
 
-    if antalya_suffix and check_if_antalya_build(current()):
+    if antalya_suffix and check_if_antalya_pre_26_1(current()):
         id_postfix = id_postfix + "_antalya"
 
     if snapshot_id is None:
