@@ -7,6 +7,7 @@
 #
 import time
 from tiered_storage.tests.common import get_used_disks_for_table
+from helpers.common import check_clickhouse_version
 from testflows.core import *
 from testflows.asserts import error
 
@@ -55,8 +56,11 @@ def scenario(self, storage_type):
                     f"SELECT disk_name FROM system.parts WHERE table = '{table_name}'"
                     " AND partition = '201903' and active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
-            with Then("both disk names should be 'external'"):
-                assert disks == ["external"] * 2, error()
+            expected_disk = (
+                "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+            )
+            with Then(f"both disk names should be '{expected_disk}'"):
+                assert disks == [expected_disk] * 2, error()
 
         with When("I select the number of row in the table"):
             count = node.query(

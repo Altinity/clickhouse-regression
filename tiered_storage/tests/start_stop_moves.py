@@ -8,6 +8,7 @@
 import time
 
 from tiered_storage.tests.common import get_used_disks_for_table, get_random_string
+from helpers.common import check_clickhouse_version
 from testflows.core import *
 from testflows.asserts import error
 
@@ -90,8 +91,13 @@ def scenario(self, cluster, node="clickhouse1"):
                                 f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                             ).output.strip()
 
-                        with Then("part should be on external disk"):
-                            assert disk == "external", error()
+                        expected_disk = (
+                            "external_cache"
+                            if check_clickhouse_version(">=26.3")(self)
+                            else "external"
+                        )
+                        with Then(f"part should be on {expected_disk} disk"):
+                            assert disk == expected_disk, error()
 
                     with When("I truncate table"):
                         node.query(f"TRUNCATE TABLE {name}")

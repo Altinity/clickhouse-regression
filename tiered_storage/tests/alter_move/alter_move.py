@@ -73,8 +73,11 @@ def scenario(self, engine):
                     f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                 ).output.strip()
 
-            with Then("the disk name should be 'external'"):
-                assert disk == "external", error()
+            expected_disk = (
+                "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+            )
+            with Then(f"the disk name should be '{expected_disk}'"):
+                assert disk == expected_disk, error()
             with And("path should start with '/external'"):
                 expected = "/external"
                 if cluster.with_minio or (
