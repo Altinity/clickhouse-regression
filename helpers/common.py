@@ -325,6 +325,47 @@ def check_is_boringssl_build(test):
     return output == "1"
 
 
+def check_is_fips_clickhouse_build(test):
+    """Return True if this ClickHouse binary is a FIPS build.
+
+    Altinity FIPS Docker tags (e.g. ``altinityfips``) do not always appear in
+    ``SELECT version()``; use ``system.build_options`` instead of substring
+    checks on the version string (avoids needing ``--force-fips``).
+
+    Matches the same signals used in ``ssl_server`` FIPS 140-3 build checks:
+    ``FIPS_CLICKHOUSE=1`` and/or ``OPENSSL_VERSION`` containing ``AWS-LC-FIPS``.
+    """
+    node = getattr(test.context, "node", None)
+    if node is None:
+        node = getattr(current().context, "node", None)
+    if node is None:
+        cluster = getattr(test.context, "cluster", None) or getattr(
+            current().context, "cluster", None
+        )
+        if cluster is not None and "clickhouse" in getattr(cluster, "nodes", {}):
+            try:
+                node = cluster.node(cluster.nodes["clickhouse"][0])
+            except (AttributeError, IndexError, KeyError):
+                node = None
+    if node is None:
+        return False
+
+    fips_flag = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'FIPS_CLICKHOUSE' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    if fips_flag == "1":
+        return True
+
+    openssl_ver = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'OPENSSL_VERSION' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    return "AWS-LC-FIPS" in openssl_ver
+
+
 def check_is_altinity_build(node=None):
     """
     Check if the build is from Altinity.

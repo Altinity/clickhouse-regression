@@ -348,7 +348,12 @@ def regression(
             experimental_analyzer(node=cluster.node(node), with_analyzer=with_analyzer)
 
     with Given("I check if the binary is FIPS compatible"):
-        if "fips" in current().context.clickhouse_version or force_fips:
+        version_str = current().context.clickhouse_version or ""
+        if (
+            force_fips
+            or "fips" in version_str.lower()
+            or check_is_fips_clickhouse_build(self)
+        ):
             self.context.fips_mode = True
 
     with Feature("part 1"):

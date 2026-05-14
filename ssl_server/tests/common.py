@@ -31,6 +31,14 @@ fips_140_3_compatible_tlsv1_3_cipher_suites = [
     "TLS_AES_256_GCM_SHA384",
 ]
 
+# TLS 1.2 suites that rely on finite-field DH (Table 8 / SP 800-52 posture).
+# Used as explicit handshake-failure probes on permissive servers (no cipherList lockdown).
+fips_forbidden_primitive_tlsv1_2_cipher_suites = [
+    "DHE-RSA-AES128-GCM-SHA256",
+    "DHE-RSA-AES256-GCM-SHA384",
+    "DHE-RSA-CHACHA20-POLY1305",
+]
+
 all_tlsv1_3_ciphers = [
     "TLS_AES_256_GCM_SHA384",
     "TLS_CHACHA20_POLY1305_SHA256",
