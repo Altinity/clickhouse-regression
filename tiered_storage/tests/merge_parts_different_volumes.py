@@ -102,7 +102,12 @@ def scenario(self, cluster, node="clickhouse1"):
                         ).output.strip()
 
                     expected_disk = (
-                        "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+                        "external_cache"
+                        if (
+                            check_clickhouse_version(">=26.3")(self)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                        )
+                        else "external"
                     )
                     with Then(f"the disk name should be '{expected_disk}'"):
                         assert disk == expected_disk, error()
@@ -138,7 +143,12 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert len(disks) == 1, error()
 
                     expected_disk = (
-                        "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+                        "external_cache"
+                        if (
+                            check_clickhouse_version(">=26.3")(self)
+                            and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                        )
+                        else "external"
                     )
                     with And(f"all disks should be '{expected_disk}'"):
                         assert all(d == expected_disk for d in disks), error()

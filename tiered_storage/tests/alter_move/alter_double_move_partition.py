@@ -57,7 +57,12 @@ def scenario(self, storage_type):
                     " AND partition = '201903' and active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
             expected_disk = (
-                "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
             )
             with Then(f"both disk names should be '{expected_disk}'"):
                 assert disks == [expected_disk] * 2, error()

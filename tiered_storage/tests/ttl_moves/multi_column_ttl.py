@@ -111,7 +111,12 @@ def scenario(self, name, engine):
                     " AND active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
             expected_external = (
-                "external_cache" if check_clickhouse_version(">=26.3")(self) else "external"
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
             )
             with Then("checking disk names"):
                 assert set(disks) == {"jbod1", "jbod2", expected_external}, error()

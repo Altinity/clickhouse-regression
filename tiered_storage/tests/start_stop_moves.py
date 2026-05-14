@@ -93,7 +93,14 @@ def scenario(self, cluster, node="clickhouse1"):
 
                         expected_disk = (
                             "external_cache"
-                            if check_clickhouse_version(">=26.3")(self)
+                            if (
+                                check_clickhouse_version(">=26.3")(self)
+                                and (
+                                    cluster.with_minio
+                                    or cluster.with_s3amazon
+                                    or cluster.with_s3gcs
+                                )
+                            )
                             else "external"
                         )
                         with Then(f"part should be on {expected_disk} disk"):
