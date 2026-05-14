@@ -19,6 +19,7 @@
       "attributes": {
         "oauth2.device.authorization.grant.enabled": "true"
       },
+      "optionalClientScopes": ["offline_access"],
       "protocolMappers": [
         {
           "name": "groups",
@@ -46,6 +47,7 @@
       "lastName": "User",
       "emailVerified": true,
       "groups": ["/grafana-admins", "/can-read"],
+      "realmRoles": ["offline_access"],
       "credentials": [
         {
           "type": "password",
