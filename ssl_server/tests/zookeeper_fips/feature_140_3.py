@@ -3,6 +3,7 @@ import ssl_server.tests.zookeeper.feature
 from ssl_server.tests.common import (
     fips_140_3_compatible_tlsv1_2_cipher_suites,
     fips_140_3_compatible_tlsv1_3_cipher_suites,
+    fips_forbidden_primitive_tlsv1_2_cipher_suites,
 )
 from ssl_server.tests.zookeeper.steps import *
 from ssl_server.requirements import *
@@ -343,6 +344,59 @@ def fips_140_3_connection(self, cipher_list=None, cipher_suites=None):
         check_clickhouse_connection_to_zookeeper()
 
 
+@TestOutline
+def forbidden_primitive_ffdh_zookeeper_connection(self, cipher_list):
+    """Secure ZooKeeper client SSL forces only TLS 1.2 finite-field DH cipher offers.
+
+    Expect TLS handshake failure when the cryptographic module declines FFDH,
+    matching the permissive-server openssl semantics exercised elsewhere.
+    """
+    with Given(
+        "ClickHouse coordination SSL client forces TLS 1.2 DHE-only cipher offer",
+    ):
+        entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+            "preferServerCiphers": "false",
+            "requireTLSv1_2": "true",
+            "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+            "cipherList": cipher_list,
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use secure connection"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then("I check ClickHouse connection to zookeeper fails at TLS handshake"):
+        # FIPS/AWS-LC may refuse DHE before sending ClientHello ciphers (NO_CIPHERS_AVAILABLE)
+        # or fail after peer alert (HANDSHAKE_FAILURE); OpenSSL 3 style uses a different string.
+        check_clickhouse_connection_to_zookeeper(
+            messages=[
+                "SSLV3_ALERT_HANDSHAKE_FAILURE",
+                "NO_CIPHERS_AVAILABLE",
+                "ssl/tls alert handshake failure",
+            ],
+        )
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"),
@@ -376,6 +430,11 @@ def fips_140_3(self):
             cipher_list=":".join(fips_140_3_compatible_tlsv1_2_cipher_suites),
             cipher_suites=":".join(fips_140_3_compatible_tlsv1_3_cipher_suites),
         )
+
+    with Feature("TLSv1.2 forbidden primitive (FFDH) suites"):
+        for cipher_suite in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+            with Feature(f"{cipher_suite}"):
+                forbidden_primitive_ffdh_zookeeper_connection(cipher_list=cipher_suite)
 
 
 @TestFeature

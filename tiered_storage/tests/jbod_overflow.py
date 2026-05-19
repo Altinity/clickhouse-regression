@@ -8,6 +8,7 @@
 import time
 
 from tiered_storage.tests.common import get_used_disks_for_table, get_random_string
+from helpers.common import check_clickhouse_version
 from testflows.core import *
 from testflows.asserts import error
 
@@ -110,9 +111,21 @@ def scenario(self, cluster, node="clickhouse1"):
                                     .split("\n")
                                 )
 
-                            with Then("all parts should be on 'external' disk"):
+                            expected_disk = (
+                                "external_cache"
+                                if (
+                                    check_clickhouse_version(">=26.3")(self)
+                                    and (
+                                        cluster.with_minio
+                                        or cluster.with_s3amazon
+                                        or cluster.with_s3gcs
+                                    )
+                                )
+                                else "external"
+                            )
+                            with Then(f"all parts should be on '{expected_disk}' disk"):
                                 assert all(
-                                    disk == "external" for disk in disks_for_merges
+                                    disk == expected_disk for disk in disks_for_merges
                                 ), error()
 
                 finally:

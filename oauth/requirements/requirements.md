@@ -2905,10 +2905,12 @@ version: 1.0
 `clickhouse-client` SHALL accept only the following values for `--login=<mode>`:
 
 - the empty string (bare `--login`) — cloud auto-login;
-- `browser` — Authorization Code + PKCE flow;
-- `device` — Device Authorization Grant flow.
+- exactly `browser` — Authorization Code + PKCE flow;
+- exactly `device` — Device Authorization Grant flow.
 
-Any other value SHALL be rejected with a `BAD_ARGUMENTS` error before any network traffic is initiated. The error message SHALL name the offending value.
+Matching SHALL be case-sensitive: values such as `BROWSER`, `Browser`, `DEVICE`, or `Device` SHALL be rejected like any unknown mode.
+
+Any other value SHALL be rejected with a `BAD_ARGUMENTS` error before any network traffic is initiated. The error message SHALL indicate that the mode must be `browser` or `device` and SHALL name the offending value.
 
 #### RQ.SRS-042.OAuth.Client.Login.Conflict.User
 version: 1.0

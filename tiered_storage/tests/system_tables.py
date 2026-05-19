@@ -54,7 +54,9 @@ def scenario(self, cluster, node="clickhouse1"):
                         )
                     ):
                         name += "_with_external"
-                    assert that(snapshot(disk_data, id=name)), error()
+                        if check_clickhouse_version(">=26.3")(self):
+                            name += ">=26.3"
+                    assert that(snapshot(disk_data, id=name, mode=snapshot.CHECK)), error()
 
         with When("I read system.storage_policies"):
             policy_fields = "policy_name, volume_name, volume_priority, disks, volume_type, max_data_part_size, move_factor, prefer_not_to_merge"
@@ -84,4 +86,6 @@ def scenario(self, cluster, node="clickhouse1"):
                         )
                     ):
                         name += "_with_external"
-                    assert that(snapshot(policies_data, id=name)), error()
+                        if check_clickhouse_version(">=26.3")(self):
+                            name += ">=26.3"
+                    assert that(snapshot(policies_data, id=name, mode=snapshot.CHECK)), error()

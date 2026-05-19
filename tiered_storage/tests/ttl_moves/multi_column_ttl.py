@@ -8,6 +8,7 @@
 import datetime
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 
 
@@ -109,8 +110,16 @@ def scenario(self, name, engine):
                     f"SELECT disk_name FROM system.parts WHERE table = '{name}'"
                     " AND active = 1 FORMAT TabSeparated"
                 ).output.splitlines()
+            expected_external = (
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
+            )
             with Then("checking disk names"):
-                assert set(disks) == {"jbod1", "jbod2", "external"}, error()
+                assert set(disks) == {"jbod1", "jbod2", expected_external}, error()
 
     finally:
         with Finally("I drop the table"):

@@ -42,6 +42,7 @@ MODULES = (
     "storage_paths",
     "disaster_recovery",
     "multi_replica_recovery",
+    "replicas",
     "system_monitoring",
     "settings",
     "direct_writes",

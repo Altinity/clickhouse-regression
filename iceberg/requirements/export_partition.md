@@ -45,6 +45,7 @@
     * 7.5 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.InitiatorFailover](#rqicebergexportpartitionmultireplicarecoveryinitiatorfailover)
     * 7.6 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.ZooKeeperBounce](#rqicebergexportpartitionmultireplicarecoveryzookeeperbounce)
     * 7.7 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.RandomisedChaos](#rqicebergexportpartitionmultireplicarecoveryrandomisedchaos)
+    * 7.8 [RQ.Iceberg.ExportPartition.MultiReplicaRecovery.SettingDisabledFailover](#rqicebergexportpartitionmultireplicarecoverysettingdisabledfailover)
 * 8 [Observability and export settings](#observability-and-export-settings)
     * 8.1 [RQ.Iceberg.ExportPartition.SystemMonitoring.ReplicatedPartitionExports](#rqicebergexportpartitionsystemmonitoringreplicatedpartitionexports)
     * 8.2 [RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog](#rqicebergexportpartitionsystemmonitoringpartlog)
@@ -408,6 +409,19 @@ version: 1.0
 * Killing a replica at randomly-chosen export-lifecycle phases (before commit, during commit, after `COMPLETED`) with random kill modes and restart policies SHALL converge to a terminal status with at most one snapshot per partition; for kills after `COMPLETED` the destination state SHALL remain unchanged.
 * Repeatedly bouncing the initiating replica during a single export SHALL still produce at most one append snapshot.
 * Exporting many partitions concurrently while a chaos thread randomly bounces a replica SHALL produce a linear, txn-id-tagged snapshot chain with no double-commits.
+
+### RQ.Iceberg.ExportPartition.MultiReplicaRecovery.SettingDisabledFailover
+version: 1.0
+
+[ClickHouse] SHALL allow a peer replica to finish an in-flight export when the initiating client authenticates as a ClickHouse user whose profile fixes `allow_experimental_insert_into_iceberg = 0`, while `default` keeps the gate enabled on every replica:
+
+* The initiating session SHALL parse and schedule `ALTER TABLE … EXPORT PARTITION` because the per-query setting overrides the restrictive profile default.
+* The export SHALL reach `COMPLETED` and the destination SHALL hold every source row once the peer applies the gate-enabled profile for its background work.
+* The `source_replica` recorded in `system.replicated_partition_exports` SHALL name the **initiating** replica encoded in the Keeper manifest when `ALTER TABLE … EXPORT PARTITION` runs (ClickHouse documents this column as “Name of the source replica.”); it SHALL NOT be rewritten when a peer replica performs the Iceberg commit work.
+
+Iceberg regression containers bind one host `users.d` directory into every replica service; overriding `profiles/default` on “just clickhouse1” is not replica-local, so the regression adds a dedicated restrictive profile and a matching **SQL** ``CREATE USER`` identity (``GRANT`` cannot extend ``users_xml``-only users).
+
+**Regression module:** `iceberg.tests.export_partition.replicas` (`replicas.py`).
 
 ## Observability and export settings
 

@@ -3,6 +3,7 @@
 from testflows.core import *
 
 from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost,
     RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride,
     RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort,
     RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields,
@@ -11,6 +12,7 @@ from oauth.tests.client_oauth_login.common import oauth_connection_config_xml
 from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
     assert_no_segfault,
+    extract_device_user_code_from_client_output,
     reset_client_state,
     run_clickhouse_client_no_host,
     write_client_config_xml,
@@ -115,6 +117,268 @@ def invalid_callback_port_rejected(self):
 
     with Then("the client did not crash"):
         assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
+@Name("connection block with login browser drives browser OAuth")
+def connection_block_login_browser(self):
+    """``<login>browser</login>`` reaches browser OAuth without crashing."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write a browser-oriented connection block"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(login_mode="browser")
+        )
+
+    with When("I run clickhouse-client with --connection ch_oauth"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=14,
+        )
+
+    with Then("the client did not crash"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost("1.0"))
+@Name("connection block bare login requires explicit oauth fields")
+def connection_block_bare_login_without_oauth_requires_args(self):
+    """Empty ``<login/>`` on non-cloud hosts demands OAuth configuration."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write connection metadata without oauth-url"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="",
+                oauth_url=None,
+                oauth_client_id=None,
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=12,
+        )
+
+    with Then("OAuth parameters are required"):
+        assert exit_code != 0
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "oauth" in ol or "bad_arguments" in ol or "authentication_failed" in ol
+        ), f"Expected OAuth requirement hint, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
+@Name("connection oauth-url discovers device endpoints")
+def connection_block_oauth_url_oidc_discovery_device_flow(self):
+    """``<oauth-url>`` drives OIDC discovery for device login."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write oauth-url plus confidential client secret"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="device",
+                oauth_url="http://keycloak:8080/realms/grafana",
+                oauth_client_id="grafana-client",
+                oauth_client_secret="grafana-secret",
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=15,
+        )
+
+    with Then("device authorization details appear"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            extract_device_user_code_from_client_output(output) is not None
+        ), f"Expected discovery-driven device flow:\n{output}"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
+@Name("invalid oauth-url fails discovery cleanly")
+def connection_block_invalid_oauth_url(self):
+    """Bad issuer URLs stop discovery without crashing."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write a bogus oauth-url"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="device",
+                oauth_url="http://keycloak:8080/nonexistent-realm",
+                oauth_client_id="grafana-client",
+                oauth_client_secret="grafana-secret",
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=14,
+        )
+
+    with Then("the client errors"):
+        assert exit_code != 0
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride("1.0"))
+@Name("CLI oauth flags override broken connection defaults")
+def cli_overrides_multiple_oauth_fields(self):
+    """``--oauth-url`` / secret / audience supersede bad XML defaults."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write misleading OAuth defaults in XML"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="device",
+                oauth_url="http://127.0.0.1:9/dead",
+                oauth_client_id="wrong-id",
+                oauth_client_secret="wrong-secret",
+            )
+        )
+
+    with When("I override via CLI with working Keycloak endpoints"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+                "--oauth-url",
+                "http://keycloak:8080/realms/grafana",
+                "--oauth-client-id",
+                "grafana-client",
+                "--oauth-client-secret",
+                "grafana-secret",
+                "--oauth-audience",
+                "http://localhost",
+            ],
+            query="SELECT 1",
+            timeout=14,
+        )
+
+    with Then("CLI wins — device flow reaches Keycloak"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            extract_device_user_code_from_client_output(output) is not None
+        ), f"Expected CLI overrides to fix discovery:\n{output}"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
+@Name("negative oauth-callback-port in connection block is rejected")
+def connection_block_negative_callback_port(self):
+    """Callback ports below zero are invalid."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write oauth-callback-port=-1"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="browser",
+                oauth_callback_port="-1",
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=12,
+        )
+
+    with Then("the client rejects the port"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "bad_arguments" in ol or "invalid" in ol or "port" in ol
+        ), f"Expected invalid port diagnostic:\n{output}"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
+@Name("oauth-callback-port 65535 is accepted")
+def connection_block_callback_port_upper_bound(self):
+    """Upper TCP port boundary ``65535`` validates."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I pin oauth-callback-port to 65535"):
+        write_client_config_xml(
+            contents=oauth_connection_config_xml(
+                login_mode="browser",
+                oauth_callback_port="65535",
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "ch_oauth",
+            ],
+            query="SELECT 1",
+            timeout=14,
+        )
+
+    with Then("there is no immediate invalid-port error"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert (
+            "invalid port" not in output.lower()
+        ), f"Unexpected rejection for 65535:\n{output}"
 
 
 @TestFeature

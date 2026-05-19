@@ -4,12 +4,17 @@ from testflows.core import *
 from testflows.asserts import error
 
 from oauth.requirements.requirements import (
+    RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin,
     RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost,
 )
+from oauth.tests.client_oauth_login.common import connection_only_config_xml
 from oauth.tests.steps.client_login import (
+    DEFAULT_CONFIG_PATH,
     assert_no_segfault,
     reset_client_state,
     run_clickhouse_client,
+    run_clickhouse_client_no_host,
+    write_client_config_xml,
 )
 
 
@@ -42,6 +47,74 @@ def cloud_auto_login_off_for_non_cloud_host(self):
             or "BAD_ARGUMENTS" in output
             or "AUTHENTICATION_FAILED" in output
         ), f"Expected explicit-OAuth-args hint or BAD_ARGUMENTS, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin("1.0"))
+@Name("clickhouse.cloud host avoids bare-login BAD_ARGUMENTS")
+def cloud_hostname_triggers_auto_login_branch(self):
+    """``*.clickhouse.cloud`` must not demand manual ``--oauth-url`` flags immediately."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with When("I run bare --login against a cloud-shaped hostname"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "test.clickhouse.cloud",
+                "--login",
+            ],
+            query="SELECT 1",
+            timeout=18,
+            expect_error=True,
+        )
+
+    with Then("failure is connectivity—not missing oauth-url arguments"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert not (
+            "bad_arguments" in ol and "oauth-url" in ol
+        ), f"Cloud host should not complain about oauth-url:\n{output}"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin("1.0"))
+@Name("cloud hostname via connection block uses auto-login branch")
+def cloud_hostname_via_connection_block(self):
+    """Connection-derived cloud hosts follow the same detection rules."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I install a cloud-shaped hostname in connections_credentials"):
+        write_client_config_xml(
+            contents=connection_only_config_xml(
+                host="test.clickhouse.cloud",
+                port=9440,
+                name="cloud_conn",
+            )
+        )
+
+    with When("I run bare --login with --connection"):
+        exit_code, output = run_clickhouse_client_no_host(
+            args=[
+                "--config",
+                DEFAULT_CONFIG_PATH,
+                "--connection",
+                "cloud_conn",
+                "--login",
+            ],
+            query="SELECT 1",
+            timeout=18,
+        )
+
+    with Then("failure is not missing-oauth-url BAD_ARGUMENTS"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert not (
+            "bad_arguments" in ol and "oauth-url" in ol
+        ), f"Cloud host should not complain about oauth-url:\n{output}"
 
 
 @TestFeature

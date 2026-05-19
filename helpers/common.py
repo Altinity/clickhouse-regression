@@ -177,13 +177,26 @@ def check_if_25_8_altinity_build(test=None):
     return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
 
 
+def check_if_antalya_pre_26_1(test=None):
+    """True if build is Antalya with version < 26.1 (i.e., antalya 25.8).
+
+    Antalya 25.8 wraps inferred Parquet columns in Nullable, while
+    antalya 26.1+ behaves like regular upstream >=26.1 (no extra Nullable).
+    """
+    if not check_if_antalya_build(test):
+        return False
+    return not check_clickhouse_version(">=26.1")(test)
+
+
 def check_clickhouse_version_or_antalya(version):
     """Return a predicate that is True when either ``check_clickhouse_version(version)``
     matches *or* the build is an Antalya build.
 
-    Antalya is currently based on ClickHouse 25.8 but ships parquet behavior that
-    matches upstream >=26.1, so version-gated branches that select snapshots /
-    settings for >=26.1 must also fire for Antalya.
+    Antalya 25.8 is based on ClickHouse 25.8 but ships parquet behavior that
+    matches upstream >=26.1 (e.g. schema inference, null type support), so
+    version-gated branches that select snapshots / settings for >=26.1 must
+    also fire for Antalya 25.8.  Antalya 26.1+ satisfies version checks
+    directly via its numeric version.
     """
 
     def check(test):
@@ -310,6 +323,47 @@ def check_is_boringssl_build(test):
         steps=False,
     ).output.strip()
     return output == "1"
+
+
+def check_is_fips_clickhouse_build(test):
+    """Return True if this ClickHouse binary is a FIPS build.
+
+    Altinity FIPS Docker tags (e.g. ``altinityfips``) do not always appear in
+    ``SELECT version()``; use ``system.build_options`` instead of substring
+    checks on the version string (avoids needing ``--force-fips``).
+
+    Matches the same signals used in ``ssl_server`` FIPS 140-3 build checks:
+    ``FIPS_CLICKHOUSE=1`` and/or ``OPENSSL_VERSION`` containing ``AWS-LC-FIPS``.
+    """
+    node = getattr(test.context, "node", None)
+    if node is None:
+        node = getattr(current().context, "node", None)
+    if node is None:
+        cluster = getattr(test.context, "cluster", None) or getattr(
+            current().context, "cluster", None
+        )
+        if cluster is not None and "clickhouse" in getattr(cluster, "nodes", {}):
+            try:
+                node = cluster.node(cluster.nodes["clickhouse"][0])
+            except (AttributeError, IndexError, KeyError):
+                node = None
+    if node is None:
+        return False
+
+    fips_flag = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'FIPS_CLICKHOUSE' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    if fips_flag == "1":
+        return True
+
+    openssl_ver = node.query(
+        "SELECT value FROM system.build_options WHERE name = 'OPENSSL_VERSION' FORMAT TabSeparated",
+        no_checks=1,
+        steps=False,
+    ).output.strip()
+    return "AWS-LC-FIPS" in openssl_ver
 
 
 def check_is_altinity_build(node=None):
@@ -583,7 +637,8 @@ def create_xml_config_content(
 
 
 def add_invalid_config(
-    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None
+    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None,
+    validate_during_invalid=None,
 ):
     """Check that ClickHouse errors when trying to load invalid configuration file."""
     cluster = current().context.cluster
@@ -616,6 +671,11 @@ def add_invalid_config(
         if restart:
             with When("I restart ClickHouse to apply the config changes"):
                 node.restart_clickhouse(safe=False, wait_healthy=False, user=user)
+        time.sleep(5)
+
+        if validate_during_invalid is not None:
+            with When("running validation while invalid config is active"):
+                validate_during_invalid()
 
     finally:
         if recover_config is None:
@@ -1371,7 +1431,7 @@ def get_snapshot_id(
         if matches:
             id_postfix = clickhouse_version
 
-    if antalya_suffix and check_if_antalya_build(current()):
+    if antalya_suffix and check_if_antalya_pre_26_1(current()):
         id_postfix = id_postfix + "_antalya"
 
     if snapshot_id is None:

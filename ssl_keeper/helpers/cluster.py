@@ -823,6 +823,7 @@ class Cluster(object):
         self.clickhouse_odbc_bridge_binary_path = clickhouse_odbc_bridge_binary_path
         self.clickhouse_package_path = None
         self.clickhouse_docker_image_name = None
+        self.source_docker_image = None
         self.configs_dir = configs_dir
         self.local = local
         self.nodes = nodes or {}
@@ -889,6 +890,9 @@ class Cluster(object):
                     self.clickhouse_binary_path = f"./{filename}"
 
             elif self.clickhouse_binary_path.startswith("docker://"):
+                self.source_docker_image = self.clickhouse_binary_path.split(
+                    "docker://", 1
+                )[-1]
                 if current().context.clickhouse_version is None:
                     parsed_version = ""
                     for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
@@ -1057,11 +1061,13 @@ class Cluster(object):
                     raise
                 except ExpectTimeoutError:
                     self.close_control_shell()
-                    timeout = timeout - (time.time() - time_start)
-                    if timeout <= 0:
-                        raise RuntimeError(
-                            f"failed to get docker container id for the {node} service"
-                        )
+
+                if time.time() - time_start > timeout:
+                    raise RuntimeError(
+                        f"failed to get docker container id for the {node} service "
+                        f"within {timeout}s (docker-compose ps -q output={container_id!r})"
+                    )
+                time.sleep(1)
         return container_id
 
     def shell(self, node, timeout=300):
@@ -1268,6 +1274,27 @@ class Cluster(object):
 
     def up(self, timeout=30 * 60):
         """Bring cluster up."""
+        # Compose expands ${CLICKHOUSE_TESTS_DIR}; if unset, volume mounts break and
+        # ClickHouse never becomes queryable (hangs in wait_clickhouse_healthy).
+        self.environ.setdefault(
+            "CLICKHOUSE_TESTS_DIR", os.path.abspath(self.configs_dir)
+        )
+        if self.clickhouse_docker_image_name:
+            self.environ.setdefault(
+                "CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME",
+                self.clickhouse_docker_image_name,
+            )
+        elif getattr(self, "source_docker_image", None):
+            derived_name = re.sub(
+                r"[^a-zA-Z0-9_.-]",
+                "_",
+                self.source_docker_image.replace("/", "_"),
+            )
+            self.environ.setdefault(
+                "CLICKHOUSE_TESTS_DOCKER_IMAGE_NAME",
+                derived_name,
+            )
+
         if self.local:
             with Given("I am running in local mode"):
                 with Then("check --clickhouse-binary-path is specified"):

@@ -18,7 +18,9 @@ def datatype(self, func, table, col_name):
 def scenario(self, func="max({params})", table=None, snapshot_id=None):
     """Check max aggregate function."""
 
-    if check_clickhouse_version(">=24.1")(self):
+    if check_clickhouse_version(">=26.4")(self):
+        clickhouse_version = ">=26.4"
+    elif check_clickhouse_version(">=24.1")(self):
         clickhouse_version = ">=24.1"
     elif check_clickhouse_version(">=23.12")(self):
         clickhouse_version = ">=23.12"
