@@ -27,6 +27,15 @@ def parse_s3_uri(uri):
     return endpoint_url, bucket, prefix
 
 
+def join_s3_key(*parts):
+    """Join S3 key segments without introducing duplicate slashes."""
+    return "/".join(
+        str(part).strip("/")
+        for part in parts
+        if part is not None and str(part).strip("/") != ""
+    )
+
+
 def add_config(
     config,
     timeout=60,
@@ -1184,8 +1193,9 @@ def cleanup(self, storage="minio", disk="external", s3_path=None):
 
     if storage == "hetzner" and s3_path is not None:
         s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
-        bucket_prefix = getattr(self.context, "bucket_prefix", None) or "data"
-        cmd = f"aws s3 rm s3://{self.context.bucket_name}/{bucket_prefix}/{s3_path} --recursive"
+        bucket_prefix = getattr(self.context, "bucket_prefix", None)
+        s3_key = join_s3_key(bucket_prefix, s3_path)
+        cmd = f"aws s3 rm s3://{self.context.bucket_name}/{s3_key} --recursive"
         if s3_endpoint_url:
             cmd += f" --endpoint-url {s3_endpoint_url}"
         current().context.cluster.command("aws", cmd)
@@ -1256,6 +1266,7 @@ def temporary_bucket_path(
 
     if bucket_prefix is None:
         bucket_prefix = self.context.bucket_prefix
+    bucket_prefix = (bucket_prefix or "").strip("/")
 
     if access_key_id is None:
         access_key_id = self.context.access_key_id
@@ -1274,18 +1285,19 @@ def temporary_bucket_path(
 
     finally:
         with Finally("remove the temporary bucket path"):
+            temp_key_prefix = join_s3_key(bucket_prefix, temp_path)
             if storage == "minio":
                 minio_client = self.context.cluster.minio_client
                 for obj in list(minio_client.list_objects(bucket_name, recursive=True)):
                     if str(obj.object_name).find(".SCHEMA_VERSION") != -1:
                         continue
-                    if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
+                    if obj.object_name.startswith(temp_key_prefix):
                         minio_client.remove_object(bucket_name, obj.object_name)
 
             elif storage in ("aws_s3", "hetzner"):
                 cluster = current().context.cluster
 
-                cmd = f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
+                cmd = f"aws s3 rm s3://{bucket_name}/{temp_key_prefix} --recursive"
                 if aws_region:
                     cmd += f" --region {aws_region}"
                 if s3_endpoint_url:

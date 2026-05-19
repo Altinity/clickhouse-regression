@@ -67,10 +67,14 @@ on:
           - ARM
           - all
       artifacts:
-        description: "Artifact S3 bucket"
+        description: "Report storage backend and bucket (hetzner=Hetzner internal, internal=AWS internal fallback)"
         type: choice
         options:
+          - hetzner
           - internal
+          - public
+          - builds
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice
@@ -106,7 +110,10 @@ env:
   REPORT_S3_ENDPOINT: ${{ vars.REPORT_S3_ENDPOINT }}
   REPORT_S3_PUBLIC_ENDPOINT_URL: ${{ vars.REPORT_S3_PUBLIC_ENDPOINT_URL }}
   REPORT_S3_CLI_ENDPOINT_URL: ${{ secrets.REPORT_S3_CLI_ENDPOINT_URL }}
-  AWS_ENDPOINT_URL_S3: ${{ secrets.REPORT_S3_CLI_ENDPOINT_URL }}
+  HETZNER_S3_BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+  HETZNER_S3_REGION: ${{ secrets.HETZNER_S3_REGION }}
+  HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}
+  HETZNER_S3_ACCESS_KEY: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   CHECKS_DATABASE_HOST: ${{ secrets.CHECKS_DATABASE_HOST }}

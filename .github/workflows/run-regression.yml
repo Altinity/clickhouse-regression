@@ -119,7 +119,7 @@ on:
         description: "🏺 Artifact S3 bucket"
         type: choice
         options:
-          - internal
+          - hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice
@@ -178,7 +178,7 @@ on:
         description: "Artifact S3 bucket"
         type: string
         required: false
-        default: internal
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: string
@@ -1050,7 +1050,7 @@ jobs:
       timeout_minutes: 360
       part: 1
       storage_path: /hetzner
-      regression_args: '--storage hetzner --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}}'
+      regression_args: '--storage hetzner'
       artifact_name: s3-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1071,7 +1071,7 @@ jobs:
       timeout_minutes: 360
       part: 2
       storage_path: /hetzner
-      regression_args: '--storage hetzner --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}}'
+      regression_args: '--storage hetzner'
       artifact_name: s3-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}
@@ -1414,7 +1414,7 @@ jobs:
       job_name: tiered_storage_hetzner
       timeout_minutes: 180
       storage_path: /hetzner
-      regression_args: '--with-s3hetzner --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}}'
+      regression_args: '--with-s3hetzner'
       artifact_name: tiered_storage-hetzner-artifacts
       ref: ${{ inputs.ref }}
       package: ${{ inputs.package }}

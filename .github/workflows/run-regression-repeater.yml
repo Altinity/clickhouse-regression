@@ -97,10 +97,14 @@ on:
           - tiered_storage_minio
           - window_functions
       artifacts:
-        description: "Artifact S3 bucket"
+        description: "Report storage: hetzner (default) or internal/public/builds (AWS)"
         type: choice
         options:
+          - hetzner
           - internal
+          - public
+          - builds
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice

@@ -36,7 +36,7 @@ DEFAULTS = {
     "flags": "--use-keeper --with-analyzer",
     "suite": "all",
     "output_format": "classic",
-    "artifacts": "internal",
+    "artifacts": "hetzner",
     "branch": "main",
     "arch": "x86",
 }
@@ -81,7 +81,7 @@ CHOICES = {
         "progress",
         "raw",
     ],
-    "artifact_locations": ["internal"],
+    "artifact_locations": ["hetzner"],
     "suites": [
         "all",
         "all_aws",
@@ -479,19 +479,25 @@ def trigger():
                 print(f"Response text: {e.response.text}")
             sys.exit(1)
 
-        log_path = (
-            "altinity-internal-test-reports"
-            if args.artifacts == "internal"
-            else "altinity-test-reports"
-        )
+        if args.artifacts == "public":
+            log_path = "altinity-test-reports"
+        elif args.artifacts == "builds":
+            log_path = "altinity-build-artifacts"
+        else:
+            log_path = "altinity-internal-test-reports"
         print(
             f"   Workflow triggered on branch {args.branch} for {args.arch} architecture\n"
             f"   \u2728 https://github.com/{REPO_OWNER}/{REPO_NAME}/actions \u2728"
         )
         print("\n".join(f"   {k}: {v}" for k, v in inputs.items()))
-        print(
-            f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{inputs['version']}/testflows/ after the run is complete"
-        )
+        if args.artifacts == "hetzner":
+            print(
+                f"   Job logs will be uploaded to Hetzner bucket '{log_path}' (see report index in CI job output)"
+            )
+        else:
+            print(
+                f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{inputs['version']}/testflows/ after the run is complete"
+            )
 
     if args.wait:
         with Action("Wait for workflow to finish"):

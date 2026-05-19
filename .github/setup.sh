@@ -87,24 +87,71 @@ fi
 echo "::endgroup::"
 
 echo "::group::Generate upload paths..."
-if [[ $artifacts == 'internal' ]]; then
-  artifact_s3_bucket_path="altinity-internal-test-reports"
-  artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
-  confidential="--confidential"
-elif [[ $artifacts == 'public' ]]; then
-  artifact_s3_bucket_path="altinity-test-reports"
-  artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
-  confidential=""
-elif [[ $artifacts == 'builds' ]]; then
-  artifact_s3_bucket_path="altinity-build-artifacts"
-  confidential=""
-  if [[ $event_name == "pull_request" ]]; then
-    artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
-  else # release, push, workflow_dispatch
-    artifact_s3_dir="REFs/$GITHUB_REF_NAME/$build_sha/regression"
-  fi
 
+artifacts="${artifacts:-hetzner}"
+
+# Build HETZNER_S3_URI only when Hetzner is selected for reports or when this is
+# an explicit hetzner suite job (e.g. s3_hetzner, tiered_storage_hetzner).
+if [[ "$artifacts" == "hetzner" || "${GITHUB_JOB:-}" == *"hetzner"* ]]; then
+  : "${HETZNER_S3_BUCKET:?HETZNER_S3_BUCKET must be set when Hetzner is used}"
+  : "${HETZNER_S3_REGION:?HETZNER_S3_REGION must be set when Hetzner is used}"
+  echo "HETZNER_S3_URI=https://${HETZNER_S3_REGION}.your-objectstorage.com/${HETZNER_S3_BUCKET}/" >>"$GITHUB_ENV"
 fi
+
+# For hetzner: override AWS_* credentials (workflow defaults them from AWS_REPORT_*)
+# and set the Hetzner endpoint. AWS branch is a no-op.
+# Secret values reach this script only via ${{ secrets.HETZNER_S3_* }}, so
+# GitHub Actions auto-masks them; we still disable tracing for credential writes.
+if [[ "$artifacts" == "hetzner" ]]; then
+  : "${HETZNER_S3_BUCKET:?HETZNER_S3_BUCKET must be set when artifacts=hetzner}"
+  : "${HETZNER_S3_REGION:?HETZNER_S3_REGION must be set when artifacts=hetzner (Hetzner location: fsn1, nbg1, hel1, ...)}"
+  : "${HETZNER_S3_KEY_ID:?HETZNER_S3_KEY_ID must be set when artifacts=hetzner}"
+  : "${HETZNER_S3_ACCESS_KEY:?HETZNER_S3_ACCESS_KEY must be set when artifacts=hetzner}"
+
+  hetzner_endpoint="https://${HETZNER_S3_REGION}.your-objectstorage.com"
+  export REPORT_S3_PUBLIC_ENDPOINT_URL="$hetzner_endpoint"
+  export S3_CLI_ENDPOINT_URL="$hetzner_endpoint"
+
+  { set +x; } 2>/dev/null
+  {
+    echo "AWS_ACCESS_KEY_ID=$HETZNER_S3_KEY_ID"
+    echo "AWS_SECRET_ACCESS_KEY=$HETZNER_S3_ACCESS_KEY"
+    echo "AWS_DEFAULT_REGION=$HETZNER_S3_REGION"
+  } >>"$GITHUB_ENV"
+  set -x
+fi
+
+# Bucket layout: hetzner reuses HETZNER_S3_BUCKET; AWS values use legacy buckets.
+case "$artifacts" in
+  hetzner)
+    artifact_s3_bucket_path="$HETZNER_S3_BUCKET"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential="--confidential"
+    ;;
+  internal)
+    artifact_s3_bucket_path="altinity-internal-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential="--confidential"
+    ;;
+  public)
+    artifact_s3_bucket_path="altinity-test-reports"
+    artifact_s3_dir="clickhouse/$version/$GITHUB_RUN_ID/testflows"
+    confidential=""
+    ;;
+  builds)
+    artifact_s3_bucket_path="altinity-build-artifacts"
+    confidential=""
+    if [[ $event_name == "pull_request" ]]; then
+      artifact_s3_dir="PRs/$pr_number/$build_sha/regression"
+    else
+      artifact_s3_dir="REFs/$GITHUB_REF_NAME/$build_sha/regression"
+    fi
+    ;;
+  *)
+    echo "::error::Unknown artifacts='$artifacts'"
+    exit 1
+    ;;
+esac
 
 if [[ $args == *'--with-analyzer'* ]]; then
   analyzer="with_analyzer"
@@ -127,7 +174,7 @@ fi
 
 report_public_endpoint_url="${REPORT_S3_PUBLIC_ENDPOINT_URL:-${S3_PUBLIC_ENDPOINT_URL:-}}"
 report_endpoint="${REPORT_S3_ENDPOINT:-${S3_ENDPOINT:-}}"
-report_cli_endpoint_url="${REPORT_S3_CLI_ENDPOINT_URL:-${S3_CLI_ENDPOINT_URL:-${AWS_ENDPOINT_URL_S3:-${AWS_ENDPOINT_URL:-}}}}"
+report_cli_endpoint_url="${S3_CLI_ENDPOINT_URL:-${REPORT_S3_CLI_ENDPOINT_URL:-${AWS_ENDPOINT_URL_S3:-${AWS_ENDPOINT_URL:-}}}}"
 
 report_public_endpoint_url="${report_public_endpoint_url%/}"
 report_endpoint="${report_endpoint%/}"

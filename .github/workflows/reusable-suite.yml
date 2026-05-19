@@ -97,7 +97,12 @@ jobs:
       REPORT_S3_ENDPOINT: ${{ vars.REPORT_S3_ENDPOINT }}
       REPORT_S3_PUBLIC_ENDPOINT_URL: ${{ vars.REPORT_S3_PUBLIC_ENDPOINT_URL }}
       REPORT_S3_CLI_ENDPOINT_URL: ${{ secrets.REPORT_S3_CLI_ENDPOINT_URL }}
-      AWS_ENDPOINT_URL_S3: ${{ secrets.REPORT_S3_CLI_ENDPOINT_URL }}
+      # Hetzner (s3/tiered_storage suites and hetzner report uploads).
+      # HETZNER_S3_URI is built from BUCKET + REGION in setup.sh.
+      HETZNER_S3_BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+      HETZNER_S3_REGION: ${{ secrets.HETZNER_S3_REGION }}
+      HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}
+      HETZNER_S3_ACCESS_KEY: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
       # Docker credentials
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -159,10 +164,10 @@ jobs:
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_KEY_ID}}'/${{ secrets.AWS_KEY_ID }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{AWS_ACCESS_KEY}}'/${{ secrets.AWS_ACCESS_KEY }}}"
           # Hetzner S3 replacements
-          REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_URI}}'/${{ secrets.HETZNER_S3_URI }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_BUCKET}}'/${{ secrets.HETZNER_S3_BUCKET }}}"
+          REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_REGION}}'/${{ secrets.HETZNER_S3_REGION }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_KEY_ID}}'/${{ secrets.HETZNER_S3_KEY_ID }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_ACCESS_KEY}}'/${{ secrets.HETZNER_S3_ACCESS_KEY }}}"
-          REGRESSION_ARGS="${REGRESSION_ARGS//'{{HETZNER_S3_REGION}}'/${{ secrets.HETZNER_S3_REGION }}}"
           # GCS replacements
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{GCS_URI}}'/${{ secrets.GCS_URI }}}"
           REGRESSION_ARGS="${REGRESSION_ARGS//'{{GCS_KEY_ID}}'/${{ secrets.GCS_KEY_ID }}}"
