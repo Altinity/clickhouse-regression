@@ -1010,6 +1010,195 @@ def server_all_protocols_disabled(self):
 
 
 @TestFeature
+@Name("AWS-LC service-indicator note and FFDH handshake probes")
+@Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"))
+def server_default_config_algorithm_enforcement(self, node=None):
+    """Compliance context for AWS-LC FIPS vs what this regression can observe.
+
+    AWS-LC documents (``crypto/fipsmodule/FIPS.md``, Service Indicator) that FIPS
+    140-3 IG 2.4.C can be met via a **runtime service indicator**: approved and
+    non-approved algorithms may **coexist** in the library; distinguishing an
+    **approved security service** from non-approved use relies on indicator
+    checks, not on TLS cipher negotiation alone. Other stacks disable
+    non-approved algorithms outright; AWS-LC explicitly chose the indicator
+    pattern.
+
+    Therefore **successful negotiation of a cipher suite is not** a reliable
+    proof that only approved cryptographic services ran (e.g. ChaCha20-Poly1305
+    may still complete a handshake while falling outside SP 800-52 §3.3.1
+    acceptable suite lists and outside the policy's AES-GCM TLS framing).
+
+    ClickHouse does not expose ``FIPS_service_indicator_*`` (140sp4816 §4.3) to
+    SQL or a regression probe today, so **this suite cannot assert indicator
+    transitions**. Coverage of validated crypto behavior remains with ACVP / SSL
+    runner scenarios elsewhere in this module.
+
+    **What we still probe here:** TLS 1.2 ``DHE_*`` suites require finite-field
+    Diffie-Hellman; 140sp4816 Table 8 lists Diffie Hellman as non-approved for
+    shared-secret computation. Those handshakes **often fail** without explicit
+    ``cipherList`` lockdown—a behavioral check orthogonal to “negotiation =
+    approval”, not a substitute for indicator verification.
+
+    The same suites are exercised via ``clickhouse-client`` (native secure TCP)
+    and, under ``ssl_keeper`` / ZooKeeper FIPS modules, via keeper ports and
+    coordination client SSL respectively.
+    """
+    if node is None:
+        node = self.context.node
+
+    hostname = node.name
+    bash_tools = self.context.cluster.node("bash-tools")
+    self.context.connection_port = self.context.secure_tcp_port
+
+    with Given(
+        "Reference: AWS-LC FIPS compliance uses service indicators",
+        description=(
+            "See upstream crypto/fipsmodule/FIPS.md (Service Indicator). "
+            "TLS negotiation outcomes alone do not classify approved vs "
+            "non-approved cryptographic service use; SP 800-52 suite "
+            "allowlists are a separate deployment layer."
+        ),
+    ):
+        pass
+
+    with Given(
+        "server is running with the permissive SSL configuration installed by enable_ssl",
+        description=(
+            "no cipherList, cipherSuites, or disableProtocols are configured "
+            "on the secure TCP port"
+        ),
+    ):
+        pass
+
+    for cipher in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+        with Check(
+            f"TLSv1.2 DHE suite {cipher} handshake should fail without cipherList lockdown "
+            "(FFDH primitive unavailable in this FIPS stack)"
+        ):
+            openssl_client_connection(
+                options=f'-cipher "{cipher}" -tls1_2',
+                success=False,
+                node=bash_tools,
+                hostname=hostname,
+            )
+
+    for cipher in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+        with Check(
+            f"clickhouse-client TLSv1.2 DHE suite {cipher} should fail without cipherList lockdown "
+            "(FFDH primitive unavailable in this FIPS stack)"
+        ):
+            clickhouse_client_connection(
+                options={
+                    "requireTLSv1_2": "true",
+                    "cipherList": cipher,
+                    "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                },
+                success=False,
+                hostname=hostname,
+            )
+
+
+@TestFeature
+@Name("misconfigured server SSL attempting legacy protocols and FFDH ciphers")
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"),
+)
+def server_misconfiguration_attempt_non_fips_protocols_and_ciphers(self, node=None):
+    """Negative coverage when server XML appears to widen the TLS attack surface.
+
+    The operator sets ``disableProtocols`` to only ``sslv2,sslv3`` (omitting ``tlsv1``
+    and ``tlsv1_1``) and advertises a finite-field ``DHE_*`` TLS 1.2 suite ahead of
+    ECDHE in ``cipherList``. That is the wrong posture for SP 800-52 style deployments;
+    on AWS-LC FIPS builds, TLS 1.0/1.1 and ``DHE_*`` handshakes must still fail while
+    allowlisted TLS 1.2 (ECDHE) and TLS 1.3 remain available.
+
+    This does not prove CMVP-approved-vs-non-approved service indicators; it only
+    checks that misconfiguration cannot re-enable these protocol/cipher paths end-to-end.
+    """
+    if node is None:
+        node = self.context.node
+
+    hostname = node.name
+    bash_tools = self.context.cluster.node("bash-tools")
+    self.context.connection_port = self.context.secure_tcp_port
+
+    with Given(
+        "I apply server SSL that appears to allow legacy TLS and FFDH cipher offers",
+        description=(
+            "disableProtocols sslv2,sslv3 only; cipherList lists a DHE suite before "
+            "an allowlisted ECDHE suite; TLS 1.3 suites stay policy-consistent."
+        ),
+    ):
+        entries = define(
+            "SSL settings",
+            {
+                "disableProtocols": "sslv2,sslv3",
+                "preferServerCiphers": "true",
+                "cipherList": ":".join(
+                    [
+                        fips_forbidden_primitive_tlsv1_2_cipher_suites[0],
+                        fips_140_3_compatible_tlsv1_2_cipher_suites[0],
+                    ]
+                ),
+                "cipherSuites": ":".join(fips_140_3_compatible_tlsv1_3_cipher_suites),
+            },
+        )
+
+    with And("I apply SSL server configuration"):
+        add_ssl_server_configuration_file(
+            entries=entries,
+            config_file="ssl_misconfiguration_non_fips_attempt.xml",
+            restart=True,
+        )
+
+    with Check("TLSv1 client handshake must still fail"):
+        openssl_client_connection(
+            options="-tls1",
+            success=False,
+            message="no protocols available",
+            node=bash_tools,
+            hostname=hostname,
+        )
+
+    with Check("TLSv1_1 client handshake must still fail"):
+        openssl_client_connection(
+            options="-tls1_1",
+            success=False,
+            message="no protocols available",
+            node=bash_tools,
+            hostname=hostname,
+        )
+
+    for cipher in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+        with Check(
+            f"TLSv1.2 client forcing server-advertised DHE suite {cipher} must still fail"
+        ):
+            openssl_client_connection(
+                options=f'-cipher "{cipher}" -tls1_2',
+                success=False,
+                node=bash_tools,
+                hostname=hostname,
+            )
+
+    with Check("TLSv1.2 client must succeed via allowlisted ECDHE cipher"):
+        openssl_client_connection(
+            options="-tls1_2",
+            success=True,
+            node=bash_tools,
+            hostname=hostname,
+        )
+
+    with Check("TLSv1.3 client must succeed"):
+        openssl_client_connection(
+            options="-tls1_3",
+            success=True,
+            node=bash_tools,
+            hostname=hostname,
+        )
+
+
+@TestFeature
 @Requirements(RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_SSL_Server_Config("1.0"))
 def server(self, node=None):
     """Check forcing server to use only FIPS 140-3 compatible cipher suites."""
@@ -1136,6 +1325,8 @@ def feature(self, node="clickhouse1"):
     Feature(run=fips_check)
     Scenario(run=break_hash)
     Feature(run=awslc_test_suites)
+    Feature(run=server_default_config_algorithm_enforcement)
+    Feature(run=server_misconfiguration_attempt_non_fips_protocols_and_ciphers)
     Feature(run=server)
     Feature(run=clickhouse_client)
     Feature(run=server_as_client)

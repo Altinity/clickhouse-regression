@@ -3,6 +3,7 @@ import time
 from ssl_keeper.requirements import *
 from ssl_keeper.tests.steps import *
 from helpers.common import *
+from ssl_server.tests.common import fips_forbidden_primitive_tlsv1_2_cipher_suites
 
 fips_140_3_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
@@ -84,6 +85,40 @@ all_ciphers = [
     "PSK-AES128-CBC-SHA256",
     "PSK-AES128-CBC-SHA",
 ]
+
+# Overlay merges after packaged `fips.xml`: omit server cipherList/cipherSuites so TLS stack
+# uses defaults (permits probing client-offered DHE on otherwise FIPS deployments).
+PERMISSIVE_FFDH_PROBE_SSL_ENTRIES = {
+    "server": {
+        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
+        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
+        "dhParamsFile": "/etc/clickhouse-server/config.d/dhparam.pem",
+        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "loadDefaultCAFile": "false",
+        "verificationMode": "none",
+        "cacheSessions": "true",
+        "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1",
+        "preferServerCiphers": "true",
+    },
+    "client": {
+        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
+        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
+        "loadDefaultCAFile": "false",
+        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "cacheSessions": "true",
+        "preferServerCiphers": "true",
+        "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1",
+        "verificationMode": "none",
+        "invalidCertificateHandler": {"name": "AcceptCertificateHandler"},
+    },
+}
+
+PERMISSIVE_FFDH_PROBE_CONFIG_FILE = "zz_ffdh_permissive_probe.xml"
+# clickhouse_client_connection leaves this file unless removed; last cipherList (e.g. DHE-only)
+# breaks later SELECT version() health checks with NO_CIPHERS_AVAILABLE against ECDHE-only server.
+CLICKHOUSE_CLIENT_FIPS_TEST_OVERRIDE = (
+    "/etc/clickhouse-client/config.d/fips_test_override.xml"
+)
 
 
 @TestScenario
@@ -167,6 +202,107 @@ def simple_check_clickhouse_connection_to_keeper(self, node=None, message="keepe
     node.query(
         "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON", message=message
     )
+
+
+@TestFeature
+@Name("AWS-LC FFDH handshake probes (permissive server)")
+@Requirements(
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_Keeper("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Server_SSL_TCP("1.0"),
+    RQ_SRS_035_ClickHouse_FIPS_Compatible_AWSLC_Clients_SSL_TCP_ClickHouseClient_FIPS(
+        "1.0"
+    ),
+)
+def keeper_permissive_ffdh_handshake_probes(self):
+    """Finite-field DH TLS 1.2 suites against permissive listener configs.
+
+    Packaged ``fips.xml`` locks ``cipherList``; this overlay drops that lockdown so
+    openssl / clickhouse-client can mirror ``ssl_server`` FFDH probes on Keeper,
+    interserver, HTTPS, and native secure TCP ports.
+
+    Same service-indicator caveats as ``ssl_server`` ``server_default_config_algorithm_enforcement``.
+    """
+    cluster_nodes = ("clickhouse1", "clickhouse2", "clickhouse3")
+    probe_path = (
+        f"/etc/clickhouse-server/config.d/{PERMISSIVE_FFDH_PROBE_CONFIG_FILE}"
+    )
+
+    if not check_is_fips_clickhouse_build(self):
+        skip("FFDH permissive-server probes apply only to FIPS builds")
+
+    retry(self.context.cluster.node("clickhouse1").query, timeout=300, delay=10)(
+        "SELECT 1", message="1", exitcode=0
+    )
+
+    try:
+        with Given(
+            "permissive openSSL overlay without cipherList/cipherSuites lockdown",
+            description=(
+                "Merge order loads this file after packaged fips.xml so defaults "
+                "apply for cipher negotiation while certs and protocol floors stay."
+            ),
+        ):
+            create_ssl_configuration(
+                entries=PERMISSIVE_FFDH_PROBE_SSL_ENTRIES,
+                config_file=PERMISSIVE_FFDH_PROBE_CONFIG_FILE,
+                nodes=list(cluster_nodes),
+                restart=True,
+            )
+
+        retry(self.context.cluster.node("clickhouse1").query, timeout=300, delay=10)(
+            "SELECT 1", message="1", exitcode=0
+        )
+
+        bash_tools = self.context.cluster.node("bash-tools")
+        target_host = "clickhouse1"
+
+        for port in ("9281", "9444", "9010", "8443", "9440"):
+            self.context.connection_port = port
+            for cipher in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+                with Check(
+                    f"openssl port {port} TLSv1.2 DHE suite {cipher} handshake should fail "
+                    "(FFDH primitive unavailable in this FIPS stack)"
+                ):
+                    openssl_client_connection(
+                        options=f'-cipher "{cipher}" -tls1_2',
+                        success=False,
+                        node=bash_tools,
+                        hostname=target_host,
+                        port=port,
+                    )
+
+        self.context.connection_port = 9440
+        client_node = self.context.cluster.node("clickhouse1")
+        for cipher in fips_forbidden_primitive_tlsv1_2_cipher_suites:
+            with Check(
+                f"clickhouse-client TLSv1.2 DHE suite {cipher} should fail without cipherList lockdown "
+                "(FFDH primitive unavailable in this FIPS stack)"
+            ):
+                clickhouse_client_connection(
+                    options={
+                        "requireTLSv1_2": "true",
+                        "cipherList": cipher,
+                        "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                    },
+                    success=False,
+                    node=client_node,
+                    hostname=target_host,
+                    port=9440,
+                )
+
+    finally:
+        with Finally("remove permissive overlay and restore packaged SSL"):
+            for name in cluster_nodes:
+                self.context.cluster.node(name).command(
+                    f"rm -f {probe_path}", exitcode=0
+                )
+            for name in cluster_nodes:
+                self.context.cluster.node(name).command(
+                    f"rm -f {CLICKHOUSE_CLIENT_FIPS_TEST_OVERRIDE}",
+                    exitcode=0,
+                )
+            for name in cluster_nodes:
+                self.context.cluster.node(name).restart_clickhouse()
 
 
 @TestFeature

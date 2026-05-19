@@ -94,7 +94,8 @@ def postgresql_function_to_parquet_file_to_postgresql_function(self):
     writes the data back into a `postgresql` table function correctly."""
     self.context.snapshot_id = (
         f"{get_snapshot_id()}_above_26"
-        if check_clickhouse_version_or_antalya(">=26.0")(self)
+        if check_clickhouse_version(">=26.0")(self)
+        and check_if_not_antalya_build(self)
         else get_snapshot_id()
     )
     postgresql_node = self.context.cluster.node("postgres1")

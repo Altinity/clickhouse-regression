@@ -167,6 +167,21 @@ xfails = {
             "in ExternalAuthenticators.cpp:624-640.",
         )
     ],
+    "/oauth/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
+        (
+            Fail,
+            "PR #1606 follow-up audit: loopback /start must not redirect with "
+            "a Location header bearing oauth state= (see "
+            "issue-pr-1606-oauth-audit-round2.md).",
+        )
+    ],
+    "/oauth/client oauth login/browser flow security/oversized OIDC discovery document fails without hanging": [
+        (
+            Fail,
+            "PR #1606 follow-up audit: OIDC discovery should bound download "
+            "size (issue-pr-1606-oauth-audit-round2.md).",
+        )
+    ],
 }
 
 ffails = {

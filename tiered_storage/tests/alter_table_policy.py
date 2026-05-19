@@ -9,6 +9,7 @@ import time
 
 from testflows.core import *
 from testflows.asserts import error
+from helpers.common import check_clickhouse_version
 from tiered_storage.requirements import *
 
 from tiered_storage.tests.common import get_random_string
@@ -122,7 +123,19 @@ def scenario(self, cluster, node="clickhouse1"):
                         output = node.query(
                             f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                         ).output
-                        assert "external\t1" in output, error()
+                        expected_disk = (
+                            "external_cache"
+                            if (
+                                check_clickhouse_version(">=26.3")(self)
+                                and (
+                                    cluster.with_minio
+                                    or cluster.with_s3amazon
+                                    or cluster.with_s3gcs
+                                )
+                            )
+                            else "external"
+                        )
+                        assert f"{expected_disk}\t1" in output, error()
                 else:
                     with And("I recheck disks utilizations"):
                         with By("checking jbod1 utilization remains above 10%%"):
@@ -148,7 +161,19 @@ def scenario(self, cluster, node="clickhouse1"):
                     output = node.query(
                         f"SELECT disk_name, active FROM system.parts WHERE table = '{name}' FORMAT TabSeparated"
                     ).output
-                    assert "external\t1" in output, error()
+                    expected_disk = (
+                        "external_cache"
+                        if (
+                            check_clickhouse_version(">=26.3")(self)
+                            and (
+                                cluster.with_minio
+                                or cluster.with_s3amazon
+                                or cluster.with_s3gcs
+                            )
+                        )
+                        else "external"
+                    )
+                    assert f"{expected_disk}\t1" in output, error()
                 else:
                     with And("I recheck disks utilizations"):
                         with By("checking jbod1 utilization remains above 10%%"):

@@ -7,9 +7,9 @@ from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format,
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed,
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing,
-    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId,
-)
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId)
 from oauth.tests.steps.client_login import (
+    CLIENT_CONFIG_DIR,
     DEFAULT_CREDS_PATH,
     assert_no_segfault,
     reset_client_state,
@@ -50,6 +50,11 @@ def missing_credentials_file(self):
             or "open" in output.lower()
             or "BAD_ARGUMENTS" in output
         ), f"Expected file-not-found diagnostic, got:\n---\n{output}\n---"
+
+    with And("the diagnostic names the missing path"):
+        assert (
+            missing_path in output
+        ), f"Expected missing path in output:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -157,6 +162,312 @@ def credentials_top_level_web(self):
         assert (
             "missing 'installed' or 'web'" not in output
         ), f"Top-level 'web' key was rejected unexpectedly:\n---\n{output}\n---"
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"))
+@Name("credentials JSON empty object is rejected")
+def credentials_empty_top_level_object(self):
+    """Top-level ``{}`` must be rejected (needs installed or web)."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write an empty JSON object"):
+        write_oauth_credentials_file(raw_contents="{}")
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client rejects the file"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "installed" in ol or "web" in ol or "bad_arguments" in ol
+        ), f"Expected structural error, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"))
+@Name("credentials JSON top-level array is rejected")
+def credentials_top_level_array_rejected(self):
+    """A JSON array cannot stand in for the credentials object."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write a JSON array"):
+        write_oauth_credentials_file(raw_contents="[1,2,3]")
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client fails without crashing"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Name("credentials missing auth_uri is rejected")
+def credentials_missing_auth_uri(self):
+    """``auth_uri`` is required inside ``installed`` / ``web``."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I omit auth_uri"):
+        write_oauth_credentials_file(
+            raw_contents=(
+                '{"installed":{"client_id":"x","token_uri":"http://localhost/x"}}'
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client names auth_uri or BAD_ARGUMENTS"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "auth_uri" in ol or "bad_arguments" in ol
+        ), f"Expected auth_uri diagnostic, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Name("credentials missing token_uri is rejected")
+def credentials_missing_token_uri(self):
+    """``token_uri`` is required inside ``installed`` / ``web``."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I omit token_uri"):
+        write_oauth_credentials_file(
+            raw_contents=(
+                '{"installed":{"client_id":"x",' '"auth_uri":"http://localhost/auth"}}'
+            )
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client names token_uri or BAD_ARGUMENTS"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "token_uri" in ol or "bad_arguments" in ol
+        ), f"Expected token_uri diagnostic, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId("1.0"))
+@Name("credentials with empty client_id are rejected at OAuth")
+def credentials_empty_client_id(self):
+    """Empty ``client_id`` must not reach a silent success."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I write client_id as empty string"):
+        write_oauth_credentials_file(client_id="")
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the flow fails without crashing"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing("1.0"))
+@Name("--oauth-credentials pointing at directory fails")
+def credentials_path_is_directory(self):
+    """The credentials path must be a regular file."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    dir_path = f"{CLIENT_CONFIG_DIR}/not_a_file"
+
+    with And("I create a directory at the credentials path"):
+        self.context.node.command(command=f"mkdir -p {dir_path}")
+
+    with When("I pass that directory as --oauth-credentials"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                dir_path,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client errors without crashing"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
+@Name("credentials without client_secret document current behaviour")
+def credentials_without_client_secret(self):
+    """Missing ``client_secret`` should surface a clear load error today."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I omit client_secret from JSON"):
+        write_oauth_credentials_file(client_secret=None)
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client refuses or fails OAuth without crashing"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        assert exit_code != 0, error()
+        ol = output.lower()
+        assert (
+            "secret" in ol or "bad_arguments" in ol or "oauth" in ol
+        ), f"Expected client_secret-related failure, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
+@Name("extra fields in credentials JSON are ignored")
+def credentials_unknown_extra_fields_are_ignored(self):
+    """Forward-compatible unknown keys must not break parsing."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I add unrelated inner keys"):
+        write_oauth_credentials_file(
+            extra={"unknown_field": "value", "another_key": 42},
+        )
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=12,
+            expect_error=True,
+        )
+
+    with Then("OAuth starts instead of failing on unknown JSON keys"):
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "unknown field" not in ol and "unexpected property" not in ol
+        ), f"Unexpected schema rejection:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
+@Name("unicode in client_id does not crash the loader")
+def credentials_unicode_client_id(self):
+    """Non-ASCII ``client_id`` values must not abort the client."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I use a unicode client_id"):
+        write_oauth_credentials_file(client_id="client-id-with-\u00fcnic\u00f6d\u00eb")
+
+    with When("I run clickhouse-client"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=10,
+            expect_error=True,
+        )
+
+    with Then("the client stays up"):
         assert_no_segfault(output=output, exit_code=exit_code)
 
 

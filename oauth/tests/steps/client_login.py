@@ -28,7 +28,10 @@ soon as auth is resolved) and a hard wall-clock cap.
 """
 
 import json
+import re
 import shlex
+import time
+from pathlib import Path
 
 from helpers.common import getuid
 from testflows.core import *
@@ -42,6 +45,22 @@ CLIENT_CONFIG_DIR = f"{CLIENT_HOME}/.clickhouse-client"
 DEFAULT_CREDS_PATH = f"{CLIENT_CONFIG_DIR}/oauth_client.json"
 DEFAULT_CACHE_PATH = f"{CLIENT_CONFIG_DIR}/oauth_cache.json"
 DEFAULT_CONFIG_PATH = f"{CLIENT_CONFIG_DIR}/config.xml"
+
+DEVICE_FLOW_BG_LOG = "/tmp/ch_oauth_device_flow.log"
+DEVICE_FLOW_BG_PID = "/tmp/ch_oauth_device_flow.pid"
+
+
+def extract_device_user_code_from_client_output(text):
+    """Extract RFC 8628-shaped user code from clickhouse-client stderr/stdout."""
+
+    m = re.search(r"\b([A-Z2-7]{4}-[A-Z2-7]{4})\b", text, flags=re.IGNORECASE)
+    if m:
+        return m.group(1).upper()
+    m = re.search(r"\b([A-Z2-7]{8})\b", text, flags=re.IGNORECASE)
+    if m:
+        s = m.group(1).upper()
+        return f"{s[:4]}-{s[4:]}"
+    return None
 
 
 def _shell_quote(value):
@@ -187,6 +206,168 @@ def write_oauth_cache(self, mapping=None, raw_contents=None, mode="600", node=No
         )
     )
     node.command(command=f"chmod {mode} {DEFAULT_CACHE_PATH}")
+
+
+@TestStep(Given)
+def approve_keycloak_device_user_code_via_bash_tools(
+    self,
+    user_code,
+    username=None,
+    password=None,
+    node=None,
+):
+    """Complete Keycloak device authorization for ``user_code`` (runs on bash-tools)."""
+
+    if node is None:
+        node = self.context.bash_tools
+    if username is None:
+        username = self.context.username
+    if password is None:
+        password = self.context.password
+
+    ku = self.context.keycloak_url
+    realm = self.context.realm_name
+    src_path = Path(__file__).resolve().parent / "keycloak_device_flow.py"
+    src = src_path.read_text(encoding="utf-8")
+    tail = (
+        "\n\napprove_keycloak_device_user_code("
+        f"{ku!r}, {realm!r}, {user_code!r}, {username!r}, {password!r})\n"
+    )
+    bundle = src + tail
+    tag = f"_OAuthKeycloakDevice_{getuid()}_"
+    node.command(command=f"python3 <<'{tag}'\n{bundle}\n{tag}")
+
+
+@TestStep(When)
+def start_clickhouse_oauth_client_background(
+    self,
+    args,
+    query,
+    log_path=DEVICE_FLOW_BG_LOG,
+    pid_path=DEVICE_FLOW_BG_PID,
+    wall_timeout=120,
+    node=None,
+):
+    """Run ``clickhouse-client`` in the background inside the ClickHouse container."""
+
+    if node is None:
+        node = self.context.node
+
+    cmd_parts = ["clickhouse-client"]
+    cmd_parts.extend(args)
+    if query is not None:
+        cmd_parts.extend(["--query", query])
+
+    inner = " ".join(_shell_quote(p) for p in cmd_parts)
+    log_q = _shell_quote(log_path)
+    pid_q = _shell_quote(pid_path)
+    wrapped_shell = (
+        f"timeout {wall_timeout} {inner} >{log_q} 2>&1; " f"echo __EXIT__=$? >>{log_q}"
+    )
+    node.command(command=f"rm -f {log_q} {pid_q}")
+    node.command(
+        command=(
+            f"nohup sh -c {_shell_quote(wrapped_shell)} >/dev/null 2>&1 & "
+            f"echo $! > {pid_q}"
+        )
+    )
+
+
+def parse_background_client_exit_code(log_text):
+    """Return exit code from trailing ``__EXIT__=`` line or ``None``."""
+
+    for line in log_text.strip().splitlines()[::-1]:
+        if line.startswith("__EXIT__="):
+            try:
+                return int(line.split("=", 1)[1])
+            except ValueError:
+                return None
+    return None
+
+
+@TestStep(Then)
+def read_clickhouse_oauth_background_log(self, log_path=DEVICE_FLOW_BG_LOG, node=None):
+    """Return the current contents of a background clickhouse-client log file."""
+
+    if node is None:
+        node = self.context.node
+
+    result = node.command(
+        command=f"cat {_shell_quote(log_path)} 2>/dev/null || true",
+        no_checks=True,
+    )
+    return result.output
+
+
+@TestStep(Then)
+def wait_clickhouse_oauth_background_finished(
+    self,
+    pid_path=DEVICE_FLOW_BG_PID,
+    timeout_sec=120,
+    node=None,
+):
+    """Wait until the background ``clickhouse-client`` process exits."""
+
+    if node is None:
+        node = self.context.node
+
+    for _ in range(timeout_sec):
+        result = node.command(
+            command=(
+                f"if kill -0 $(cat {_shell_quote(pid_path)} 2>/dev/null) "
+                f"2>/dev/null; then echo RUNNING; else echo DONE; fi"
+            ),
+            no_checks=True,
+        )
+        if "DONE" in result.output:
+            return
+        time.sleep(1)
+
+    raise AssertionError(
+        "Background clickhouse-client still running after "
+        f"{timeout_sec}s (pid file {_shell_quote(pid_path)})"
+    )
+
+
+@TestStep(Finally)
+def kill_clickhouse_oauth_background_if_alive(
+    self, pid_path=DEVICE_FLOW_BG_PID, node=None
+):
+    """Best-effort SIGTERM for a background clickhouse-client PID."""
+
+    if node is None:
+        node = self.context.node
+
+    node.command(
+        command=(
+            f"PID=$(cat {_shell_quote(pid_path)} 2>/dev/null); "
+            f'if [ -n "$PID" ]; then '
+            f'disown "$PID" 2>/dev/null || true; '
+            f'kill "$PID" 2>/dev/null || true; '
+            f"fi"
+        ),
+        no_checks=True,
+    )
+
+
+@TestStep(Then)
+def read_oauth_cache(self, path=DEFAULT_CACHE_PATH, node=None):
+    """Parse ``oauth_cache.json`` as a dict, or return ``None`` if missing/invalid."""
+
+    if node is None:
+        node = self.context.node
+
+    result = node.command(
+        command=f"cat {_shell_quote(path)} 2>/dev/null || true",
+        no_checks=True,
+    )
+    raw = result.output.strip()
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return None
 
 
 @TestStep(Then)
@@ -368,6 +549,118 @@ def stat_file_mode(self, path, node=None):
     )
     out = result.output.strip()
     return out if out else None
+
+
+@TestStep(Given)
+def keycloak_enable_optional_scope(
+    self,
+    scope_name="offline_access",
+    client_id="grafana-client",
+    realm=None,
+    keycloak_url=None,
+    node=None,
+):
+    """Add ``scope_name`` to the optional client scopes of ``client_id`` via the
+    Keycloak admin REST API.  Safe to call when the scope is already assigned.
+    """
+
+    if node is None:
+        node = self.context.bash_tools
+    if realm is None:
+        realm = self.context.realm_name
+    if keycloak_url is None:
+        keycloak_url = self.context.keycloak_url
+
+    py_script = f"""
+import json, sys, urllib.request, urllib.parse, urllib.error
+
+base = {keycloak_url!r}
+realm = {realm!r}
+client_id = {client_id!r}
+scope_name = {scope_name!r}
+
+# admin token
+data = urllib.parse.urlencode(dict(
+    grant_type='password', client_id='admin-cli',
+    username='admin', password='admin',
+)).encode()
+req = urllib.request.Request(f'{{base}}/realms/master/protocol/openid-connect/token', data=data)
+with urllib.request.urlopen(req) as r:
+    token = json.load(r)['access_token']
+
+auth = {{'Authorization': f'Bearer {{token}}'}}
+
+# ── 1. Ensure the scope is in the client's optional scopes ────────────────
+req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/clients?clientId={{client_id}}', headers=auth)
+with urllib.request.urlopen(req) as r:
+    client_uuid = json.load(r)[0]['id']
+
+req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/client-scopes', headers=auth)
+with urllib.request.urlopen(req) as r:
+    scope_map = {{s['name']: s['id'] for s in json.load(r)}}
+
+if scope_name not in scope_map:
+    print(f'ERROR: scope {{scope_name!r}} not found in realm (available: {{sorted(scope_map)}})')
+    sys.exit(1)
+
+scope_id = scope_map[scope_name]
+req = urllib.request.Request(
+    f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes', headers=auth
+)
+with urllib.request.urlopen(req) as r:
+    current_optional = {{s['name'] for s in json.load(r)}}
+
+if scope_name not in current_optional:
+    req = urllib.request.Request(
+        f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes/{{scope_id}}',
+        method='PUT', headers=auth,
+    )
+    try:
+        with urllib.request.urlopen(req) as r:
+            print(f'Added {{scope_name}} to optional scopes ({{r.status}})')
+    except urllib.error.HTTPError as exc:
+        print(f'PUT optional-client-scopes failed {{exc.code}}: {{exc.read().decode()}}')
+        sys.exit(1)
+else:
+    print(f'{{scope_name}} already in optional scopes')
+
+# ── 2. Ensure every user in the realm has the offline_access realm role ───
+req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/roles/offline_access', headers=auth)
+with urllib.request.urlopen(req) as r:
+    offline_role = json.load(r)
+
+req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/users', headers=auth)
+with urllib.request.urlopen(req) as r:
+    users = json.load(r)
+
+for user in users:
+    uid = user['id']
+    uname = user.get('username', uid)
+    req = urllib.request.Request(
+        f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm', headers=auth
+    )
+    with urllib.request.urlopen(req) as r:
+        assigned = {{role['name'] for role in json.load(r)}}
+    if 'offline_access' not in assigned:
+        body = json.dumps([offline_role]).encode()
+        req = urllib.request.Request(
+            f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm',
+            data=body, method='POST',
+            headers={{**auth, 'Content-Type': 'application/json'}},
+        )
+        try:
+            with urllib.request.urlopen(req) as r:
+                print(f'Assigned offline_access role to user {{uname!r}} ({{r.status}})')
+        except urllib.error.HTTPError as exc:
+            print(f'POST role-mappings failed for {{uname!r}} {{exc.code}}: {{exc.read().decode()}}')
+            sys.exit(1)
+    else:
+        print(f'User {{uname!r}} already has offline_access role')
+
+print('Done')
+"""
+    tag = f"_KcScope_{getuid()}_"
+    node.command(command=f"python3 <<'{tag}'\n{py_script}\n{tag}")
 
 
 @TestStep(Given)

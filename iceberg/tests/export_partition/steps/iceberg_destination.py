@@ -438,6 +438,29 @@ def as_destination_name(destination):
     return destination
 
 
+def as_destination_sql_identifier(destination):
+    """Qualified name with real SQL backticks for large / file-backed queries.
+
+    :func:`as_destination_name` keeps ``\\``` escapes so catalog-qualified
+    identifiers survive bash ``echo`` pipelines inside
+    :meth:`helpers.cluster.Node.query`. Once the query exceeds the inline
+    length threshold, the same SQL is written to a tempfile and piped to
+    ``clickhouse client`` — those backslashes then reach the server
+    literally and produce ``SYNTAX_ERROR``. Use this helper when building
+    long multi-statement batches (or any SQL not routed through the short
+    ``echo`` path).
+
+    Catalog-backed values become ``<database>.`<namespace>.<table>```.
+    ``no_catalog`` returns the bare table string unchanged.
+    """
+    if isinstance(destination, dict):
+        return (
+            f"{destination['database_name']}."
+            f"`{destination['namespace']}.{destination['table_name']}`"
+        )
+    return destination
+
+
 def as_pyiceberg_handle(destination):
     """Return the dict describing the PyIceberg table handle if available.
 

@@ -73,8 +73,16 @@ def scenario(self, engine):
                     f" AND name = '{first_part}' and active = 1 FORMAT TabSeparated"
                 ).output.strip()
 
-            with Then("the disk name should be 'external'"):
-                assert disk == "external", error()
+            expected_disk = (
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
+            )
+            with Then(f"the disk name should be '{expected_disk}'"):
+                assert disk == expected_disk, error()
             with And("path should start with '/external'"):
                 expected = "/external"
                 if cluster.with_minio or (
@@ -123,8 +131,16 @@ def scenario(self, engine):
 
             with Then("number of disks should be 2"):
                 assert len(disks) == 2, error()
-            with And("all disks should be 'external'"):
-                assert all(d == "external" for d in disks), error()
+            expected_disk = (
+                "external_cache"
+                if (
+                    check_clickhouse_version(">=26.3")(self)
+                    and (cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs)
+                )
+                else "external"
+            )
+            with And(f"all disks should be '{expected_disk}'"):
+                assert all(d == expected_disk for d in disks), error()
             with And("all paths should start with '/external'"):
                 expected = "/external"
                 if cluster.with_minio or (

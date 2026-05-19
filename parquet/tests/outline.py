@@ -30,7 +30,7 @@ def import_export(
             snapshot_id = f"{self.context.snapshot_id}_above_24"
         else:
             snapshot_id = self.context.snapshot_id
-        if check_if_antalya_build(self):
+        if check_if_antalya_pre_26_1(self):
             snapshot_id = f"{snapshot_id}_antalya"
 
     with Given("I save file structure"):
