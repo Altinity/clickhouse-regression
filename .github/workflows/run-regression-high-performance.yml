@@ -97,6 +97,7 @@ on:
           - s3_aws
           - s3_azure
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - export_part
           - export_partition
@@ -1102,6 +1103,50 @@ jobs:
       flags: ${{ inputs.flags }}
       output_format: ${{ inputs.output_format }}
       extra_args: --only "/s3/aws s3/part 2/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_hetzner_1:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 1
+      storage_path: /hetzner
+      regression_args: '--storage hetzner --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}}'
+      artifact_name: s3-hetzner-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 1/*" ${{ inputs.extra_args }}
+      artifacts: ${{ inputs.artifacts }}
+      runner_arch: ${{ inputs.arch }}
+    secrets: inherit
+
+  s3_hetzner_2:
+    if: ${{ (inputs.run_s3_suites || inputs.is_workflow_call != true) && (inputs.suite == 's3_hetzner' || inputs.suite == 's3_all' || inputs.suite == 'all') }}
+    uses: ./.github/workflows/reusable-suite.yml
+    with:
+      suite_name: s3
+      job_name: s3_hetzner
+      timeout_minutes: 360
+      part: 2
+      storage_path: /hetzner
+      regression_args: '--storage hetzner --hetzner-s3-uri {{HETZNER_S3_URI}} --hetzner-s3-region {{HETZNER_S3_REGION}} --hetzner-s3-key-id {{HETZNER_S3_KEY_ID}} --hetzner-s3-access-key {{HETZNER_S3_ACCESS_KEY}}'
+      artifact_name: s3-hetzner-artifacts
+      runner_type: ${{ inputs.arch == 'arm64' && 'type-cax41' || 'type-cx53-cpx52' }}
+      ref: ${{ inputs.ref }}
+      package: ${{ inputs.package }}
+      version: ${{ inputs.version }}
+      flags: ${{ inputs.flags }}
+      output_format: ${{ inputs.output_format }}
+      extra_args: --only "/s3/hetzner/part 2/*" ${{ inputs.extra_args }}
       artifacts: ${{ inputs.artifacts }}
       runner_arch: ${{ inputs.arch }}
     secrets: inherit

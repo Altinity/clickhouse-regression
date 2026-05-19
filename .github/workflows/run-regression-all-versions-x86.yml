@@ -52,6 +52,7 @@ on:
           - s3_aws
           - s3_azure
           - s3_gcs
+          - s3_hetzner
           - s3_minio
           - selects
           - session_timezone

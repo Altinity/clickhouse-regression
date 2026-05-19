@@ -189,7 +189,7 @@ def argparser_s3(parser):
         "--storage",
         action="append",
         help="select which storage types to run tests with",
-        choices=["minio", "aws_s3", "gcs", "local", "azure"],
+        choices=["minio", "aws_s3", "gcs", "local", "azure", "hetzner"],
         default=None,
         dest="storages",
     )
@@ -248,6 +248,38 @@ def argparser_s3(parser):
         help="aws s3 access key",
         type=Secret(name="aws_s3_access_key"),
         default=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-uri",
+        action="store",
+        help="Hetzner S3 URI including bucket and base prefix (path-style)",
+        type=Secret(name="hetzner_s3_uri"),
+        default=os.getenv("HETZNER_S3_URI"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-region",
+        action="store",
+        help="Hetzner S3 signing region",
+        type=Secret(name="hetzner_s3_region"),
+        default=os.getenv("HETZNER_S3_REGION"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-key-id",
+        action="store",
+        help="Hetzner S3 key id",
+        type=Secret(name="hetzner_s3_key_id"),
+        default=os.getenv("HETZNER_S3_KEY_ID"),
+    )
+
+    parser.add_argument(
+        "--hetzner-s3-access-key",
+        action="store",
+        help="Hetzner S3 access key",
+        type=Secret(name="hetzner_s3_access_key"),
+        default=os.getenv("HETZNER_S3_ACCESS_KEY"),
     )
 
     parser.add_argument(
@@ -329,6 +361,10 @@ def CaptureS3Args(func):
         aws_s3_region,
         aws_s3_key_id,
         aws_s3_access_key,
+        hetzner_s3_uri,
+        hetzner_s3_region,
+        hetzner_s3_key_id,
+        hetzner_s3_access_key,
         gcs_uri,
         gcs_key_id,
         gcs_key_secret,
@@ -346,6 +382,10 @@ def CaptureS3Args(func):
             "aws_s3_region": aws_s3_region,
             "aws_s3_key_id": aws_s3_key_id,
             "aws_s3_access_key": aws_s3_access_key,
+            "hetzner_s3_uri": hetzner_s3_uri,
+            "hetzner_s3_region": hetzner_s3_region,
+            "hetzner_s3_key_id": hetzner_s3_key_id,
+            "hetzner_s3_access_key": hetzner_s3_access_key,
             "gcs_uri": gcs_uri,
             "gcs_key_id": gcs_key_id,
             "gcs_key_secret": gcs_key_secret,

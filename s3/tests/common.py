@@ -2,6 +2,7 @@ import os
 import base64
 import tempfile
 from contextlib import contextmanager
+from urllib.parse import urlparse
 
 from minio import Minio
 from testflows.connect import Shell
@@ -11,6 +12,19 @@ from helpers.common import *
 from helpers.queries import sync_replica, get_row_count
 
 Config = namedtuple("Config", "content path name uid preprocessed_name")
+
+
+def parse_s3_uri(uri):
+    """Return endpoint URL, bucket, and prefix from a path-style S3 URI."""
+    parsed = urlparse(uri)
+    path = parsed.path.strip("/")
+    bucket, _, prefix = path.partition("/")
+
+    if not bucket:
+        raise ValueError(f"Could not parse bucket from S3 URI: {uri}")
+
+    endpoint_url = f"{parsed.scheme}://{parsed.netloc}"
+    return endpoint_url, bucket, prefix
 
 
 def add_config(
@@ -886,6 +900,14 @@ def get_bucket_size(
 
         if self.context.storage == "gcs":
             aws = f"AWS_ACCESS_KEY_ID={self.context.access_key_id} AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} aws --endpoint-url=https://storage.googleapis.com/"
+        elif self.context.storage == "hetzner":
+            s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+            if s3_endpoint_url:
+                aws = (
+                    f"AWS_ACCESS_KEY_ID={self.context.access_key_id} "
+                    f"AWS_SECRET_ACCESS_KEY={self.context.secret_access_key} "
+                    f"aws --endpoint-url={s3_endpoint_url}"
+                )
 
         cmd = (
             f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
@@ -1160,6 +1182,14 @@ def cleanup(self, storage="minio", disk="external", s3_path=None):
             f"aws s3 rm s3://{self.context.bucket_name}/data/{s3_path} --recursive",
         )
 
+    if storage == "hetzner" and s3_path is not None:
+        s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+        bucket_prefix = getattr(self.context, "bucket_prefix", None) or "data"
+        cmd = f"aws s3 rm s3://{self.context.bucket_name}/{bucket_prefix}/{s3_path} --recursive"
+        if s3_endpoint_url:
+            cmd += f" --endpoint-url {s3_endpoint_url}"
+        current().context.cluster.command("aws", cmd)
+
 
 @TestStep(Given)
 def aws_s3_setup_second_bucket(self, region, bucket):
@@ -1218,6 +1248,7 @@ def temporary_bucket_path(
         "minio",
         "aws_s3",
         "gcs",
+        "hetzner",
     ], f"Unsupported storage: {storage}"
 
     if bucket_name is None:
@@ -1230,6 +1261,11 @@ def temporary_bucket_path(
         access_key_id = self.context.access_key_id
     if secret_access_key is None:
         secret_access_key = self.context.secret_access_key
+
+    if storage == "hetzner" and s3_endpoint_url is None:
+        s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+    if storage == "hetzner" and aws_region is None:
+        aws_region = getattr(self.context, "region", None)
 
     try:
         with When("I create a temporary bucket path"):
@@ -1246,7 +1282,7 @@ def temporary_bucket_path(
                     if obj.object_name.startswith(f"{bucket_prefix}/{temp_path}"):
                         minio_client.remove_object(bucket_name, obj.object_name)
 
-            elif storage == "aws_s3":
+            elif storage in ("aws_s3", "hetzner"):
                 cluster = current().context.cluster
 
                 cmd = f"aws s3 rm s3://{bucket_name}/{bucket_prefix}/{temp_path} --recursive"
