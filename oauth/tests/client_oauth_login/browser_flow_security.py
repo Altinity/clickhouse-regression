@@ -1,8 +1,5 @@
 """Security-focused negatives for browser OAuth and OIDC discovery."""
 
-import textwrap
-import time
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
@@ -13,20 +10,20 @@ from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
     DEFAULT_CREDS_PATH,
     assert_no_segfault,
-    curl_head,
     kill_clickhouse_oauth_background_if_alive,
     reset_client_state,
     run_clickhouse_client_no_host,
     start_clickhouse_oauth_client_background,
-    start_mock_oidc_server,
+    start_oversized_oidc_discovery_mock,
     stop_mock_oidc_server,
+    wait_for_http_response,
     write_client_config_xml,
     write_oauth_credentials_file,
 )
 
 BROWSER_SECURITY_LOG = "/tmp/ch_oauth_browser_security.log"
 BROWSER_SECURITY_PID = "/tmp/ch_oauth_browser_security.pid"
-MOCK_OIDC_PID_FILE = "/tmp/mock_oidc_oversized.pid"
+OVERSIZED_OIDC_MOCK_PORT = 18080
 
 
 @TestScenario
@@ -69,16 +66,24 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
                 wall_timeout=25,
             )
 
-        with And("I probe /start on the loopback server"):
-            # TODO(P2): replace this fixed sleep with a poll-for-bind loop;
-            # see oauth/client_oauth_login_fix_plan.md priority 2 follow-up.
-            time.sleep(3)
-            probe = curl_head(url="http://127.0.0.1:49152/start")
+        with And("I probe /start on the loopback server once it binds"):
+            # Poll the loopback callback server rather than waiting a
+            # fixed sleep — the previous sleep(3) raced against
+            # clickhouse-client's port-bind under load and produced
+            # phantom passes when /start was queried before the
+            # server was up.
+            probe = wait_for_http_response(
+                url="http://127.0.0.1:49152/start",
+                max_wait=15,
+            )
 
         with Then("HTTP responded and Location omits oauth state"):
             assert (
                 "HTTP/" in probe
-            ), f"Expected an HTTP response from :49152/start, got:\n{probe}"
+            ), (
+                "Loopback /start never responded within the poll window — "
+                f"the callback server may not have bound. Probe:\n{probe}"
+            )
             loc_line = ""
             for line in probe.splitlines():
                 if line.lower().startswith("location:"):
@@ -105,43 +110,21 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
 def oversized_oidc_discovery_response_is_bounded(self):
     """Huge ``openid-configuration`` payloads must not grow memory without bound."""
 
-    mock_py = textwrap.dedent(
-        """
-        from http.server import BaseHTTPRequestHandler, HTTPServer
-
-        class H(BaseHTTPRequestHandler):
-            def log_message(self, fmt, *args):
-                pass
-
-            def do_GET(self):
-                if ".well-known/openid-configuration" not in self.path:
-                    self.send_response(404)
-                    self.end_headers()
-                    return
-                pad = b"x" * 8000000
-                body = b'{"issuer":"http://bash-tools:18080/x","pad":"' + pad + b'"}'
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-
-        HTTPServer(("0.0.0.0", 18080), H).serve_forever()
-        """
-    ).strip()
-
+    mock_pid_file = None
     try:
         with Given("I reset the client state"):
             reset_client_state()
 
-        with And("I start a mock discovery endpoint on bash-tools"):
-            start_mock_oidc_server(script=mock_py, pid_file=MOCK_OIDC_PID_FILE)
+        with And("I start the oversized OIDC discovery mock on bash-tools"):
+            mock_pid_file = start_oversized_oidc_discovery_mock(
+                port=OVERSIZED_OIDC_MOCK_PORT,
+            )
 
         with And("I write a connection that discovers via the mock"):
             write_client_config_xml(
                 contents=oauth_connection_config_xml(
                     login_mode="device",
-                    oauth_url="http://bash-tools:18080/realms/x",
+                    oauth_url=f"http://bash-tools:{OVERSIZED_OIDC_MOCK_PORT}/realms/x",
                     oauth_client_id="grafana-client",
                     oauth_client_secret="grafana-secret",
                 )
@@ -165,7 +148,8 @@ def oversized_oidc_discovery_response_is_bounded(self):
 
     finally:
         with Finally("I stop the mock HTTP server"):
-            stop_mock_oidc_server(pid_file=MOCK_OIDC_PID_FILE)
+            if mock_pid_file is not None:
+                stop_mock_oidc_server(pid_file=mock_pid_file)
 
 
 @TestFeature

@@ -62,29 +62,62 @@ def corrupted_cache_is_ignored(self):
                 DEFAULT_CREDS_PATH,
             ],
             query="SELECT 1",
-            timeout=10,
+            timeout=15,
             expect_error=True,
         )
 
-    with Then("the client did not crash"):
+    with Then("the corrupted cache is bypassed and a fresh device flow starts"):
         assert_no_segfault(output=output, exit_code=exit_code)
+        # The corrupted-cache requirement is "ignored, not crashed" — so
+        # the client MUST fall back to a fresh device authorization. Pin
+        # the user_code (or at least the verification URL) so the
+        # scenario fails loudly if some future regression swallows the
+        # cache-parse error and silently exits without doing OAuth.
+        ol = output.lower()
+        assert (
+            extract_device_user_code_from_client_output(output) is not None
+            or "http://" in ol
+            or "https://" in ol
+        ), (
+            "Expected fresh device flow signal after corrupted cache, got:\n"
+            f"---\n{output}\n---"
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions("1.0"))
 @Name("oauth_cache.json is created with mode 0600")
 def cache_file_mode_is_strict(self):
-    """Pre-existing strict cache keeps ``0600``."""
+    """A freshly-created cache file lands on disk with mode ``0600``."""
 
-    with Given("I reset the client state"):
-        reset_client_state()
+    try:
+        with Given("I reset the client state"):
+            reset_client_state()
 
-    with And("I pre-seed an oauth_cache.json with mode 0600"):
-        write_oauth_cache(mapping={"abc123": "refresh-token-placeholder"}, mode="600")
+        with And("I write OAuth credentials"):
+            write_keycloak_device_credentials()
 
-    with Then("the cache file mode is 0600"):
-        mode = stat_file_mode(path=DEFAULT_CACHE_PATH)
-        assert mode == "600", f"Expected oauth_cache.json mode 600, got {mode!r}"
+        with When("I complete one device login so the client creates the cache"):
+            # The previous version of this scenario seeded a 0600 file
+            # ourselves and asserted it was still 0600 — that tested our
+            # write_oauth_cache helper, not the client. Drive a real
+            # login so the client *creates* the cache, then check its
+            # on-disk mode.
+            complete_keycloak_device_login_via_background()
+
+        with Then("the cache file the client just created is mode 0600"):
+            assert file_exists(
+                path=DEFAULT_CACHE_PATH
+            ), "Expected oauth_cache.json after successful device login"
+            mode = stat_file_mode(path=DEFAULT_CACHE_PATH)
+            assert mode == "600", (
+                f"Expected client-created oauth_cache.json mode 600, "
+                f"got {mode!r}"
+            )
+
+    finally:
+        with Finally("I stop background clients"):
+            kill_clickhouse_oauth_background_if_alive()
 
 
 @TestScenario
@@ -234,12 +267,27 @@ def world_readable_oauth_cache_is_handled(self):
                 DEFAULT_CREDS_PATH,
             ],
             query="SELECT 1",
-            timeout=12,
+            timeout=15,
             expect_error=True,
         )
 
-    with Then("the client survives"):
+    with Then("the loose-permission cache does not short-circuit OAuth"):
         assert_no_segfault(output=output, exit_code=exit_code)
+        # The seeded "refresh-placeholder" is not a real refresh token,
+        # so the client must either (a) ignore the world-readable cache
+        # outright or (b) try the placeholder, get rejected, and fall
+        # back to device flow. Either way a fresh device authorization
+        # MUST appear — "no crash" alone allows a regression that
+        # silently exits before doing OAuth.
+        ol = output.lower()
+        assert (
+            extract_device_user_code_from_client_output(output) is not None
+            or "http://" in ol
+            or "https://" in ol
+        ), (
+            "Expected fresh device flow signal when ignoring/rejecting "
+            f"the world-readable cache, got:\n---\n{output}\n---"
+        )
 
 
 @TestScenario

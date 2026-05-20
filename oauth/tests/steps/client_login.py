@@ -671,6 +671,41 @@ def unset_immutable(self, path, node=None):
 
 
 @TestStep(Then)
+def wait_for_http_response(self, url, max_wait=15, poll_interval=1, node=None):
+    """Poll ``curl -sSI <url>`` until it returns an HTTP response or
+    ``max_wait`` elapses; return the final response output.
+
+    Replaces the ``sleep N; curl …`` antipattern in the loopback-
+    security scenarios, where a fixed sleep races against the
+    background ``clickhouse-client`` finding a free port and binding
+    its callback HTTP server. The poll loop terminates on the first
+    ``HTTP/`` header line, so the scenario observes the *real* time
+    to bind rather than a worst-case-padded guess.
+
+    On timeout the helper returns whatever the last curl invocation
+    produced (often an empty string when nothing is listening yet)
+    — callers should assert ``"HTTP/" in result`` to fail loudly on
+    timeout instead of silently accepting a no-bind.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    deadline = time.time() + max_wait
+    probe = ""
+    while time.time() < deadline:
+        result = node.command(
+            command=f"(curl -sSI {_shell_quote(url)} || true) 2>&1",
+            no_checks=True,
+        )
+        probe = result.output
+        if "HTTP/" in probe:
+            return probe
+        time.sleep(poll_interval)
+    return probe
+
+
+@TestStep(Then)
 def curl_head(self, url, node=None):
     """Run ``curl -sSI <url>`` inside ``node`` and return the raw response.
 
@@ -754,6 +789,37 @@ def stop_mock_oidc_server(self, pid_file, node=None):
     )
 
 
+@TestStep(Given)
+def start_oversized_oidc_discovery_mock(
+    self,
+    port=18080,
+    padding_bytes=8_000_000,
+    pid_file=None,
+    node=None,
+):
+    """Start the oversized OIDC discovery mock on ``node`` and return its pid_file.
+
+    Loads the implementation from the sibling module
+    ``mock_oidc_oversized.py`` so the test files don't carry a
+    multi-line HTTP-server blob inline — same idiom as
+    :func:`approve_keycloak_device_user_code_via_bash_tools` /
+    ``keycloak_device_flow.py``.
+
+    Returns the on-disk pid_file path so scenarios can pass it to
+    :func:`stop_mock_oidc_server` in their ``Finally`` block. ``port``
+    defaults to 18080 (matches the URLs the existing scenarios build).
+    """
+
+    if pid_file is None:
+        pid_file = f"/tmp/mock_oidc_oversized_{port}.pid"
+
+    src_path = Path(__file__).resolve().parent / "mock_oidc_oversized.py"
+    src = src_path.read_text(encoding="utf-8")
+    tail = f"\n\nrun_oversized_oidc_discovery_mock({int(port)}, {int(padding_bytes)})\n"
+    start_mock_oidc_server(script=src + tail, pid_file=pid_file, node=node)
+    return pid_file
+
+
 @TestStep(Then)
 def file_exists(self, path, node=None):
     """Return True if ``path`` exists inside ``node``."""
@@ -795,8 +861,15 @@ def keycloak_enable_optional_scope(
     keycloak_url=None,
     node=None,
 ):
-    """Add ``scope_name`` to the optional client scopes of ``client_id`` via the
-    Keycloak admin REST API.  Safe to call when the scope is already assigned.
+    """Add ``scope_name`` to the optional client scopes of ``client_id``.
+
+    Idempotent — safe to call when the scope is already assigned.
+    Implementation lives in the sibling module
+    ``keycloak_optional_scope.py`` (loaded as text and executed
+    inside the bash-tools container — same idiom as
+    ``keycloak_device_flow.py`` and ``mock_oidc_oversized.py``) so
+    the step file stays free of an inline Python blob driving the
+    Keycloak admin REST API.
     """
 
     if node is None:
@@ -806,96 +879,14 @@ def keycloak_enable_optional_scope(
     if keycloak_url is None:
         keycloak_url = self.context.keycloak_url
 
-    py_script = f"""
-import json, sys, urllib.request, urllib.parse, urllib.error
-
-base = {keycloak_url!r}
-realm = {realm!r}
-client_id = {client_id!r}
-scope_name = {scope_name!r}
-
-# admin token
-data = urllib.parse.urlencode(dict(
-    grant_type='password', client_id='admin-cli',
-    username='admin', password='admin',
-)).encode()
-req = urllib.request.Request(f'{{base}}/realms/master/protocol/openid-connect/token', data=data)
-with urllib.request.urlopen(req) as r:
-    token = json.load(r)['access_token']
-
-auth = {{'Authorization': f'Bearer {{token}}'}}
-
-# ── 1. Ensure the scope is in the client's optional scopes ────────────────
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/clients?clientId={{client_id}}', headers=auth)
-with urllib.request.urlopen(req) as r:
-    client_uuid = json.load(r)[0]['id']
-
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/client-scopes', headers=auth)
-with urllib.request.urlopen(req) as r:
-    scope_map = {{s['name']: s['id'] for s in json.load(r)}}
-
-if scope_name not in scope_map:
-    print(f'ERROR: scope {{scope_name!r}} not found in realm (available: {{sorted(scope_map)}})')
-    sys.exit(1)
-
-scope_id = scope_map[scope_name]
-req = urllib.request.Request(
-    f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes', headers=auth
-)
-with urllib.request.urlopen(req) as r:
-    current_optional = {{s['name'] for s in json.load(r)}}
-
-if scope_name not in current_optional:
-    req = urllib.request.Request(
-        f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes/{{scope_id}}',
-        method='PUT', headers=auth,
+    src_path = Path(__file__).resolve().parent / "keycloak_optional_scope.py"
+    src = src_path.read_text(encoding="utf-8")
+    tail = (
+        "\n\nenable_optional_scope_and_assign_role("
+        f"{keycloak_url!r}, {realm!r}, {client_id!r}, {scope_name!r})\n"
     )
-    try:
-        with urllib.request.urlopen(req) as r:
-            print(f'Added {{scope_name}} to optional scopes ({{r.status}})')
-    except urllib.error.HTTPError as exc:
-        print(f'PUT optional-client-scopes failed {{exc.code}}: {{exc.read().decode()}}')
-        sys.exit(1)
-else:
-    print(f'{{scope_name}} already in optional scopes')
-
-# ── 2. Ensure every user in the realm has the offline_access realm role ───
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/roles/offline_access', headers=auth)
-with urllib.request.urlopen(req) as r:
-    offline_role = json.load(r)
-
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/users', headers=auth)
-with urllib.request.urlopen(req) as r:
-    users = json.load(r)
-
-for user in users:
-    uid = user['id']
-    uname = user.get('username', uid)
-    req = urllib.request.Request(
-        f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm', headers=auth
-    )
-    with urllib.request.urlopen(req) as r:
-        assigned = {{role['name'] for role in json.load(r)}}
-    if 'offline_access' not in assigned:
-        body = json.dumps([offline_role]).encode()
-        req = urllib.request.Request(
-            f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm',
-            data=body, method='POST',
-            headers={{**auth, 'Content-Type': 'application/json'}},
-        )
-        try:
-            with urllib.request.urlopen(req) as r:
-                print(f'Assigned offline_access role to user {{uname!r}} ({{r.status}})')
-        except urllib.error.HTTPError as exc:
-            print(f'POST role-mappings failed for {{uname!r}} {{exc.code}}: {{exc.read().decode()}}')
-            sys.exit(1)
-    else:
-        print(f'User {{uname!r}} already has offline_access role')
-
-print('Done')
-"""
     tag = f"_KcScope_{getuid()}_"
-    node.command(command=f"python3 <<'{tag}'\n{py_script}\n{tag}")
+    node.command(command=f"python3 <<'{tag}'\n{src}{tail}\n{tag}")
 
 
 @TestStep(Given)
