@@ -14,7 +14,14 @@ from oauth.requirements.requirements import *
 
 @TestStep(Then)
 def access_clickhouse(
-    self, token, ip="clickhouse1", https=False, status_code=200, node=None, query=None
+    self,
+    token,
+    ip="clickhouse1",
+    https=False,
+    status_code=200,
+    node=None,
+    query=None,
+    query_params=None,
 ):
     """Execute a query against ClickHouse with bearer-token auth.
 
@@ -23,6 +30,12 @@ def access_clickhouse(
     (POST) so quoting / special characters are safe — earlier versions
     used ad-hoc URL escaping that broke on any query containing ``&``,
     ``+``, ``#`` or quotes.
+
+    ``query_params`` is an optional ``{key: value}`` dict whose entries
+    become query-string parameters on the request URL (e.g.
+    ``{"session_id": "..."}``). Used by the M-30 session-sharing audit
+    scenario that exercises ClickHouse's HTTP named-session machinery.
+    Values are URL-encoded.
     """
     if node is None:
         node = self.context.bash_tools
@@ -30,6 +43,9 @@ def access_clickhouse(
     port = 8443 if https else 8123
     http_prefix = "https" if https else "http"
     url = f"{http_prefix}://{ip}:{port}/"
+
+    if query_params:
+        url = f"{url}?{urllib.parse.urlencode(query_params)}"
 
     if query is None:
         query = "SELECT currentUser()"
@@ -266,6 +282,7 @@ def change_user_directories_config(
     common_roles=None,
     roles_filter=None,
     roles_transform=None,
+    default_profile=None,
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
 ):
@@ -279,6 +296,11 @@ def change_user_directories_config(
     ``roles_transform`` accepts a sed-style regex (e.g. ``s/^grafana-//``)
     used by the M-13 audit scenario; the helper writes it verbatim into
     ``<roles_transform>``.
+
+    ``default_profile`` names a ClickHouse settings profile to attach to
+    auto-provisioned token users. The M-NEW-01 audit scenario drives the
+    "missing profile silently provisions unrestricted user" path through
+    this argument.
     """
 
     token_section = {"processor": processor}
@@ -291,6 +313,9 @@ def change_user_directories_config(
 
     if roles_transform is not None:
         token_section["roles_transform"] = roles_transform
+
+    if default_profile is not None:
+        token_section["default_profile"] = default_profile
 
     entries = {"user_directories": {"token": token_section}}
 
