@@ -8,6 +8,7 @@ from testflows.asserts import error
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_Cache_Reuse,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication,
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint,
 )
@@ -281,8 +282,12 @@ def device_flow_wrong_client_secret(self):
         reset_client_state()
 
     with And("I write a credentials file with a wrong secret"):
+        # ``grafana-client`` is a public client in the realm export, so
+        # Keycloak ignores ``client_secret`` for it entirely. Use the
+        # confidential client ``grafana-client-confidential`` so the wrong
+        # secret actually trips Keycloak's authentication check.
         write_oauth_credentials_file(
-            client_id="grafana-client",
+            client_id="grafana-client-confidential",
             client_secret="wrong-secret-value",
             token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
             device_authorization_uri=(
@@ -309,9 +314,9 @@ def device_flow_wrong_client_secret(self):
         assert_no_segfault(output=output, exit_code=exit_code)
         ol = output.lower()
         # Keycloak responds 401 with {"error":"invalid_client"} when the
-        # device endpoint receives a wrong client_secret. Pin at least one
-        # of the OAuth-spec failure markers so the scenario can't silently
-        # pass on, say, a network error.
+        # device endpoint receives a wrong client_secret for a confidential
+        # client. Pin at least one of the OAuth-spec failure markers so the
+        # scenario can't silently pass on, say, a network error.
         assert (
             "invalid_client" in ol
             or "unauthorized" in ol
@@ -319,6 +324,146 @@ def device_flow_wrong_client_secret(self):
             or "client_secret" in ol
             or "authentication_failed" in ol
         ), f"Expected OAuth invalid-client diagnostic, got:\n---\n{output}\n---"
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
+@Name("device flow succeeds with confidential client secret")
+def device_flow_succeeds_with_confidential_client(self):
+    """Confidential client + correct secret completes the device grant.
+
+    Mirrors :func:`device_flow_succeeds_when_keycloak_approves` but points
+    at ``grafana-client-confidential``, the realm's confidential client.
+    With ``grafana-client`` (public) Keycloak ignores ``client_secret``
+    entirely, so the secret-validation code path on both clickhouse-client
+    and Keycloak is structurally untested. This scenario closes that gap.
+    """
+
+    try:
+        with Given("I reset the client state"):
+            reset_client_state()
+
+        with And("offline_access scope is enabled for the confidential client"):
+            keycloak_enable_optional_scope(
+                scope_name="offline_access",
+                client_id="grafana-client-confidential",
+            )
+
+        with And("I write a credentials file with the confidential client's secret"):
+            write_oauth_credentials_file(
+                client_id="grafana-client-confidential",
+                client_secret="grafana-confidential-secret",
+                token_uri=(
+                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
+                ),
+                device_authorization_uri=(
+                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+                ),
+            )
+
+        with When("I start clickhouse-client with device login in the background"):
+            start_clickhouse_oauth_client_background(
+                args=[
+                    "--host",
+                    "clickhouse1",
+                    "--login=device",
+                    "--oauth-credentials",
+                    DEFAULT_CREDS_PATH,
+                ],
+                query="SELECT currentUser()",
+                wall_timeout=120,
+            )
+
+        user_code = None
+        with And("I wait until the log contains a device user_code"):
+            for _ in range(50):
+                log_snippet = read_clickhouse_oauth_background_log()
+                user_code = extract_device_user_code_from_client_output(log_snippet)
+                if user_code:
+                    break
+                time.sleep(1)
+            assert user_code is not None, (
+                "Timed out waiting for device user_code in clickhouse-client output:\n"
+                f"{read_clickhouse_oauth_background_log()}"
+            )
+
+        with And("I approve the device code through Keycloak"):
+            approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
+
+        with Then("the background client finishes successfully"):
+            wait_clickhouse_oauth_background_finished(timeout_sec=90)
+            full_log = read_clickhouse_oauth_background_log()
+            ec = parse_background_client_exit_code(full_log)
+            assert ec == 0, (
+                f"Expected exit code 0 after device approval with confidential "
+                f"client, got {ec!r}:\n---\n{full_log}\n---"
+            )
+            assert_no_segfault(output=full_log, exit_code=ec)
+
+    finally:
+        with Finally("I stop any stray background client"):
+            kill_clickhouse_oauth_background_if_alive()
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
+@Name("device flow rejects missing client_secret at confidential client")
+def device_flow_missing_client_secret_at_confidential_client(self):
+    """Confidential client + no ``client_secret`` is refused cleanly.
+
+    Documents the current end-to-end behaviour when ``client_secret`` is
+    omitted from the credentials JSON while pointing at a confidential
+    client. Today clickhouse-client rejects the credentials at load time
+    (PR-audit issue 2.2 — ``client_secret`` is hard-required); when that
+    fix lands the rejection will move server-side and Keycloak will
+    return ``invalid_client``. The assertion accepts either shape so the
+    scenario stays meaningful across that transition.
+    """
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I omit client_secret and point at the confidential client"):
+        write_oauth_credentials_file(
+            client_id="grafana-client-confidential",
+            client_secret=None,
+            token_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
+            ),
+            device_authorization_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+            ),
+        )
+
+    with When("I run clickhouse-client with device login"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=15,
+            expect_error=True,
+        )
+
+    with Then("the client refuses cleanly without crashing"):
+        assert exit_code != 0, error()
+        assert_no_segfault(output=output, exit_code=exit_code)
+        ol = output.lower()
+        assert (
+            "secret" in ol
+            or "bad_arguments" in ol
+            or "invalid_client" in ol
+            or "unauthorized" in ol
+            or "401" in ol
+            or "authentication_failed" in ol
+        ), (
+            "Expected client_secret-related load failure or OAuth "
+            f"invalid-client diagnostic, got:\n---\n{output}\n---"
+        )
 
 
 @TestScenario

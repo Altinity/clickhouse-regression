@@ -245,12 +245,15 @@ def connection_block_oauth_url_oidc_discovery_device_flow(self):
         reset_client_state()
 
     with And("I write oauth-url plus confidential client secret"):
+        # Use the confidential client so the ``oauth_client_secret`` value
+        # is actually validated by Keycloak (``grafana-client`` is public
+        # and ignores ``client_secret`` entirely).
         write_client_config_xml(
             contents=oauth_connection_config_xml(
                 login_mode="device",
                 oauth_url="http://keycloak:8080/realms/grafana",
-                oauth_client_id="grafana-client",
-                oauth_client_secret="grafana-secret",
+                oauth_client_id="grafana-client-confidential",
+                oauth_client_secret="grafana-confidential-secret",
             )
         )
 
@@ -329,6 +332,9 @@ def cli_overrides_multiple_oauth_fields(self):
         )
 
     with When("I override via CLI with working Keycloak endpoints"):
+        # Override targets the confidential client so the secret-override
+        # path is exercised end-to-end rather than relying on Keycloak
+        # ignoring the secret for a public client.
         exit_code, output = run_clickhouse_client_no_host(
             args=[
                 "--config",
@@ -338,9 +344,9 @@ def cli_overrides_multiple_oauth_fields(self):
                 "--oauth-url",
                 "http://keycloak:8080/realms/grafana",
                 "--oauth-client-id",
-                "grafana-client",
+                "grafana-client-confidential",
                 "--oauth-client-secret",
-                "grafana-secret",
+                "grafana-confidential-secret",
                 "--oauth-audience",
                 "http://localhost",
             ],
