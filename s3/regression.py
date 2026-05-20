@@ -534,6 +534,11 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
+    "/:/:/export tests/export partition/sanity/export partition all/*": (
+        Skip,
+        "EXPORT PARTITION ALL requires ClickHouse >= 26.3",
+        check_clickhouse_version("<26.3"),
+    ),
     "/:/:/export tests/export partition/sanity/partition export tight pool lock inside task/*": (
         Skip,
         "Export partition introduced in Antalya build",

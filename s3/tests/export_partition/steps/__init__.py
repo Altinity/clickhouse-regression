@@ -25,6 +25,7 @@ from .containers import (
 from .export_operations import (
     get_partitions,
     export_partitions,
+    export_partition_all,
     kill_export_partition,
 )
 
@@ -120,6 +121,7 @@ __all__ = [
     # Export operations
     "get_partitions",
     "export_partitions",
+    "export_partition_all",
     "kill_export_partition",
     # Export status
     "get_export_events",

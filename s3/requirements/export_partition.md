@@ -12,6 +12,7 @@
     * 3.2 [RQ.ClickHouse.ExportPartition.IntoOutfile](#rqclickhouseexportpartitionintooutfile)
     * 3.3 [RQ.ClickHouse.ExportPartition.Format](#rqclickhouseexportpartitionformat)
     * 3.4 [RQ.ClickHouse.ExportPartition.SettingsClause](#rqclickhouseexportpartitionsettingsclause)
+    * 3.5 [RQ.ClickHouse.ExportPartition.PartitionAll](#rqclickhouseexportpartitionpartitionall)
 * 4 [Supported source table engines](#supported-source-table-engines)
     * 4.1 [RQ.ClickHouse.ExportPartition.SourceEngines](#rqclickhouseexportpartitionsourceengines)
 * 5 [Cluster and node support](#cluster-and-node-support)
@@ -192,6 +193,21 @@ EXPORT PARTITION ID '2020'
 TO TABLE destination_table
 SETTINGS allow_experimental_export_merge_tree_part = 1, 
          export_merge_tree_partition_max_retries = 5
+```
+
+### RQ.ClickHouse.ExportPartition.PartitionAll
+version: 1.0
+
+[ClickHouse] SHALL support `ALTER TABLE ... EXPORT PARTITION ALL TO TABLE ...` from a `ReplicatedMergeTree` source to a compatible S3 destination such that:
+
+* One `ALTER` schedules an export for every active partition on the source table.
+* All rows from every active partition appear in the destination after exports complete, without skipping or duplicating data.
+
+```sql
+ALTER TABLE [database.]source_table_name
+EXPORT PARTITION ALL
+TO TABLE [database.]destination_table_name
+SETTINGS allow_experimental_export_merge_tree_part = 1
 ```
 
 ## Supported source table engines

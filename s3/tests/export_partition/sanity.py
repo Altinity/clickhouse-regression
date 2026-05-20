@@ -7,6 +7,7 @@ from helpers.common import getuid
 from helpers.queries import *
 from s3.requirements.export_partition import *
 from s3.tests.export_partition.steps import (
+    export_partition_all as run_export_partition_all,
     export_partitions,
     get_partitions,
     source_matches_destination,
@@ -121,6 +122,38 @@ def basic_table(self):
         source_matches_destination(
             source_table=source_table,
             destination_table=s3_table,
+        )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_PartitionAll("1.0"))
+def export_partition_all(self):
+    """EXPORT PARTITION ALL schedules every active partition in one ALTER."""
+
+    source_table = f"source_{getuid()}"
+    with Given("I create a populated source table and empty S3 table"):
+        partitioned_replicated_merge_tree_table(
+            table_name=source_table,
+            partition_by="p",
+            columns=default_columns(),
+            stop_merges=True,
+            cluster="replicated_cluster",
+            number_of_partitions=3,
+            number_of_parts=1,
+        )
+        s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
+
+    with When("I export all partitions in one ALTER"):
+        run_export_partition_all(
+            source_table=source_table,
+            destination_table=s3_table_name,
+            node=self.context.node,
+        )
+
+    with Then("check source matches destination"):
+        source_matches_destination(
+            source_table=source_table,
+            destination_table=s3_table_name,
         )
 
 
@@ -319,6 +352,7 @@ def feature(self):
 
     Scenario(run=empty_table)
     Scenario(run=basic_table)
+    Scenario(run=export_partition_all)
     Scenario(run=replicated_partition_exports_local_mode_peer_replica)
     Scenario(run=no_partition_by)
     Scenario(run=mismatched_columns)
