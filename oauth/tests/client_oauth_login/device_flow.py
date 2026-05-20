@@ -24,19 +24,9 @@ from oauth.tests.steps.client_login import (
     run_clickhouse_client,
     start_clickhouse_oauth_client_background,
     wait_clickhouse_oauth_background_finished,
+    write_keycloak_device_credentials,
     write_oauth_credentials_file,
 )
-
-
-def _standard_keycloak_device_creds():
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
-        device_authorization_uri=(
-            "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
-        ),
-    )
 
 
 @TestScenario
@@ -56,7 +46,7 @@ def device_flow_succeeds_when_keycloak_approves(self):
             keycloak_enable_optional_scope(scope_name="offline_access")
 
         with And("I write a credentials file pointing at the Keycloak realm"):
-            _standard_keycloak_device_creds()
+            write_keycloak_device_credentials()
 
         with When("I start clickhouse-client with device login in the background"):
             start_clickhouse_oauth_client_background(
@@ -112,7 +102,7 @@ def device_flow_prints_user_code_and_verification_uri(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with device login and never approve"):
         exit_code, output = run_clickhouse_client(
@@ -310,7 +300,7 @@ def device_flow_timeout_message_is_actionable(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client until device polling exhausts"):
         exit_code, output = run_clickhouse_client(
@@ -347,7 +337,7 @@ def device_flow_with_explicit_tcp_port(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with explicit tcp_port matching compose"):
         exit_code, output = run_clickhouse_client(
@@ -383,7 +373,7 @@ def device_flow_against_second_cluster_node(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client against clickhouse2"):
         exit_code, output = run_clickhouse_client(
@@ -413,7 +403,7 @@ def device_flow_with_secure_transport_flag(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with --secure"):
         exit_code, output = run_clickhouse_client(
@@ -447,7 +437,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with --login=device and never approve"):
         exit_code, output = run_clickhouse_client(

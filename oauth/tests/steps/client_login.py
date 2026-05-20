@@ -157,6 +157,34 @@ def write_oauth_credentials_file(
     node.command(command=f"chmod 600 {_shell_quote(path)}")
 
 
+def write_keycloak_device_credentials(
+    client_id="grafana-client",
+    client_secret="grafana-secret",
+    token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+    device_authorization_uri=(
+        "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+    ),
+    node=None,
+):
+    """Write the default Keycloak-grafana device-flow credentials file.
+
+    Thin wrapper around :func:`write_oauth_credentials_file` that fills
+    in the four fields every device-flow scenario in the suite was
+    re-typing verbatim. Kept as a plain function (rather than a
+    ``@TestStep``) so callers can keep their own ``with And("…"):``
+    framing intact, matching the pre-existing convention used by
+    helpers like ``_complete_device_login_via_background``.
+    """
+
+    write_oauth_credentials_file(
+        client_id=client_id,
+        client_secret=client_secret,
+        token_uri=token_uri,
+        device_authorization_uri=device_authorization_uri,
+        node=node,
+    )
+
+
 @TestStep(Given)
 def write_client_config_xml(self, contents, path=DEFAULT_CONFIG_PATH, node=None):
     """Write ``~/.clickhouse-client/config.xml``.
@@ -370,40 +398,18 @@ def read_oauth_cache(self, path=DEFAULT_CACHE_PATH, node=None):
         return None
 
 
-@TestStep(Then)
-def run_clickhouse_client(
-    self,
-    args,
-    query=None,
-    timeout=15,
-    node=None,
-    expect_error=False,
-):
-    """Run ``clickhouse-client`` inside ``node`` and return ``(exitcode, output)``.
+def _run_clickhouse_client_core(node, args, query, timeout, expect_error):
+    """Shared implementation behind ``run_clickhouse_client[_no_host]``.
 
-    ``args`` is a list of additional CLI flags (everything except
-    ``-q``/``--query`` and ``--host``, which the helper supplies).
+    Builds the ``timeout(1) clickhouse-client <args>`` command, runs it
+    via ``node.command(no_checks=True)`` so the helper owns the
+    exit-code policy, parses the trailing ``__EXIT__=<rc>`` marker, and
+    enforces ``expect_error``.
 
-    The helper always passes ``--host clickhouse1`` so that the OAuth
-    "is this a *.clickhouse.cloud host?" auto-detection is
-    deterministic — explicit ``--host`` populates ``hosts_and_ports``
-    so the segfault path of PR #1696 is *not* triggered. Tests that
-    want to exercise that path must omit ``--host`` from ``args`` and
-    set ``omit_host=True``.
-
-    The wall-clock ``timeout`` exists because ``--login=browser`` blocks
-    on a callback that will never come in CI. Anything still running
-    at ``timeout`` is killed with SIGTERM and the helper returns the
-    output captured up to that point.
-
-    ``expect_error`` flips the assertion: by default the helper asserts
-    ``exitcode == 0``. When the test is asserting "this command must
-    fail with a specific message", set ``expect_error=True`` and check
-    the returned ``output`` instead.
+    Kept as a plain function (no ``@TestStep`` decorator) so it can be
+    called from inside the public ``@TestStep(Then)`` wrappers without
+    re-entering the step machinery.
     """
-
-    if node is None:
-        node = self.context.node
 
     cmd_parts = ["timeout", str(timeout), "clickhouse-client"]
     cmd_parts.extend(args)
@@ -438,6 +444,52 @@ def run_clickhouse_client(
 
 
 @TestStep(Then)
+def run_clickhouse_client(
+    self,
+    args,
+    query=None,
+    timeout=15,
+    node=None,
+    expect_error=False,
+):
+    """Run ``clickhouse-client`` inside ``node`` and return ``(exitcode, output)``.
+
+    ``args`` is a list of additional CLI flags (everything except
+    ``-q``/``--query``, which the helper appends from the ``query``
+    kwarg). Callers that want the ``--host clickhouse1`` shorthand
+    must add it to ``args`` themselves — the helper does not inject
+    it.
+
+    The wall-clock ``timeout`` exists because ``--login=browser`` blocks
+    on a callback that will never come in CI. Anything still running
+    at ``timeout`` is killed with SIGTERM and the helper returns the
+    output captured up to that point.
+
+    ``expect_error`` flips the assertion: by default the helper asserts
+    ``exitcode == 0``. When the test is asserting "this command must
+    fail with a specific message", set ``expect_error=True`` and check
+    the returned ``output`` instead.
+
+    Use :func:`run_clickhouse_client_no_host` instead when the scenario
+    must exercise the PR #1696 / ClickHouse #103603 codepath where
+    ``hosts_and_ports`` is intentionally empty — the two helpers only
+    differ in their default ``expect_error`` value (this one defaults
+    to ``False`` because most callers expect a clean round-trip).
+    """
+
+    if node is None:
+        node = self.context.node
+
+    return _run_clickhouse_client_core(
+        node=node,
+        args=args,
+        query=query,
+        timeout=timeout,
+        expect_error=expect_error,
+    )
+
+
+@TestStep(Then)
 def run_clickhouse_client_no_host(
     self,
     args,
@@ -446,48 +498,32 @@ def run_clickhouse_client_no_host(
     node=None,
     expect_error=True,
 ):
-    """Variant of ``run_clickhouse_client`` that does NOT inject ``--host``.
+    """Variant of :func:`run_clickhouse_client` for the PR #1696 repro.
 
-    Required for the PR #1696 / ClickHouse #103603 segfault repro: the
-    crash only happens when ``hosts_and_ports`` is left empty by the
-    initialise() pass — i.e. the host comes from
-    ``connections_credentials`` or from the bare ``<host>`` element in
-    the config file rather than from ``--host`` on the CLI.
+    The crash from ClickHouse #103603 only happens when
+    ``hosts_and_ports`` is left empty by the ``initialise()`` pass —
+    i.e. the host comes from ``connections_credentials`` or from the
+    bare ``<host>`` element in the config file rather than from
+    ``--host`` on the CLI. Callers therefore omit ``--host`` from
+    ``args``.
 
-    Defaults to ``expect_error=True`` because most callers are pinning
-    a specific failure mode (arg-parse error, auth-redirect timeout,
-    etc.) rather than expecting a clean ``SELECT 1`` round-trip.
+    Mechanically identical to :func:`run_clickhouse_client`; the only
+    difference is the default of ``expect_error=True`` because most
+    callers are pinning a specific failure mode (arg-parse error,
+    auth-redirect timeout, etc.) rather than expecting a clean
+    ``SELECT 1`` round-trip.
     """
 
     if node is None:
         node = self.context.node
 
-    cmd_parts = ["timeout", str(timeout), "clickhouse-client"]
-    cmd_parts.extend(args)
-    if query is not None:
-        cmd_parts.extend(["--query", query])
-
-    cmd = " ".join(_shell_quote(p) for p in cmd_parts) + " 2>&1; echo __EXIT__=$?"
-    result = node.command(command=cmd, no_checks=True)
-
-    output = result.output
-    exit_code = None
-    for line in output.strip().splitlines()[::-1]:
-        if line.startswith("__EXIT__="):
-            try:
-                exit_code = int(line.split("=", 1)[1])
-            except ValueError:
-                exit_code = None
-            output = output.replace(line, "").rstrip()
-            break
-
-    if not expect_error:
-        assert exit_code == 0, (
-            f"clickhouse-client failed (exit={exit_code}) for args={args!r}\n"
-            f"---\n{output}\n---"
-        )
-
-    return exit_code, output
+    return _run_clickhouse_client_core(
+        node=node,
+        args=args,
+        query=query,
+        timeout=timeout,
+        expect_error=expect_error,
+    )
 
 
 @TestStep(Then)
@@ -517,6 +553,205 @@ def assert_no_segfault(self, output, exit_code):
             f"clickhouse-client crashed (exit={exit_code}); "
             f"found marker {marker!r} in output:\n---\n{output}\n---"
         )
+
+
+@TestStep(When)
+def complete_keycloak_device_login_via_background(
+    self,
+    args=None,
+    query="SELECT currentUser()",
+    wall_timeout=120,
+    user_code_poll_iters=50,
+    finish_timeout_sec=90,
+):
+    """Drive one successful Keycloak device-flow login end-to-end.
+
+    Starts ``clickhouse-client --login=device`` in the background,
+    polls the log for the RFC 8628 user code, approves it through the
+    Keycloak admin API, waits for the client to finish, and asserts a
+    clean ``exit code 0``. Used by every refresh-token-cache scenario
+    that needs a populated cache to test against.
+
+    ``args`` defaults to the standard ``--host clickhouse1
+    --login=device --oauth-credentials <DEFAULT_CREDS_PATH>``
+    invocation. Override only when a scenario needs a non-default
+    host / credentials path / extra flag — every existing caller
+    relies on the default.
+
+    Caller still owns ``reset_client_state()`` /
+    ``write_keycloak_device_credentials()`` (these are scenario-level
+    Givens) and the ``Finally`` that kills any leftover background
+    client.
+    """
+
+    if args is None:
+        args = [
+            "--host",
+            "clickhouse1",
+            "--login=device",
+            "--oauth-credentials",
+            DEFAULT_CREDS_PATH,
+        ]
+
+    start_clickhouse_oauth_client_background(
+        args=args,
+        query=query,
+        wall_timeout=wall_timeout,
+    )
+
+    user_code = None
+    for _ in range(user_code_poll_iters):
+        log_snippet = read_clickhouse_oauth_background_log()
+        user_code = extract_device_user_code_from_client_output(log_snippet)
+        if user_code:
+            break
+        time.sleep(1)
+    assert user_code is not None, (
+        "Timed out waiting for device user_code:\n"
+        f"{read_clickhouse_oauth_background_log()}"
+    )
+
+    approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
+    wait_clickhouse_oauth_background_finished(timeout_sec=finish_timeout_sec)
+
+    full_log = read_clickhouse_oauth_background_log()
+    ec = parse_background_client_exit_code(full_log)
+    assert ec == 0, (
+        f"Expected exit 0 after device approval, got {ec!r}:\n---\n{full_log}\n---"
+    )
+
+
+@TestStep(Given)
+def create_directory(self, path, node=None):
+    """Create ``path`` (with parents) inside ``node``.
+
+    Thin wrapper around ``mkdir -p`` so scenarios don't reach into
+    ``self.context.node.command(...)`` directly. Idempotent — calling
+    twice is safe.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"mkdir -p {_shell_quote(path)}")
+
+
+@TestStep(Given)
+def set_immutable(self, path, node=None):
+    """Mark ``path`` as immutable via ``chattr +i``.
+
+    ``chmod 555`` is insufficient when the binary under test runs as
+    root (``chmod`` does not stop root); ``chattr +i`` does. Used by
+    the "read-only ~/.clickhouse-client" cache-write scenarios.
+
+    Always pair with :func:`unset_immutable` in a ``Finally`` block —
+    otherwise the next scenario inherits a directory the cleanup
+    helpers cannot wipe.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"chattr +i {_shell_quote(path)}")
+
+
+@TestStep(Finally)
+def unset_immutable(self, path, node=None):
+    """Clear the immutable bit set by :func:`set_immutable`.
+
+    Uses ``no_checks`` so a stray cleanup on a path that no longer
+    exists (or was never marked immutable) doesn't propagate a
+    spurious failure out of ``Finally``.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"chattr -i {_shell_quote(path)}", no_checks=True)
+
+
+@TestStep(Then)
+def curl_head(self, url, node=None):
+    """Run ``curl -sSI <url>`` inside ``node`` and return the raw response.
+
+    Used by the loopback-callback security probes that need to look at
+    the response headers (e.g. checking the ``Location`` header for
+    leaked OAuth ``state``). Tolerates connection failures with
+    ``|| true`` so a not-yet-listening server surfaces as empty output
+    rather than aborting the scenario; callers are expected to assert
+    on what they actually need ("HTTP/" present, specific header
+    absent, etc.).
+    """
+
+    if node is None:
+        node = self.context.node
+
+    result = node.command(
+        command=f"(curl -sSI {_shell_quote(url)} || true) 2>&1",
+        no_checks=True,
+    )
+    return result.output
+
+
+@TestStep(Given)
+def start_mock_oidc_server(
+    self,
+    script,
+    pid_file,
+    log_file=None,
+    node=None,
+):
+    """Start a Python HTTP mock (e.g. for OIDC discovery) on ``node``.
+
+    ``script`` is the full Python source to write into the container
+    and run under ``nohup``. ``pid_file`` is where the PID lands —
+    callers pass the same path to :func:`stop_mock_oidc_server` to
+    tear it down. ``log_file`` defaults to a sibling of ``pid_file``
+    if not supplied.
+
+    Defaults to the bash-tools node because mock servers in this
+    suite live on a separate container so the clickhouse-server
+    sandbox stays clean.
+    """
+
+    if node is None:
+        node = self.context.bash_tools
+
+    if log_file is None:
+        log_file = pid_file.rsplit(".", 1)[0] + ".log"
+
+    script_path = pid_file.rsplit(".", 1)[0] + ".py"
+    tag = f"_MockOIDC_{getuid()}_"
+    node.command(
+        command=(
+            f"cat > {_shell_quote(script_path)} <<'{tag}'\n"
+            f"{script}\n"
+            f"{tag}\n"
+            f"nohup python3 -u {_shell_quote(script_path)} "
+            f">{_shell_quote(log_file)} 2>&1 & "
+            f"echo $! > {_shell_quote(pid_file)}"
+        )
+    )
+
+
+@TestStep(Finally)
+def stop_mock_oidc_server(self, pid_file, node=None):
+    """SIGTERM the mock OIDC server started by :func:`start_mock_oidc_server`.
+
+    Best-effort — runs with ``no_checks`` so a missing PID file (mock
+    never started) does not propagate out of ``Finally``.
+    """
+
+    if node is None:
+        node = self.context.bash_tools
+
+    node.command(
+        command=(
+            f"PID=$(cat {_shell_quote(pid_file)} 2>/dev/null); "
+            f'if [ -n "$PID" ]; then kill "$PID" 2>/dev/null || true; fi'
+        ),
+        no_checks=True,
+    )
 
 
 @TestStep(Then)

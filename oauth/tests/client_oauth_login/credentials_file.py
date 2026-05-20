@@ -12,6 +12,7 @@ from oauth.tests.steps.client_login import (
     CLIENT_CONFIG_DIR,
     DEFAULT_CREDS_PATH,
     assert_no_segfault,
+    create_directory,
     reset_client_state,
     run_clickhouse_client,
     write_oauth_credentials_file,
@@ -349,7 +350,7 @@ def credentials_path_is_directory(self):
     dir_path = f"{CLIENT_CONFIG_DIR}/not_a_file"
 
     with And("I create a directory at the credentials path"):
-        self.context.node.command(command=f"mkdir -p {dir_path}")
+        create_directory(path=dir_path)
 
     with When("I pass that directory as --oauth-credentials"):
         exit_code, output = run_clickhouse_client(

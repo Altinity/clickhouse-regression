@@ -17,6 +17,7 @@ from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
     approve_keycloak_device_user_code_via_bash_tools,
     assert_no_segfault,
+    complete_keycloak_device_login_via_background,
     extract_device_user_code_from_client_output,
     file_exists,
     kill_clickhouse_oauth_background_if_alive,
@@ -25,57 +26,15 @@ from oauth.tests.steps.client_login import (
     read_oauth_cache,
     reset_client_state,
     run_clickhouse_client,
+    set_immutable,
     start_clickhouse_oauth_client_background,
     stat_file_mode,
+    unset_immutable,
     wait_clickhouse_oauth_background_finished,
+    write_keycloak_device_credentials,
     write_oauth_cache,
     write_oauth_credentials_file,
 )
-
-
-def _standard_device_creds():
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
-        device_authorization_uri=(
-            "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
-        ),
-    )
-
-
-def _complete_device_login_via_background():
-    """Run one successful device login (caller manages reset/cleanup)."""
-
-    start_clickhouse_oauth_client_background(
-        args=[
-            "--host",
-            "clickhouse1",
-            "--login=device",
-            "--oauth-credentials",
-            DEFAULT_CREDS_PATH,
-        ],
-        query="SELECT currentUser()",
-        wall_timeout=120,
-    )
-    user_code = None
-    for _ in range(50):
-        log_snippet = read_clickhouse_oauth_background_log()
-        user_code = extract_device_user_code_from_client_output(log_snippet)
-        if user_code:
-            break
-        time.sleep(1)
-    assert user_code is not None, (
-        "Timed out waiting for device user_code:\n"
-        f"{read_clickhouse_oauth_background_log()}"
-    )
-    approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
-    wait_clickhouse_oauth_background_finished(timeout_sec=90)
-    full_log = read_clickhouse_oauth_background_log()
-    ec = parse_background_client_exit_code(full_log)
-    assert (
-        ec == 0
-    ), f"Expected exit 0 after device approval, got {ec!r}:\n---\n{full_log}\n---"
 
 
 @TestScenario
@@ -139,10 +98,10 @@ def oauth_cache_written_after_successful_device_login(self):
             reset_client_state()
 
         with And("I write OAuth credentials"):
-            _standard_device_creds()
+            write_keycloak_device_credentials()
 
         with When("I complete one device login"):
-            _complete_device_login_via_background()
+            complete_keycloak_device_login_via_background()
 
         with Then("oauth_cache.json exists with strict permissions"):
             assert file_exists(
@@ -171,10 +130,10 @@ def second_client_run_reuses_cached_refresh_token(self):
             reset_client_state()
 
         with And("I write OAuth credentials"):
-            _standard_device_creds()
+            write_keycloak_device_credentials()
 
         with When("I complete the first device login"):
-            _complete_device_login_via_background()
+            complete_keycloak_device_login_via_background()
 
         with And("I run clickhouse-client again without resetting HOME"):
             exit_code, output = run_clickhouse_client(
@@ -210,10 +169,10 @@ def invalid_cached_refresh_token_falls_back_to_device_flow(self):
             reset_client_state()
 
         with And("I write OAuth credentials"):
-            _standard_device_creds()
+            write_keycloak_device_credentials()
 
         with When("I complete the first device login"):
-            _complete_device_login_via_background()
+            complete_keycloak_device_login_via_background()
 
         with And("I corrupt the cached refresh token"):
             cached = read_oauth_cache()
@@ -329,12 +288,10 @@ def read_only_client_dir_blocks_cache_write(self):
             reset_client_state()
 
         with And("I write OAuth credentials"):
-            _standard_device_creds()
+            write_keycloak_device_credentials()
 
         with And("I make the config directory immutable"):
-            # chmod 555 is insufficient when clickhouse-client runs as root;
-            # chattr +i enforces immutability even for root.
-            self.context.node.command(command=f"chattr +i {CLIENT_CONFIG_DIR}")
+            set_immutable(path=CLIENT_CONFIG_DIR)
 
         with When("I start clickhouse-client with device login"):
             # Use a short wall_timeout so that if the client hangs trying to
@@ -382,10 +339,7 @@ def read_only_client_dir_blocks_cache_write(self):
 
     finally:
         with Finally("I restore directory and stop clients"):
-            self.context.node.command(
-                command=f"chattr -i {CLIENT_CONFIG_DIR}",
-                no_checks=True,
-            )
+            unset_immutable(path=CLIENT_CONFIG_DIR)
             kill_clickhouse_oauth_background_if_alive()
 
 

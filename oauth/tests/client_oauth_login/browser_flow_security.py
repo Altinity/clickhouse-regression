@@ -1,6 +1,7 @@
 """Security-focused negatives for browser OAuth and OIDC discovery."""
 
 import textwrap
+import time
 
 from testflows.core import *
 
@@ -10,13 +11,17 @@ from oauth.requirements.requirements import (
 from oauth.tests.client_oauth_login.common import oauth_connection_config_xml
 from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
+    DEFAULT_CREDS_PATH,
     assert_no_segfault,
+    curl_head,
     kill_clickhouse_oauth_background_if_alive,
     reset_client_state,
     run_clickhouse_client_no_host,
     start_clickhouse_oauth_client_background,
+    start_mock_oidc_server,
+    stop_mock_oidc_server,
     write_client_config_xml,
-    write_oauth_credentials_file, DEFAULT_CREDS_PATH,
+    write_oauth_credentials_file,
 )
 
 BROWSER_SECURITY_LOG = "/tmp/ch_oauth_browser_security.log"
@@ -65,13 +70,10 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
             )
 
         with And("I probe /start on the loopback server"):
-            result = self.context.node.command(
-                command=(
-                    "sleep 3; " "(curl -sSI http://127.0.0.1:49152/start || true) 2>&1"
-                ),
-                no_checks=True,
-            )
-            probe = result.output
+            # TODO(P2): replace this fixed sleep with a poll-for-bind loop;
+            # see oauth/client_oauth_login_fix_plan.md priority 2 follow-up.
+            time.sleep(3)
+            probe = curl_head(url="http://127.0.0.1:49152/start")
 
         with Then("HTTP responded and Location omits oauth state"):
             assert (
@@ -91,7 +93,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
     finally:
         with Finally("I stop the browser-login background client"):
             kill_clickhouse_oauth_background_if_alive(
-                self, pid_path=BROWSER_SECURITY_PID
+                pid_path=BROWSER_SECURITY_PID
             )
 
 
@@ -133,15 +135,7 @@ def oversized_oidc_discovery_response_is_bounded(self):
             reset_client_state()
 
         with And("I start a mock discovery endpoint on bash-tools"):
-            bash = self.context.bash_tools
-            bash.command(
-                command=(
-                    f"cat > /tmp/mock_oidc_oversized.py <<'PY'\n{mock_py}\nPY\n"
-                    "nohup python3 -u /tmp/mock_oidc_oversized.py "
-                    f">/tmp/mock_oidc_oversized.log 2>&1 & "
-                    f"echo $! > {MOCK_OIDC_PID_FILE}"
-                )
-            )
+            start_mock_oidc_server(script=mock_py, pid_file=MOCK_OIDC_PID_FILE)
 
         with And("I write a connection that discovers via the mock"):
             write_client_config_xml(
@@ -171,13 +165,7 @@ def oversized_oidc_discovery_response_is_bounded(self):
 
     finally:
         with Finally("I stop the mock HTTP server"):
-            self.context.bash_tools.command(
-                command=(
-                    f"PID=$(cat {MOCK_OIDC_PID_FILE} 2>/dev/null); "
-                    'if [ -n "$PID" ]; then kill "$PID" 2>/dev/null || true; fi'
-                ),
-                no_checks=True,
-            )
+            stop_mock_oidc_server(pid_file=MOCK_OIDC_PID_FILE)
 
 
 @TestFeature
