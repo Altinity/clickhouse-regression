@@ -3974,6 +3974,25 @@ RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint = Requirement(
     num="15.4.3",
 )
 
+RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient = Requirement(
+    name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "When the configured `client_id` refers to a confidential OAuth client (one whose identity provider requires `client_secret` authentication on the device-authorization and token endpoints), `clickhouse-client` SHALL:\n"
+        "\n"
+        "1. Submit the configured `client_secret` to both the `device_authorization_uri` and the `token_uri` so that the identity provider can authenticate the client. With a correct `client_secret`, the device flow SHALL complete successfully (issue a `user_code`, accept user approval, and obtain an `id_token` / `access_token`) and the subsequent ClickHouse query SHALL be authenticated.\n"
+        "2. When the configured `client_secret` is missing, empty, or does not match the value registered at the identity provider, surface the resulting OAuth error (typically `invalid_client` / HTTP 401) to the user, exit with a non-zero status, and SHALL NOT crash, leak a stack trace, or silently fall through into an indefinite polling loop.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="15.4.4",
+)
+
 RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication = Requirement(
     name="RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication",
     version="1.0",
@@ -4951,6 +4970,11 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
             level=3,
             num="15.4.3",
         ),
+        Heading(
+            name="RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient",
+            level=3,
+            num="15.4.4",
+        ),
         Heading(name="Browser Flow", level=2, num="15.5"),
         Heading(
             name="RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication",
@@ -5142,6 +5166,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication,
         RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse,
         RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint,
+        RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient,
         RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication,
         RQ_SRS_042_OAuth_Client_Login_Cache_Reuse,
         RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions,
@@ -5406,6 +5431,7 @@ SRS_042_OAuth_Authentication_in_ClickHouse = Specification(
         * 15.4.1 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication](#rqsrs-042oauthclientlogindeviceflowauthentication)
         * 15.4.2 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse](#rqsrs-042oauthclientlogindeviceflownonjsonresponse)
         * 15.4.3 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint](#rqsrs-042oauthclientlogindeviceflowunreachableendpoint)
+        * 15.4.4 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient](#rqsrs-042oauthclientlogindeviceflowconfidentialclient)
     * 15.5 [Browser Flow](#browser-flow)
         * 15.5.1 [RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication](#rqsrs-042oauthclientloginbrowserflowauthentication)
     * 15.6 [Refresh Token Cache](#refresh-token-cache)
@@ -8166,6 +8192,14 @@ The device flow SHALL still terminate cleanly when the `expires_in` deadline ela
 version: 1.0
 
 When the configured `token_uri` or `device_authorization_uri` is unreachable (DNS failure, connection refused, HTTP 404), `clickhouse-client` SHALL fail with a clear network or authentication error and SHALL NOT crash.
+
+#### RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient
+version: 1.0
+
+When the configured `client_id` refers to a confidential OAuth client (one whose identity provider requires `client_secret` authentication on the device-authorization and token endpoints), `clickhouse-client` SHALL:
+
+1. Submit the configured `client_secret` to both the `device_authorization_uri` and the `token_uri` so that the identity provider can authenticate the client. With a correct `client_secret`, the device flow SHALL complete successfully (issue a `user_code`, accept user approval, and obtain an `id_token` / `access_token`) and the subsequent ClickHouse query SHALL be authenticated.
+2. When the configured `client_secret` is missing, empty, or does not match the value registered at the identity provider, surface the resulting OAuth error (typically `invalid_client` / HTTP 401) to the user, exit with a non-zero status, and SHALL NOT crash, leak a stack trace, or silently fall through into an indefinite polling loop.
 
 ### Browser Flow
 

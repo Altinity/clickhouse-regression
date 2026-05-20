@@ -251,6 +251,7 @@
         * 15.4.1 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.Authentication](#rqsrs-042oauthclientlogindeviceflowauthentication)
         * 15.4.2 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.NonJSONResponse](#rqsrs-042oauthclientlogindeviceflownonjsonresponse)
         * 15.4.3 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.UnreachableEndpoint](#rqsrs-042oauthclientlogindeviceflowunreachableendpoint)
+        * 15.4.4 [RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient](#rqsrs-042oauthclientlogindeviceflowconfidentialclient)
     * 15.5 [Browser Flow](#browser-flow)
         * 15.5.1 [RQ.SRS-042.OAuth.Client.Login.BrowserFlow.Authentication](#rqsrs-042oauthclientloginbrowserflowauthentication)
     * 15.6 [Refresh Token Cache](#refresh-token-cache)
@@ -3011,6 +3012,14 @@ The device flow SHALL still terminate cleanly when the `expires_in` deadline ela
 version: 1.0
 
 When the configured `token_uri` or `device_authorization_uri` is unreachable (DNS failure, connection refused, HTTP 404), `clickhouse-client` SHALL fail with a clear network or authentication error and SHALL NOT crash.
+
+#### RQ.SRS-042.OAuth.Client.Login.DeviceFlow.ConfidentialClient
+version: 1.0
+
+When the configured `client_id` refers to a confidential OAuth client (one whose identity provider requires `client_secret` authentication on the device-authorization and token endpoints), `clickhouse-client` SHALL:
+
+1. Submit the configured `client_secret` to both the `device_authorization_uri` and the `token_uri` so that the identity provider can authenticate the client. With a correct `client_secret`, the device flow SHALL complete successfully (issue a `user_code`, accept user approval, and obtain an `id_token` / `access_token`) and the subsequent ClickHouse query SHALL be authenticated.
+2. When the configured `client_secret` is missing, empty, or does not match the value registered at the identity provider, surface the resulting OAuth error (typically `invalid_client` / HTTP 401) to the user, exit with a non-zero status, and SHALL NOT crash, leak a stack trace, or silently fall through into an indefinite polling loop.
 
 ### Browser Flow
 
