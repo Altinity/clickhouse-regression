@@ -100,7 +100,8 @@ def cli_overrides_connection_block(self):
             "invalid_client" in ol
             or "invalid client" in ol
             or "unauthorized" in ol
-            or "client" in ol  # final fallback so Keycloak phrasing changes don't break us
+            or "client"
+            in ol  # final fallback so Keycloak phrasing changes don't break us
         ), f"Expected OAuth invalid-client diagnostic from Keycloak, got:\n---\n{output}\n---"
 
 

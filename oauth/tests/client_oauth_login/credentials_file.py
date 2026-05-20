@@ -7,7 +7,8 @@ from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format,
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed,
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing,
-    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId)
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId,
+)
 from oauth.tests.steps.client_login import (
     CLIENT_CONFIG_DIR,
     DEFAULT_CREDS_PATH,

@@ -111,8 +111,7 @@ def cache_file_mode_is_strict(self):
             ), "Expected oauth_cache.json after successful device login"
             mode = stat_file_mode(path=DEFAULT_CACHE_PATH)
             assert mode == "600", (
-                f"Expected client-created oauth_cache.json mode 600, "
-                f"got {mode!r}"
+                f"Expected client-created oauth_cache.json mode 600, " f"got {mode!r}"
             )
 
     finally:

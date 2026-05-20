@@ -78,9 +78,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
             )
 
         with Then("HTTP responded and Location omits oauth state"):
-            assert (
-                "HTTP/" in probe
-            ), (
+            assert "HTTP/" in probe, (
                 "Loopback /start never responded within the poll window — "
                 f"the callback server may not have bound. Probe:\n{probe}"
             )
@@ -97,9 +95,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
 
     finally:
         with Finally("I stop the browser-login background client"):
-            kill_clickhouse_oauth_background_if_alive(
-                pid_path=BROWSER_SECURITY_PID
-            )
+            kill_clickhouse_oauth_background_if_alive(pid_path=BROWSER_SECURITY_PID)
 
 
 @TestScenario

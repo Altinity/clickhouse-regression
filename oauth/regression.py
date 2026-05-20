@@ -167,7 +167,7 @@ xfails = {
             "in ExternalAuthenticators.cpp:624-640.",
         )
     ],
-    "/oauth/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
+    "/oauth/client login/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
         (
             Fail,
             "PR #1606 follow-up audit: loopback /start must not redirect with "
@@ -175,7 +175,7 @@ xfails = {
             "issue-pr-1606-oauth-audit-round2.md).",
         )
     ],
-    "/oauth/client oauth login/browser flow security/oversized OIDC discovery document fails without hanging": [
+    "/oauth/client login/client oauth login/browser flow security/oversized OIDC discovery document fails without hanging": [
         (
             Fail,
             "PR #1606 follow-up audit: OIDC discovery should bound download "
@@ -190,7 +190,7 @@ ffails = {
         "OAuth not implemented in non Antalya build",
         check_if_not_antalya_build,
     ),
-    "/oauth/client oauth login/connection block segfault/*": (
+    "/oauth/client login/client oauth login/connection block segfault/*": (
         Skip,
         "Waiting for upstream fix: Altinity/ClickHouse#1696 / "
         "ClickHouse/ClickHouse#103603 (Client::login segfault on empty "
@@ -331,7 +331,9 @@ def regression(
     Scenario(run=load("oauth.tests.groups", "feature"))
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
-    Scenario(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+
+    with Feature("client login"):
+        Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
     if run_security:
         Scenario(run=load("oauth.tests.security_audit.feature", "feature"))

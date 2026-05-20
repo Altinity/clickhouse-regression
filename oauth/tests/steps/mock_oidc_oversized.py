@@ -30,9 +30,7 @@ def _make_handler(padding_bytes: int):
                 self.end_headers()
                 return
             pad = b"x" * padding_bytes
-            body = (
-                b'{"issuer":"http://bash-tools:0/x","pad":"' + pad + b'"}'
-            )
+            body = b'{"issuer":"http://bash-tools:0/x","pad":"' + pad + b'"}'
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))

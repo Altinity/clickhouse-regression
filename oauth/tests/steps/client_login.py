@@ -616,9 +616,9 @@ def complete_keycloak_device_login_via_background(
 
     full_log = read_clickhouse_oauth_background_log()
     ec = parse_background_client_exit_code(full_log)
-    assert ec == 0, (
-        f"Expected exit 0 after device approval, got {ec!r}:\n---\n{full_log}\n---"
-    )
+    assert (
+        ec == 0
+    ), f"Expected exit 0 after device approval, got {ec!r}:\n---\n{full_log}\n---"
 
 
 @TestStep(Given)

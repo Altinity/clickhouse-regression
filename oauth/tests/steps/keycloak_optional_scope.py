@@ -26,7 +26,9 @@ import urllib.parse
 import urllib.request
 
 
-def _admin_token(base: str, admin_user: str = "admin", admin_password: str = "admin") -> str:
+def _admin_token(
+    base: str, admin_user: str = "admin", admin_password: str = "admin"
+) -> str:
     """Acquire an admin-cli access token for ``base``'s master realm."""
 
     data = urllib.parse.urlencode(
@@ -67,9 +69,10 @@ def _attach_optional_scope(
         sys.exit(1)
     client_uuid = clients[0]["id"]
 
-    scope_map = {s["name"]: s["id"] for s in _get_json(
-        f"{base}/admin/realms/{realm}/client-scopes", auth
-    )}
+    scope_map = {
+        s["name"]: s["id"]
+        for s in _get_json(f"{base}/admin/realms/{realm}/client-scopes", auth)
+    }
     if scope_name not in scope_map:
         print(
             f"ERROR: scope {scope_name!r} not found in realm "
@@ -101,8 +104,7 @@ def _attach_optional_scope(
             print(f"Added {scope_name} to optional scopes ({r.status})")
     except urllib.error.HTTPError as exc:
         print(
-            f"PUT optional-client-scopes failed {exc.code}: "
-            f"{exc.read().decode()}"
+            f"PUT optional-client-scopes failed {exc.code}: " f"{exc.read().decode()}"
         )
         sys.exit(1)
 
@@ -139,10 +141,7 @@ def _assign_realm_role_to_every_user(
         )
         try:
             with urllib.request.urlopen(req) as r:
-                print(
-                    f"Assigned {role_name} role to user {uname!r} "
-                    f"({r.status})"
-                )
+                print(f"Assigned {role_name} role to user {uname!r} " f"({r.status})")
         except urllib.error.HTTPError as exc:
             print(
                 f"POST role-mappings failed for {uname!r} "
