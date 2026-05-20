@@ -12,7 +12,6 @@ from oauth.tests.steps.clikhouse import (
     change_user_jwt_auth,
     reload_clickhouse_config,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 from oauth.tests.security_audit.common import search_server_log
 
 
@@ -20,15 +19,19 @@ from oauth.tests.security_audit.common import search_server_log
 @Name("H-16 / 1")
 def scenario_1(self):
     """[H-16]"""
+    client = self.context.provider_client
     secret = "shared_secret_for_tests"
 
-    with Given("a Keycloak OpenID processor + a static-key processor"):
+    with Given("a provider OpenID processor + a static-key processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=0,
             replace_section=True,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
         change_token_processors(
             processor_name="proc_b",
@@ -156,13 +159,16 @@ def scenario_4(self):
     """[M-13]"""
     client = self.context.provider_client
 
-    with Given("a Keycloak OpenID processor"):
+    with Given("a provider OpenID processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=0,
             replace_section=True,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
 
     with And(

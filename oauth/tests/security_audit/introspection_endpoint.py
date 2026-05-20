@@ -7,7 +7,6 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 @TestScenario
@@ -20,13 +19,13 @@ def scenario_1(self):
         "I configure OpenID with valid endpoints "
         "and an unreachable introspection URL"
     ):
-        kc = keycloak_openid_processor_args()
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
-            userinfo_endpoint=kc["userinfo_endpoint"],
+            userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint="http://keycloak:8080/does-not-exist/introspect",
-            jwks_uri=kc["jwks_uri"],
+            jwks_uri=endpoints.jwks_uri,
         )
 
     with And("I configure user directories"):
@@ -49,12 +48,12 @@ def scenario_2(self):
     client = self.context.provider_client
 
     with Given("I configure OpenID with only userinfo and jwks_uri (no introspection)"):
-        kc = keycloak_openid_processor_args()
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
-            userinfo_endpoint=kc["userinfo_endpoint"],
-            jwks_uri=kc["jwks_uri"],
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            jwks_uri=endpoints.jwks_uri,
             replace=True,
         )
 

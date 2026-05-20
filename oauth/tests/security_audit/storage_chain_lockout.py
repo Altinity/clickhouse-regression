@@ -8,20 +8,24 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_order,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 @TestScenario
 @Name("H-25 / 1")
 def scenario_1(self):
     """[H-25]"""
-    with Given("a working Keycloak token processor"):
+    client = self.context.provider_client
+
+    with Given("a working provider token processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=0,
             replace_section=True,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
 
     with And("I reorder user_directories so <token> is first and <users_xml> second"):

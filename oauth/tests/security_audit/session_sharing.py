@@ -8,7 +8,6 @@ from oauth.tests.steps.clikhouse import (
     access_clickhouse,
     change_token_processors,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 @TestScenario
@@ -19,16 +18,19 @@ def scenario_1(self):
     sid = "sess_" + getuid()[:8]
     tbl = "t_" + getuid()[:8]
 
-    with Given("a Keycloak OpenID processor"):
+    with Given("a provider OpenID processor"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=60,
             replace_section=True,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
 
-    with And("I get a valid Keycloak token"):
+    with And("I get a valid provider token"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with When(f"request 1 creates a temporary table '{tbl}' under session_id='{sid}'"):

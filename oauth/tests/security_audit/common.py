@@ -7,7 +7,6 @@ catalogue.
 from testflows.core import *
 
 from oauth.tests.steps.clikhouse import change_token_processors
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 @TestStep(Given)
@@ -19,15 +18,24 @@ def two_processor_setup(
     lenient_algo="hs256",
     token_cache_lifetime=60,
 ):
-    """Configure one Keycloak-JWKS processor and one static-key processor
+    """Configure one provider-OpenID processor and one static-key processor
     alongside it. Returns both processor names and the static-key secret.
+
+    The OpenID processor uses the active provider's discovery endpoints
+    via ``client.OAuthProvider.openid_endpoints()`` so this fixture works
+    against any IdP that implements the contract.
     """
-    with By(f"configuring the '{strict_name}' Keycloak OpenID processor"):
+    client = self.context.provider_client
+    endpoints = client.OAuthProvider.openid_endpoints()
+
+    with By(f"configuring the '{strict_name}' provider OpenID processor"):
         change_token_processors(
             processor_name=strict_name,
             processor_type="OpenID",
             token_cache_lifetime=token_cache_lifetime,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
 
     with And(f"adding a '{lenient_name}' static-key processor"):

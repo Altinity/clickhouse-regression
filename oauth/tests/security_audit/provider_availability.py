@@ -10,7 +10,6 @@ from oauth.tests.steps.clikhouse import (
     change_user_directories_config,
     check_clickhouse_is_alive,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 MAX_REASONABLE_AUTH_TIMEOUT = 30
@@ -25,13 +24,13 @@ def scenario_1(self):
     with Given(
         "I configure OpenID with a non-routable jwks_uri " "and valid userinfo_endpoint"
     ):
-        kc = keycloak_openid_processor_args()
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             jwks_uri="http://10.255.255.1:9999/hang",
-            userinfo_endpoint=kc["userinfo_endpoint"],
-            token_introspection_endpoint=kc["token_introspection_endpoint"],
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
         )
 
     with And("I configure user directories"):
@@ -72,13 +71,13 @@ def scenario_2(self):
     with Given(
         "I configure OpenID with a non-routable userinfo_endpoint and valid jwks_uri"
     ):
-        kc = keycloak_openid_processor_args()
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             userinfo_endpoint="http://10.255.255.1:9999/hang",
-            jwks_uri=kc["jwks_uri"],
-            token_introspection_endpoint=kc["token_introspection_endpoint"],
+            jwks_uri=endpoints.jwks_uri,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
         )
 
     with And("I configure user directories"):

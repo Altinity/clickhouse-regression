@@ -9,7 +9,6 @@ from oauth.tests.steps.clikhouse import (
     access_clickhouse,
     change_token_processors,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 from oauth.tests.security_audit.common import search_server_log
 
 
@@ -49,12 +48,15 @@ def scenario_2(self):
     """[L-13]"""
     client = self.context.provider_client
 
-    with Given("a Keycloak-backed processor and a live token"):
+    with Given("a provider-backed OpenID processor and a live token"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=0,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            jwks_uri=endpoints.jwks_uri,
         )
         token = client.OAuthProvider.get_oauth_token().access_token
 
