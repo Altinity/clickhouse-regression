@@ -1,7 +1,5 @@
 """Tests for the device-authorization (``--login=device``) flow."""
 
-import time
-
 from testflows.core import *
 from testflows.asserts import error
 
@@ -25,6 +23,7 @@ from oauth.tests.steps.client_login import (
     run_clickhouse_client,
     start_clickhouse_oauth_client_background,
     wait_clickhouse_oauth_background_finished,
+    wait_for_device_user_code,
     write_keycloak_device_credentials,
     write_oauth_credentials_file,
 )
@@ -62,18 +61,8 @@ def device_flow_succeeds_when_keycloak_approves(self):
                 wall_timeout=120,
             )
 
-        user_code = None
         with And("I wait until the log contains a device user_code"):
-            for _ in range(50):
-                log_snippet = read_clickhouse_oauth_background_log()
-                user_code = extract_device_user_code_from_client_output(log_snippet)
-                if user_code:
-                    break
-                time.sleep(1)
-            assert user_code is not None, (
-                "Timed out waiting for device user_code in clickhouse-client output:\n"
-                f"{read_clickhouse_oauth_background_log()}"
-            )
+            user_code = wait_for_device_user_code()
 
         with And("I approve the device code through Keycloak"):
             approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
@@ -367,18 +356,8 @@ def device_flow_succeeds_with_confidential_client(self):
                 wall_timeout=120,
             )
 
-        user_code = None
         with And("I wait until the log contains a device user_code"):
-            for _ in range(50):
-                log_snippet = read_clickhouse_oauth_background_log()
-                user_code = extract_device_user_code_from_client_output(log_snippet)
-                if user_code:
-                    break
-                time.sleep(1)
-            assert user_code is not None, (
-                "Timed out waiting for device user_code in clickhouse-client output:\n"
-                f"{read_clickhouse_oauth_background_log()}"
-            )
+            user_code = wait_for_device_user_code()
 
         with And("I approve the device code through Keycloak"):
             approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)

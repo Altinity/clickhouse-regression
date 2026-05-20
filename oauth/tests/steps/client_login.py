@@ -50,16 +50,80 @@ DEVICE_FLOW_BG_LOG = "/tmp/ch_oauth_device_flow.log"
 DEVICE_FLOW_BG_PID = "/tmp/ch_oauth_device_flow.pid"
 
 
-def extract_device_user_code_from_client_output(text):
-    """Extract RFC 8628-shaped user code from clickhouse-client stderr/stdout."""
+# Markers ``clickhouse-client --login=device`` is expected to emit near the
+# user code per RFC 8628 §3.3 (the client SHALL display the ``user_code`` and
+# verification URI to the user). Anchoring on these makes the extractor
+# immune to noisy URL substrings like ``keycloak`` / ``localhost`` /
+# ``clickhouse`` that happen to match permissive code patterns.
+_DEVICE_USER_CODE_ANCHOR_RE = re.compile(
+    r"(?:user[_\- ]?code|verification_uri_complete|verification[_\- ]?url)"
+    r"[^A-Za-z0-9]{0,40}"
+    r"([A-Z0-9]{4}-[A-Z0-9]{4})",
+    flags=re.IGNORECASE,
+)
 
-    m = re.search(r"\b([A-Z2-7]{4}-[A-Z2-7]{4})\b", text, flags=re.IGNORECASE)
+# Fallback for outputs that don't print an explicit anchor: the canonical
+# dash-separated 4-4 shape used by Keycloak / Auth0 / Google / Okta / Entra ID.
+# The literal ``-`` in the middle is what keeps unrelated 8-letter substrings
+# (``keycloak``, ``localhost``, ...) out — they have no embedded dash.
+_DEVICE_USER_CODE_DASHED_RE = re.compile(
+    r"\b([A-Z0-9]{4}-[A-Z0-9]{4})\b", flags=re.IGNORECASE
+)
+
+
+def extract_device_user_code_from_client_output(text):
+    """Extract an RFC 8628 user code from ``clickhouse-client`` output.
+
+    Two-stage match: first an anchored search keyed on the marker words
+    every conformant client prints next to the code (``user_code``,
+    ``User code:``, ``verification_uri_complete=...?user_code=XXXX-XXXX``),
+    then a fallback to the bare 4-4 dashed shape for outputs that don't
+    print a marker.
+
+    The previous implementation also accepted any 8-character alphanumeric
+    run, which made it match the literal substring ``keycloak`` (and any
+    other 8-letter host name) inside ``http://keycloak:8080/...`` warnings
+    that ``clickhouse-client`` emits before it has issued any device-code
+    request — producing a fake ``KEYC-LOAK`` user code that then propagated
+    into the IdP-approver step and caused failures to surface several steps
+    away from where they actually happened.
+    """
+
+    m = _DEVICE_USER_CODE_ANCHOR_RE.search(text)
     if m:
         return m.group(1).upper()
-    m = re.search(r"\b([A-Z2-7]{8})\b", text, flags=re.IGNORECASE)
+    m = _DEVICE_USER_CODE_DASHED_RE.search(text)
     if m:
-        s = m.group(1).upper()
-        return f"{s[:4]}-{s[4:]}"
+        return m.group(1).upper()
+    return None
+
+
+# Strings that, once present in the background client log, mean continuing to
+# poll for a user code is futile — the client process has exited or is about
+# to. Surface the failure at the wait step instead of cascading into the
+# IdP-approval step that would otherwise fire with a junk code.
+_DEVICE_FLOW_TERMINAL_MARKERS = (
+    "__EXIT__=",
+    "AUTHENTICATION_FAILED",
+    "Stack trace:",
+)
+_DEVICE_FLOW_EXCEPTION_RE = re.compile(r"\bCode:\s*\d+\.\s*DB::Exception")
+
+
+def device_flow_terminal_failure_reason(text):
+    """Return a short string describing why the device flow has terminally failed, or ``None``.
+
+    Used by :func:`wait_for_device_user_code` to short-circuit the polling
+    loop the moment the background ``clickhouse-client`` either exits
+    (``__EXIT__=`` epilogue) or logs a ClickHouse exception / stack trace.
+    """
+
+    for marker in _DEVICE_FLOW_TERMINAL_MARKERS:
+        if marker in text:
+            return marker
+    m = _DEVICE_FLOW_EXCEPTION_RE.search(text)
+    if m:
+        return m.group(0)
     return None
 
 
@@ -325,6 +389,59 @@ def read_clickhouse_oauth_background_log(self, log_path=DEVICE_FLOW_BG_LOG, node
         no_checks=True,
     )
     return result.output
+
+
+@TestStep(When)
+def wait_for_device_user_code(
+    self,
+    poll_iters=50,
+    poll_interval_sec=1,
+    log_path=DEVICE_FLOW_BG_LOG,
+    node=None,
+):
+    """Poll the background ``clickhouse-client`` log until a user code appears.
+
+    Returns the extracted user code as a string. Fails the assertion early
+    (with the captured log included in the message) if the background
+    client has already exited or logged a ClickHouse exception / stack
+    trace — without this guard, a client that died at the device-auth step
+    would silently let the wait loop time out, after which the loose
+    user-code matcher could pick a junk substring out of unrelated log
+    lines and feed it to the IdP-approver step.
+
+    Centralising this loop also means scenarios stay short and the
+    fail-fast logic only has to live in one place.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    last_log = ""
+    for _ in range(poll_iters):
+        last_log = node.command(
+            command=f"cat {_shell_quote(log_path)} 2>/dev/null || true",
+            no_checks=True,
+        ).output
+
+        user_code = extract_device_user_code_from_client_output(last_log)
+        if user_code:
+            return user_code
+
+        reason = device_flow_terminal_failure_reason(last_log)
+        assert reason is None, (
+            "Background clickhouse-client failed before emitting a device "
+            f"user_code (saw {reason!r} in the log). This usually means the "
+            "device-authorization request itself was rejected by the IdP. "
+            f"Captured log:\n---\n{last_log}\n---"
+        )
+
+        time.sleep(poll_interval_sec)
+
+    raise AssertionError(
+        f"Timed out after ~{poll_iters * poll_interval_sec}s waiting for a "
+        "device user_code in clickhouse-client output. Captured log:\n"
+        f"---\n{last_log}\n---"
+    )
 
 
 @TestStep(Then)
@@ -599,17 +716,7 @@ def complete_keycloak_device_login_via_background(
         wall_timeout=wall_timeout,
     )
 
-    user_code = None
-    for _ in range(user_code_poll_iters):
-        log_snippet = read_clickhouse_oauth_background_log()
-        user_code = extract_device_user_code_from_client_output(log_snippet)
-        if user_code:
-            break
-        time.sleep(1)
-    assert user_code is not None, (
-        "Timed out waiting for device user_code:\n"
-        f"{read_clickhouse_oauth_background_log()}"
-    )
+    user_code = wait_for_device_user_code(poll_iters=user_code_poll_iters)
 
     approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
     wait_clickhouse_oauth_background_finished(timeout_sec=finish_timeout_sec)
