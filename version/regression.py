@@ -63,7 +63,8 @@ xfails = {
             lambda test: check_clickhouse_version("=25.3.8.10042")(test)
             or check_clickhouse_version("=25.8.16.10002")(test)
             or check_clickhouse_version("=25.8.22.20001")(test)
-            or check_clickhouse_version("=26.1.11.20001")(test),
+            or check_clickhouse_version("=26.1.11.20001")(test)
+            or check_clickhouse_version("<24.8")(test),
         ),
     ],
     "/version/altinity/no clickhouse cloud url in auth error/": [
@@ -73,7 +74,8 @@ xfails = {
             lambda test: check_clickhouse_version("=25.3.8.10042")(test)
             or check_clickhouse_version("=25.8.16.10002")(test)
             or check_clickhouse_version("=25.8.22.20001")(test)
-            or check_clickhouse_version("=26.1.11.20001")(test),
+            or check_clickhouse_version("=26.1.11.20001")(test)
+            or check_clickhouse_version("<24.8")(test),
         ),
     ],
 }
