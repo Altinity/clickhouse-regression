@@ -41,7 +41,7 @@ from oauth.tests.steps.client_login import (
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored("1.0"))
 @Name("corrupted oauth_cache.json does not crash login flow")
 def corrupted_cache_is_ignored(self):
-    """Corrupted ``oauth_cache.json`` is ignored rather than crashing."""
+    """Corrupted ``oauth_cache.json`` SHALL be ignored; device flow starts fresh."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -88,7 +88,7 @@ def corrupted_cache_is_ignored(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions("1.0"))
 @Name("oauth_cache.json is created with mode 0600")
 def cache_file_mode_is_strict(self):
-    """A freshly-created cache file lands on disk with mode ``0600``."""
+    """New ``oauth_cache.json`` SHALL be created with mode ``0600``."""
 
     try:
         with Given("I reset the client state"):
@@ -123,7 +123,7 @@ def cache_file_mode_is_strict(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_Reuse("1.0"))
 @Name("oauth_cache.json is written after successful device login")
 def oauth_cache_written_after_successful_device_login(self):
-    """Happy-path login persists refresh metadata."""
+    """Successful device login SHALL write ``oauth_cache.json``."""
 
     try:
         with Given("I reset the client state"):
@@ -155,7 +155,7 @@ def oauth_cache_written_after_successful_device_login(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_Reuse("1.0"))
 @Name("second device login reuses refresh cache without new device code")
 def second_client_run_reuses_cached_refresh_token(self):
-    """Follow-up queries reuse cached tokens without user interaction."""
+    """Second login SHALL reuse the cached refresh token."""
 
     try:
         with Given("I reset the client state"):
@@ -194,7 +194,7 @@ def second_client_run_reuses_cached_refresh_token(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_Reuse("1.0"))
 @Name("invalid cached refresh token falls back to interactive device flow")
 def invalid_cached_refresh_token_falls_back_to_device_flow(self):
-    """Rejected refresh tokens trigger a fresh device cycle."""
+    """Invalid cached refresh token SHALL fall back to device flow."""
 
     try:
         with Given("I reset the client state"):
@@ -242,7 +242,7 @@ def invalid_cached_refresh_token_falls_back_to_device_flow(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_FilePermissions("1.0"))
 @Name("world-readable oauth_cache.json is handled safely")
 def world_readable_oauth_cache_is_handled(self):
-    """Loosely permissioned cache must not crash the client."""
+    """World-readable cache SHALL not crash or skip OAuth silently."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -293,7 +293,7 @@ def world_readable_oauth_cache_is_handled(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cache_CorruptedIgnored("1.0"))
 @Name("oauth_cache JSON object with wrong shape starts device flow")
 def oauth_cache_wrong_json_shape_starts_device_flow(self):
-    """Non-mapping entries must behave like a cache miss."""
+    """Wrong cache JSON shape SHALL behave like a cache miss."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -328,7 +328,7 @@ def oauth_cache_wrong_json_shape_starts_device_flow(self):
 @TestScenario
 @Name("read-only config dir allows login but blocks cache write")
 def read_only_client_dir_blocks_cache_write(self):
-    """Non-writable ``~/.clickhouse-client`` cannot persist cache."""
+    """Read-only config dir SHALL allow login but not write the cache."""
 
     try:
         with Given("I reset the client state"):

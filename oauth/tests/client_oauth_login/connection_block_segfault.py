@@ -23,7 +23,7 @@ from oauth.tests.steps.client_login import (
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Connection_NoSegfault("1.0"))
 @Name("login with --connection does not segfault")
 def login_with_connection_no_segfault(self):
-    """Check that ``--login=device --connection X`` does not crash on empty hosts list."""
+    """``--login`` with ``--connection`` SHALL not segfault on empty hosts list."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -60,7 +60,7 @@ def login_with_connection_no_segfault(self):
 )
 @Name("bare --login + --connection (cloud path) does not segfault")
 def bare_login_with_connection_no_segfault(self):
-    """Check that bare ``--login`` with ``--connection`` does not crash."""
+    """Bare ``--login`` with ``--connection`` SHALL not crash."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -92,7 +92,7 @@ def bare_login_with_connection_no_segfault(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Connection_HostFallback("1.0"))
 @Name("login with explicit --host preserves existing behaviour")
 def login_with_explicit_host_still_works(self):
-    """Check that explicit ``--host`` still drives the original code path without crashing."""
+    """Explicit ``--host`` with ``--login`` SHALL not crash."""
 
     with Given("I reset the client state"):
         reset_client_state()

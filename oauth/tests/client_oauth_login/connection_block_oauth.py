@@ -23,7 +23,7 @@ from oauth.tests.steps.client_login import (
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
 @Name("connection block configures device-flow OAuth")
 def connection_block_oauth_device(self):
-    """Check that a ``<connection>`` with ``<login>device</login>`` drives device flow."""
+    """``<login>device</login>`` in a connection block SHALL drive device flow."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -60,7 +60,7 @@ def connection_block_oauth_device(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride("1.0"))
 @Name("--oauth-* CLI flags override connection block")
 def cli_overrides_connection_block(self):
-    """Check that CLI ``--oauth-client-id`` overrides ``<oauth-client-id>`` from the block."""
+    """``--oauth-client-id`` SHALL override ``<oauth-client-id>`` from the connection block."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -109,7 +109,7 @@ def cli_overrides_connection_block(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
 @Name("connection block with invalid oauth-callback-port is rejected")
 def invalid_callback_port_rejected(self):
-    """Check that an out-of-range ``<oauth-callback-port>`` fails fast without crashing."""
+    """Out-of-range ``<oauth-callback-port>`` SHALL be rejected without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -150,7 +150,7 @@ def invalid_callback_port_rejected(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
 @Name("connection block with login browser drives browser OAuth")
 def connection_block_login_browser(self):
-    """``<login>browser</login>`` reaches browser OAuth without crashing."""
+    """``<login>browser</login>`` SHALL start browser OAuth without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -200,7 +200,7 @@ def connection_block_login_browser(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost("1.0"))
 @Name("connection block bare login requires explicit oauth fields")
 def connection_block_bare_login_without_oauth_requires_args(self):
-    """Empty ``<login/>`` on non-cloud hosts demands OAuth configuration."""
+    """Empty ``<login/>`` on non-cloud hosts SHALL require OAuth configuration."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -239,7 +239,7 @@ def connection_block_bare_login_without_oauth_requires_args(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
 @Name("connection oauth-url discovers device endpoints")
 def connection_block_oauth_url_oidc_discovery_device_flow(self):
-    """``<oauth-url>`` drives OIDC discovery for device login."""
+    """``<oauth-url>`` SHALL drive OIDC discovery for device login."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -280,7 +280,7 @@ def connection_block_oauth_url_oidc_discovery_device_flow(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_OAuthFields("1.0"))
 @Name("invalid oauth-url fails discovery cleanly")
 def connection_block_invalid_oauth_url(self):
-    """Bad issuer URLs stop discovery without crashing."""
+    """Invalid ``<oauth-url>`` SHALL fail discovery without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -316,7 +316,7 @@ def connection_block_invalid_oauth_url(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_CLIOverride("1.0"))
 @Name("CLI oauth flags override broken connection defaults")
 def cli_overrides_multiple_oauth_fields(self):
-    """``--oauth-url`` / secret / audience supersede bad XML defaults."""
+    """CLI ``--oauth-*`` flags SHALL override bad connection-block defaults."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -365,7 +365,7 @@ def cli_overrides_multiple_oauth_fields(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
 @Name("negative oauth-callback-port in connection block is rejected")
 def connection_block_negative_callback_port(self):
-    """Callback ports below zero are invalid."""
+    """Negative ``<oauth-callback-port>`` SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -402,7 +402,7 @@ def connection_block_negative_callback_port(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
 @Name("oauth-callback-port 65535 is accepted")
 def connection_block_callback_port_upper_bound(self):
-    """Upper TCP port boundary ``65535`` validates."""
+    """``<oauth-callback-port>`` 65535 SHALL be accepted."""
 
     with Given("I reset the client state"):
         reset_client_state()

@@ -22,7 +22,7 @@ from oauth.tests.steps.client_login import (
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_NonCloudHost("1.0"))
 @Name("cloud auto-login is NOT triggered for non-cloud hostnames")
 def cloud_auto_login_off_for_non_cloud_host(self):
-    """Check that bare ``--login`` against a non-cloud host requires explicit OAuth args."""
+    """Bare ``--login`` on non-cloud hosts SHALL require explicit OAuth args."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -53,7 +53,7 @@ def cloud_auto_login_off_for_non_cloud_host(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin("1.0"))
 @Name("clickhouse.cloud host avoids bare-login BAD_ARGUMENTS")
 def cloud_hostname_triggers_auto_login_branch(self):
-    """``*.clickhouse.cloud`` must not demand manual ``--oauth-url`` flags immediately."""
+    """``*.clickhouse.cloud`` SHALL not immediately require ``--oauth-url``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -82,7 +82,7 @@ def cloud_hostname_triggers_auto_login_branch(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin("1.0"))
 @Name("cloud hostname via connection block uses auto-login branch")
 def cloud_hostname_via_connection_block(self):
-    """Connection-derived cloud hosts follow the same detection rules."""
+    """Cloud hostname via connection block SHALL use auto-login detection."""
 
     with Given("I reset the client state"):
         reset_client_state()

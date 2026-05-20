@@ -37,7 +37,7 @@ from oauth.tests.steps.client_login import (
 )
 @Name("device flow succeeds after Keycloak approves the user code")
 def device_flow_succeeds_when_keycloak_approves(self):
-    """Client obtains tokens via device grant and runs the query."""
+    """Device grant SHALL succeed after Keycloak approves the user code."""
 
     try:
         with Given("I reset the client state"):
@@ -97,7 +97,7 @@ def device_flow_succeeds_when_keycloak_approves(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow prints verification URI and user code")
 def device_flow_prints_user_code_and_verification_uri(self):
-    """Client surfaces device authorization details before polling."""
+    """Device flow SHALL print verification URI and user code before polling."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -135,7 +135,7 @@ def device_flow_prints_user_code_and_verification_uri(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow fails cleanly when device_authorization_uri is unreachable")
 def device_flow_unreachable_device_authorization_uri(self):
-    """Unreachable ``device_authorization_uri`` yields a network error, not a crash."""
+    """Unreachable ``device_authorization_uri`` SHALL fail with a network error, not a crash."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -190,7 +190,7 @@ def device_flow_unreachable_device_authorization_uri(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow fails cleanly when device_authorization_uri returns 404")
 def device_flow_device_authorization_endpoint_404(self):
-    """404 from the device authorization endpoint is handled without stack traces."""
+    """404 from the device endpoint SHALL exit cleanly without a stack trace."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -230,7 +230,7 @@ def device_flow_device_authorization_endpoint_404(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow rejects unknown client_id at Keycloak")
 def device_flow_unknown_client_id(self):
-    """Wrong ``client_id`` surfaces an OAuth error from the device endpoint."""
+    """Unknown ``client_id`` SHALL surface an OAuth error without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -276,7 +276,7 @@ def device_flow_unknown_client_id(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow rejects wrong client_secret at Keycloak")
 def device_flow_wrong_client_secret(self):
-    """Wrong ``client_secret`` fails device authorization cleanly."""
+    """Wrong ``client_secret`` SHALL fail device authorization without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -330,14 +330,7 @@ def device_flow_wrong_client_secret(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
 @Name("device flow succeeds with confidential client secret")
 def device_flow_succeeds_with_confidential_client(self):
-    """Confidential client + correct secret completes the device grant.
-
-    Mirrors :func:`device_flow_succeeds_when_keycloak_approves` but points
-    at ``grafana-client-confidential``, the realm's confidential client.
-    With ``grafana-client`` (public) Keycloak ignores ``client_secret``
-    entirely, so the secret-validation code path on both clickhouse-client
-    and Keycloak is structurally untested. This scenario closes that gap.
-    """
+    """Confidential client with correct secret SHALL complete the device grant."""
 
     try:
         with Given("I reset the client state"):
@@ -409,16 +402,7 @@ def device_flow_succeeds_with_confidential_client(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
 @Name("device flow rejects missing client_secret at confidential client")
 def device_flow_missing_client_secret_at_confidential_client(self):
-    """Confidential client + no ``client_secret`` is refused cleanly.
-
-    Documents the current end-to-end behaviour when ``client_secret`` is
-    omitted from the credentials JSON while pointing at a confidential
-    client. Today clickhouse-client rejects the credentials at load time
-    (PR-audit issue 2.2 — ``client_secret`` is hard-required); when that
-    fix lands the rejection will move server-side and Keycloak will
-    return ``invalid_client``. The assertion accepts either shape so the
-    scenario stays meaningful across that transition.
-    """
+    """Confidential client without ``client_secret`` SHALL be refused without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -470,7 +454,7 @@ def device_flow_missing_client_secret_at_confidential_client(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow timeout message is actionable")
 def device_flow_timeout_message_is_actionable(self):
-    """Expired device sessions mention timeout or expiry without low-level exceptions."""
+    """Expired device sessions SHALL report timeout or expiry without C++ leaks."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -507,7 +491,7 @@ def device_flow_timeout_message_is_actionable(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login with explicit --port reaches OAuth stage without crash")
 def device_flow_with_explicit_tcp_port(self):
-    """Explicit native ``--port`` must not break reaching the device-authorization step."""
+    """Explicit ``--port`` SHALL not block reaching device authorization."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -543,7 +527,7 @@ def device_flow_with_explicit_tcp_port(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login does not crash when targeting clickhouse2")
 def device_flow_against_second_cluster_node(self):
-    """OAuth device negotiation works when the TCP host is ``clickhouse2``."""
+    """Device flow SHALL work when ``--host`` is ``clickhouse2``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -581,7 +565,7 @@ def device_flow_against_second_cluster_node(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login with --secure does not crash")
 def device_flow_with_secure_transport_flag(self):
-    """Passing ``--secure`` while using device OAuth must not segfault."""
+    """``--secure`` with device login SHALL reach user-code display without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -624,7 +608,7 @@ def device_flow_with_secure_transport_flag(self):
 )
 @Name("device flow times out cleanly when token endpoint never returns id_token")
 def device_flow_token_endpoint_eventually_times_out(self):
-    """Device flow exits without ``std::bad_cast`` when no approval comes."""
+    """Unapproved device flow SHALL exit without ``std::bad_cast``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -658,7 +642,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow handles invalid token endpoint URL")
 def device_flow_invalid_token_endpoint(self):
-    """Unreachable ``token_uri`` fails cleanly without a crash."""
+    """Unreachable ``token_uri`` SHALL fail cleanly without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()

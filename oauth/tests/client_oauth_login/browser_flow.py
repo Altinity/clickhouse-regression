@@ -34,7 +34,7 @@ def _browser_flow_creds(auth_uri=None):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication("1.0"))
 @Name("browser login times out without crashing in headless env")
 def browser_login_times_out_without_crash(self):
-    """Loopback callback waits, then fails cleanly when no browser completes OAuth."""
+    """Browser login without callback SHALL time out cleanly in headless CI."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -69,7 +69,7 @@ def browser_login_times_out_without_crash(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication("1.0"))
 @Name("browser login handles unreachable auth_uri")
 def browser_login_unreachable_auth_uri(self):
-    """Unreachable ``auth_uri`` fails without aborting the process."""
+    """Unreachable ``auth_uri`` SHALL fail without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -100,7 +100,7 @@ def browser_login_unreachable_auth_uri(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_ConnectionBlock_InvalidCallbackPort("1.0"))
 @Name("browser login accepts oauth-callback-port 0")
 def browser_login_accepts_callback_port_zero(self):
-    """Port ``0`` selects an ephemeral loopback callback port."""
+    """``--oauth-callback-port=0`` SHALL select an ephemeral loopback port."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -136,7 +136,7 @@ def browser_login_accepts_callback_port_zero(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication("1.0"))
 @Name("browser login accepts fixed oauth-callback-port")
 def browser_login_accepts_fixed_callback_port(self):
-    """A concrete loopback port inside the valid range is accepted."""
+    """Fixed loopback ``--oauth-callback-port`` in range SHALL be accepted."""
 
     with Given("I reset the client state"):
         reset_client_state()

@@ -29,7 +29,7 @@ OVERSIZED_OIDC_MOCK_PORT = 18080
 @TestScenario
 @Name("loopback /start must not leak oauth state in Location")
 def loopback_start_must_not_redirect_with_oauth_state(self):
-    """Unauthenticated GET /start must not expose CSRF ``state`` (clickhouse/audit #1606)."""
+    """GET /start SHALL not expose OAuth ``state`` in the Location header."""
 
     try:
         with Given("I reset the client state"):
@@ -104,7 +104,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
 )
 @Name("oversized OIDC discovery document fails without hanging")
 def oversized_oidc_discovery_response_is_bounded(self):
-    """Huge ``openid-configuration`` payloads must not grow memory without bound."""
+    """Oversized OIDC discovery response SHALL fail without hanging or crashing."""
 
     mock_pid_file = None
     try:

@@ -24,7 +24,7 @@ from oauth.tests.steps.client_login import (
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing("1.0"))
 @Name("login with missing credentials file produces actionable error")
 def missing_credentials_file(self):
-    """Check that a missing ``--oauth-credentials`` file produces a clear error."""
+    """Missing ``--oauth-credentials`` file SHALL produce a clear not-found error."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -63,7 +63,7 @@ def missing_credentials_file(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"))
 @Name("login with malformed credentials JSON fails cleanly")
 def malformed_credentials_json(self):
-    """Check that malformed credentials JSON produces a clean parse error."""
+    """Malformed credentials JSON SHALL produce a parse error without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -97,7 +97,7 @@ def malformed_credentials_json(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId("1.0"))
 @Name("login with credentials missing client_id is rejected")
 def credentials_missing_client_id(self):
-    """Check that a credentials file without ``client_id`` is rejected."""
+    """Credentials without ``client_id`` SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -133,7 +133,7 @@ def credentials_missing_client_id(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
 @Name("login top-level key 'web' accepted alongside 'installed'")
 def credentials_top_level_web(self):
-    """Check that the ``web`` top-level key is accepted alongside ``installed``."""
+    """Top-level ``web`` key SHALL be accepted alongside ``installed``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -171,7 +171,7 @@ def credentials_top_level_web(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"))
 @Name("credentials JSON empty object is rejected")
 def credentials_empty_top_level_object(self):
-    """Top-level ``{}`` must be rejected (needs installed or web)."""
+    """Empty top-level ``{}`` SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -206,7 +206,7 @@ def credentials_empty_top_level_object(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"))
 @Name("credentials JSON top-level array is rejected")
 def credentials_top_level_array_rejected(self):
-    """A JSON array cannot stand in for the credentials object."""
+    """Top-level JSON array SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -236,7 +236,7 @@ def credentials_top_level_array_rejected(self):
 @TestScenario
 @Name("credentials missing auth_uri is rejected")
 def credentials_missing_auth_uri(self):
-    """``auth_uri`` is required inside ``installed`` / ``web``."""
+    """Missing ``auth_uri`` SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -274,7 +274,7 @@ def credentials_missing_auth_uri(self):
 @TestScenario
 @Name("credentials missing token_uri is rejected")
 def credentials_missing_token_uri(self):
-    """``token_uri`` is required inside ``installed`` / ``web``."""
+    """Missing ``token_uri`` SHALL be rejected."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -313,7 +313,7 @@ def credentials_missing_token_uri(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId("1.0"))
 @Name("credentials with empty client_id are rejected at OAuth")
 def credentials_empty_client_id(self):
-    """Empty ``client_id`` must not reach a silent success."""
+    """Empty ``client_id`` SHALL not succeed silently."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -343,7 +343,7 @@ def credentials_empty_client_id(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Missing("1.0"))
 @Name("--oauth-credentials pointing at directory fails")
 def credentials_path_is_directory(self):
-    """The credentials path must be a regular file."""
+    """Directory path for ``--oauth-credentials`` SHALL fail."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -376,7 +376,7 @@ def credentials_path_is_directory(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
 @Name("credentials without client_secret document current behaviour")
 def credentials_without_client_secret(self):
-    """Missing ``client_secret`` should surface a clear load error today."""
+    """Missing ``client_secret`` SHALL surface a load or OAuth error."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -411,7 +411,7 @@ def credentials_without_client_secret(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
 @Name("extra fields in credentials JSON are ignored")
 def credentials_unknown_extra_fields_are_ignored(self):
-    """Forward-compatible unknown keys must not break parsing."""
+    """Unknown JSON fields SHALL be ignored."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -447,7 +447,7 @@ def credentials_unknown_extra_fields_are_ignored(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"))
 @Name("unicode in client_id does not crash the loader")
 def credentials_unicode_client_id(self):
-    """Non-ASCII ``client_id`` values must not abort the client."""
+    """Unicode ``client_id`` SHALL not crash the loader."""
 
     with Given("I reset the client state"):
         reset_client_state()

@@ -106,7 +106,7 @@ _EXTRA_FLAGS = {
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Mode("1.0"))
 @Name("login mode validation rejects unknown values")
 def login_mode_validation(self):
-    """Check that an unknown ``--login=<mode>`` value is rejected with BAD_ARGUMENTS."""
+    """clickhouse-client SHALL reject unknown ``--login`` values with BAD_ARGUMENTS."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -133,7 +133,7 @@ def login_mode_validation(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Conflict_User("1.0"))
 @Name("login conflicts with --user")
 def login_conflicts_with_user(self):
-    """Check that ``--login`` and ``--user`` cannot be specified together."""
+    """clickhouse-client SHALL reject ``--login`` together with ``--user``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -163,7 +163,7 @@ def login_conflicts_with_user(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Conflict_JWT("1.0"))
 @Name("login conflicts with --jwt")
 def login_conflicts_with_jwt(self):
-    """Check that ``--login`` and ``--jwt`` cannot be specified together."""
+    """clickhouse-client SHALL reject ``--login`` together with ``--jwt``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -193,7 +193,7 @@ def login_conflicts_with_jwt(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_OAuthCredentials_RequiresLogin("1.0"))
 @Name("--oauth-credentials without --login is rejected")
 def oauth_credentials_requires_login(self):
-    """Check that ``--oauth-credentials`` requires ``--login=browser|device``."""
+    """``--oauth-credentials`` SHALL require ``--login=browser`` or ``--login=device``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -226,7 +226,7 @@ def oauth_credentials_requires_login(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Mode("1.0"))
 @Name("bare --login= behaves like cloud auto-login probe")
 def bare_login_equals_empty_targets_cloud_logic(self):
-    """``--login=`` follows the same hostname rules as bare ``--login``."""
+    """``--login=`` on a non-cloud host SHALL require explicit OAuth configuration."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -251,7 +251,7 @@ def bare_login_equals_empty_targets_cloud_logic(self):
 @TestScenario
 @Name("login conflicts with --password")
 def login_conflicts_with_password(self):
-    """``--login`` cannot be combined with ``--password``."""
+    """clickhouse-client SHALL reject ``--login`` together with ``--password``."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -283,7 +283,7 @@ def login_conflicts_with_password(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Mode("1.0"))
 @Name("capitalised login modes are rejected")
 def login_mode_capitalisation_rejected(self):
-    """Modes other than exact ``browser`` / ``device`` SHALL fail before OAuth."""
+    """Capitalised login modes SHALL be rejected before OAuth starts."""
 
     for variant in ("BROWSER", "Browser", "DEVICE", "Device"):
         with Given(f"I reset state for {variant!r}"):
@@ -315,7 +315,7 @@ def login_mode_capitalisation_rejected(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login without --query still enters OAuth")
 def device_login_interactive_without_query(self):
-    """Interactive sessions must still start OAuth instead of crashing."""
+    """Device login without ``--query`` SHALL start OAuth without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -349,27 +349,7 @@ def device_login_interactive_without_query(self):
 )
 @Name("login value combinatorial fuzz")
 def login_value_combinatorial_fuzz(self):
-    """Exotic ``--login=<value>`` inputs SHALL be rejected without crashing.
-
-    For every (payload, extra-flag) pair produced by a strength-2 covering
-    array the client must:
-
-    1. Exit with a non-zero status.
-    2. Not abort via SIGSEGV/SIGABRT or hit a libc++ hardening trap.
-    3. Print a recognisable validation hint — either the mode-value error
-       ("must be 'browser' or 'device'") or the conflict error
-       ("cannot be specified together" / "cannot be combined with a JWT")
-       depending on which extra flag was paired with the payload. The
-       ``with_oauth_credentials`` extra additionally exercises the path
-       where the credentials-file processor and the mode-value validator
-       run in the same invocation.
-
-    Payload classes covered: whitespace and control bytes, case variants,
-    near-matches/typos, punctuation, shell/SQL injection shapes,
-    path-like, non-ASCII Unicode (Cyrillic, CJK, full-width, emoji,
-    RTL override, zero-width, combining marks, BOM), and boundary
-    lengths up to 1 KiB.
-    """
+    """Invalid ``--login`` values with mixed flags SHALL exit with a validation hint, not a crash."""
 
     combinations_dict = {
         "payload": list(_LOGIN_VALUE_PAYLOADS.keys()),
@@ -449,20 +429,7 @@ def login_value_combinatorial_fuzz(self):
 )
 @Name("login split form behaves like equals form")
 def login_split_vs_equals_form_equivalence(self):
-    """Both ``--login <value>`` and ``--login=<value>`` SHALL be validated identically.
-
-    Boost program_options accepts both the equals-attached and the
-    space-separated form of a long option that takes an argument. The
-    argument-validation surface must therefore reject (or accept) the same
-    set of inputs regardless of which form the user typed — otherwise a
-    regression in either parser branch would silently bypass the conflict
-    or mode-value checks.
-
-    The cases below pair each rejection surface (unknown mode, user
-    conflict, JWT conflict) against both invocation forms and assert that
-    both forms produce a non-zero exit with a recognisable validation hint
-    and never crash the client.
-    """
+    """``--login <v>`` and ``--login=<v>`` SHALL get identical validation."""
 
     cases = [
         (
@@ -544,16 +511,7 @@ def login_split_vs_equals_form_equivalence(self):
 )
 @Name("login multi-conflict combinations are rejected without crashing")
 def login_multi_conflict_combinations(self):
-    """Multiple simultaneous flag conflicts SHALL be rejected cleanly.
-
-    Each case piles on more than one conflicting flag (e.g. ``--user`` AND
-    ``--jwt`` AND an invalid ``--login`` value) to make sure the argument
-    parser handles the cross-product without crashing via SIGSEGV / SIGABRT
-    and does not silently let any of the offending flags through. We don't
-    pin which conflict the client reports first — the order of checks is
-    an implementation detail — but we DO pin that *some* recognisable
-    validation hint surfaces in the output for every combination.
-    """
+    """Multiple conflicting flags SHALL exit with a validation hint, not a crash."""
 
     cases = [
         (
@@ -671,30 +629,7 @@ def login_multi_conflict_combinations(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_Mode("1.0"))
 @Name("duplicate --login flags do not crash and resolve safely")
 def login_duplicate_flag_precedence(self):
-    """Duplicated ``--login`` flags SHALL be rejected without crashing.
-
-    Boost program_options rejects repeated occurrences of ``--login``
-    outright (``option '--login' cannot be specified more than once``)
-    rather than picking a winner. This is the strongest safety property
-    we could ask for — duplication can never be used to bypass either
-    the mode-value validator or the flag-conflict checks.
-
-    For every duplicate combination (both forms, both orderings, both-
-    invalid as well as mixed-validity) this scenario pins three
-    invariants:
-
-    1. The client never aborts via SIGSEGV / SIGABRT.
-    2. The client exits with a non-zero status.
-    3. The output contains a recognisable rejection hint — either the
-       duplicate-rejection from program_options
-       ("cannot be specified more than once") or, if a future build
-       relaxes the duplicate check, one of the downstream validation
-       hints (mode-value or conflict).
-
-    The observed exit code is recorded via ``note(...)`` so a shift in
-    precedence / parser behaviour is visible in the log even when it
-    does not break any of the invariants above.
-    """
+    """Duplicate ``--login`` flags SHALL be rejected without crashing."""
 
     pairs = [
         # (name, login args)
