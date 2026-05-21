@@ -157,7 +157,7 @@ def check_changing_encryption_algorithm(
     with And("I add storage configuration that uses encrypted disk"):
         validate_during_invalid = (
             (lambda: verify_data_unreadable_with_new_key(table_name=table_name))
-            if check_clickhouse_version(">=24.8")(self)
+            if check_clickhouse_version(">=25.3")(self)
             else None
         )
         add_invalid_encrypted_disk_configuration(
@@ -250,7 +250,7 @@ def check_hex_changing_encryption_algorithm(
     with And("I add storage configuration that uses encrypted disk"):
         validate_during_invalid = (
             (lambda: verify_data_unreadable_with_new_key(table_name=table_name))
-            if check_clickhouse_version(">=24.8")(self)
+            if check_clickhouse_version(">=25.3")(self)
             else None
         )
         add_invalid_encrypted_disk_configuration(
