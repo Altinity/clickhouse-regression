@@ -326,6 +326,10 @@ def remove_orphans(self):
         aws = "aws"
         if self.context.storage == "minio":
             aws = f"aws --endpoint-url http://minio1:9001"
+        elif self.context.storage == "hetzner":
+            s3_endpoint_url = getattr(self.context, "s3_endpoint_url", None)
+            if s3_endpoint_url:
+                aws = f"aws --endpoint-url {s3_endpoint_url}"
 
         node.query(
             generate_orphan_rm_commands.format(

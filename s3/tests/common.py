@@ -895,12 +895,14 @@ def get_bucket_size(
             self.context, "minio_enabled", False
         )
 
+    normalized_prefix = join_s3_key(prefix)
+
     if minio_enabled:
         with By("querying with minio client"):
             minio_client = self.context.cluster.minio_client
 
             objects = minio_client.list_objects(
-                bucket_name=name, prefix=prefix, recursive=True
+                bucket_name=name, prefix=normalized_prefix, recursive=True
             )
             return sum(obj._size for obj in objects)
 
@@ -918,8 +920,9 @@ def get_bucket_size(
                     f"aws --endpoint-url={s3_endpoint_url}"
                 )
 
+        s3_path = f"s3://{name}/{normalized_prefix}" if normalized_prefix else f"s3://{name}"
         cmd = (
-            f"{aws} s3 ls s3://{name}/{prefix} --recursive --summarize | "
+            f"{aws} s3 ls {s3_path} --recursive --summarize | "
             "grep -Po --color=never '(?<=Total Size: )(.+)'"
         )
         result = self.context.cluster.command("aws", cmd, steps=False, no_checks=True)
