@@ -1,0 +1,9 @@
+<clickhouse>
+    <zookeeper>
+        <node>
+            <host>zookeeper</host>
+            <port>9281</port>
+            <secure>1</secure>
+        </node>
+    </zookeeper>
+</clickhouse>

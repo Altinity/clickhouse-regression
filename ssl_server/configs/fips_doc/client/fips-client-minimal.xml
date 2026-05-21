@@ -1,0 +1,10 @@
+<config>
+    <secure>true</secure>
+    <openSSL>
+        <client>
+            <caConfig>/etc/clickhouse-server/config.d/ca.crt</caConfig>
+            <loadDefaultCAFile>false</loadDefaultCAFile>
+            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1</disableProtocols>
+        </client>
+    </openSSL>
+</config>
