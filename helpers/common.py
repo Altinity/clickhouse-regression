@@ -799,6 +799,18 @@ def add_config(
             with And("I start ClickHouse back up"):
                 node.start_clickhouse(user=user, wait_healthy=wait_healthy)
 
+            with And("I detect if the log file was rotated during restart"):
+                cmd = node.cluster.command(
+                    None,
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                )
+                current_logsize = cmd.output.split(" ")[0].strip()
+                if int(current_logsize) < int(logsize):
+                    # Log rotated while server was restarting: captured offset is
+                    # past the new file's EOF. Reset to byte 1 so tail reads from
+                    # the start of the new file.
+                    logsize = "1"
+
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt
                 bash.open()
@@ -954,6 +966,18 @@ def remove_config(
 
             with And("I start ClickHouse back up"):
                 node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+
+            with And("I detect if the log file was rotated during restart"):
+                cmd = node.cluster.command(
+                    None,
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                )
+                current_logsize = cmd.output.split(" ")[0].strip()
+                if int(current_logsize) < int(logsize):
+                    # Log rotated while server was restarting: captured offset is
+                    # past the new file's EOF. Reset to byte 1 so tail reads from
+                    # the start of the new file.
+                    logsize = "1"
 
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt
