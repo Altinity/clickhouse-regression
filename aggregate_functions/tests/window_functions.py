@@ -18,13 +18,19 @@ from aggregate_functions.tests.steps import execute_query
 
 
 @TestOutline
-def check(self, arguments, func, func_=None):
+def check(self, arguments, func, func_=None, exitcode=None, message=None):
     if func_ is None:
         func_ = func
+
+    if exitcode is None:
+        exitcode = 36
+    if message is None:
+        message = f"DB::Exception: The function '{func_}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform."
+
     execute_query(
         f"SELECT {func}({arguments}) FROM values('sample_data UInt8, sample_index UInt8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
-        exitcode=36,
-        message=f"DB::Exception: The function '{func_}' can only be used as a window function, not as an aggregate function: While executing AggregatingTransform.",
+        exitcode=exitcode,
+        message=message,
     )
 
 
@@ -32,8 +38,7 @@ def check(self, arguments, func, func_=None):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_RowNumber("1.0"))
 def row_number(self):
     """Check that row_number window function can not be used as an aggregate functions."""
-    arguments = "sample_data"
-    check(func="row_number", arguments=arguments)
+    check(func="row_number", arguments="")
 
 
 @TestScenario
@@ -56,20 +61,14 @@ def ntile(self):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_Rank("1.0"))
 def rank(self):
     """Check that rank window function can not be used as an aggregate functions."""
-    arguments = "sample_data"
-    check(func="rank", arguments=arguments)
+    check(func="rank", arguments="")
 
 
 @TestScenario
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_DenseRank("1.0"))
 def dense_rank(self):
     """Check that dense_rank window function can not be used as an aggregate functions."""
-    arguments = "sample_data"
-    execute_query(
-        f"SELECT dense_rank({arguments}) FROM values('sample_data UInt8, sample_index UInt8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))",
-        exitcode=36,
-        message=f"DB::Exception: The function",
-    )
+    check(func="dense_rank", arguments="", func_="denseRank")
 
 
 @TestScenario
