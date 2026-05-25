@@ -2,6 +2,7 @@ import sys
 
 from testflows.core import *
 
+from engines.requirements import *
 from engines.tests.summing_merge_tree.steps import (
     create_summing_test_table,
     insert_sample_values,
@@ -15,6 +16,7 @@ append_path(sys.path, "..")
 
 
 @TestScenario
+@Requirements(RQ_SRS_046_ClickHouse_SummingMergeTree_ZeroRowDeletion_Update("1.0"))
 def zero_row_deletion_with_update(self, node=None):
     """Check that SummingMergeTree deletes rows where all summed columns
     are zero after UPDATE and OPTIMIZE TABLE FINAL."""
@@ -47,6 +49,7 @@ def zero_row_deletion_with_update(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_046_ClickHouse_SummingMergeTree_ZeroRowDeletion_ClearColumn("1.0"))
 def zero_row_deletion_with_clear_column(self, node=None):
     """Check that SummingMergeTree deletes rows where all summed columns
     are zero after CLEAR COLUMN IN PARTITION and OPTIMIZE TABLE FINAL.
@@ -81,6 +84,7 @@ def zero_row_deletion_with_clear_column(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_046_ClickHouse_SummingMergeTree_ClearColumn_Consistency("1.0"))
 def clear_column_validation_consistency(self, node=None):
     """Check that CLEAR COLUMN on summing columns is allowed consistently
     for both explicit and auto-detected ``columns_to_sum``.
