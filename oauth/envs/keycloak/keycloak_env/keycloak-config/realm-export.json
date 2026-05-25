@@ -19,6 +19,14 @@
       "attributes": {
         "oauth2.device.authorization.grant.enabled": "true"
       },
+      "defaultClientScopes": [
+        "basic",
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
       "optionalClientScopes": ["offline_access"],
       "protocolMappers": [
         {
@@ -56,6 +64,14 @@
       "attributes": {
         "oauth2.device.authorization.grant.enabled": "true"
       },
+      "defaultClientScopes": [
+        "basic",
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
       "optionalClientScopes": ["offline_access"],
       "protocolMappers": [
         {

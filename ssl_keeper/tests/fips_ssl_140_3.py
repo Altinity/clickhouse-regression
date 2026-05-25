@@ -643,6 +643,9 @@ def tcp_connection_check(self, node=None):
 def feature(self):
     """Check ClickHouse Keeper with FIPS 140-3 compatible SSL connections
     using AWS-LC cryptographic module."""
+
+    Feature(run=load("ssl_keeper.tests.fips_doc_config.feature", "feature"))
+
     with Pool(1) as executor:
         try:
             for scenario in loads(current_module(), Scenario):

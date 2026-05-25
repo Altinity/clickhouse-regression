@@ -1307,6 +1307,49 @@ def server_as_client(self):
     Feature(run=dictionary)
 
 
+@TestScenario
+@Name("plaintext ports not exposed on fips build")
+def plaintext_ports_not_exposed_on_fips_build(self, node=None):
+    """FIPS builds must not accept plaintext on native TCP 9000 or HTTP 8123."""
+    if node is None:
+        node = self.context.node
+
+    with Given("FIPS build is running before any TLS drop-in is applied"):
+        preprocessed = "/var/lib/clickhouse/preprocessed_configs/config.xml"
+
+    with When("I inspect the preprocessed config for plaintext port declarations"):
+        tcp_line = node.command(
+            f"grep --color=never '<tcp_port>' {preprocessed}",
+            no_checks=True,
+        ).output.strip()
+        http_line = node.command(
+            f"grep --color=never '<http_port>' {preprocessed}",
+            no_checks=True,
+        ).output.strip()
+
+    with Then("preprocessed config should not declare plaintext ports"):
+        assert not tcp_line, error(f"<tcp_port> still present in {preprocessed}")
+        assert not http_line, error(f"<http_port> still present in {preprocessed}")
+
+    with When("I probe native plaintext TCP port 9000"):
+        tcp_result = node.command(
+            'clickhouse client --host 127.0.0.1 --port 9000 -q "SELECT 1"',
+            no_checks=True,
+        )
+
+    with Then("port 9000 should reject queries"):
+        assert tcp_result.exitcode != 0, error(tcp_result.output)
+
+    with When("I probe plaintext HTTP port 8123"):
+        http_result = node.command(
+            'curl -sS "http://127.0.0.1:8123/?query=SELECT+1"',
+            no_checks=True,
+        )
+
+    with Then("port 8123 should reject queries"):
+        assert http_result.exitcode != 0, error(http_result.output)
+
+
 @TestFeature
 @Name("fips 140-3")
 @Requirements()
@@ -1318,6 +1361,10 @@ def feature(self, node="clickhouse1"):
         skip("fips 140-3 tests only apply to FIPS builds")
 
     self.context.node = self.context.cluster.node(node)
+
+    Scenario(run=plaintext_ports_not_exposed_on_fips_build)
+
+    Feature(run=load("ssl_server.tests.fips_doc_config.feature", "feature"))
 
     with Given("I enable SSL"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")

@@ -102,6 +102,9 @@ xfails = {
     ":/fips 140-3/:/:/:/non fips clickhouse-client/:non-FIPS compatible : should be rejected": [
         (Fail, "non-FIPS binary lacks TLSv1.3 cipher/protocol restriction support")
     ],
+    "*/fips 140-3/plaintext ports not exposed on fips build": [
+        (Fail, "FIPS build must not expose plaintext ports 9000/8123"),
+    ],
     ":/fips 140-3/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
@@ -367,7 +370,8 @@ def regression(
     with Feature("part 2"):
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         # Feature(run=load("ssl_server.tests.fips", "feature"))
-        Feature(run=load("ssl_server.tests.fips_140_3", "feature"))
+        if self.context.fips_mode:
+            Feature(run=load("ssl_server.tests.fips_140_3", "feature"))
 
     with Feature("part 3"):
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
