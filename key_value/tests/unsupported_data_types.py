@@ -168,6 +168,12 @@ def feature(self, node="clickhouse1"):
     nullable_constant_types = ["String", "LowCardinality", "FixedString(3)"]
 
     for constant_type in nullable_constant_types:
+        # Nullable(String) and Nullable(FixedString) are supported since 26.5.
+        if check_clickhouse_version(">=26.5")(self) and constant_type in (
+            "String",
+            "FixedString(3)",
+        ):
+            continue
         with Feature(f"Nullable({constant_type})"):
             for scenario in loads(current_module(), Scenario):
                 scenario(constant_type=constant_type, nullable=True)
