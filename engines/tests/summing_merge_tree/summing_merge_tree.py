@@ -3,6 +3,9 @@ import sys
 from testflows.core import *
 from engines.tests.steps import *
 from helpers.common import check_clickhouse_version
+from helpers.create import create_summing_merge_tree_table
+from helpers.alter.update import alter_table_update_column
+from helpers.alter.column import alter_table_clear_column_in_partition
 
 append_path(sys.path, "..")
 
@@ -19,17 +22,31 @@ def zero_row_deletion_with_update(self, node=None):
 
     try:
         with Given("I create SummingMergeTree table with partition key"):
-            node.query(
-                f"CREATE TABLE {name} (v UInt64, p UInt64, c UInt64)"
-                f" ENGINE = SummingMergeTree PARTITION BY p ORDER BY v"
+            create_summing_merge_tree_table(
+                table_name=name,
+                columns=[
+                    {"name": "v", "type": "UInt64"}, 
+                    {"name": "p", "type": "UInt64"}, 
+                    {"name": "c", "type": "UInt64"}, 
+                ],
+                partition_by="p",
+                order_by="v",
             )
 
         with When("I insert data"):
-            node.query(f"INSERT INTO {name} VALUES (1, 1, 100)")
-            node.query(f"INSERT INTO {name} VALUES (2, 2, 200)")
+            insert_values_into_table(
+                table_name=name,
+                values=["(1, 1, 100)", "(2, 2, 200)"],
+            )
 
         with And("I update summing column to zero"):
-            node.query(f"ALTER TABLE {name} UPDATE c = 0 WHERE v = 1")
+            alter_table_update_column(
+                table_name=name,
+                column_name="c",
+                expression="0",
+                condition="v = 1",
+                node=node,
+            )
 
         with And("I optimize table"):
             node.query(f"OPTIMIZE TABLE {name} FINAL")
@@ -60,17 +77,30 @@ def zero_row_deletion_with_clear_column(self, node=None):
 
     try:
         with Given("I create SummingMergeTree table with partition key"):
-            node.query(
-                f"CREATE TABLE {name} (v UInt64, p UInt64, c UInt64)"
-                f" ENGINE = SummingMergeTree PARTITION BY p ORDER BY v"
+            create_summing_merge_tree_table(
+                table_name=name,
+                columns=[
+                    {"name": "v", "type": "UInt64"},
+                    {"name": "p", "type": "UInt64"},
+                    {"name": "c", "type": "UInt64"},
+                ],
+                partition_by="p",
+                order_by="v",
             )
 
         with When("I insert data"):
-            node.query(f"INSERT INTO {name} VALUES (1, 1, 100)")
-            node.query(f"INSERT INTO {name} VALUES (2, 2, 200)")
+            insert_values_into_table(
+                table_name=name,
+                values=["(1, 1, 100)", "(2, 2, 200)"],
+            )
 
         with And("I clear summing column in partition 1"):
-            node.query(f"ALTER TABLE {name} CLEAR COLUMN c IN PARTITION 1")
+            alter_table_clear_column_in_partition(
+                table_name=name,
+                partition_name="1",
+                column_name="c",
+                node=node,
+            )
 
         with And("I optimize table"):
             node.query(f"OPTIMIZE TABLE {name} FINAL")
@@ -88,8 +118,8 @@ def zero_row_deletion_with_clear_column(self, node=None):
 
 @TestScenario
 def clear_column_validation_consistency(self, node=None):
-    """Check that CLEAR COLUMN on auto-detected summing columns is
-    blocked the same way as explicitly declared ones.
+    """Check that CLEAR COLUMN on summing columns is allowed consistently
+    for both explicit and auto-detected ``columns_to_sum``.
 
     Related: https://github.com/ClickHouse/ClickHouse/issues/101953
     """
@@ -101,30 +131,43 @@ def clear_column_validation_consistency(self, node=None):
     name_auto = f"summing_auto_{getuid()}"
 
     try:
+        columns = [
+            {"name": "v", "type": "UInt64"},
+            {"name": "p", "type": "UInt64"},
+            {"name": "c", "type": "UInt64"},
+        ]
+
         with Given("I create table with explicit columns_to_sum"):
-            node.query(
-                f"CREATE TABLE {name_explicit} (v UInt64, p UInt64, c UInt64)"
-                f" ENGINE = SummingMergeTree(c) PARTITION BY p ORDER BY v"
+            create_summing_merge_tree_table(
+                table_name=name_explicit,
+                columns=columns,
+                partition_by="p",
+                order_by="v",
+                columns_to_sum=["c"],
             )
 
         with And("I create table with auto-detected columns_to_sum"):
-            node.query(
-                f"CREATE TABLE {name_auto} (v UInt64, p UInt64, c UInt64)"
-                f" ENGINE = SummingMergeTree PARTITION BY p ORDER BY v"
+            create_summing_merge_tree_table(
+                table_name=name_auto,
+                columns=columns,
+                partition_by="p",
+                order_by="v",
             )
 
-        with When("I try to clear summing column on explicit table"):
-            node.query(
-                f"ALTER TABLE {name_explicit} CLEAR COLUMN c IN PARTITION 1",
-                exitcode=524,
-                message="ALTER_OF_COLUMN_IS_FORBIDDEN",
+        with When("I clear summing column on explicit table"):
+            alter_table_clear_column_in_partition(
+                table_name=name_explicit,
+                partition_name="1",
+                column_name="c",
+                node=node,
             )
 
-        with Then("I try to clear summing column on auto-detected table"):
-            node.query(
-                f"ALTER TABLE {name_auto} CLEAR COLUMN c IN PARTITION 1",
-                exitcode=524,
-                message="ALTER_OF_COLUMN_IS_FORBIDDEN",
+        with Then("I clear summing column on auto-detected table"):
+            alter_table_clear_column_in_partition(
+                table_name=name_auto,
+                partition_name="1",
+                column_name="c",
+                node=node,
             )
 
     finally:

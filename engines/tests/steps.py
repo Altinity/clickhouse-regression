@@ -5,6 +5,18 @@ from testflows.core import *
 from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
+@TestStep(When)
+def insert_values_into_table(self, table_name, values, node=None):
+    """Insert one or more value tuples into a table."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    if not isinstance(values, str):
+        values = ", ".join(values)
+
+    node.query(f"INSERT INTO {table_name} VALUES {values}")
+
+
 insert_values = (
     " ('data1', 1, 0),"
     " ('data1', 2, 0),"
