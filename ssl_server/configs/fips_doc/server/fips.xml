@@ -1,6 +1,7 @@
 <clickhouse>
     <tcp_port remove="1" />
     <http_port remove="1" />
+    <interserver_http_port remove="1" />
     <https_port>8443</https_port>
     <tcp_port_secure>9440</tcp_port_secure>
     <interserver_https_port>9010</interserver_https_port>
@@ -15,7 +16,7 @@
             <cipherSuites>TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384</cipherSuites>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1</disableProtocols>
             <preferServerCiphers>true</preferServerCiphers>
-            <verificationMode>none</verificationMode>
+            <verificationMode>relaxed</verificationMode>
         </server>
         <client>
             <caConfig>/etc/clickhouse-server/config.d/ca.crt</caConfig>
@@ -24,9 +25,9 @@
             <cipherSuites>TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384</cipherSuites>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1</disableProtocols>
             <preferServerCiphers>true</preferServerCiphers>
-            <verificationMode>none</verificationMode>
+            <verificationMode>relaxed</verificationMode>
             <invalidCertificateHandler>
-                <name>AcceptCertificateHandler</name>
+                <name>RejectCertificateHandler</name>
             </invalidCertificateHandler>
         </client>
     </openSSL>
