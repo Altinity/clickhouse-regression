@@ -213,6 +213,12 @@ def check_if_head(test):
     return "head" in binary_path
 
 
+def check_if_latest(test):
+    """True if build is upstream latest build."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    return "latest" in binary_path
+
+
 def check_with_any_sanitizer(test):
     """Check if the build is with any sanitizer (tsan, asan, ubsan, msan)."""
     sanitizers = ["tsan", "asan", "ubsan", "msan"]

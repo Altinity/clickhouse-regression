@@ -10,7 +10,7 @@ from helpers.argparser import (
     CaptureClusterArgs,
 )
 
-from helpers.common import check_clickhouse_version, check_if_head
+from helpers.common import check_clickhouse_version, check_if_head, check_if_latest
 
 xfails = {
     "/settings/default values/parallel_replicas_mark_segment_size": [
@@ -78,8 +78,8 @@ xfails = {
     "/settings/default values/*": [
         (
             Fail,
-            "A lot of changes on head, do not need to track before release.",
-            check_if_head,
+            "A lot of changes on head/latest, do not need to track before release.",
+            lambda test: check_if_head(test) or check_if_latest(test),
         )
     ],
     "/settings/default values/allow_experimental_database_glue_catalog": [
