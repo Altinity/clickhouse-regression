@@ -794,6 +794,10 @@ def hetzner_s3_regression(
 
     s3_endpoint_url, bucket, bucket_prefix = parse_s3_uri(uri)
 
+    if not bucket_prefix:
+        bucket_prefix = "data"
+        uri = f"{s3_endpoint_url}/{bucket}/{bucket_prefix}/"
+
     self.context.storage = "hetzner"
     self.context.access_key_id = key_id
     self.context.secret_access_key = access_key

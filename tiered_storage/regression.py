@@ -224,6 +224,9 @@ def feature(
     if with_s3amazon or with_s3hetzner:
         with Given("a temporary S3 path"):
             s3_endpoint_url, bucket_name, bucket_prefix = parse_s3_uri(base_uri)
+            if with_s3hetzner and not bucket_prefix:
+                bucket_prefix = "data"
+                base_uri = f"{s3_endpoint_url}/{bucket_name}/{bucket_prefix}/"
             cleanup_prefix = (
                 f"{bucket_prefix}/tiered_storage" if bucket_prefix else "tiered_storage"
             )
