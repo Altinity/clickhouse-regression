@@ -117,7 +117,7 @@ on:
         description: "🏺 Artifact S3 bucket"
         type: choice
         options:
-          - internal
+          - hetzner
       output_format:
         description: "📜 Testflows output style."
         type: choice
@@ -176,7 +176,7 @@ on:
         description: "Artifact S3 bucket"
         type: string
         required: false
-        default: internal
+        default: hetzner
       output_format:
         description: "📜 Testflows output style."
         type: string
