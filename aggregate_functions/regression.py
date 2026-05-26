@@ -816,6 +816,30 @@ ffails = {
         Skip,
         "quantilePrometheusHistogram test is not implemented",
     ),
+    "/aggregate functions/part 1/rankCorr/with group by": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/105845",
+        lambda test: check_clickhouse_version(">=26.5")(test)
+        and check_current_cpu("aarch64")(test),
+    ),
+    "/aggregate functions/part 1/rankCorr/single row": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/105845",
+        lambda test: check_clickhouse_version(">=26.5")(test)
+        and check_current_cpu("aarch64")(test),
+    ),
+    "/aggregate functions/part 3/state/rankCorrState/single row": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/105845",
+        lambda test: check_clickhouse_version(">=26.5")(test)
+        and check_current_cpu("aarch64")(test),
+    ),
+    "/aggregate functions/part 3/state/rankCorrState/with group by": (
+        Skip,
+        "https://github.com/ClickHouse/ClickHouse/issues/105845",
+        lambda test: check_clickhouse_version(">=26.5")(test)
+        and check_current_cpu("aarch64")(test),
+    ),
 }
 
 

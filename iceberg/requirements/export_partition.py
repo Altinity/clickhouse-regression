@@ -812,24 +812,6 @@ RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance = Requirement(
     num="8.4",
 )
 
-RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote = Requirement(
-    name="RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL serve consistent status information from `system.replicated_partition_exports` whether the row is read from the local cache (`export_merge_tree_partition_system_table_prefer_remote_information = 0`, the new default) or refreshed directly from Keeper (`= 1`). The two modes SHALL return the same status for an already-completed export.\n"
-        "\n"
-        "**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`).\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="8.5",
-)
-
 RQ_Iceberg_ExportPartition_Settings_ParquetCompression = Requirement(
     name="RQ.Iceberg.ExportPartition.Settings.ParquetCompression",
     version="1.0",
@@ -843,7 +825,7 @@ RQ_Iceberg_ExportPartition_Settings_ParquetCompression = Requirement(
     ),
     link=None,
     level=2,
-    num="8.6",
+    num="8.5",
 )
 
 RQ_Iceberg_ExportPartition_DirectWrites = Requirement(
@@ -1165,14 +1147,9 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
             num="8.4",
         ),
         Heading(
-            name="RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote",
-            level=2,
-            num="8.5",
-        ),
-        Heading(
             name="RQ.Iceberg.ExportPartition.Settings.ParquetCompression",
             level=2,
-            num="8.6",
+            num="8.5",
         ),
         Heading(name="Post-export destination operations", level=1, num="9"),
         Heading(name="RQ.Iceberg.ExportPartition.DirectWrites", level=2, num="9.1"),
@@ -1232,7 +1209,6 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_SystemMonitoring_PartLog,
         RQ_Iceberg_ExportPartition_SystemMonitoring_ProfileEvents,
         RQ_Iceberg_ExportPartition_SystemMonitoring_KilledProvenance,
-        RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote,
         RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
         RQ_Iceberg_ExportPartition_DirectWrites,
         RQ_Iceberg_ExportPartition_Truncate,
@@ -1295,8 +1271,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 8.2 [RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog](#rqicebergexportpartitionsystemmonitoringpartlog)
     * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
     * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
-    * 8.5 [RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote](#rqicebergexportpartitionsettingssystemtablepreferremote)
-    * 8.6 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
+    * 8.5 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
 * 9 [Post-export destination operations](#post-export-destination-operations)
     * 9.1 [RQ.Iceberg.ExportPartition.DirectWrites](#rqicebergexportpartitiondirectwrites)
     * 9.2 [RQ.Iceberg.ExportPartition.Truncate](#rqicebergexportpartitiontruncate)
@@ -1693,13 +1668,6 @@ version: 1.0
 
 * `source_replica`, `create_time`, and identifying columns SHALL still match the original initiator and timing once the row has transitioned to `KILLED`.
 * When the kill lands during the commit window, the same provenance fields and any diagnostic counters that were already populated SHALL remain readable for post-mortem analysis.
-
-### RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote
-version: 1.0
-
-[ClickHouse] SHALL serve consistent status information from `system.replicated_partition_exports` whether the row is read from the local cache (`export_merge_tree_partition_system_table_prefer_remote_information = 0`, the new default) or refreshed directly from Keeper (`= 1`). The two modes SHALL return the same status for an already-completed export.
-
-**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`).
 
 ### RQ.Iceberg.ExportPartition.Settings.ParquetCompression
 version: 1.0
