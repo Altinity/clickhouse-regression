@@ -17,15 +17,15 @@ xfails = {
     "/engines/summing_merge_tree/zero row deletion with clear column": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/101953"
-            " — CLEAR COLUMN sets default state not recognized as zero by SummingSortedAlgorithm since 25.8",
+            "https://github.com/ClickHouse/ClickHouse/issues/101953 - fixed in >=26.6",
+            check_clickhouse_version("<26.6"),
         )
     ],
     "/engines/summing_merge_tree/clear column validation consistency": [
         (
             Fail,
-            "https://github.com/ClickHouse/ClickHouse/issues/101953"
-            " — CLEAR COLUMN allowed on auto-detected summing columns but blocked on explicit ones",
+            "https://github.com/ClickHouse/ClickHouse/issues/101953 - fixed in >=26.6",
+            check_clickhouse_version("<26.6"),
         )
     ],
 }
