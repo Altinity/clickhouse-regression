@@ -94,11 +94,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
-      REPORT_S3_ENDPOINT: ${{ vars.REPORT_S3_ENDPOINT }}
-      REPORT_S3_PUBLIC_ENDPOINT_URL: ${{ vars.REPORT_S3_PUBLIC_ENDPOINT_URL }}
-      REPORT_S3_CLI_ENDPOINT_URL: ${{ secrets.REPORT_S3_CLI_ENDPOINT_URL }}
-      # Hetzner (s3/tiered_storage suites and hetzner report uploads).
-      # HETZNER_S3_URI is built from BUCKET + REGION in setup.sh.
+      # Hetzner report uploads. HETZNER_S3_URI is built from BUCKET + REGION.
       HETZNER_S3_BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
       HETZNER_S3_REGION: ${{ secrets.HETZNER_S3_REGION }}
       HETZNER_S3_KEY_ID: ${{ secrets.HETZNER_S3_KEY_ID }}

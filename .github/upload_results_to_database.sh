@@ -3,9 +3,10 @@
 
 set -x
 
-aws_endpoint_args=""
-if [[ -n "${S3_CLI_ENDPOINT_URL:-}" ]]; then
-    aws_endpoint_args="--endpoint-url $S3_CLI_ENDPOINT_URL"
+if [[ "$artifacts" == "hetzner" ]]; then
+  export AWS_ACCESS_KEY_ID="$HETZNER_S3_KEY_ID"
+  export AWS_SECRET_ACCESS_KEY="$HETZNER_S3_ACCESS_KEY"
+  export AWS_DEFAULT_REGION="$HETZNER_S3_REGION"
 fi
 
 if [[ $1 == 1 ]];
