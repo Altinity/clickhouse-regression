@@ -15,7 +15,7 @@ FIPS_DOC_SECURE_TCP_PORT = 9440
 FIPS_DOC_SECURE_HTTP_PORT = 8443
 FIPS_DOC_INTERSERVER_HTTPS_PORT = 9010
 FIPS_DOC_METRICS_PATH = "/metrics_all"
-FIPS_DOC_KEEPER_CLIENT_PORT = 2281
+FIPS_DOC_KEEPER_CLIENT_PORT = 9281
 FIPS_DOC_KEEPER_RAFT_PORT = 9444
 FIPS_DOC_KEEPER_HTTP_CONTROL_PORT = 9182
 FIPS_DOC_KEEPER_READINESS_PATH = "/ready"
@@ -77,9 +77,17 @@ def read_local_config_file(base_dir, filename):
         return config_file.read()
 
 
+def write_host_config_file(base_dir, filename, content):
+    """Write a bind-mounted config on the host without altering trailing newlines."""
+    path = os.path.join(base_dir, filename)
+    with open(path, "w", encoding="utf-8", newline="") as config_file:
+        config_file.write(content)
+
+
 def write_node_config(node, dest, content):
+    """Write config inside the container (for paths that are not bind-mounted)."""
     node.command(
-        f"cat <<'FIPS_DOC_CONFIG' > {dest}\n{content}\nFIPS_DOC_CONFIG",
+        f"cat <<'FIPS_DOC_CONFIG' > {dest}\n{content.rstrip(chr(10))}\nFIPS_DOC_CONFIG",
         exitcode=0,
     )
 
@@ -121,18 +129,19 @@ def use_stock_fips_server_config(self, node=None, timeout=300):
     with When("I switch to the stock Altinity FIPS server configuration"):
         snapshot_regression_server_configs(self.context)
         node.stop_clickhouse(timeout=timeout, safe=False)
-        write_node_config(
-            node,
-            "/etc/clickhouse-server/config.xml",
+        write_host_config_file(
+            REGRESSION_CONFIG_DIR,
+            "config.xml",
             read_local_config_file(STOCK_FIPS_CONFIG_DIR, "config.xml"),
         )
-        write_node_config(
-            node,
-            "/etc/clickhouse-server/users.xml",
+        write_host_config_file(
+            REGRESSION_CONFIG_DIR,
+            "users.xml",
             read_local_config_file(STOCK_FIPS_CONFIG_DIR, "users.xml"),
         )
-        for dest, _, _ in MOUNTED_SERVER_CONFIG_FILES[2:]:
-            write_node_config(node, dest, EMPTY_CLICKHOUSE_CONFIG)
+        config_d_dir = os.path.join(REGRESSION_CONFIG_DIR, "config.d")
+        for _, filename, _ in MOUNTED_SERVER_CONFIG_FILES[2:]:
+            write_host_config_file(config_d_dir, filename, EMPTY_CLICKHOUSE_CONFIG)
         node.start_clickhouse(timeout=timeout, wait_healthy=True)
 
     self.context.fips_doc_stock_config_applied = True
@@ -155,7 +164,10 @@ def restore_regression_server_config(self, node=None, timeout=300):
     with By("I restore regression server configuration"):
         node.stop_clickhouse(timeout=timeout, safe=False)
         for dest, content in backup.items():
-            write_node_config(node, dest, content)
+            _, filename, base_dir = next(
+                row for row in MOUNTED_SERVER_CONFIG_FILES if row[0] == dest
+            )
+            write_host_config_file(base_dir, filename, content)
         node.start_clickhouse(timeout=timeout, wait_healthy=True)
 
     self.context.fips_doc_stock_config_applied = False

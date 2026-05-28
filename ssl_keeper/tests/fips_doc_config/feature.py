@@ -30,7 +30,7 @@ def keeper_doc_fixture(self):
 
     def verify_steps():
         with Then("preprocessed config should reflect the zookeeper fixture"):
-            verify_doc_fixture_preprocessed(marker="<port>2281</port>")
+            verify_doc_fixture_preprocessed(marker="<port>9281</port>")
             verify_doc_fixture_preprocessed(marker="<secure>1</secure>")
 
         with And("preprocessed config should reflect the keeper fixture"):
