@@ -6,11 +6,15 @@ from ssl_server.tests.fips_doc_config.common import *
 def _run_doc_fixture_scenario(apply_steps, verify_steps):
     """Apply fixtures, run checks, then tear fixtures down explicitly."""
     try:
+        with Given("stock Altinity FIPS image config is active"):
+            use_stock_fips_server_config()
         apply_steps()
         verify_steps()
     finally:
+        remove_byoc_metrics_simulation(restart=False)
         remove_fips_doc_client_fixture()
-        remove_fips_doc_server_fixtures()
+        remove_fips_doc_server_fixtures(restart=False)
+        restore_regression_server_config()
 
 
 @TestScenario
@@ -28,6 +32,8 @@ def fips_server_doc_fixture(self):
         with Then("preprocessed config should reflect the fixture"):
             verify_doc_fixture_preprocessed(marker="<tcp_port_secure>9440</tcp_port_secure>")
             verify_doc_fixture_installed(marker="<interserver_http_port remove")
+            verify_doc_fixture_installed(marker="<mysql_port remove")
+            verify_doc_fixture_installed(marker="<postgresql_port remove")
             verify_doc_fixture_preprocessed(marker="<interserver_https_port>")
             verify_doc_fixture_preprocessed(marker="RejectCertificateHandler")
 
@@ -39,6 +45,9 @@ def fips_server_doc_fixture(self):
 
         with And("HTTPS should accept queries"):
             verify_secure_https()
+
+        with And("HTTPS metrics endpoint should return Prometheus text"):
+            verify_https_metrics_endpoint()
 
     _run_doc_fixture_scenario(apply_steps, verify_steps)
 

@@ -8,6 +8,7 @@ from ssl_server.tests.fips_doc_config.common import (
     FIPS_DOC_KEEPER_RAFT_PORT,
     FIPS_DOC_SERVER_FIXTURE,
     verify_doc_fixture_preprocessed,
+    verify_keeper_http_readiness_not_exposed,
     verify_server_listening_ports,
 )
 
@@ -271,6 +272,17 @@ def verify_cluster_listening_ports(self, allowed_ports, nodes=None, forbid_plain
             node=cluster.node(name),
             forbid_plaintext=forbid_plaintext,
         )
+
+
+@TestStep(Then)
+def verify_cluster_keeper_http_readiness_not_exposed(self, nodes=None):
+    """Assert Keeper HTTP /ready is not exposed on any cluster node."""
+    if nodes is None:
+        nodes = KEEPER_CLUSTER_NODES
+
+    cluster = self.context.cluster
+    for name in nodes:
+        verify_keeper_http_readiness_not_exposed(node=cluster.node(name))
 
 
 @TestStep(Then)

@@ -42,6 +42,9 @@ def keeper_doc_fixture(self):
         with And("only configured listener ports should be open"):
             verify_cluster_listening_ports(allowed_ports=KEEPER_DOC_CLUSTER_LISTEN_PORTS)
 
+        with And("Keeper HTTP readiness endpoint should not be exposed"):
+            verify_cluster_keeper_http_readiness_not_exposed()
+
         with And("ClickHouse should reach Keeper over secure coordination"):
             verify_keeper_connection()
 
