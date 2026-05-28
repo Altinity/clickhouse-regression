@@ -3,7 +3,7 @@
 from testflows.core import *
 from testflows.asserts import *
 
-from oauth.tests.steps.clikhouse import access_clickhouse
+from oauth.tests.steps.clikhouse import access_clickhouse, assert_token_rejected
 
 
 @TestScenario
@@ -50,7 +50,7 @@ def scenario_3(self):
         )
 
     with Then("[H-02]"):
-        access_clickhouse(token=modified, https=True, status_code=500)
+        assert_token_rejected(token=modified, https=True)
 
 
 @TestScenario

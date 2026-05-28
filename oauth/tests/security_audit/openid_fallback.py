@@ -36,6 +36,7 @@ def scenario_1(self):
             token_introspection_endpoint="http://keycloak:8080/does-not-exist/introspect",
             introspection_client_id=self.context.introspection_client_id,
             introspection_client_secret=self.context.introspection_client_secret,
+            replace=True,
         )
 
     with And("I configure user directories"):

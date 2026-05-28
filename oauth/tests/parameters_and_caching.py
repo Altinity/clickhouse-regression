@@ -22,7 +22,7 @@ def _configure_processor(
     token_cache_lifetime=None,
     expected_issuer=None,
     expected_audience=None,
-    replace=False,
+    replace=True,
 ):
     """Apply a Keycloak-OpenID processor config plus optional overrides.
 
@@ -190,7 +190,7 @@ def expected_issuer_wrong(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects the token (issuer mismatch)"):
-        access_clickhouse(token=token, status_code=500)
+        assert_token_rejected(token=token)
 
 
 @TestScenario
@@ -206,7 +206,7 @@ def expected_audience_missing_claim(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects the token (aud claim missing from JWT)"):
-        access_clickhouse(token=token, status_code=500)
+        assert_token_rejected(token=token)
 
 
 @TestScenario
@@ -224,7 +224,7 @@ def expected_audience_wrong(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects the token (audience mismatch)"):
-        access_clickhouse(token=token, status_code=500)
+        assert_token_rejected(token=token)
 
 
 # ---------------------------------------------------------------------------
@@ -430,10 +430,10 @@ def processor_with_every_parameter_at_once_rejected(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then(
-        "ClickHouse refuses the auth (over-specified, internally "
-        "contradictory configuration)"
+        "ClickHouse rejects the config at parse time — "
+        "token authentication is disabled (H-07 fail-closed)"
     ):
-        assert_token_rejected(token=token)
+        access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()
