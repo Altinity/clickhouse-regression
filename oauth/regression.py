@@ -67,51 +67,6 @@ def argparser(parser):
 
 
 xfails = {
-    "/oauth/security audit/H-16 jwt decode uncaught/H-16 / 2 malformed signature base64 leaks runtime_error": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — JwksJwtProcessor::"
-            "resolveAndValidate has no top-level try/catch around "
-            "jwt::decode; a malformed-base64 JWT segment leaks "
-            "std::runtime_error out as Code: 1001 (HTTP 500) with no "
-            "AUTHENTICATION_FAILED marker. See "
-            "src/Access/TokenProcessorsJWT.cpp.",
-        )
-    ],
-    "/oauth/security audit/H-16 jwt decode uncaught/H-16 / 3 non-base64 signature leaks runtime_error": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — same root cause as "
-            "H-16 / 2: any exception thrown by jwt::decode escapes "
-            "JwksJwtProcessor::resolveAndValidate uncaught.",
-        )
-    ],
-    "/oauth/jwt_manipulation/malformed token string": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — third reproducer of "
-            "the same JwksJwtProcessor::resolveAndValidate uncaught-"
-            "exception bug: ``not.a.valid-jwt`` parses to 3 segments "
-            "but the second segment is not base64url-clean, so "
-            "jwt::decode throws std::runtime_error which leaks as "
-            "Code: 1001 (HTTP 500) instead of AUTHENTICATION_FAILED. "
-            "Tracked alongside the security_audit/H-16 scenarios.",
-        )
-    ],
-    "/oauth/configuration/invalid roles filter regex in user directory": [
-        (
-            Fail,
-            "DEFECT_H06 (alias F16 / AUTHZ-02) — invalid <roles_filter> "
-            "regex fails open: ClickHouse silently tolerates the "
-            "malformed pattern and grants the token's <common_roles> "
-            "as if no filter were configured. SRS 6.2.1.1.3 says auth "
-            "SHALL fail when the roles section is incorrectly defined; "
-            "the existing security_audit/H-06 scenarios already pin "
-            "the buggy behaviour by asserting status_code=200, this "
-            "new scenario asserts the SRS-correct behaviour and will "
-            "go green when the upstream fix lands.",
-        )
-    ],
     "/oauth/configuration/multiple token entries in user directories": [
         (
             Fail,

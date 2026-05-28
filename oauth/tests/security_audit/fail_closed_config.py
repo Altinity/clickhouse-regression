@@ -50,8 +50,8 @@ def scenario_1(self):
             expiration_minutes=5,
         )
 
-    with Then("[H-16]"):
-        access_clickhouse(token=token, status_code=403)
+    with Then("proc_b validates the HS256 token (OpenID processor fails gracefully)"):
+        access_clickhouse(token=token, status_code=200)
 
 
 @TestScenario
