@@ -67,7 +67,8 @@ def token_from_other_realm_rejected(self):
                 expected_issuer=endpoints.issuer,
                 userinfo_endpoint=endpoints.userinfo_endpoint,
                 token_introspection_endpoint=endpoints.token_introspection_endpoint,
-                jwks_uri=endpoints.jwks_uri,
+                introspection_client_id=self.context.introspection_client_id,
+                introspection_client_secret=self.context.introspection_client_secret,
                 replace=True,
             )
             change_user_directories_config(
@@ -147,7 +148,8 @@ def token_from_wrong_client_rejected(self):
                 expected_audience=self.context.client_id,
                 userinfo_endpoint=endpoints.userinfo_endpoint,
                 token_introspection_endpoint=endpoints.token_introspection_endpoint,
-                jwks_uri=endpoints.jwks_uri,
+                introspection_client_id=self.context.introspection_client_id,
+                introspection_client_secret=self.context.introspection_client_secret,
                 replace=True,
             )
             change_user_directories_config(
@@ -192,7 +194,8 @@ def authorization_succeeds_baseline(self):
             expected_issuer=endpoints.issuer,
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
         change_user_directories_config(

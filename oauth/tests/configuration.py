@@ -51,9 +51,9 @@ def missing_processor_type(self):
 
     Per the docs: ``type`` is *Mandatory*. To isolate that single
     invariant, the overlay keeps the base processor's endpoints
-    (``userinfo_endpoint``, ``token_introspection_endpoint``,
-    ``jwks_uri``) so the only thing wrong with the resulting processor
-    is the absence of ``<type>``. Otherwise a server that's broken on
+    (``userinfo_endpoint``, ``token_introspection_endpoint``) so the
+    only thing wrong with the resulting processor is the absence of
+    ``<type>``. Otherwise a server that's broken on
     *any* missing-mandatory-field path would pass this test and the
     type-specific assertion would be hidden.
     """
@@ -68,7 +68,8 @@ def missing_processor_type(self):
             processor_name="keycloak",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
 
@@ -275,18 +276,17 @@ def openid_processor_with_no_endpoints_rejected(self):
     ),
 )
 def openid_processor_with_all_endpoints_rejected(self):
-    """An OpenID processor with all three endpoint kinds set
-    (``configuration_endpoint`` + ``userinfo_endpoint`` +
-    ``token_introspection_endpoint``) SHALL be rejected at parse time.
+    """An OpenID processor with both ``configuration_endpoint`` and
+    ``userinfo_endpoint`` set SHALL be rejected at parse time.
 
-    Docs (verbatim): *"If none of them are set or all three are set,
-    this is an invalid configuration that will not be parsed."*
+    Since antalya-26.3 (PR #1799): ``configuration_endpoint`` and
+    ``userinfo_endpoint`` are mutually exclusive.
     """
     client = self.context.provider_client
 
     with Given(
-        "I replace the keycloak processor with type=OpenID and all three "
-        "endpoint kinds present"
+        "I replace the keycloak processor with type=OpenID and both "
+        "configuration_endpoint and userinfo_endpoint present"
     ):
         endpoints = client.OAuthProvider.openid_endpoints()
         if endpoints.configuration_endpoint is None:
@@ -296,7 +296,6 @@ def openid_processor_with_all_endpoints_rejected(self):
             processor_type="OpenID",
             configuration_endpoint=endpoints.configuration_endpoint,
             userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
             replace=True,
         )
 
@@ -348,21 +347,14 @@ def enable_token_auth_disabled_rejects_tokens(self):
             token = client.OAuthProvider.get_oauth_token().access_token
 
         with Then("ClickHouse refuses to accept the bearer token"):
-            # The exact failure surface for "token auth disabled" is not
-            # pinned by the spec — depending on the build it can be a
-            # plain ``AUTHENTICATION_FAILED`` (HTTP 403) or an explicit
-            # ``Token authentication is disabled`` message (HTTP 500).
-            # Both are valid rejections; we simply assert the request
-            # did not succeed and that the body mentions an auth-style
-            # error.
-            for sc in (403, 500):
+            for sc in (400, 403, 500):
                 try:
                     body = access_clickhouse(token=token, status_code=sc)
                     break
                 except AssertionError:
                     continue
             else:
-                fail("token auth was not rejected with HTTP 403 or 500")
+                fail("token auth was not rejected with HTTP 400, 403, or 500")
             assert any(
                 marker in body
                 for marker in (
@@ -370,6 +362,7 @@ def enable_token_auth_disabled_rejects_tokens(self):
                     "Token authentication is disabled",
                     "token authentication is disabled",
                     "Authentication failed",
+                    "BAD_ARGUMENTS",
                 )
             ), error(
                 f"Expected an auth-rejection marker in the response body; "
@@ -412,7 +405,8 @@ def valid_openid_processor_type(self):
             processor_type="OpEnId",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
 
@@ -436,48 +430,31 @@ def valid_openid_processor_type(self):
     ),
 )
 def invalid_roles_filter_regex_in_user_directory(self):
-    """ClickHouse SHALL not allow the external user to authenticate when
-    the ``roles_filter`` inside ``user_directories/token`` is not a
-    valid regex.
+    """ClickHouse SHALL reject a user-directory config whose
+    ``roles_filter`` contains an invalid regex at parse time.
 
-    Maps to SRS 6.2.1.1.3 — "incorrectly defined roles section".
-    The ``[invalid regex`` pattern has an unmatched ``[``; std::regex
-    rejects it at construction time. Either ClickHouse refuses to
-    apply the overlay (HTTP error on first auth) or the regex compiler
-    throws on first use; the spec only requires that the user is not
-    authenticated, so we accept any non-200 outcome with an auth /
-    config rejection marker.
+    Fixed in antalya-26.3 (PR #1777, commit H-06): the
+    ``TokenAccessStorage`` constructor validates the RE2 pattern and
+    throws ``BAD_ARGUMENTS`` when ``!roles_filter->ok()``, refusing to
+    instantiate the storage in a permissive state.
 
-    **Currently xfailed** as ``DEFECT_H06`` (alias ``F16 / AUTHZ-02``) —
-    invalid ``roles_filter`` regex fails open on antalya-26.1: ClickHouse
-    silently tolerates the malformed pattern and grants the token's
-    ``<common_roles>`` as if no filter were configured. The sibling
-    ``security_audit/H-06`` scenarios pin the *buggy* behaviour
-    (``status_code=200``) so the regression alarms when the fix
-    flips it; this scenario pins the *spec-correct* behaviour
-    (``assert_token_rejected``) so the same fix flips this one
-    green from xfail.
+    The test writes the bad config, restarts ClickHouse, and asserts
+    the rejection message appears in the error log.  Cleanup restores
+    the server to a healthy state.
     """
-    client = self.context.provider_client
-
-    with Given("I configure user_directories with an invalid roles_filter regex"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-            roles_filter="[invalid regex",
+    with Given("I apply a user_directories config with an invalid roles_filter regex"):
+        apply_fatal_user_directories_config(
+            entries={
+                "user_directories": {
+                    "token": {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                        "roles_filter": "[invalid regex",
+                    }
+                }
+            },
+            expected_message="Invalid 'roles_filter' regex",
         )
-
-    with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token().access_token
-
-    with Then(
-        "ClickHouse does not authenticate the request (the invalid "
-        "regex prevents role mapping)"
-    ):
-        assert_token_rejected(token=token)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
 
 
 @TestScenario

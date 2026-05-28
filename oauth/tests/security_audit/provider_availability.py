@@ -1,4 +1,10 @@
-"""[H-19] See ``oauth/new_audit_review/combined-issues.md``."""
+"""[H-19] See ``oauth/new_audit_review/combined-issues.md``.
+
+Since antalya-26.3 (PR #1799), the OpenID processor no longer accepts
+``jwks_uri``. Validation goes through ``userinfo_endpoint`` /
+``token_introspection_endpoint``. These scenarios now test provider
+availability when those endpoints are unreachable.
+"""
 
 import time
 
@@ -18,19 +24,22 @@ MAX_REASONABLE_AUTH_TIMEOUT = 30
 @TestScenario
 @Name("H-19 / 1")
 def scenario_1(self):
-    """[H-19]"""
+    """[H-19] ClickHouse does not hang indefinitely when the
+    introspection endpoint is non-routable."""
     client = self.context.provider_client
 
     with Given(
-        "I configure OpenID with a non-routable jwks_uri " "and valid userinfo_endpoint"
+        "I configure OpenID with a non-routable introspection endpoint "
+        "and valid userinfo_endpoint"
     ):
         endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
-            jwks_uri="http://10.255.255.1:9999/hang",
             userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            token_introspection_endpoint="http://10.255.255.1:9999/hang",
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
         )
 
     with And("I configure user directories"):
@@ -65,19 +74,22 @@ def scenario_1(self):
 @TestScenario
 @Name("H-19 / 2")
 def scenario_2(self):
-    """[H-19]"""
+    """[H-19] ClickHouse does not hang indefinitely when the
+    userinfo endpoint is non-routable."""
     client = self.context.provider_client
 
     with Given(
-        "I configure OpenID with a non-routable userinfo_endpoint and valid jwks_uri"
+        "I configure OpenID with a non-routable userinfo_endpoint "
+        "and valid introspection endpoint"
     ):
         endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             userinfo_endpoint="http://10.255.255.1:9999/hang",
-            jwks_uri=endpoints.jwks_uri,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
         )
 
     with And("I configure user directories"):

@@ -5,6 +5,7 @@ Helpers.queries contains functions that wrap SQL queries.
 import json
 
 from testflows.core import *
+from testflows.asserts import error
 from testflows.uexpect.uexpect import ExpectTimeoutError
 from testflows.connect.shell import Command
 
@@ -108,7 +109,7 @@ def optimize(
     self, node: ClickHouseNode, table_name: str, final=False, no_checks=False
 ) -> Command:
     """Apply OPTIMIZE on the given table and node."""
-    q = f"OPTIMIZE TABLE {table_name}" + " FINAL" if final else ""
+    q = f"OPTIMIZE TABLE {table_name}" + (" FINAL" if final else "")
     return node.query(q, no_checks=no_checks, exitcode=0)
 
 
@@ -167,6 +168,18 @@ def get_row_count(
         timeout=timeout,
     )
     return int(json.loads(r.output)[0])
+
+
+@TestStep(Then)
+def assert_row_count(
+    self, table_name: str, rows: int, node: ClickHouseNode = None, timeout: int = 30
+) -> None:
+    """Assert that the number of rows in a table matches the expected value."""
+    if node is None:
+        node = self.context.node
+
+    actual_count = get_row_count(node=node, table_name=table_name, timeout=timeout)
+    assert actual_count == rows, error()
 
 
 @TestStep

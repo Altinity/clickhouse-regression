@@ -90,7 +90,7 @@ def access_clickhouse_when_forbidden(self, token, ip="clickhouse1", https=False)
 
     Expects HTTP 500 with a signature-verification failure message.
     """
-    response = access_clickhouse(token=token, ip=ip, https=https, status_code=500)
+    response = access_clickhouse(token=token, ip=ip, https=https, status_code=403)
     assert (
         "failed to verify signature" in response or "AUTHENTICATION_FAILED" in response
     ), error()
@@ -183,8 +183,14 @@ def change_token_processors(
     token_introspection_endpoint=None,
     expected_issuer=None,
     expected_audience=None,
+    expected_typ=None,
     allow_no_expiration=None,
     processor_type=None,
+    tenant_id=None,
+    introspection_client_id=None,
+    introspection_client_secret=None,
+    verifier_leeway=None,
+    allow_http_discovery_urls=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     node=None,
     replace=False,
@@ -244,14 +250,34 @@ def change_token_processors(
     if expected_audience is not None:
         proc["expected_audience"] = expected_audience
 
+    if expected_typ is not None:
+        proc["expected_typ"] = expected_typ
+
     if allow_no_expiration is not None:
-        # XML-friendly bool: ClickHouse parses 1 / 0 (or true / false)
-        # as a Boolean. The tests pass actual bools; serialise them to
-        # the canonical string form here.
         if isinstance(allow_no_expiration, bool):
             proc["allow_no_expiration"] = "true" if allow_no_expiration else "false"
         else:
             proc["allow_no_expiration"] = str(allow_no_expiration)
+
+    if tenant_id is not None:
+        proc["tenant_id"] = tenant_id
+
+    if introspection_client_id is not None:
+        proc["introspection_client_id"] = introspection_client_id
+
+    if introspection_client_secret is not None:
+        proc["introspection_client_secret"] = introspection_client_secret
+
+    if verifier_leeway is not None:
+        proc["verifier_leeway"] = str(verifier_leeway)
+
+    if allow_http_discovery_urls is not None:
+        if isinstance(allow_http_discovery_urls, bool):
+            proc["allow_http_discovery_urls"] = (
+                "true" if allow_http_discovery_urls else "false"
+            )
+        else:
+            proc["allow_http_discovery_urls"] = str(allow_http_discovery_urls)
 
     if replace:
         proc_key = KeyWithAttributes(processor_name, {"replace": "replace"})
@@ -282,6 +308,7 @@ def change_user_directories_config(
     common_roles=None,
     roles_filter=None,
     roles_transform=None,
+    roles_mapping=None,
     default_profile=None,
     node=None,
     config_d_dir="/etc/clickhouse-server/config.d",
@@ -313,6 +340,10 @@ def change_user_directories_config(
 
     if roles_transform is not None:
         token_section["roles_transform"] = roles_transform
+
+    if roles_mapping is not None:
+        maps = [{"from": m["from"], "to": m["to"]} for m in roles_mapping]
+        token_section["roles_mapping"] = {"map": maps}
 
     if default_profile is not None:
         token_section["default_profile"] = default_profile

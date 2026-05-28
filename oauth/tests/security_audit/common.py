@@ -35,7 +35,8 @@ def two_processor_setup(
             token_cache_lifetime=token_cache_lifetime,
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
         )
 
     with And(f"adding a '{lenient_name}' static-key processor"):

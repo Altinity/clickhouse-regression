@@ -286,11 +286,11 @@ def large_export(self):
 @TestScenario
 @Requirements(RQ_ClickHouse_ExportPartition_SystemTables_Exports("1.0"))
 def replicated_partition_exports_local_mode_peer_replica(self):
-    """Altinity/ClickHouse#1500: local system.replicated_partition_exports on a peer replica.
+    """Altinity/ClickHouse#1500: system.replicated_partition_exports on a peer replica.
 
-    With ``export_merge_tree_partition_system_table_prefer_remote_information = 0``,
-    the table is served from local state. A replica that did not run the ALTER must
-    still list COMPLETED exports after another replica finishes the export.
+    ``system.replicated_partition_exports`` is served from per-replica local state.
+    A replica that did not run the ALTER must still list COMPLETED exports after
+    another replica finishes the export.
     """
 
     source_table = f"source_{getuid()}"
@@ -307,10 +307,6 @@ def replicated_partition_exports_local_mode_peer_replica(self):
         s3_table_name = create_s3_table(table_name="s3", create_new_bucket=True)
         partitions = get_partitions(table_name=source_table, node=initiator)
 
-    select_settings = [
-        ("export_merge_tree_partition_system_table_prefer_remote_information", "0"),
-    ]
-
     with When("I export partitions from the first replica"):
 
         export_partitions(
@@ -320,8 +316,7 @@ def replicated_partition_exports_local_mode_peer_replica(self):
         )
 
     with Then(
-        "the second replica sees COMPLETED rows in system.replicated_partition_exports "
-        "when preferring local information"
+        "the second replica sees COMPLETED rows in system.replicated_partition_exports"
     ):
         for partition in partitions:
             for attempt in retries(timeout=120, delay=2):
@@ -330,7 +325,6 @@ def replicated_partition_exports_local_mode_peer_replica(self):
                         "SELECT count() FROM system.replicated_partition_exports WHERE "
                         f"source_table = '{source_table}' AND partition_id = '{partition}' "
                         "AND status = 'COMPLETED'",
-                        settings=select_settings,
                         exitcode=0,
                     )
                     assert int(r.output.strip()) >= 1, error()

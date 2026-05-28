@@ -1,7 +1,10 @@
 """Tests for ``--oauth-credentials`` file loading and validation."""
 
+import json
+
 from testflows.core import *
 from testflows.asserts import error
+from testflows.combinatorics import CoveringArray
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format,
@@ -471,6 +474,162 @@ def credentials_unicode_client_id(self):
 
     with Then("the client stays up"):
         assert_no_segfault(output=output, exit_code=exit_code)
+
+
+_TOP_LEVEL_KEYS = {
+    "installed": "installed",
+    "web": "web",
+    "unknown": "bogus_key",
+}
+
+_FIELD_VALUES = {
+    "client_id": {
+        "valid": "grafana-client",
+        "empty": "",
+        "number": 42,
+        "object": {"nested": True},
+    },
+    "auth_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth",
+        "empty": "",
+        "number": 9999,
+        "object": {"url": "http://x"},
+    },
+    "token_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+        "empty": "",
+        "number": 9999,
+        "object": {"url": "http://x"},
+    },
+    "client_secret": {
+        "valid": "grafana-secret",
+        "empty": "",
+        "number": 12345,
+    },
+    "redirect_uris": {
+        "valid": ["http://localhost"],
+        "string": "http://localhost",
+    },
+    "device_authorization_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device",
+        "empty": "",
+        "number": 9999,
+    },
+}
+
+_CREDS_DIMENSIONS = {
+    "top_level_key": ["installed", "web", "unknown", "empty_object", "array"],
+    "client_id": ["valid", "empty", "absent", "number", "object"],
+    "auth_uri": ["valid", "empty", "absent", "number", "object"],
+    "token_uri": ["valid", "empty", "absent", "number", "object"],
+    "client_secret": ["valid", "absent", "empty", "number"],
+    "redirect_uris": ["valid", "absent", "string"],
+    "device_authorization_uri": ["valid", "absent", "empty", "number"],
+}
+
+_STRUCTURAL_DIAGNOSTIC_MARKERS = ("installed", "web", "bad_arguments", "missing")
+_FIELD_DIAGNOSTIC_MARKERS = ("bad_arguments", "client_id", "auth_uri", "token_uri")
+
+
+def _build_credentials_raw_json(combo):
+    """Assemble the raw JSON credentials string for a CoveringArray combo."""
+    top_name = combo["top_level_key"]
+
+    if top_name == "array":
+        return "[1, 2, 3]"
+    if top_name == "empty_object":
+        return "{}"
+
+    top_key = _TOP_LEVEL_KEYS[top_name]
+    inner = {}
+    for field in (
+        "client_id",
+        "auth_uri",
+        "token_uri",
+        "client_secret",
+        "redirect_uris",
+        "device_authorization_uri",
+    ):
+        state = combo[field]
+        if state != "absent":
+            inner[field] = _FIELD_VALUES[field][state]
+
+    return json.dumps({top_key: inner})
+
+
+def _combo_expects_structural_rejection(combo):
+    """True when the top-level JSON shape is wrong (array, empty, unknown key)."""
+    return combo["top_level_key"] in ("array", "empty_object", "unknown")
+
+
+def _combo_expects_field_rejection(combo):
+    """True when a required field is absent, empty, or has the wrong type."""
+    if _combo_expects_structural_rejection(combo):
+        return False
+    for field in ("client_id", "auth_uri", "token_uri"):
+        if combo[field] != "valid":
+            return True
+    return False
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"),
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"),
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId("1.0"),
+)
+@Name("credentials file combinatorial validation")
+def credentials_combinatorial_validation(self):
+    """Pairwise combinations of top-level key, required/optional field
+    presence, and value types SHALL be validated without crashing."""
+
+    for combo in CoveringArray(_CREDS_DIMENSIONS, strength=2):
+        label = " ".join(f"{k}={v}" for k, v in combo.items())
+
+        with Check(label):
+            with Given("I reset the client state"):
+                reset_client_state()
+
+            raw_json = _build_credentials_raw_json(combo)
+
+            with And(f"I write credentials JSON: {raw_json[:80]}"):
+                write_oauth_credentials_file(raw_contents=raw_json)
+
+            with When("I run clickhouse-client with the credentials file"):
+                exit_code, output = run_clickhouse_client(
+                    args=[
+                        "--host",
+                        "clickhouse1",
+                        "--login=device",
+                        "--oauth-credentials",
+                        DEFAULT_CREDS_PATH,
+                    ],
+                    query="SELECT 1",
+                    timeout=10,
+                    expect_error=True,
+                )
+
+            with Then("the client did not crash"):
+                assert_no_segfault(output=output, exit_code=exit_code)
+
+            with And("the client exited with a non-zero status"):
+                assert (
+                    exit_code != 0
+                ), f"Expected non-zero exit for {label}\n---\n{output}\n---"
+
+            if _combo_expects_structural_rejection(combo):
+                with And("the output contains a structural diagnostic"):
+                    ol = output.lower()
+                    assert any(m in ol for m in _STRUCTURAL_DIAGNOSTIC_MARKERS), (
+                        f"No structural diagnostic for {label}:\n" f"---\n{output}\n---"
+                    )
+
+            elif _combo_expects_field_rejection(combo):
+                with And("the output contains a field-validation diagnostic"):
+                    ol = output.lower()
+                    assert any(m in ol for m in _FIELD_DIAGNOSTIC_MARKERS), (
+                        f"No field diagnostic for {label}:\n" f"---\n{output}\n---"
+                    )
 
 
 @TestFeature

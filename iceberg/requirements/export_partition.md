@@ -51,8 +51,7 @@
     * 8.2 [RQ.Iceberg.ExportPartition.SystemMonitoring.PartLog](#rqicebergexportpartitionsystemmonitoringpartlog)
     * 8.3 [RQ.Iceberg.ExportPartition.SystemMonitoring.ProfileEvents](#rqicebergexportpartitionsystemmonitoringprofileevents)
     * 8.4 [RQ.Iceberg.ExportPartition.SystemMonitoring.KilledProvenance](#rqicebergexportpartitionsystemmonitoringkilledprovenance)
-    * 8.5 [RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote](#rqicebergexportpartitionsettingssystemtablepreferremote)
-    * 8.6 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
+    * 8.5 [RQ.Iceberg.ExportPartition.Settings.ParquetCompression](#rqicebergexportpartitionsettingsparquetcompression)
 * 9 [Post-export destination operations](#post-export-destination-operations)
     * 9.1 [RQ.Iceberg.ExportPartition.DirectWrites](#rqicebergexportpartitiondirectwrites)
     * 9.2 [RQ.Iceberg.ExportPartition.Truncate](#rqicebergexportpartitiontruncate)
@@ -449,13 +448,6 @@ version: 1.0
 
 * `source_replica`, `create_time`, and identifying columns SHALL still match the original initiator and timing once the row has transitioned to `KILLED`.
 * When the kill lands during the commit window, the same provenance fields and any diagnostic counters that were already populated SHALL remain readable for post-mortem analysis.
-
-### RQ.Iceberg.ExportPartition.Settings.SystemTablePreferRemote
-version: 1.0
-
-[ClickHouse] SHALL serve consistent status information from `system.replicated_partition_exports` whether the row is read from the local cache (`export_merge_tree_partition_system_table_prefer_remote_information = 0`, the new default) or refreshed directly from Keeper (`= 1`). The two modes SHALL return the same status for an already-completed export.
-
-**Regression module:** `iceberg.tests.export_partition.settings` (`settings.py`).
 
 ### RQ.Iceberg.ExportPartition.Settings.ParquetCompression
 version: 1.0

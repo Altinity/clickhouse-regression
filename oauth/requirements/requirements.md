@@ -2930,6 +2930,57 @@ version: 1.0
 
 ### Credentials File
 
+The `--oauth-credentials <path>` flag tells `clickhouse-client` where to find the OIDC provider
+configuration needed to perform the `--login=browser` (Authorization Code + PKCE) or
+`--login=device` (Device Authorization Grant) flow against a custom, non-Cloud identity provider.
+
+It bundles the equivalent of the mainline ClickHouse `--oauth-url`, `--oauth-client-id`, and
+`--oauth-audience` flags — plus `token_uri`, `device_authorization_uri`, and optionally
+`client_secret` — into a single JSON file. The file format matches the "Download JSON" export
+from the Google Cloud Console ("OAuth 2.0 Client IDs"), but works with any OIDC-compliant
+provider (Keycloak, Azure AD, Google, Okta, etc.) as long as the URI fields point at the correct
+endpoints.
+
+When `--oauth-credentials` is omitted and `--login` targets a `*.clickhouse.cloud` host,
+the client auto-detects the Cloud OAuth endpoints and no credentials file is required.
+For all other hosts, the credentials file is mandatory.
+
+**Typical usage — device-code flow against Keycloak:**
+
+```bash
+clickhouse-client \
+  --host myserver \
+  --login=device \
+  --oauth-credentials ~/.clickhouse-client/oauth_client.json
+```
+
+**Typical usage — browser (Authorization Code + PKCE) flow:**
+
+```bash
+clickhouse-client \
+  --host myserver \
+  --login=browser \
+  --oauth-credentials /etc/clickhouse-client/my_idp.json
+```
+
+The client reads the file, extracts the provider endpoints and client identity, then initiates
+the chosen OAuth flow. On success, an `id_token` (or `access_token`, depending on the provider)
+is used to authenticate subsequent queries. A `refresh_token`, if returned by the provider, is
+cached on disk at `~/.clickhouse-client/oauth_cache.json` so that future sessions can
+re-authenticate transparently without repeating the interactive login.
+
+**Which fields are consumed by which flow:**
+
+| Field                        | `--login=browser` | `--login=device` |
+|------------------------------|:-----------------:|:-----------------:|
+| `client_id`                  | required          | required          |
+| `auth_uri`                   | required          | —                 |
+| `token_uri`                  | required          | required          |
+| `client_secret`              | optional          | optional          |
+| `device_authorization_uri`   | —                 | required          |
+| `issuer`                     | optional          | optional          |
+| `redirect_uris`              | optional          | —                 |
+
 #### RQ.SRS-042.OAuth.Client.Login.CredentialsFile.Format
 version: 1.0
 

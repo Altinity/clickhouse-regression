@@ -26,9 +26,14 @@ def _configure_processor(
 ):
     """Apply a Keycloak-OpenID processor config plus optional overrides.
 
-    Centralised here so each scenario doesn't repeat the same 4 URLs.
+    Centralised here so each scenario doesn't repeat the same URLs.
     The endpoint bundle comes from the provider so non-Keycloak runs
     pick up the right URLs automatically.
+
+    Since antalya-26.3 (PR #1799) the ``openid`` processor rejects
+    ``jwks_uri``. Introspection credentials are always included so
+    that ``expected_issuer`` / ``expected_audience`` can be enforced
+    via RFC 7662 when set.
     """
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -38,7 +43,8 @@ def _configure_processor(
         "processor_type": "OpenID",
         "userinfo_endpoint": endpoints.userinfo_endpoint,
         "token_introspection_endpoint": endpoints.token_introspection_endpoint,
-        "jwks_uri": endpoints.jwks_uri,
+        "introspection_client_id": self.context.introspection_client_id,
+        "introspection_client_secret": self.context.introspection_client_secret,
         "replace": replace,
     }
     if username_claim is not None:
@@ -394,7 +400,7 @@ def processor_with_every_parameter_at_once_rejected(self):
 
     with Given(
         "I configure an OpenID processor with every other parameter set "
-        "(static_key + static_jwks + jwks_uri + every endpoint + every "
+        "(static_key + static_jwks + every endpoint + every "
         "claim knob + every cache lifetime + allow_no_expiration)"
     ):
         endpoints = client.OAuthProvider.openid_endpoints()
@@ -407,13 +413,13 @@ def processor_with_every_parameter_at_once_rejected(self):
                 '{"keys":[{"kty":"RSA","alg":"RS256","kid":"madness",'
                 '"n":"_modulus_","e":"AQAB"}]}'
             ),
-            jwks_uri=endpoints.jwks_uri,
-            jwks_cache_lifetime=300,
             token_cache_lifetime=600,
             username_claim="sub",
             groups_claim="groups",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             expected_issuer="https://auth.example.com",
             expected_audience="clickhouse-app",
             allow_no_expiration=True,

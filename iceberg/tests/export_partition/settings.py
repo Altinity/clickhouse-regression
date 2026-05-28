@@ -12,7 +12,6 @@ from testflows.core import *
 from testflows.asserts import error
 
 from iceberg.requirements.export_partition import (
-    RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote,
     RQ_Iceberg_ExportPartition_Settings_ParquetCompression,
 )
 
@@ -24,9 +23,6 @@ from iceberg.tests.export_partition.steps.common import (
 )
 from iceberg.tests.export_partition.steps.export_operations import (
     export_partition,
-)
-from iceberg.tests.export_partition.steps.export_status import (
-    get_export_row,
 )
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     DEFAULT_S3_WAREHOUSE_BUCKET,
@@ -63,69 +59,6 @@ def _seed_source(values="(1, 2020), (2, 2020), (3, 2020)"):
     with And("insert partitioned values"):
         insert_data(table_name=source_table, values=values)
     return source_table
-
-
-@TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_Settings_SystemTablePreferRemote("1.0"))
-@Name("system_table_prefer_remote_information returns the same status")
-def prefer_remote_information_returns_same_status(
-    self, minio_root_user, minio_root_password
-):
-    """``system.replicated_partition_exports`` returns the same row
-    whether read from the per-replica cache or via ZooKeeper
-    (``export_merge_tree_partition_system_table_prefer_remote_information``
-    set to 0 vs 1) once the export has completed.
-    """
-    source_table = _seed_source()
-
-    with Given("create the Iceberg destination"):
-        destination = create_iceberg_destination(
-            columns=SIMPLE_COLUMNS,
-            partition_by=SIMPLE_PARTITION_BY,
-            minio_root_user=minio_root_user,
-            minio_root_password=minio_root_password,
-        )
-    with When("run EXPORT PARTITION to completion"):
-        export_partition(
-            source_table=source_table,
-            destination=destination,
-            partition_id="2020",
-        )
-
-    with Then("query system.replicated_partition_exports via local cache"):
-        local_row = get_export_row(
-            source_table=source_table,
-            destination=destination,
-            partition_id="2020",
-            columns="status, exception_count",
-            prefer_remote=False,
-        )
-
-    with And("query the same row preferring ZooKeeper"):
-        remote_row = get_export_row(
-            source_table=source_table,
-            destination=destination,
-            partition_id="2020",
-            columns="status, exception_count",
-            prefer_remote=True,
-        )
-
-    with And("both views agree on status=COMPLETED and exception_count=0"):
-        assert local_row is not None, error(
-            "Local view missing the export row"
-        )
-        assert remote_row is not None, error(
-            "Remote view missing the export row"
-        )
-        assert local_row == remote_row, error(
-            f"Local and remote views disagree: local={local_row!r} "
-            f"remote={remote_row!r}"
-        )
-        # Defensive spot check on the status field so an accidental
-        # "both return empty" does not silently pass.
-        assert local_row.split("\t")[0] == "COMPLETED", error(
-            f"Expected COMPLETED in both views, got local={local_row!r}"
-        )
 
 
 def _read_parquet_compression_codecs(
@@ -253,10 +186,7 @@ def parquet_compression_method_flows_to_data_files(
             )
 
 
-SCENARIOS = (
-    prefer_remote_information_returns_same_status,
-    parquet_compression_method_flows_to_data_files,
-)
+SCENARIOS = (parquet_compression_method_flows_to_data_files,)
 
 
 @TestFeature

@@ -210,12 +210,17 @@ def create_summing_merge_tree_table(
     partition_by: str = None,
     cluster: str = None,
     stop_merges: bool = False,
+    columns_to_sum: list[str] = None,
 ):
     """Create a table with the SummingMergeTree engine."""
+    engine = "SummingMergeTree"
+    if columns_to_sum:
+        engine = f"SummingMergeTree({', '.join(columns_to_sum)})"
+
     create_table(
         table_name=table_name,
         columns=columns,
-        engine="SummingMergeTree",
+        engine=engine,
         order_by=order_by,
         primary_key=primary_key,
         if_not_exists=if_not_exists,

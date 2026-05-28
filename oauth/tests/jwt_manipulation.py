@@ -180,16 +180,11 @@ def replace_signature_entirely(self):
     that is base64url-clean by alphabet but the wrong length-modulo-4
     after ``jwt-cpp`` pads it, which makes the underlying base64
     decoder throw ``std::runtime_error("Invalid input: too much
-    fill")``. ``JwksJwtProcessor::resolveAndValidate`` does not wrap
-    ``jwt::decode`` in a top-level ``try/catch`` (unlike
-    ``StaticKeyJwtProcessor``), so the exception propagates out as
-    ``Code: 1001`` with no rejection marker — the bug is tracked
-    separately as ``DEFECT_H16`` (alias ``F20 / TOKEN-06``) in
-    ``oauth/tests/defects_catalogue.py`` and
-    ``security_audit/jwt_decode_uncaught_exception.py``. Using a
-    base64url-clean replacement of correct length here keeps this
-    scenario focused on its stated assertion (signature mismatch) and
-    avoids accidentally testing the same bug twice.
+    fill")``. This was ``DEFECT_H16`` (alias ``F20 / TOKEN-06``),
+    fixed in antalya-26.3 (PR #1777): ``JwksJwtProcessor`` now wraps
+    its body in a try/catch mirroring ``StaticKeyJwtProcessor``.
+    Using a base64url-clean replacement of correct length here keeps
+    this scenario focused on its stated assertion (signature mismatch).
     """
     client = self.context.provider_client
 
@@ -247,15 +242,10 @@ def empty_token(self):
 def malformed_token_string(self):
     """ClickHouse SHALL reject a garbage string that is not a valid JWT.
 
-    Currently expected to fail because ``"not.a.valid-jwt"`` triggers
-    the same uncaught-exception bug pinned by ``H-16`` (alias
-    ``F20 / TOKEN-06``): the second segment ``"a"`` is not a valid
-    base64url frame, so ``jwt::decode`` raises
-    ``std::runtime_error("Invalid input: too much fill")`` and
-    ``JwksJwtProcessor::resolveAndValidate`` lets it leak as
-    ``Code: 1001`` (HTTP 500) without an ``AUTHENTICATION_FAILED``
-    marker.  Registered in ``oauth/regression.py`` ``xfails`` against
-    ``DEFECT_H16``; pull the xfail entry once the fix lands.
+    Previously failed as ``DEFECT_H16`` (alias ``F20 / TOKEN-06``):
+    ``jwt::decode`` threw ``std::runtime_error`` which leaked as
+    ``Code: 1001`` (HTTP 500).  Fixed in antalya-26.3 (PR #1777):
+    ``JwksJwtProcessor`` now wraps its body in a try/catch.
     """
     with Then("ClickHouse rejects the garbage token"):
         assert_token_rejected(token="not.a.valid-jwt")

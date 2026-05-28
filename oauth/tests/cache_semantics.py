@@ -32,30 +32,24 @@ from testflows.asserts import *
 from oauth.requirements.requirements import *
 
 
-def _configure_cache(self, *, token_cache_lifetime, include_jwks_uri=True):
+def _configure_cache(self, *, token_cache_lifetime):
     """Apply the standard Keycloak processor with a custom cache lifetime.
 
-    Centralised so each scenario doesn't repeat the same 4 URLs. Mirrors
-    ``parameters_and_caching._configure_processor`` but exposes
-    ``include_jwks_uri`` so scenarios that want the
-    userinfo-fallback path (no local JWT-fastpath) can opt out — see
-    ``security_audit/runtime_revocation_jwks.py`` for the same trick.
+    Centralised so each scenario doesn't repeat the same boilerplate.
     """
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
 
-    kwargs = {
-        "processor_name": "keycloak",
-        "processor_type": "OpenID",
-        "userinfo_endpoint": endpoints.userinfo_endpoint,
-        "token_introspection_endpoint": endpoints.token_introspection_endpoint,
-        "token_cache_lifetime": token_cache_lifetime,
-        "replace": True,
-    }
-    if include_jwks_uri:
-        kwargs["jwks_uri"] = endpoints.jwks_uri
-
-    change_token_processors(**kwargs)
+    change_token_processors(
+        processor_name="keycloak",
+        processor_type="OpenID",
+        userinfo_endpoint=endpoints.userinfo_endpoint,
+        token_introspection_endpoint=endpoints.token_introspection_endpoint,
+        introspection_client_id=self.context.introspection_client_id,
+        introspection_client_secret=self.context.introspection_client_secret,
+        token_cache_lifetime=token_cache_lifetime,
+        replace=True,
+    )
     change_user_directories_config(
         processor="keycloak",
         common_roles=["general-role"],
@@ -265,17 +259,6 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     Keycloak Admin API, configure ClickHouse with
     ``token_cache_lifetime=600`` (well above 30s), get a token, use
     it, wait past 30s but well below 600s, retry — SHALL fail.
-
-    **Currently xfailed** as ``DEFECT_H_NEW_30`` — the JWT fastpath
-    in ``StaticKeyJwtProcessor::resolveAndValidate`` /
-    ``JwksJwtProcessor::resolveAndValidate`` never propagates the
-    token's ``exp`` to the cache entry's TTL, so the cache extends
-    the token's lifetime up to the full ``token_cache_lifetime``.
-    The opaque / OpenID-userinfo paths set ``setExpiresAt`` correctly;
-    this scenario exercises the buggy JWKS fastpath because
-    ``_configure_cache(...)`` configures ``jwks_uri``. Will go green
-    once the JWT processors propagate ``decoded_jwt.get_expires_at()``
-    to the cache write.
     """
     client = self.context.provider_client
     realm = self.context.realm_name

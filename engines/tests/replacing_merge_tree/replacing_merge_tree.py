@@ -3,7 +3,7 @@ import sys
 from testflows.core import *
 from engines.requirements import *
 from engines.tests.steps import *
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, getuid
 
 
 append_path(sys.path, "..")
