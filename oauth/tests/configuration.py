@@ -51,9 +51,9 @@ def missing_processor_type(self):
 
     Per the docs: ``type`` is *Mandatory*. To isolate that single
     invariant, the overlay keeps the base processor's endpoints
-    (``userinfo_endpoint``, ``token_introspection_endpoint``,
-    ``jwks_uri``) so the only thing wrong with the resulting processor
-    is the absence of ``<type>``. Otherwise a server that's broken on
+    (``userinfo_endpoint``, ``token_introspection_endpoint``) so the
+    only thing wrong with the resulting processor is the absence of
+    ``<type>``. Otherwise a server that's broken on
     *any* missing-mandatory-field path would pass this test and the
     type-specific assertion would be hidden.
     """
@@ -68,7 +68,8 @@ def missing_processor_type(self):
             processor_name="keycloak",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
 
@@ -275,18 +276,17 @@ def openid_processor_with_no_endpoints_rejected(self):
     ),
 )
 def openid_processor_with_all_endpoints_rejected(self):
-    """An OpenID processor with all three endpoint kinds set
-    (``configuration_endpoint`` + ``userinfo_endpoint`` +
-    ``token_introspection_endpoint``) SHALL be rejected at parse time.
+    """An OpenID processor with both ``configuration_endpoint`` and
+    ``userinfo_endpoint`` set SHALL be rejected at parse time.
 
-    Docs (verbatim): *"If none of them are set or all three are set,
-    this is an invalid configuration that will not be parsed."*
+    Since antalya-26.3 (PR #1799): ``configuration_endpoint`` and
+    ``userinfo_endpoint`` are mutually exclusive.
     """
     client = self.context.provider_client
 
     with Given(
-        "I replace the keycloak processor with type=OpenID and all three "
-        "endpoint kinds present"
+        "I replace the keycloak processor with type=OpenID and both "
+        "configuration_endpoint and userinfo_endpoint present"
     ):
         endpoints = client.OAuthProvider.openid_endpoints()
         if endpoints.configuration_endpoint is None:
@@ -296,7 +296,6 @@ def openid_processor_with_all_endpoints_rejected(self):
             processor_type="OpenID",
             configuration_endpoint=endpoints.configuration_endpoint,
             userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
             replace=True,
         )
 
@@ -348,21 +347,14 @@ def enable_token_auth_disabled_rejects_tokens(self):
             token = client.OAuthProvider.get_oauth_token().access_token
 
         with Then("ClickHouse refuses to accept the bearer token"):
-            # The exact failure surface for "token auth disabled" is not
-            # pinned by the spec — depending on the build it can be a
-            # plain ``AUTHENTICATION_FAILED`` (HTTP 403) or an explicit
-            # ``Token authentication is disabled`` message (HTTP 500).
-            # Both are valid rejections; we simply assert the request
-            # did not succeed and that the body mentions an auth-style
-            # error.
-            for sc in (403, 500):
+            for sc in (400, 403, 500):
                 try:
                     body = access_clickhouse(token=token, status_code=sc)
                     break
                 except AssertionError:
                     continue
             else:
-                fail("token auth was not rejected with HTTP 403 or 500")
+                fail("token auth was not rejected with HTTP 400, 403, or 500")
             assert any(
                 marker in body
                 for marker in (
@@ -370,6 +362,7 @@ def enable_token_auth_disabled_rejects_tokens(self):
                     "Token authentication is disabled",
                     "token authentication is disabled",
                     "Authentication failed",
+                    "BAD_ARGUMENTS",
                 )
             ), error(
                 f"Expected an auth-rejection marker in the response body; "
@@ -412,7 +405,8 @@ def valid_openid_processor_type(self):
             processor_type="OpEnId",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
 

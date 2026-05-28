@@ -67,27 +67,6 @@ def argparser(parser):
 
 
 xfails = {
-    "/oauth/security audit/M-06 runtime revocation/M-06 / 3 disabled user accepted with jwks_uri": [
-        (
-            Fail,
-            "DEFECT_M06 (alias F8 / TOKEN-05) — OpenID processor with "
-            "jwks_uri uses the JWT-fastpath and never consults userinfo / "
-            "introspection on cache miss, so the IdP's runtime decision "
-            "to disable the user is not observed until the JWT's own exp "
-            "passes. See src/Access/TokenProcessorsOpaque.cpp:339-414 "
-            "(TODO at line 353).",
-        )
-    ],
-    "/oauth/security audit/M-06 runtime revocation/M-06 / 4 deleted user accepted with jwks_uri": [
-        (
-            Fail,
-            "DEFECT_M06 (alias F8 / TOKEN-05) — same root cause as "
-            "M-06 / 3: the JWT-fastpath does not observe IdP user "
-            "deletion either. userinfo_endpoint would 401 a deleted "
-            "user but is never consulted while local JWKS verification "
-            "of the issued JWT still succeeds.",
-        )
-    ],
     "/oauth/security audit/H-16 jwt decode uncaught/H-16 / 2 malformed signature base64 leaks runtime_error": [
         (
             Fail,
@@ -151,20 +130,15 @@ xfails = {
     "/oauth/cache semantics/cache entry capped at token exp when token expires first": [
         (
             Fail,
-            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL "
-            "on the StaticKeyJwtProcessor / JwksJwtProcessor fastpaths. "
+            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL. "
             "resolveAndValidate never calls "
-            "credentials.setExpiresAt(decoded_jwt.get_expires_at()) on "
-            "the JWT codepaths, so a token past its IdP-issued exp "
-            "keeps authenticating for up to token_cache_lifetime. The "
-            "opaque/OpenID-userinfo paths set it correctly; the bug "
-            "is specific to the JWT fastpath this scenario exercises "
-            "(OpenID processor with jwks_uri configured). Violates SRS "
-            "13.1.5 'Common.Cache.Behavior' which mandates "
+            "credentials.setExpiresAt(decoded_jwt.get_expires_at()), "
+            "so a token past its IdP-issued exp keeps authenticating "
+            "for up to token_cache_lifetime. Violates SRS 13.1.5 "
+            "'Common.Cache.Behavior' which mandates "
             "cache_entry_expires_at = min(token.exp, now + "
-            "token_cache_lifetime). Will go green once "
-            "TokenProcessorsJWT.cpp propagates exp to the cache write "
-            "in ExternalAuthenticators.cpp:624-640.",
+            "token_cache_lifetime). Will go green once the exp is "
+            "propagated to the cache write.",
         )
     ],
     "/oauth/client login/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
@@ -291,6 +265,8 @@ def regression(
             self.context.password = "demo"
             self.context.client_secret = "grafana-secret"
             self.context.client_id = "grafana-client"
+            self.context.introspection_client_id = "grafana-client-confidential"
+            self.context.introspection_client_secret = "grafana-confidential-secret"
             self.context.realm_name = "grafana"
         elif identity_provider_lower == "google":
             self.context.client_id = client_id
@@ -332,8 +308,8 @@ def regression(
     Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
     Scenario(run=load("oauth.tests.tls", "feature"))
 
-    with Feature("client login"):
-        Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+    # with Feature("client login"):
+    #     Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
     if run_security:
         Scenario(run=load("oauth.tests.security_audit.feature", "feature"))

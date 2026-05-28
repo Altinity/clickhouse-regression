@@ -23,7 +23,8 @@ def scenario_1(self):
             token_cache_lifetime=60,
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
         )
 
     with And("I configure user directories"):

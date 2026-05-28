@@ -25,7 +25,8 @@ def scenario_1(self):
             processor_type="OpenID",
             userinfo_endpoint=endpoints.userinfo_endpoint,
             token_introspection_endpoint="http://keycloak:8080/does-not-exist/introspect",
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
         )
 
     with And("I configure user directories"):
@@ -47,13 +48,14 @@ def scenario_2(self):
     """[M-06]"""
     client = self.context.provider_client
 
-    with Given("I configure OpenID with only userinfo and jwks_uri (no introspection)"):
+    with Given("I configure OpenID with only userinfo (no introspection)"):
         endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             userinfo_endpoint=endpoints.userinfo_endpoint,
-            jwks_uri=endpoints.jwks_uri,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
             replace=True,
         )
 

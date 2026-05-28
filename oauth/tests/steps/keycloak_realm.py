@@ -60,7 +60,13 @@ def keycloak_openid_processor_args(
     step-result ``'OK'`` object instead of the dict tests expect.
     Centralised here so every security_audit / configuration scenario
     that wires up an OpenID processor against Keycloak doesn't repeat
-    the same 4 URLs inline.
+    the same URLs inline.
+
+    Since antalya-26.3 (PR #1799) the ``openid`` processor rejects
+    ``jwks_uri`` — local JWT validation should use ``jwt_dynamic_jwks``
+    instead. Introspection credentials are always included so that
+    ``expected_issuer`` / ``expected_audience`` bindings can be enforced
+    via RFC 7662.
     """
     ctx = current().context
     if realm_name is None:
@@ -74,7 +80,8 @@ def keycloak_openid_processor_args(
         "processor_type": "OpenID",
         "userinfo_endpoint": f"{base}/userinfo",
         "token_introspection_endpoint": f"{base}/token/introspect",
-        "jwks_uri": f"{base}/certs",
+        "introspection_client_id": ctx.introspection_client_id,
+        "introspection_client_secret": ctx.introspection_client_secret,
     }
     if expected_audience is not None:
         args["expected_audience"] = expected_audience
@@ -127,7 +134,7 @@ def default_idp(self, node=None, common_roles=None, roles_filter=None):
 
 
 @TestStep(Given)
-def get_oauth_token(self, node=None, username=None, password=None, scope=None):
+def get_oauth_token(self, node=None, username=None, password=None, scope="openid"):
     """Acquire an access token from Keycloak via Resource-Owner-Password-Credentials.
 
     Returns an :class:`OAuthToken` that ``access_token`` and friends can
@@ -137,17 +144,12 @@ def get_oauth_token(self, node=None, username=None, password=None, scope=None):
     returns an error response (disabled user, wrong password, ...) so
     callers don't get an opaque ``KeyError``.
 
-    ``scope`` is an optional OAuth scope string requested at token-issue
-    time. Default ``None`` preserves Keycloak's client default scopes —
-    sufficient for ClickHouse's local JWT-fastpath validation when a
-    ``jwks_uri`` is configured. Pass ``scope="openid"`` for tests that
-    drop ``jwks_uri`` and rely on the ``userinfo_endpoint`` fallback —
-    Keycloak's userinfo endpoint requires the ``openid`` scope per OIDC
-    spec, so a token issued without it would 403 there even for a
-    perfectly valid user. This was the root cause of the runtime-
-    revocation cache-eviction tests failing on the very first request:
-    the userinfo path was reachable but the token had no ``openid``
-    scope, so Keycloak refused to honor it.
+    ``scope`` defaults to ``"openid"`` because antalya-26.3 (PR #1799)
+    removed ``jwks_uri`` from the ``openid`` processor — all OpenID tests
+    now use ``userinfo_endpoint``, which requires the ``openid`` scope per
+    OIDC spec. For ``jwt_dynamic_jwks`` tests (the base config) the extra
+    scope is harmless. Pass ``scope=None`` only when you specifically need
+    a token without the ``openid`` scope.
     """
     if node is None:
         node = self.context.bash_tools

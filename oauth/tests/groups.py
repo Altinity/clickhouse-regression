@@ -25,7 +25,6 @@ def _configure_short_cache(
     *,
     token_cache_lifetime=3,
     common_roles=None,
-    include_jwks_uri=True,
 ):
     """Configure the standard Keycloak/OpenID processor with a short cache.
 
@@ -33,31 +32,12 @@ def _configure_short_cache(
     bundle comes from the provider so the URLs match whichever IdP is
     active.
 
-    ``include_jwks_uri`` (default ``True``) controls whether ``jwks_uri``
-    is written into the processor config. This is **load-bearing** for
-    the IdP-state cache-eviction scenarios:
-
-    Per ``OpenIdTokenProcessor::resolveAndValidate``
-    (``src/Access/TokenProcessorsOpaque.cpp`` in antalya-26.1), when
-    ``jwks_uri`` is set the processor decodes and verifies the JWT
-    locally against JWKS and reads ``exp`` straight off the token —
-    ``userinfo_endpoint`` is consulted only as a fallback when local
-    validation fails. The IdP's *runtime* user state (disabled,
-    deleted, removed from a group) is therefore invisible to ClickHouse
-    until the JWT itself expires, because every cache-miss re-validation
-    just re-decodes the same JWT with the same answer.
-
-    Tests that assert "user is disabled at the IdP → cached token is
-    rejected after cache lifetime" need the userinfo path active, so
-    they pass ``include_jwks_uri=False`` to drop the JWKS URI from the
-    processor. ``resolveAndValidate`` then falls through to
-    ``userinfo_endpoint``, which Keycloak makes 401 for a disabled or
-    deleted user, surfacing the rejection ClickHouse-side.
-
-    Tests that don't depend on this distinction (e.g. fresh-token
-    membership-change scenarios) keep ``include_jwks_uri=True`` so the
-    suite still exercises the JWT-fast-path that's the production
-    default.
+    Since antalya-26.3 (PR #1799) the ``openid`` processor rejects
+    ``jwks_uri``. All validation goes through the userinfo + optional
+    introspection path. Introspection credentials are always included
+    so that revocation checks work. The userinfo endpoint is what
+    surfaces disabled/deleted user state from the IdP after cache
+    expiry.
     """
     client = _provider_or_skip(self)
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -67,7 +47,8 @@ def _configure_short_cache(
         token_cache_lifetime=token_cache_lifetime,
         userinfo_endpoint=endpoints.userinfo_endpoint,
         token_introspection_endpoint=endpoints.token_introspection_endpoint,
-        jwks_uri=endpoints.jwks_uri if include_jwks_uri else None,
+        introspection_client_id=self.context.introspection_client_id,
+        introspection_client_secret=self.context.introspection_client_secret,
         replace=True,
     )
     change_user_directories_config(
@@ -558,21 +539,18 @@ def disabled_user_rejected_after_cache(self):
 
     try:
         with And(
-            "I configure a short token-cache lifetime with no jwks_uri so "
-            "cache misses re-validate against userinfo (which Keycloak "
-            "makes 401 for disabled users) rather than re-decoding the "
-            "JWT locally"
+            "I configure a short token-cache lifetime so cache misses "
+            "re-validate against userinfo (which Keycloak makes 401 for "
+            "disabled users)"
         ):
             _configure_short_cache(
                 self,
                 token_cache_lifetime=cache_lifetime,
-                include_jwks_uri=False,
             )
 
         with And(
             "I get a token while the user is enabled "
-            "(scope=openid is required for Keycloak's userinfo_endpoint to "
-            "honor the token; without jwks_uri we depend on userinfo)"
+            "(scope=openid is required for Keycloak's userinfo_endpoint)"
         ):
             token = client.OAuthProvider.get_oauth_token(
                 username=username, password="testpass123", scope="openid"
@@ -637,20 +615,17 @@ def deleted_user_rejected_after_cache(self):
     deleted = False
     try:
         with And(
-            "I configure a short token-cache lifetime with no jwks_uri so "
-            "cache misses re-validate against userinfo (Keycloak rejects "
-            "deleted users there) rather than re-decoding the JWT locally"
+            "I configure a short token-cache lifetime so cache misses "
+            "re-validate against userinfo (Keycloak rejects deleted users there)"
         ):
             _configure_short_cache(
                 self,
                 token_cache_lifetime=cache_lifetime,
-                include_jwks_uri=False,
             )
 
         with And(
             f"I get a token for '{username}' "
-            "(scope=openid is required for Keycloak's userinfo_endpoint to "
-            "honor the token; without jwks_uri we depend on userinfo)"
+            "(scope=openid is required for Keycloak's userinfo_endpoint)"
         ):
             token = client.OAuthProvider.get_oauth_token(
                 username=username, password="testpass123", scope="openid"
