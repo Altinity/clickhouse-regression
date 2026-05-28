@@ -330,7 +330,7 @@ def union_clause(self, minio_root_user, minio_root_password, node=None):
 @TestFeature
 @Name("swarm union")
 def feature(self, minio_root_user, minio_root_password):
-    """Check that union cluse works with object_storage_cluster setting."""
+    """Check that union clause works with object_storage_cluster setting."""
 
     with Given("create cluster with observer initiator and one swarm nodes"):
         cluster_name = "cluster_one_observer_one_swarm"
