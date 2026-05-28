@@ -54,7 +54,7 @@ def tampered_signature_rejected(self):
 def malformed_token_rejected(self):
     """ClickHouse SHALL reject a completely malformed token."""
     with Then("ClickHouse rejects the garbage token"):
-        access_clickhouse(token="not.a.valid-jwt", status_code=500)
+        access_clickhouse(token="not.a.valid-jwt", status_code=403)
 
     with And("the server is still alive"):
         check_clickhouse_is_alive()

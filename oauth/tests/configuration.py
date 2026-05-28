@@ -430,48 +430,31 @@ def valid_openid_processor_type(self):
     ),
 )
 def invalid_roles_filter_regex_in_user_directory(self):
-    """ClickHouse SHALL not allow the external user to authenticate when
-    the ``roles_filter`` inside ``user_directories/token`` is not a
-    valid regex.
+    """ClickHouse SHALL reject a user-directory config whose
+    ``roles_filter`` contains an invalid regex at parse time.
 
-    Maps to SRS 6.2.1.1.3 — "incorrectly defined roles section".
-    The ``[invalid regex`` pattern has an unmatched ``[``; std::regex
-    rejects it at construction time. Either ClickHouse refuses to
-    apply the overlay (HTTP error on first auth) or the regex compiler
-    throws on first use; the spec only requires that the user is not
-    authenticated, so we accept any non-200 outcome with an auth /
-    config rejection marker.
+    Fixed in antalya-26.3 (PR #1777, commit H-06): the
+    ``TokenAccessStorage`` constructor validates the RE2 pattern and
+    throws ``BAD_ARGUMENTS`` when ``!roles_filter->ok()``, refusing to
+    instantiate the storage in a permissive state.
 
-    **Currently xfailed** as ``DEFECT_H06`` (alias ``F16 / AUTHZ-02``) —
-    invalid ``roles_filter`` regex fails open on antalya-26.1: ClickHouse
-    silently tolerates the malformed pattern and grants the token's
-    ``<common_roles>`` as if no filter were configured. The sibling
-    ``security_audit/H-06`` scenarios pin the *buggy* behaviour
-    (``status_code=200``) so the regression alarms when the fix
-    flips it; this scenario pins the *spec-correct* behaviour
-    (``assert_token_rejected``) so the same fix flips this one
-    green from xfail.
+    The test writes the bad config, restarts ClickHouse, and asserts
+    the rejection message appears in the error log.  Cleanup restores
+    the server to a healthy state.
     """
-    client = self.context.provider_client
-
-    with Given("I configure user_directories with an invalid roles_filter regex"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-            roles_filter="[invalid regex",
+    with Given("I apply a user_directories config with an invalid roles_filter regex"):
+        apply_fatal_user_directories_config(
+            entries={
+                "user_directories": {
+                    "token": {
+                        "processor": "keycloak",
+                        "common_roles": {"general-role": {}},
+                        "roles_filter": "[invalid regex",
+                    }
+                }
+            },
+            expected_message="Invalid 'roles_filter' regex",
         )
-
-    with And("I get a valid token"):
-        token = client.OAuthProvider.get_oauth_token().access_token
-
-    with Then(
-        "ClickHouse does not authenticate the request (the invalid "
-        "regex prevents role mapping)"
-    ):
-        assert_token_rejected(token=token)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
 
 
 @TestScenario
