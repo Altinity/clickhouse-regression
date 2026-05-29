@@ -7,7 +7,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.common import check_if_not_antalya_build
+from helpers.common import check_if_not_antalya_build, check_clickhouse_version
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
@@ -239,13 +239,13 @@ def regression(
         self.context.provider_client = provider_module
         self.context.provider_name = identity_provider
 
-    self.context.bash_tools = self.context.cluster.node("bash-tools")
-    self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.node2 = self.context.cluster.node("clickhouse2")
-    self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [
-        self.context.cluster.node(node) for node in nodes["clickhouse"]
-    ]
+        self.context.bash_tools = cluster.node("bash-tools")
+        self.context.node = cluster.node("clickhouse1")
+        self.context.node2 = cluster.node("clickhouse2")
+        self.context.node3 = cluster.node("clickhouse3")
+        self.context.nodes = [
+            cluster.node(node) for node in nodes["clickhouse"]
+        ]
 
     with Given(f"{identity_provider} is up and running"):
         if identity_provider_lower == "keycloak":
@@ -253,15 +253,18 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.access_control", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
-    Scenario(run=load("oauth.tests.tls", "feature"))
+    if check_clickhouse_version(">=26.3")(self):
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+        Scenario(run=load("oauth.tests.configuration", "feature"))
+        Scenario(run=load("oauth.tests.authentication", "feature"))
+        Scenario(run=load("oauth.tests.tokens", "feature"))
+        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+        Scenario(run=load("oauth.tests.access_control", "feature"))
+        Scenario(run=load("oauth.tests.groups", "feature"))
+        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+        Scenario(run=load("oauth.tests.tls", "feature"))
+    else:
+        pass
 
     # with Feature("client login"):
     #     Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
