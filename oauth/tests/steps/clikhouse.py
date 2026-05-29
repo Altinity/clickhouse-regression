@@ -531,6 +531,69 @@ def change_user_jwt_auth(
 
 
 @TestStep(Given)
+def create_sql_jwt_user(
+    self,
+    username,
+    processor=None,
+    claims=None,
+    node=None,
+):
+    """Create a user via ``CREATE USER ... IDENTIFIED WITH jwt``.
+
+    Accepts optional ``PROCESSOR`` and ``CLAIMS`` clauses.
+    Drops the user in a ``Finally`` block at scenario teardown.
+    """
+    if node is None:
+        node = self.context.node
+
+    stmt = f"CREATE USER OR REPLACE {username} IDENTIFIED WITH jwt"
+    if processor is not None:
+        stmt += f" PROCESSOR '{processor}'"
+    if claims is not None:
+        if isinstance(claims, dict):
+            claims = json.dumps(claims, separators=(",", ":"))
+        stmt += f" CLAIMS '{claims.replace(chr(34), chr(92) + chr(34))}'"
+
+    node.query(stmt)
+
+    try:
+        yield username
+    finally:
+        with Finally(f"I drop user {username}"):
+            node.query(f"DROP USER IF EXISTS {username}", no_checks=True)
+
+
+@TestStep(When)
+def alter_sql_jwt_user(
+    self,
+    username,
+    processor=None,
+    claims=None,
+    node=None,
+):
+    """ALTER a user's JWT authentication via SQL."""
+    if node is None:
+        node = self.context.node
+
+    stmt = f"ALTER USER {username} IDENTIFIED WITH jwt"
+    if processor is not None:
+        stmt += f" PROCESSOR '{processor}'"
+    if claims is not None:
+        if isinstance(claims, dict):
+            claims = json.dumps(claims, separators=(",", ":"))
+        stmt += f" CLAIMS '{claims.replace(chr(34), chr(92) + chr(34))}'"
+
+    node.query(stmt)
+
+
+def show_create_user(username, node=None):
+    """Return the ``SHOW CREATE USER`` output for a user."""
+    if node is None:
+        node = current().context.node
+    return node.query(f"SHOW CREATE USER {username}").output.strip()
+
+
+@TestStep(Given)
 def change_user_directories_order(
     self,
     entries_in_order,
