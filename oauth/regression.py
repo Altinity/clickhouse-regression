@@ -243,9 +243,7 @@ def regression(
         self.context.node = cluster.node("clickhouse1")
         self.context.node2 = cluster.node("clickhouse2")
         self.context.node3 = cluster.node("clickhouse3")
-        self.context.nodes = [
-            cluster.node(node) for node in nodes["clickhouse"]
-        ]
+        self.context.nodes = [cluster.node(node) for node in nodes["clickhouse"]]
 
     with Given(f"{identity_provider} is up and running"):
         if identity_provider_lower == "keycloak":

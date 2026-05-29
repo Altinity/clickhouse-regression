@@ -24,16 +24,10 @@ def _configure_processor(
     expected_audience=None,
     replace=True,
 ):
-    """Apply a Keycloak-OpenID processor config plus optional overrides.
+    """Apply a Keycloak-OpenID processor config with optional overrides.
 
-    Centralised here so each scenario doesn't repeat the same URLs.
     The endpoint bundle comes from the provider so non-Keycloak runs
     pick up the right URLs automatically.
-
-    Since antalya-26.3 (PR #1799) the ``openid`` processor rejects
-    ``jwks_uri``. Introspection credentials are always included so
-    that ``expected_issuer`` / ``expected_audience`` can be enforced
-    via RFC 7662 when set.
     """
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -156,14 +150,7 @@ def groups_claim_parameter(self):
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Common_Parameters_ExpectedIssuer("1.0"))
 def expected_issuer_correct(self):
-    """ClickHouse SHALL accept a token when ``expected_issuer`` matches ``iss``.
-
-    Note: Keycloak in this compose is started with ``--hostname=localhost``
-    so the ``iss`` claim is ``http://localhost:8080/realms/<realm>``,
-    NOT the in-network ``http://keycloak:8080/...`` URL ClickHouse uses
-    for JWKS. The provider's ``openid_endpoints().issuer`` returns the
-    correct value for both branches automatically.
-    """
+    """ClickHouse SHALL accept a token when ``expected_issuer`` matches ``iss``."""
     client = self.context.provider_client
     endpoints = client.OAuthProvider.openid_endpoints()
 
@@ -228,32 +215,15 @@ def expected_audience_wrong(self):
 
 
 # ---------------------------------------------------------------------------
-# allow_no_expiration — RQ.SRS-042.OAuth.Common.Parameters.AllowNoExpiration
+# allow_no_expiration
 # ---------------------------------------------------------------------------
-#
-# These scenarios mint their own HS256-signed JWTs locally (PyJWT) and pair
-# them with a ``jwt_static_key`` processor whose static_key matches the
-# minting key. This is the only way to assert ``allow_no_expiration``:
-# Keycloak always issues tokens with an ``exp`` claim, so we cannot drive
-# the IdP into producing a no-``exp`` token.
 
-# Constant secret used only by the two AllowNoExpiration scenarios. The
-# payload SHALL be authenticated only by ClickHouse against this same key,
-# so leaking it has no security impact (it never reaches Keycloak / a
-# real IdP). Kept short for readability; spec doesn't pin a minimum
-# length for the static-key path.
 _ALLOW_NO_EXP_HS256_SECRET = "allow-no-exp-test-secret"
 _ALLOW_NO_EXP_PROCESSOR_NAME = "allow_no_exp_processor"
 
 
 def _mint_hs256(payload):
-    """Encode ``payload`` as a compact-form HS256 JWT signed with
-    ``_ALLOW_NO_EXP_HS256_SECRET``.
-
-    Returns a string. PyJWT 2.x returns ``str``; older 1.x returned
-    ``bytes`` — we coerce to ``str`` defensively so the assertions below
-    don't trip on a bytes/str mismatch.
-    """
+    """Encode ``payload`` as a compact HS256 JWT signed with the test secret."""
     token = pyjwt.encode(
         payload,
         _ALLOW_NO_EXP_HS256_SECRET,
@@ -265,12 +235,8 @@ def _mint_hs256(payload):
 
 
 def _configure_static_key_processor(self, *, allow_no_expiration):
-    """Replace the keycloak processor with a ``jwt_static_key``
-    processor matching ``_ALLOW_NO_EXP_HS256_SECRET``.
-
-    The ``user_directories`` block is rebound to the new processor so
-    that the username carried in the test JWTs (``sub`` claim)
-    materialises through the token user directory.
+    """Replace the keycloak processor with a ``jwt_static_key`` processor
+    matching the test secret.
     """
     change_token_processors(
         processor_name=_ALLOW_NO_EXP_PROCESSOR_NAME,
@@ -291,17 +257,11 @@ def _configure_static_key_processor(self, *, allow_no_expiration):
     RQ_SRS_042_OAuth_Common_Parameters_AllowNoExpiration("1.0"),
 )
 def allow_no_expiration_true_accepts_token_without_exp(self):
-    """When ``<allow_no_expiration>true</allow_no_expiration>`` is set
-    on a JWT-based processor, a token without an ``exp`` claim SHALL
-    be accepted.
+    """When ``allow_no_expiration`` is ``true``, a token without an ``exp``
+    claim SHALL be accepted.
 
-    Maps to SRS 13.1.6. We mint two HS256 JWTs locally (PyJWT): one
-    with a future ``exp``, one without ``exp``. With ``true``, both
+    Mints two HS256 JWTs locally: one with ``exp``, one without. Both
     SHALL authenticate.
-
-    The ``sub`` claim is a per-test UUID-ish string so the IdP-issued
-    user materialised through the token user-directory does not
-    collide with any seeded local user (``demo``, ``default``, ...).
     """
     from helpers.common import getuid
 
@@ -320,10 +280,7 @@ def allow_no_expiration_true_accepts_token_without_exp(self):
     with Then("ClickHouse accepts the token with exp"):
         access_clickhouse(token=token_with_exp, status_code=200)
 
-    with And(
-        "ClickHouse accepts the token without exp "
-        "(allow_no_expiration=true honours SRS 13.1.6)"
-    ):
+    with And("ClickHouse accepts the token without exp " "(allow_no_expiration=true)"):
         access_clickhouse(token=token_no_exp, status_code=200)
 
 
@@ -332,12 +289,8 @@ def allow_no_expiration_true_accepts_token_without_exp(self):
     RQ_SRS_042_OAuth_Common_Parameters_AllowNoExpiration("1.0"),
 )
 def allow_no_expiration_false_rejects_token_without_exp(self):
-    """When ``<allow_no_expiration>false</allow_no_expiration>`` is
-    set (or the parameter is omitted — the default per SRS 13.1.6 is
-    ``false``), a token without an ``exp`` claim SHALL be rejected.
-
-    Maps to SRS 13.1.6 negative path. Same minted-JWT setup as the
-    positive scenario above; we just flip the configured value.
+    """When ``allow_no_expiration`` is ``false`` (the default), a token
+    without an ``exp`` claim SHALL be rejected.
     """
     from helpers.common import getuid
 
@@ -359,15 +312,12 @@ def allow_no_expiration_false_rejects_token_without_exp(self):
     ):
         access_clickhouse(token=token_with_exp, status_code=200)
 
-    with And(
-        "ClickHouse rejects the token without exp "
-        "(allow_no_expiration=false enforces SRS 13.1.6)"
-    ):
+    with And("ClickHouse rejects the token without exp " "(allow_no_expiration=false)"):
         assert_token_rejected(token=token_no_exp)
 
 
 # ---------------------------------------------------------------------------
-# Common.Parameters.Unfiltered — RQ.SRS-042.OAuth.Common.Parameters.Unfiltered
+# Unfiltered parameter rejection
 # ---------------------------------------------------------------------------
 
 
@@ -376,25 +326,12 @@ def allow_no_expiration_false_rejects_token_without_exp(self):
     RQ_SRS_042_OAuth_Common_Parameters_Unfiltered("1.0"),
 )
 def processor_with_every_parameter_at_once_rejected(self):
-    """A token-processor configuration that sets *every* parameter at
-    once SHALL be rejected.
+    """A token-processor configuration that sets every parameter at once
+    SHALL be rejected.
 
-    Maps to SRS 13.1.7 — the spec gives a verbatim ``<madness>``
-    example with ``algo`` + ``static_key`` + ``static_jwks`` +
-    ``jwks_uri`` + every OpenID endpoint + every claim knob + both
-    leeways + every cache lifetime + ``allow_no_expiration``. The
-    configuration is contradictory (a JWT can be validated by HS256
-    static_key XOR by JWKS XOR by the OpenID userinfo path; having
-    all three plus ``type=openid`` confuses the parser) and SHALL
+    The configuration is contradictory (a JWT cannot be validated by
+    static_key, JWKS, and OpenID userinfo simultaneously) and SHALL
     not authenticate.
-
-    The ``configuration_endpoint`` is omitted vs. the SRS example
-    because OpenID processors already reject the combination of
-    ``configuration_endpoint`` AND ``userinfo_endpoint`` /
-    ``token_introspection_endpoint`` separately (see
-    ``configuration::openid_processor_with_all_endpoints_rejected``);
-    that shortcut would mask the ``Unfiltered`` rejection we're
-    actually trying to observe.
     """
     client = self.context.provider_client
 
@@ -429,10 +366,7 @@ def processor_with_every_parameter_at_once_rejected(self):
     with And("I get a valid token from the IdP"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
-    with Then(
-        "ClickHouse rejects the config at parse time — "
-        "token authentication is disabled (H-07 fail-closed)"
-    ):
+    with Then("ClickHouse rejects the contradictory config at parse time"):
         access_clickhouse(token=token, status_code=400)
 
     with And("the server is still alive"):
