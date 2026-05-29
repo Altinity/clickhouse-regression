@@ -206,9 +206,13 @@ def supporteduuid(self):
     with Given("I have a Parquet file with uuid"):
         import_file = os.path.join("arrow", "uuid-arrow.parquet")
 
+    # Upstream imports the Parquet UUID logical type as native UUID starting
+    # with 26.4, while the Antalya build picked up the same behavior in 26.3
+    # (antalya 25.8 / 26.1 still infer Nullable(FixedString(16))).
     snapshot_name = (
         "uuid_2_structure_above_26"
         if check_clickhouse_version(">=26.4")(self)
+        or (check_if_antalya_build(self) and check_clickhouse_version(">=26.3")(self))
         else "uuid_2_structure"
     )
     import_export(snapshot_name=snapshot_name, import_file=import_file)
