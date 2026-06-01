@@ -6,6 +6,7 @@ def wait_for_metrics(log_comment, node=None):
     """Wait until QueryFinish event is logged and metrics are collected."""
     for retry in retries(count=10, delay=1):
         with retry:
+            node.query("SYSTEM FLUSH LOGS")
             count = node.query(
                 f"""
                     SELECT count()
