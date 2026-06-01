@@ -56,9 +56,6 @@ from .export_fields import (
     get_parts,
     get_parts_count,
     get_parts_to_do,
-    get_exception_replica,
-    get_last_exception,
-    get_exception_part,
     get_exception_count,
 )
 
@@ -146,9 +143,6 @@ __all__ = [
     "get_parts",
     "get_parts_count",
     "get_parts_to_do",
-    "get_exception_replica",
-    "get_last_exception",
-    "get_exception_part",
     "get_exception_count",
     # Tables
     "create_distributed_table",
