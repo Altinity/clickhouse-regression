@@ -26,13 +26,10 @@ from oauth.requirements.requirements import (
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Common_Parameters_ExpectedIssuer("1.0"))
 def token_from_other_realm_rejected(self):
-    """A token issued by a *different* IdP realm/tenant SHALL be rejected.
+    """A token issued by a different IdP realm/tenant SHALL be rejected.
 
-    Concretely (Keycloak): we create a fresh realm + client + user via
-    the Admin API, mint a token through that realm, and assert
-    ClickHouse rejects it because the ``iss`` claim does not match the
-    ``expected_issuer`` configured for our processor. This is the
-    canonical "user from another organisation tries to log in" check.
+    Creates a fresh realm + client + user, mints a token through that
+    realm, and asserts ClickHouse rejects it due to issuer mismatch.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -101,27 +98,8 @@ def token_from_other_realm_rejected(self):
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Body_Aud("1.0"),
 )
 def token_from_wrong_client_rejected(self):
-    """A token minted for a *different* client in the same realm SHALL
+    """A token minted for a different client in the same realm SHALL
     be rejected by an audience-pinned ClickHouse.
-
-    "Same IdP, different application." The user has a perfectly valid
-    SSO identity, but their token's ``aud`` claim is for a different
-    OAuth client — say, the marketing dashboard — and ClickHouse is
-    pinned to ``expected_audience=our-client``.
-
-    Status-code note: depending on how Keycloak shapes the token, the
-    other client's token may either:
-
-    - have an ``aud`` claim but with a different value → ClickHouse
-      returns HTTP 403 (AUTHENTICATION_FAILED), or
-    - have no ``aud`` claim at all (Keycloak default for a vanilla
-      client without an Audience protocol mapper) → ClickHouse returns
-      HTTP 500 with ``token_verification_exception: decoded JWT is
-      missing required claim(s)``.
-
-    Both outcomes prove the gate works. We assert on the body marker
-    rather than only on the status code so the test isn't fragile
-    against either shape.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -178,11 +156,8 @@ def token_from_wrong_client_rejected(self):
 
 @TestScenario
 def authorization_succeeds_baseline(self):
-    """Sanity check: a token from OUR realm is accepted while
+    """Sanity check: a token from our realm is accepted while
     ``expected_issuer`` is enforced.
-
-    Pairs with ``token_from_other_realm_rejected`` to prove the
-    issuer-pinning gate doesn't reject *legitimate* tokens.
     """
     client = self.context.provider_client
 

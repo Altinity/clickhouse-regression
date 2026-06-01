@@ -57,11 +57,8 @@ def get_oauth_token(
 ):
     """Acquire an Azure AD access token via client-credentials grant.
 
-    Returns an :class:`OAuthToken` so call sites can use the same
-    ``token["access_token"]`` / ``token.access_token`` pattern as
-    Keycloak. ``username``/``password`` are accepted for signature
-    compatibility with the Keycloak provider but are ignored — Azure
-    automation uses the app registration secret.
+    Returns an ``OAuthToken``. ``username``/``password`` are accepted for
+    signature compatibility but ignored.
     """
 
     if tenant_id is None:
@@ -85,8 +82,7 @@ def get_oauth_token(
 def openid_endpoints(tenant_id=None):
     """Return Azure AD v2.0 OpenID endpoints for the active tenant.
 
-    NOT a ``@TestStep`` — see ``keycloak_realm.openid_endpoints`` for
-    the rationale.
+    Plain function (not a ``@TestStep``) — returns the dataclass directly.
     """
     ctx = current().context
     if tenant_id is None:
@@ -491,9 +487,6 @@ def setup_azure_application(self):
     # finally:
     #     with Finally("I delete the Azure AD application"):
     #         delete_application(application_id=app_id)
-
-
-# Negative Test Steps for Azure OAuth Configuration
 
 
 @TestStep(Given)
@@ -967,9 +960,6 @@ def path_traversal_attempt_configuration(self, node=None):
     )
 
 
-# Combined negative configurations for comprehensive testing
-
-
 @TestStep(Given)
 @Requirements(
     RQ_SRS_042_OAuth_Authentication_UserDirectories_IncorrectConfiguration_provider(
@@ -1029,14 +1019,10 @@ def mixed_valid_invalid_configuration(self, node=None):
 
 
 class OAuthProvider:
-    """Provider implementation for Azure AD.
+    """Azure AD provider contract implementation.
 
-    Implements the contract defined in
-    ``oauth.tests.steps.provider_protocol``. Methods that Azure cannot
-    cleanly automate (``disable_user``, ``invalidate_user_sessions``,
-    ``get_oauth_token_for_client`` with arbitrary client/realm) are
-    explicitly marked unsupported so scenarios that depend on them
-    ``Skip`` rather than crash.
+    Exposes the interface defined in ``provider_protocol``.
+    Unsupported operations are marked so dependent scenarios ``Skip``.
     """
 
     get_oauth_token = get_oauth_token

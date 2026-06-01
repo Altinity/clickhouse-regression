@@ -58,6 +58,7 @@ def scenario_2(self):
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
             introspection_client_id=self.context.introspection_client_id,
             introspection_client_secret=self.context.introspection_client_secret,
+            replace=True,
         )
         token = client.OAuthProvider.get_oauth_token().access_token
 

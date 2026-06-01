@@ -1,30 +1,12 @@
 """Step helpers for the ``clickhouse-client --login`` OAuth flow.
 
-These helpers drive the **client-side** OAuth surface added by
-Altinity/ClickHouse PR #1606 (and the follow-up issues #1696 / #1697 /
-#1698) — i.e. invocations of ``clickhouse-client --login=...`` along with
-the ``--oauth-credentials`` flag, the ``~/.clickhouse-client/config.xml``
-``connections_credentials`` block, and the on-disk
-``oauth_cache.json`` refresh-token cache.
+These helpers drive client-side OAuth: ``--login=device|browser``,
+``--oauth-credentials``, ``connections_credentials``, and the
+on-disk ``oauth_cache.json`` refresh-token cache.
 
-Tests run inside the Keycloak env which already provides:
-
-* a ``clickhouse1`` node with the patched ``clickhouse-client`` binary
-* a Keycloak instance reachable from the cluster network as
-  ``http://keycloak:8080`` with realm ``grafana``, client
-  ``grafana-client`` and a user ``demo``/``demo``
-
-The helpers run ``clickhouse-client`` **inside the clickhouse1
-container** (the bash-tools image does not ship the binary). The
-client's ``$HOME`` lands at ``/root`` in that container, so
-``/root/.clickhouse-client/`` is where the credentials and cache files
-land.
-
-Why so much explicit ``timeout=`` and explicit returncode handling: the
-``--login=*`` paths can hang waiting for a browser callback or for the
-device-code polling loop to time out. Every helper that invokes the
-client therefore drives it with ``--query`` (so the client exits as
-soon as auth is resolved) and a hard wall-clock cap.
+Helpers run ``clickhouse-client`` inside the ClickHouse container
+(not bash-tools). Every invocation uses ``--query`` and a wall-clock
+timeout to prevent hangs from browser callbacks or device-code polling.
 """
 
 import json
@@ -38,8 +20,7 @@ from testflows.core import *
 
 
 CLIENT_HOME = "/root"
-"""Where ``HOME`` resolves inside the clickhouse server containers; the
-client looks for credentials and cache files relative to it."""
+"""HOME inside the ClickHouse server containers."""
 
 CLIENT_CONFIG_DIR = f"{CLIENT_HOME}/.clickhouse-client"
 DEFAULT_CREDS_PATH = f"{CLIENT_CONFIG_DIR}/oauth_client.json"
@@ -50,11 +31,7 @@ DEVICE_FLOW_BG_LOG = "/tmp/ch_oauth_device_flow.log"
 DEVICE_FLOW_BG_PID = "/tmp/ch_oauth_device_flow.pid"
 
 
-# Markers ``clickhouse-client --login=device`` is expected to emit near the
-# user code per RFC 8628 §3.3 (the client SHALL display the ``user_code`` and
-# verification URI to the user). Anchoring on these makes the extractor
-# immune to noisy URL substrings like ``keycloak`` / ``localhost`` /
-# ``clickhouse`` that happen to match permissive code patterns.
+# Anchored pattern for RFC 8628 user_code next to known label keywords.
 _DEVICE_USER_CODE_ANCHOR_RE = re.compile(
     r"(?:user[_\- ]?code|verification_uri_complete|verification[_\- ]?url)"
     r"[^A-Za-z0-9]{0,40}"
@@ -62,10 +39,7 @@ _DEVICE_USER_CODE_ANCHOR_RE = re.compile(
     flags=re.IGNORECASE,
 )
 
-# Fallback for outputs that don't print an explicit anchor: the canonical
-# dash-separated 4-4 shape used by Keycloak / Auth0 / Google / Okta / Entra ID.
-# The literal ``-`` in the middle is what keeps unrelated 8-letter substrings
-# (``keycloak``, ``localhost``, ...) out — they have no embedded dash.
+# Fallback: bare XXXX-XXXX pattern (the dash disambiguates from random substrings).
 _DEVICE_USER_CODE_DASHED_RE = re.compile(
     r"\b([A-Z0-9]{4}-[A-Z0-9]{4})\b", flags=re.IGNORECASE
 )
@@ -74,19 +48,9 @@ _DEVICE_USER_CODE_DASHED_RE = re.compile(
 def extract_device_user_code_from_client_output(text):
     """Extract an RFC 8628 user code from ``clickhouse-client`` output.
 
-    Two-stage match: first an anchored search keyed on the marker words
-    every conformant client prints next to the code (``user_code``,
-    ``User code:``, ``verification_uri_complete=...?user_code=XXXX-XXXX``),
-    then a fallback to the bare 4-4 dashed shape for outputs that don't
-    print a marker.
-
-    The previous implementation also accepted any 8-character alphanumeric
-    run, which made it match the literal substring ``keycloak`` (and any
-    other 8-letter host name) inside ``http://keycloak:8080/...`` warnings
-    that ``clickhouse-client`` emits before it has issued any device-code
-    request — producing a fake ``KEYC-LOAK`` user code that then propagated
-    into the IdP-approver step and caused failures to surface several steps
-    away from where they actually happened.
+    Two-stage match: first an anchored search keyed on marker words
+    (``user_code``, ``verification_uri_complete``), then a fallback to
+    the bare ``XXXX-XXXX`` dashed pattern.
     """
 
     m = _DEVICE_USER_CODE_ANCHOR_RE.search(text)
@@ -98,10 +62,7 @@ def extract_device_user_code_from_client_output(text):
     return None
 
 
-# Strings that, once present in the background client log, mean continuing to
-# poll for a user code is futile — the client process has exited or is about
-# to. Surface the failure at the wait step instead of cascading into the
-# IdP-approval step that would otherwise fire with a junk code.
+# Markers indicating the background client has terminally failed.
 _DEVICE_FLOW_TERMINAL_MARKERS = (
     "__EXIT__=",
     "AUTHENTICATION_FAILED",
@@ -111,12 +72,7 @@ _DEVICE_FLOW_EXCEPTION_RE = re.compile(r"\bCode:\s*\d+\.\s*DB::Exception")
 
 
 def device_flow_terminal_failure_reason(text):
-    """Return a short string describing why the device flow has terminally failed, or ``None``.
-
-    Used by :func:`wait_for_device_user_code` to short-circuit the polling
-    loop the moment the background ``clickhouse-client`` either exits
-    (``__EXIT__=`` epilogue) or logs a ClickHouse exception / stack trace.
-    """
+    """Return a failure reason if the device flow has terminally failed, or ``None``."""
 
     for marker in _DEVICE_FLOW_TERMINAL_MARKERS:
         if marker in text:
@@ -128,14 +84,7 @@ def device_flow_terminal_failure_reason(text):
 
 
 def _shell_quote(value):
-    """Quote ``value`` for safe inclusion in a shell command.
-
-    ``shlex.quote`` handles every special character but produces single
-    quotes that must round-trip through one more layer of quoting in the
-    ``docker exec sh -c '...'`` chain. We wrap the call so callers can
-    pass arbitrary strings (including JSON blobs and CLI args) without
-    worrying about escaping rules.
-    """
+    """Quote ``value`` for safe inclusion in a shell command."""
 
     return shlex.quote(value)
 
@@ -144,10 +93,7 @@ def _shell_quote(value):
 def reset_client_state(self, node=None):
     """Wipe ``~/.clickhouse-client`` and any saved OAuth artefacts.
 
-    Used as a Given/Finally guard so each scenario starts from a
-    consistent state — the cache file from a previous test must never
-    influence the next one because that's exactly the persistence bug
-    M1 of the audit fixed.
+    Ensures each scenario starts from a consistent state.
     """
 
     if node is None:
@@ -176,14 +122,8 @@ def write_oauth_credentials_file(
 ):
     """Write a Google-Cloud-Console-shaped OAuth credentials JSON file.
 
-    PR #1606 expects ``--oauth-credentials`` to point at exactly this
-    shape (``{"installed": {...}}`` or ``{"web": {...}}``). Tests use
-    this helper to materialise the file inside the container before
-    invoking the client.
-
-    ``raw_contents`` overrides every other argument and writes the
-    string verbatim — used by the "malformed JSON" / "missing required
-    field" scenarios.
+    Expects the ``{"installed": {...}}`` or ``{"web": {...}}`` shape.
+    ``raw_contents`` overrides all other arguments and writes verbatim.
     """
 
     if node is None:
@@ -232,12 +172,8 @@ def write_keycloak_device_credentials(
 ):
     """Write the default Keycloak-grafana device-flow credentials file.
 
-    Thin wrapper around :func:`write_oauth_credentials_file` that fills
-    in the four fields every device-flow scenario in the suite was
-    re-typing verbatim. Kept as a plain function (rather than a
-    ``@TestStep``) so callers can keep their own ``with And("…"):``
-    framing intact, matching the pre-existing convention used by
-    helpers like ``_complete_device_login_via_background``.
+    Plain function (not a ``@TestStep``) — callers provide their own
+    ``with And("…"):`` framing.
     """
 
     write_oauth_credentials_file(
@@ -251,11 +187,7 @@ def write_keycloak_device_credentials(
 
 @TestStep(Given)
 def write_client_config_xml(self, contents, path=DEFAULT_CONFIG_PATH, node=None):
-    """Write ``~/.clickhouse-client/config.xml``.
-
-    Used to drive the ``connections_credentials`` /
-    ``--connection`` paths exercised by PRs #1696 and #1698.
-    """
+    """Write ``~/.clickhouse-client/config.xml`` inside the container."""
 
     if node is None:
         node = self.context.node
@@ -274,11 +206,8 @@ def write_client_config_xml(self, contents, path=DEFAULT_CONFIG_PATH, node=None)
 def write_oauth_cache(self, mapping=None, raw_contents=None, mode="600", node=None):
     """Pre-populate ``~/.clickhouse-client/oauth_cache.json``.
 
-    ``mapping`` is the cache dict (``{cache_key_hex: refresh_token}``).
-    ``raw_contents`` is a literal string (used to test parse-resilience
-    against corrupted caches). ``mode`` controls the on-disk
-    permissions so we can verify the client refuses to ingest a
-    world-readable cache (a common audit ask).
+    ``mapping`` is the cache dict. ``raw_contents`` writes a literal string.
+    ``mode`` controls on-disk permissions.
     """
 
     if node is None:
@@ -399,18 +328,10 @@ def wait_for_device_user_code(
     log_path=DEVICE_FLOW_BG_LOG,
     node=None,
 ):
-    """Poll the background ``clickhouse-client`` log until a user code appears.
+    """Poll the background client log until a user code appears.
 
-    Returns the extracted user code as a string. Fails the assertion early
-    (with the captured log included in the message) if the background
-    client has already exited or logged a ClickHouse exception / stack
-    trace — without this guard, a client that died at the device-auth step
-    would silently let the wait loop time out, after which the loose
-    user-code matcher could pick a junk substring out of unrelated log
-    lines and feed it to the IdP-approver step.
-
-    Centralising this loop also means scenarios stay short and the
-    fail-fast logic only has to live in one place.
+    Returns the extracted user code string. Fails early if the client
+    has exited or logged a ClickHouse exception.
     """
 
     if node is None:
@@ -516,16 +437,11 @@ def read_oauth_cache(self, path=DEFAULT_CACHE_PATH, node=None):
 
 
 def _run_clickhouse_client_core(node, args, query, timeout, expect_error):
-    """Shared implementation behind ``run_clickhouse_client[_no_host]``.
+    """Shared core for ``run_clickhouse_client`` and ``_no_host`` variant.
 
-    Builds the ``timeout(1) clickhouse-client <args>`` command, runs it
-    via ``node.command(no_checks=True)`` so the helper owns the
-    exit-code policy, parses the trailing ``__EXIT__=<rc>`` marker, and
-    enforces ``expect_error``.
-
-    Kept as a plain function (no ``@TestStep`` decorator) so it can be
-    called from inside the public ``@TestStep(Then)`` wrappers without
-    re-entering the step machinery.
+    Runs ``timeout(1) clickhouse-client <args>``, parses the trailing
+    ``__EXIT__=<rc>`` marker, and enforces ``expect_error``.
+    Plain function (no ``@TestStep``).
     """
 
     cmd_parts = ["timeout", str(timeout), "clickhouse-client"]
@@ -571,27 +487,8 @@ def run_clickhouse_client(
 ):
     """Run ``clickhouse-client`` inside ``node`` and return ``(exitcode, output)``.
 
-    ``args`` is a list of additional CLI flags (everything except
-    ``-q``/``--query``, which the helper appends from the ``query``
-    kwarg). Callers that want the ``--host clickhouse1`` shorthand
-    must add it to ``args`` themselves — the helper does not inject
-    it.
-
-    The wall-clock ``timeout`` exists because ``--login=browser`` blocks
-    on a callback that will never come in CI. Anything still running
-    at ``timeout`` is killed with SIGTERM and the helper returns the
-    output captured up to that point.
-
-    ``expect_error`` flips the assertion: by default the helper asserts
-    ``exitcode == 0``. When the test is asserting "this command must
-    fail with a specific message", set ``expect_error=True`` and check
-    the returned ``output`` instead.
-
-    Use :func:`run_clickhouse_client_no_host` instead when the scenario
-    must exercise the PR #1696 / ClickHouse #103603 codepath where
-    ``hosts_and_ports`` is intentionally empty — the two helpers only
-    differ in their default ``expect_error`` value (this one defaults
-    to ``False`` because most callers expect a clean round-trip).
+    ``args`` is a list of CLI flags. ``timeout`` caps wall-clock time.
+    ``expect_error=True`` skips the exit-code-zero assertion.
     """
 
     if node is None:
@@ -615,20 +512,10 @@ def run_clickhouse_client_no_host(
     node=None,
     expect_error=True,
 ):
-    """Variant of :func:`run_clickhouse_client` for the PR #1696 repro.
+    """Like ``run_clickhouse_client`` but defaults to ``expect_error=True``.
 
-    The crash from ClickHouse #103603 only happens when
-    ``hosts_and_ports`` is left empty by the ``initialise()`` pass —
-    i.e. the host comes from ``connections_credentials`` or from the
-    bare ``<host>`` element in the config file rather than from
-    ``--host`` on the CLI. Callers therefore omit ``--host`` from
-    ``args``.
-
-    Mechanically identical to :func:`run_clickhouse_client`; the only
-    difference is the default of ``expect_error=True`` because most
-    callers are pinning a specific failure mode (arg-parse error,
-    auth-redirect timeout, etc.) rather than expecting a clean
-    ``SELECT 1`` round-trip.
+    Used when the scenario omits ``--host`` so the host comes from config
+    rather than the CLI.
     """
 
     if node is None:
@@ -647,14 +534,8 @@ def run_clickhouse_client_no_host(
 def assert_no_segfault(self, output, exit_code):
     """Assert the client did not abort via SIGSEGV/SIGABRT.
 
-    Direct evidence for ClickHouse #103603 / PR #1696. The libc++
-    hardening trap (`front() called on an empty vector`) prints that
-    exact phrase before raising SIGABRT, so we grep for both the
-    message and the conventional "Received signal 6 / 11" lines.
-
-    `timeout(1)` exits 124 on wall-clock kill and 137/143 when it has
-    to SIGKILL the child — those are NOT the abort signals we're
-    looking for and must not be flagged here.
+    Checks for libc++ hardening traps and signal markers in output.
+    ``timeout(1)`` exit codes (124/137/143) are not flagged.
     """
 
     fatal_markers = [
@@ -683,22 +564,9 @@ def complete_keycloak_device_login_via_background(
 ):
     """Drive one successful Keycloak device-flow login end-to-end.
 
-    Starts ``clickhouse-client --login=device`` in the background,
-    polls the log for the RFC 8628 user code, approves it through the
-    Keycloak admin API, waits for the client to finish, and asserts a
-    clean ``exit code 0``. Used by every refresh-token-cache scenario
-    that needs a populated cache to test against.
-
-    ``args`` defaults to the standard ``--host clickhouse1
-    --login=device --oauth-credentials <DEFAULT_CREDS_PATH>``
-    invocation. Override only when a scenario needs a non-default
-    host / credentials path / extra flag — every existing caller
-    relies on the default.
-
-    Caller still owns ``reset_client_state()`` /
-    ``write_keycloak_device_credentials()`` (these are scenario-level
-    Givens) and the ``Finally`` that kills any leftover background
-    client.
+    Starts the client in the background, polls for the user code,
+    approves it via Keycloak, waits for completion, and asserts
+    exit code 0. ``args`` defaults to the standard device-flow invocation.
     """
 
     if args is None:
@@ -730,12 +598,7 @@ def complete_keycloak_device_login_via_background(
 
 @TestStep(Given)
 def create_directory(self, path, node=None):
-    """Create ``path`` (with parents) inside ``node``.
-
-    Thin wrapper around ``mkdir -p`` so scenarios don't reach into
-    ``self.context.node.command(...)`` directly. Idempotent — calling
-    twice is safe.
-    """
+    """Create ``path`` (with parents) inside ``node``. Idempotent."""
 
     if node is None:
         node = self.context.node
@@ -747,13 +610,7 @@ def create_directory(self, path, node=None):
 def set_immutable(self, path, node=None):
     """Mark ``path`` as immutable via ``chattr +i``.
 
-    ``chmod 555`` is insufficient when the binary under test runs as
-    root (``chmod`` does not stop root); ``chattr +i`` does. Used by
-    the "read-only ~/.clickhouse-client" cache-write scenarios.
-
-    Always pair with :func:`unset_immutable` in a ``Finally`` block —
-    otherwise the next scenario inherits a directory the cleanup
-    helpers cannot wipe.
+    Always pair with ``unset_immutable`` in a ``Finally`` block.
     """
 
     if node is None:
@@ -764,12 +621,7 @@ def set_immutable(self, path, node=None):
 
 @TestStep(Finally)
 def unset_immutable(self, path, node=None):
-    """Clear the immutable bit set by :func:`set_immutable`.
-
-    Uses ``no_checks`` so a stray cleanup on a path that no longer
-    exists (or was never marked immutable) doesn't propagate a
-    spurious failure out of ``Finally``.
-    """
+    """Clear the immutable bit set by ``set_immutable``."""
 
     if node is None:
         node = self.context.node
@@ -779,20 +631,10 @@ def unset_immutable(self, path, node=None):
 
 @TestStep(Then)
 def wait_for_http_response(self, url, max_wait=15, poll_interval=1, node=None):
-    """Poll ``curl -sSI <url>`` until it returns an HTTP response or
-    ``max_wait`` elapses; return the final response output.
+    """Poll ``curl -sSI <url>`` until an HTTP response arrives or ``max_wait`` elapses.
 
-    Replaces the ``sleep N; curl …`` antipattern in the loopback-
-    security scenarios, where a fixed sleep races against the
-    background ``clickhouse-client`` finding a free port and binding
-    its callback HTTP server. The poll loop terminates on the first
-    ``HTTP/`` header line, so the scenario observes the *real* time
-    to bind rather than a worst-case-padded guess.
-
-    On timeout the helper returns whatever the last curl invocation
-    produced (often an empty string when nothing is listening yet)
-    — callers should assert ``"HTTP/" in result`` to fail loudly on
-    timeout instead of silently accepting a no-bind.
+    Returns the final response output. Callers should assert ``"HTTP/" in result``
+    to detect timeout.
     """
 
     if node is None:
@@ -816,13 +658,7 @@ def wait_for_http_response(self, url, max_wait=15, poll_interval=1, node=None):
 def curl_head(self, url, node=None):
     """Run ``curl -sSI <url>`` inside ``node`` and return the raw response.
 
-    Used by the loopback-callback security probes that need to look at
-    the response headers (e.g. checking the ``Location`` header for
-    leaked OAuth ``state``). Tolerates connection failures with
-    ``|| true`` so a not-yet-listening server surfaces as empty output
-    rather than aborting the scenario; callers are expected to assert
-    on what they actually need ("HTTP/" present, specific header
-    absent, etc.).
+    Tolerates connection failures — returns empty output if nothing is listening.
     """
 
     if node is None:
@@ -843,17 +679,10 @@ def start_mock_oidc_server(
     log_file=None,
     node=None,
 ):
-    """Start a Python HTTP mock (e.g. for OIDC discovery) on ``node``.
+    """Start a Python HTTP mock on ``node``.
 
-    ``script`` is the full Python source to write into the container
-    and run under ``nohup``. ``pid_file`` is where the PID lands —
-    callers pass the same path to :func:`stop_mock_oidc_server` to
-    tear it down. ``log_file`` defaults to a sibling of ``pid_file``
-    if not supplied.
-
-    Defaults to the bash-tools node because mock servers in this
-    suite live on a separate container so the clickhouse-server
-    sandbox stays clean.
+    ``script`` is the Python source to run. ``pid_file`` is where the PID lands.
+    Defaults to bash-tools node.
     """
 
     if node is None:
@@ -878,11 +707,7 @@ def start_mock_oidc_server(
 
 @TestStep(Finally)
 def stop_mock_oidc_server(self, pid_file, node=None):
-    """SIGTERM the mock OIDC server started by :func:`start_mock_oidc_server`.
-
-    Best-effort — runs with ``no_checks`` so a missing PID file (mock
-    never started) does not propagate out of ``Finally``.
-    """
+    """SIGTERM the mock server started by ``start_mock_oidc_server``. Best-effort."""
 
     if node is None:
         node = self.context.bash_tools
@@ -904,17 +729,9 @@ def start_oversized_oidc_discovery_mock(
     pid_file=None,
     node=None,
 ):
-    """Start the oversized OIDC discovery mock on ``node`` and return its pid_file.
+    """Start the oversized OIDC discovery mock and return its pid_file.
 
-    Loads the implementation from the sibling module
-    ``mock_oidc_oversized.py`` so the test files don't carry a
-    multi-line HTTP-server blob inline — same idiom as
-    :func:`approve_keycloak_device_user_code_via_bash_tools` /
-    ``keycloak_device_flow.py``.
-
-    Returns the on-disk pid_file path so scenarios can pass it to
-    :func:`stop_mock_oidc_server` in their ``Finally`` block. ``port``
-    defaults to 18080 (matches the URLs the existing scenarios build).
+    Returns the pid_file path for use with ``stop_mock_oidc_server``.
     """
 
     if pid_file is None:
@@ -970,13 +787,8 @@ def keycloak_enable_optional_scope(
 ):
     """Add ``scope_name`` to the optional client scopes of ``client_id``.
 
-    Idempotent — safe to call when the scope is already assigned.
-    Implementation lives in the sibling module
-    ``keycloak_optional_scope.py`` (loaded as text and executed
-    inside the bash-tools container — same idiom as
-    ``keycloak_device_flow.py`` and ``mock_oidc_oversized.py``) so
-    the step file stays free of an inline Python blob driving the
-    Keycloak admin REST API.
+    Idempotent. Runs the implementation from ``keycloak_optional_scope.py``
+    inside the bash-tools container.
     """
 
     if node is None:
@@ -1009,17 +821,10 @@ def get_keycloak_token_via_curl(
     grant_type="password",
     extra_data=None,
 ):
-    """Obtain an access token from Keycloak via the password / refresh-token grant.
+    """Obtain an access token from Keycloak via password or refresh-token grant.
 
-    A thin wrapper around the same direct-access-grant flow used by
-    ``oauth.tests.steps.keycloak_realm.get_oauth_token`` but allowing
-    the caller to override the grant type (e.g. ``refresh_token``)
-    without going through bash-tools, since these tests run from a
-    clickhouse-server container.
-
-    Returns the parsed JSON response; raises with a descriptive error
-    when Keycloak refuses (so failed setups don't surface as opaque
-    KeyErrors deep in the scenario).
+    Allows overriding the grant type and adding extra form fields.
+    Returns the parsed JSON response.
     """
 
     if node is None:

@@ -265,6 +265,20 @@
         * 15.8.1 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.OAuthFields](#rqsrs-042oauthclientloginconnectionblockoauthfields)
         * 15.8.2 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.CLIOverride](#rqsrs-042oauthclientloginconnectionblockclioverride)
         * 15.8.3 [RQ.SRS-042.OAuth.Client.Login.ConnectionBlock.InvalidCallbackPort](#rqsrs-042oauthclientloginconnectionblockinvalidcallbackport)
+* 16 [SQL-Declared JWT Users](#sql-declared-jwt-users)
+    * 16.1 [CREATE USER with JWT Authentication](#create-user-with-jwt-authentication)
+        * 16.1.1 [RQ.SRS-042.OAuth.SQLJWTUsers.CreateUser](#rqsrs-042oauthsqljwtuserscreateuser)
+    * 16.2 [PROCESSOR Clause](#processor-clause)
+        * 16.2.1 [RQ.SRS-042.OAuth.SQLJWTUsers.ProcessorClause](#rqsrs-042oauthsqljwtusersprocessorclause)
+    * 16.3 [CLAIMS Clause](#claims-clause)
+        * 16.3.1 [RQ.SRS-042.OAuth.SQLJWTUsers.ClaimsClause](#rqsrs-042oauthsqljwtusersclaimsclause)
+    * 16.4 [ALTER USER Re-pinning](#alter-user-re-pinning)
+        * 16.4.1 [RQ.SRS-042.OAuth.SQLJWTUsers.AlterUser](#rqsrs-042oauthsqljwtusersalteruser)
+    * 16.5 [Authentication Flow for SQL-Declared JWT Users](#authentication-flow-for-sql-declared-jwt-users)
+        * 16.5.1 [RQ.SRS-042.OAuth.SQLJWTUsers.AuthenticationFlow](#rqsrs-042oauthsqljwtusersauthenticationflow)
+    * 16.6 [Input Validation](#input-validation)
+        * 16.6.1 [RQ.SRS-042.OAuth.SQLJWTUsers.Validation.EmptyProcessor](#rqsrs-042oauthsqljwtusersvalidationemptyprocessor)
+        * 16.6.2 [RQ.SRS-042.OAuth.SQLJWTUsers.Validation.InvalidClaims](#rqsrs-042oauthsqljwtusersvalidationinvalidclaims)
 
     
 ## Introduction
@@ -3166,6 +3180,109 @@ When the same OAuth field is specified in both the connection block and on the c
 version: 1.0
 
 When `<oauth-callback-port>` (or `--oauth-callback-port`) is set to a value outside the valid TCP port range `[0, 65535]`, `clickhouse-client` SHALL fail with a clear configuration error before attempting to bind the loopback callback socket. The value `0` SHALL be accepted and SHALL mean "ask the kernel for an ephemeral port" per RFC 8252 §7.3.
+
+## SQL-Declared JWT Users
+
+JWT-authenticated users can be declared via SQL using the `CREATE USER ... IDENTIFIED WITH jwt` statement. This provides the same processor-pinning and per-user claims enforcement that was previously only available through `users.xml`, but through standard SQL DDL.
+
+### CREATE USER with JWT Authentication
+
+The `IDENTIFIED WITH jwt` clause accepts two optional sub-clauses: `PROCESSOR` and `CLAIMS`. When neither is specified, the user is unpinned and any configured token processor can authenticate them.
+
+```sql
+-- Bare JWT user (unpinned, no claims requirement)
+CREATE USER my_user IDENTIFIED WITH jwt
+
+-- Pinned to a specific processor
+CREATE USER my_user IDENTIFIED WITH jwt PROCESSOR 'keycloak'
+
+-- With per-user claims requirement
+CREATE USER my_user IDENTIFIED WITH jwt CLAIMS '{"role":"admin"}'
+
+-- Both processor pin and claims
+CREATE USER my_user IDENTIFIED WITH jwt PROCESSOR 'keycloak' CLAIMS '{"role":"admin"}'
+```
+
+The clauses may appear in either order. `SHOW CREATE USER` SHALL emit the stored clauses back so that the DDL round-trips correctly.
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.CreateUser
+version: 1.0
+
+[ClickHouse] SHALL support creating users with JWT authentication via the SQL statement `CREATE USER <name> IDENTIFIED WITH jwt`. The statement SHALL accept two optional clauses, `PROCESSOR '<token_processor_name>'` and `CLAIMS '<json_object>'`, in either order. The user SHALL be persisted in the local access storage and SHALL be visible via `SHOW CREATE USER`.
+
+> **Note:** Users with JWT authentication type cannot be created using SQL in ClickHouse versions prior to 26.3. `CREATE USER ... IDENTIFIED WITH jwt` was explicitly blocked. JWT users had to be defined in `users.xml` or auto-provisioned via the `token` user directory.
+
+### PROCESSOR Clause
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.ProcessorClause
+version: 1.0
+
+When a SQL-declared JWT user has `PROCESSOR '<name>'` set, [ClickHouse] SHALL only accept bearer tokens that are validated by the named token processor. A token that is valid according to a different processor in the chain SHALL be rejected for this user. `SHOW CREATE USER` SHALL emit the `PROCESSOR` clause with the stored processor name.
+
+### CLAIMS Clause
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.ClaimsClause
+version: 1.0
+
+When a SQL-declared JWT user has `CLAIMS '<json>'` set, [ClickHouse] SHALL verify that the bearer token's payload contains all the key-value pairs specified in the claims JSON object. A token that is missing a required claim or has a different value for a required claim SHALL be rejected. `SHOW CREATE USER` SHALL emit the `CLAIMS` clause with the stored JSON.
+
+### ALTER USER Re-pinning
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.AlterUser
+version: 1.0
+
+`ALTER USER <name> IDENTIFIED WITH jwt PROCESSOR '<name>'` SHALL update the stored processor pin for the user. After the ALTER, only the newly specified processor SHALL be accepted for token validation. The previous processor SHALL be rejected. The same applies to the `CLAIMS` clause. `SHOW CREATE USER` SHALL reflect the updated values.
+
+### Authentication Flow for SQL-Declared JWT Users
+
+SQL-declared JWT users follow a different authentication path than auto-provisioned token-directory users. The SQL user exists in the local access storage before any token arrives and carries its own per-user `token_processor_name` and `jwt_claims` fields.
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.AuthenticationFlow
+version: 1.0
+
+When a bearer token arrives via HTTP, [ClickHouse] SHALL authenticate a SQL-declared JWT user according to the following flow:
+
+```mermaid
+flowchart TD
+    Request["HTTP request with Bearer token"] --> PreAuth["Pre-auth: iterate all processors, find one that validates the token, extract username"]
+    PreAuth --> UserLookup["Look up username in access storage chain"]
+    UserLookup --> Found{Where is the user found?}
+    Found -->|"LocalDirectory (SQL user)"| SQLPath["AuthenticationData has type=JWT"]
+    Found -->|"TokenAccessStorage (auto-provisioned)"| TokenPath["Dynamic user created with processor's extracted identity"]
+    Found -->|"Not found anywhere"| Rejected["Rejected: unknown user"]
+
+    SQLPath --> CheckProc{token_processor_name set?}
+    CheckProc -->|"Yes"| PinnedCheck["Re-validate token against the pinned processor only"]
+    CheckProc -->|"No (empty)"| UnpinnedCheck["Accept token validated by any processor"]
+    PinnedCheck -->|Pass| CheckClaims{jwt_claims set?}
+    PinnedCheck -->|Fail| Rejected
+    UnpinnedCheck --> CheckClaims
+    CheckClaims -->|"Yes"| ClaimsMatch["Check token payload contains all required claim key-value pairs"]
+    CheckClaims -->|"No"| Authenticated["Authenticated as SQL user with SQL user's grants and roles"]
+    ClaimsMatch -->|Match| Authenticated
+    ClaimsMatch -->|Mismatch| Rejected
+
+    TokenPath --> Authenticated2["Authenticated as dynamic user with common_roles from config"]
+```
+
+Key properties:
+
+- **Storage lookup order**: `LocalDirectory` (SQL users) is consulted before `TokenAccessStorage` (auto-provisioned users). If a SQL user matches the extracted username, the token directory is not consulted.
+- **Processor pin**: When `token_processor_name` is set, [ClickHouse] SHALL validate the token against only that processor. When empty, any processor that validated the token during pre-auth is accepted.
+- **Claims check**: When `jwt_claims` is set, [ClickHouse] SHALL verify the token payload contains all specified key-value pairs. This is an additional per-user gate independent of the processor's own claim checks.
+- **Persistent grants**: SQL-declared JWT users carry their own `GRANT`s, roles, quotas, and settings profiles, unlike auto-provisioned users which only receive `common_roles` from config.
+
+### Input Validation
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.Validation.EmptyProcessor
+version: 1.0
+
+`CREATE USER <name> IDENTIFIED WITH jwt PROCESSOR ''` SHALL be rejected with `BAD_ARGUMENTS`. An empty processor name SHALL NOT be silently stored as an unpinned user.
+
+#### RQ.SRS-042.OAuth.SQLJWTUsers.Validation.InvalidClaims
+version: 1.0
+
+`CREATE USER <name> IDENTIFIED WITH jwt CLAIMS '<value>'` SHALL be rejected with `BAD_ARGUMENTS` when `<value>` is not a valid JSON object. This includes plain strings (`not-json`), JSON arrays (`[]`), and malformed JSON. Only a JSON object (`{...}`) SHALL be accepted.
 
 [ClickHouse]: https://clickhouse.com
 [Grafana]: https://grafana.com

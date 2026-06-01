@@ -25,17 +25,11 @@ def access_clickhouse(
 ):
     """Execute a query against ClickHouse with bearer-token auth.
 
-    Returns the response body string. Asserts the HTTP status code matches
-    ``status_code`` (default 200). The query is sent in the request body
-    (POST) so quoting / special characters are safe — earlier versions
-    used ad-hoc URL escaping that broke on any query containing ``&``,
-    ``+``, ``#`` or quotes.
+    Returns the response body. Asserts HTTP status matches ``status_code``
+    (default 200). The query is sent as POST body for safe quoting.
 
-    ``query_params`` is an optional ``{key: value}`` dict whose entries
-    become query-string parameters on the request URL (e.g.
-    ``{"session_id": "..."}``). Used by the M-30 session-sharing audit
-    scenario that exercises ClickHouse's HTTP named-session machinery.
-    Values are URL-encoded.
+    ``query_params`` is an optional ``{key: value}`` dict appended to the
+    request URL as query-string parameters.
     """
     if node is None:
         node = self.context.bash_tools
@@ -106,18 +100,8 @@ def access_clickhouse_unauthenticated(self, ip="clickhouse1", https=False):
 def assert_token_rejected(self, token, ip="clickhouse1", https=False, node=None):
     """Assert ClickHouse refuses ``token`` for any credential-validity reason.
 
-    "Rejected" can surface as either:
-
-    - HTTP 403 (``AUTHENTICATION_FAILED``) — token validated against
-      JWKS but the audience/issuer/etc. didn't match what the
-      processor expected, or
-    - HTTP 500 with ``token_verification_exception`` — the JWT
-      structure itself was rejected (missing required claim, bad
-      signature, unknown ``kid``, etc.).
-
-    Use this when the *exact* failure code depends on which claim is
-    wrong / missing, but the test only cares that ClickHouse said no.
-    For tests that want to pin a specific status, call
+    Accepts HTTP 403 (``AUTHENTICATION_FAILED``) or HTTP 500
+    (``token_verification_exception``). For a specific status code, use
     ``access_clickhouse(..., status_code=...)`` directly.
     """
     if node is None:
@@ -315,19 +299,8 @@ def change_user_directories_config(
 ):
     """Change ClickHouse user directories configuration.
 
-    The config.d file merges with the base ``<user_directories>`` section.
-    For positive tests (overriding the processor or roles on the existing
-    token directory) this is sufficient because ClickHouse merges children
-    by element name.
-
-    ``roles_transform`` accepts a sed-style regex (e.g. ``s/^grafana-//``)
-    used by the M-13 audit scenario; the helper writes it verbatim into
-    ``<roles_transform>``.
-
-    ``default_profile`` names a ClickHouse settings profile to attach to
-    auto-provisioned token users. The M-NEW-01 audit scenario drives the
-    "missing profile silently provisions unrestricted user" path through
-    this argument.
+    ``roles_transform`` accepts a sed-style regex (e.g. ``s/^grafana-//``).
+    ``default_profile`` names a settings profile for auto-provisioned token users.
     """
 
     token_section = {"processor": processor}
@@ -374,27 +347,9 @@ def apply_fatal_user_directories_config(
     """Write a config overlay that ClickHouse SHALL reject at startup,
     and verify the rejection message.
 
-    Used for invariants that surface as ``Application: Caught exception
-    while setting up access control`` (e.g. an empty
-    ``<processor></processor>`` inside ``<user_directories>/<token>``,
-    which the docs flag as "mandatory and cannot be empty").
-    ``change_user_directories_config`` cannot test these cases because it
-    goes through ``add_config`` which expects the server to come back
-    healthy after restart and times out waiting for it.
-
-    Why we don't reuse ``helpers.common.add_invalid_config``: that helper
-    cleans up by ``rm -rf``-ing the bad config file on the **host**
-    (under ``CLICKHOUSE_TESTS_DIR/configs/<node>/config.d``). It assumes
-    the config.d directory is bind-mounted from the host. In the OAuth
-    suite ``configs/clickhouse/config.d/*`` is mounted file-by-file, not
-    as a directory, so files that ``node.command`` writes only exist
-    inside the container; a host-side ``rm`` would silently no-op and
-    leave the bad config in place, wedging every subsequent scenario.
-    This helper therefore writes and removes the file via ``node.command``
-    (in-container) and restarts ClickHouse twice on teardown — once to
-    pick up the removal, and a second time to recover from the still-
-    failed previous start (mirroring ``add_invalid_config``'s
-    double-restart contract).
+    Writes the bad config inside the container (not on the host), verifies
+    the expected error appears in the log, then removes the config and
+    double-restarts to recover.
     """
     if node is None:
         node = self.context.node
@@ -468,8 +423,7 @@ def access_clickhouse_connection_refused(
 ):
     """Assert that a TCP connection to ClickHouse is refused.
 
-    Used when the target port (HTTP or HTTPS) has been disabled via config.
-    curl returns exit code 7 when the connection is refused.
+    Expects curl exit code 7 (connection refused) or 28 (timeout).
     """
     if node is None:
         node = self.context.bash_tools
@@ -553,22 +507,10 @@ def change_user_jwt_auth(
     node=None,
     config_d_dir="/etc/clickhouse-server/users.d",
 ):
-    """Pin a ClickHouse user to a specific JWT processor (and optional claims).
+    """Pin a ClickHouse user to a specific JWT processor and optional claims.
 
-    Writes ``users.d/<user>_jwt_auth.xml`` of the form
-
-        <users>
-            <${username}>
-                <jwt>
-                    <processor>${processor}</processor>
-                    <claims>{...}</claims>
-                </jwt>
-            </${username}>
-        </users>
-
-    Used by the ``processor_pin_bypass`` and ``quota_binding`` audit
-    scenarios. Cleanup is handled automatically by the underlying
-    ``change_clickhouse_config`` helper at scenario teardown.
+    Writes ``users.d/<user>_jwt_auth.xml``. Cleanup is automatic at
+    scenario teardown.
     """
     jwt_section = {}
     if processor is not None:
@@ -589,6 +531,69 @@ def change_user_jwt_auth(
 
 
 @TestStep(Given)
+def create_sql_jwt_user(
+    self,
+    username,
+    processor=None,
+    claims=None,
+    node=None,
+):
+    """Create a user via ``CREATE USER ... IDENTIFIED WITH jwt``.
+
+    Accepts optional ``PROCESSOR`` and ``CLAIMS`` clauses.
+    Drops the user in a ``Finally`` block at scenario teardown.
+    """
+    if node is None:
+        node = self.context.node
+
+    stmt = f"CREATE USER OR REPLACE {username} IDENTIFIED WITH jwt"
+    if processor is not None:
+        stmt += f" PROCESSOR '{processor}'"
+    if claims is not None:
+        if isinstance(claims, dict):
+            claims = json.dumps(claims, separators=(",", ":"))
+        stmt += f" CLAIMS '{claims.replace(chr(34), chr(92) + chr(34))}'"
+
+    node.query(stmt)
+
+    try:
+        yield username
+    finally:
+        with Finally(f"I drop user {username}"):
+            node.query(f"DROP USER IF EXISTS {username}", no_checks=True)
+
+
+@TestStep(When)
+def alter_sql_jwt_user(
+    self,
+    username,
+    processor=None,
+    claims=None,
+    node=None,
+):
+    """ALTER a user's JWT authentication via SQL."""
+    if node is None:
+        node = self.context.node
+
+    stmt = f"ALTER USER {username} IDENTIFIED WITH jwt"
+    if processor is not None:
+        stmt += f" PROCESSOR '{processor}'"
+    if claims is not None:
+        if isinstance(claims, dict):
+            claims = json.dumps(claims, separators=(",", ":"))
+        stmt += f" CLAIMS '{claims.replace(chr(34), chr(92) + chr(34))}'"
+
+    node.query(stmt)
+
+
+def show_create_user(username, node=None):
+    """Return the ``SHOW CREATE USER`` output for a user."""
+    if node is None:
+        node = current().context.node
+    return node.query(f"SHOW CREATE USER {username}").output.strip()
+
+
+@TestStep(Given)
 def change_user_directories_order(
     self,
     entries_in_order,
@@ -597,16 +602,10 @@ def change_user_directories_order(
 ):
     """Write a ``<user_directories>`` section with a specific child order.
 
-    ``change_user_directories_config`` merges by element name and
-    therefore can't reorder children. The H-25 scenario specifically
-    needs ``<token>`` to come before ``<users_xml>`` to exercise the
-    storage-chain-lockout code path, so we write a ``replace="replace"``
-    section here.
+    Uses ``replace="replace"`` to fully replace the section, allowing
+    control over element ordering that merge-based helpers cannot provide.
 
-    ``entries_in_order`` is a list of ``(element_name, child_dict)`` so
-    duplicate keys at the same level are also accepted (Python dicts
-    can't represent that, but the underlying ``KeyWithAttributes``
-    convention used elsewhere in the helpers does).
+    ``entries_in_order`` is a list of ``(element_name, child_dict)`` tuples.
     """
     children = {}
     for name, value in entries_in_order:
@@ -638,18 +637,7 @@ def change_user_quota(
 ):
     """Apply a per-user ClickHouse quota.
 
-    Currently exposes only ``failed_sequential_authentications`` because
-    that's what the L-08/L-17 audit scenarios need. The XML written is::
-
-        <quotas>
-            <${username}_quota>
-                <interval>
-                    <duration>3600</duration>
-                    <failed_sequential_authentications>${N}</failed_sequential_authentications>
-                </interval>
-            </${username}_quota>
-        </quotas>
-        <users><${username}><quota>${username}_quota</quota></${username}></users>
+    Currently exposes only ``failed_sequential_authentications``.
     """
     quota_name = f"{username}_quota"
     interval = {"duration": "3600"}
@@ -681,34 +669,18 @@ def open_native_jwt_session(
 ):
     """Open a long-lived ``clickhouse-client --jwt`` TCP session.
 
-    Used by the H-05 / M-28 audit scenarios that need to assert the
-    behaviour of an established native-protocol session when the token
-    expires or the validating processor is replaced server-side.
-
-    Implementation status: the original pexpect-based implementation
-    was reverted (see ``audit-automation-progress.md``) and a new one
-    has not landed yet. The dependent scenarios should be ``Skip``-ped
-    until then. We import it as a real symbol so downstream imports
-    work; calling it surfaces a clear ``NotImplementedError`` instead
-    of an ``ImportError`` that breaks the whole ``security_audit``
-    package.
+    Not yet re-implemented; callers should ``Skip`` until the
+    replacement helper lands.
     """
     raise NotImplementedError(
-        "open_native_jwt_session is not yet re-implemented; H-05 / M-28 "
-        "scenarios should Skip until the pexpect-backed helper lands. "
-        "See oauth/audit-automation-progress.md for context."
+        "open_native_jwt_session is not yet re-implemented; "
+        "dependent scenarios should Skip until the replacement helper lands."
     )
 
 
 @TestStep(Given)
 def reload_clickhouse_config(self, node=None):
-    """Force ClickHouse to re-read its configuration.
-
-    Some scenarios mutate config.d/users.d files via filesystem-level
-    helpers (not via ``change_clickhouse_config``) and need ClickHouse
-    to pick up the new files without a restart. ``SYSTEM RELOAD CONFIG``
-    is the correct hook.
-    """
+    """Force ClickHouse to re-read its configuration via ``SYSTEM RELOAD CONFIG``."""
     if node is None:
         node = self.context.node
     node.query("SYSTEM RELOAD CONFIG")

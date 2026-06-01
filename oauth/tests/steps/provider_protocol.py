@@ -30,14 +30,9 @@ class UnsupportedByProvider(Exception):
 class OAuthToken:
     """Uniform token container returned by every provider.
 
-    ``access_token`` is the only field guaranteed to be set across all
-    providers. ``refresh_token`` and ``id_token`` may be ``None`` (e.g.
-    Azure client-credentials only returns an access token; Google may
-    skip refresh on subsequent token-endpoint calls).
-
-    The container behaves like a dict for ``["access_token"]`` /
-    ``.get("error")`` access so legacy call sites that already do
-    ``token["access_token"]`` continue to work during the migration.
+    ``access_token`` is always set. Other fields may be ``None``
+    depending on the provider and grant type. Also supports dict-style
+    access (``token["access_token"]``) for backwards compatibility.
     """
 
     access_token: str
@@ -95,14 +90,11 @@ class OpenIDEndpoints:
 
 
 def unsupported(method_name: str):
-    """Helper to build ``Skip``-style ``OAuthProvider`` placeholders.
+    """Return a callable that raises ``UnsupportedByProvider``.
 
-    Use as the value of an ``OAuthProvider`` attribute when a provider
-    cannot implement a given method:
+    Usage::
 
         delete_user = unsupported("delete_user")
-
-    The returned callable raises ``UnsupportedByProvider`` immediately.
     """
 
     def _stub(*args, **kwargs):
@@ -116,14 +108,11 @@ def unsupported(method_name: str):
 
 
 REQUIRED_METHODS = (
-    # Core token + endpoint access — every provider must implement these.
+    # Core token + endpoint access.
     "get_oauth_token",
     "openid_endpoints",
     "default_idp",
-    # JWT mutation (used heavily by tokens / jwt_manipulation / tls /
-    # security_audit). Provider-agnostic implementation lives in
-    # ``provider_protocol`` itself but providers re-export it for
-    # discoverability.
+    # JWT mutation helper.
     "modify_jwt_token",
 )
 
@@ -141,10 +130,7 @@ OPTIONAL_METHODS = (
     "disable_client",
     "enable_client",
     "invalidate_user_sessions",
-    # Authorization-negative testing: ability to mint tokens from a
-    # *different* trust boundary (realm / tenant / org). Keycloak
-    # implements these via the Admin API; Azure/Google can't easily
-    # mock them, so dependent scenarios Skip.
+    # Cross-realm / cross-tenant authorization-negative testing.
     "create_realm",
     "delete_realm",
     "create_client_in_realm",
@@ -155,11 +141,8 @@ OPTIONAL_METHODS = (
 def assert_provider_contract(provider_module):
     """Assert that ``provider_module.OAuthProvider`` exposes the contract.
 
-    Required methods MUST be present and callable. Optional methods MUST
-    be either present or explicitly marked unsupported via ``unsupported()``.
-    Raises ``AssertionError`` if the contract is violated; this is meant
-    to be called once at suite startup so a missing method fails fast
-    instead of later in a confusing test step.
+    Required methods must be present and callable. Missing optional
+    methods are automatically backfilled with ``unsupported()`` stubs.
     """
     provider = getattr(provider_module, "OAuthProvider", None)
     assert (
@@ -200,8 +183,7 @@ def _decode_jwt_token(token: str):
 def _encode_jwt_token(header: dict, payload: dict, signature: str):
     """Re-encode JWT components into a compact string.
 
-    The signature is NOT recomputed; tests use this to assert that a
-    server rejects mutated tokens.
+    The signature is NOT recomputed.
     """
     import base64
     import json
@@ -222,12 +204,10 @@ def modify_jwt_token(
     payload_changes: dict = None,
     signature_change: str = None,
 ):
-    """Provider-agnostic JWT mutation.
+    """Return a new token with the given header/payload/signature changes applied.
 
-    Returns a new token string. The signature is NOT recomputed, so the
-    server should reject the token unless only non-verified fields were
-    changed. Re-exported by every provider's ``OAuthProvider`` so test
-    code can keep calling ``client.OAuthProvider.modify_jwt_token``.
+    The signature is NOT recomputed, so the server should reject the
+    resulting token unless only non-verified fields were changed.
     """
     header, payload, signature = _decode_jwt_token(token)
 

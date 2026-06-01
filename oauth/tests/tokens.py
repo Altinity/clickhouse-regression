@@ -27,6 +27,7 @@ def openid_discovery_mode(self):
             token_introspection_endpoint=endpoints.token_introspection_endpoint,
             introspection_client_id=self.context.introspection_client_id,
             introspection_client_secret=self.context.introspection_client_secret,
+            replace=True,
         )
 
     with And("I configure user directories"):

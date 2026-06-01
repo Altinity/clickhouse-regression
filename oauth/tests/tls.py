@@ -61,7 +61,7 @@ def invalid_token_over_https(self):
         )
 
     with Then("ClickHouse rejects the tampered token over HTTPS"):
-        access_clickhouse(token=modified, https=True, status_code=500)
+        assert_token_rejected(token=modified, https=True)
 
 
 @TestScenario

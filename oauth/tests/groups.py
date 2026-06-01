@@ -26,18 +26,11 @@ def _configure_short_cache(
     token_cache_lifetime=3,
     common_roles=None,
 ):
-    """Configure the standard Keycloak/OpenID processor with a short cache.
+    """Configure the Keycloak/OpenID processor with a short cache.
 
-    Used by scenarios that need to observe cache eviction. The endpoint
-    bundle comes from the provider so the URLs match whichever IdP is
-    active.
-
-    Since antalya-26.3 (PR #1799) the ``openid`` processor rejects
-    ``jwks_uri``. All validation goes through the userinfo + optional
-    introspection path. Introspection credentials are always included
-    so that revocation checks work. The userinfo endpoint is what
-    surfaces disabled/deleted user state from the IdP after cache
-    expiry.
+    The endpoint bundle comes from the provider. Validation goes through
+    userinfo + introspection so disabled/deleted user state is observed
+    after cache expiry.
     """
     client = _provider_or_skip(self)
     endpoints = client.OAuthProvider.openid_endpoints()
@@ -65,13 +58,6 @@ def _configure_short_cache(
 def group_name_matches_clickhouse_role(self):
     """When an IdP group name matches a ClickHouse role, the user SHALL
     receive that role's privileges.
-
-    To make the assertion meaningful we use a probe (``SELECT FROM
-    system.roles``) that is granted **only** by the ``can-read`` role and
-    by nothing else in the test fixture — so the request fails if the
-    group→role mapping is silently broken. ``common_roles`` is left
-    empty for the same reason; otherwise a buggy mapping would still
-    pass via the catch-all role.
     """
     client = self.context.provider_client
 
@@ -113,13 +99,6 @@ def group_name_matches_clickhouse_role(self):
 def roles_filter_limits_groups(self):
     """Only IdP groups matching ``roles_filter`` SHALL be considered for
     role mapping; non-matching groups SHALL NOT contribute privileges.
-
-    ``demo`` is in both ``grafana-admins`` and ``can-read``. We pin the
-    filter to the former and probe two privileges, one granted by each
-    role, to prove only the matching group is mapped:
-
-    - ``SELECT FROM system.users`` (granted by ``grafana-admins``) → 200
-    - ``SELECT FROM system.roles`` (granted by ``can-read``) → denied
     """
     client = self.context.provider_client
 
@@ -158,9 +137,6 @@ def roles_filter_limits_groups(self):
 def roles_filter_excludes_user_groups(self):
     """A user whose groups don't match the roles_filter and who has no
     common_roles SHALL authenticate but not gain any role-bound privileges.
-
-    This is the inverse of ``roles_filter_limits_groups`` — proves the
-    filter is actually restrictive, not just permissive.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -212,14 +188,7 @@ def roles_filter_excludes_user_groups(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoGroups("1.0"),
 )
 def user_with_no_groups_gets_common_roles(self):
-    """A user with no groups SHALL receive only ``common_roles``.
-
-    The probe queries discriminate the actual role rather than just
-    proving authentication: ``SELECT FROM default.test_table_1`` is
-    granted by ``general-role`` and asserts the common role was applied;
-    ``SELECT FROM system.users`` is *not* granted by any role this user
-    should have, asserting nothing extra leaked in.
-    """
+    """A user with no groups SHALL receive only ``common_roles``."""
     client = self.context.provider_client
     uid = getuid()[:8]
     username = f"nogroups_{uid}"
@@ -272,14 +241,8 @@ def user_with_no_groups_gets_common_roles(self):
     ),
 )
 def user_with_no_groups_and_no_common_roles(self):
-    """A user with no groups and no ``common_roles`` SHALL authenticate but have no privileges.
-
-    Doubles as the regression for SRS 6.2.1.2.6 — *"the roles section
-    is not defined in the token section of user_directories"*: no
-    privileges to access resources is the spec's "SHALL not allow …
-    to authenticate and access resources" outcome on a token user
-    directory whose ``<common_roles>`` is omitted and whose user has
-    no IdP-side group mappings.
+    """A user with no groups and no ``common_roles`` SHALL authenticate
+    but have no privileges.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -327,13 +290,6 @@ def user_with_no_groups_and_no_common_roles(self):
 def user_in_multiple_groups(self):
     """A user in multiple matching groups SHALL receive the union of all
     mapped role privileges.
-
-    To prove union (rather than just one of the roles being mapped), we
-    exercise a privilege uniquely granted by each group's role with no
-    ``common_roles`` to provide a fallback:
-
-    - ``grafana-admins`` → ``SELECT ON system.users``
-    - ``can-read``       → ``SELECT ON system.roles``
     """
     client = self.context.provider_client
 
@@ -371,31 +327,12 @@ def user_in_multiple_groups(self):
     RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup("1.0"),
 )
 def dynamic_group_membership_update(self):
-    """Adding / removing a user from a group SHALL change their effective
+    """Adding or removing a user from a group SHALL change their effective
     role set on the next token issued after the change.
 
-    For JWT-issuing IdPs (Keycloak) the ``groups`` claim lives **inside**
-    the signed token (see the ``groups_claim`` doc paragraph: "this claim
-    will be looked up in the token itself in case token is a valid JWT").
-    Once a token is signed, its claim set is frozen — no amount of cache
-    expiry on the ClickHouse side will retroactively rewrite the groups
-    encoded in an already-issued JWT. The user-visible contract is
-    therefore "the **next** token issued after a membership change
-    reflects the new groups", not "the same token flips inside the cache
-    window".
-
-    To pin both directions of that contract we:
-
-    1. Get a token while the user is **not** in ``grafana-admins`` and
-       confirm the privileged probe (``SELECT FROM system.users``,
-       granted only by ``grafana-admins`` in our fixture) is denied.
-    2. Add the user to ``grafana-admins``, get a **fresh** token, and
-       confirm the privileged probe now succeeds.
-    3. Remove the user from ``grafana-admins``, get another **fresh**
-       token, and confirm the privileged probe is denied again. The
-       previously-cached "admin" token is also exercised to show the
-       cache itself does not leak across the issued-token boundary
-       (it is allowed to keep working until it naturally expires).
+    For JWT-issuing IdPs, the ``groups`` claim is frozen at token signing
+    time, so the contract is "the next token reflects the new groups"
+    rather than "the same token updates via cache expiry".
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -509,22 +446,6 @@ def dynamic_group_membership_update(self):
 def disabled_user_rejected_after_cache(self):
     """A disabled IdP user's previously-cached token SHALL be rejected
     after the token cache expires.
-
-    Real test of the cache-eviction path:
-
-    1. Configure ``token_cache_lifetime=3`` **without** ``jwks_uri`` so
-       cache misses re-validate via ``userinfo_endpoint`` rather than
-       re-decoding the JWT locally (see ``_configure_short_cache``
-       docstring for why ``jwks_uri`` would mask the IdP user state).
-    2. User authenticates with a valid token; first request populates the
-       cache.
-    3. Disable the user at the IdP.
-    4. Wait > cache lifetime so ClickHouse must re-validate via
-       ``userinfo`` / ``introspection``.
-    5. Same cached token MUST now be rejected. The exact rejection code
-       depends on whether re-validation surfaces as ``AUTHENTICATION_FAILED``
-       (HTTP 403) or as a ``token_verification_exception`` (HTTP 500),
-       both of which are valid; ``assert_token_rejected`` accepts either.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -589,17 +510,6 @@ def disabled_user_rejected_after_cache(self):
 def deleted_user_rejected_after_cache(self):
     """A deleted IdP user's cached token SHALL be rejected after cache
     expiry.
-
-    Replaces the old ``deleted_user_cannot_get_token`` which only proved
-    Keycloak rejects the token-issuance request — that's a Keycloak
-    invariant, not a ClickHouse one. This variant proves ClickHouse's
-    cache-eviction path observes the deletion.
-
-    As with ``disabled_user_rejected_after_cache``, the processor is
-    configured **without** ``jwks_uri`` so cache misses re-validate via
-    ``userinfo_endpoint`` (which Keycloak makes 401 for deleted users)
-    instead of re-decoding the still-valid JWT locally; see
-    ``_configure_short_cache`` for the rationale.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
