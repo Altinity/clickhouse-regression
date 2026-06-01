@@ -303,24 +303,24 @@ def check_detach_attach_partition(
         self.context.node_1.query(
             f"ALTER TABLE {table_name} DETACH PARTITION {partition}"
         )
-        data_after = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                data_after = self.context.node_1.query(
+                    f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert data_after.output != data_before, error()
 
     with And("I attach partition to the table"):
         self.context.node_1.query(
             f"ALTER TABLE {table_name} ATTACH PARTITION {partition}"
         )
-        data_after = self.context.node_1.query(
-            f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
 
     with Then("I check that partitions were attached"):
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                data_after = self.context.node_1.query(
+                    f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert data_after.output == data_before, error()
 
 
@@ -367,11 +367,11 @@ def check_drop_partition(
 
     with And("I check that partitions were dropped"):
         for partition in destination_partition_ids:
-            data = self.context.node_1.query(
-                f"SELECT count() FROM {table_name} FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    data = self.context.node_1.query(
+                        f"SELECT count() FROM {table_name} FORMAT TabSeparated"
+                    )
                     assert int(data.output) == 0, error()
 
 
@@ -444,11 +444,11 @@ def check_replace_partition(
         source_data = self.context.node_1.query(
             f"SELECT * FROM {table_name} ORDER BY tuple(*) FORMAT TabSeparated"
         ).output
-        replace_data = self.context.node_1.query(
-            f"SELECT * FROM {replace_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                replace_data = self.context.node_1.query(
+                    f"SELECT * FROM {replace_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert replace_data.output == source_data, error()
 
 
@@ -553,11 +553,11 @@ def check_update_in_partition(
             )
 
     with Then("I check that partitions were updated"):
-        result_data = self.context.node_1.query(
-            f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*) FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=120, delay=2):
             with attempt:
+                result_data = self.context.node_1.query(
+                    f"SELECT {update_column} FROM {table_name} WHERE {update_column} > 2 ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert result_data.output == expected_data, error()
 
 
@@ -623,11 +623,11 @@ def check_move_partition(
             )
 
     with Then("I check that partitions were moved"):
-        data_after = self.context.node_1.query(
-            f"SELECT * FROM {move_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                data_after = self.context.node_1.query(
+                    f"SELECT * FROM {move_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                )
                 assert data_after.output == data_before, error()
 
 
@@ -691,11 +691,11 @@ def check_multiple_attach_move_partition(
             new_source_partition_key = new_destination_partition_key
 
             with Then("I check that all partitions were attached or moved"):
-                data_after = self.context.node_1.query(
-                    f"SELECT * FROM {new_destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
-                )
                 for attempt in retries(timeout=300, delay=20):
                     with attempt:
+                        data_after = self.context.node_1.query(
+                            f"SELECT * FROM {new_destination_table_name} ORDER BY tuple(*) FORMAT TabSeparated"
+                        )
                         assert data_after.output == data_before, error()
 
 

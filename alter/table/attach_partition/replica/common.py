@@ -530,16 +530,16 @@ def check_partition_was_attached(self, table_name, expected):
     data = None
     for node in self.context.nodes:
         if data is None:
-            data = node.query(
-                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    data = node.query(
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                    )
                     assert data.output == expected
         else:
-            current_data = node.query(
-                f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    current_data = node.query(
+                        f"SELECT * FROM {table_name} ORDER BY a,b,c,extra FORMAT TabSeparated"
+                    )
                     assert current_data.output == data.output == expected
