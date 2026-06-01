@@ -372,7 +372,7 @@ RQ_Iceberg_ExportPartition_Transactions_Idempotency = Requirement(
     description=(
         "[ClickHouse] SHALL guard against accidental duplicate commits via a ZooKeeper-backed live manifest keyed on `(source_table, destination_table, partition_id)`:\n"
         "\n"
-        "* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (typically `BAD_ARGUMENTS`).\n"
+        "* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (`EXPORT_PARTITION_ALREADY_EXPORTED`, historically `BAD_ARGUMENTS`).\n"
         "* Setting `export_merge_tree_partition_force_export = 1` SHALL bypass the gate, at the operator's documented risk.\n"
         "* Once `export_merge_tree_partition_manifest_ttl` has elapsed (or the prior export has been removed), the same key SHALL be exportable again.\n"
         "\n"
@@ -455,6 +455,7 @@ RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations = Requirement(
         "\n"
         "* Adding a column on both sides; the new column receives null / default values for previously exported rows.\n"
         "* Dropping a column on both sides; subsequent exports omit the dropped column.\n"
+        "* Renaming a column on both sides; previously exported rows remain readable under the new name.\n"
         "* Widening a numeric column (verified for `Int32 → Int64`); already-exported rows remain readable, new exports use the wider type.\n"
         "\n"
         "**Regression module:** `iceberg.tests.export_partition.schema_evolution` (`schema_evolution.py`).\n"
@@ -475,7 +476,6 @@ RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations = Requirement(
     description=(
         "[ClickHouse] SHALL reject schema changes that would corrupt destination metadata or break round-trip reads:\n"
         "\n"
-        "* `RENAME COLUMN` on an Iceberg destination SHALL be rejected.\n"
         "* Schema drift on the source alone (without the matching destination change) SHALL fail the export rather than commit a mismatched snapshot.\n"
         "\n"
     ),
@@ -1471,7 +1471,7 @@ version: 1.0
 
 [ClickHouse] SHALL guard against accidental duplicate commits via a ZooKeeper-backed live manifest keyed on `(source_table, destination_table, partition_id)`:
 
-* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (typically `BAD_ARGUMENTS`).
+* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (`EXPORT_PARTITION_ALREADY_EXPORTED`, historically `BAD_ARGUMENTS`).
 * Setting `export_merge_tree_partition_force_export = 1` SHALL bypass the gate, at the operator's documented risk.
 * Once `export_merge_tree_partition_manifest_ttl` has elapsed (or the prior export has been removed), the same key SHALL be exportable again.
 
@@ -1512,6 +1512,7 @@ version: 1.0
 
 * Adding a column on both sides; the new column receives null / default values for previously exported rows.
 * Dropping a column on both sides; subsequent exports omit the dropped column.
+* Renaming a column on both sides; previously exported rows remain readable under the new name.
 * Widening a numeric column (verified for `Int32 → Int64`); already-exported rows remain readable, new exports use the wider type.
 
 **Regression module:** `iceberg.tests.export_partition.schema_evolution` (`schema_evolution.py`).
@@ -1521,7 +1522,6 @@ version: 1.0
 
 [ClickHouse] SHALL reject schema changes that would corrupt destination metadata or break round-trip reads:
 
-* `RENAME COLUMN` on an Iceberg destination SHALL be rejected.
 * Schema drift on the source alone (without the matching destination change) SHALL fail the export rather than commit a mismatched snapshot.
 
 ### RQ.Iceberg.ExportPartition.SchemaEvolution.SchemaHistory

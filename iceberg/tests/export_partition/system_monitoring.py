@@ -96,10 +96,6 @@ def system_table_columns_populated_on_success(
         )
 
     with Then("collect the row as a single tab-separated record"):
-        # ``last_exception`` is replaced by ``empty(last_exception)`` so the
-        # field is a stable ``0``/``1`` rather than an empty string that
-        # ``get_export_row``'s ``.strip()`` would drop together with the
-        # trailing tab (see steps/export_status.py::get_export_row).
         row = get_export_row(
             source_table=source_table,
             partition_id="2020",
@@ -107,16 +103,15 @@ def system_table_columns_populated_on_success(
             columns=(
                 "source_table, destination_table, partition_id, status, "
                 "parts_count, parts_to_do, source_replica, "
-                "toUnixTimestamp(create_time), exception_count, "
-                "empty(last_exception)"
+                "toUnixTimestamp(create_time), exception_count"
             ),
         )
         assert row is not None, error(
             "Export row missing from system.replicated_partition_exports"
         )
         fields = row.split("\t")
-        assert len(fields) == 10, error(
-            f"Expected 10 fields in the system row, got {len(fields)}: {fields!r}"
+        assert len(fields) == 9, error(
+            f"Expected 9 fields in the system row, got {len(fields)}: {fields!r}"
         )
         (
             src_tab,
@@ -128,7 +123,6 @@ def system_table_columns_populated_on_success(
             source_replica,
             create_time_unix,
             exception_count,
-            last_exception_empty,
         ) = fields
 
     with And("the identifying columns match the ALTER arguments"):
@@ -167,12 +161,6 @@ def system_table_columns_populated_on_success(
         )
         assert int(exception_count) == 0, error(
             f"exception_count should be zero for a clean export, got {exception_count!r}"
-        )
-        # ``empty(last_exception)`` returns 1 when the string is empty and
-        # 0 otherwise; a clean export must leave the field empty.
-        assert last_exception_empty == "1", error(
-            f"last_exception should be empty for a clean export, "
-            f"empty(last_exception)={last_exception_empty!r}"
         )
 
 

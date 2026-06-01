@@ -23,6 +23,7 @@ from iceberg.tests.export_partition.steps.common import (
     insert_data,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
+    EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
     export_partition,
     prepare_export_partition_settings,
 )
@@ -45,9 +46,6 @@ from iceberg.tests.export_partition.steps.verification import (
 
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
-
-BAD_ARGUMENTS = 36
-
 
 def _seed_source(values, partition_by=SIMPLE_PARTITION_BY, columns=SIMPLE_COLUMNS):
     """Create a ReplicatedMergeTree and insert a single batch of values."""
@@ -155,8 +153,8 @@ def duplicate_export_inside_one_alter(
     self, minio_root_user, minio_root_password
 ):
     """An ALTER that lists the same partition twice is rejected with
-    ``BAD_ARGUMENTS`` / "Export with key ..."; the destination ends with
-    at most one append snapshot.
+    ``EXPORT_PARTITION_ALREADY_EXPORTED`` / "Export with key ..."; the
+    destination ends with at most one append snapshot.
     """
     node = self.context.node
     source_table = _seed_source(values="(1, 2020), (2, 2020), (3, 2020)")
@@ -178,14 +176,14 @@ def duplicate_export_inside_one_alter(
             settings=prepare_export_partition_settings(
                 self.context.catalog, None
             ),
-            exitcode=BAD_ARGUMENTS,
+            exitcode=EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
             message="Export with key",
             ignore_exception=True,
         )
 
     with And("drain any background export tasks the ALTER left running"):
-        # The parser/scheduler rejects the duplicate entry with
-        # BAD_ARGUMENTS but the first entry's background task may still be
+        # The duplicate clause is rejected with EXPORT_PARTITION_ALREADY_EXPORTED
+        # but the first entry's background task may still be
         # in flight when the client's ALTER returns. If we inspect the
         # destination now we race PyIceberg's metadata.json read against
         # the snapshot commit and can observe "0 snapshots but 3 rows" -

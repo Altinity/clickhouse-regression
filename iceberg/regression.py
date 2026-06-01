@@ -46,25 +46,23 @@ xfails = {
     "/iceberg/export partition/*/manifest integrity/external iceberg reader round-trips exported data": [
         (
             Fail,
-            "User-visible impact of the same MultipleFileWriter::startNewFile "
-            "bug: any Iceberg reader that dispatches FileIO by URI scheme "
-            "(PyIceberg, Spark, Trino, duckdb) cannot open the exported "
-            "data files because `data_file.file_path` lacks the `s3://` "
-            "scheme and falls back to the local filesystem. Remove this "
-            "xfail together with the `data file paths live under the "
-            "table prefix` entry above.",
+            "PyIceberg cannot scan EXPORT PARTITION data files: Parquet "
+            "written by ClickHouse lacks Iceberg field-ids and IcebergS3 "
+            "tables have no schema.name-mapping.default, so strict readers "
+            "raise ValueError during schema resolution. On builds that "
+            "still write bucket-relative data_file.file_path, the scenario "
+            "may instead fail with FileNotFoundError (local FileIO fallback).",
         )
     ],
     "/iceberg/export partition/*/catalogs/catalog: external reader round-trips exported data": [
         (
             Fail,
-            "Same MultipleFileWriter::startNewFile bug as the no_catalog "
-            "external-reader scenario, but reached through a catalog-backed "
-            "destination (REST / Glue). PyIceberg loads the table via the "
-            "catalog, walks the manifest, and FileIO dispatches by URI "
-            "scheme — data_file.file_path has no scheme so it falls back to "
-            "the local filesystem and raises FileNotFoundError. Remove this "
-            "xfail alongside the manifest-integrity one above.",
+            "Same Parquet field-id / name-mapping gap as the no_catalog "
+            "external-reader scenario: catalog-backed tables get a proper "
+            "Iceberg schema from PyIceberg at CREATE time, but EXPORT "
+            "PARTITION still writes Parquet without embedded field-ids. "
+            "Older builds may instead hit FileNotFoundError when "
+            "data_file.file_path lacks a URI scheme.",
         )
     ],
     "/iceberg/export partition/ice catalog/truncate/export after truncate repopulates destination": [
