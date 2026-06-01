@@ -932,17 +932,15 @@ export_merge_tree_part_throw_on_pending_mutations = r"""'{"default":"1"}'"""
 
 export_merge_tree_part_throw_on_pending_patch_parts = r"""'{"default":"1"}'"""
 
-export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
+export_merge_tree_partition_all_on_error = r"""'{"default":"throw_first"}'"""
 
-export_merge_tree_partition_lock_inside_the_task = r"""'{"default":"0"}'"""
+export_merge_tree_partition_force_export = r"""'{"default":"0"}'"""
 
 export_merge_tree_partition_manifest_ttl = r"""'{"default":"86400"}'"""
 
 export_merge_tree_partition_max_retries = r"""'{"default":"3"}'"""
 
-export_merge_tree_partition_system_table_prefer_remote_information = r"""'{"default":"0"}'"""
-
-export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"3600"}'"""
+export_merge_tree_partition_task_timeout_seconds = r"""'{"default":"86400"}'"""
 
 external_storage_connect_timeout_sec = r"""'{"default":"10"}'"""
 
@@ -1692,7 +1690,7 @@ materialized_views_ignore_errors = r"""'{"default":"0"}'"""
 
 materialized_views_squash_parallel_inserts = r"""'{"default":"1"}'"""
 
-max_alter_threads = r"""'{"default":"\'auto(16)\'"}'"""
+max_alter_threads = r"""'{"default":"\'auto(14)\'"}'"""
 
 max_analyze_depth = r"""'{"default":"5000"}'"""
 
@@ -1764,7 +1762,7 @@ max_expanded_ast_elements = r"""'{"default":"500000"}'"""
 
 max_fetch_partition_retries_count = r"""'{"default":"5"}'"""
 
-max_final_threads = r"""'{"default":"\'auto(16)\'"}'"""
+max_final_threads = r"""'{"default":"\'auto(14)\'"}'"""
 
 max_http_get_redirects = r"""'{"default":"0"}'"""
 
@@ -1820,7 +1818,7 @@ max_parser_backtracks = r"""'{"default":"1000000"}'"""
 
 max_parser_depth = r"""'{"default":"1000"}'"""
 
-max_parsing_threads = r"""'{"default":"\'auto(16)\'"}'"""
+max_parsing_threads = r"""'{"default":"\'auto(14)\'"}'"""
 
 max_partition_size_to_drop = r"""'{"default":"50000000000"}'"""
 
@@ -1912,7 +1910,7 @@ max_temporary_data_on_disk_size_for_user = r"""'{"default":"0"}'"""
 
 max_temporary_non_const_columns = r"""'{"default":"0"}'"""
 
-max_threads = r"""'{"default":"\'auto(16)\'"}'"""
+max_threads = r"""'{"default":"\'auto(14)\'"}'"""
 
 max_threads_for_annoy_index_creation = r"""'{"default":"4"}'"""
 
