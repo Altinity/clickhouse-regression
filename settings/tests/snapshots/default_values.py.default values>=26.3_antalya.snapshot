@@ -82,6 +82,8 @@ allow_experimental_database_paimon_rest_catalog = r"""'{"default":"0"}'"""
 
 allow_experimental_database_replicated = r"""'{"default":"1"}'"""
 
+allow_experimental_database_s3_tables = r"""'{"default":"0"}'"""
+
 allow_experimental_database_unity_catalog = r"""'{"default":"1"}'"""
 
 allow_experimental_delta_kernel_rs = r"""'{"default":"1"}'"""
@@ -2793,6 +2795,8 @@ s3_max_upload_part_size = r"""'{"default":"5368709120"}'"""
 s3_min_upload_part_size = r"""'{"default":"16777216"}'"""
 
 s3_path_filter_limit = r"""'{"default":"1000"}'"""
+
+s3_propagate_credentials_to_other_storages = r"""'{"default":"0"}'"""
 
 s3_request_timeout_ms = r"""'{"default":"30000"}'"""
 
