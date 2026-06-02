@@ -1,6 +1,7 @@
 from oauth.tests.steps.clikhouse import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
+from helpers.workload import background_workload
 
 
 @TestScenario
@@ -100,6 +101,31 @@ def no_token_processor_configured(self):
         check_clickhouse_is_alive()
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Keycloak_GetAccessToken("1.0"),
+    RQ_SRS_042_OAuth_Keycloak_AccessTokenSupport("1.0"),
+)
+def valid_token_accepted_under_load(self):
+    """ClickHouse SHALL accept a valid OAuth token while the server is under realistic workload."""
+    client = self.context.provider_client
+    node = self.context.node
+
+    with background_workload(node, intensity="medium"):
+        with Given("I get a valid OAuth token from the provider"):
+            token = client.OAuthProvider.get_oauth_token().access_token
+
+        with Then("ClickHouse accepts the token under load"):
+            body = access_clickhouse(token=token, status_code=200)
+
+        with And("the response contains a user identity"):
+            assert len(body) > 0, error()
+
+        with And("a second authentication also succeeds under load"):
+            token2 = client.OAuthProvider.get_oauth_token().access_token
+            access_clickhouse(token=token2, status_code=200)
+
+
 @TestFeature
 @Name("authentication")
 @Requirements(
@@ -114,3 +140,4 @@ def feature(self):
     Scenario(run=malformed_token_rejected)
     Scenario(run=valid_token_on_all_nodes)
     Scenario(run=no_token_processor_configured)
+    Scenario(run=valid_token_accepted_under_load)

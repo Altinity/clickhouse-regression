@@ -566,6 +566,99 @@ This suite *tests* an authentication subsystem. A few hard rules:
   scenario and adapt; never reach into provider modules directly,
   always go through `client.OAuthProvider.*`.
 - **"Test against a new IdP"** → §5 above.
+- **"Test behaviour X while the server is busy / under load"** → §11
+  below (the workload helper).
 
 Keep this file accurate. If you change the contract, update §4. If you
 add a CLI flag, update §3. If you tear out a sub-suite, fix §2.
+
+---
+
+## 11. Running scenarios under background load (workload helper)
+
+In production, OAuth requests never hit an idle server. To assert that
+authentication keeps working while the node is doing real work, wrap the
+scenario body in the workload helper from
+[`helpers/workload.py`](../helpers/workload.py). It runs a randomised mix
+of DDL/DML/query activity in parallel, then stops and cleans up after
+itself.
+
+### 11.1 Basic usage
+
+Prefer the `background_workload` context manager — it owns the
+`Event`, the `parallel=True` launch, the stop signal, and the join:
+
+```python
+from helpers.workload import background_workload
+
+@TestScenario
+def valid_token_accepted_under_load(self):
+    """ClickHouse SHALL accept a valid token while the server is under load."""
+    client = self.context.provider_client
+    node = self.context.node
+
+    with background_workload(node, intensity="medium"):
+        with Given("I get a valid OAuth token"):
+            token = client.OAuthProvider.get_oauth_token().access_token
+        with Then("ClickHouse accepts the token under load"):
+            access_clickhouse(token=token, status_code=200)
+```
+
+The reference proof-of-concept is
+`valid_token_accepted_under_load` in
+[`tests/authentication.py`](tests/authentication.py). Copy it when
+adding load coverage elsewhere.
+
+Pass `self.context.node` (the `clickhouse1` node object) — not an IP
+string. The helper uses `node.query(...)` (native client), independent
+of the HTTP/bearer path the OAuth steps exercise.
+
+### 11.2 Tuning the load
+
+`background_workload(node, **kwargs)` forwards everything to
+`simulate_workload`:
+
+| Argument | Default | Meaning |
+|------------------|------------|------------------------------------------------------------------|
+| `intensity`      | `"medium"` | `"low"` / `"medium"` / `"high"` — controls repeat counts + delay |
+| `delay`          | profile    | Override the per-round sleep (seconds) |
+| `cluster`        | `None`     | If set, create/drop/truncate run `ON CLUSTER` |
+| `enable_creates` | `True`     | CREATE TABLE / MATERIALIZED VIEW |
+| `enable_inserts` | `True`     | INSERT |
+| `enable_selects` | `True`     | SELECT count/agg/where/order/group |
+| `enable_alters`  | `True`     | ADD/DROP/RENAME column, UPDATE/DELETE rows |
+| `enable_drops`   | `True`     | DROP / TRUNCATE TABLE |
+| `enable_system`  | `True`     | read-only `system.*` queries |
+
+Toggle groups off to shape the load — e.g. a read-only background:
+
+```python
+with background_workload(
+    node, enable_inserts=False, enable_alters=False, enable_drops=False
+):
+    ...
+```
+
+### 11.3 Behaviour to know
+
+- **Self-cleaning.** Every object is named `workload_<uid>_*` and dropped
+  in a `Finally:` on exit, even if the body raises. No manual cleanup.
+- **Quiet failures.** Background queries run with `no_checks=True`; a
+  failed action is logged via `note(...)` and the loop continues, so
+  transient races never fail the scenario. Your *foreground* assertions
+  are the ones that matter.
+- **Always-seeded.** A minimal set of tables + rows is created up front
+  regardless of the `enable_*` flags, so reads have data even with
+  `enable_inserts=False`.
+- **`join()` on exit.** The context manager joins parallel work when the
+  `with` block ends; don't start unrelated parallel tasks inside it.
+
+### 11.4 Extending the action set
+
+The helper lives in `helpers/` (shared, not OAuth-specific). Add a new
+action with the `@action(name, group, preconditions=[...])` decorator
+next to the others; it auto-registers and is picked up by the matching
+`enable_*` flag. Reuse existing step helpers (e.g. `helpers/alter.py`)
+rather than hand-rolling SQL where one exists. Declare preconditions
+(`"table_exists"`, `"has_rows"`) so the scheduler only runs an action
+once its prerequisites are met.
