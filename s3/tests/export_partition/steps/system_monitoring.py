@@ -164,9 +164,6 @@ def verify_table_structure_has_fields(
         "parts_count",
         "parts_to_do",
         "status",
-        "exception_replica",
-        "last_exception",
-        "exception_part",
         "exception_count",
     ]
 
@@ -203,8 +200,7 @@ def verify_all_fields_populated(self, source_table, node=None, timeout=30, delay
             result = node.query(
                 f"SELECT source_database, source_table, destination_database, destination_table, "
                 f"create_time, partition_id, transaction_id, query_id, source_replica, "
-                f"parts, parts_count, parts_to_do, status, exception_replica, "
-                f"last_exception, exception_part, exception_count "
+                f"parts, parts_count, parts_to_do, status, exception_count "
                 f"FROM system.replicated_partition_exports "
                 f"WHERE source_table = '{source_table}' LIMIT 1",
                 exitcode=0,

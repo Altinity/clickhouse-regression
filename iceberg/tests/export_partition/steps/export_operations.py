@@ -42,6 +42,11 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_destination_name,
 )
 
+# ``EXPORT_PARTITION_ALREADY_EXPORTED`` (server error code 1006) when a
+# duplicate export key is still live in Keeper. ``clickhouse-client`` maps
+# it to ``1006 % 256``.
+EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE = 238
+
 
 # ClickHouse bug workaround (Glue only).
 #
@@ -201,7 +206,7 @@ def export_partition(
             the whole list.
         exitcode: Expected exit code for the ``ALTER`` statement. Use ``0``
             (default) for success, or a specific code (e.g. ``36`` for
-            ``BAD_ARGUMENTS``) to assert synchronous rejection.
+            ``EXPORT_PARTITION_ALREADY_EXPORTED``) to assert synchronous rejection.
         message: Expected substring in the error output. Typically set
             together with ``exitcode`` when asserting rejection.
         wait_for_completion: If ``True`` and no rejection is expected, block

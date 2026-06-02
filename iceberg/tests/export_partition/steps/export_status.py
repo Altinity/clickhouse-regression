@@ -219,7 +219,8 @@ def wait_for_exports_to_settle(
     at parse/schedule time but still leave one of the EXPORT entries
     running in the background (e.g. the
     duplicate-EXPORT-inside-one-ALTER scenario in ``concurrent_writes.py``
-    - the client sees ``BAD_ARGUMENTS`` for the second entry while the
+    - the client sees ``EXPORT_PARTITION_ALREADY_EXPORTED`` for the second
+      entry while the
     first entry's commit is still in flight, which races PyIceberg against
     the snapshot being written and produces a "snapshots=0, rows=3"
     inconsistency on the next assertion).
