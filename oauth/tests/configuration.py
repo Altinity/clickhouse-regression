@@ -96,12 +96,14 @@ def non_existent_processor_in_user_directory(self):
     with Then(
         "ClickHouse rejects: the only configured processor cannot validate "
         "the token, and the user_directories reference 'keycloak' is "
-        "dangling so no fallback path can authenticate it"
+        "dangling so no fallback path can authenticate it",
+        description="""
+            HTTP layer rejects with AUTHENTICATION_FAILED (403) when no
+            processor can validate the bearer token; that is the failure
+            surface for any unverifiable token, including the dangling-
+            reference case under test.
+        """,
     ):
-        # HTTP layer rejects with AUTHENTICATION_FAILED (403) when no
-        # processor can validate the bearer token; that is the failure
-        # surface for any unverifiable token, including the dangling-
-        # reference case under test.
         body = access_clickhouse(token=token, status_code=403)
         assert (
             "AUTHENTICATION_FAILED" in body or "Token could not be verified" in body
@@ -358,11 +360,13 @@ def multiple_token_entries_in_user_directories(self):
 
     with Given(
         "I overlay <user_directories replace> with two <token> blocks "
-        "pointing at the same processor"
+        "pointing at the same processor",
+        description="""
+            Pass the two <token> children as a list — the XML writer
+            in helpers.common._create_xml_tree treats list-of-dicts as
+            a request for sibling elements with the same tag.
+        """,
     ):
-        # Pass the two <token> children as a list — the XML writer
-        # in helpers.common._create_xml_tree treats list-of-dicts as
-        # a request for sibling elements with the same tag.
         entries = {
             KeyWithAttributes("user_directories", {"replace": "replace"}): {
                 "token": [

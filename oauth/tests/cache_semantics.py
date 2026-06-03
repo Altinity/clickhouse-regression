@@ -72,8 +72,10 @@ def at_most_one_cache_entry_per_user(self):
         token_a = client.OAuthProvider.get_oauth_token().access_token
         body_a = access_clickhouse(token=token_a, status_code=200)
 
-    with And("I get a fresh token B for the same user"):
-        # 1s gap so iat / jti differ at Keycloak.
+    with And(
+        "I get a fresh token B for the same user",
+        description="1s gap so iat / jti differ at Keycloak.",
+    ):
         time.sleep(1)
         token_b = client.OAuthProvider.get_oauth_token().access_token
         assert token_b != token_a, error(
@@ -90,10 +92,14 @@ def at_most_one_cache_entry_per_user(self):
             f"A={body_a!r} B={body_b!r}"
         )
 
-    with And("token A still works after token B (no slot eviction breaks A)"):
-        # A's signature is still valid locally; even if the cache
-        # entry was rewritten by B, A's re-validation against JWKS
-        # SHALL succeed and SHALL again map to the same user.
+    with And(
+        "token A still works after token B (no slot eviction breaks A)",
+        description="""
+            A's signature is still valid locally; even if the cache
+            entry was rewritten by B, A's re-validation against JWKS
+            SHALL succeed and SHALL again map to the same user.
+        """,
+    ):
         body_a_again = access_clickhouse(token=token_a, status_code=200)
         assert body_a_again == body_a, error(
             f"After token B, token A no longer resolves to the same "
@@ -193,7 +199,6 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     short_token_lifespan = 30
     cache_lifetime = 600
 
-    # Only Keycloak supports setting accessTokenLifespan via Admin API.
     if str(self.context.provider_name).lower() != "keycloak":
         skip(
             "Common.Cache.Behavior reproduction needs the IdP to honour "
@@ -205,10 +210,14 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     from oauth.tests.steps.keycloak_realm import keycloak_admin_request
     from oauth.tests.steps.provider_protocol import _decode_jwt_token
 
-    # Capture the realm's current accessTokenLifespan so we can restore
-    # it on teardown. Some Keycloak builds default to 300s, others to
-    # the global default; we don't want to bake an assumption in.
-    with Given("I capture the realm's current accessTokenLifespan"):
+    with Given(
+        "I capture the realm's current accessTokenLifespan",
+        description="""
+            Capture the realm's current accessTokenLifespan so we can restore
+            it on teardown. Some Keycloak builds default to 300s, others to
+            the global default; we don't want to bake an assumption in.
+        """,
+    ):
         status, body = keycloak_admin_request(
             method="GET",
             path=f"/admin/realms/{realm}",
@@ -244,8 +253,10 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             token_response = client.OAuthProvider.get_oauth_token()
             token = token_response.access_token
 
-        with And("I verify Keycloak actually honoured the accessTokenLifespan change"):
-            # Verify Keycloak actually honoured the lifespan change by decoding the JWT.
+        with And(
+            "I verify Keycloak actually honoured the accessTokenLifespan change",
+            description="By decoding the JWT.",
+        ):
             _, payload, _ = _decode_jwt_token(token)
             jwt_lifespan = None
             if "exp" in payload and "iat" in payload:

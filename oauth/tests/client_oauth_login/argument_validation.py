@@ -359,11 +359,15 @@ def login_value_combinatorial_fuzz(self):
             with Given("I reset the client state"):
                 reset_client_state()
 
-            # ``reset_client_state`` wipes ~/.clickhouse-client so the
-            # credentials file must be (re-)materialised inside every
-            # iteration that needs it.
             if extra_name == "with_oauth_credentials":
-                with And("I write a valid OAuth credentials file"):
+                with And(
+                    "I write a valid OAuth credentials file",
+                    description="""
+                        ``reset_client_state`` wipes ~/.clickhouse-client so
+                        the credentials file must be (re-)materialised inside
+                        every iteration that needs it.
+                    """,
+                ):
                     write_oauth_credentials_file()
 
             with When(
@@ -552,11 +556,16 @@ def login_multi_conflict_combinations(self):
             with Given("I reset the client state"):
                 reset_client_state()
 
-            # Materialise the credentials file when the case references it,
-            # so we exercise the credentials-processing branch rather than
-            # the "file not found" branch.
             if "--oauth-credentials" in extra:
-                with And("I write a valid OAuth credentials file"):
+                with And(
+                    "I write a valid OAuth credentials file",
+                    description="""
+                        Materialise the credentials file when the case
+                        references it, so we exercise the credentials-
+                        processing branch rather than the "file not found"
+                        branch.
+                    """,
+                ):
                     write_oauth_credentials_file()
 
             with When(f"I run clickhouse-client with {extra!r}"):

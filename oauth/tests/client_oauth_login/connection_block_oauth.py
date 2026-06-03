@@ -46,11 +46,15 @@ def connection_block_oauth_device(self):
             timeout=15,
         )
 
-    with Then("the device flow is driven from the XML connection block"):
-        # The connection block names a valid Keycloak realm + client,
-        # so device authorization MUST hand out a user_code. Pinning
-        # this rather than just "no crash" catches regressions where
-        # the XML fields stop being read into the OAuth context.
+    with Then(
+        "the device flow is driven from the XML connection block",
+        description="""
+            The connection block names a valid Keycloak realm + client,
+            so device authorization MUST hand out a user_code. Pinning
+            this rather than just "no crash" catches regressions where
+            the XML fields stop being read into the OAuth context.
+        """,
+    ):
         assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
@@ -87,12 +91,16 @@ def cli_overrides_connection_block(self):
             timeout=12,
         )
 
-    with Then("Keycloak rejects cli-id (proving the override is in effect)"):
-        # Both block-id and cli-id are fake; what we are pinning here is
-        # that the *overridden* value reached Keycloak. That manifests as
-        # an OAuth invalid_client/invalid-client diagnostic. The bare
-        # "client" marker is a final fallback so Keycloak phrasing changes
-        # don't break us.
+    with Then(
+        "Keycloak rejects cli-id (proving the override is in effect)",
+        description="""
+            Both block-id and cli-id are fake; what we are pinning here is
+            that the *overridden* value reached Keycloak. That manifests as
+            an OAuth invalid_client/invalid-client diagnostic. The bare
+            "client" marker is a final fallback so Keycloak phrasing changes
+            don't break us.
+        """,
+    ):
         assert_client_rejected(
             output=output,
             exit_code=exit_code,
@@ -129,11 +137,15 @@ def invalid_callback_port_rejected(self):
             timeout=10,
         )
 
-    with Then("the client rejects the out-of-range port"):
-        # 999999 is outside the legal TCP port range; a *clean* arg-parse
-        # rejection is the SRS-prescribed outcome. Mirror the assertion
-        # the negative-port sibling scenario already enforces so the two
-        # boundary conditions are pinned symmetrically.
+    with Then(
+        "the client rejects the out-of-range port",
+        description="""
+            999999 is outside the legal TCP port range; a *clean* arg-parse
+            rejection is the SRS-prescribed outcome. Mirror the assertion
+            the negative-port sibling scenario already enforces so the two
+            boundary conditions are pinned symmetrically.
+        """,
+    ):
         assert_client_rejected(
             output=output,
             exit_code=exit_code,
@@ -168,12 +180,16 @@ def connection_block_login_browser(self):
             timeout=14,
         )
 
-    with Then("the browser-flow front half ran without crashing"):
-        # ``<login>browser</login>`` must drive the authorization-code
-        # flow far enough to print a visit-this-URL hint or a callback
-        # message — otherwise the connection block isn't actually
-        # selecting the browser path. Headless CI cannot complete the
-        # callback but the *start* of the flow is observable.
+    with Then(
+        "the browser-flow front half ran without crashing",
+        description="""
+            ``<login>browser</login>`` must drive the authorization-code
+            flow far enough to print a visit-this-URL hint or a callback
+            message — otherwise the connection block isn't actually
+            selecting the browser path. Headless CI cannot complete the
+            callback but the *start* of the flow is observable.
+        """,
+    ):
         assert_client_rejected(
             output=output,
             exit_code=exit_code,
@@ -239,10 +255,14 @@ def connection_block_oauth_url_oidc_discovery_device_flow(self):
     with Given("I reset the client state"):
         reset_client_state()
 
-    with And("I write oauth-url plus confidential client secret"):
-        # Use the confidential client so the ``oauth_client_secret`` value
-        # is actually validated by Keycloak (``grafana-client`` is public
-        # and ignores ``client_secret`` entirely).
+    with And(
+        "I write oauth-url plus confidential client secret",
+        description="""
+            Use the confidential client so the ``oauth_client_secret`` value
+            is actually validated by Keycloak (``grafana-client`` is public
+            and ignores ``client_secret`` entirely).
+        """,
+    ):
         write_client_config_xml(
             contents=oauth_connection_config_xml(
                 login_mode="device",
@@ -322,10 +342,14 @@ def cli_overrides_multiple_oauth_fields(self):
             )
         )
 
-    with When("I override via CLI with working Keycloak endpoints"):
-        # Override targets the confidential client so the secret-override
-        # path is exercised end-to-end rather than relying on Keycloak
-        # ignoring the secret for a public client.
+    with When(
+        "I override via CLI with working Keycloak endpoints",
+        description="""
+            Override targets the confidential client so the secret-override
+            path is exercised end-to-end rather than relying on Keycloak
+            ignoring the secret for a public client.
+        """,
+    ):
         exit_code, output = run_clickhouse_client_no_host(
             args=[
                 "--config",

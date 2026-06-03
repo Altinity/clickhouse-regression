@@ -67,13 +67,17 @@ def corrupted_cache_is_ignored(self):
             expect_error=True,
         )
 
-    with Then("the corrupted cache is bypassed and a fresh device flow starts"):
+    with Then(
+        "the corrupted cache is bypassed and a fresh device flow starts",
+        description="""
+            The corrupted-cache requirement is "ignored, not crashed" — so
+            the client MUST fall back to a fresh device authorization. Pin
+            the user_code (or at least the verification URL) so the
+            scenario fails loudly if some future regression swallows the
+            cache-parse error and silently exits without doing OAuth.
+        """,
+    ):
         assert_no_segfault(output=output, exit_code=exit_code)
-        # The corrupted-cache requirement is "ignored, not crashed" — so
-        # the client MUST fall back to a fresh device authorization. Pin
-        # the user_code (or at least the verification URL) so the
-        # scenario fails loudly if some future regression swallows the
-        # cache-parse error and silently exits without doing OAuth.
         ol = output.lower()
         assert (
             extract_device_user_code_from_client_output(output) is not None
@@ -98,12 +102,16 @@ def cache_file_mode_is_strict(self):
         with And("I write OAuth credentials"):
             write_keycloak_device_credentials()
 
-        with When("I complete one device login so the client creates the cache"):
-            # The previous version of this scenario seeded a 0600 file
-            # ourselves and asserted it was still 0600 — that tested our
-            # write_oauth_cache helper, not the client. Drive a real
-            # login so the client *creates* the cache, then check its
-            # on-disk mode.
+        with When(
+            "I complete one device login so the client creates the cache",
+            description="""
+                The previous version of this scenario seeded a 0600 file
+                ourselves and asserted it was still 0600 — that tested our
+                write_oauth_cache helper, not the client. Drive a real
+                login so the client *creates* the cache, then check its
+                on-disk mode.
+            """,
+        ):
             complete_keycloak_device_login_via_background()
 
         with Then("the cache file the client just created is mode 0600"):
@@ -268,14 +276,18 @@ def world_readable_oauth_cache_is_handled(self):
             expect_error=True,
         )
 
-    with Then("the loose-permission cache does not short-circuit OAuth"):
+    with Then(
+        "the loose-permission cache does not short-circuit OAuth",
+        description="""
+            The seeded "refresh-placeholder" is not a real refresh token,
+            so the client must either (a) ignore the world-readable cache
+            outright or (b) try the placeholder, get rejected, and fall
+            back to device flow. Either way a fresh device authorization
+            MUST appear — "no crash" alone allows a regression that
+            silently exits before doing OAuth.
+        """,
+    ):
         assert_no_segfault(output=output, exit_code=exit_code)
-        # The seeded "refresh-placeholder" is not a real refresh token,
-        # so the client must either (a) ignore the world-readable cache
-        # outright or (b) try the placeholder, get rejected, and fall
-        # back to device flow. Either way a fresh device authorization
-        # MUST appear — "no crash" alone allows a regression that
-        # silently exits before doing OAuth.
         ol = output.lower()
         assert (
             extract_device_user_code_from_client_output(output) is not None
@@ -335,10 +347,14 @@ def read_only_client_dir_blocks_cache_write(self):
         with And("I make the config directory immutable"):
             set_immutable(path=CLIENT_CONFIG_DIR)
 
-        with When("I start clickhouse-client with device login"):
-            # Use a short wall_timeout so that if the client hangs trying to
-            # write the immutable cache directory it is killed within the 90s
-            # wait window rather than outliving it.
+        with When(
+            "I start clickhouse-client with device login",
+            description="""
+        Use a short wall_timeout so that if the client hangs trying to
+            write the immutable cache directory it is killed within the 90s
+            wait window rather than outliving it.""",
+        ):
+
             start_clickhouse_oauth_client_background(
                 args=[
                     "--host",
@@ -357,8 +373,12 @@ def read_only_client_dir_blocks_cache_write(self):
         with And("I approve the device code"):
             approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
 
-        with And("I wait for the client to finish or be killed by wall timeout"):
-            # timeout > wall_timeout guarantees the process always finishes here.
+        with And(
+            "I wait for the client to finish or be killed by wall timeout",
+            description=(
+                "timeout > wall_timeout guarantees the process always " "finishes here."
+            ),
+        ):
             wait_clickhouse_oauth_background_finished(timeout_sec=60)
 
         with Then("oauth_cache.json is absent despite successful authentication"):

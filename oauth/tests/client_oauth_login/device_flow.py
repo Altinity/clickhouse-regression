@@ -148,10 +148,14 @@ def device_flow_unreachable_device_authorization_uri(self):
             expect_error=True,
         )
 
-    with Then("the client surfaces a network error and does not crash"):
-        # Acceptable network-failure shapes from Poco / glibc / curl-style
-        # diagnostics — pinning at least one is required so the scenario
-        # cannot pass on an unrelated failure mode (e.g. arg-parse error).
+    with Then(
+        "the client surfaces a network error and does not crash",
+        description="""
+            Acceptable network-failure shapes from Poco / glibc / curl-style
+            diagnostics — pinning at least one is required so the scenario
+            cannot pass on an unrelated failure mode (e.g. arg-parse error).
+        """,
+    ):
         assert_client_rejected(
             output=output,
             exit_code=exit_code,
@@ -264,11 +268,15 @@ def device_flow_wrong_client_secret(self):
     with Given("I reset the client state"):
         reset_client_state()
 
-    with And("I write a credentials file with a wrong secret"):
-        # ``grafana-client`` is a public client in the realm export, so
-        # Keycloak ignores ``client_secret`` for it entirely. Use the
-        # confidential client ``grafana-client-confidential`` so the wrong
-        # secret actually trips Keycloak's authentication check.
+    with And(
+        "I write a credentials file with a wrong secret",
+        description="""
+            ``grafana-client`` is a public client in the realm export, so
+            Keycloak ignores ``client_secret`` for it entirely. Use the
+            confidential client ``grafana-client-confidential`` so the wrong
+            secret actually trips Keycloak's authentication check.
+        """,
+    ):
         write_oauth_credentials_file(
             client_id="grafana-client-confidential",
             client_secret="wrong-secret-value",
@@ -292,11 +300,15 @@ def device_flow_wrong_client_secret(self):
             expect_error=True,
         )
 
-    with Then("the client exits with an OAuth invalid-client diagnostic"):
-        # Keycloak responds 401 with {"error":"invalid_client"} when the
-        # device endpoint receives a wrong client_secret for a confidential
-        # client. Pin at least one of the OAuth-spec failure markers so the
-        # scenario can't silently pass on, say, a network error.
+    with Then(
+        "the client exits with an OAuth invalid-client diagnostic",
+        description="""
+            Keycloak responds 401 with {"error":"invalid_client"} when the
+            device endpoint receives a wrong client_secret for a confidential
+            client. Pin at least one of the OAuth-spec failure markers so the
+            scenario can't silently pass on, say, a network error.
+        """,
+    ):
         assert_client_rejected(
             output=output,
             exit_code=exit_code,
@@ -522,12 +534,16 @@ def device_flow_against_second_cluster_node(self):
             expect_error=True,
         )
 
-    with Then("device authorization details appear against the second node"):
-        # OAuth happens before the TCP connection — the device user_code
-        # MUST appear regardless of which cluster node is named on --host.
-        # Asserting on user_code (rather than just "no crash") catches a
-        # regression where the OAuth path is short-circuited by node-
-        # specific routing.
+    with Then(
+        "device authorization details appear against the second node",
+        description="""
+            OAuth happens before the TCP connection — the device user_code
+            MUST appear regardless of which cluster node is named on --host.
+            Asserting on user_code (rather than just "no crash") catches a
+            regression where the OAuth path is short-circuited by node-
+            specific routing.
+        """,
+    ):
         assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
@@ -558,13 +574,17 @@ def device_flow_with_secure_transport_flag(self):
             expect_error=True,
         )
 
-    with Then("the device-auth step runs to user_code before TLS would matter"):
-        # ``--secure`` only matters AFTER OAuth produces a token; in this
-        # ~12s window the device endpoint must still print the user_code
-        # so we know --secure didn't break the OAuth-front half of
-        # --login=device. The eventual TLS handshake failure (server is
-        # plaintext) is not observable in this timeout window and is not
-        # what this scenario is regressing.
+    with Then(
+        "the device-auth step runs to user_code before TLS would matter",
+        description="""
+            ``--secure`` only matters AFTER OAuth produces a token; in this
+            ~12s window the device endpoint must still print the user_code
+            so we know --secure didn't break the OAuth-front half of
+            --login=device. The eventual TLS handshake failure (server is
+            plaintext) is not observable in this timeout window and is not
+            what this scenario is regressing.
+        """,
+    ):
         assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
