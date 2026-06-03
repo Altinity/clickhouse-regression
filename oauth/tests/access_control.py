@@ -1,17 +1,3 @@
-"""Authorization-negative scenarios.
-
-These tests prove ClickHouse correctly rejects tokens issued from a
-trust boundary it should not accept:
-
-- Wrong realm (Keycloak) / wrong tenant (Azure) — "user from another org"
-- Wrong client / wrong audience — "user is in our IdP but not in our app"
-- ``email_verified=false`` — identity exists but the email-ownership
-  check failed at the IdP
-
-Tokens are minted by the *actual IdP* (not by JWT mutation) so the
-scenarios exercise the same code path that runs in production.
-"""
-
 from helpers.common import getuid
 from oauth.tests.steps.clikhouse import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
@@ -192,7 +178,20 @@ def authorization_succeeds_baseline(self):
     RQ_SRS_042_OAuth_Common_Parameters_ExpectedAudience("1.0"),
 )
 def feature(self):
-    """Authorization-negative scenarios using real IdP-issued tokens."""
+    """Authorization-negative scenarios.
+
+    These tests prove ClickHouse correctly rejects tokens issued from a
+    trust boundary it should not accept:
+
+    - Wrong realm (Keycloak) / wrong tenant (Azure) — "user from another org"
+    - Wrong client / wrong audience — "user is in our IdP but not in our app"
+    - ``email_verified=false`` — identity exists but the email-ownership
+      check failed at the IdP
+
+    Tokens are minted by the *actual IdP* (not by JWT mutation) so the
+    scenarios exercise the same code path that runs in production.
+    """
+
     Scenario(run=authorization_succeeds_baseline)
     Scenario(run=token_from_other_realm_rejected)
     Scenario(run=token_from_wrong_client_rejected)
