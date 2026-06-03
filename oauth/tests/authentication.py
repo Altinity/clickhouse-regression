@@ -1,4 +1,5 @@
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 from helpers.workload import background_workload
@@ -72,9 +73,8 @@ def valid_token_on_all_nodes(self):
     with Given("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
-    for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
-        with Then(f"node {i} ({ip}) accepts the token"):
-            access_clickhouse(token=token, ip=ip, status_code=200)
+    with Then("every node accepts the token"):
+        access_clickhouse_on_all_nodes(token=token)
 
 
 @TestScenario
@@ -95,10 +95,7 @@ def no_token_processor_configured(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario

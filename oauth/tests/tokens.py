@@ -6,6 +6,7 @@ JWKS endpoint, etc.) so we don't double-count the same coverage.
 """
 
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 
@@ -19,22 +20,7 @@ def openid_discovery_mode(self):
     client = self.context.provider_client
 
     with Given("I configure a token processor with provider OpenID endpoints"):
-        endpoints = client.OAuthProvider.openid_endpoints()
-        change_token_processors(
-            processor_name="keycloak",
-            processor_type="OpenID",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            introspection_client_id=self.context.introspection_client_id,
-            introspection_client_secret=self.context.introspection_client_secret,
-            replace=True,
-        )
-
-    with And("I configure user directories"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-        )
+        configure_openid_token_processor()
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token

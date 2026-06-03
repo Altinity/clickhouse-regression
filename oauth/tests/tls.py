@@ -1,4 +1,5 @@
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 
@@ -24,9 +25,8 @@ def token_auth_over_https_multinode(self):
     with Given("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
 
-    for i, ip in enumerate(["clickhouse1", "clickhouse2", "clickhouse3"], 1):
-        with Then(f"node {i} ({ip}) accepts the token over HTTPS"):
-            access_clickhouse(token=token, ip=ip, https=True, status_code=200)
+    with Then("every node accepts the token over HTTPS"):
+        access_clickhouse_on_all_nodes(token=token, https=True)
 
 
 @TestScenario

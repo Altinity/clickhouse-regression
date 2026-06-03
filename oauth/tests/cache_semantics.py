@@ -9,33 +9,10 @@ import json
 import time
 
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
 from testflows.asserts import *
 from oauth.requirements.requirements import *
-
-
-def _configure_cache(self, *, token_cache_lifetime):
-    """Apply the standard Keycloak processor with a custom cache lifetime.
-
-    Centralised so each scenario doesn't repeat the same boilerplate.
-    """
-    client = self.context.provider_client
-    endpoints = client.OAuthProvider.openid_endpoints()
-
-    change_token_processors(
-        processor_name="keycloak",
-        processor_type="OpenID",
-        userinfo_endpoint=endpoints.userinfo_endpoint,
-        token_introspection_endpoint=endpoints.token_introspection_endpoint,
-        introspection_client_id=self.context.introspection_client_id,
-        introspection_client_secret=self.context.introspection_client_secret,
-        token_cache_lifetime=token_cache_lifetime,
-        replace=True,
-    )
-    change_user_directories_config(
-        processor="keycloak",
-        common_roles=["general-role"],
-    )
 
 
 @TestScenario
@@ -50,7 +27,7 @@ def cache_evicted_after_lifetime_then_new_token_cached(self):
     cache_lifetime = 5
 
     with Given(f"I configure the processor with cache lifetime {cache_lifetime}s"):
-        _configure_cache(self, token_cache_lifetime=cache_lifetime)
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
     with And("I get token A"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
@@ -89,7 +66,7 @@ def at_most_one_cache_entry_per_user(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a 60s cache lifetime"):
-        _configure_cache(self, token_cache_lifetime=60)
+        configure_openid_token_processor(token_cache_lifetime=60)
 
     with And("I get token A and authenticate (warms cache)"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
@@ -136,7 +113,7 @@ def new_token_replaces_cache_entry_for_same_user(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a 60s cache lifetime"):
-        _configure_cache(self, token_cache_lifetime=60)
+        configure_openid_token_processor(token_cache_lifetime=60)
 
     with And("I get token A and authenticate (populates cache for the user)"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
@@ -176,7 +153,7 @@ def expired_cache_entry_persists_until_next_auth(self):
     cache_lifetime = 5
 
     with Given(f"I configure the processor with cache lifetime {cache_lifetime}s"):
-        _configure_cache(self, token_cache_lifetime=cache_lifetime)
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
     with And("I get a token and authenticate (populates cache)"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -261,7 +238,7 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             f"I configure the processor with cache lifetime {cache_lifetime}s "
             f"(>> the {short_token_lifespan}s token lifespan)"
         ):
-            _configure_cache(self, token_cache_lifetime=cache_lifetime)
+            configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
         with And("I get a token (it should now carry a short exp)"):
             token_response = client.OAuthProvider.get_oauth_token()

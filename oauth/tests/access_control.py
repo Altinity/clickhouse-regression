@@ -1,5 +1,6 @@
 from helpers.common import getuid
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
 from testflows.asserts import *
 from oauth.requirements.requirements import (
@@ -44,20 +45,7 @@ def token_from_other_realm_rejected(self):
     try:
         with And("I configure ClickHouse to expect tokens from OUR realm only"):
             endpoints = client.OAuthProvider.openid_endpoints()
-            change_token_processors(
-                processor_name="keycloak",
-                processor_type="OpenID",
-                expected_issuer=endpoints.issuer,
-                userinfo_endpoint=endpoints.userinfo_endpoint,
-                token_introspection_endpoint=endpoints.token_introspection_endpoint,
-                introspection_client_id=self.context.introspection_client_id,
-                introspection_client_secret=self.context.introspection_client_secret,
-                replace=True,
-            )
-            change_user_directories_config(
-                processor="keycloak",
-                common_roles=["general-role"],
-            )
+            configure_openid_token_processor(expected_issuer=endpoints.issuer)
 
         with When("I get a token from the OTHER realm"):
             outsider_token = client.OAuthProvider.get_oauth_token_for_client(
@@ -105,21 +93,7 @@ def token_from_wrong_client_rejected(self):
 
     try:
         with And("I configure ClickHouse to require expected_audience=our-client"):
-            endpoints = client.OAuthProvider.openid_endpoints()
-            change_token_processors(
-                processor_name="keycloak",
-                processor_type="OpenID",
-                expected_audience=self.context.client_id,
-                userinfo_endpoint=endpoints.userinfo_endpoint,
-                token_introspection_endpoint=endpoints.token_introspection_endpoint,
-                introspection_client_id=self.context.introspection_client_id,
-                introspection_client_secret=self.context.introspection_client_secret,
-                replace=True,
-            )
-            change_user_directories_config(
-                processor="keycloak",
-                common_roles=["general-role"],
-            )
+            configure_openid_token_processor(expected_audience=self.context.client_id)
 
         with When("I get a token issued for the OTHER client"):
             try:
@@ -149,20 +123,7 @@ def authorization_succeeds_baseline(self):
 
     with Given("I configure ClickHouse with expected_issuer pinned to our realm"):
         endpoints = client.OAuthProvider.openid_endpoints()
-        change_token_processors(
-            processor_name="keycloak",
-            processor_type="OpenID",
-            expected_issuer=endpoints.issuer,
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            introspection_client_id=self.context.introspection_client_id,
-            introspection_client_secret=self.context.introspection_client_secret,
-            replace=True,
-        )
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-        )
+        configure_openid_token_processor(expected_issuer=endpoints.issuer)
 
     with When("I get a token from OUR realm"):
         token = client.OAuthProvider.get_oauth_token().access_token
