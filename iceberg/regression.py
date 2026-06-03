@@ -90,6 +90,16 @@ xfails = {
             "new writes only instead of the inherited snapshot chain.",
         )
     ],
+    "/iceberg/export partition/*/datatypes/*/accepted/accepted*UInt64*": [
+        (
+            Fail,
+            "ClickHouse maps UInt64 to Iceberg long (signed). Values above "
+            "INT64_MAX (e.g. 18446744073709551615) round-trip as -1 on "
+            "IcebergS3 read-back; byte-compare fails until export/read uses "
+            "a type that preserves the full unsigned range or rejects "
+            "out-of-range values at export time.",
+        )
+    ],
     "/iceberg/export partition/*/settings/output_format_parquet_compression_method flows to data files": [
         (
             Fail,

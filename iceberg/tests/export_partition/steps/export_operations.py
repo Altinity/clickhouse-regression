@@ -30,7 +30,11 @@ they live in different layers:
 from testflows.core import *
 
 from iceberg.tests.export_partition.steps.common import (
+    get_active_part_name,
     get_partition_ids,
+)
+from iceberg.tests.export_partition.steps.verification import (
+    wait_for_destination_row_count,
 )
 from iceberg.tests.export_partition.steps.export_status import (
     wait_for_export_status,
@@ -108,6 +112,7 @@ _apply_glue_metadata_path_workaround = apply_glue_metadata_path_workaround
 
 
 _INSERT_INTO_ICEBERG_SETTING_KEY = "allow_experimental_insert_into_iceberg"
+_EXPORT_PART_SETTING_KEY = "allow_experimental_export_merge_tree_part"
 
 
 def prepare_export_partition_settings(context_catalog, settings):
@@ -140,6 +145,29 @@ def prepare_export_partition_settings(context_catalog, settings):
 
     if not any(key == _INSERT_INTO_ICEBERG_SETTING_KEY for key, _ in settings):
         settings.append((_INSERT_INTO_ICEBERG_SETTING_KEY, 1))
+
+    return apply_glue_metadata_path_workaround(context_catalog, settings)
+
+
+def prepare_export_part_settings(context_catalog, settings):
+    """Per-query settings for ``ALTER TABLE … EXPORT PART …``.
+
+    ``EXPORT PART`` is gated by the user-level setting
+    ``allow_experimental_export_merge_tree_part`` (enabled in the default
+    profile by :mod:`iceberg.tests.export_partition.feature`, same pattern as
+    ``allow_experimental_insert_into_iceberg``) and still needs that Iceberg
+    gate for destinations.
+    """
+    if settings is None:
+        settings = []
+    else:
+        settings = list(settings)
+
+    if not any(key == _INSERT_INTO_ICEBERG_SETTING_KEY for key, _ in settings):
+        settings.append((_INSERT_INTO_ICEBERG_SETTING_KEY, 1))
+
+    if not any(key == _EXPORT_PART_SETTING_KEY for key, _ in settings):
+        settings.append((_EXPORT_PART_SETTING_KEY, 1))
 
     return apply_glue_metadata_path_workaround(context_catalog, settings)
 
@@ -250,6 +278,102 @@ def export_partition(
                 destination=filter_obj,
                 partition_id=partition_id,
                 expected_status="COMPLETED",
+                timeout=wait_timeout,
+                node=node,
+            )
+
+    return result
+
+
+@TestStep(When)
+def export_part(
+    self,
+    source_table,
+    part_name,
+    destination=None,
+    destination_table=None,
+    node=None,
+    settings=None,
+    extra_settings=None,
+    exitcode=0,
+    message=None,
+    wait_for_completion=True,
+    wait_timeout=120,
+    expected_rows=None,
+    where_clause=None,
+    minio_root_user=None,
+    minio_root_password=None,
+):
+    """Run ``ALTER TABLE … EXPORT PART '…' TO TABLE …``.
+
+    Completion is detected by polling the destination row count (not
+    ``system.replicated_partition_exports``, which tracks ``EXPORT PARTITION``
+    on ``ReplicatedMergeTree``).
+    """
+    if node is None:
+        node = self.context.node
+
+    if destination is None and destination_table is None:
+        raise ValueError(
+            "export_part requires either destination= or destination_table="
+        )
+    name, filter_obj = _resolve_destination(destination, destination_table)
+
+    if settings is None and extra_settings:
+        settings = list(extra_settings)
+
+    settings = prepare_export_part_settings(self.context.catalog, settings)
+
+    expect_failure = exitcode != 0 or message is not None
+
+    with By(
+        f"running EXPORT PART '{part_name}' from {source_table} to {name}"
+    ):
+        if expect_failure:
+            result = node.query(
+                f"ALTER TABLE {source_table} "
+                f"EXPORT PART '{part_name}' "
+                f"TO TABLE {name}",
+                settings=settings,
+                exitcode=exitcode,
+                message=message,
+                ignore_exception=True,
+            )
+        else:
+            for attempt in retries(timeout=300, delay=0.2):
+                with attempt:
+                    result = node.query(
+                        f"ALTER TABLE {source_table} "
+                        f"EXPORT PART '{part_name}' "
+                        f"TO TABLE {name}",
+                        settings=settings,
+                        no_checks=True,
+                    )
+                    if (
+                        result.exitcode != 0
+                        and "Background executor is busy" in result.output
+                    ):
+                        fail("Background executor is busy, retrying EXPORT PART")
+                    assert result.exitcode == 0, error(result.output)
+
+    if wait_for_completion and not expect_failure:
+        if (
+            expected_rows is None
+            or where_clause is None
+            or minio_root_user is None
+            or minio_root_password is None
+        ):
+            raise ValueError(
+                "export_part wait_for_completion requires expected_rows, "
+                "where_clause, minio_root_user, and minio_root_password"
+            )
+        with And(f"waiting for EXPORT PART '{part_name}' to complete"):
+            wait_for_destination_row_count(
+                destination=filter_obj,
+                expected=expected_rows,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                where_clause=where_clause,
                 timeout=wait_timeout,
                 node=node,
             )
