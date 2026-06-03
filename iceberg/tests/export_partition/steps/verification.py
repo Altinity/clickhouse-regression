@@ -93,6 +93,38 @@ def count_rows_in_destination(
         return 0
 
 
+@TestStep(When)
+def wait_for_destination_row_count(
+    self,
+    destination,
+    expected,
+    minio_root_user,
+    minio_root_password,
+    where_clause=None,
+    timeout=120,
+    delay=2,
+    node=None,
+):
+    """Poll until the destination has ``expected`` rows matching ``where_clause``.
+
+    Used after ``EXPORT PART``, which does not populate
+    ``system.replicated_partition_exports``.
+    """
+    for attempt in retries(timeout=timeout, delay=delay):
+        with attempt:
+            actual = count_rows_in_destination(
+                destination=destination,
+                minio_root_user=minio_root_user,
+                minio_root_password=minio_root_password,
+                where_clause=where_clause,
+                node=node,
+            )
+            assert actual == expected, error(
+                f"destination has {actual} rows, expected {expected} "
+                f"(still waiting for EXPORT PART)"
+            )
+
+
 @TestStep(Then)
 def assert_destination_row_count(
     self,
