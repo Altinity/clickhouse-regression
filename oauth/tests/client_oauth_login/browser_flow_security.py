@@ -17,8 +17,8 @@ from oauth.tests.steps.client_login import (
     start_oversized_oidc_discovery_mock,
     stop_mock_oidc_server,
     wait_for_http_response,
+    write_browser_oauth_credentials,
     write_client_config_xml,
-    write_oauth_credentials_file,
 )
 
 BROWSER_SECURITY_LOG = "/tmp/ch_oauth_browser_security.log"
@@ -36,18 +36,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
             reset_client_state()
 
         with And("I write credentials for browser OAuth"):
-            write_oauth_credentials_file(
-                client_id="grafana-client",
-                client_secret="grafana-secret",
-                auth_uri=(
-                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth"
-                ),
-                token_uri=(
-                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
-                ),
-                redirect_uris=["http://127.0.0.1"],
-                device_authorization_uri=None,
-            )
+            write_browser_oauth_credentials()
 
         with When("I start browser login pinned to callback port 49152"):
             start_clickhouse_oauth_client_background(

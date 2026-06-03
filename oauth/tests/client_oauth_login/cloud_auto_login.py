@@ -1,7 +1,6 @@
 """Tests for the ClickHouse Cloud auto-login detection."""
 
 from testflows.core import *
-from testflows.asserts import error
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_Cloud_AutoLogin,
@@ -10,6 +9,7 @@ from oauth.requirements.requirements import (
 from oauth.tests.client_oauth_login.common import connection_only_config_xml
 from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
+    assert_client_rejected,
     assert_no_segfault,
     reset_client_state,
     run_clickhouse_client,
@@ -40,13 +40,11 @@ def cloud_auto_login_off_for_non_cloud_host(self):
         )
 
     with Then("the client requires explicit OAuth args and did not crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            "oauth-url" in output.lower()
-            or "BAD_ARGUMENTS" in output
-            or "AUTHENTICATION_FAILED" in output
-        ), f"Expected explicit-OAuth-args hint or BAD_ARGUMENTS, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("oauth-url", "BAD_ARGUMENTS", "AUTHENTICATION_FAILED"),
+        )
 
 
 @TestScenario

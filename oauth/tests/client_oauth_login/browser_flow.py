@@ -1,7 +1,6 @@
 """Tests for ``--login=browser`` (authorization code + PKCE)."""
 
 from testflows.core import *
-from testflows.asserts import error
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_BrowserFlow_Authentication,
@@ -9,25 +8,12 @@ from oauth.requirements.requirements import (
 )
 from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
+    assert_client_rejected,
     assert_no_segfault,
     reset_client_state,
     run_clickhouse_client,
-    write_oauth_credentials_file,
+    write_browser_oauth_credentials,
 )
-
-
-def _browser_flow_creds(auth_uri=None):
-    au = auth_uri or (
-        "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth"
-    )
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        auth_uri=au,
-        token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
-        redirect_uris=["http://127.0.0.1"],
-        device_authorization_uri=None,
-    )
 
 
 @TestScenario
@@ -40,7 +26,7 @@ def browser_login_times_out_without_crash(self):
         reset_client_state()
 
     with And("I write OAuth credentials for the authorization-code flow"):
-        _browser_flow_creds()
+        write_browser_oauth_credentials()
 
     with When("I run clickhouse-client with --login=browser"):
         exit_code, output = run_clickhouse_client(
@@ -57,12 +43,11 @@ def browser_login_times_out_without_crash(self):
         )
 
     with Then("the client surfaces browser or callback or timeout and does not crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "browser" in ol or "callback" in ol or "timeout" in ol or "timed" in ol
-        ), f"Expected browser/callback/timeout hint, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("browser", "callback", "timeout", "timed"),
+        )
 
 
 @TestScenario
@@ -75,7 +60,9 @@ def browser_login_unreachable_auth_uri(self):
         reset_client_state()
 
     with And("I write credentials with a bogus authorization endpoint"):
-        _browser_flow_creds(auth_uri="http://does-not-exist.invalid:9999/oauth/auth")
+        write_browser_oauth_credentials(
+            auth_uri="http://does-not-exist.invalid:9999/oauth/auth"
+        )
 
     with When("I run clickhouse-client with --login=browser"):
         exit_code, output = run_clickhouse_client(
@@ -92,8 +79,7 @@ def browser_login_unreachable_auth_uri(self):
         )
 
     with Then("the client exits with an error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -106,7 +92,7 @@ def browser_login_accepts_callback_port_zero(self):
         reset_client_state()
 
     with And("I write OAuth credentials for the authorization-code flow"):
-        _browser_flow_creds()
+        write_browser_oauth_credentials()
 
     with When("I run clickhouse-client with --oauth-callback-port=0"):
         exit_code, output = run_clickhouse_client(
@@ -142,7 +128,7 @@ def browser_login_accepts_fixed_callback_port(self):
         reset_client_state()
 
     with And("I write OAuth credentials for the authorization-code flow"):
-        _browser_flow_creds()
+        write_browser_oauth_credentials()
 
     with When("I run clickhouse-client with --oauth-callback-port=49152"):
         exit_code, output = run_clickhouse_client(

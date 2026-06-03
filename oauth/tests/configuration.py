@@ -390,7 +390,7 @@ def multiple_token_entries_in_user_directories(self):
 
     with Then(
         "ClickHouse refuses the auth (duplicate <token> binding is an "
-        "invalid configuration per SRS 6.2.1.1.4)"
+        "invalid configuration)"
     ):
         assert_token_rejected(token=token)
 

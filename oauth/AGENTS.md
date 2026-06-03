@@ -44,7 +44,8 @@ oauth/
 │   │   ├── keycloak_realm.py             # Keycloak provider (full impl)
 │   │   ├── azure_application.py          # Azure provider (token-only)
 │   │   ├── google_application.py         # Google provider (token-only)
-│   │   └── clikhouse.py                  # access_clickhouse, change_token_processors, …
+│   │   ├── clikhouse.py                  # access_clickhouse, change_token_processors, …
+│   │   └── common.py                     # composite steps: configure_openid_token_processor, assert_query_denied, provider_user, …
 │   ├── authentication.py                 # baseline: valid/empty/tampered tokens
 │   ├── tokens.py                         # processor-config (OpenID discovery, bad jwks_uri)
 │   ├── jwt_manipulation.py               # JWT-mutation negatives (alg=none, exp past, …)
@@ -252,6 +253,28 @@ AttributeError: 'OK' object has no attribute 'issuer'
 
 …happens when a `@TestStep` returns a dataclass and the caller tries
 to read a field on the wrapped result.
+
+**Never pass `self` when calling a step.** A `@TestStep` (or any
+testflows test object) takes `self` as its first parameter in the
+*definition*, but testflows injects it automatically at call time. Pass
+only the real arguments:
+
+```python
+# definition — self is the first parameter
+@TestStep(Given)
+def configure_openid_token_processor(self, *, token_cache_lifetime=None):
+    ...
+
+# call site — DO NOT pass self
+with Given("I configure the processor"):
+    configure_openid_token_processor(token_cache_lifetime=5)   # correct
+    # configure_openid_token_processor(self, token_cache_lifetime=5)  # WRONG
+```
+
+This applies to every `@TestStep` / `@TestScenario` / `@TestOutline`
+call (`access_clickhouse(...)`, `change_token_processors(...)`, the composite
+steps in `steps/common.py`, etc.). Passing `self` shifts it into the
+first real positional argument and corrupts the call.
 
 **Rule of thumb**: only decorate with `@TestStep(Given|When|Then)`
 helpers that produce *side effects* (configuration writes, container

@@ -15,6 +15,7 @@ from oauth.tests.steps.client_login import (
     DEFAULT_CACHE_PATH,
     DEFAULT_CREDS_PATH,
     approve_keycloak_device_user_code_via_bash_tools,
+    assert_device_user_code_present,
     assert_no_segfault,
     complete_keycloak_device_login_via_background,
     extract_device_user_code_from_client_output,
@@ -228,10 +229,7 @@ def invalid_cached_refresh_token_falls_back_to_device_flow(self):
             )
 
         with Then("the client surfaces a fresh device authorization"):
-            assert_no_segfault(output=output, exit_code=exit_code)
-            assert (
-                extract_device_user_code_from_client_output(output) is not None
-            ), f"Expected new device user_code after invalid_grant fallback:\n{output}"
+            assert_device_user_code_present(output=output, exit_code=exit_code)
 
     finally:
         with Finally("I stop background clients"):
@@ -319,10 +317,7 @@ def oauth_cache_wrong_json_shape_starts_device_flow(self):
         )
 
     with Then("device authorization prompts appear"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected interactive device flow:\n{output}"
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
