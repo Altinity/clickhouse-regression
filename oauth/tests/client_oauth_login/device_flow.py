@@ -1,5 +1,3 @@
-"""Tests for the device-authorization (``--login=device``) flow."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
