@@ -1,5 +1,3 @@
-"""Tests for the on-disk OAuth refresh-token cache."""
-
 import json
 
 from testflows.core import *
