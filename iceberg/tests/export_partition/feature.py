@@ -78,6 +78,7 @@ def feature(self, minio_root_user, minio_root_password):
                         "default": {
                             "allow_experimental_insert_into_iceberg": "1",
                             "allow_experimental_export_merge_tree_part": "1",
+                            "allow_experimental_hybrid_table": "1",
                         }
                     }
                 },

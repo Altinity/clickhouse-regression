@@ -5,7 +5,9 @@ Round-trips every supported primitive / composite type in
 omits is rejected at CREATE-TABLE or export time (``rejected_*``).
 
 Runs under ``no_catalog`` (direct IcebergS3 writes) for both
-``EXPORT PARTITION ID`` and ``EXPORT PART``.
+``EXPORT PARTITION ID`` and ``EXPORT PART``. The ``cisco_schema`` scenario
+follows the no-catalog production path (``ENGINE = S3`` export + Hybrid
+cold read) for DNS types that ``IcebergS3`` DDL rejects.
 
 ClickHouse -> Iceberg primitive mapping exercised here:
 ``Int16/UInt16`` / ``Int32/UInt32`` / ``Int64/UInt64`` -> ``int`` /
@@ -35,6 +37,7 @@ from helpers.common import getuid
 
 from iceberg.tests.export_partition.steps.common import (
     create_replicated_mergetree,
+    first_partition_id,
     get_active_part_name,
     insert_data,
 )
@@ -49,6 +52,13 @@ from iceberg.tests.export_partition.steps.iceberg_destination import (
 from iceberg.tests.export_partition.steps.verification import (
     assert_destination_row_count,
     assert_source_and_destination_match,
+)
+from iceberg.tests.export_partition.steps.cisco_no_catalog import (
+    CISCO_COLD_EVENT_DATE,
+    CISCO_INSERT_SELECT,
+    CISCO_RETENTION,
+    create_cisco_hybrid_read_table,
+    create_cisco_no_catalog_fixture,
 )
 
 
@@ -773,6 +783,80 @@ def rejected_array_low_cardinality_string(
     )
 
 
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
+@Name("cisco schema")
+def cisco_schema(self, minio_root_user, minio_root_password):
+    """DNS-shaped schema: ``EXPORT PART`` to ``ENGINE = S3`` (no Iceberg catalog)
+    and verify through Hybrid cold segment.
+
+    Exercises every ClickHouse type in the Cisco DNS schema that
+    ``getIcebergType`` rejects for ``IcebergS3`` — ``UInt8``,
+    ``LowCardinality(String)``, ``Nullable(Enum8)``, and
+    ``Array(LowCardinality(String))`` — plus the rest of the production
+    column types. Based on ``test-export-mtree/no-catalog.sql``.
+    """
+    _require_no_catalog(
+        "cisco_schema uses S3 hive export and Hybrid read-back, not IcebergS3"
+    )
+
+    where_clause = (
+        f"eventDate = toDate('{CISCO_COLD_EVENT_DATE}') "
+        f"AND retention = {CISCO_RETENTION}"
+    )
+    expected_rows = 3
+
+    with Given("cisco source, hot stub, and S3 cold export target"):
+        fixture = create_cisco_no_catalog_fixture(
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with And("insert cold-tier sample rows into the source table"):
+        self.context.node.query(
+            f"INSERT INTO {fixture['source_table']} {CISCO_INSERT_SELECT}"
+        )
+
+    with And("resolve the composite partition id for the cold slice"):
+        partition_id = first_partition_id(table_name=fixture["source_table"])
+
+    _run_export(
+        self,
+        source_table=fixture["source_table"],
+        destination=fixture["cold_table"],
+        partition_id=partition_id,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        expected_rows=expected_rows,
+        where_clause=where_clause,
+    )
+
+    with Then("the S3 cold table holds the exported rows"):
+        assert_destination_row_count(
+            destination=fixture["cold_table"],
+            expected=expected_rows,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            where_clause=where_clause,
+        )
+
+    with And("create a Hybrid table over hot stub + S3 cold"):
+        hybrid_table = create_cisco_hybrid_read_table(
+            hot_table=fixture["hot_table"],
+            cold_table=fixture["cold_table"],
+        )
+
+    with Then("Hybrid read-back matches the source for the cold partition"):
+        assert_source_and_destination_match(
+            source_table=fixture["source_table"],
+            destination=hybrid_table,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            partition_where=where_clause,
+            order_by="timestamp",
+        )
+
+
 # ---------------------------------------------------------------------------
 # Feature entry point
 # ---------------------------------------------------------------------------
@@ -847,3 +931,9 @@ def feature(self, minio_root_user, minio_root_password):
                         minio_root_user=minio_root_user,
                         minio_root_password=minio_root_password,
                     )
+
+    self.context.export_surface = "part"
+    Scenario(test=cisco_schema, flags=TE)(
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+    )
