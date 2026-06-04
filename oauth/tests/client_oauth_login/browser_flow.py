@@ -1,5 +1,3 @@
-"""Tests for ``--login=browser`` (authorization code + PKCE)."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
