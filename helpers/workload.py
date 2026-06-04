@@ -32,10 +32,6 @@ from helpers.alter import (
     alter_table_delete_rows,
 )
 
-
-# --- State ---
-
-
 @dataclass
 class WorkloadState:
     """Objects created by the workload, used to check action preconditions."""
