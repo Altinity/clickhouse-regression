@@ -1,5 +1,3 @@
-"""Tests for ``--oauth-credentials`` file loading and validation."""
-
 import json
 
 from testflows.core import *
