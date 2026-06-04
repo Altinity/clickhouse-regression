@@ -1,10 +1,3 @@
-"""Token validation tests that exercise the configured token processor.
-
-JWT-mutation tests live in ``oauth.tests.jwt_manipulation``. This file
-focuses on processor-configuration behaviour (OpenID discovery, invalid
-JWKS endpoint, etc.) so we don't double-count the same coverage.
-"""
-
 from oauth.tests.steps.clikhouse import *
 from oauth.tests.steps.common import *
 from testflows.asserts import *
@@ -70,6 +63,6 @@ def invalid_jwks_uri_rejected(self):
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
 )
 def feature(self):
-    """Token-processor configuration tests."""
+    """Token validation tests that exercise the configured token processor."""
     Scenario(run=openid_discovery_mode)
     Scenario(run=invalid_jwks_uri_rejected)
