@@ -1,12 +1,3 @@
-"""Group-based role-mapping and identity-management tests.
-
-All identity-provider operations (``create_user`` etc.) are routed
-through ``self.context.provider_client.OAuthProvider`` so the same
-scenarios apply to any provider that implements the contract. Providers
-that cannot automate a given operation raise ``UnsupportedByProvider``;
-the affected scenarios ``Skip`` automatically rather than fail.
-"""
-
 import time
 
 from helpers.common import getuid
@@ -431,7 +422,7 @@ def deleted_user_rejected_after_cache(self):
     RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted("1.0"),
 )
 def feature(self):
-    """Group-based role mapping and identity-management actions."""
+    """Group-based role-mapping and identity-management tests."""
     Scenario(run=group_name_matches_clickhouse_role)
     Scenario(run=roles_filter_limits_groups)
     Scenario(run=roles_filter_excludes_user_groups)
