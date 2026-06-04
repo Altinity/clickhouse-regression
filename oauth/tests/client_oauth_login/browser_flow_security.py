@@ -1,5 +1,3 @@
-"""Security-focused negatives for browser OAuth and OIDC discovery."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
