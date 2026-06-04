@@ -61,10 +61,6 @@ class WorkloadState:
     def table_prefix(self):
         return f"workload_{self.uid}_"
 
-
-# --- Action registry ---
-
-
 @dataclass
 class Action:
     name: str
@@ -97,8 +93,6 @@ def action(name, group, preconditions=()):
     return register
 
 
-# --- Intensity profiles ---
-
 INTENSITY_PROFILES = {
     "low": {"repeat_min": 1, "repeat_max": 3, "delay": 1.0},
     "medium": {"repeat_min": 3, "repeat_max": 10, "delay": 0.2},
@@ -109,8 +103,6 @@ INTENSITY_PROFILES = {
 def _repeat_count(profile):
     return random.randint(profile["repeat_min"], profile["repeat_max"])
 
-
-# --- Column types and SQL helpers ---
 
 COLUMN_TYPES = [
     "UInt8",
@@ -153,10 +145,6 @@ def _numeric_columns(columns, include_id=False):
         and (include_id or c["name"] != "id")
     ]
 
-
-# --- CREATE actions (tracked in state, dropped at cleanup) ---
-
-
 @action("create_table", group="create")
 def _action_create_table(node, state, cluster=None, **kwargs):
     """Create a MergeTree table with random columns."""
@@ -192,10 +180,6 @@ def _action_create_mv(node, state, cluster=None, **kwargs):
         )
     state.views.append(mv_name)
 
-
-# --- INSERT actions ---
-
-
 @action("insert_batch", group="insert", preconditions=["table_exists"])
 def _action_insert_batch(node, state, **kwargs):
     """Insert a batch of random rows into a managed table."""
@@ -219,9 +203,6 @@ def _action_insert_batch(node, state, **kwargs):
                 steps=False,
             )
     state.rows_inserted[table_name] = state.rows_inserted.get(table_name, 0) + num_rows
-
-
-# --- ALTER actions (reuse helpers.alter) ---
 
 
 @action("add_column", group="alter", preconditions=["table_exists"])
@@ -321,10 +302,6 @@ def _action_delete_rows(node, state, **kwargs):
     )
     state.rows_inserted[table_name] = max(0, state.rows_inserted[table_name] // 2)
 
-
-# --- DROP actions (tracked in state) ---
-
-
 @action("drop_table", group="drop", preconditions=["table_exists"])
 def _action_drop_table(node, state, cluster=None, **kwargs):
     """Drop a random managed table."""
@@ -350,9 +327,6 @@ def _action_truncate_table(node, state, cluster=None, **kwargs):
             steps=False,
         )
     state.rows_inserted[table_name] = 0
-
-
-# --- SELECT actions ---
 
 
 @action("select_count", group="select", preconditions=["table_exists"])
@@ -432,9 +406,6 @@ def _action_select_group_by(node, state, profile=None, **kwargs):
             )
 
 
-# --- SYSTEM actions ---
-
-
 @action("system_query", group="system")
 def _action_system_query(node, state, profile=None, **kwargs):
     """Run read-only system.* queries."""
@@ -451,8 +422,6 @@ def _action_system_query(node, state, profile=None, **kwargs):
         for _ in range(_repeat_count(profile)):
             node.query(random.choice(queries), no_checks=True, steps=False)
 
-
-# --- Scheduler ---
 
 PRECONDITION_CHECKS = {
     "table_exists": lambda state: state.has_tables(),
@@ -495,10 +464,6 @@ def _cleanup(node, state, cluster=None):
     state.views.clear()
     state.tables.clear()
     state.rows_inserted.clear()
-
-
-# --- Main step ---
-
 
 @TestStep(Given)
 def simulate_workload(
@@ -567,9 +532,6 @@ def simulate_workload(
             _cleanup(node, state, cluster=cluster)
 
 
-# --- Context manager ---
-
-
 @contextmanager
 def background_workload(node, **kwargs):
     """Run a background workload for the duration of the ``with`` block.
@@ -579,7 +541,6 @@ def background_workload(node, **kwargs):
     forwarded to ``simulate_workload``.
 
     Example::
-
         with background_workload(node, intensity="high", enable_drops=False):
             ...
     """
