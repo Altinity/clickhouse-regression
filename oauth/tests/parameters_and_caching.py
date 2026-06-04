@@ -164,6 +164,7 @@ def expected_audience_wrong(self):
     with Then("ClickHouse rejects the token (audience mismatch)"):
         assert_token_rejected(token=token)
 
+
 _ALLOW_NO_EXP_HS256_SECRET = "allow-no-exp-test-secret"
 _ALLOW_NO_EXP_PROCESSOR_NAME = "allow_no_exp_processor"
 
@@ -260,6 +261,7 @@ def allow_no_expiration_false_rejects_token_without_exp(self):
 
     with And("ClickHouse rejects the token without exp " "(allow_no_expiration=false)"):
         assert_token_rejected(token=token_no_exp)
+
 
 @TestScenario
 @Requirements(

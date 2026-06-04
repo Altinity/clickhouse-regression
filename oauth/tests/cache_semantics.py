@@ -257,14 +257,14 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             if jwt_lifespan is None or jwt_lifespan > short_token_lifespan + 5:
                 skip(
                     f"Keycloak issued a token with exp-iat={jwt_lifespan!r} "
-                    f"after we requested accessTokenLifespan="
-                    f"{short_token_lifespan}s (expires_in="
-                    f"{token_response.expires_in!r}). The Admin REST API "
-                    f"cannot modify accessTokenLifespan via PUT "
-                    f"/admin/realms/{{realm}} — see "
-                    f"oauth/requirements/keycloak_actions.md. Reproducing "
-                    f"this scenario requires the realm-import workaround, "
-                    f"which is not yet wired up."
+                    f"after we set accessTokenLifespan={short_token_lifespan}s "
+                    f"via PUT /admin/realms/{{realm}} (expires_in="
+                    f"{token_response.expires_in!r}). The realm-level change "
+                    f"did not take effect on the issued token — most likely a "
+                    f"client-level 'access.token.lifespan' override, an SSO "
+                    f"session cap (exp = min(accessTokenLifespan, remaining "
+                    f"session)), or the admin PUT not applying on this build. "
+                    f"Cannot reproduce the short-exp scenario, so skipping."
                 )
             wait_seconds = jwt_lifespan + 5
 
@@ -311,12 +311,12 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
 )
 def feature(self):
     """Token cache semantics tests.
-    
+
     Exercises cache eviction after ``token_cache_lifetime``, per-user cache
     slot accounting, cache entry refresh on token rotation, lazy cleanup
     behavior, and the ``min(token_exp, cache_lifetime)`` rule.
     """
-    
+
     Scenario(run=cache_evicted_after_lifetime_then_new_token_cached)
     Scenario(run=at_most_one_cache_entry_per_user)
     Scenario(run=new_token_replaces_cache_entry_for_same_user)
