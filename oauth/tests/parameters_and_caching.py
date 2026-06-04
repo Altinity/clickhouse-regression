@@ -1,10 +1,3 @@
-"""Token-processor parameter and caching tests.
-
-All scenarios route OpenID endpoints through the provider abstraction
-(``client.OAuthProvider.openid_endpoints()``) so the same tests run
-unchanged when ``--identity-provider`` switches.
-"""
-
 import time
 
 import jwt as pyjwt
@@ -171,11 +164,6 @@ def expected_audience_wrong(self):
     with Then("ClickHouse rejects the token (audience mismatch)"):
         assert_token_rejected(token=token)
 
-
-# ---------------------------------------------------------------------------
-# allow_no_expiration
-# ---------------------------------------------------------------------------
-
 _ALLOW_NO_EXP_HS256_SECRET = "allow-no-exp-test-secret"
 _ALLOW_NO_EXP_PROCESSOR_NAME = "allow_no_exp_processor"
 
@@ -272,12 +260,6 @@ def allow_no_expiration_false_rejects_token_without_exp(self):
 
     with And("ClickHouse rejects the token without exp " "(allow_no_expiration=false)"):
         assert_token_rejected(token=token_no_exp)
-
-
-# ---------------------------------------------------------------------------
-# Unfiltered parameter rejection
-# ---------------------------------------------------------------------------
-
 
 @TestScenario
 @Requirements(
