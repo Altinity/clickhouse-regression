@@ -1,10 +1,3 @@
-"""Token cache semantics tests.
-
-Exercises cache eviction after ``token_cache_lifetime``, per-user cache
-slot accounting, cache entry refresh on token rotation, lazy cleanup
-behavior, and the ``min(token_exp, cache_lifetime)`` rule.
-"""
-
 import json
 import time
 
@@ -317,8 +310,13 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     RQ_SRS_042_OAuth_Authentication_Caching("1.0"),
 )
 def feature(self):
-    """Token cache semantics — eviction, per-user accounting, refresh,
-    lazy cleanup, and the min(token_exp, cache_lifetime) rule."""
+    """Token cache semantics tests.
+    
+    Exercises cache eviction after ``token_cache_lifetime``, per-user cache
+    slot accounting, cache entry refresh on token rotation, lazy cleanup
+    behavior, and the ``min(token_exp, cache_lifetime)`` rule.
+    """
+    
     Scenario(run=cache_evicted_after_lifetime_then_new_token_cached)
     Scenario(run=at_most_one_cache_entry_per_user)
     Scenario(run=new_token_replaces_cache_entry_for_same_user)
