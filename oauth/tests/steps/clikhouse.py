@@ -450,11 +450,15 @@ def apply_fatal_user_directories_config(
             with By("removing the bad config file from inside the container"):
                 node.command(f"rm -rf {config.path}", steps=False, exitcode=0)
 
-            with And("restarting ClickHouse to recover from the failed start"):
-                # Two restarts mirrors ``helpers.common.add_invalid_config``:
-                # the first kicks any wedged process / clears stale pid
-                # state, the second comes up healthy now that the bad
-                # overlay is gone.
+            with And(
+                "restarting ClickHouse to recover from the failed start",
+                description="""
+                    Two restarts mirrors ``helpers.common.add_invalid_config``:
+                    the first kicks any wedged process / clears stale pid
+                    state, the second comes up healthy now that the bad
+                    overlay is gone.
+                """,
+            ):
                 node.restart_clickhouse(safe=False)
                 node.restart_clickhouse(safe=False)
 

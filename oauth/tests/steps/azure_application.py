@@ -476,7 +476,6 @@ async def delete_application(self, application_id: str):
 
 @TestStep(Given)
 def setup_azure_application(self):
-    # try:
     with Given("I create an Azure AD application with a secret"):
         application, secret, app_id = create_azure_application_with_secret()
         self.context.application = application
@@ -484,9 +483,6 @@ def setup_azure_application(self):
         self.context.app_id = app_id
 
     yield application
-    # finally:
-    #     with Finally("I delete the Azure AD application"):
-    #         delete_application(application_id=app_id)
 
 
 @TestStep(Given)

@@ -1,19 +1,3 @@
-"""Provider-agnostic OAuth provider contract.
-
-Every concrete OAuth provider (Keycloak, Azure, Google, ...) exposes the
-same surface so test scenarios can run against any of them by swapping
-``--identity-provider``.
-
-Tests MUST go through ``self.context.provider_client.OAuthProvider`` and
-MUST NOT import provider-specific symbols (``keycloak_realm.create_user``
-etc.) directly. Anything not implemented by a given provider raises
-``UnsupportedByProvider`` so the scenario is reported as ``Skip`` instead
-of erroring.
-
-The contract intentionally keeps token shape uniform: ``get_oauth_token``
-ALWAYS returns an ``OAuthToken`` (defined below) regardless of provider.
-"""
-
 import hashlib
 
 from dataclasses import dataclass, field
@@ -39,9 +23,6 @@ def mask_secret(value):
         return value
 
     value = str(value)
-    # Derive a stable, unique secret name from the value itself so that
-    # re-registering the same token is a harmless no-op (the registry
-    # rejects duplicate names) and identical tokens are de-duplicated.
     name = "oauth_secret_" + hashlib.sha1(value.encode("utf-8")).hexdigest()[:24]
     try:
         Secret(name=name)(value)
@@ -89,10 +70,11 @@ class OAuthToken:
     raw: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
-        # Mask every token this container carries so it never leaks into
-        # the test log (e.g. via ``Authorization: Bearer …`` headers in
-        # logged curl commands). Provider-agnostic: applies regardless of
-        # which IdP produced the token.
+        """Mask every token this container carries so it never leaks into
+        the test log (e.g. via ``Authorization: Bearer …`` headers in
+        logged curl commands). Provider-agnostic: applies regardless of
+        which IdP produced the token."""
+
         mask_secret(self.access_token)
         mask_secret(self.refresh_token)
         mask_secret(self.id_token)
