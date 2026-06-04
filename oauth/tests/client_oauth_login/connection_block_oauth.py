@@ -1,5 +1,3 @@
-"""Tests for ``connections_credentials`` OAuth fields and ``--oauth-*`` CLI flags."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
