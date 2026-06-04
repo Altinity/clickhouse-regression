@@ -1,5 +1,3 @@
-"""Tests for the ClickHouse Cloud auto-login detection."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
