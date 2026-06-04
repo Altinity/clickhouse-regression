@@ -75,6 +75,7 @@ from .tables import (
     create_table_with_json_column_with_hints,
     create_table_with_nested_column,
     create_table_with_complex_nested_column,
+    create_table_with_nested_array_column,
 )
 
 # Verification steps
@@ -159,6 +160,7 @@ __all__ = [
     "create_table_with_json_column_with_hints",
     "create_table_with_nested_column",
     "create_table_with_complex_nested_column",
+    "create_table_with_nested_array_column",
     # Verification
     "source_matches_destination",
     "export_and_verify_columns",

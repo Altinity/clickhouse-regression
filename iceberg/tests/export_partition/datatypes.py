@@ -13,7 +13,8 @@ ClickHouse -> Iceberg primitive mapping exercised here:
 ``Date`` / ``Date32`` -> ``date``; ``DateTime`` / ``DateTime64`` ->
 ``timestamp``; ``Time`` -> ``time``; ``String`` -> ``string``; ``UUID``
 -> ``uuid``; ``Tuple`` -> ``struct``; ``Array(T)`` -> ``list``;
-``Map(K, V)`` -> ``map``; ``Nullable(T)`` -> required=false. Types
+``Map(K, V)`` -> ``map``; ``Array(Array(T))`` -> nested Iceberg ``list``;
+``Nullable(T)`` -> required=false. Types
 absent from the switch (``Int8`` / ``UInt8`` / ``Bool`` /
 ``FixedString`` / ``Decimal`` / ``Enum8`` / ``LowCardinality(String)``)
 power the ``rejected_*`` scenarios.
@@ -593,6 +594,24 @@ def accepted_array_string(self, minio_root_user, minio_root_password):
 
 @TestScenario
 @Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
+@Name("accepted: Array(Array(Int32))")
+def accepted_array_array_int32(self, minio_root_user, minio_root_password):
+    """``Array(Array(Int32))`` maps to a nested Iceberg ``list<list<int>>``."""
+    _run_accepted_type(
+        self,
+        minio_root_user=minio_root_user,
+        minio_root_password=minio_root_password,
+        value_column="v Array(Array(Int32))",
+        values=(
+            "(1, 2020, []), "
+            "(2, 2020, [[1, 2], [3]]), "
+            "(3, 2020, [[-1, 0, 1]])"
+        ),
+    )
+
+
+@TestScenario
+@Requirements(RQ_Iceberg_ExportPartition_DataTypes_Composite("1.0"))
 @Name("accepted: Map(String, Int64)")
 def accepted_map_string_int64(self, minio_root_user, minio_root_password):
     """``Map(String, Int64)`` maps to Iceberg ``map<string, long>``."""
@@ -781,6 +800,7 @@ ACCEPTED_SCENARIOS = (
     accepted_array_uint32,
     accepted_array_uint64,
     accepted_array_string,
+    accepted_array_array_int32,
     accepted_map_string_int64,
     accepted_tuple,
 )
