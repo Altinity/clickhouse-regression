@@ -23,6 +23,13 @@ xfails = {
     "/swarms/feature/swarm joins/join clause/join 455 of 816480*": [
         (Fail, "https://github.com/Altinity/ClickHouse/issues/1244"),
     ],
+    "/swarms/feature/task rescheduling/rescheduling with bucket granularity": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1873",
+            check_clickhouse_version("~25.8"),
+        )
+    ],
 }
 ffails = {
     "/swarms/feature": (
@@ -32,9 +39,9 @@ ffails = {
     ),
     "/swarms/feature/task rescheduling/*": (
         Skip,
-        "task rescheduling fix was introduced in antalya-26.1 by PR #1493",
+        "Task rescheduling fix is only available in Antalya builds since 25.8",
         lambda test: check_if_not_antalya_build(test)
-        or check_clickhouse_version("<26.1")(test),
+        or check_clickhouse_version("<25.8")(test),
     ),
 }
 
