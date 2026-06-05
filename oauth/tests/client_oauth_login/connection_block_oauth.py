@@ -1,5 +1,3 @@
-"""Tests for ``connections_credentials`` OAuth fields and ``--oauth-*`` CLI flags."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
@@ -11,8 +9,9 @@ from oauth.requirements.requirements import (
 from oauth.tests.client_oauth_login.common import oauth_connection_config_xml
 from oauth.tests.steps.client_login import (
     DEFAULT_CONFIG_PATH,
+    assert_client_rejected,
+    assert_device_user_code_present,
     assert_no_segfault,
-    extract_device_user_code_from_client_output,
     reset_client_state,
     run_clickhouse_client_no_host,
     write_client_config_xml,
@@ -45,15 +44,16 @@ def connection_block_oauth_device(self):
             timeout=15,
         )
 
-    with Then("the device flow is driven from the XML connection block"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        # The connection block names a valid Keycloak realm + client,
-        # so device authorization MUST hand out a user_code. Pinning
-        # this rather than just "no crash" catches regressions where
-        # the XML fields stop being read into the OAuth context.
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected XML-driven device flow user_code:\n---\n{output}\n---"
+    with Then(
+        "the device flow is driven from the XML connection block",
+        description="""
+            The connection block names a valid Keycloak realm + client,
+            so device authorization MUST hand out a user_code. Pinning
+            this rather than just "no crash" catches regressions where
+            the XML fields stop being read into the OAuth context.
+        """,
+    ):
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -89,20 +89,21 @@ def cli_overrides_connection_block(self):
             timeout=12,
         )
 
-    with Then("Keycloak rejects cli-id (proving the override is in effect)"):
-        assert exit_code != 0
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        # Both block-id and cli-id are fake; what we are pinning here is
-        # that the *overridden* value reached Keycloak. That manifests as
-        # an OAuth invalid_client/invalid-client diagnostic.
-        assert (
-            "invalid_client" in ol
-            or "invalid client" in ol
-            or "unauthorized" in ol
-            or "client"
-            in ol  # final fallback so Keycloak phrasing changes don't break us
-        ), f"Expected OAuth invalid-client diagnostic from Keycloak, got:\n---\n{output}\n---"
+    with Then(
+        "Keycloak rejects cli-id (proving the override is in effect)",
+        description="""
+            Both block-id and cli-id are fake; what we are pinning here is
+            that the *overridden* value reached Keycloak. That manifests as
+            an OAuth invalid_client/invalid-client diagnostic. The bare
+            "client" marker is a final fallback so Keycloak phrasing changes
+            don't break us.
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("invalid_client", "invalid client", "unauthorized", "client"),
+        )
 
 
 @TestScenario
@@ -134,16 +135,21 @@ def invalid_callback_port_rejected(self):
             timeout=10,
         )
 
-    with Then("the client rejects the out-of-range port"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        # 999999 is outside the legal TCP port range; a *clean* arg-parse
-        # rejection is the SRS-prescribed outcome. Mirror the assertion
-        # the negative-port sibling scenario already enforces so the two
-        # boundary conditions are pinned symmetrically.
-        ol = output.lower()
-        assert (
-            "bad_arguments" in ol or "invalid" in ol or "port" in ol
-        ), f"Expected out-of-range port diagnostic, got:\n---\n{output}\n---"
+    with Then(
+        "the client rejects the out-of-range port",
+        description="""
+            999999 is outside the legal TCP port range; a *clean* arg-parse
+            rejection is the SRS-prescribed outcome. Mirror the assertion
+            the negative-port sibling scenario already enforces so the two
+            boundary conditions are pinned symmetrically.
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("bad_arguments", "invalid", "port"),
+            require_nonzero_exit=False,
+        )
 
 
 @TestScenario
@@ -172,17 +178,20 @@ def connection_block_login_browser(self):
             timeout=14,
         )
 
-    with Then("the browser-flow front half ran without crashing"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        # ``<login>browser</login>`` must drive the authorization-code
-        # flow far enough to print a visit-this-URL hint or a callback
-        # message — otherwise the connection block isn't actually
-        # selecting the browser path. Headless CI cannot complete the
-        # callback but the *start* of the flow is observable.
-        ol = output.lower()
-        assert any(
-            marker in ol
-            for marker in (
+    with Then(
+        "the browser-flow front half ran without crashing",
+        description="""
+            ``<login>browser</login>`` must drive the authorization-code
+            flow far enough to print a visit-this-URL hint or a callback
+            message — otherwise the connection block isn't actually
+            selecting the browser path. Headless CI cannot complete the
+            callback but the *start* of the flow is observable.
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
                 "browser",
                 "callback",
                 "loopback",
@@ -192,8 +201,9 @@ def connection_block_login_browser(self):
                 "http://localhost",
                 "timeout",
                 "timed out",
-            )
-        ), f"Expected browser-flow start signal, got:\n---\n{output}\n---"
+            ),
+            require_nonzero_exit=False,
+        )
 
 
 @TestScenario
@@ -227,12 +237,11 @@ def connection_block_bare_login_without_oauth_requires_args(self):
         )
 
     with Then("OAuth parameters are required"):
-        assert exit_code != 0
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "oauth" in ol or "bad_arguments" in ol or "authentication_failed" in ol
-        ), f"Expected OAuth requirement hint, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("oauth", "bad_arguments", "authentication_failed"),
+        )
 
 
 @TestScenario
@@ -244,10 +253,14 @@ def connection_block_oauth_url_oidc_discovery_device_flow(self):
     with Given("I reset the client state"):
         reset_client_state()
 
-    with And("I write oauth-url plus confidential client secret"):
-        # Use the confidential client so the ``oauth_client_secret`` value
-        # is actually validated by Keycloak (``grafana-client`` is public
-        # and ignores ``client_secret`` entirely).
+    with And(
+        "I write oauth-url plus confidential client secret",
+        description="""
+            Use the confidential client so the ``oauth_client_secret`` value
+            is actually validated by Keycloak (``grafana-client`` is public
+            and ignores ``client_secret`` entirely).
+        """,
+    ):
         write_client_config_xml(
             contents=oauth_connection_config_xml(
                 login_mode="device",
@@ -270,10 +283,7 @@ def connection_block_oauth_url_oidc_discovery_device_flow(self):
         )
 
     with Then("device authorization details appear"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected discovery-driven device flow:\n{output}"
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -308,8 +318,7 @@ def connection_block_invalid_oauth_url(self):
         )
 
     with Then("the client errors"):
-        assert exit_code != 0
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -331,10 +340,14 @@ def cli_overrides_multiple_oauth_fields(self):
             )
         )
 
-    with When("I override via CLI with working Keycloak endpoints"):
-        # Override targets the confidential client so the secret-override
-        # path is exercised end-to-end rather than relying on Keycloak
-        # ignoring the secret for a public client.
+    with When(
+        "I override via CLI with working Keycloak endpoints",
+        description="""
+            Override targets the confidential client so the secret-override
+            path is exercised end-to-end rather than relying on Keycloak
+            ignoring the secret for a public client.
+        """,
+    ):
         exit_code, output = run_clickhouse_client_no_host(
             args=[
                 "--config",
@@ -355,10 +368,7 @@ def cli_overrides_multiple_oauth_fields(self):
         )
 
     with Then("CLI wins — device flow reaches Keycloak"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected CLI overrides to fix discovery:\n{output}"
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -391,11 +401,12 @@ def connection_block_negative_callback_port(self):
         )
 
     with Then("the client rejects the port"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "bad_arguments" in ol or "invalid" in ol or "port" in ol
-        ), f"Expected invalid port diagnostic:\n{output}"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("bad_arguments", "invalid", "port"),
+            require_nonzero_exit=False,
+        )
 
 
 @TestScenario

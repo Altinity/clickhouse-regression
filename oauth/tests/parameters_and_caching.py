@@ -1,62 +1,11 @@
-"""Token-processor parameter and caching tests.
-
-All scenarios route OpenID endpoints through the provider abstraction
-(``client.OAuthProvider.openid_endpoints()``) so the same tests run
-unchanged when ``--identity-provider`` switches.
-"""
-
 import time
 
 import jwt as pyjwt
 
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
-
-
-def _configure_processor(
-    self,
-    *,
-    username_claim=None,
-    groups_claim=None,
-    token_cache_lifetime=None,
-    expected_issuer=None,
-    expected_audience=None,
-    replace=True,
-):
-    """Apply a Keycloak-OpenID processor config with optional overrides.
-
-    The endpoint bundle comes from the provider so non-Keycloak runs
-    pick up the right URLs automatically.
-    """
-    client = self.context.provider_client
-    endpoints = client.OAuthProvider.openid_endpoints()
-
-    kwargs = {
-        "processor_name": "keycloak",
-        "processor_type": "OpenID",
-        "userinfo_endpoint": endpoints.userinfo_endpoint,
-        "token_introspection_endpoint": endpoints.token_introspection_endpoint,
-        "introspection_client_id": self.context.introspection_client_id,
-        "introspection_client_secret": self.context.introspection_client_secret,
-        "replace": replace,
-    }
-    if username_claim is not None:
-        kwargs["username_claim"] = username_claim
-    if groups_claim is not None:
-        kwargs["groups_claim"] = groups_claim
-    if token_cache_lifetime is not None:
-        kwargs["token_cache_lifetime"] = token_cache_lifetime
-    if expected_issuer is not None:
-        kwargs["expected_issuer"] = expected_issuer
-    if expected_audience is not None:
-        kwargs["expected_audience"] = expected_audience
-
-    change_token_processors(**kwargs)
-    change_user_directories_config(
-        processor="keycloak",
-        common_roles=["general-role"],
-    )
 
 
 @TestScenario
@@ -66,7 +15,7 @@ def username_claim_sub(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with username_claim=sub"):
-        _configure_processor(self, username_claim="sub")
+        configure_openid_token_processor(username_claim="sub")
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -83,7 +32,7 @@ def username_claim_preferred_username(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with username_claim=preferred_username"):
-        _configure_processor(self, username_claim="preferred_username")
+        configure_openid_token_processor(username_claim="preferred_username")
 
     with And("I get a valid token for user 'demo'"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -103,7 +52,7 @@ def token_cache_lifetime_honoured(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a short cache lifetime"):
-        _configure_processor(self, token_cache_lifetime=5)
+        configure_openid_token_processor(token_cache_lifetime=5)
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -122,7 +71,7 @@ def cache_disabled(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with cache disabled"):
-        _configure_processor(self, token_cache_lifetime=0)
+        configure_openid_token_processor(token_cache_lifetime=0)
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -138,7 +87,7 @@ def groups_claim_parameter(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with groups_claim=groups"):
-        _configure_processor(self, groups_claim="groups")
+        configure_openid_token_processor(groups_claim="groups")
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -155,7 +104,7 @@ def expected_issuer_correct(self):
     endpoints = client.OAuthProvider.openid_endpoints()
 
     with Given("I configure the processor with the matching expected_issuer"):
-        _configure_processor(self, expected_issuer=endpoints.issuer)
+        configure_openid_token_processor(expected_issuer=endpoints.issuer)
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -171,7 +120,9 @@ def expected_issuer_wrong(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a wrong expected_issuer"):
-        _configure_processor(self, expected_issuer="https://wrong-issuer.example.com")
+        configure_openid_token_processor(
+            expected_issuer="https://wrong-issuer.example.com"
+        )
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -187,7 +138,7 @@ def expected_audience_missing_claim(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with expected_audience=account"):
-        _configure_processor(self, expected_audience="account")
+        configure_openid_token_processor(expected_audience="account")
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -203,8 +154,8 @@ def expected_audience_wrong(self):
     client = self.context.provider_client
 
     with Given("I configure the processor with a wrong expected_audience"):
-        _configure_processor(
-            self, expected_audience="https://wrong-audience.example.com"
+        configure_openid_token_processor(
+            expected_audience="https://wrong-audience.example.com"
         )
 
     with And("I get a valid token"):
@@ -213,10 +164,6 @@ def expected_audience_wrong(self):
     with Then("ClickHouse rejects the token (audience mismatch)"):
         assert_token_rejected(token=token)
 
-
-# ---------------------------------------------------------------------------
-# allow_no_expiration
-# ---------------------------------------------------------------------------
 
 _ALLOW_NO_EXP_HS256_SECRET = "allow-no-exp-test-secret"
 _ALLOW_NO_EXP_PROCESSOR_NAME = "allow_no_exp_processor"
@@ -316,11 +263,6 @@ def allow_no_expiration_false_rejects_token_without_exp(self):
         assert_token_rejected(token=token_no_exp)
 
 
-# ---------------------------------------------------------------------------
-# Unfiltered parameter rejection
-# ---------------------------------------------------------------------------
-
-
 @TestScenario
 @Requirements(
     RQ_SRS_042_OAuth_Common_Parameters_Unfiltered("1.0"),
@@ -367,10 +309,7 @@ def processor_with_every_parameter_at_once_rejected(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects the contradictory config at parse time"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestFeature

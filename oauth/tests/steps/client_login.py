@@ -18,6 +18,9 @@ from pathlib import Path
 from helpers.common import getuid
 from testflows.core import *
 
+from oauth.tests.steps.clikhouse import without_command_logging
+from oauth.tests.steps.provider_protocol import mask_secret, mask_token_response
+
 
 CLIENT_HOME = "/root"
 """HOME inside the ClickHouse server containers."""
@@ -181,6 +184,33 @@ def write_keycloak_device_credentials(
         client_secret=client_secret,
         token_uri=token_uri,
         device_authorization_uri=device_authorization_uri,
+        node=node,
+    )
+
+
+def write_browser_oauth_credentials(
+    auth_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/auth",
+    token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+    client_id="grafana-client",
+    client_secret="grafana-secret",
+    redirect_uris=None,
+    node=None,
+):
+    """Write Keycloak-grafana credentials for the browser (auth-code + PKCE) flow.
+
+    Mirrors ``write_keycloak_device_credentials`` but omits the device
+    endpoint and supplies a loopback ``redirect_uris`` default. Plain
+    function (not a ``@TestStep``) — callers provide their own
+    ``with And("…"):`` framing.
+    """
+
+    write_oauth_credentials_file(
+        client_id=client_id,
+        client_secret=client_secret,
+        auth_uri=auth_uri,
+        token_uri=token_uri,
+        redirect_uris=redirect_uris or ["http://127.0.0.1"],
+        device_authorization_uri=None,
         node=node,
     )
 
@@ -423,17 +453,39 @@ def read_oauth_cache(self, path=DEFAULT_CACHE_PATH, node=None):
     if node is None:
         node = self.context.node
 
-    result = node.command(
-        command=f"cat {_shell_quote(path)} 2>/dev/null || true",
-        no_checks=True,
-    )
+    # Suppress log forwarding: the cache file holds the refresh/access
+    # tokens clickhouse-client persisted.
+    with without_command_logging(node):
+        result = node.command(
+            command=f"cat {_shell_quote(path)} 2>/dev/null || true",
+            no_checks=True,
+        )
     raw = result.output.strip()
     if not raw:
         return None
     try:
-        return json.loads(raw)
+        cache = json.loads(raw)
     except json.JSONDecodeError:
         return None
+
+    # Mask any cached token values (at any nesting depth) so subsequent
+    # references to them are redacted. Only token-named fields are masked
+    # to avoid clobbering benign values (timestamps, URLs) in the log.
+    def _mask_tokens(obj):
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                if key in ("access_token", "refresh_token", "id_token") and isinstance(
+                    value, str
+                ):
+                    mask_secret(value)
+                else:
+                    _mask_tokens(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                _mask_tokens(item)
+
+    _mask_tokens(cache)
+    return cache
 
 
 def _run_clickhouse_client_core(node, args, query, timeout, expect_error):
@@ -551,6 +603,50 @@ def assert_no_segfault(self, output, exit_code):
             f"clickhouse-client crashed (exit={exit_code}); "
             f"found marker {marker!r} in output:\n---\n{output}\n---"
         )
+
+
+@TestStep(Then)
+def assert_client_rejected(
+    self, output, exit_code, markers=None, require_nonzero_exit=True
+):
+    """Assert ``clickhouse-client`` rejected the input safely.
+
+    Bundles the rejection checks repeated across the suite:
+
+    - the client did not crash (delegates to ``assert_no_segfault``);
+    - when ``require_nonzero_exit`` (the default), the client exited
+      non-zero;
+    - when ``markers`` is given, at least one marker appears in the
+      output (case-insensitive substring match).
+    """
+
+    assert_no_segfault(output=output, exit_code=exit_code)
+
+    if require_nonzero_exit:
+        assert (
+            exit_code != 0
+        ), f"Expected a non-zero exit code, got {exit_code}:\n---\n{output}\n---"
+
+    if markers:
+        ol = output.lower()
+        assert any(marker.lower() in ol for marker in markers), (
+            f"Expected one of {list(markers)!r} in the client output:\n"
+            f"---\n{output}\n---"
+        )
+
+
+@TestStep(Then)
+def assert_device_user_code_present(self, output, exit_code):
+    """Assert the client emitted an RFC 8628 device user code without crashing.
+
+    Used by scenarios that pin device-flow start (rather than just
+    "no crash") so a regression that short-circuits OAuth fails loudly.
+    """
+
+    assert_no_segfault(output=output, exit_code=exit_code)
+    assert (
+        extract_device_user_code_from_client_output(output) is not None
+    ), f"Expected a device user_code in the client output:\n---\n{output}\n---"
 
 
 @TestStep(When)
@@ -855,7 +951,9 @@ def get_keycloak_token_via_curl(
         "--header 'Content-Type: application/x-www-form-urlencoded' "
         + " ".join(data_pairs)
     )
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the tokens.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -871,4 +969,6 @@ def get_keycloak_token_via_curl(
             f"{response.get('error_description', '')}"
         )
 
-    return response
+    # Mask the tokens so any later reference to them (cache reads,
+    # background-client logs) is redacted.
+    return mask_token_response(response)

@@ -1,12 +1,3 @@
-"""SQL-declared JWT user tests.
-
-Verifies that ``CREATE USER ... IDENTIFIED WITH jwt`` supports the
-``PROCESSOR`` and ``CLAIMS`` clauses and that ClickHouse enforces them
-at authentication time.  Prior to the fix, the SQL grammar accepted only
-``CLAIMS`` and had no syntax for pinning ``token_processor_name``,
-leaving every SQL-declared JWT user unpinned.
-"""
-
 from helpers.common import getuid
 from jwt_authentication.tests.steps import create_static_jwt
 from oauth.tests.steps.clikhouse import (
@@ -396,11 +387,17 @@ def invalid_claims_json_rejected(self):
 
 @TestFeature
 @Name("sql jwt users")
-@Requirements(
-    RQ_SRS_042_OAuth_SQLJWTUsers_CreateUser("1.0")
-)
+@Requirements(RQ_SRS_042_OAuth_SQLJWTUsers_CreateUser("1.0"))
 def feature(self):
-    """SQL-declared JWT user DDL and enforcement."""
+    """SQL-declared JWT user tests.
+
+    Verifies that ``CREATE USER ... IDENTIFIED WITH jwt`` supports the
+    ``PROCESSOR`` and ``CLAIMS`` clauses and that ClickHouse enforces them
+    at authentication time.  Prior to the fix, the SQL grammar accepted only
+    ``CLAIMS`` and had no syntax for pinning ``token_processor_name``,
+    leaving every SQL-declared JWT user unpinned.
+    """
+
     Scenario(run=create_bare_jwt_user)
     Scenario(run=create_jwt_user_with_processor_roundtrip)
     Scenario(run=create_jwt_user_with_claims_roundtrip)

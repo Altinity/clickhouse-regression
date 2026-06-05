@@ -383,7 +383,7 @@ def create_replicated_merge_tree_table(
     cluster: str = None,
     stop_merges: bool = False,
     query_settings: str = None,
-    sharded=False
+    sharded=False,
 ):
     """Create a table with the ReplicatedMergeTree engine."""
     if columns is None:
@@ -474,7 +474,7 @@ def partitioned_replicated_merge_tree_table(
     number_of_partitions=5,
     number_of_parts=10,
     query_settings=None,
-    sharded=False
+    sharded=False,
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(

@@ -68,13 +68,17 @@ def _load_modules(self, minio_root_user, minio_root_password):
 @Name("export partition")
 def feature(self, minio_root_user, minio_root_password):
     """Run export-partition tests across every supported catalog mode."""
-    with Given("enable allow_experimental_insert_into_iceberg in the default profile"):
+    with Given(
+        "enable export-partition Iceberg and EXPORT PART gates in the default profile"
+    ):
         for node in self.context.nodes:
             users_d.create_and_add(
                 entries={
                     "profiles": {
                         "default": {
                             "allow_experimental_insert_into_iceberg": "1",
+                            "allow_experimental_export_merge_tree_part": "1",
+                            "allow_experimental_hybrid_table": "1",
                         }
                     }
                 },

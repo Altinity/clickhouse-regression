@@ -6,10 +6,12 @@ from helpers.common import getuid
 from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
+    without_command_logging,
 )
 from oauth.tests.steps.provider_protocol import (
     OAuthToken,
     OpenIDEndpoints,
+    mask_secret,
     modify_jwt_token as _shared_modify_jwt_token,
 )
 
@@ -131,7 +133,10 @@ def get_oauth_token(self, node=None, username=None, password=None, scope="openid
     if scope is not None:
         curl_command += f" --data-urlencode 'scope={scope}'"
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body is the token itself and
+    # would otherwise be printed verbatim before we can mask it.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -201,7 +206,9 @@ def get_oauth_token_for_client(
         f"--data-urlencode 'client_secret={client_secret}'"
     )
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -246,7 +253,9 @@ def get_admin_token(self):
         f"--data-urlencode 'password=admin'"
     )
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the admin token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         token_data = json.loads(result.output)
@@ -263,7 +272,10 @@ def get_admin_token(self):
             f"{token_data.get('error_description', result.output[:200])}"
         )
 
-    return token_data["access_token"]
+    # Mask the admin token so its reuse in ``Authorization: Bearer …``
+    # headers (logged as command descriptions across the admin helpers)
+    # is redacted.
+    return mask_secret(token_data["access_token"])
 
 
 @TestStep(Given)

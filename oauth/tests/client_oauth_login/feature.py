@@ -1,5 +1,3 @@
-"""Tests for clickhouse-client's ``--login`` OAuth flow."""
-
 from testflows.core import *
 
 

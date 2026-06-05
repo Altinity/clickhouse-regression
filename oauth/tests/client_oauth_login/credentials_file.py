@@ -1,9 +1,6 @@
-"""Tests for ``--oauth-credentials`` file loading and validation."""
-
 import json
 
 from testflows.core import *
-from testflows.asserts import error
 from testflows.combinatorics import CoveringArray
 
 from oauth.requirements.requirements import (
@@ -15,6 +12,7 @@ from oauth.requirements.requirements import (
 from oauth.tests.steps.client_login import (
     CLIENT_CONFIG_DIR,
     DEFAULT_CREDS_PATH,
+    assert_client_rejected,
     assert_no_segfault,
     create_directory,
     reset_client_state,
@@ -49,12 +47,11 @@ def missing_credentials_file(self):
         )
 
     with Then("the client exits with a file-not-found diagnostic"):
-        assert exit_code != 0, error()
-        assert (
-            missing_path in output
-            or "open" in output.lower()
-            or "BAD_ARGUMENTS" in output
-        ), f"Expected file-not-found diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(missing_path, "open", "BAD_ARGUMENTS"),
+        )
 
     with And("the diagnostic names the missing path"):
         assert (
@@ -89,11 +86,11 @@ def malformed_credentials_json(self):
         )
 
     with Then("the client exits with a parse diagnostic and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            "BAD_ARGUMENTS" in output or "JSON" in output or "parse" in output.lower()
-        ), f"Expected JSON-parse diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "JSON", "parse"),
+        )
 
 
 @TestScenario
@@ -125,11 +122,11 @@ def credentials_missing_client_id(self):
         )
 
     with Then("the client exits naming the missing client_id"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            "client_id" in output or "BAD_ARGUMENTS" in output
-        ), f"Expected 'client_id' diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("client_id", "BAD_ARGUMENTS"),
+        )
 
 
 @TestScenario
@@ -163,11 +160,10 @@ def credentials_top_level_web(self):
         )
 
     with Then("the client did not reject the top-level 'web' key"):
-        assert exit_code != 0, error()
+        assert_client_rejected(output=output, exit_code=exit_code)
         assert (
             "missing 'installed' or 'web'" not in output
         ), f"Top-level 'web' key was rejected unexpectedly:\n---\n{output}\n---"
-        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -197,12 +193,11 @@ def credentials_empty_top_level_object(self):
         )
 
     with Then("the client rejects the file"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "installed" in ol or "web" in ol or "bad_arguments" in ol
-        ), f"Expected structural error, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("installed", "web", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -232,8 +227,7 @@ def credentials_top_level_array_rejected(self):
         )
 
     with Then("the client fails without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -266,12 +260,11 @@ def credentials_missing_auth_uri(self):
         )
 
     with Then("the client names auth_uri or BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "auth_uri" in ol or "bad_arguments" in ol
-        ), f"Expected auth_uri diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("auth_uri", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -304,12 +297,11 @@ def credentials_missing_token_uri(self):
         )
 
     with Then("the client names token_uri or BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "token_uri" in ol or "bad_arguments" in ol
-        ), f"Expected token_uri diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("token_uri", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -371,8 +363,7 @@ def credentials_path_is_directory(self):
         )
 
     with Then("the client errors without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -402,12 +393,11 @@ def credentials_without_client_secret(self):
         )
 
     with Then("the client refuses or fails OAuth without crashing"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert exit_code != 0, error()
-        ol = output.lower()
-        assert (
-            "secret" in ol or "bad_arguments" in ol or "oauth" in ol
-        ), f"Expected client_secret-related failure, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("secret", "bad_arguments", "oauth"),
+        )
 
 
 @TestScenario
@@ -609,26 +599,23 @@ def credentials_combinatorial_validation(self):
                     expect_error=True,
                 )
 
-            with Then("the client did not crash"):
-                assert_no_segfault(output=output, exit_code=exit_code)
-
-            with And("the client exited with a non-zero status"):
-                assert (
-                    exit_code != 0
-                ), f"Expected non-zero exit for {label}\n---\n{output}\n---"
+            with Then("the client is rejected without crashing"):
+                assert_client_rejected(output=output, exit_code=exit_code)
 
             if _combo_expects_structural_rejection(combo):
                 with And("the output contains a structural diagnostic"):
-                    ol = output.lower()
-                    assert any(m in ol for m in _STRUCTURAL_DIAGNOSTIC_MARKERS), (
-                        f"No structural diagnostic for {label}:\n" f"---\n{output}\n---"
+                    assert_client_rejected(
+                        output=output,
+                        exit_code=exit_code,
+                        markers=_STRUCTURAL_DIAGNOSTIC_MARKERS,
                     )
 
             elif _combo_expects_field_rejection(combo):
                 with And("the output contains a field-validation diagnostic"):
-                    ol = output.lower()
-                    assert any(m in ol for m in _FIELD_DIAGNOSTIC_MARKERS), (
-                        f"No field diagnostic for {label}:\n" f"---\n{output}\n---"
+                    assert_client_rejected(
+                        output=output,
+                        exit_code=exit_code,
+                        markers=_FIELD_DIAGNOSTIC_MARKERS,
                     )
 
 

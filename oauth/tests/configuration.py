@@ -1,4 +1,5 @@
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 
@@ -26,10 +27,7 @@ def invalid_processor_type(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario
@@ -62,10 +60,7 @@ def missing_processor_type(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario
@@ -101,12 +96,14 @@ def non_existent_processor_in_user_directory(self):
     with Then(
         "ClickHouse rejects: the only configured processor cannot validate "
         "the token, and the user_directories reference 'keycloak' is "
-        "dangling so no fallback path can authenticate it"
+        "dangling so no fallback path can authenticate it",
+        description="""
+            HTTP layer rejects with AUTHENTICATION_FAILED (403) when no
+            processor can validate the bearer token; that is the failure
+            surface for any unverifiable token, including the dangling-
+            reference case under test.
+        """,
     ):
-        # HTTP layer rejects with AUTHENTICATION_FAILED (403) when no
-        # processor can validate the bearer token; that is the failure
-        # surface for any unverifiable token, including the dangling-
-        # reference case under test.
         body = access_clickhouse(token=token, status_code=403)
         assert (
             "AUTHENTICATION_FAILED" in body or "Token could not be verified" in body
@@ -146,10 +143,7 @@ def empty_processor_in_user_directory(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects (the referenced processor failed parse)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario
@@ -210,10 +204,7 @@ def openid_processor_with_no_endpoints_rejected(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario
@@ -248,10 +239,7 @@ def openid_processor_with_all_endpoints_rejected(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (ambiguous endpoint config)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario
@@ -324,22 +312,7 @@ def valid_openid_processor_type(self):
     client = self.context.provider_client
 
     with Given("I configure a token processor with type='OpEnId' (mixed case)"):
-        endpoints = client.OAuthProvider.openid_endpoints()
-        change_token_processors(
-            processor_name="keycloak",
-            processor_type="OpEnId",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            introspection_client_id=self.context.introspection_client_id,
-            introspection_client_secret=self.context.introspection_client_secret,
-            replace=True,
-        )
-
-    with And("I configure user directories to use the processor"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-        )
+        configure_openid_token_processor(processor_type="OpEnId")
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -387,11 +360,13 @@ def multiple_token_entries_in_user_directories(self):
 
     with Given(
         "I overlay <user_directories replace> with two <token> blocks "
-        "pointing at the same processor"
+        "pointing at the same processor",
+        description="""
+            Pass the two <token> children as a list — the XML writer
+            in helpers.common._create_xml_tree treats list-of-dicts as
+            a request for sibling elements with the same tag.
+        """,
     ):
-        # Pass the two <token> children as a list — the XML writer
-        # in helpers.common._create_xml_tree treats list-of-dicts as
-        # a request for sibling elements with the same tag.
         entries = {
             KeyWithAttributes("user_directories", {"replace": "replace"}): {
                 "token": [
@@ -419,7 +394,7 @@ def multiple_token_entries_in_user_directories(self):
 
     with Then(
         "ClickHouse refuses the auth (duplicate <token> binding is an "
-        "invalid configuration per SRS 6.2.1.1.4)"
+        "invalid configuration)"
     ):
         assert_token_rejected(token=token)
 
@@ -453,10 +428,7 @@ def empty_token_processors_section(self):
         token = client.OAuthProvider.get_oauth_token().access_token
 
     with Then("ClickHouse rejects with BAD_ARGUMENTS (token auth not configured)"):
-        access_clickhouse(token=token, status_code=400)
-
-    with And("the server is still alive"):
-        check_clickhouse_is_alive()
+        assert_misconfigured_processor_rejects(token=token)
 
 
 @TestScenario

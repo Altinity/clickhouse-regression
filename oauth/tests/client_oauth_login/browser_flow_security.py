@@ -1,5 +1,3 @@
-"""Security-focused negatives for browser OAuth and OIDC discovery."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (
@@ -17,8 +15,8 @@ from oauth.tests.steps.client_login import (
     start_oversized_oidc_discovery_mock,
     stop_mock_oidc_server,
     wait_for_http_response,
+    write_browser_oauth_credentials,
     write_client_config_xml,
-    write_oauth_credentials_file,
 )
 
 BROWSER_SECURITY_LOG = "/tmp/ch_oauth_browser_security.log"
@@ -36,18 +34,7 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
             reset_client_state()
 
         with And("I write credentials for browser OAuth"):
-            write_oauth_credentials_file(
-                client_id="grafana-client",
-                client_secret="grafana-secret",
-                auth_uri=(
-                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth"
-                ),
-                token_uri=(
-                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
-                ),
-                redirect_uris=["http://127.0.0.1"],
-                device_authorization_uri=None,
-            )
+            write_browser_oauth_credentials()
 
         with When("I start browser login pinned to callback port 49152"):
             start_clickhouse_oauth_client_background(
@@ -66,12 +53,16 @@ def loopback_start_must_not_redirect_with_oauth_state(self):
                 wall_timeout=25,
             )
 
-        with And("I probe /start on the loopback server once it binds"):
-            # Poll the loopback callback server rather than waiting a
-            # fixed sleep — the previous sleep(3) raced against
-            # clickhouse-client's port-bind under load and produced
-            # phantom passes when /start was queried before the
-            # server was up.
+        with And(
+            "I probe /start on the loopback server once it binds",
+            description="""
+                Poll the loopback callback server rather than waiting a
+                fixed sleep — the previous sleep(3) raced against
+                clickhouse-client's port-bind under load and produced
+                phantom passes when /start was queried before the
+                server was up.
+            """,
+        ):
             probe = wait_for_http_response(
                 url="http://127.0.0.1:49152/start",
                 max_wait=15,

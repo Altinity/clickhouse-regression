@@ -1,21 +1,48 @@
-"""Provider-agnostic OAuth provider contract.
-
-Every concrete OAuth provider (Keycloak, Azure, Google, ...) exposes the
-same surface so test scenarios can run against any of them by swapping
-``--identity-provider``.
-
-Tests MUST go through ``self.context.provider_client.OAuthProvider`` and
-MUST NOT import provider-specific symbols (``keycloak_realm.create_user``
-etc.) directly. Anything not implemented by a given provider raises
-``UnsupportedByProvider`` so the scenario is reported as ``Skip`` instead
-of erroring.
-
-The contract intentionally keeps token shape uniform: ``get_oauth_token``
-ALWAYS returns an ``OAuthToken`` (defined below) regardless of provider.
-"""
+import hashlib
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
+
+
+def mask_secret(value):
+    """Register ``value`` with the testflows secrets registry so it is
+    redacted from every subsequent log message.
+
+    Used to keep OAuth tokens (access / refresh / id tokens, admin
+    tokens) out of the logs. Idempotent: registering the same value
+    twice is a no-op. Safe to call with ``None``/empty values and safe
+    to call when no secrets registry is active (returns ``value``
+    unchanged so callers can use it inline).
+    """
+    if not value:
+        return value
+
+    try:
+        from testflows.core import Secret
+    except Exception:
+        return value
+
+    value = str(value)
+    name = "oauth_secret_" + hashlib.sha1(value.encode("utf-8")).hexdigest()[:24]
+    try:
+        Secret(name=name)(value)
+    except Exception:
+        pass
+
+    return value
+
+
+def mask_token_response(response):
+    """Mask the standard token fields in a raw token-endpoint response.
+
+    Accepts the parsed JSON ``dict`` of an OAuth/OIDC token response and
+    registers ``access_token``/``refresh_token``/``id_token`` as secrets.
+    Returns the same ``dict`` for convenient inline use.
+    """
+    if isinstance(response, dict):
+        for key in ("access_token", "refresh_token", "id_token"):
+            mask_secret(response.get(key))
+    return response
 
 
 class UnsupportedByProvider(Exception):
@@ -41,6 +68,16 @@ class OAuthToken:
     token_type: Optional[str] = None
     expires_in: Optional[int] = None
     raw: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Mask every token this container carries so it never leaks into
+        the test log (e.g. via ``Authorization: Bearer …`` headers in
+        logged curl commands). Provider-agnostic: applies regardless of
+        which IdP produced the token."""
+
+        mask_secret(self.access_token)
+        mask_secret(self.refresh_token)
+        mask_secret(self.id_token)
 
     def __getitem__(self, key):
         if key in {

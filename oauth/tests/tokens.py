@@ -1,11 +1,5 @@
-"""Token validation tests that exercise the configured token processor.
-
-JWT-mutation tests live in ``oauth.tests.jwt_manipulation``. This file
-focuses on processor-configuration behaviour (OpenID discovery, invalid
-JWKS endpoint, etc.) so we don't double-count the same coverage.
-"""
-
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 
@@ -19,22 +13,7 @@ def openid_discovery_mode(self):
     client = self.context.provider_client
 
     with Given("I configure a token processor with provider OpenID endpoints"):
-        endpoints = client.OAuthProvider.openid_endpoints()
-        change_token_processors(
-            processor_name="keycloak",
-            processor_type="OpenID",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            introspection_client_id=self.context.introspection_client_id,
-            introspection_client_secret=self.context.introspection_client_secret,
-            replace=True,
-        )
-
-    with And("I configure user directories"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-        )
+        configure_openid_token_processor()
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -84,6 +63,6 @@ def invalid_jwks_uri_rejected(self):
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
 )
 def feature(self):
-    """Token-processor configuration tests."""
+    """Token validation tests that exercise the configured token processor."""
     Scenario(run=openid_discovery_mode)
     Scenario(run=invalid_jwks_uri_rejected)

@@ -132,7 +132,7 @@ RQ_Iceberg_ExportPartition_DataTypes_Primitives = Requirement(
     description=(
         "[ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:\n"
         "\n"
-        "* Integer types `Int16`, `Int32`, `Int64`, `UInt32`.\n"
+        "* Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.\n"
         "* Floating-point types `Float32` and `Float64`.\n"
         "* Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.\n"
         "* `String` and `UUID`.\n"
@@ -157,7 +157,7 @@ RQ_Iceberg_ExportPartition_DataTypes_Nullable = Requirement(
         "\n"
         "* Explicit `NULL` values are exported as Iceberg nulls.\n"
         "* Round-trip reads return `NULL` (not a default sentinel) for the same rows.\n"
-        "* Both numeric (`Nullable(Int64)`) and string-backed (`Nullable(String)`) cases are exercised.\n"
+        "* Numeric (`Nullable(Int64)`, `Nullable(UInt64)`) and string-backed (`Nullable(String)`) cases are exercised.\n"
         "\n"
     ),
     link=None,
@@ -175,7 +175,7 @@ RQ_Iceberg_ExportPartition_DataTypes_Composite = Requirement(
     description=(
         "[ClickHouse] SHALL export the documented composite types into their Iceberg analogues:\n"
         "\n"
-        "* `Array(T)` for both numeric and string element types.\n"
+        "* `Array(T)` for numeric (`Int32`, `UInt32`, `UInt64`) and string element types.\n"
         "* `Map(K, V)` (verified for `Map(String, Int64)`).\n"
         "* `Tuple(T1, T2, …)` mapped to an Iceberg struct, verified for a `(Int32, String)` tuple.\n"
         "\n"
@@ -202,7 +202,7 @@ RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection = Requirement(
         "* `FixedString(N)`.\n"
         "* `Decimal(p, s)`.\n"
         "* `Enum8` (and its variants).\n"
-        "* `LowCardinality(T)`.\n"
+        "* `LowCardinality(T)` (including `Array(LowCardinality(String))`).\n"
         "\n"
         "The rejection SHALL fire either when the destination is created or when the export is issued, before any data files are written.\n"
         "\n"
@@ -210,6 +210,22 @@ RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection = Requirement(
     link=None,
     level=2,
     num="3.6",
+)
+
+RQ_Iceberg_ExportPartition_DataTypes_ExportSurfaces = Requirement(
+    name="RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL preserve the same Iceberg type mapping and round-trip row equality when the export is issued as either `EXPORT PARTITION ID '<id>'` or `EXPORT PART '<part_name>'` against a `no_catalog` IcebergS3 destination (direct writes, no REST/Glue catalog on read-back).\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="3.7",
 )
 
 RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain = Requirement(
@@ -990,6 +1006,11 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
             level=2,
             num="3.6",
         ),
+        Heading(
+            name="RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces",
+            level=2,
+            num="3.7",
+        ),
         Heading(name="Committed Iceberg metadata", level=1, num="4"),
         Heading(
             name="RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain",
@@ -1178,6 +1199,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
         RQ_Iceberg_ExportPartition_DataTypes_Nullable,
         RQ_Iceberg_ExportPartition_DataTypes_Composite,
         RQ_Iceberg_ExportPartition_DataTypes_UnsupportedRejection,
+        RQ_Iceberg_ExportPartition_DataTypes_ExportSurfaces,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_SnapshotChain,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_PartitionSpec,
         RQ_Iceberg_ExportPartition_ManifestIntegrity_ColumnStats,
@@ -1235,6 +1257,7 @@ SRS_047_ClickHouse_EXPORT_PARTITION_to_Apache_Iceberg = Specification(
     * 3.4 [RQ.Iceberg.ExportPartition.DataTypes.Nullable](#rqicebergexportpartitiondatatypesnullable)
     * 3.5 [RQ.Iceberg.ExportPartition.DataTypes.Composite](#rqicebergexportpartitiondatatypescomposite)
     * 3.6 [RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection](#rqicebergexportpartitiondatatypesunsupportedrejection)
+    * 3.7 [RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces](#rqicebergexportpartitiondatatypesexportsurfaces)
 * 4 [Committed Iceberg metadata](#committed-iceberg-metadata)
     * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
     * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
@@ -1359,7 +1382,7 @@ version: 1.0
 
 [ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:
 
-* Integer types `Int16`, `Int32`, `Int64`, `UInt32`.
+* Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.
 * Floating-point types `Float32` and `Float64`.
 * Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.
 * `String` and `UUID`.
@@ -1373,14 +1396,14 @@ version: 1.0
 
 * Explicit `NULL` values are exported as Iceberg nulls.
 * Round-trip reads return `NULL` (not a default sentinel) for the same rows.
-* Both numeric (`Nullable(Int64)`) and string-backed (`Nullable(String)`) cases are exercised.
+* Numeric (`Nullable(Int64)`, `Nullable(UInt64)`) and string-backed (`Nullable(String)`) cases are exercised.
 
 ### RQ.Iceberg.ExportPartition.DataTypes.Composite
 version: 1.0
 
 [ClickHouse] SHALL export the documented composite types into their Iceberg analogues:
 
-* `Array(T)` for both numeric and string element types.
+* `Array(T)` for numeric (`Int32`, `UInt32`, `UInt64`) and string element types.
 * `Map(K, V)` (verified for `Map(String, Int64)`).
 * `Tuple(T1, T2, …)` mapped to an Iceberg struct, verified for a `(Int32, String)` tuple.
 
@@ -1396,9 +1419,14 @@ version: 1.0
 * `FixedString(N)`.
 * `Decimal(p, s)`.
 * `Enum8` (and its variants).
-* `LowCardinality(T)`.
+* `LowCardinality(T)` (including `Array(LowCardinality(String))`).
 
 The rejection SHALL fire either when the destination is created or when the export is issued, before any data files are written.
+
+### RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces
+version: 1.0
+
+[ClickHouse] SHALL preserve the same Iceberg type mapping and round-trip row equality when the export is issued as either `EXPORT PARTITION ID '<id>'` or `EXPORT PART '<part_name>'` against a `no_catalog` IcebergS3 destination (direct writes, no REST/Glue catalog on read-back).
 
 ## Committed Iceberg metadata
 

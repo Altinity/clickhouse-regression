@@ -1,6 +1,7 @@
 import json
 import time
 import urllib.parse
+from contextlib import contextmanager
 from helpers.common import (
     getuid,
     KeyWithAttributes,
@@ -10,6 +11,47 @@ from testflows.asserts import error
 from testflows.core import *
 from jwt_authentication.tests.steps import change_clickhouse_config
 from oauth.requirements.requirements import *
+
+
+@contextmanager
+def without_command_logging(node=None):
+    """Mute live forwarding of a node's bash output to the test log.
+
+    Commands executed inside this context still run and their captured
+    ``output`` is returned to the caller exactly as usual — only the
+    streaming of that output into the on-disk/console log is suppressed.
+
+    Use it to run commands whose *output* contains secrets that cannot be
+    pre-registered (e.g. a raw OAuth token-endpoint response, or the
+    contents of ``oauth_cache.json``), so the token never reaches the log
+    in the first place. After parsing, register the obtained values via
+    ``mask_secret`` so any *later* reference to them is redacted too.
+    """
+    if node is None:
+        node = current().context.bash_tools
+
+    bash = node.cluster.bash(node.name)
+    child = bash.child
+
+    # ``Command`` re-attaches a logger on every invocation, so we override
+    # the bound ``logger`` method to keep output unlogged for the duration
+    # rather than just clearing ``_logger`` once.
+    original_logger = child.__dict__.get("logger", None)
+
+    def _suppressed_logger(logger=None, prefix=""):
+        child._logger = None
+        return None
+
+    child._logger = None
+    child.logger = _suppressed_logger
+    try:
+        yield
+    finally:
+        if original_logger is not None:
+            child.logger = original_logger
+        else:
+            child.__dict__.pop("logger", None)
+        child._logger = None
 
 
 @TestStep(Then)
@@ -408,11 +450,15 @@ def apply_fatal_user_directories_config(
             with By("removing the bad config file from inside the container"):
                 node.command(f"rm -rf {config.path}", steps=False, exitcode=0)
 
-            with And("restarting ClickHouse to recover from the failed start"):
-                # Two restarts mirrors ``helpers.common.add_invalid_config``:
-                # the first kicks any wedged process / clears stale pid
-                # state, the second comes up healthy now that the bad
-                # overlay is gone.
+            with And(
+                "restarting ClickHouse to recover from the failed start",
+                description="""
+                    Two restarts mirrors ``helpers.common.add_invalid_config``:
+                    the first kicks any wedged process / clears stale pid
+                    state, the second comes up healthy now that the bad
+                    overlay is gone.
+                """,
+            ):
                 node.restart_clickhouse(safe=False)
                 node.restart_clickhouse(safe=False)
 
