@@ -1,42 +1,10 @@
 import swarms.tests.steps.swarm_node_actions as actions
+import swarms.tests.steps.s3_steps as s3_steps
 
 from testflows.core import *
 from testflows.asserts import error
 
 from helpers.common import getuid
-
-
-@TestStep(Given)
-def create_parquet_with_many_row_groups(
-    self,
-    node,
-    s3_access_key_id,
-    s3_secret_access_key,
-    rows=200000,
-    row_group_size=1000,
-):
-    """Create one Parquet file with many row groups in MinIO."""
-    file_name = f"task_reschedule_{getuid()}.parquet"
-    file_url = f"http://minio:9000/warehouse/data/{file_name}"
-
-    node.query(
-        f"""
-            INSERT INTO FUNCTION s3(
-                '{file_url}',
-                '{s3_access_key_id}',
-                '{s3_secret_access_key}',
-                'Parquet',
-                'id UInt64'
-            )
-            SELECT number
-            FROM numbers({rows})
-            SETTINGS
-                output_format_parquet_row_group_size={row_group_size},
-                output_format_parquet_row_group_size_bytes=1048576
-        """
-    )
-
-    return file_url
 
 
 @TestStep(Given)
@@ -118,7 +86,7 @@ def rescheduling_with_bucket_granularity(
     log_comment = f"bucket_reschedule_{getuid()}"
 
     with Given("create one parquet file with many row groups"):
-        parquet_url = create_parquet_with_many_row_groups(
+        parquet_url = s3_steps.create_parquet_with_many_row_groups(
             node=node,
             s3_access_key_id=minio_root_user,
             s3_secret_access_key=minio_root_password,
@@ -135,7 +103,10 @@ def rescheduling_with_bucket_granularity(
     ):
         with Pool() as pool:
             Step(
-                "run long query", test=run_long_query, parallel=True, executor=pool
+                "run long query",
+                test=run_long_query,
+                parallel=True,
+                executor=pool,
             )(
                 node=node,
                 clickhouse_iceberg_table_name=table_expression,
@@ -144,6 +115,10 @@ def rescheduling_with_bucket_granularity(
                 max_threads=1,
                 lock_object_storage_task_distribution_ms=2,
                 cluster_table_function_split_granularity="bucket",
+                # Force one bucket per distributed task (smallest possible batch)
+                # so the pre-fix bucket-identity collision in
+                # rescheduleTasksFromReplica is reliably exercised when a replica
+                # is killed mid-query (see Altinity/ClickHouse#1486).
                 cluster_table_function_buckets_batch_size=1,
                 log_comment=log_comment,
                 expected_total=expected_total,
@@ -201,12 +176,9 @@ def rescheduling_with_bucket_granularity(
 
 @TestFeature
 @Name("task rescheduling")
-def feature(self, minio_root_user, minio_root_password, node=None):
+def feature(self, minio_root_user, minio_root_password):
     """Check that task rescheduling works correctly when swarm replicas fail,
     verifying data completeness after recovery."""
-    if node is None:
-        node = self.context.node
-
     Scenario(test=rescheduling_with_bucket_granularity)(
         minio_root_user=minio_root_user,
         minio_root_password=minio_root_password,
