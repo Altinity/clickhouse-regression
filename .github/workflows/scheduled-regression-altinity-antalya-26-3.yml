@@ -1,0 +1,28 @@
+name: 🗓 Scheduled Altinity 26.3 Antalya 
+run-name: 🗓 Scheduled Altinity 26.3 Antalya 
+on:
+  workflow_dispatch:
+  #Run at 10:00 PM (UTC) on Saturday
+  schedule:
+    - cron: "0 22 * * 6"
+
+jobs:
+  altinitystable-26-3-antalya-x86-with-analyzer-zookeeper:
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: docker://altinity/clickhouse-server:26.3.10.20001.altinityantalya
+      version: '26.3.10.20001'
+      extra_args: '--with-analyzer'
+      run_s3_suites: false
+      arch: x86
+    secrets: inherit
+
+  altinitystable-26-3-antalya-arm-with-analyzer-zookeeper:
+    uses: ./.github/workflows/run-regression.yml
+    with:
+      package: docker://altinity/clickhouse-server:26.3.10.20001.altinityantalya
+      version: '26.3.10.20001'
+      extra_args: '--with-analyzer'
+      run_s3_suites: false
+      arch: arm64
+    secrets: inherit

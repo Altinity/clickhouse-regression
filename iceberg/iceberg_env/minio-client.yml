@@ -5,7 +5,7 @@ services:
     depends_on:
       - minio
     image: minio/mc:RELEASE.2025-03-12T17-29-24Z-cpuv1
-    container_name: mc
+    container_name: iceberg_mc
     entrypoint: >
       /bin/sh -c "
       until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;

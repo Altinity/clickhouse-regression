@@ -17,6 +17,7 @@ from s3.tests.export_partition.steps import (
     create_table_with_json_column_with_hints,
     create_table_with_nested_column,
     create_table_with_complex_nested_column,
+    create_table_with_nested_array_column,
     export_and_verify_columns,
 )
 from s3.tests.export_part.steps import get_column_info
@@ -593,6 +594,47 @@ def complex_nested_columns(self):
     complex_nested_column_export()
 
 
+@TestCheck
+def nested_array_column_export(self):
+    """Check exporting nested ``Array(Array(...))`` columns to S3 table."""
+
+    with Given(
+        "I create a source table with nested array column and S3 destination table"
+    ):
+        table_name = f"mt_nested_array_{getuid()}"
+
+        create_table_with_nested_array_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_nested_array",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "nested_arrays", "type": "Array(Array(Int32))"},
+            ],
+            partition_by="id",
+        )
+
+    export_and_verify_columns(
+        table_name=table_name,
+        s3_table_name=s3_table_name,
+        insert_query=(
+            f"INSERT INTO {table_name} (id, nested_arrays) VALUES "
+            f"(1, []), (1, [[1, 2], [3]]), (2, [[-1, 0, 1]])"
+        ),
+        order_by="id, nested_arrays",
+        columns=["id", "nested_arrays"],
+        description="nested Array(Array(Int32)) column data",
+    )
+
+
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPartition_ColumnTypes_Nested("1.0"))
+def nested_array_columns(self):
+    """Check that nested ``Array(Array(...))`` columns export correctly."""
+
+    nested_array_column_export()
+
+
 @TestFeature
 @Name("datatypes")
 @Requirements(
@@ -617,3 +659,4 @@ def feature(self, num_parts=10):
     Scenario(run=json_columns_with_hints)
     Scenario(run=nested_columns)
     Scenario(run=complex_nested_columns)
+    Scenario(run=nested_array_columns)

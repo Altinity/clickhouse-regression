@@ -4,46 +4,11 @@ See ``oauth/new_audit_review/all-issues.md`` (Series A, H-16) and
 ``DEFECT_H16`` in ``oauth/tests/defects_catalogue.py``. Legacy aliases:
 F20 / TOKEN-06 used in earlier drafts of this suite — same defect.
 
-``JwksJwtProcessor::resolveAndValidate``
-(``src/Access/TokenProcessorsJWT.cpp`` in antalya-26.1) calls
-``jwt::decode(credentials.getToken())`` as the very first line of its
-body — without a top-level ``try { } catch (...)``. Any exception raised
-by JWT parsing therefore propagates out of the processor and out of
-``ExternalAuthenticators::checkCredentialsAgainstProcessor``,
-ultimately surfacing in the HTTP response as a generic ``Code: 1001``
-``std::runtime_error`` with the underlying library's error message.
-
-H-16 in ``all-issues.md`` is framed around the iteration-abort
-consequence (later processors never tried). The scenarios in this file
-pin the *exception-leak* consequence (HTTP 500 + library detail
-leakage) of the same root cause. Companion scenario in
-``fail_closed_config.py`` (H-16 / 1) pins the iteration-abort angle.
-
-Concrete consequences:
-
-1. ClickHouse's HTTP layer returns 500 with no ``AUTHENTICATION_FAILED``
-   marker — the response is indistinguishable from an unrelated server
-   crash for any client logic that buckets errors by class.
-2. The error body leaks JWT-library implementation detail to the
-   client (e.g. the literal text ``"Invalid input: too much fill"``
-   from the base64 decoder), which is mild information disclosure but
-   undesirable for an authentication path.
-3. Comparable code paths handle this correctly:
-   ``StaticKeyJwtProcessor::resolveAndValidate`` wraps its body in a
-   single ``try { ... } catch (const std::exception & ex) { LOG_TRACE...
-   return false; }``; ``OpenIdTokenProcessor::resolveAndValidate`` does
-   the same for its ``catch (...)`` fallback. ``JwksJwtProcessor`` only
-   catches narrowly-scoped ``claim_not_present_exception`` /
-   ``std::bad_cast`` deep inside the x5c block, so anything thrown by
-   ``jwt::decode`` itself escapes.
-
-These scenarios are expected to FAIL on current antalya-26.1
-(``DEFECT_H16``). They are registered in ``oauth/regression.py`` under
-``xfails`` so CI surfaces them as expected failures, not regressions.
-Remove the xfail entries once the upstream fix lands — the fix is a
-one-line ``try``/``catch`` wrapper around the body of
-``JwksJwtProcessor::resolveAndValidate`` mirroring the
-``StaticKeyJwtProcessor`` shape.
+Fixed in antalya-26.3 (PR #1777): ``JwksJwtProcessor::resolveAndValidate``
+now wraps its entire body in a ``try { } catch (const std::exception &)``
+block, mirroring ``StaticKeyJwtProcessor``. Malformed-token exceptions are
+caught, logged at TRACE level, and the processor returns ``false`` so the
+iterator can try the next processor. No more HTTP 500 / Code 1001 leakage.
 """
 
 from testflows.core import *

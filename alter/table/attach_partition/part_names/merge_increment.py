@@ -70,11 +70,11 @@ def check_merge_increment(self, engine):
         optimize_table(table_name=first_table)
         expected_part_name = "all_1_5_11"
 
-        part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                part_name = node.query(
+                    f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
+                )
                 assert part_name.output == expected_part_name, error(
                     f"Unexpected part name: {part_name.output}"
                 )
@@ -151,11 +151,11 @@ def check_merge_increment_replicated(self, engine):
         if engine == "ReplicatedGraphiteMergeTree":
             expected_part_name = ["all_0_2_11", "all_1_5_12"]
 
-        part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                part_name = node.query(
+                    f"SELECT name FROM system.parts WHERE table = '{first_table}' AND active FORMAT TabSeparated"
+                )
                 assert part_name.output in expected_part_name, error(
                     f"Unexpected part name: {part_name.output}"
                 )

@@ -29,4 +29,16 @@ then
     sudo rm --recursive --force $SUITE/_instances/*/database/
     ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
     ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
+    ./retry.sh 5 30 "aws $aws_endpoint_args s3 cp --recursive . $SUITE_REPORT_BUCKET_PATH/"' --exclude "*" --include "*/_instances/*.log" --content-type "\"text/plain; charset=utf-8\"" --no-follow-symlinks'
+    # oauth (and similar suites) collect docker service logs next to the compose
+    # env dir (envs/<provider>/_service_logs), not at <suite>/_service_logs.
+    if [[ ! -d "$SUITE/_service_logs" ]]; then
+        for nested_logs in "$SUITE"/envs/*/_service_logs; do
+            if [[ -d "$nested_logs" ]]; then
+                cp -a "$nested_logs" "$SUITE/_service_logs"
+                break
+            fi
+        done
+    fi
+    ./retry.sh 5 30 "aws s3 cp --recursive $SUITE/_service_logs/ $SUITE_REPORT_BUCKET_PATH/_service_logs/"' --exclude "*" --include "*.log" --content-type "\"text/plain; charset=utf-8\""'
 fi

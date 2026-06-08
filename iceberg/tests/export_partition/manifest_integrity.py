@@ -373,11 +373,14 @@ def external_reader_round_trips_exported_data(
     self, minio_root_user, minio_root_password
 ):
     """PyIceberg (a non-ClickHouse reader) can scan the destination and
-    materialise the exported rows. Companion to
-    :func:`data_file_paths_under_table_prefix`: exercises the user-visible
-    impact of bucket-relative ``data_file.file_path`` for clients that
-    dispatch FileIO by URI scheme. Currently XFail; flips with the same
-    ``MultipleFileWriter::startNewFile`` fix.
+    materialise the exported rows.
+
+    Currently XFail: EXPORT PARTITION writes Parquet without Iceberg
+    field-ids and IcebergS3 tables do not set
+    ``schema.name-mapping.default``, so strict readers (PyIceberg) cannot
+    map physical columns to the table schema. On older builds that still
+    write bucket-relative ``data_file.file_path`` URIs, the same scenario
+    may instead fail at FileIO open with ``FileNotFoundError``.
     """
     source_table = f"mt_{getuid()}"
     expected_values = [(1, 2020), (2, 2020), (3, 2020)]
@@ -421,17 +424,20 @@ def external_reader_round_trips_exported_data(
         )
 
     with Then("PyIceberg can scan the table and materialise the rows"):
-        # PyIceberg's ProjectedSchema.to_arrow() walks every manifest
-        # entry and asks its FileIO to open each data file. FileIO is
-        # dispatched by URI scheme: "s3://..." -> the S3FileIO we
-        # registered in load_pyiceberg_table; anything else -> the
-        # default PyArrowFileIO which treats the string as a local
-        # filesystem path. The latter is what happens today — we catch
-        # that and rewrite the exception into an assertion that names
-        # the offending data_file.file_path so the failure points
-        # straight at the spec violation.
         try:
             arrow_table = table.scan().to_arrow()
+        except ValueError as exc:
+            msg = str(exc)
+            if "field-ids" not in msg and "name-mapping.default" not in msg:
+                raise
+            assert False, error(
+                "External reader (PyIceberg) could not map exported Parquet "
+                "columns to the Iceberg table schema. EXPORT PARTITION writes "
+                "Parquet without Iceberg field-ids, and IcebergS3 "
+                "destinations do not set table property "
+                "schema.name-mapping.default. Underlying error: "
+                f"{type(exc).__name__}: {exc}"
+            )
         except (FileNotFoundError, OSError) as exc:
             offending = [df.file_path for df in get_data_files(
                 destination=destination,

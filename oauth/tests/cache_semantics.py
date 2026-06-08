@@ -1,65 +1,11 @@
-"""Token cache semantics tests.
-
-These scenarios exercise the cache rules in SRS section 14.3:
-
-- ``CacheEviction.CacheLifetime`` — cached entries are evicted after
-  ``token_cache_lifetime`` seconds; the next request SHALL re-validate
-  and re-cache.
-- ``TokensPerUser`` — ClickHouse SHALL keep at most one cache entry per
-  user. Two distinct tokens for the same user authenticate, but they
-  share a single cache slot.
-- ``CacheEntryRefresh`` — a successful auth with a different token
-  SHALL replace the existing cache entry for the same user, even
-  while the old entry is still inside its ``token_cache_lifetime``
-  window.
-- ``LazyCleanup`` — ClickHouse SHALL NOT proactively sweep expired
-  entries. They persist until the user authenticates again.
-- ``Common.Cache.Behavior`` — when a token's ``exp`` is sooner than
-  ``token_cache_lifetime``, the cache entry SHALL only be valid until
-  the token's ``exp`` (the shorter of the two limits).
-
-All scenarios are provider-agnostic: tokens are obtained via
-``client.OAuthProvider.get_oauth_token(...)`` so swapping
-``--identity-provider`` keeps them running.
-"""
-
 import json
 import time
 
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
 from testflows.asserts import *
 from oauth.requirements.requirements import *
-
-
-def _configure_cache(self, *, token_cache_lifetime, include_jwks_uri=True):
-    """Apply the standard Keycloak processor with a custom cache lifetime.
-
-    Centralised so each scenario doesn't repeat the same 4 URLs. Mirrors
-    ``parameters_and_caching._configure_processor`` but exposes
-    ``include_jwks_uri`` so scenarios that want the
-    userinfo-fallback path (no local JWT-fastpath) can opt out — see
-    ``security_audit/runtime_revocation_jwks.py`` for the same trick.
-    """
-    client = self.context.provider_client
-    endpoints = client.OAuthProvider.openid_endpoints()
-
-    kwargs = {
-        "processor_name": "keycloak",
-        "processor_type": "OpenID",
-        "userinfo_endpoint": endpoints.userinfo_endpoint,
-        "token_introspection_endpoint": endpoints.token_introspection_endpoint,
-        "token_cache_lifetime": token_cache_lifetime,
-        "replace": True,
-    }
-    if include_jwks_uri:
-        kwargs["jwks_uri"] = endpoints.jwks_uri
-
-    change_token_processors(**kwargs)
-    change_user_directories_config(
-        processor="keycloak",
-        common_roles=["general-role"],
-    )
 
 
 @TestScenario
@@ -68,18 +14,13 @@ def _configure_cache(self, *, token_cache_lifetime, include_jwks_uri=True):
 )
 def cache_evicted_after_lifetime_then_new_token_cached(self):
     """ClickHouse SHALL evict cached tokens after ``token_cache_lifetime``
-    elapses, and SHALL cache the next token presented for the same user.
-
-    Maps to SRS 14.3.3.1. Observable as: after the eviction window, a
-    second (different) token still authenticates correctly — proving
-    the eviction did not break re-authentication and that the cache
-    refilled with the new token rather than serving a stale entry.
+    elapses, and SHALL cache the next token for the same user.
     """
     client = self.context.provider_client
     cache_lifetime = 5
 
     with Given(f"I configure the processor with cache lifetime {cache_lifetime}s"):
-        _configure_cache(self, token_cache_lifetime=cache_lifetime)
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
     with And("I get token A"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
@@ -111,24 +52,23 @@ def cache_evicted_after_lifetime_then_new_token_cached(self):
 def at_most_one_cache_entry_per_user(self):
     """ClickHouse SHALL keep no more than one cache entry per user.
 
-    Maps to SRS 14.3.4.1. We can't introspect the cache directly, so
-    we observe the behavioural consequence: two distinct tokens for
-    the same user, used in alternation within the cache lifetime,
-    SHALL both authenticate and SHALL resolve to the same
-    ``currentUser()`` (no cross-user contamination, no separate slot
-    silently mis-attributed).
+    Two distinct tokens for the same user, used in alternation within
+    the cache lifetime, SHALL both authenticate and resolve to the same
+    ``currentUser()``.
     """
     client = self.context.provider_client
 
     with Given("I configure the processor with a 60s cache lifetime"):
-        _configure_cache(self, token_cache_lifetime=60)
+        configure_openid_token_processor(token_cache_lifetime=60)
 
     with And("I get token A and authenticate (warms cache)"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
         body_a = access_clickhouse(token=token_a, status_code=200)
 
-    with And("I get a fresh token B for the same user"):
-        # 1s gap so iat / jti differ at Keycloak.
+    with And(
+        "I get a fresh token B for the same user",
+        description="1s gap so iat / jti differ at Keycloak.",
+    ):
         time.sleep(1)
         token_b = client.OAuthProvider.get_oauth_token().access_token
         assert token_b != token_a, error(
@@ -145,10 +85,14 @@ def at_most_one_cache_entry_per_user(self):
             f"A={body_a!r} B={body_b!r}"
         )
 
-    with And("token A still works after token B (no slot eviction breaks A)"):
-        # A's signature is still valid locally; even if the cache
-        # entry was rewritten by B, A's re-validation against JWKS
-        # SHALL succeed and SHALL again map to the same user.
+    with And(
+        "token A still works after token B (no slot eviction breaks A)",
+        description="""
+            A's signature is still valid locally; even if the cache
+            entry was rewritten by B, A's re-validation against JWKS
+            SHALL succeed and SHALL again map to the same user.
+        """,
+    ):
         body_a_again = access_clickhouse(token=token_a, status_code=200)
         assert body_a_again == body_a, error(
             f"After token B, token A no longer resolves to the same "
@@ -161,21 +105,14 @@ def at_most_one_cache_entry_per_user(self):
     RQ_SRS_042_OAuth_Authentication_Caching_CacheEntryRefresh("1.0"),
 )
 def new_token_replaces_cache_entry_for_same_user(self):
-    """A successful authentication with a different token SHALL
-    replace the existing cache entry for the same user, even while
-    the old entry is still inside its ``token_cache_lifetime``.
-
-    Maps to SRS 14.3.4.2. Observable: after token B's success, both
-    A and B continue to authenticate (re-validation works for either
-    token regardless of which one currently owns the cache slot).
-    The "old entry was removed" property is internal; what we can
-    pin is "the system continues to behave correctly when a same-user
-    token rotation happens inside the cache window".
+    """A successful auth with a different token SHALL replace the
+    existing cache entry for the same user, even inside the
+    ``token_cache_lifetime`` window.
     """
     client = self.context.provider_client
 
     with Given("I configure the processor with a 60s cache lifetime"):
-        _configure_cache(self, token_cache_lifetime=60)
+        configure_openid_token_processor(token_cache_lifetime=60)
 
     with And("I get token A and authenticate (populates cache for the user)"):
         token_a = client.OAuthProvider.get_oauth_token().access_token
@@ -207,21 +144,15 @@ def new_token_replaces_cache_entry_for_same_user(self):
 )
 def expired_cache_entry_persists_until_next_auth(self):
     """ClickHouse SHALL NOT proactively sweep expired cache entries.
-    They persist (or are at least observable as non-blocking) until
-    the next successful authentication for that user.
 
-    Maps to SRS 14.3.4.3. The "persistence" property is internal;
-    what we observe is the absence of any side-effect during the idle
-    window (no spurious failures, no log spam, no resource exhaustion)
-    and that the next auth after the window completes the normal
-    re-validation path. We pin those two: idle window passes
-    uneventfully, then a fresh auth still works.
+    After the cache window passes idle, the server stays healthy and
+    re-authentication with the same token still works (full re-validation).
     """
     client = self.context.provider_client
     cache_lifetime = 5
 
     with Given(f"I configure the processor with cache lifetime {cache_lifetime}s"):
-        _configure_cache(self, token_cache_lifetime=cache_lifetime)
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
     with And("I get a token and authenticate (populates cache)"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -252,41 +183,15 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     """When a token's ``exp`` is sooner than ``token_cache_lifetime``,
     the cache entry SHALL only be valid until the token's ``exp``.
 
-    Maps to SRS 13.1.5 / "Common.Cache.Behavior" (scenario 1):
-    *Token expiration: 30 minutes, Cache lifetime: 60 minutes →
-    Token cached for 30 minutes (until token expires)*.
-
-    Observable: with ``token_cache_lifetime`` configured well above
-    the IdP-issued ``exp``, the token SHALL stop authenticating
-    around its ``exp`` — i.e. the cache does not extend the token's
-    lifetime past its own ``exp``.
-
-    Setup: shorten the realm's ``accessTokenLifespan`` to 30s via the
-    Keycloak Admin API, configure ClickHouse with
-    ``token_cache_lifetime=600`` (well above 30s), get a token, use
-    it, wait past 30s but well below 600s, retry — SHALL fail.
-
-    **Currently xfailed** as ``DEFECT_H_NEW_30`` — the JWT fastpath
-    in ``StaticKeyJwtProcessor::resolveAndValidate`` /
-    ``JwksJwtProcessor::resolveAndValidate`` never propagates the
-    token's ``exp`` to the cache entry's TTL, so the cache extends
-    the token's lifetime up to the full ``token_cache_lifetime``.
-    The opaque / OpenID-userinfo paths set ``setExpiresAt`` correctly;
-    this scenario exercises the buggy JWKS fastpath because
-    ``_configure_cache(...)`` configures ``jwks_uri``. Will go green
-    once the JWT processors propagate ``decoded_jwt.get_expires_at()``
-    to the cache write.
+    Shortens the realm's ``accessTokenLifespan`` via the Keycloak Admin
+    API and verifies the token stops authenticating around its ``exp``
+    even though ``token_cache_lifetime`` is much longer.
     """
     client = self.context.provider_client
     realm = self.context.realm_name
     short_token_lifespan = 30
     cache_lifetime = 600
 
-    # The accessTokenLifespan tweak below uses the Keycloak Admin
-    # REST API directly. Other providers (Azure / Google) don't expose
-    # an equivalent knob through the protocol, and the scenario only
-    # makes sense when we can pin the IdP-issued token's exp to a
-    # known value, so we skip rather than xfail.
     if str(self.context.provider_name).lower() != "keycloak":
         skip(
             "Common.Cache.Behavior reproduction needs the IdP to honour "
@@ -294,16 +199,18 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             "supports this through the realm-admin endpoint."
         )
 
-    # Imported lazily so non-Keycloak runs don't pay the import cost
-    # (and so the module remains importable even if the Keycloak
-    # provider module ever moves).
+    # Lazy import for non-Keycloak runs.
     from oauth.tests.steps.keycloak_realm import keycloak_admin_request
     from oauth.tests.steps.provider_protocol import _decode_jwt_token
 
-    # Capture the realm's current accessTokenLifespan so we can restore
-    # it on teardown. Some Keycloak builds default to 300s, others to
-    # the global default; we don't want to bake an assumption in.
-    with Given("I capture the realm's current accessTokenLifespan"):
+    with Given(
+        "I capture the realm's current accessTokenLifespan",
+        description="""
+            Capture the realm's current accessTokenLifespan so we can restore
+            it on teardown. Some Keycloak builds default to 300s, others to
+            the global default; we don't want to bake an assumption in.
+        """,
+    ):
         status, body = keycloak_admin_request(
             method="GET",
             path=f"/admin/realms/{realm}",
@@ -333,22 +240,16 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             f"I configure the processor with cache lifetime {cache_lifetime}s "
             f"(>> the {short_token_lifespan}s token lifespan)"
         ):
-            _configure_cache(self, token_cache_lifetime=cache_lifetime)
+            configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
 
         with And("I get a token (it should now carry a short exp)"):
             token_response = client.OAuthProvider.get_oauth_token()
             token = token_response.access_token
 
-        with And("I verify Keycloak actually honoured the accessTokenLifespan change"):
-            # Keycloak's Admin REST API silently ignores accessTokenLifespan
-            # on PUT /admin/realms/{realm} — see
-            # oauth/requirements/keycloak_actions.md ("Not Configurable via
-            # REST"). The PUT returns 204 even though no value changes.
-            # ``expires_in`` from the OAuth response can also drift from
-            # the token's actual ``exp`` claim (Keycloak computes it from
-            # several lifespan settings), so the only fully reliable
-            # signal is the JWT itself. Decode it and compare ``exp - iat``
-            # against what we asked for.
+        with And(
+            "I verify Keycloak actually honoured the accessTokenLifespan change",
+            description="By decoding the JWT.",
+        ):
             _, payload, _ = _decode_jwt_token(token)
             jwt_lifespan = None
             if "exp" in payload and "iat" in payload:
@@ -356,14 +257,14 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
             if jwt_lifespan is None or jwt_lifespan > short_token_lifespan + 5:
                 skip(
                     f"Keycloak issued a token with exp-iat={jwt_lifespan!r} "
-                    f"after we requested accessTokenLifespan="
-                    f"{short_token_lifespan}s (expires_in="
-                    f"{token_response.expires_in!r}). The Admin REST API "
-                    f"cannot modify accessTokenLifespan via PUT "
-                    f"/admin/realms/{{realm}} — see "
-                    f"oauth/requirements/keycloak_actions.md. Reproducing "
-                    f"this scenario requires the realm-import workaround, "
-                    f"which is not yet wired up."
+                    f"after we set accessTokenLifespan={short_token_lifespan}s "
+                    f"via PUT /admin/realms/{{realm}} (expires_in="
+                    f"{token_response.expires_in!r}). The realm-level change "
+                    f"did not take effect on the issued token — most likely a "
+                    f"client-level 'access.token.lifespan' override, an SSO "
+                    f"session cap (exp = min(accessTokenLifespan, remaining "
+                    f"session)), or the admin PUT not applying on this build. "
+                    f"Cannot reproduce the short-exp scenario, so skipping."
                 )
             wait_seconds = jwt_lifespan + 5
 
@@ -409,8 +310,13 @@ def cache_entry_capped_at_token_exp_when_token_expires_first(self):
     RQ_SRS_042_OAuth_Authentication_Caching("1.0"),
 )
 def feature(self):
-    """Token cache semantics — eviction, per-user accounting, refresh,
-    lazy cleanup, and the min(token_exp, cache_lifetime) rule."""
+    """Token cache semantics tests.
+
+    Exercises cache eviction after ``token_cache_lifetime``, per-user cache
+    slot accounting, cache entry refresh on token rotation, lazy cleanup
+    behavior, and the ``min(token_exp, cache_lifetime)`` rule.
+    """
+
     Scenario(run=cache_evicted_after_lifetime_then_new_token_cached)
     Scenario(run=at_most_one_cache_entry_per_user)
     Scenario(run=new_token_replaces_cache_entry_for_same_user)

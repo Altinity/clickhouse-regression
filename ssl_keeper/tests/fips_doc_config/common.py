@@ -8,7 +8,10 @@ from ssl_server.tests.fips_doc_config.common import (
     FIPS_DOC_KEEPER_RAFT_PORT,
     FIPS_DOC_SERVER_FIXTURE,
     verify_doc_fixture_preprocessed,
+    verify_keeper_http_readiness_not_exposed,
     verify_server_listening_ports,
+    write_host_config_file,
+    write_node_config,
 )
 
 FIPS_DOC_FIXTURES_DIR = os.path.join(
@@ -33,9 +36,6 @@ KEEPER_BUNDLED_CONFIG_DIR = os.path.normpath(
 MOUNTED_BUNDLED_CONFIGS = {
     BUILTIN_FIPS_CONFIG: "fips.xml",
     BUILTIN_ZK_CONFIG: "secure_keeper.xml",
-}
-MOUNTED_RAFT_CONFIGS = {
-    BUILTIN_RAFT_CONFIG: "raft_keeper.xml",
 }
 DOC_PORT_REMOVALS = (
     '<tcp_port remove="1" />',
@@ -81,6 +81,30 @@ def read_bundled_raft_config(node_name):
         return config_file.read()
 
 
+def bundled_raft_config_dir(node_name):
+    return os.path.normpath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "configs", node_name, "config.d")
+    )
+
+
+def snapshot_keeper_regression_configs(context, nodes=None):
+    """Capture bind-mounted keeper configs before doc fixtures overwrite them."""
+    backup = getattr(context, "fips_doc_keeper_config_backup", None)
+    if backup:
+        return backup
+    if nodes is None:
+        nodes = KEEPER_CLUSTER_NODES
+
+    backup = {}
+    for dest, filename in MOUNTED_BUNDLED_CONFIGS.items():
+        backup[dest] = read_bundled_keeper_config(filename)
+    for name in nodes:
+        backup[(name, BUILTIN_RAFT_CONFIG)] = read_bundled_raft_config(name)
+
+    context.fips_doc_keeper_config_backup = backup
+    return backup
+
+
 def build_keeper_doc_fips_content():
     """Apply doc fips.xml port removals on top of the bundled cluster fips."""
     bundled = read_bundled_keeper_config("fips.xml")
@@ -93,22 +117,19 @@ def build_keeper_doc_fips_content():
     return bundled
 
 
-def _write_node_config(node, dest, content):
-    node.command(
-        f"cat <<'FIPS_DOC_CONFIG' > {dest}\n{content}\nFIPS_DOC_CONFIG",
-        exitcode=0,
-    )
+def _write_bundled_keeper_config(filename, content):
+    write_host_config_file(KEEPER_BUNDLED_CONFIG_DIR, filename, content)
 
 
-def _restore_mounted_configs(cluster, nodes, configs, raft=False):
+def _write_raft_keeper_config(node_name, content):
+    write_host_config_file(bundled_raft_config_dir(node_name), "raft_keeper.xml", content)
+
+
+def _restore_mounted_configs(cluster, nodes, backup):
+    for dest, filename in MOUNTED_BUNDLED_CONFIGS.items():
+        _write_bundled_keeper_config(filename, backup[dest])
     for name in nodes:
-        node = cluster.node(name)
-        for dest, filename in configs.items():
-            if raft:
-                content = read_bundled_raft_config(name)
-            else:
-                content = read_bundled_keeper_config(filename)
-            _write_node_config(node, dest, content)
+        _write_raft_keeper_config(name, backup[(name, BUILTIN_RAFT_CONFIG)])
 
 
 def _restart_cluster_nodes(cluster, nodes, timeout=300):
@@ -183,9 +204,14 @@ def restore_builtin_keeper_configs(
         nodes = KEEPER_CLUSTER_NODES
 
     cluster = self.context.cluster
+    backup = getattr(self.context, "fips_doc_keeper_config_backup", None)
+    if not backup:
+        raise RuntimeError(
+            "keeper config snapshot missing; bind-mounted configs may be corrupted"
+        )
+
     with By("I restore bundled keeper and server config files"):
-        _restore_mounted_configs(cluster, nodes, MOUNTED_BUNDLED_CONFIGS)
-        _restore_mounted_configs(cluster, nodes, MOUNTED_RAFT_CONFIGS, raft=True)
+        _restore_mounted_configs(cluster, nodes, backup)
         for name in nodes:
             cluster.node(name).command(f"rm -f {DOC_KEEPER_CONFIG}", no_checks=True)
 
@@ -196,6 +222,7 @@ def restore_builtin_keeper_configs(
     self.context.fips_doc_disabled_configs = []
     self.context.fips_doc_server_installed = False
     self.context.fips_doc_keeper_installed = False
+    self.context.fips_doc_keeper_config_backup = None
 
 
 @TestStep(Given)
@@ -214,14 +241,16 @@ def apply_doc_fips_server_fixture(
     zookeeper_content = read_fips_doc_fixture("server/zookeeper.xml")
 
     with When("I install the doc fips and zookeeper fixtures on all nodes"):
+        snapshot_keeper_regression_configs(self.context, nodes=nodes)
         disable_builtin_keeper_configs(
             nodes=nodes, raft=False, zookeeper_client=True, fips=True
         )
         for name in nodes:
-            node = cluster.node(name)
-            node.command("mkdir -p /etc/clickhouse-server/config.d", exitcode=0)
-            _write_node_config(node, BUILTIN_FIPS_CONFIG, fips_content)
-            _write_node_config(node, BUILTIN_ZK_CONFIG, zookeeper_content)
+            cluster.node(name).command(
+                "mkdir -p /etc/clickhouse-server/config.d", exitcode=0
+            )
+        _write_bundled_keeper_config("fips.xml", fips_content)
+        _write_bundled_keeper_config("secure_keeper.xml", zookeeper_content)
 
         if restart:
             _restart_cluster_nodes(cluster, nodes, timeout=timeout)
@@ -241,14 +270,15 @@ def apply_doc_keeper_fixture(self, nodes=None, restart=True, timeout=300):
     template = read_fips_doc_fixture("server/keeper.xml")
 
     with When("I install the doc keeper fixture on all keeper nodes"):
+        snapshot_keeper_regression_configs(self.context, nodes=nodes)
         disable_builtin_keeper_configs(
             nodes=nodes, raft=True, zookeeper_client=False, fips=False
         )
         for index, name in enumerate(nodes, start=1):
             node = cluster.node(name)
             content = template.format(server_id=index)
-            _write_node_config(node, BUILTIN_RAFT_CONFIG, EMPTY_CONFIG)
-            _write_node_config(node, DOC_KEEPER_CONFIG, content)
+            _write_raft_keeper_config(name, EMPTY_CONFIG)
+            write_node_config(node, DOC_KEEPER_CONFIG, content)
 
         if restart:
             _restart_cluster_nodes(cluster, nodes, timeout=timeout)
@@ -271,6 +301,17 @@ def verify_cluster_listening_ports(self, allowed_ports, nodes=None, forbid_plain
             node=cluster.node(name),
             forbid_plaintext=forbid_plaintext,
         )
+
+
+@TestStep(Then)
+def verify_cluster_keeper_http_readiness_not_exposed(self, nodes=None):
+    """Assert Keeper HTTP /ready is not exposed on any cluster node."""
+    if nodes is None:
+        nodes = KEEPER_CLUSTER_NODES
+
+    cluster = self.context.cluster
+    for name in nodes:
+        verify_keeper_http_readiness_not_exposed(node=cluster.node(name))
 
 
 @TestStep(Then)

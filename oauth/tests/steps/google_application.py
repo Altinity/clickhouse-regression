@@ -50,16 +50,12 @@ def get_oauth_token(
 ):
     """Acquire a Google OAuth token via refresh-token grant.
 
-    Returns an :class:`OAuthToken`. ``username``/``password`` are
-    accepted for signature compatibility with the Keycloak provider but
-    are ignored — Google does not allow ROPC.
+    Returns an ``OAuthToken``. ``username``/``password`` are accepted
+    for signature compatibility but ignored (Google does not allow ROPC).
 
-    Google OAuth requires user interaction for *initial* authorization,
-    so this helper expects a long-lived refresh token to have been
-    obtained out of band (see ``get_refresh_token_interactive`` below)
-    and passed in via ``--refresh-token`` or
-    ``self.context.refresh_token``. Alternatively, callers may pass
-    ``access_token=`` directly when running ad-hoc.
+    Expects a long-lived refresh token obtained out of band (see
+    ``get_refresh_token_interactive``). Pass ``access_token=`` directly
+    for ad-hoc runs.
     """
     import requests
 
@@ -105,8 +101,7 @@ def get_oauth_token(
 def openid_endpoints():
     """Return Google's standard OpenID-Connect endpoints.
 
-    NOT a ``@TestStep`` — see ``keycloak_realm.openid_endpoints`` for
-    the rationale.
+    Plain function (not a ``@TestStep``) — returns the dataclass directly.
     """
     ctx = current().context
     return OpenIDEndpoints(
@@ -122,15 +117,10 @@ def openid_endpoints():
 
 
 def get_refresh_token_interactive(client_id, client_secret):
-    """
-    Interactive helper to get a refresh token from Google.
+    """Interactive helper to obtain a Google refresh token.
 
-    This function guides the user through the OAuth flow to obtain a refresh token.
-    Run this once to get a refresh token, then use it for automated testing.
-
-    Usage:
-        from oauth.tests.steps.google_application import get_refresh_token_interactive
-        refresh_token = get_refresh_token_interactive("your-client-id", "your-client-secret")
+    Guides the user through the browser OAuth flow. Run once, then
+    use the returned token for automated testing via ``--refresh-token``.
     """
     import webbrowser
     from urllib.parse import urlencode, urlparse, parse_qs
@@ -318,13 +308,10 @@ def no_token_processors_configuration(self, node=None):
 
 
 class OAuthProvider:
-    """Provider implementation for Google Identity.
+    """Google Identity provider contract implementation.
 
-    Implements the contract defined in
-    ``oauth.tests.steps.provider_protocol``. Most identity-management
-    operations (``create_user``, ``disable_user``, ...) are not
-    automated for Google, so they're explicitly marked unsupported
-    here. Scenarios that depend on them ``Skip`` rather than crash.
+    Exposes the interface defined in ``provider_protocol``.
+    Unsupported operations are marked so dependent scenarios ``Skip``.
     """
 
     get_oauth_token = get_oauth_token

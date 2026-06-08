@@ -1,22 +1,10 @@
-"""Keycloak admin-API automation for client / user scope assignments.
+"""Keycloak admin-API automation for optional client scope assignments.
 
-Wraps the dance required to attach an optional client scope (e.g.
-``offline_access``) to a Keycloak client and then make sure every
-realm user actually holds the matching realm role so the scope can
-be requested at token-issue time.
+Attaches an optional scope (e.g. ``offline_access``) to a client
+and grants the matching realm role to every user.
 
-The module is loaded as text by the
-``keycloak_enable_optional_scope`` step in ``client_login.py`` and
-executed inside the ``bash-tools`` container — same idiom as
-``keycloak_device_flow.py`` and ``mock_oidc_oversized.py``. The
-step appends a call to :func:`enable_optional_scope_and_assign_role`
-with the desired ``base``/``realm``/``client_id``/``scope_name`` and
-streams the bundle through ``python3 <<'TAG'``.
-
-Why bother running this on bash-tools instead of from the test
-runner directly: the Keycloak admin endpoint is only reachable via
-the Docker network alias ``keycloak:8080``; the host running the
-testflows runner has no route there.
+Loaded as text and executed inside the bash-tools container by the
+``keycloak_enable_optional_scope`` step.
 """
 
 import json
@@ -158,10 +146,7 @@ def enable_optional_scope_and_assign_role(
 ) -> None:
     """Attach ``scope_name`` to ``client_id`` and grant the matching realm role.
 
-    Idempotent — safe to call repeatedly. ``base`` is the Keycloak
-    root URL (e.g. ``http://keycloak:8080``); the matching realm
-    role is assumed to share the scope name (``offline_access`` for
-    the ``offline_access`` scope, which is the only caller today).
+    Idempotent. ``base`` is the Keycloak root URL (e.g. ``http://keycloak:8080``).
     """
 
     token = _admin_token(base)

@@ -1,3 +1,4 @@
+import os
 import random
 
 from testflows.core import *
@@ -86,12 +87,23 @@ def wildcard(self, wildcard, expected_time, expect_result):
 
     node = current().context.node
 
+    baseline_cpu_cores = 8
+    num_cpu_cores = os.cpu_count() or baseline_cpu_cores
+    cpu_scale = max(1.0, baseline_cpu_cores / num_cpu_cores)
+    expected_time = expected_time * cpu_scale
+
+    if cpu_scale > 1.0:
+        note(
+            f"detected {num_cpu_cores} cpu cores; scaling expected_time by "
+            f"{cpu_scale:.2f} to {expected_time:.0f}s"
+        )
+
     for i in range(1, 3):
         with Then(f"""I query S3 using the wildcard '{wildcard}'"""):
             t_start = time.time()
             r = node.query(
                 f"""SELECT median(d) FROM s3(s3_credentials, url='{self.context.many_files_uri}id={wildcard}/*', format='CSV', structure='d UInt64') FORMAT TabSeparated""",
-                timeout=expected_time,
+                timeout=expected_time + 60,
             )
             t_elapsed = time.time() - t_start
             metric(f"wildcard pattern='{wildcard}', i={i}", t_elapsed, "s")

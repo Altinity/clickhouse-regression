@@ -338,6 +338,45 @@ xfails = {
             check_clickhouse_version(">=25.8"),
         )
     ],
+    "/:/:/export tests/export part/columns/json columns/*": [
+        (
+            Fail,
+            "S3 table engine rejects JSON column DDL on 26.3+ "
+            "(ILLEGAL_COLUMN: storage S3 doesn't support columns with dynamic structure)",
+            check_clickhouse_version(">=26.3"),
+        ),
+    ],
+    "/:/:/export tests/export part/columns/json columns with hints/*": [
+        (
+            Fail,
+            "S3 table engine rejects JSON column DDL on 26.3+ "
+            "(ILLEGAL_COLUMN: storage S3 doesn't support columns with dynamic structure)",
+            check_clickhouse_version(">=26.3"),
+        ),
+    ],
+    "/:/:/export tests/export partition/datatypes/json columns/*": [
+        (
+            Fail,
+            "S3 table engine rejects JSON column DDL on 26.3+ "
+            "(ILLEGAL_COLUMN: storage S3 doesn't support columns with dynamic structure)",
+            check_clickhouse_version(">=26.3"),
+        ),
+    ],
+    "/:/:/export tests/export partition/datatypes/json columns with hints/*": [
+        (
+            Fail,
+            "S3 table engine rejects JSON column DDL on 26.3+ "
+            "(ILLEGAL_COLUMN: storage S3 doesn't support columns with dynamic structure)",
+            check_clickhouse_version(">=26.3"),
+        ),
+    ],
+    "minio/part 3/hive partitioning/hive_partitioning_cluster_*": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1855",
+            check_if_antalya_build,
+        )
+    ],
 }
 
 ffails = {
