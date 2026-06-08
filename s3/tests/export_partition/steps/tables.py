@@ -250,6 +250,20 @@ def create_table_with_complex_nested_column(self, table_name):
     )
 
 
+@TestStep(Given)
+def create_table_with_nested_array_column(self, table_name):
+    """Create a MergeTree table with a nested ``Array(Array(...))`` column."""
+    create_replicated_merge_tree_table(
+        table_name=table_name,
+        columns=[
+            {"name": "id", "type": "UInt32"},
+            {"name": "nested_arrays", "type": "Array(Array(Int32))"},
+        ],
+        partition_by="id",
+        query_settings="index_granularity = 1",
+    )
+
+
 @TestStep(When)
 def insert_all_datatypes(self, table_name, rows_per_part=1, num_parts=1, node=None):
     """Insert all datatypes into a MergeTree table."""

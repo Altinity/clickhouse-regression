@@ -331,10 +331,18 @@ def catalog_external_reader_round_trips_exported_data(
         )
         try:
             arrow_table = external_view.scan().to_arrow()
+        except ValueError as exc:
+            msg = str(exc)
+            if "field-ids" not in msg and "name-mapping.default" not in msg:
+                raise
+            assert False, error(
+                "External reader (PyIceberg) could not map exported Parquet "
+                "columns to the Iceberg table schema. EXPORT PARTITION writes "
+                "Parquet without Iceberg field-ids even when the catalog "
+                "table was created with a proper schema. Underlying error: "
+                f"{type(exc).__name__}: {exc}"
+            )
         except (FileNotFoundError, OSError) as exc:
-            # Same diagnostic shape as the no-catalog sibling: name the
-            # offending ``data_file.file_path`` so the failure points
-            # straight at the spec violation rather than a PyArrow trace.
             offending = []
             current_snapshot = external_view.current_snapshot()
             if current_snapshot is not None:

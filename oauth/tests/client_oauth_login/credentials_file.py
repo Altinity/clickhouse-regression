@@ -1,7 +1,7 @@
-"""Tests for ``--oauth-credentials`` file loading and validation."""
+import json
 
 from testflows.core import *
-from testflows.asserts import error
+from testflows.combinatorics import CoveringArray
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format,
@@ -12,6 +12,7 @@ from oauth.requirements.requirements import (
 from oauth.tests.steps.client_login import (
     CLIENT_CONFIG_DIR,
     DEFAULT_CREDS_PATH,
+    assert_client_rejected,
     assert_no_segfault,
     create_directory,
     reset_client_state,
@@ -46,12 +47,11 @@ def missing_credentials_file(self):
         )
 
     with Then("the client exits with a file-not-found diagnostic"):
-        assert exit_code != 0, error()
-        assert (
-            missing_path in output
-            or "open" in output.lower()
-            or "BAD_ARGUMENTS" in output
-        ), f"Expected file-not-found diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(missing_path, "open", "BAD_ARGUMENTS"),
+        )
 
     with And("the diagnostic names the missing path"):
         assert (
@@ -86,11 +86,11 @@ def malformed_credentials_json(self):
         )
 
     with Then("the client exits with a parse diagnostic and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            "BAD_ARGUMENTS" in output or "JSON" in output or "parse" in output.lower()
-        ), f"Expected JSON-parse diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "JSON", "parse"),
+        )
 
 
 @TestScenario
@@ -122,11 +122,11 @@ def credentials_missing_client_id(self):
         )
 
     with Then("the client exits naming the missing client_id"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert (
-            "client_id" in output or "BAD_ARGUMENTS" in output
-        ), f"Expected 'client_id' diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("client_id", "BAD_ARGUMENTS"),
+        )
 
 
 @TestScenario
@@ -160,11 +160,10 @@ def credentials_top_level_web(self):
         )
 
     with Then("the client did not reject the top-level 'web' key"):
-        assert exit_code != 0, error()
+        assert_client_rejected(output=output, exit_code=exit_code)
         assert (
             "missing 'installed' or 'web'" not in output
         ), f"Top-level 'web' key was rejected unexpectedly:\n---\n{output}\n---"
-        assert_no_segfault(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -194,12 +193,11 @@ def credentials_empty_top_level_object(self):
         )
 
     with Then("the client rejects the file"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "installed" in ol or "web" in ol or "bad_arguments" in ol
-        ), f"Expected structural error, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("installed", "web", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -229,8 +227,7 @@ def credentials_top_level_array_rejected(self):
         )
 
     with Then("the client fails without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -263,12 +260,11 @@ def credentials_missing_auth_uri(self):
         )
 
     with Then("the client names auth_uri or BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "auth_uri" in ol or "bad_arguments" in ol
-        ), f"Expected auth_uri diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("auth_uri", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -301,12 +297,11 @@ def credentials_missing_token_uri(self):
         )
 
     with Then("the client names token_uri or BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "token_uri" in ol or "bad_arguments" in ol
-        ), f"Expected token_uri diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("token_uri", "bad_arguments"),
+        )
 
 
 @TestScenario
@@ -368,8 +363,7 @@ def credentials_path_is_directory(self):
         )
 
     with Then("the client errors without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -399,12 +393,11 @@ def credentials_without_client_secret(self):
         )
 
     with Then("the client refuses or fails OAuth without crashing"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert exit_code != 0, error()
-        ol = output.lower()
-        assert (
-            "secret" in ol or "bad_arguments" in ol or "oauth" in ol
-        ), f"Expected client_secret-related failure, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("secret", "bad_arguments", "oauth"),
+        )
 
 
 @TestScenario
@@ -471,6 +464,159 @@ def credentials_unicode_client_id(self):
 
     with Then("the client stays up"):
         assert_no_segfault(output=output, exit_code=exit_code)
+
+
+_TOP_LEVEL_KEYS = {
+    "installed": "installed",
+    "web": "web",
+    "unknown": "bogus_key",
+}
+
+_FIELD_VALUES = {
+    "client_id": {
+        "valid": "grafana-client",
+        "empty": "",
+        "number": 42,
+        "object": {"nested": True},
+    },
+    "auth_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth",
+        "empty": "",
+        "number": 9999,
+        "object": {"url": "http://x"},
+    },
+    "token_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+        "empty": "",
+        "number": 9999,
+        "object": {"url": "http://x"},
+    },
+    "client_secret": {
+        "valid": "grafana-secret",
+        "empty": "",
+        "number": 12345,
+    },
+    "redirect_uris": {
+        "valid": ["http://localhost"],
+        "string": "http://localhost",
+    },
+    "device_authorization_uri": {
+        "valid": "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device",
+        "empty": "",
+        "number": 9999,
+    },
+}
+
+_CREDS_DIMENSIONS = {
+    "top_level_key": ["installed", "web", "unknown", "empty_object", "array"],
+    "client_id": ["valid", "empty", "absent", "number", "object"],
+    "auth_uri": ["valid", "empty", "absent", "number", "object"],
+    "token_uri": ["valid", "empty", "absent", "number", "object"],
+    "client_secret": ["valid", "absent", "empty", "number"],
+    "redirect_uris": ["valid", "absent", "string"],
+    "device_authorization_uri": ["valid", "absent", "empty", "number"],
+}
+
+_STRUCTURAL_DIAGNOSTIC_MARKERS = ("installed", "web", "bad_arguments", "missing")
+_FIELD_DIAGNOSTIC_MARKERS = ("bad_arguments", "client_id", "auth_uri", "token_uri")
+
+
+def _build_credentials_raw_json(combo):
+    """Assemble the raw JSON credentials string for a CoveringArray combo."""
+    top_name = combo["top_level_key"]
+
+    if top_name == "array":
+        return "[1, 2, 3]"
+    if top_name == "empty_object":
+        return "{}"
+
+    top_key = _TOP_LEVEL_KEYS[top_name]
+    inner = {}
+    for field in (
+        "client_id",
+        "auth_uri",
+        "token_uri",
+        "client_secret",
+        "redirect_uris",
+        "device_authorization_uri",
+    ):
+        state = combo[field]
+        if state != "absent":
+            inner[field] = _FIELD_VALUES[field][state]
+
+    return json.dumps({top_key: inner})
+
+
+def _combo_expects_structural_rejection(combo):
+    """True when the top-level JSON shape is wrong (array, empty, unknown key)."""
+    return combo["top_level_key"] in ("array", "empty_object", "unknown")
+
+
+def _combo_expects_field_rejection(combo):
+    """True when a required field is absent, empty, or has the wrong type."""
+    if _combo_expects_structural_rejection(combo):
+        return False
+    for field in ("client_id", "auth_uri", "token_uri"):
+        if combo[field] != "valid":
+            return True
+    return False
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Format("1.0"),
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_Malformed("1.0"),
+    RQ_SRS_042_OAuth_Client_Login_CredentialsFile_MissingClientId("1.0"),
+)
+@Name("credentials file combinatorial validation")
+def credentials_combinatorial_validation(self):
+    """Pairwise combinations of top-level key, required/optional field
+    presence, and value types SHALL be validated without crashing."""
+
+    for combo in CoveringArray(_CREDS_DIMENSIONS, strength=2):
+        label = " ".join(f"{k}={v}" for k, v in combo.items())
+
+        with Check(label):
+            with Given("I reset the client state"):
+                reset_client_state()
+
+            raw_json = _build_credentials_raw_json(combo)
+
+            with And(f"I write credentials JSON: {raw_json[:80]}"):
+                write_oauth_credentials_file(raw_contents=raw_json)
+
+            with When("I run clickhouse-client with the credentials file"):
+                exit_code, output = run_clickhouse_client(
+                    args=[
+                        "--host",
+                        "clickhouse1",
+                        "--login=device",
+                        "--oauth-credentials",
+                        DEFAULT_CREDS_PATH,
+                    ],
+                    query="SELECT 1",
+                    timeout=10,
+                    expect_error=True,
+                )
+
+            with Then("the client is rejected without crashing"):
+                assert_client_rejected(output=output, exit_code=exit_code)
+
+            if _combo_expects_structural_rejection(combo):
+                with And("the output contains a structural diagnostic"):
+                    assert_client_rejected(
+                        output=output,
+                        exit_code=exit_code,
+                        markers=_STRUCTURAL_DIAGNOSTIC_MARKERS,
+                    )
+
+            elif _combo_expects_field_rejection(combo):
+                with And("the output contains a field-validation diagnostic"):
+                    assert_client_rejected(
+                        output=output,
+                        exit_code=exit_code,
+                        markers=_FIELD_DIAGNOSTIC_MARKERS,
+                    )
 
 
 @TestFeature

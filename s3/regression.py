@@ -370,6 +370,13 @@ xfails = {
             check_clickhouse_version(">=26.3"),
         ),
     ],
+    "minio/part 3/hive partitioning/hive_partitioning_cluster_*": [
+        (
+            Fail,
+            "https://github.com/Altinity/ClickHouse/issues/1855",
+            check_if_antalya_build,
+        )
+    ],
 }
 
 ffails = {

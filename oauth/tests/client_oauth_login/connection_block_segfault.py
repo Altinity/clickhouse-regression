@@ -1,5 +1,3 @@
-"""Tests guarding against ``Client::login`` segfaults on empty ``hosts_and_ports``."""
-
 from testflows.core import *
 
 from oauth.requirements.requirements import (

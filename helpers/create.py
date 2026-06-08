@@ -210,12 +210,17 @@ def create_summing_merge_tree_table(
     partition_by: str = None,
     cluster: str = None,
     stop_merges: bool = False,
+    columns_to_sum: list[str] = None,
 ):
     """Create a table with the SummingMergeTree engine."""
+    engine = "SummingMergeTree"
+    if columns_to_sum:
+        engine = f"SummingMergeTree({', '.join(columns_to_sum)})"
+
     create_table(
         table_name=table_name,
         columns=columns,
-        engine="SummingMergeTree",
+        engine=engine,
         order_by=order_by,
         primary_key=primary_key,
         if_not_exists=if_not_exists,
@@ -378,7 +383,7 @@ def create_replicated_merge_tree_table(
     cluster: str = None,
     stop_merges: bool = False,
     query_settings: str = None,
-    sharded=False
+    sharded=False,
 ):
     """Create a table with the ReplicatedMergeTree engine."""
     if columns is None:
@@ -469,7 +474,7 @@ def partitioned_replicated_merge_tree_table(
     number_of_partitions=5,
     number_of_parts=10,
     query_settings=None,
-    sharded=False
+    sharded=False,
 ):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(

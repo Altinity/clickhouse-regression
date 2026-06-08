@@ -10,8 +10,8 @@ RUN mkdir -p /var/lib/clickhouse/coordination
 # install curl, base image could be Alpine or Ubuntu
 RUN if [ -f /etc/alpine-release ]; then \
     apk update && \
-    apk add --no-cache curl openssl shadow openssh-client ca-certificates; \
+    apk add --no-cache curl openssl shadow openssh-client ca-certificates iproute2; \
     else \
     apt-get update -o Acquire::Retries=5 --fix-missing && \
-    apt-get install -y --no-install-recommends curl openssh-client; \
+    apt-get install -y --no-install-recommends curl openssh-client iproute2; \
     fi

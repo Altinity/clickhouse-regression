@@ -7,6 +7,7 @@ from s3.tests.export_partition.steps import (
     create_table_with_json_column_with_hints,
     create_table_with_nested_column,
     create_table_with_complex_nested_column,
+    create_table_with_nested_array_column,
     escape_json_for_sql,
 )
 from helpers.create import *
@@ -625,6 +626,57 @@ def complex_nested_columns(self):
                 assert source_data == destination_data, error()
 
 
+@TestScenario
+@Requirements(RQ_ClickHouse_ExportPart_ColumnTypes_Nested("1.0"))
+def nested_array_columns(self):
+    """Check that nested ``Array(Array(...))`` columns export correctly."""
+
+    with Given(
+        "I create a source table with nested array column and S3 destination table"
+    ):
+        table_name = f"mt_nested_array_{getuid()}"
+
+        create_table_with_nested_array_column(table_name=table_name)
+        s3_table_name = create_s3_table(
+            table_name="s3_nested_array",
+            create_new_bucket=True,
+            columns=[
+                {"name": "id", "type": "UInt32"},
+                {"name": "nested_arrays", "type": "Array(Array(Int32))"},
+            ],
+            partition_by="id",
+        )
+
+    insert_query = (
+        f"INSERT INTO {table_name} (id, nested_arrays) VALUES "
+        f"(1, []), (1, [[1, 2], [3]]), (2, [[-1, 0, 1]])"
+    )
+
+    with By("inserting data into the source table"):
+        self.context.node.query(insert_query, use_file=True)
+
+    with And("exporting parts to the S3 table"):
+        export_parts(
+            source_table=table_name,
+            destination_table=s3_table_name,
+        )
+
+    with And("verifying nested array column data exported to S3 matches source"):
+        for retry in retries(timeout=35, delay=5):
+            with retry:
+                source_data = select_all_ordered(
+                    table_name=table_name,
+                    identifier="id, nested_arrays",
+                    order_by="id, nested_arrays",
+                )
+                destination_data = select_all_ordered(
+                    table_name=s3_table_name,
+                    identifier="id, nested_arrays",
+                    order_by="id, nested_arrays",
+                )
+                assert source_data == destination_data, error()
+
+
 @TestFeature
 @Name("columns")
 def feature(self):
@@ -641,3 +693,4 @@ def feature(self):
     Scenario(run=json_columns_with_hints)
     Scenario(run=nested_columns)
     Scenario(run=complex_nested_columns)
+    Scenario(run=nested_array_columns)

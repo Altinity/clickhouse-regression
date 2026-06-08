@@ -6,22 +6,18 @@ from helpers.common import getuid
 from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
+    without_command_logging,
 )
 from oauth.tests.steps.provider_protocol import (
     OAuthToken,
     OpenIDEndpoints,
+    mask_secret,
     modify_jwt_token as _shared_modify_jwt_token,
 )
 
 
 def _keycloak_realm_base_url(self):
-    """Return ``http://<keycloak_host>/realms/<realm>`` for the active realm.
-
-    The ``iss`` claim Keycloak embeds in tokens uses
-    ``KC_HOSTNAME`` (``localhost`` in our compose), not the in-network
-    ``keycloak`` hostname. Tests that compare against ``iss`` MUST use
-    this helper.
-    """
+    """Return the realm base URL for the active Keycloak realm."""
     realm = getattr(self.context, "realm_name", "grafana")
     base = self.context.keycloak_url
     return f"{base}/realms/{realm}"
@@ -34,12 +30,8 @@ def _keycloak_token_endpoint(self):
 def _keycloak_issuer_for_token_validation(self):
     """Return the issuer string Keycloak puts into the ``iss`` claim.
 
-    docker-compose starts Keycloak with ``--hostname=localhost`` so
-    minted tokens carry ``iss=http://localhost:8080/realms/<realm>``,
-    NOT the in-network hostname ``keycloak:8080``. ClickHouse, however,
-    talks to Keycloak through the in-network hostname for JWKS /
-    introspection. This split is intentional and these two helpers
-    make it explicit so authz tests stop drifting.
+    Tokens carry ``iss=http://localhost:8080/realms/<realm>`` (from
+    ``--hostname=localhost``), not the in-network ``keycloak:8080``.
     """
     realm = getattr(self.context, "realm_name", "grafana")
     return f"http://localhost:8080/realms/{realm}"
@@ -54,13 +46,7 @@ def keycloak_openid_processor_args(
     """Return ``change_token_processors``-compatible kwargs for the
     standard Keycloak OpenID processor.
 
-    NOT a ``@TestStep`` — this is a pure context-read that returns a
-    dict. Decorating it would force callers into a ``with Given(...)``
-    block just to compute four URLs and surface them as the wrapped
-    step-result ``'OK'`` object instead of the dict tests expect.
-    Centralised here so every security_audit / configuration scenario
-    that wires up an OpenID processor against Keycloak doesn't repeat
-    the same 4 URLs inline.
+    Plain function (not a ``@TestStep``) — returns a dict directly.
     """
     ctx = current().context
     if realm_name is None:
@@ -74,7 +60,8 @@ def keycloak_openid_processor_args(
         "processor_type": "OpenID",
         "userinfo_endpoint": f"{base}/userinfo",
         "token_introspection_endpoint": f"{base}/token/introspect",
-        "jwks_uri": f"{base}/certs",
+        "introspection_client_id": ctx.introspection_client_id,
+        "introspection_client_secret": ctx.introspection_client_secret,
     }
     if expected_audience is not None:
         args["expected_audience"] = expected_audience
@@ -86,10 +73,7 @@ def keycloak_openid_processor_args(
 def openid_endpoints(realm_name=None):
     """Return an ``OpenIDEndpoints`` bundle for the active Keycloak realm.
 
-    NOT a ``@TestStep`` — see ``keycloak_openid_processor_args`` for
-    the rationale. Tests use this instead of constructing URLs inline
-    so swapping ``--identity-provider`` switches every endpoint at
-    once.
+    Plain function (not a ``@TestStep``) — returns the dataclass directly.
     """
     ctx = current().context
     if realm_name is None:
@@ -111,11 +95,7 @@ def openid_endpoints(realm_name=None):
 
 @TestStep(Given)
 def default_idp(self, node=None, common_roles=None, roles_filter=None):
-    """Configure ClickHouse with the default Keycloak token processor.
-
-    Provider-agnostic helper invoked from generic tests so the same
-    scenario works against any IdP that implements the contract.
-    """
+    """Configure ClickHouse with the default Keycloak token processor."""
     args = keycloak_openid_processor_args()
     change_token_processors(processor_name="keycloak", node=node, **args)
     change_user_directories_config(
@@ -127,27 +107,11 @@ def default_idp(self, node=None, common_roles=None, roles_filter=None):
 
 
 @TestStep(Given)
-def get_oauth_token(self, node=None, username=None, password=None, scope=None):
-    """Acquire an access token from Keycloak via Resource-Owner-Password-Credentials.
+def get_oauth_token(self, node=None, username=None, password=None, scope="openid"):
+    """Acquire an access token from Keycloak via ROPC grant.
 
-    Returns an :class:`OAuthToken` that ``access_token`` and friends can
-    be read off of. Behaves dict-like so legacy
-    ``token["access_token"]`` call sites keep working until they migrate
-    to ``token.access_token``. Raises a clear ``Exception`` when Keycloak
-    returns an error response (disabled user, wrong password, ...) so
-    callers don't get an opaque ``KeyError``.
-
-    ``scope`` is an optional OAuth scope string requested at token-issue
-    time. Default ``None`` preserves Keycloak's client default scopes —
-    sufficient for ClickHouse's local JWT-fastpath validation when a
-    ``jwks_uri`` is configured. Pass ``scope="openid"`` for tests that
-    drop ``jwks_uri`` and rely on the ``userinfo_endpoint`` fallback —
-    Keycloak's userinfo endpoint requires the ``openid`` scope per OIDC
-    spec, so a token issued without it would 403 there even for a
-    perfectly valid user. This was the root cause of the runtime-
-    revocation cache-eviction tests failing on the very first request:
-    the userinfo path was reachable but the token had no ``openid``
-    scope, so Keycloak refused to honor it.
+    Returns an ``OAuthToken``. ``scope`` defaults to ``"openid"``; pass
+    ``scope=None`` to omit it.
     """
     if node is None:
         node = self.context.bash_tools
@@ -169,7 +133,10 @@ def get_oauth_token(self, node=None, username=None, password=None, scope=None):
     if scope is not None:
         curl_command += f" --data-urlencode 'scope={scope}'"
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body is the token itself and
+    # would otherwise be printed verbatim before we can mask it.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -213,9 +180,7 @@ def get_oauth_token_for_client(
 ):
     """Acquire a token from Keycloak for an arbitrary client/realm.
 
-    Used by authorization-negative tests that need a token with a
-    different ``aud`` / ``azp`` than the one ClickHouse expects.
-    Returns an :class:`OAuthToken`.
+    Returns an ``OAuthToken``.
     """
     if node is None:
         node = self.context.bash_tools
@@ -241,7 +206,9 @@ def get_oauth_token_for_client(
         f"--data-urlencode 'client_secret={client_secret}'"
     )
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -286,7 +253,9 @@ def get_admin_token(self):
         f"--data-urlencode 'password=admin'"
     )
 
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the admin token.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         token_data = json.loads(result.output)
@@ -303,7 +272,10 @@ def get_admin_token(self):
             f"{token_data.get('error_description', result.output[:200])}"
         )
 
-    return token_data["access_token"]
+    # Mask the admin token so its reuse in ``Authorization: Bearer …``
+    # headers (logged as command descriptions across the admin helpers)
+    # is redacted.
+    return mask_secret(token_data["access_token"])
 
 
 @TestStep(Given)
@@ -365,12 +337,7 @@ def create_user(
     email=None,
     realm_name=None,
 ):
-    """Create a user in Keycloak. Returns the user ID.
-
-    Uses the Keycloak Admin REST API to create the user. Extracts the
-    user ID from the ``Location`` response header returned by Keycloak
-    on successful creation (HTTP 201).
-    """
+    """Create a user in Keycloak. Returns the user ID."""
     if realm_name is None:
         realm_name = self.context.realm_name
 
@@ -494,13 +461,7 @@ def enable_user(self, username, realm_name=None):
 
 @TestStep(Given)
 def create_realm(self, realm_name, enabled=True):
-    """Create a brand-new Keycloak realm via the Admin API.
-
-    Used by authorization-negative tests that need a token issued by an
-    issuer ClickHouse does not trust ("user from another tenant /
-    organisation"). Idempotent: returns silently if the realm already
-    exists.
-    """
+    """Create a Keycloak realm via the Admin API. Idempotent."""
     keycloak_admin_request(
         method="POST",
         path="/admin/realms",
@@ -635,11 +596,7 @@ def delete_group(self, group_name, realm_name=None):
 
 @TestStep(Given)
 def get_group_by_name(self, group_name, realm_name=None):
-    """Look up a Keycloak group by exact name. Returns dict or None.
-
-    Uses Keycloak's ``?search=`` parameter (substring match) then filters
-    results for an exact name match on the client side.
-    """
+    """Look up a Keycloak group by exact name. Returns dict or None."""
     if realm_name is None:
         realm_name = self.context.realm_name
 
@@ -785,13 +742,9 @@ def invalidate_user_sessions(self, username, realm_name=None):
 
 
 class OAuthProvider:
-    """Provider implementation for Keycloak.
+    """Keycloak provider contract implementation.
 
-    Implements the contract defined in
-    ``oauth.tests.steps.provider_protocol``. Tests MUST go through
-    ``self.context.provider_client.OAuthProvider`` and never reach into
-    this module directly so the same scenarios work against Azure/Google
-    once those providers are wired up.
+    Exposes the interface defined in ``provider_protocol``.
     """
 
     get_oauth_token = get_oauth_token

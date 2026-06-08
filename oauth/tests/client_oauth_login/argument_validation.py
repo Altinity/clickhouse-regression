@@ -1,7 +1,4 @@
-"""Tests for ``--login`` argument-validation rules."""
-
 from testflows.core import *
-from testflows.asserts import error
 from testflows.combinatorics import CoveringArray
 
 from oauth.requirements.requirements import (
@@ -13,31 +10,14 @@ from oauth.requirements.requirements import (
 )
 from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
+    assert_client_rejected,
     assert_no_segfault,
     reset_client_state,
     run_clickhouse_client,
     write_oauth_credentials_file,
 )
 
-# Curated payloads for the combinatorial fuzz scenario below. Each entry
-# is meant to be rejected by the client — either by mode-value validation
-# ("must be 'browser' or 'device'") or by conflict validation when paired
-# with another flag. The list is grouped by character class so it's easy
-# to see what's covered and to extend later without duplicating intent.
-#
-# Notes on what's deliberately NOT here:
-# - NUL (\x00) — the kernel truncates argv at the first NUL, so the
-#   byte never reaches the parser intact and the test wouldn't be
-#   exercising what it claims to.
-# - The exact strings "browser" / "device" — those are the only two
-#   accepted values; including them would turn the fuzz scenario into
-#   a happy-path test that would then hang waiting on the real OAuth
-#   flow.
-#
-# The list is kept around three dozen entries on purpose: combined with
-# the five ``_EXTRA_FLAGS`` contexts below it produces ~180 cases under
-# a strength-2 covering array, which is enough to hit every character
-# class against every validation surface without blowing out CI time.
+
 _LOGIN_VALUE_PAYLOADS = {
     # --- whitespace and empty-ish ----------------------------------------
     "single_space": " ",
@@ -119,14 +99,12 @@ def login_mode_validation(self):
             expect_error=True,
         )
 
-    with Then("the client exits with BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert (
-            "BAD_ARGUMENTS" in output or "must be 'browser' or 'device'" in output
-        ), f"Expected BAD_ARGUMENTS for --login=banana, got:\n---\n{output}\n---"
-
-    with And("the client did not crash"):
-        assert_no_segfault(output=output, exit_code=exit_code)
+    with Then("the client rejects --login=banana without crashing"):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "must be 'browser' or 'device'"),
+        )
 
 
 @TestScenario
@@ -152,11 +130,12 @@ def login_conflicts_with_user(self):
             expect_error=True,
         )
 
-    with Then("the client exits with BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert (
-            "BAD_ARGUMENTS" in output or "cannot both be specified" in output
-        ), f"Expected BAD_ARGUMENTS for --user + --login, got:\n---\n{output}\n---"
+    with Then("the client rejects --login + --user without crashing"):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "cannot both be specified"),
+        )
 
 
 @TestScenario
@@ -182,11 +161,12 @@ def login_conflicts_with_jwt(self):
             expect_error=True,
         )
 
-    with Then("the client exits with BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert (
-            "BAD_ARGUMENTS" in output or "cannot be combined with a JWT" in output
-        ), f"Expected BAD_ARGUMENTS for --jwt + --login, got:\n---\n{output}\n---"
+    with Then("the client rejects --login + --jwt without crashing"):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "cannot be combined with a JWT"),
+        )
 
 
 @TestScenario
@@ -214,11 +194,11 @@ def oauth_credentials_requires_login(self):
             expect_error=True,
         )
 
-    with Then("the client exits with BAD_ARGUMENTS"):
-        assert exit_code != 0, error()
-        assert "BAD_ARGUMENTS" in output or "requires --login" in output, (
-            "Expected BAD_ARGUMENTS for bare --oauth-credentials, got:\n"
-            f"---\n{output}\n---"
+    with Then("the client rejects bare --oauth-credentials without crashing"):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("BAD_ARGUMENTS", "requires --login"),
         )
 
 
@@ -240,12 +220,11 @@ def bare_login_equals_empty_targets_cloud_logic(self):
         )
 
     with Then("non-cloud hosts still require explicit OAuth configuration"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert exit_code != 0, error()
-        ol = output.strip()
-        assert (
-            "oauth" in ol or "Bad arguments" in ol or "authentication_failed" in ol
-        ), f"Expected OAuth requirement on non-cloud host:\n{output}"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("oauth", "Bad arguments", "authentication_failed"),
+        )
 
 
 @TestScenario
@@ -271,12 +250,11 @@ def login_conflicts_with_password(self):
         )
 
     with Then("the client rejects the combination"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "bad_arguments" in ol or "cannot" in ol or "conflict" in ol
-        ), f"Expected BAD_ARGUMENTS/conflict, got:\n{output}"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("bad_arguments", "cannot", "conflict"),
+        )
 
 
 @TestScenario
@@ -302,13 +280,15 @@ def login_mode_capitalisation_rejected(self):
             )
 
         with Then(f"{variant} is rejected with a browser-or-device hint"):
-            assert exit_code != 0, error()
-            assert_no_segfault(output=output, exit_code=exit_code)
-            assert (
-                "BAD_ARGUMENTS" in output
-                or "must be 'browser' or 'device'" in output
-                or 'must be "browser" or "device"' in output
-            ), f"Expected mode rejection for {variant}, got:\n---\n{output}\n---"
+            assert_client_rejected(
+                output=output,
+                exit_code=exit_code,
+                markers=(
+                    "BAD_ARGUMENTS",
+                    "must be 'browser' or 'device'",
+                    'must be "browser" or "device"',
+                ),
+            )
 
 
 @TestScenario
@@ -379,11 +359,15 @@ def login_value_combinatorial_fuzz(self):
             with Given("I reset the client state"):
                 reset_client_state()
 
-            # ``reset_client_state`` wipes ~/.clickhouse-client so the
-            # credentials file must be (re-)materialised inside every
-            # iteration that needs it.
             if extra_name == "with_oauth_credentials":
-                with And("I write a valid OAuth credentials file"):
+                with And(
+                    "I write a valid OAuth credentials file",
+                    description="""
+                        ``reset_client_state`` wipes ~/.clickhouse-client so
+                        the credentials file must be (re-)materialised inside
+                        every iteration that needs it.
+                    """,
+                ):
                     write_oauth_credentials_file()
 
             with When(
@@ -402,22 +386,11 @@ def login_value_combinatorial_fuzz(self):
                     expect_error=True,
                 )
 
-            with Then("the client did not crash"):
-                assert_no_segfault(output=output, exit_code=exit_code)
-
-            with And("the client exited with a non-zero status"):
-                assert exit_code != 0, (
-                    "Expected rejection for "
-                    f"--login={payload_value!r} + {extra_args!r}, "
-                    f"but exit_code=0\n---\n{output}\n---"
-                )
-
-            with And("the output contains a recognisable validation hint"):
-                ol = output.lower()
-                assert any(marker in ol for marker in accepted_markers), (
-                    "No validation hint found in output for "
-                    f"payload={payload_name!r} extra={extra_name!r}:\n"
-                    f"---\n{output}\n---"
+            with Then("the client is rejected with a validation hint and no crash"):
+                assert_client_rejected(
+                    output=output,
+                    exit_code=exit_code,
+                    markers=accepted_markers,
                 )
 
 
@@ -486,20 +459,9 @@ def login_split_vs_equals_form_equivalence(self):
                         expect_error=True,
                     )
 
-                with Then("the client did not crash"):
-                    assert_no_segfault(output=output, exit_code=exit_code)
-
-                with And("the client exited with a non-zero status"):
-                    assert exit_code != 0, (
-                        f"Expected rejection for {case_name} via {form_label} form, "
-                        f"got exit=0\n---\n{output}\n---"
-                    )
-
-                with And("the output contains a recognisable validation hint"):
-                    ol = output.lower()
-                    assert any(m in ol for m in markers), (
-                        f"No validation hint for {case_name} via {form_label}:\n"
-                        f"---\n{output}\n---"
+                with Then("the client is rejected with a validation hint and no crash"):
+                    assert_client_rejected(
+                        output=output, exit_code=exit_code, markers=markers
                     )
 
 
@@ -594,11 +556,16 @@ def login_multi_conflict_combinations(self):
             with Given("I reset the client state"):
                 reset_client_state()
 
-            # Materialise the credentials file when the case references it,
-            # so we exercise the credentials-processing branch rather than
-            # the "file not found" branch.
             if "--oauth-credentials" in extra:
-                with And("I write a valid OAuth credentials file"):
+                with And(
+                    "I write a valid OAuth credentials file",
+                    description="""
+                        Materialise the credentials file when the case
+                        references it, so we exercise the credentials-
+                        processing branch rather than the "file not found"
+                        branch.
+                    """,
+                ):
                     write_oauth_credentials_file()
 
             with When(f"I run clickhouse-client with {extra!r}"):
@@ -609,20 +576,10 @@ def login_multi_conflict_combinations(self):
                     expect_error=True,
                 )
 
-            with Then("the client did not crash"):
-                assert_no_segfault(output=output, exit_code=exit_code)
-
-            with And("the client exited with a non-zero status"):
-                assert exit_code != 0, (
-                    f"Expected rejection for {name} {extra!r}, "
-                    f"got exit=0\n---\n{output}\n---"
+            with Then("the client is rejected with a validation hint and no crash"):
+                assert_client_rejected(
+                    output=output, exit_code=exit_code, markers=markers
                 )
-
-            with And("the output contains a recognisable validation hint"):
-                ol = output.lower()
-                assert any(
-                    m in ol for m in markers
-                ), f"No validation hint for {name}:\n---\n{output}\n---"
 
 
 @TestScenario
@@ -664,28 +621,19 @@ def login_duplicate_flag_precedence(self):
                     expect_error=True,
                 )
 
-            with Then("the client did not crash"):
-                assert_no_segfault(output=output, exit_code=exit_code)
-
             note(f"{name}: exit_code={exit_code}")
 
-            with And("the client exited with a non-zero status"):
-                assert exit_code != 0, (
-                    f"Expected rejection for duplicate --login {login_args!r}, "
-                    f"got exit=0\n---\n{output}\n---"
+            with Then("the client is rejected without crashing"):
+                assert_client_rejected(
+                    output=output, exit_code=exit_code, markers=duplicate_markers
                 )
-
-            with And("the output contains a recognisable rejection hint"):
-                ol = output.lower()
-                assert any(
-                    m in ol for m in duplicate_markers
-                ), f"No rejection hint for {name}:\n---\n{output}\n---"
 
 
 @TestFeature
 @Name("argument validation")
 def feature(self):
     """Tests for ``--login`` argument-validation rules."""
+
     Scenario(run=login_mode_validation)
     Scenario(run=login_conflicts_with_user)
     Scenario(run=login_conflicts_with_jwt)

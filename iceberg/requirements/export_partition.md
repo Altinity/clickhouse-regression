@@ -15,6 +15,7 @@
     * 3.4 [RQ.Iceberg.ExportPartition.DataTypes.Nullable](#rqicebergexportpartitiondatatypesnullable)
     * 3.5 [RQ.Iceberg.ExportPartition.DataTypes.Composite](#rqicebergexportpartitiondatatypescomposite)
     * 3.6 [RQ.Iceberg.ExportPartition.DataTypes.UnsupportedRejection](#rqicebergexportpartitiondatatypesunsupportedrejection)
+    * 3.7 [RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces](#rqicebergexportpartitiondatatypesexportsurfaces)
 * 4 [Committed Iceberg metadata](#committed-iceberg-metadata)
     * 4.1 [RQ.Iceberg.ExportPartition.ManifestIntegrity.SnapshotChain](#rqicebergexportpartitionmanifestintegritysnapshotchain)
     * 4.2 [RQ.Iceberg.ExportPartition.ManifestIntegrity.PartitionSpec](#rqicebergexportpartitionmanifestintegritypartitionspec)
@@ -139,7 +140,7 @@ version: 1.0
 
 [ClickHouse] SHALL export the following primitive types into their Iceberg equivalents and read them back unchanged through both ClickHouse and an external Iceberg reader:
 
-* Integer types `Int16`, `Int32`, `Int64`, `UInt32`.
+* Integer types `Int16`, `Int32`, `Int64`, `UInt16`, `UInt32`, `UInt64`.
 * Floating-point types `Float32` and `Float64`.
 * Date / time types `Date`, `Date32`, `DateTime`, `DateTime64(3)`.
 * `String` and `UUID`.
@@ -153,14 +154,14 @@ version: 1.0
 
 * Explicit `NULL` values are exported as Iceberg nulls.
 * Round-trip reads return `NULL` (not a default sentinel) for the same rows.
-* Both numeric (`Nullable(Int64)`) and string-backed (`Nullable(String)`) cases are exercised.
+* Numeric (`Nullable(Int64)`, `Nullable(UInt64)`) and string-backed (`Nullable(String)`) cases are exercised.
 
 ### RQ.Iceberg.ExportPartition.DataTypes.Composite
 version: 1.0
 
 [ClickHouse] SHALL export the documented composite types into their Iceberg analogues:
 
-* `Array(T)` for both numeric and string element types.
+* `Array(T)` for numeric (`Int32`, `UInt32`, `UInt64`) and string element types.
 * `Map(K, V)` (verified for `Map(String, Int64)`).
 * `Tuple(T1, T2, …)` mapped to an Iceberg struct, verified for a `(Int32, String)` tuple.
 
@@ -176,9 +177,14 @@ version: 1.0
 * `FixedString(N)`.
 * `Decimal(p, s)`.
 * `Enum8` (and its variants).
-* `LowCardinality(T)`.
+* `LowCardinality(T)` (including `Array(LowCardinality(String))`).
 
 The rejection SHALL fire either when the destination is created or when the export is issued, before any data files are written.
+
+### RQ.Iceberg.ExportPartition.DataTypes.ExportSurfaces
+version: 1.0
+
+[ClickHouse] SHALL preserve the same Iceberg type mapping and round-trip row equality when the export is issued as either `EXPORT PARTITION ID '<id>'` or `EXPORT PART '<part_name>'` against a `no_catalog` IcebergS3 destination (direct writes, no REST/Glue catalog on read-back).
 
 ## Committed Iceberg metadata
 
@@ -251,7 +257,7 @@ version: 1.0
 
 [ClickHouse] SHALL guard against accidental duplicate commits via a ZooKeeper-backed live manifest keyed on `(source_table, destination_table, partition_id)`:
 
-* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (typically `BAD_ARGUMENTS`).
+* A second `EXPORT PARTITION` for the same key submitted within `export_merge_tree_partition_manifest_ttl` SHALL be rejected (`EXPORT_PARTITION_ALREADY_EXPORTED`, historically `BAD_ARGUMENTS`).
 * Setting `export_merge_tree_partition_force_export = 1` SHALL bypass the gate, at the operator's documented risk.
 * Once `export_merge_tree_partition_manifest_ttl` has elapsed (or the prior export has been removed), the same key SHALL be exportable again.
 
@@ -292,6 +298,7 @@ version: 1.0
 
 * Adding a column on both sides; the new column receives null / default values for previously exported rows.
 * Dropping a column on both sides; subsequent exports omit the dropped column.
+* Renaming a column on both sides; previously exported rows remain readable under the new name.
 * Widening a numeric column (verified for `Int32 → Int64`); already-exported rows remain readable, new exports use the wider type.
 
 **Regression module:** `iceberg.tests.export_partition.schema_evolution` (`schema_evolution.py`).
@@ -301,7 +308,6 @@ version: 1.0
 
 [ClickHouse] SHALL reject schema changes that would corrupt destination metadata or break round-trip reads:
 
-* `RENAME COLUMN` on an Iceberg destination SHALL be rejected.
 * Schema drift on the source alone (without the matching destination change) SHALL fail the export rather than commit a mismatched snapshot.
 
 ### RQ.Iceberg.ExportPartition.SchemaEvolution.SchemaHistory

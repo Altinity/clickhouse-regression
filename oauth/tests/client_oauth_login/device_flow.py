@@ -1,7 +1,4 @@
-"""Tests for the device-authorization (``--login=device``) flow."""
-
 from testflows.core import *
-from testflows.asserts import error
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_Cache_Reuse,
@@ -13,8 +10,9 @@ from oauth.requirements.requirements import (
 from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
     approve_keycloak_device_user_code_via_bash_tools,
+    assert_client_rejected,
+    assert_device_user_code_present,
     assert_no_segfault,
-    extract_device_user_code_from_client_output,
     keycloak_enable_optional_scope,
     kill_clickhouse_oauth_background_if_alive,
     parse_background_client_exit_code,
@@ -109,15 +107,12 @@ def device_flow_prints_user_code_and_verification_uri(self):
         )
 
     with Then("the output contains an http URL and a user code"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "http://" in ol or "https://" in ol
-        ), f"Expected a verification URL in output:\n---\n{output}\n---"
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected a device user_code in output:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("http://", "https://"),
+        )
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -151,16 +146,18 @@ def device_flow_unreachable_device_authorization_uri(self):
             expect_error=True,
         )
 
-    with Then("the client surfaces a network error and does not crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        # Acceptable network-failure shapes from Poco / glibc / curl-style
-        # diagnostics — pinning at least one is required so the scenario
-        # cannot pass on an unrelated failure mode (e.g. arg-parse error).
-        assert any(
-            marker in ol
-            for marker in (
+    with Then(
+        "the client surfaces a network error and does not crash",
+        description="""
+            Acceptable network-failure shapes from Poco / glibc / curl-style
+            diagnostics — pinning at least one is required so the scenario
+            cannot pass on an unrelated failure mode (e.g. arg-parse error).
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
                 "could not resolve",
                 "name or service",
                 "name resolution",
@@ -171,8 +168,8 @@ def device_flow_unreachable_device_authorization_uri(self):
                 "unreachable",
                 "timed out",
                 "timeout",
-            )
-        ), f"Expected a network-failure diagnostic, got:\n---\n{output}\n---"
+            ),
+        )
 
 
 @TestScenario
@@ -210,9 +207,7 @@ def device_flow_device_authorization_endpoint_404(self):
         )
 
     with Then("the client exits with an error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert "Stack trace:" not in output, error()
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -249,16 +244,17 @@ def device_flow_unknown_client_id(self):
         )
 
     with Then("the client reports failure without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "client" in ol
-            or "unauthorized" in ol
-            or "invalid" in ol
-            or "bad_arguments" in ol
-            or "authentication_failed" in ol
-        ), f"Expected OAuth client diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "client",
+                "unauthorized",
+                "invalid",
+                "bad_arguments",
+                "authentication_failed",
+            ),
+        )
 
 
 @TestScenario
@@ -270,11 +266,15 @@ def device_flow_wrong_client_secret(self):
     with Given("I reset the client state"):
         reset_client_state()
 
-    with And("I write a credentials file with a wrong secret"):
-        # ``grafana-client`` is a public client in the realm export, so
-        # Keycloak ignores ``client_secret`` for it entirely. Use the
-        # confidential client ``grafana-client-confidential`` so the wrong
-        # secret actually trips Keycloak's authentication check.
+    with And(
+        "I write a credentials file with a wrong secret",
+        description="""
+            ``grafana-client`` is a public client in the realm export, so
+            Keycloak ignores ``client_secret`` for it entirely. Use the
+            confidential client ``grafana-client-confidential`` so the wrong
+            secret actually trips Keycloak's authentication check.
+        """,
+    ):
         write_oauth_credentials_file(
             client_id="grafana-client-confidential",
             client_secret="wrong-secret-value",
@@ -298,21 +298,26 @@ def device_flow_wrong_client_secret(self):
             expect_error=True,
         )
 
-    with Then("the client exits with an OAuth invalid-client diagnostic"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        # Keycloak responds 401 with {"error":"invalid_client"} when the
-        # device endpoint receives a wrong client_secret for a confidential
-        # client. Pin at least one of the OAuth-spec failure markers so the
-        # scenario can't silently pass on, say, a network error.
-        assert (
-            "invalid_client" in ol
-            or "unauthorized" in ol
-            or "401" in ol
-            or "client_secret" in ol
-            or "authentication_failed" in ol
-        ), f"Expected OAuth invalid-client diagnostic, got:\n---\n{output}\n---"
+    with Then(
+        "the client exits with an OAuth invalid-client diagnostic",
+        description="""
+            Keycloak responds 401 with {"error":"invalid_client"} when the
+            device endpoint receives a wrong client_secret for a confidential
+            client. Pin at least one of the OAuth-spec failure markers so the
+            scenario can't silently pass on, say, a network error.
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "invalid_client",
+                "unauthorized",
+                "401",
+                "client_secret",
+                "authentication_failed",
+            ),
+        )
 
 
 @TestScenario
@@ -413,19 +418,17 @@ def device_flow_missing_client_secret_at_confidential_client(self):
         )
 
     with Then("the client refuses cleanly without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "secret" in ol
-            or "bad_arguments" in ol
-            or "invalid_client" in ol
-            or "unauthorized" in ol
-            or "401" in ol
-            or "authentication_failed" in ol
-        ), (
-            "Expected client_secret-related load failure or OAuth "
-            f"invalid-client diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "secret",
+                "bad_arguments",
+                "invalid_client",
+                "unauthorized",
+                "401",
+                "authentication_failed",
+            ),
         )
 
 
@@ -456,12 +459,12 @@ def device_flow_timeout_message_is_actionable(self):
         )
 
     with Then("stderr mentions timeout or expiry without C++ leaks"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("timeout", "timed out", "expired", "expire"),
+        )
         ol = output.lower()
-        assert (
-            "timeout" in ol or "timed out" in ol or "expired" in ol or "expire" in ol
-        ), f"Expected timeout/expiry wording, got:\n---\n{output}\n---"
         for bad in ("std::bad_cast", "std::exception", "poco::", "stack trace:"):
             assert bad not in ol, f"Unexpected low-level marker {bad!r} in:\n{output}"
 
@@ -495,11 +498,12 @@ def device_flow_with_explicit_tcp_port(self):
         )
 
     with Then("the client shows device-flow hints without crashing"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "http://" in ol or "https://" in ol
-        ), f"Expected verification URI in output, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("http://", "https://"),
+            require_nonzero_exit=False,
+        )
 
 
 @TestScenario
@@ -528,16 +532,17 @@ def device_flow_against_second_cluster_node(self):
             expect_error=True,
         )
 
-    with Then("device authorization details appear against the second node"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        # OAuth happens before the TCP connection — the device user_code
-        # MUST appear regardless of which cluster node is named on --host.
-        # Asserting on user_code (rather than just "no crash") catches a
-        # regression where the OAuth path is short-circuited by node-
-        # specific routing.
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected device user_code targeting clickhouse2:\n---\n{output}\n---"
+    with Then(
+        "device authorization details appear against the second node",
+        description="""
+            OAuth happens before the TCP connection — the device user_code
+            MUST appear regardless of which cluster node is named on --host.
+            Asserting on user_code (rather than just "no crash") catches a
+            regression where the OAuth path is short-circuited by node-
+            specific routing.
+        """,
+    ):
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -567,17 +572,18 @@ def device_flow_with_secure_transport_flag(self):
             expect_error=True,
         )
 
-    with Then("the device-auth step runs to user_code before TLS would matter"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        # ``--secure`` only matters AFTER OAuth produces a token; in this
-        # ~12s window the device endpoint must still print the user_code
-        # so we know --secure didn't break the OAuth-front half of
-        # --login=device. The eventual TLS handshake failure (server is
-        # plaintext) is not observable in this timeout window and is not
-        # what this scenario is regressing.
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected device user_code with --secure:\n---\n{output}\n---"
+    with Then(
+        "the device-auth step runs to user_code before TLS would matter",
+        description="""
+            ``--secure`` only matters AFTER OAuth produces a token; in this
+            ~12s window the device endpoint must still print the user_code
+            so we know --secure didn't break the OAuth-front half of
+            --login=device. The eventual TLS handshake failure (server is
+            plaintext) is not observable in this timeout window and is not
+            what this scenario is regressing.
+        """,
+    ):
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -610,8 +616,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
         )
 
     with Then("the client exits cleanly without a Poco bad_cast"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
         assert (
             "bad_cast" not in output and "std::bad_cast" not in output
         ), f"Device flow leaked Poco bad_cast:\n---\n{output}\n---"
@@ -653,8 +658,7 @@ def device_flow_invalid_token_endpoint(self):
         )
 
     with Then("the client exits with a recognisable error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestFeature

@@ -6,11 +6,7 @@ from oauth.requirements.requirements import *
 def _split_jwt(token):
     """Return ``(header, payload, signature)`` segments of a JWT.
 
-    Lightweight string-only split — does NOT base64-decode. Used by
-    scenarios that need to look at or replace one segment with another
-    string of the same length. Re-using
-    ``provider_protocol._decode_jwt_token`` would force a base64 round
-    trip we don't want here.
+    String-only split — does NOT base64-decode.
     """
     parts = token.split(".")
     if len(parts) != 3:
@@ -43,15 +39,7 @@ def modify_alg_to_none(self):
     RQ_SRS_042_OAuth_Authentication_IncorrectRequests_Header_Alg("1.0"),
 )
 def modify_alg_to_hs256(self):
-    """ClickHouse SHALL reject a token with alg changed to HS256 (algorithm confusion).
-
-    Uses ``assert_token_rejected`` rather than a pinned status code: per
-    ``oauth/KNOWLEDGE.md`` §"HTTP Status Codes" the JWT-rejection path
-    consistently surfaces as ``AUTHENTICATION_FAILED`` → HTTP 403; the
-    helper accepts any of 401/403/500 with a recognizable rejection
-    marker so the test stays correct if upstream consolidates the
-    mapping further. See also ``audit-suite-review.md`` §3.2.
-    """
+    """ClickHouse SHALL reject a token with alg changed to HS256 (algorithm confusion)."""
     client = self.context.provider_client
 
     with Given("I get a valid token"):
@@ -173,23 +161,8 @@ def modify_azp_to_invalid(self):
 def replace_signature_entirely(self):
     """ClickHouse SHALL reject a token with a completely replaced signature.
 
-    The replacement must be **base64url-valid** so that we exercise the
-    signature-verification path (which surfaces as
-    ``AUTHENTICATION_FAILED`` → HTTP 403). Earlier versions of this
-    scenario used the literal string ``"totally-invalid-signature"``;
-    that is base64url-clean by alphabet but the wrong length-modulo-4
-    after ``jwt-cpp`` pads it, which makes the underlying base64
-    decoder throw ``std::runtime_error("Invalid input: too much
-    fill")``. ``JwksJwtProcessor::resolveAndValidate`` does not wrap
-    ``jwt::decode`` in a top-level ``try/catch`` (unlike
-    ``StaticKeyJwtProcessor``), so the exception propagates out as
-    ``Code: 1001`` with no rejection marker — the bug is tracked
-    separately as ``DEFECT_H16`` (alias ``F20 / TOKEN-06``) in
-    ``oauth/tests/defects_catalogue.py`` and
-    ``security_audit/jwt_decode_uncaught_exception.py``. Using a
-    base64url-clean replacement of correct length here keeps this
-    scenario focused on its stated assertion (signature mismatch) and
-    avoids accidentally testing the same bug twice.
+    The replacement is base64url-valid so we exercise the
+    signature-verification path rather than a decoding error.
     """
     client = self.context.provider_client
 
@@ -245,18 +218,7 @@ def empty_token(self):
     RQ_SRS_042_OAuth_Authentication_TokenHandling_Incorrect("1.0"),
 )
 def malformed_token_string(self):
-    """ClickHouse SHALL reject a garbage string that is not a valid JWT.
-
-    Currently expected to fail because ``"not.a.valid-jwt"`` triggers
-    the same uncaught-exception bug pinned by ``H-16`` (alias
-    ``F20 / TOKEN-06``): the second segment ``"a"`` is not a valid
-    base64url frame, so ``jwt::decode`` raises
-    ``std::runtime_error("Invalid input: too much fill")`` and
-    ``JwksJwtProcessor::resolveAndValidate`` lets it leak as
-    ``Code: 1001`` (HTTP 500) without an ``AUTHENTICATION_FAILED``
-    marker.  Registered in ``oauth/regression.py`` ``xfails`` against
-    ``DEFECT_H16``; pull the xfail entry once the fix lands.
-    """
+    """ClickHouse SHALL reject a garbage string that is not a valid JWT."""
     with Then("ClickHouse rejects the garbage token"):
         assert_token_rejected(token="not.a.valid-jwt")
 

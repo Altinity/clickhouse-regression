@@ -2,7 +2,7 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.combinatorics import product
 
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version, check_if_antalya_build
 from helpers.tables import create_table_as_select
 from swarms.requirements.requirements import *
 
@@ -115,6 +115,39 @@ class JoinTable:
         return self.__str__()
 
 
+def _union_branch_select(test):
+    """Normalize time_col when Iceberg (Int64) and s3/Parquet (DateTime64) disagree."""
+    if check_clickhouse_version(">=26.3")(test) and check_if_antalya_build(test):
+        return "SELECT *"
+    return "SELECT * EXCEPT (time_col), toDateTime(time_col) AS time_col"
+
+
+def _union_query(
+    test,
+    left_from,
+    right_from,
+    all_or_distinct,
+    order_by,
+    left_settings="",
+    right_settings="",
+):
+    branch = _union_branch_select(test)
+    return f"""
+        SELECT * FROM ((
+            {branch}
+            FROM {left_from} AS t1
+            {left_settings}
+            )
+        {all_or_distinct} (
+            {branch}
+            FROM {right_from} AS t2
+            {right_settings}
+            )
+        )
+        ORDER BY {order_by}
+        """
+
+
 @TestScenario
 def check_union(
     self,
@@ -141,18 +174,13 @@ def check_union(
         )
 
     with When("get expected result from uniting merge tree tables"):
-        query = f"""
-            SELECT * FROM ((
-                SELECT * EXCEPT (time_col), toDateTime(time_col) as time_col
-                    FROM {left_merge_tree_table} AS t1
-                )
-            {all_or_distinct} (
-                SELECT * EXCEPT (time_col), toDateTime(time_col) as time_col
-                FROM {right_merge_tree_table} AS t2
-                )
-            )
-            ORDER BY {order_by}
-            """
+        query = _union_query(
+            self,
+            left_merge_tree_table,
+            right_merge_tree_table,
+            all_or_distinct,
+            order_by,
+        )
         expected_result = node.query(query)
 
     with Then("check UNION on iceberg tables and cluster functions"):
@@ -162,21 +190,15 @@ def check_union(
         object_storage_cluster_setting_2 = random.choice(
             ["", f"SETTINGS object_storage_cluster = '{object_storage_cluster_2}'"]
         )
-        query = f"""
-            SELECT * FROM ((
-                SELECT * EXCEPT (time_col), toDateTime(time_col) as time_col
-                FROM {left_table} AS t1
-                {object_storage_cluster_setting_1}
-                )
-            {all_or_distinct} (
-                SELECT * EXCEPT (time_col), toDateTime(time_col) as time_col
-                FROM {right_table} AS t2
-                {object_storage_cluster_setting_2}
-                )
-            )
-            ORDER BY {order_by}
-            """
-
+        query = _union_query(
+            self,
+            left_table,
+            right_table,
+            all_or_distinct,
+            order_by,
+            left_settings=object_storage_cluster_setting_1,
+            right_settings=object_storage_cluster_setting_2,
+        )
         result = node.query(query)
         assert result.output == expected_result.output, error()
 
@@ -330,7 +352,7 @@ def union_clause(self, minio_root_user, minio_root_password, node=None):
 @TestFeature
 @Name("swarm union")
 def feature(self, minio_root_user, minio_root_password):
-    """Check that union cluse works with object_storage_cluster setting."""
+    """Check that union clause works with object_storage_cluster setting."""
 
     with Given("create cluster with observer initiator and one swarm nodes"):
         cluster_name = "cluster_one_observer_one_swarm"

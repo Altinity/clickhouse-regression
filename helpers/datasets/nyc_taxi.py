@@ -1,5 +1,6 @@
 from testflows.core import *
 
+
 def nyc_columns():
     return [
         {"name": "trip_id", "type": "UInt64"},
@@ -20,6 +21,7 @@ def nyc_columns():
         {"name": "pickup_ntaname", "type": "String"},
         {"name": "dropoff_ntaname", "type": "String"},
     ]
+
 
 @TestStep
 def nyc_taxi(

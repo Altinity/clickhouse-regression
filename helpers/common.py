@@ -174,7 +174,11 @@ def check_if_25_8_altinity_build(test=None):
     v = full_clickhouse_version_string(test)
     if not v:
         return False
-    return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
+    return (
+        "25.8" in v
+        and check_if_altinity_build(test)
+        and check_if_not_antalya_build(test)
+    )
 
 
 def check_if_antalya_pre_26_1(test=None):
@@ -643,7 +647,13 @@ def create_xml_config_content(
 
 
 def add_invalid_config(
-    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None,
+    config,
+    message,
+    recover_config=None,
+    tail=300,
+    timeout=300,
+    restart=True,
+    user=None,
     validate_during_invalid=None,
 ):
     """Check that ClickHouse errors when trying to load invalid configuration file."""

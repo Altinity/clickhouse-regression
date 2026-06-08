@@ -15,6 +15,7 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import execute_query
+from helpers.common import check_clickhouse_version
 
 
 @TestOutline
@@ -68,7 +69,10 @@ def rank(self):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_DenseRank("1.0"))
 def dense_rank(self):
     """Check that dense_rank window function can not be used as an aggregate functions."""
-    check(func="dense_rank", arguments="", func_="denseRank")
+    if check_clickhouse_version("<24.8")(self):
+        check(func="dense_rank", arguments="", func_="dense_rank")
+    else:
+        check(func="dense_rank", arguments="", func_="denseRank")
 
 
 @TestScenario

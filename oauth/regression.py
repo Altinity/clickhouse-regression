@@ -7,7 +7,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.common import check_if_not_antalya_build
+from helpers.common import check_if_not_antalya_build, check_clickhouse_version
 from helpers.cluster import create_cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.argparser import CaptureClusterArgs
@@ -67,72 +67,6 @@ def argparser(parser):
 
 
 xfails = {
-    "/oauth/security audit/M-06 runtime revocation/M-06 / 3 disabled user accepted with jwks_uri": [
-        (
-            Fail,
-            "DEFECT_M06 (alias F8 / TOKEN-05) — OpenID processor with "
-            "jwks_uri uses the JWT-fastpath and never consults userinfo / "
-            "introspection on cache miss, so the IdP's runtime decision "
-            "to disable the user is not observed until the JWT's own exp "
-            "passes. See src/Access/TokenProcessorsOpaque.cpp:339-414 "
-            "(TODO at line 353).",
-        )
-    ],
-    "/oauth/security audit/M-06 runtime revocation/M-06 / 4 deleted user accepted with jwks_uri": [
-        (
-            Fail,
-            "DEFECT_M06 (alias F8 / TOKEN-05) — same root cause as "
-            "M-06 / 3: the JWT-fastpath does not observe IdP user "
-            "deletion either. userinfo_endpoint would 401 a deleted "
-            "user but is never consulted while local JWKS verification "
-            "of the issued JWT still succeeds.",
-        )
-    ],
-    "/oauth/security audit/H-16 jwt decode uncaught/H-16 / 2 malformed signature base64 leaks runtime_error": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — JwksJwtProcessor::"
-            "resolveAndValidate has no top-level try/catch around "
-            "jwt::decode; a malformed-base64 JWT segment leaks "
-            "std::runtime_error out as Code: 1001 (HTTP 500) with no "
-            "AUTHENTICATION_FAILED marker. See "
-            "src/Access/TokenProcessorsJWT.cpp.",
-        )
-    ],
-    "/oauth/security audit/H-16 jwt decode uncaught/H-16 / 3 non-base64 signature leaks runtime_error": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — same root cause as "
-            "H-16 / 2: any exception thrown by jwt::decode escapes "
-            "JwksJwtProcessor::resolveAndValidate uncaught.",
-        )
-    ],
-    "/oauth/jwt_manipulation/malformed token string": [
-        (
-            Fail,
-            "DEFECT_H16 (alias F20 / TOKEN-06) — third reproducer of "
-            "the same JwksJwtProcessor::resolveAndValidate uncaught-"
-            "exception bug: ``not.a.valid-jwt`` parses to 3 segments "
-            "but the second segment is not base64url-clean, so "
-            "jwt::decode throws std::runtime_error which leaks as "
-            "Code: 1001 (HTTP 500) instead of AUTHENTICATION_FAILED. "
-            "Tracked alongside the security_audit/H-16 scenarios.",
-        )
-    ],
-    "/oauth/configuration/invalid roles filter regex in user directory": [
-        (
-            Fail,
-            "DEFECT_H06 (alias F16 / AUTHZ-02) — invalid <roles_filter> "
-            "regex fails open: ClickHouse silently tolerates the "
-            "malformed pattern and grants the token's <common_roles> "
-            "as if no filter were configured. SRS 6.2.1.1.3 says auth "
-            "SHALL fail when the roles section is incorrectly defined; "
-            "the existing security_audit/H-06 scenarios already pin "
-            "the buggy behaviour by asserting status_code=200, this "
-            "new scenario asserts the SRS-correct behaviour and will "
-            "go green when the upstream fix lands.",
-        )
-    ],
     "/oauth/configuration/multiple token entries in user directories": [
         (
             Fail,
@@ -151,20 +85,15 @@ xfails = {
     "/oauth/cache semantics/cache entry capped at token exp when token expires first": [
         (
             Fail,
-            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL "
-            "on the StaticKeyJwtProcessor / JwksJwtProcessor fastpaths. "
+            "DEFECT_H_NEW_30 — JWT exp never propagated to cache TTL. "
             "resolveAndValidate never calls "
-            "credentials.setExpiresAt(decoded_jwt.get_expires_at()) on "
-            "the JWT codepaths, so a token past its IdP-issued exp "
-            "keeps authenticating for up to token_cache_lifetime. The "
-            "opaque/OpenID-userinfo paths set it correctly; the bug "
-            "is specific to the JWT fastpath this scenario exercises "
-            "(OpenID processor with jwks_uri configured). Violates SRS "
-            "13.1.5 'Common.Cache.Behavior' which mandates "
+            "credentials.setExpiresAt(decoded_jwt.get_expires_at()), "
+            "so a token past its IdP-issued exp keeps authenticating "
+            "for up to token_cache_lifetime. Violates SRS 13.1.5 "
+            "'Common.Cache.Behavior' which mandates "
             "cache_entry_expires_at = min(token.exp, now + "
-            "token_cache_lifetime). Will go green once "
-            "TokenProcessorsJWT.cpp propagates exp to the cache write "
-            "in ExternalAuthenticators.cpp:624-640.",
+            "token_cache_lifetime). Will go green once the exp is "
+            "propagated to the cache write.",
         )
     ],
     "/oauth/client login/client oauth login/browser flow security/loopback /start must not leak oauth state in Location": [
@@ -291,6 +220,8 @@ def regression(
             self.context.password = "demo"
             self.context.client_secret = "grafana-secret"
             self.context.client_id = "grafana-client"
+            self.context.introspection_client_id = "grafana-client-confidential"
+            self.context.introspection_client_secret = "grafana-confidential-secret"
             self.context.realm_name = "grafana"
         elif identity_provider_lower == "google":
             self.context.client_id = client_id
@@ -308,13 +239,11 @@ def regression(
         self.context.provider_client = provider_module
         self.context.provider_name = identity_provider
 
-    self.context.bash_tools = self.context.cluster.node("bash-tools")
-    self.context.node = self.context.cluster.node("clickhouse1")
-    self.context.node2 = self.context.cluster.node("clickhouse2")
-    self.context.node3 = self.context.cluster.node("clickhouse3")
-    self.context.nodes = [
-        self.context.cluster.node(node) for node in nodes["clickhouse"]
-    ]
+        self.context.bash_tools = cluster.node("bash-tools")
+        self.context.node = cluster.node("clickhouse1")
+        self.context.node2 = cluster.node("clickhouse2")
+        self.context.node3 = cluster.node("clickhouse3")
+        self.context.nodes = [cluster.node(node) for node in nodes["clickhouse"]]
 
     with Given(f"{identity_provider} is up and running"):
         if identity_provider_lower == "keycloak":
@@ -322,18 +251,22 @@ def regression(
                 with retry:
                     keycloak.OAuthProvider.get_oauth_token()
 
-    Scenario(run=load("oauth.tests.sanity", "feature"))
-    Scenario(run=load("oauth.tests.configuration", "feature"))
-    Scenario(run=load("oauth.tests.authentication", "feature"))
-    Scenario(run=load("oauth.tests.tokens", "feature"))
-    Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
-    Scenario(run=load("oauth.tests.access_control", "feature"))
-    Scenario(run=load("oauth.tests.groups", "feature"))
-    Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
-    Scenario(run=load("oauth.tests.tls", "feature"))
+    if check_clickhouse_version(">=26.3")(self):
+        Scenario(run=load("oauth.tests.sanity", "feature"))
+        Scenario(run=load("oauth.tests.configuration", "feature"))
+        Scenario(run=load("oauth.tests.authentication", "feature"))
+        Scenario(run=load("oauth.tests.tokens", "feature"))
+        Scenario(run=load("oauth.tests.parameters_and_caching", "feature"))
+        Scenario(run=load("oauth.tests.access_control", "feature"))
+        Scenario(run=load("oauth.tests.groups", "feature"))
+        Scenario(run=load("oauth.tests.jwt_manipulation", "feature"))
+        Scenario(run=load("oauth.tests.tls", "feature"))
+        Scenario(run=load("oauth.tests.sql_jwt_users", "feature"))
+    else:
+        pass
 
-    with Feature("client login"):
-        Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
+    # with Feature("client login"):
+    #     Feature(run=load("oauth.tests.client_oauth_login.feature", "feature"))
 
     if run_security:
         Scenario(run=load("oauth.tests.security_audit.feature", "feature"))

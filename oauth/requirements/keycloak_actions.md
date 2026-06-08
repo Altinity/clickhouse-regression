@@ -26,9 +26,9 @@ This document describes possible actions and attributes for Keycloak realms, cli
   * [Token Renewal (Using Refresh Token)](#token-renewal-using-refresh-token)
   * [Token Revocation (Logout & Revoke)](#token-revocation-logout--revoke)
   * [Token Introspection (Validity Check)](#token-introspection-validity-check)
-* [Automating Token Expiration and Other Non-REST Configurable Settings](#automating-token-expiration-and-other-non-rest-configurable-settings)
-  * [Not Configurable via REST](#not-configurable-via-rest)
-  * [Workaround: Automate Using Realm JSON Import](#workaround-automate-using-realm-json-import)
+* [Automating Token Expiration and Other Settings](#automating-token-expiration-and-other-settings)
+  * [Configurable via REST](#configurable-via-rest)
+  * [Alternative: Bootstrap Using Realm JSON Import](#alternative-bootstrap-using-realm-json-import)
 * [Supported Actions](#supported-actions)
   * [User Management](#user-management)
   * [Realm Management](#realm-management)
@@ -296,7 +296,7 @@ Keycloak supports full token lifecycle control through OpenID Connect endpoints 
 | Refresh Token    | POST   | `/protocol/openid-connect/token`            |
 | Revoke Token     | POST   | `/protocol/openid-connect/logout`           |
 | Introspect       | POST   | `/protocol/openid-connect/token/introspect` |
-| Configure Expiry | JSON   | `Realm JSON config update and re-import`    |
+| Configure Expiry | PUT    | `/admin/realms/{realm}` (e.g. `accessTokenLifespan`) |
 
 ## Token Expiration Settings
 
@@ -388,23 +388,47 @@ curl -X POST 'https://keycloak.example.com/realms/myrealm/protocol/openid-connec
 }
 ```
 
-# Automating Token Expiration and Other Non-REST Configurable Settings
+# Automating Token Expiration and Other Settings
 
-While Keycloak exposes many administrative operations via its REST API, **some settings (such as token expiration)** cannot be modified through the Admin REST API. These include:
+Keycloak exposes token-lifecycle settings through its Admin REST API. The
+realm-level token lifespans can be updated with `PUT /admin/realms/{realm}`,
+including:
 
-- Access token lifespan
-- Refresh token lifespan
-- Session idle timeout
-- Session max lifespan
+- Access token lifespan (`accessTokenLifespan`)
+- Access token lifespan for implicit flow (`accessTokenLifespanForImplicitFlow`)
+- Refresh / SSO session timeouts (`ssoSessionIdleTimeout`, `ssoSessionMaxLifespan`)
 - Action token lifespans (e.g. email verification, password reset)
 
-## Not Configurable via REST
+## Configurable via REST
 
-Although `RealmRepresentation` and `ClientRepresentation` objects may contain fields such as `accessTokenLifespan`, updating them via `PUT /admin/realms/{realm}` **does not change those values**.
+`RealmRepresentation` fields such as `accessTokenLifespan` **can** be updated
+via `PUT /admin/realms/{realm}`; this is the same endpoint the Keycloak admin
+console uses. Example:
+
+```bash
+curl -X PUT "${KEYCLOAK_URL}/admin/realms/${REALM}" \
+  -H "Authorization: Bearer ${ADMIN_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"accessTokenLifespan": 30}'
+```
+
+Caveats to be aware of when the issued token's `exp - iat` does not match the
+value you set:
+
+- **Client-level override.** A client attribute `access.token.lifespan` takes
+  precedence over the realm setting for tokens issued to that client.
+- **Session cap.** The effective lifespan is
+  `min(accessTokenLifespan, remaining SSO session lifetime)`. With a fresh
+  direct-access (`password`) grant the session is new, so the realm value
+  applies.
+
+See `oauth/tests/cache_semantics.py::cache_entry_capped_at_token_exp_when_token_expires_first`,
+which sets `accessTokenLifespan` over REST and then decodes the JWT to confirm
+the change took effect.
 
 ---
 
-## Workaround: Automate Using Realm JSON Import
+## Alternative: Bootstrap Using Realm JSON Import
 
 You can automate token expiration and other settings by exporting the realm to a JSON file, modifying it, and re-importing it.
 

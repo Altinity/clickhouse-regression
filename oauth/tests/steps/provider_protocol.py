@@ -1,21 +1,48 @@
-"""Provider-agnostic OAuth provider contract.
-
-Every concrete OAuth provider (Keycloak, Azure, Google, ...) exposes the
-same surface so test scenarios can run against any of them by swapping
-``--identity-provider``.
-
-Tests MUST go through ``self.context.provider_client.OAuthProvider`` and
-MUST NOT import provider-specific symbols (``keycloak_realm.create_user``
-etc.) directly. Anything not implemented by a given provider raises
-``UnsupportedByProvider`` so the scenario is reported as ``Skip`` instead
-of erroring.
-
-The contract intentionally keeps token shape uniform: ``get_oauth_token``
-ALWAYS returns an ``OAuthToken`` (defined below) regardless of provider.
-"""
+import hashlib
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
+
+
+def mask_secret(value):
+    """Register ``value`` with the testflows secrets registry so it is
+    redacted from every subsequent log message.
+
+    Used to keep OAuth tokens (access / refresh / id tokens, admin
+    tokens) out of the logs. Idempotent: registering the same value
+    twice is a no-op. Safe to call with ``None``/empty values and safe
+    to call when no secrets registry is active (returns ``value``
+    unchanged so callers can use it inline).
+    """
+    if not value:
+        return value
+
+    try:
+        from testflows.core import Secret
+    except Exception:
+        return value
+
+    value = str(value)
+    name = "oauth_secret_" + hashlib.sha1(value.encode("utf-8")).hexdigest()[:24]
+    try:
+        Secret(name=name)(value)
+    except Exception:
+        pass
+
+    return value
+
+
+def mask_token_response(response):
+    """Mask the standard token fields in a raw token-endpoint response.
+
+    Accepts the parsed JSON ``dict`` of an OAuth/OIDC token response and
+    registers ``access_token``/``refresh_token``/``id_token`` as secrets.
+    Returns the same ``dict`` for convenient inline use.
+    """
+    if isinstance(response, dict):
+        for key in ("access_token", "refresh_token", "id_token"):
+            mask_secret(response.get(key))
+    return response
 
 
 class UnsupportedByProvider(Exception):
@@ -30,14 +57,9 @@ class UnsupportedByProvider(Exception):
 class OAuthToken:
     """Uniform token container returned by every provider.
 
-    ``access_token`` is the only field guaranteed to be set across all
-    providers. ``refresh_token`` and ``id_token`` may be ``None`` (e.g.
-    Azure client-credentials only returns an access token; Google may
-    skip refresh on subsequent token-endpoint calls).
-
-    The container behaves like a dict for ``["access_token"]`` /
-    ``.get("error")`` access so legacy call sites that already do
-    ``token["access_token"]`` continue to work during the migration.
+    ``access_token`` is always set. Other fields may be ``None``
+    depending on the provider and grant type. Also supports dict-style
+    access (``token["access_token"]``) for backwards compatibility.
     """
 
     access_token: str
@@ -46,6 +68,16 @@ class OAuthToken:
     token_type: Optional[str] = None
     expires_in: Optional[int] = None
     raw: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Mask every token this container carries so it never leaks into
+        the test log (e.g. via ``Authorization: Bearer …`` headers in
+        logged curl commands). Provider-agnostic: applies regardless of
+        which IdP produced the token."""
+
+        mask_secret(self.access_token)
+        mask_secret(self.refresh_token)
+        mask_secret(self.id_token)
 
     def __getitem__(self, key):
         if key in {
@@ -95,14 +127,11 @@ class OpenIDEndpoints:
 
 
 def unsupported(method_name: str):
-    """Helper to build ``Skip``-style ``OAuthProvider`` placeholders.
+    """Return a callable that raises ``UnsupportedByProvider``.
 
-    Use as the value of an ``OAuthProvider`` attribute when a provider
-    cannot implement a given method:
+    Usage::
 
         delete_user = unsupported("delete_user")
-
-    The returned callable raises ``UnsupportedByProvider`` immediately.
     """
 
     def _stub(*args, **kwargs):
@@ -116,14 +145,11 @@ def unsupported(method_name: str):
 
 
 REQUIRED_METHODS = (
-    # Core token + endpoint access — every provider must implement these.
+    # Core token + endpoint access.
     "get_oauth_token",
     "openid_endpoints",
     "default_idp",
-    # JWT mutation (used heavily by tokens / jwt_manipulation / tls /
-    # security_audit). Provider-agnostic implementation lives in
-    # ``provider_protocol`` itself but providers re-export it for
-    # discoverability.
+    # JWT mutation helper.
     "modify_jwt_token",
 )
 
@@ -141,10 +167,7 @@ OPTIONAL_METHODS = (
     "disable_client",
     "enable_client",
     "invalidate_user_sessions",
-    # Authorization-negative testing: ability to mint tokens from a
-    # *different* trust boundary (realm / tenant / org). Keycloak
-    # implements these via the Admin API; Azure/Google can't easily
-    # mock them, so dependent scenarios Skip.
+    # Cross-realm / cross-tenant authorization-negative testing.
     "create_realm",
     "delete_realm",
     "create_client_in_realm",
@@ -155,11 +178,8 @@ OPTIONAL_METHODS = (
 def assert_provider_contract(provider_module):
     """Assert that ``provider_module.OAuthProvider`` exposes the contract.
 
-    Required methods MUST be present and callable. Optional methods MUST
-    be either present or explicitly marked unsupported via ``unsupported()``.
-    Raises ``AssertionError`` if the contract is violated; this is meant
-    to be called once at suite startup so a missing method fails fast
-    instead of later in a confusing test step.
+    Required methods must be present and callable. Missing optional
+    methods are automatically backfilled with ``unsupported()`` stubs.
     """
     provider = getattr(provider_module, "OAuthProvider", None)
     assert (
@@ -200,8 +220,7 @@ def _decode_jwt_token(token: str):
 def _encode_jwt_token(header: dict, payload: dict, signature: str):
     """Re-encode JWT components into a compact string.
 
-    The signature is NOT recomputed; tests use this to assert that a
-    server rejects mutated tokens.
+    The signature is NOT recomputed.
     """
     import base64
     import json
@@ -222,12 +241,10 @@ def modify_jwt_token(
     payload_changes: dict = None,
     signature_change: str = None,
 ):
-    """Provider-agnostic JWT mutation.
+    """Return a new token with the given header/payload/signature changes applied.
 
-    Returns a new token string. The signature is NOT recomputed, so the
-    server should reject the token unless only non-verified fields were
-    changed. Re-exported by every provider's ``OAuthProvider`` so test
-    code can keep calling ``client.OAuthProvider.modify_jwt_token``.
+    The signature is NOT recomputed, so the server should reject the
+    resulting token unless only non-verified fields were changed.
     """
     header, payload, signature = _decode_jwt_token(token)
 
