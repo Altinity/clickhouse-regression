@@ -3,8 +3,8 @@
 Drives the ``IcebergMetadata::alter`` path to evolve the Iceberg
 destination's schema in lock-step with the MergeTree source (ADD /
 DROP / MODIFY column) and verifies subsequent exports pick up the new
-schema. Also covers the rejected ALTERs (``RENAME COLUMN``,
-source-only drift) and the Iceberg schema-history bookkeeping.
+schema. Also covers rejected source-only drift and the Iceberg
+schema-history bookkeeping.
 """
 
 from testflows.core import *
@@ -40,7 +40,6 @@ from iceberg.tests.export_partition.steps.verification import (
 
 
 BAD_ARGUMENTS = 36
-NOT_IMPLEMENTED = 48
 INCOMPATIBLE_COLUMNS = 122
 
 
@@ -344,26 +343,86 @@ def modify_column_widen(self, minio_root_user, minio_root_password):
 
 
 @TestScenario
-@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_RejectedAlterations("1.0"))
-@Name("rejected: RENAME COLUMN on iceberg destination")
-def rejected_rename_column(self, minio_root_user, minio_root_password):
-    """``RENAME COLUMN`` on the Iceberg destination is rejected with
-    ``NOT_IMPLEMENTED`` by ``IcebergMetadata::checkAlterIsPossible``.
+@Requirements(RQ_Iceberg_ExportPartition_SchemaEvolution_AcceptedAlterations("1.0"))
+@Name("rename column between exports")
+def rename_column_between_exports(self, minio_root_user, minio_root_password):
+    """``RENAME COLUMN note TO comment`` on both sides between two
+    exports; previously exported rows remain readable under the new
+    column name and subsequent exports use the renamed field.
     """
-    with Given("create the Iceberg destination"):
+    source_table = f"mt_{getuid()}"
+    initial_columns = "id Int64, year Int32, note String"
+    partition_by = "year"
+
+    with Given("create source ReplicatedMergeTree with the initial schema"):
+        create_replicated_mergetree(
+            table_name=source_table,
+            columns=initial_columns,
+            partition_by=partition_by,
+        )
+
+    with And("insert the first partition"):
+        insert_data(
+            table_name=source_table, values="(1, 2020, 'a'), (2, 2020, 'b')"
+        )
+
+    with And("create the Iceberg destination with the initial schema"):
         destination = create_iceberg_destination(
-            columns="id Int64, year Int32, note String",
-            partition_by="year",
+            columns=initial_columns,
+            partition_by=partition_by,
             minio_root_user=minio_root_user,
             minio_root_password=minio_root_password,
         )
 
-    with Then("RENAME COLUMN is rejected"):
+    with When("export the 2020 partition"):
+        export_partition(
+            source_table=source_table,
+            destination_table=as_destination_name(destination),
+            partition_id="2020",
+        )
+
+    with And("RENAME COLUMN note TO comment on both sides"):
+        alter_source(
+            source_table=source_table,
+            alter_clause="RENAME COLUMN note TO comment",
+        )
         alter_iceberg_destination(
             destination=destination,
             alter_clause="RENAME COLUMN note TO comment",
-            exitcode=NOT_IMPLEMENTED,
-            message="not supported",
+        )
+
+    with And("insert and export the 2021 partition under the new column name"):
+        insert_data(
+            table_name=source_table,
+            values="(3, 2021, 'c'), (4, 2021, 'd')",
+        )
+        export_partition(
+            source_table=source_table,
+            destination_table=as_destination_name(destination),
+            partition_id="2021",
+        )
+
+    with Then("destination has both partitions"):
+        assert_destination_row_count(
+            destination=destination,
+            expected=4,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+        )
+
+    with And("rows read back through the renamed column"):
+        result = select_from_destination(
+            destination=destination,
+            minio_root_user=minio_root_user,
+            minio_root_password=minio_root_password,
+            columns="id, year, comment",
+            order_by="id",
+            format="TabSeparated",
+        )
+        expected = "1\t2020\ta\n2\t2020\tb\n3\t2021\tc\n4\t2021\td"
+        actual = result.output.strip()
+        assert actual == expected, error(
+            f"Rows after RENAME COLUMN differ from expected:\n{actual}"
         )
 
 
@@ -469,7 +528,7 @@ SCENARIOS = (
     add_column_between_exports,
     drop_column_between_exports,
     modify_column_widen,
-    rejected_rename_column,
+    rename_column_between_exports,
     source_only_schema_drift_rejected,
     iceberg_schema_history_advances,
 )

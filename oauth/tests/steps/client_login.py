@@ -1,30 +1,12 @@
 """Step helpers for the ``clickhouse-client --login`` OAuth flow.
 
-These helpers drive the **client-side** OAuth surface added by
-Altinity/ClickHouse PR #1606 (and the follow-up issues #1696 / #1697 /
-#1698) — i.e. invocations of ``clickhouse-client --login=...`` along with
-the ``--oauth-credentials`` flag, the ``~/.clickhouse-client/config.xml``
-``connections_credentials`` block, and the on-disk
-``oauth_cache.json`` refresh-token cache.
+These helpers drive client-side OAuth: ``--login=device|browser``,
+``--oauth-credentials``, ``connections_credentials``, and the
+on-disk ``oauth_cache.json`` refresh-token cache.
 
-Tests run inside the Keycloak env which already provides:
-
-* a ``clickhouse1`` node with the patched ``clickhouse-client`` binary
-* a Keycloak instance reachable from the cluster network as
-  ``http://keycloak:8080`` with realm ``grafana``, client
-  ``grafana-client`` and a user ``demo``/``demo``
-
-The helpers run ``clickhouse-client`` **inside the clickhouse1
-container** (the bash-tools image does not ship the binary). The
-client's ``$HOME`` lands at ``/root`` in that container, so
-``/root/.clickhouse-client/`` is where the credentials and cache files
-land.
-
-Why so much explicit ``timeout=`` and explicit returncode handling: the
-``--login=*`` paths can hang waiting for a browser callback or for the
-device-code polling loop to time out. Every helper that invokes the
-client therefore drives it with ``--query`` (so the client exits as
-soon as auth is resolved) and a hard wall-clock cap.
+Helpers run ``clickhouse-client`` inside the ClickHouse container
+(not bash-tools). Every invocation uses ``--query`` and a wall-clock
+timeout to prevent hangs from browser callbacks or device-code polling.
 """
 
 import json
@@ -36,10 +18,12 @@ from pathlib import Path
 from helpers.common import getuid
 from testflows.core import *
 
+from oauth.tests.steps.clikhouse import without_command_logging
+from oauth.tests.steps.provider_protocol import mask_secret, mask_token_response
+
 
 CLIENT_HOME = "/root"
-"""Where ``HOME`` resolves inside the clickhouse server containers; the
-client looks for credentials and cache files relative to it."""
+"""HOME inside the ClickHouse server containers."""
 
 CLIENT_CONFIG_DIR = f"{CLIENT_HOME}/.clickhouse-client"
 DEFAULT_CREDS_PATH = f"{CLIENT_CONFIG_DIR}/oauth_client.json"
@@ -50,28 +34,60 @@ DEVICE_FLOW_BG_LOG = "/tmp/ch_oauth_device_flow.log"
 DEVICE_FLOW_BG_PID = "/tmp/ch_oauth_device_flow.pid"
 
 
-def extract_device_user_code_from_client_output(text):
-    """Extract RFC 8628-shaped user code from clickhouse-client stderr/stdout."""
+# Anchored pattern for RFC 8628 user_code next to known label keywords.
+_DEVICE_USER_CODE_ANCHOR_RE = re.compile(
+    r"(?:user[_\- ]?code|verification_uri_complete|verification[_\- ]?url)"
+    r"[^A-Za-z0-9]{0,40}"
+    r"([A-Z0-9]{4}-[A-Z0-9]{4})",
+    flags=re.IGNORECASE,
+)
 
-    m = re.search(r"\b([A-Z2-7]{4}-[A-Z2-7]{4})\b", text, flags=re.IGNORECASE)
+# Fallback: bare XXXX-XXXX pattern (the dash disambiguates from random substrings).
+_DEVICE_USER_CODE_DASHED_RE = re.compile(
+    r"\b([A-Z0-9]{4}-[A-Z0-9]{4})\b", flags=re.IGNORECASE
+)
+
+
+def extract_device_user_code_from_client_output(text):
+    """Extract an RFC 8628 user code from ``clickhouse-client`` output.
+
+    Two-stage match: first an anchored search keyed on marker words
+    (``user_code``, ``verification_uri_complete``), then a fallback to
+    the bare ``XXXX-XXXX`` dashed pattern.
+    """
+
+    m = _DEVICE_USER_CODE_ANCHOR_RE.search(text)
     if m:
         return m.group(1).upper()
-    m = re.search(r"\b([A-Z2-7]{8})\b", text, flags=re.IGNORECASE)
+    m = _DEVICE_USER_CODE_DASHED_RE.search(text)
     if m:
-        s = m.group(1).upper()
-        return f"{s[:4]}-{s[4:]}"
+        return m.group(1).upper()
+    return None
+
+
+# Markers indicating the background client has terminally failed.
+_DEVICE_FLOW_TERMINAL_MARKERS = (
+    "__EXIT__=",
+    "AUTHENTICATION_FAILED",
+    "Stack trace:",
+)
+_DEVICE_FLOW_EXCEPTION_RE = re.compile(r"\bCode:\s*\d+\.\s*DB::Exception")
+
+
+def device_flow_terminal_failure_reason(text):
+    """Return a failure reason if the device flow has terminally failed, or ``None``."""
+
+    for marker in _DEVICE_FLOW_TERMINAL_MARKERS:
+        if marker in text:
+            return marker
+    m = _DEVICE_FLOW_EXCEPTION_RE.search(text)
+    if m:
+        return m.group(0)
     return None
 
 
 def _shell_quote(value):
-    """Quote ``value`` for safe inclusion in a shell command.
-
-    ``shlex.quote`` handles every special character but produces single
-    quotes that must round-trip through one more layer of quoting in the
-    ``docker exec sh -c '...'`` chain. We wrap the call so callers can
-    pass arbitrary strings (including JSON blobs and CLI args) without
-    worrying about escaping rules.
-    """
+    """Quote ``value`` for safe inclusion in a shell command."""
 
     return shlex.quote(value)
 
@@ -80,10 +96,7 @@ def _shell_quote(value):
 def reset_client_state(self, node=None):
     """Wipe ``~/.clickhouse-client`` and any saved OAuth artefacts.
 
-    Used as a Given/Finally guard so each scenario starts from a
-    consistent state — the cache file from a previous test must never
-    influence the next one because that's exactly the persistence bug
-    M1 of the audit fixed.
+    Ensures each scenario starts from a consistent state.
     """
 
     if node is None:
@@ -112,14 +125,8 @@ def write_oauth_credentials_file(
 ):
     """Write a Google-Cloud-Console-shaped OAuth credentials JSON file.
 
-    PR #1606 expects ``--oauth-credentials`` to point at exactly this
-    shape (``{"installed": {...}}`` or ``{"web": {...}}``). Tests use
-    this helper to materialise the file inside the container before
-    invoking the client.
-
-    ``raw_contents`` overrides every other argument and writes the
-    string verbatim — used by the "malformed JSON" / "missing required
-    field" scenarios.
+    Expects the ``{"installed": {...}}`` or ``{"web": {...}}`` shape.
+    ``raw_contents`` overrides all other arguments and writes verbatim.
     """
 
     if node is None:
@@ -157,13 +164,60 @@ def write_oauth_credentials_file(
     node.command(command=f"chmod 600 {_shell_quote(path)}")
 
 
+def write_keycloak_device_credentials(
+    client_id="grafana-client",
+    client_secret="grafana-secret",
+    token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+    device_authorization_uri=(
+        "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+    ),
+    node=None,
+):
+    """Write the default Keycloak-grafana device-flow credentials file.
+
+    Plain function (not a ``@TestStep``) — callers provide their own
+    ``with And("…"):`` framing.
+    """
+
+    write_oauth_credentials_file(
+        client_id=client_id,
+        client_secret=client_secret,
+        token_uri=token_uri,
+        device_authorization_uri=device_authorization_uri,
+        node=node,
+    )
+
+
+def write_browser_oauth_credentials(
+    auth_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/auth",
+    token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
+    client_id="grafana-client",
+    client_secret="grafana-secret",
+    redirect_uris=None,
+    node=None,
+):
+    """Write Keycloak-grafana credentials for the browser (auth-code + PKCE) flow.
+
+    Mirrors ``write_keycloak_device_credentials`` but omits the device
+    endpoint and supplies a loopback ``redirect_uris`` default. Plain
+    function (not a ``@TestStep``) — callers provide their own
+    ``with And("…"):`` framing.
+    """
+
+    write_oauth_credentials_file(
+        client_id=client_id,
+        client_secret=client_secret,
+        auth_uri=auth_uri,
+        token_uri=token_uri,
+        redirect_uris=redirect_uris or ["http://127.0.0.1"],
+        device_authorization_uri=None,
+        node=node,
+    )
+
+
 @TestStep(Given)
 def write_client_config_xml(self, contents, path=DEFAULT_CONFIG_PATH, node=None):
-    """Write ``~/.clickhouse-client/config.xml``.
-
-    Used to drive the ``connections_credentials`` /
-    ``--connection`` paths exercised by PRs #1696 and #1698.
-    """
+    """Write ``~/.clickhouse-client/config.xml`` inside the container."""
 
     if node is None:
         node = self.context.node
@@ -182,11 +236,8 @@ def write_client_config_xml(self, contents, path=DEFAULT_CONFIG_PATH, node=None)
 def write_oauth_cache(self, mapping=None, raw_contents=None, mode="600", node=None):
     """Pre-populate ``~/.clickhouse-client/oauth_cache.json``.
 
-    ``mapping`` is the cache dict (``{cache_key_hex: refresh_token}``).
-    ``raw_contents`` is a literal string (used to test parse-resilience
-    against corrupted caches). ``mode`` controls the on-disk
-    permissions so we can verify the client refuses to ingest a
-    world-readable cache (a common audit ask).
+    ``mapping`` is the cache dict. ``raw_contents`` writes a literal string.
+    ``mode`` controls on-disk permissions.
     """
 
     if node is None:
@@ -299,6 +350,51 @@ def read_clickhouse_oauth_background_log(self, log_path=DEVICE_FLOW_BG_LOG, node
     return result.output
 
 
+@TestStep(When)
+def wait_for_device_user_code(
+    self,
+    poll_iters=50,
+    poll_interval_sec=1,
+    log_path=DEVICE_FLOW_BG_LOG,
+    node=None,
+):
+    """Poll the background client log until a user code appears.
+
+    Returns the extracted user code string. Fails early if the client
+    has exited or logged a ClickHouse exception.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    last_log = ""
+    for _ in range(poll_iters):
+        last_log = node.command(
+            command=f"cat {_shell_quote(log_path)} 2>/dev/null || true",
+            no_checks=True,
+        ).output
+
+        user_code = extract_device_user_code_from_client_output(last_log)
+        if user_code:
+            return user_code
+
+        reason = device_flow_terminal_failure_reason(last_log)
+        assert reason is None, (
+            "Background clickhouse-client failed before emitting a device "
+            f"user_code (saw {reason!r} in the log). This usually means the "
+            "device-authorization request itself was rejected by the IdP. "
+            f"Captured log:\n---\n{last_log}\n---"
+        )
+
+        time.sleep(poll_interval_sec)
+
+    raise AssertionError(
+        f"Timed out after ~{poll_iters * poll_interval_sec}s waiting for a "
+        "device user_code in clickhouse-client output. Captured log:\n"
+        f"---\n{last_log}\n---"
+    )
+
+
 @TestStep(Then)
 def wait_clickhouse_oauth_background_finished(
     self,
@@ -357,53 +453,48 @@ def read_oauth_cache(self, path=DEFAULT_CACHE_PATH, node=None):
     if node is None:
         node = self.context.node
 
-    result = node.command(
-        command=f"cat {_shell_quote(path)} 2>/dev/null || true",
-        no_checks=True,
-    )
+    # Suppress log forwarding: the cache file holds the refresh/access
+    # tokens clickhouse-client persisted.
+    with without_command_logging(node):
+        result = node.command(
+            command=f"cat {_shell_quote(path)} 2>/dev/null || true",
+            no_checks=True,
+        )
     raw = result.output.strip()
     if not raw:
         return None
     try:
-        return json.loads(raw)
+        cache = json.loads(raw)
     except json.JSONDecodeError:
         return None
 
+    # Mask any cached token values (at any nesting depth) so subsequent
+    # references to them are redacted. Only token-named fields are masked
+    # to avoid clobbering benign values (timestamps, URLs) in the log.
+    def _mask_tokens(obj):
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                if key in ("access_token", "refresh_token", "id_token") and isinstance(
+                    value, str
+                ):
+                    mask_secret(value)
+                else:
+                    _mask_tokens(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                _mask_tokens(item)
 
-@TestStep(Then)
-def run_clickhouse_client(
-    self,
-    args,
-    query=None,
-    timeout=15,
-    node=None,
-    expect_error=False,
-):
-    """Run ``clickhouse-client`` inside ``node`` and return ``(exitcode, output)``.
+    _mask_tokens(cache)
+    return cache
 
-    ``args`` is a list of additional CLI flags (everything except
-    ``-q``/``--query`` and ``--host``, which the helper supplies).
 
-    The helper always passes ``--host clickhouse1`` so that the OAuth
-    "is this a *.clickhouse.cloud host?" auto-detection is
-    deterministic — explicit ``--host`` populates ``hosts_and_ports``
-    so the segfault path of PR #1696 is *not* triggered. Tests that
-    want to exercise that path must omit ``--host`` from ``args`` and
-    set ``omit_host=True``.
+def _run_clickhouse_client_core(node, args, query, timeout, expect_error):
+    """Shared core for ``run_clickhouse_client`` and ``_no_host`` variant.
 
-    The wall-clock ``timeout`` exists because ``--login=browser`` blocks
-    on a callback that will never come in CI. Anything still running
-    at ``timeout`` is killed with SIGTERM and the helper returns the
-    output captured up to that point.
-
-    ``expect_error`` flips the assertion: by default the helper asserts
-    ``exitcode == 0``. When the test is asserting "this command must
-    fail with a specific message", set ``expect_error=True`` and check
-    the returned ``output`` instead.
+    Runs ``timeout(1) clickhouse-client <args>``, parses the trailing
+    ``__EXIT__=<rc>`` marker, and enforces ``expect_error``.
+    Plain function (no ``@TestStep``).
     """
-
-    if node is None:
-        node = self.context.node
 
     cmd_parts = ["timeout", str(timeout), "clickhouse-client"]
     cmd_parts.extend(args)
@@ -438,6 +529,33 @@ def run_clickhouse_client(
 
 
 @TestStep(Then)
+def run_clickhouse_client(
+    self,
+    args,
+    query=None,
+    timeout=15,
+    node=None,
+    expect_error=False,
+):
+    """Run ``clickhouse-client`` inside ``node`` and return ``(exitcode, output)``.
+
+    ``args`` is a list of CLI flags. ``timeout`` caps wall-clock time.
+    ``expect_error=True`` skips the exit-code-zero assertion.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    return _run_clickhouse_client_core(
+        node=node,
+        args=args,
+        query=query,
+        timeout=timeout,
+        expect_error=expect_error,
+    )
+
+
+@TestStep(Then)
 def run_clickhouse_client_no_host(
     self,
     args,
@@ -446,62 +564,30 @@ def run_clickhouse_client_no_host(
     node=None,
     expect_error=True,
 ):
-    """Variant of ``run_clickhouse_client`` that does NOT inject ``--host``.
+    """Like ``run_clickhouse_client`` but defaults to ``expect_error=True``.
 
-    Required for the PR #1696 / ClickHouse #103603 segfault repro: the
-    crash only happens when ``hosts_and_ports`` is left empty by the
-    initialise() pass — i.e. the host comes from
-    ``connections_credentials`` or from the bare ``<host>`` element in
-    the config file rather than from ``--host`` on the CLI.
-
-    Defaults to ``expect_error=True`` because most callers are pinning
-    a specific failure mode (arg-parse error, auth-redirect timeout,
-    etc.) rather than expecting a clean ``SELECT 1`` round-trip.
+    Used when the scenario omits ``--host`` so the host comes from config
+    rather than the CLI.
     """
 
     if node is None:
         node = self.context.node
 
-    cmd_parts = ["timeout", str(timeout), "clickhouse-client"]
-    cmd_parts.extend(args)
-    if query is not None:
-        cmd_parts.extend(["--query", query])
-
-    cmd = " ".join(_shell_quote(p) for p in cmd_parts) + " 2>&1; echo __EXIT__=$?"
-    result = node.command(command=cmd, no_checks=True)
-
-    output = result.output
-    exit_code = None
-    for line in output.strip().splitlines()[::-1]:
-        if line.startswith("__EXIT__="):
-            try:
-                exit_code = int(line.split("=", 1)[1])
-            except ValueError:
-                exit_code = None
-            output = output.replace(line, "").rstrip()
-            break
-
-    if not expect_error:
-        assert exit_code == 0, (
-            f"clickhouse-client failed (exit={exit_code}) for args={args!r}\n"
-            f"---\n{output}\n---"
-        )
-
-    return exit_code, output
+    return _run_clickhouse_client_core(
+        node=node,
+        args=args,
+        query=query,
+        timeout=timeout,
+        expect_error=expect_error,
+    )
 
 
 @TestStep(Then)
 def assert_no_segfault(self, output, exit_code):
     """Assert the client did not abort via SIGSEGV/SIGABRT.
 
-    Direct evidence for ClickHouse #103603 / PR #1696. The libc++
-    hardening trap (`front() called on an empty vector`) prints that
-    exact phrase before raising SIGABRT, so we grep for both the
-    message and the conventional "Received signal 6 / 11" lines.
-
-    `timeout(1)` exits 124 on wall-clock kill and 137/143 when it has
-    to SIGKILL the child — those are NOT the abort signals we're
-    looking for and must not be flagged here.
+    Checks for libc++ hardening traps and signal markers in output.
+    ``timeout(1)`` exit codes (124/137/143) are not flagged.
     """
 
     fatal_markers = [
@@ -517,6 +603,241 @@ def assert_no_segfault(self, output, exit_code):
             f"clickhouse-client crashed (exit={exit_code}); "
             f"found marker {marker!r} in output:\n---\n{output}\n---"
         )
+
+
+@TestStep(Then)
+def assert_client_rejected(
+    self, output, exit_code, markers=None, require_nonzero_exit=True
+):
+    """Assert ``clickhouse-client`` rejected the input safely.
+
+    Bundles the rejection checks repeated across the suite:
+
+    - the client did not crash (delegates to ``assert_no_segfault``);
+    - when ``require_nonzero_exit`` (the default), the client exited
+      non-zero;
+    - when ``markers`` is given, at least one marker appears in the
+      output (case-insensitive substring match).
+    """
+
+    assert_no_segfault(output=output, exit_code=exit_code)
+
+    if require_nonzero_exit:
+        assert (
+            exit_code != 0
+        ), f"Expected a non-zero exit code, got {exit_code}:\n---\n{output}\n---"
+
+    if markers:
+        ol = output.lower()
+        assert any(marker.lower() in ol for marker in markers), (
+            f"Expected one of {list(markers)!r} in the client output:\n"
+            f"---\n{output}\n---"
+        )
+
+
+@TestStep(Then)
+def assert_device_user_code_present(self, output, exit_code):
+    """Assert the client emitted an RFC 8628 device user code without crashing.
+
+    Used by scenarios that pin device-flow start (rather than just
+    "no crash") so a regression that short-circuits OAuth fails loudly.
+    """
+
+    assert_no_segfault(output=output, exit_code=exit_code)
+    assert (
+        extract_device_user_code_from_client_output(output) is not None
+    ), f"Expected a device user_code in the client output:\n---\n{output}\n---"
+
+
+@TestStep(When)
+def complete_keycloak_device_login_via_background(
+    self,
+    args=None,
+    query="SELECT currentUser()",
+    wall_timeout=120,
+    user_code_poll_iters=50,
+    finish_timeout_sec=90,
+):
+    """Drive one successful Keycloak device-flow login end-to-end.
+
+    Starts the client in the background, polls for the user code,
+    approves it via Keycloak, waits for completion, and asserts
+    exit code 0. ``args`` defaults to the standard device-flow invocation.
+    """
+
+    if args is None:
+        args = [
+            "--host",
+            "clickhouse1",
+            "--login=device",
+            "--oauth-credentials",
+            DEFAULT_CREDS_PATH,
+        ]
+
+    start_clickhouse_oauth_client_background(
+        args=args,
+        query=query,
+        wall_timeout=wall_timeout,
+    )
+
+    user_code = wait_for_device_user_code(poll_iters=user_code_poll_iters)
+
+    approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
+    wait_clickhouse_oauth_background_finished(timeout_sec=finish_timeout_sec)
+
+    full_log = read_clickhouse_oauth_background_log()
+    ec = parse_background_client_exit_code(full_log)
+    assert (
+        ec == 0
+    ), f"Expected exit 0 after device approval, got {ec!r}:\n---\n{full_log}\n---"
+
+
+@TestStep(Given)
+def create_directory(self, path, node=None):
+    """Create ``path`` (with parents) inside ``node``. Idempotent."""
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"mkdir -p {_shell_quote(path)}")
+
+
+@TestStep(Given)
+def set_immutable(self, path, node=None):
+    """Mark ``path`` as immutable via ``chattr +i``.
+
+    Always pair with ``unset_immutable`` in a ``Finally`` block.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"chattr +i {_shell_quote(path)}")
+
+
+@TestStep(Finally)
+def unset_immutable(self, path, node=None):
+    """Clear the immutable bit set by ``set_immutable``."""
+
+    if node is None:
+        node = self.context.node
+
+    node.command(command=f"chattr -i {_shell_quote(path)}", no_checks=True)
+
+
+@TestStep(Then)
+def wait_for_http_response(self, url, max_wait=15, poll_interval=1, node=None):
+    """Poll ``curl -sSI <url>`` until an HTTP response arrives or ``max_wait`` elapses.
+
+    Returns the final response output. Callers should assert ``"HTTP/" in result``
+    to detect timeout.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    deadline = time.time() + max_wait
+    probe = ""
+    while time.time() < deadline:
+        result = node.command(
+            command=f"(curl -sSI {_shell_quote(url)} || true) 2>&1",
+            no_checks=True,
+        )
+        probe = result.output
+        if "HTTP/" in probe:
+            return probe
+        time.sleep(poll_interval)
+    return probe
+
+
+@TestStep(Then)
+def curl_head(self, url, node=None):
+    """Run ``curl -sSI <url>`` inside ``node`` and return the raw response.
+
+    Tolerates connection failures — returns empty output if nothing is listening.
+    """
+
+    if node is None:
+        node = self.context.node
+
+    result = node.command(
+        command=f"(curl -sSI {_shell_quote(url)} || true) 2>&1",
+        no_checks=True,
+    )
+    return result.output
+
+
+@TestStep(Given)
+def start_mock_oidc_server(
+    self,
+    script,
+    pid_file,
+    log_file=None,
+    node=None,
+):
+    """Start a Python HTTP mock on ``node``.
+
+    ``script`` is the Python source to run. ``pid_file`` is where the PID lands.
+    Defaults to bash-tools node.
+    """
+
+    if node is None:
+        node = self.context.bash_tools
+
+    if log_file is None:
+        log_file = pid_file.rsplit(".", 1)[0] + ".log"
+
+    script_path = pid_file.rsplit(".", 1)[0] + ".py"
+    tag = f"_MockOIDC_{getuid()}_"
+    node.command(
+        command=(
+            f"cat > {_shell_quote(script_path)} <<'{tag}'\n"
+            f"{script}\n"
+            f"{tag}\n"
+            f"nohup python3 -u {_shell_quote(script_path)} "
+            f">{_shell_quote(log_file)} 2>&1 & "
+            f"echo $! > {_shell_quote(pid_file)}"
+        )
+    )
+
+
+@TestStep(Finally)
+def stop_mock_oidc_server(self, pid_file, node=None):
+    """SIGTERM the mock server started by ``start_mock_oidc_server``. Best-effort."""
+
+    if node is None:
+        node = self.context.bash_tools
+
+    node.command(
+        command=(
+            f"PID=$(cat {_shell_quote(pid_file)} 2>/dev/null); "
+            f'if [ -n "$PID" ]; then kill "$PID" 2>/dev/null || true; fi'
+        ),
+        no_checks=True,
+    )
+
+
+@TestStep(Given)
+def start_oversized_oidc_discovery_mock(
+    self,
+    port=18080,
+    padding_bytes=8_000_000,
+    pid_file=None,
+    node=None,
+):
+    """Start the oversized OIDC discovery mock and return its pid_file.
+
+    Returns the pid_file path for use with ``stop_mock_oidc_server``.
+    """
+
+    if pid_file is None:
+        pid_file = f"/tmp/mock_oidc_oversized_{port}.pid"
+
+    src_path = Path(__file__).resolve().parent / "mock_oidc_oversized.py"
+    src = src_path.read_text(encoding="utf-8")
+    tail = f"\n\nrun_oversized_oidc_discovery_mock({int(port)}, {int(padding_bytes)})\n"
+    start_mock_oidc_server(script=src + tail, pid_file=pid_file, node=node)
+    return pid_file
 
 
 @TestStep(Then)
@@ -560,8 +881,10 @@ def keycloak_enable_optional_scope(
     keycloak_url=None,
     node=None,
 ):
-    """Add ``scope_name`` to the optional client scopes of ``client_id`` via the
-    Keycloak admin REST API.  Safe to call when the scope is already assigned.
+    """Add ``scope_name`` to the optional client scopes of ``client_id``.
+
+    Idempotent. Runs the implementation from ``keycloak_optional_scope.py``
+    inside the bash-tools container.
     """
 
     if node is None:
@@ -571,96 +894,14 @@ def keycloak_enable_optional_scope(
     if keycloak_url is None:
         keycloak_url = self.context.keycloak_url
 
-    py_script = f"""
-import json, sys, urllib.request, urllib.parse, urllib.error
-
-base = {keycloak_url!r}
-realm = {realm!r}
-client_id = {client_id!r}
-scope_name = {scope_name!r}
-
-# admin token
-data = urllib.parse.urlencode(dict(
-    grant_type='password', client_id='admin-cli',
-    username='admin', password='admin',
-)).encode()
-req = urllib.request.Request(f'{{base}}/realms/master/protocol/openid-connect/token', data=data)
-with urllib.request.urlopen(req) as r:
-    token = json.load(r)['access_token']
-
-auth = {{'Authorization': f'Bearer {{token}}'}}
-
-# ── 1. Ensure the scope is in the client's optional scopes ────────────────
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/clients?clientId={{client_id}}', headers=auth)
-with urllib.request.urlopen(req) as r:
-    client_uuid = json.load(r)[0]['id']
-
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/client-scopes', headers=auth)
-with urllib.request.urlopen(req) as r:
-    scope_map = {{s['name']: s['id'] for s in json.load(r)}}
-
-if scope_name not in scope_map:
-    print(f'ERROR: scope {{scope_name!r}} not found in realm (available: {{sorted(scope_map)}})')
-    sys.exit(1)
-
-scope_id = scope_map[scope_name]
-req = urllib.request.Request(
-    f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes', headers=auth
-)
-with urllib.request.urlopen(req) as r:
-    current_optional = {{s['name'] for s in json.load(r)}}
-
-if scope_name not in current_optional:
-    req = urllib.request.Request(
-        f'{{base}}/admin/realms/{{realm}}/clients/{{client_uuid}}/optional-client-scopes/{{scope_id}}',
-        method='PUT', headers=auth,
+    src_path = Path(__file__).resolve().parent / "keycloak_optional_scope.py"
+    src = src_path.read_text(encoding="utf-8")
+    tail = (
+        "\n\nenable_optional_scope_and_assign_role("
+        f"{keycloak_url!r}, {realm!r}, {client_id!r}, {scope_name!r})\n"
     )
-    try:
-        with urllib.request.urlopen(req) as r:
-            print(f'Added {{scope_name}} to optional scopes ({{r.status}})')
-    except urllib.error.HTTPError as exc:
-        print(f'PUT optional-client-scopes failed {{exc.code}}: {{exc.read().decode()}}')
-        sys.exit(1)
-else:
-    print(f'{{scope_name}} already in optional scopes')
-
-# ── 2. Ensure every user in the realm has the offline_access realm role ───
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/roles/offline_access', headers=auth)
-with urllib.request.urlopen(req) as r:
-    offline_role = json.load(r)
-
-req = urllib.request.Request(f'{{base}}/admin/realms/{{realm}}/users', headers=auth)
-with urllib.request.urlopen(req) as r:
-    users = json.load(r)
-
-for user in users:
-    uid = user['id']
-    uname = user.get('username', uid)
-    req = urllib.request.Request(
-        f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm', headers=auth
-    )
-    with urllib.request.urlopen(req) as r:
-        assigned = {{role['name'] for role in json.load(r)}}
-    if 'offline_access' not in assigned:
-        body = json.dumps([offline_role]).encode()
-        req = urllib.request.Request(
-            f'{{base}}/admin/realms/{{realm}}/users/{{uid}}/role-mappings/realm',
-            data=body, method='POST',
-            headers={{**auth, 'Content-Type': 'application/json'}},
-        )
-        try:
-            with urllib.request.urlopen(req) as r:
-                print(f'Assigned offline_access role to user {{uname!r}} ({{r.status}})')
-        except urllib.error.HTTPError as exc:
-            print(f'POST role-mappings failed for {{uname!r}} {{exc.code}}: {{exc.read().decode()}}')
-            sys.exit(1)
-    else:
-        print(f'User {{uname!r}} already has offline_access role')
-
-print('Done')
-"""
     tag = f"_KcScope_{getuid()}_"
-    node.command(command=f"python3 <<'{tag}'\n{py_script}\n{tag}")
+    node.command(command=f"python3 <<'{tag}'\n{src}{tail}\n{tag}")
 
 
 @TestStep(Given)
@@ -676,17 +917,10 @@ def get_keycloak_token_via_curl(
     grant_type="password",
     extra_data=None,
 ):
-    """Obtain an access token from Keycloak via the password / refresh-token grant.
+    """Obtain an access token from Keycloak via password or refresh-token grant.
 
-    A thin wrapper around the same direct-access-grant flow used by
-    ``oauth.tests.steps.keycloak_realm.get_oauth_token`` but allowing
-    the caller to override the grant type (e.g. ``refresh_token``)
-    without going through bash-tools, since these tests run from a
-    clickhouse-server container.
-
-    Returns the parsed JSON response; raises with a descriptive error
-    when Keycloak refuses (so failed setups don't surface as opaque
-    KeyErrors deep in the scenario).
+    Allows overriding the grant type and adding extra form fields.
+    Returns the parsed JSON response.
     """
 
     if node is None:
@@ -717,7 +951,9 @@ def get_keycloak_token_via_curl(
         "--header 'Content-Type: application/x-www-form-urlencoded' "
         + " ".join(data_pairs)
     )
-    result = node.command(command=curl_command)
+    # Suppress log forwarding: the response body carries the tokens.
+    with without_command_logging(node):
+        result = node.command(command=curl_command)
 
     try:
         response = json.loads(result.output)
@@ -733,4 +969,6 @@ def get_keycloak_token_via_curl(
             f"{response.get('error_description', '')}"
         )
 
-    return response
+    # Mask the tokens so any later reference to them (cache reads,
+    # background-client logs) is redacted.
+    return mask_token_response(response)

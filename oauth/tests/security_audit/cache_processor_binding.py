@@ -7,7 +7,6 @@ from oauth.tests.steps.clikhouse import (
     change_token_processors,
     change_user_directories_config,
 )
-from oauth.tests.steps.keycloak_realm import keycloak_openid_processor_args
 
 
 @TestScenario
@@ -17,11 +16,16 @@ def scenario_1(self):
     client = self.context.provider_client
 
     with Given("I configure a token cache lifetime"):
+        endpoints = client.OAuthProvider.openid_endpoints()
         change_token_processors(
             processor_name="keycloak",
             processor_type="OpenID",
             token_cache_lifetime=60,
-            **keycloak_openid_processor_args(),
+            userinfo_endpoint=endpoints.userinfo_endpoint,
+            token_introspection_endpoint=endpoints.token_introspection_endpoint,
+            introspection_client_id=self.context.introspection_client_id,
+            introspection_client_secret=self.context.introspection_client_secret,
+            replace=True,
         )
 
     with And("I configure user directories"):

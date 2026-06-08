@@ -78,14 +78,10 @@ def _post_form(
 
 
 class _RewriteHostRedirectHandler(urllib.request.HTTPRedirectHandler):
-    """Follow redirects but rewrite the host to the configured Keycloak origin.
+    """Follow redirects, rewriting the host to the configured Keycloak origin.
 
-    Keycloak configured with ``--hostname=localhost`` emits ``Location`` headers
-    with ``localhost`` as the host.  When the test automation runs inside a
-    Docker network where Keycloak is reachable only via its service name (e.g.
-    ``keycloak:8080``), those redirects would land on the wrong host.  This
-    handler rewrites the scheme+host of every redirect URL to ``_origin``
-    before following it.
+    Needed because ``--hostname=localhost`` makes Keycloak emit ``Location``
+    headers with ``localhost``, which is unreachable from the Docker network.
     """
 
     def __init__(self, origin: str) -> None:

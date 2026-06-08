@@ -34,6 +34,7 @@ from iceberg.tests.export_partition.steps.common import (
     sync_replica,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
+    EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
     export_partition,
 )
 from iceberg.tests.export_partition.steps.export_status import (
@@ -53,8 +54,6 @@ from iceberg.tests.export_partition.steps.verification import (
 
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
-
-BAD_ARGUMENTS = 36
 
 # Named cluster from iceberg/configs/clickhouse/config.d/remote.xml;
 # every clickhouseN is listed as a replica of the same shard, so
@@ -334,8 +333,8 @@ def concurrent_cross_replica_same_partition_idempotent(
 ):
     """Two replicas try to export the same partition; the second is
     rejected synchronously by the shared ZK idempotency key
-    (``BAD_ARGUMENTS`` / "Export with key ..."), and the destination
-    ends with exactly one append snapshot.
+    (``EXPORT_PARTITION_ALREADY_EXPORTED`` / "Export with key ..."), and
+    the destination ends with exactly one append snapshot.
     """
     replica1 = self.context.nodes[0]
     replica2 = self.context.nodes[1]
@@ -376,15 +375,15 @@ def concurrent_cross_replica_same_partition_idempotent(
     with And("duplicate ALTER on replica2 is rejected by the shared ZK lock"):
         # The ZK idempotency key is visible to every replica; replica2's
         # ALTER sees the entry replica1 just installed and fails with
-        # BAD_ARGUMENTS / "Export with key ...". This is the
-        # multi-writer equivalent of
+        # EXPORT_PARTITION_ALREADY_EXPORTED / "Export with key ...".
+        # Multi-writer equivalent of
         # ``transactions.duplicate_export_within_ttl_rejected``.
         export_partition(
             source_table=table_name,
             destination=destination,
             partition_id="2020",
             node=replica2,
-            exitcode=BAD_ARGUMENTS,
+            exitcode=EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
             message="Export with key",
             wait_for_completion=False,
         )

@@ -174,7 +174,11 @@ def check_if_25_8_altinity_build(test=None):
     v = full_clickhouse_version_string(test)
     if not v:
         return False
-    return "25.8" in v and check_if_altinity_build(test) and check_if_not_antalya_build(test)
+    return (
+        "25.8" in v
+        and check_if_altinity_build(test)
+        and check_if_not_antalya_build(test)
+    )
 
 
 def check_if_antalya_pre_26_1(test=None):
@@ -211,6 +215,12 @@ def check_if_head(test):
     """True if build is head build."""
     binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
     return "head" in binary_path
+
+
+def check_if_latest(test):
+    """True if build is upstream latest build."""
+    binary_path = getsattr(test.context.cluster, "clickhouse_path", "")
+    return "latest" in binary_path
 
 
 def check_with_any_sanitizer(test):
@@ -637,7 +647,13 @@ def create_xml_config_content(
 
 
 def add_invalid_config(
-    config, message, recover_config=None, tail=300, timeout=300, restart=True, user=None,
+    config,
+    message,
+    recover_config=None,
+    tail=300,
+    timeout=300,
+    restart=True,
+    user=None,
     validate_during_invalid=None,
 ):
     """Check that ClickHouse errors when trying to load invalid configuration file."""
@@ -799,6 +815,18 @@ def add_config(
             with And("I start ClickHouse back up"):
                 node.start_clickhouse(user=user, wait_healthy=wait_healthy)
 
+            with And("I detect if the log file was rotated during restart"):
+                cmd = node.cluster.command(
+                    None,
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                )
+                current_logsize = cmd.output.split(" ")[0].strip()
+                if int(current_logsize) < int(logsize):
+                    # Log rotated while server was restarting: captured offset is
+                    # past the new file's EOF. Reset to byte 1 so tail reads from
+                    # the start of the new file.
+                    logsize = "1"
+
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt
                 bash.open()
@@ -954,6 +982,18 @@ def remove_config(
 
             with And("I start ClickHouse back up"):
                 node.start_clickhouse(user=user, wait_healthy=wait_healthy)
+
+            with And("I detect if the log file was rotated during restart"):
+                cmd = node.cluster.command(
+                    None,
+                    f"stat -c %s {cluster.environ['CLICKHOUSE_TESTS_DIR']}/_instances/{node.name}/logs/clickhouse-server.log",
+                )
+                current_logsize = cmd.output.split(" ")[0].strip()
+                if int(current_logsize) < int(logsize):
+                    # Log rotated while server was restarting: captured offset is
+                    # past the new file's EOF. Reset to byte 1 so tail reads from
+                    # the start of the new file.
+                    logsize = "1"
 
             with Then("I tail the log file from using previous log size as the offset"):
                 bash.prompt = bash.__class__.prompt

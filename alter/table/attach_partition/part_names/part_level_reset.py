@@ -49,11 +49,11 @@ def check_part_level_reset(self, engine="MergeTree"):
         else:
             expected_part_name = "all_2_2_0"
 
-        part_name = node.query(
-            f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0 FORMAT TabSeparated"
-        )
         for attempt in retries(timeout=30, delay=2):
             with attempt:
+                part_name = node.query(
+                    f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0 FORMAT TabSeparated"
+                )
                 assert part_name.output == expected_part_name, error(
                     f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
                 )
@@ -97,11 +97,11 @@ def check_part_level_reset_replicated(self, engine):
         expected_part_name = "all_1_1_0"
 
         for node in self.context.nodes:
-            part_name = node.query(
-                f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0 FORMAT TabSeparated"
-            )
             for attempt in retries(timeout=30, delay=2):
                 with attempt:
+                    part_name = node.query(
+                        f"SELECT name FROM system.parts WHERE table = '{source_table}' AND active AND rows>0 FORMAT TabSeparated"
+                    )
                     assert part_name.output == expected_part_name, error(
                         f"Unexpected part name: {part_name.output}, expected: {expected_part_name}"
                     )

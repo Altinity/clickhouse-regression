@@ -1,79 +1,11 @@
-"""Group-based role-mapping and identity-management tests.
-
-All identity-provider operations (``create_user`` etc.) are routed
-through ``self.context.provider_client.OAuthProvider`` so the same
-scenarios apply to any provider that implements the contract. Providers
-that cannot automate a given operation raise ``UnsupportedByProvider``;
-the affected scenarios ``Skip`` automatically rather than fail.
-"""
-
 import time
 
 from helpers.common import getuid
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from oauth.tests.steps.provider_protocol import UnsupportedByProvider
 from testflows.asserts import *
 from oauth.requirements.requirements import *
-
-
-def _provider_or_skip(self):
-    return self.context.provider_client
-
-
-def _configure_short_cache(
-    self,
-    *,
-    token_cache_lifetime=3,
-    common_roles=None,
-    include_jwks_uri=True,
-):
-    """Configure the standard Keycloak/OpenID processor with a short cache.
-
-    Used by scenarios that need to observe cache eviction. The endpoint
-    bundle comes from the provider so the URLs match whichever IdP is
-    active.
-
-    ``include_jwks_uri`` (default ``True``) controls whether ``jwks_uri``
-    is written into the processor config. This is **load-bearing** for
-    the IdP-state cache-eviction scenarios:
-
-    Per ``OpenIdTokenProcessor::resolveAndValidate``
-    (``src/Access/TokenProcessorsOpaque.cpp`` in antalya-26.1), when
-    ``jwks_uri`` is set the processor decodes and verifies the JWT
-    locally against JWKS and reads ``exp`` straight off the token —
-    ``userinfo_endpoint`` is consulted only as a fallback when local
-    validation fails. The IdP's *runtime* user state (disabled,
-    deleted, removed from a group) is therefore invisible to ClickHouse
-    until the JWT itself expires, because every cache-miss re-validation
-    just re-decodes the same JWT with the same answer.
-
-    Tests that assert "user is disabled at the IdP → cached token is
-    rejected after cache lifetime" need the userinfo path active, so
-    they pass ``include_jwks_uri=False`` to drop the JWKS URI from the
-    processor. ``resolveAndValidate`` then falls through to
-    ``userinfo_endpoint``, which Keycloak makes 401 for a disabled or
-    deleted user, surfacing the rejection ClickHouse-side.
-
-    Tests that don't depend on this distinction (e.g. fresh-token
-    membership-change scenarios) keep ``include_jwks_uri=True`` so the
-    suite still exercises the JWT-fast-path that's the production
-    default.
-    """
-    client = _provider_or_skip(self)
-    endpoints = client.OAuthProvider.openid_endpoints()
-    change_token_processors(
-        processor_name="keycloak",
-        processor_type="OpenID",
-        token_cache_lifetime=token_cache_lifetime,
-        userinfo_endpoint=endpoints.userinfo_endpoint,
-        token_introspection_endpoint=endpoints.token_introspection_endpoint,
-        jwks_uri=endpoints.jwks_uri if include_jwks_uri else None,
-        replace=True,
-    )
-    change_user_directories_config(
-        processor="keycloak",
-        common_roles=common_roles or ["general-role"],
-    )
 
 
 @TestScenario
@@ -84,13 +16,6 @@ def _configure_short_cache(
 def group_name_matches_clickhouse_role(self):
     """When an IdP group name matches a ClickHouse role, the user SHALL
     receive that role's privileges.
-
-    To make the assertion meaningful we use a probe (``SELECT FROM
-    system.roles``) that is granted **only** by the ``can-read`` role and
-    by nothing else in the test fixture — so the request fails if the
-    group→role mapping is silently broken. ``common_roles`` is left
-    empty for the same reason; otherwise a buggy mapping would still
-    pass via the catch-all role.
     """
     client = self.context.provider_client
 
@@ -117,12 +42,7 @@ def group_name_matches_clickhouse_role(self):
         )
 
     with And("a privilege NOT granted by 'can-read' is denied"):
-        body = access_clickhouse(
-            token=token,
-            status_code=500,
-            query="SELECT count() FROM system.users",
-        )
-        assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
+        assert_query_denied(token=token, query="SELECT count() FROM system.users")
 
 
 @TestScenario
@@ -132,13 +52,6 @@ def group_name_matches_clickhouse_role(self):
 def roles_filter_limits_groups(self):
     """Only IdP groups matching ``roles_filter`` SHALL be considered for
     role mapping; non-matching groups SHALL NOT contribute privileges.
-
-    ``demo`` is in both ``grafana-admins`` and ``can-read``. We pin the
-    filter to the former and probe two privileges, one granted by each
-    role, to prove only the matching group is mapped:
-
-    - ``SELECT FROM system.users`` (granted by ``grafana-admins``) → 200
-    - ``SELECT FROM system.roles`` (granted by ``can-read``) → denied
     """
     client = self.context.provider_client
 
@@ -162,12 +75,7 @@ def roles_filter_limits_groups(self):
         )
 
     with And("the privilege granted only by the filtered-out group is denied"):
-        body = access_clickhouse(
-            token=token,
-            status_code=500,
-            query="SELECT count() FROM system.roles",
-        )
-        assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
+        assert_query_denied(token=token, query="SELECT count() FROM system.roles")
 
 
 @TestScenario
@@ -177,53 +85,33 @@ def roles_filter_limits_groups(self):
 def roles_filter_excludes_user_groups(self):
     """A user whose groups don't match the roles_filter and who has no
     common_roles SHALL authenticate but not gain any role-bound privileges.
-
-    This is the inverse of ``roles_filter_limits_groups`` — proves the
-    filter is actually restrictive, not just permissive.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
     username = f"excluded_{uid}"
 
     with Given(f"I create a user '{username}' with no groups"):
-        try:
-            client.OAuthProvider.create_user(username=username, password="testpass123")
-        except UnsupportedByProvider as e:
-            skip(str(e))
+        provider_user(username=username)
 
-    try:
-        with And(
-            "I configure roles_filter so that *no* IdP group matches it "
-            "and no common_roles are granted"
-        ):
-            change_user_directories_config(
-                processor="keycloak",
-                roles_filter="^matches-nothing-$",
-            )
+    with And(
+        "I configure roles_filter so that *no* IdP group matches it "
+        "and no common_roles are granted"
+    ):
+        change_user_directories_config(
+            processor="keycloak",
+            roles_filter="^matches-nothing-$",
+        )
 
-        with And(f"I get a token for '{username}'"):
-            token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with And(f"I get a token for '{username}'"):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then("ClickHouse authenticates the user"):
-            access_clickhouse(token=token, status_code=200)
+    with Then("ClickHouse authenticates the user"):
+        access_clickhouse(token=token, status_code=200)
 
-        with And(
-            "the user has no privileges (cannot read system tables a guest can't)"
-        ):
-            body = access_clickhouse(
-                token=token,
-                status_code=500,
-                query="SELECT * FROM system.users LIMIT 1",
-            )
-            assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
-    finally:
-        with Finally(f"I clean up '{username}'"):
-            try:
-                client.OAuthProvider.delete_user(username=username)
-            except UnsupportedByProvider:
-                pass
+    with And("the user has no privileges (cannot read system tables a guest can't)"):
+        assert_query_denied(token=token, query="SELECT * FROM system.users LIMIT 1")
 
 
 @TestScenario
@@ -231,56 +119,34 @@ def roles_filter_excludes_user_groups(self):
     RQ_SRS_042_OAuth_Keycloak_Authentication_UserRoles_NoGroups("1.0"),
 )
 def user_with_no_groups_gets_common_roles(self):
-    """A user with no groups SHALL receive only ``common_roles``.
-
-    The probe queries discriminate the actual role rather than just
-    proving authentication: ``SELECT FROM default.test_table_1`` is
-    granted by ``general-role`` and asserts the common role was applied;
-    ``SELECT FROM system.users`` is *not* granted by any role this user
-    should have, asserting nothing extra leaked in.
-    """
+    """A user with no groups SHALL receive only ``common_roles``."""
     client = self.context.provider_client
     uid = getuid()[:8]
     username = f"nogroups_{uid}"
 
     with Given(f"I create a user '{username}' with no group memberships"):
-        try:
-            client.OAuthProvider.create_user(username=username, password="testpass123")
-        except UnsupportedByProvider as e:
-            skip(str(e))
+        provider_user(username=username)
 
-    try:
-        with And("I configure user directories with common_roles=['general-role']"):
-            change_user_directories_config(
-                processor="keycloak",
-                common_roles=["general-role"],
-            )
+    with And("I configure user directories with common_roles=['general-role']"):
+        change_user_directories_config(
+            processor="keycloak",
+            common_roles=["general-role"],
+        )
 
-        with And(f"I get a token for '{username}'"):
-            token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with And(f"I get a token for '{username}'"):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then("the privilege granted by 'general-role' is exercisable"):
-            access_clickhouse(
-                token=token,
-                status_code=200,
-                query="SELECT count() FROM default.test_table_1",
-            )
+    with Then("the privilege granted by 'general-role' is exercisable"):
+        access_clickhouse(
+            token=token,
+            status_code=200,
+            query="SELECT count() FROM default.test_table_1",
+        )
 
-        with And("a privilege NOT granted by 'general-role' is denied"):
-            body = access_clickhouse(
-                token=token,
-                status_code=500,
-                query="SELECT count() FROM system.users",
-            )
-            assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
-    finally:
-        with Finally(f"I clean up user '{username}'"):
-            try:
-                client.OAuthProvider.delete_user(username=username)
-            except UnsupportedByProvider:
-                pass
+    with And("a privilege NOT granted by 'general-role' is denied"):
+        assert_query_denied(token=token, query="SELECT count() FROM system.users")
 
 
 @TestScenario
@@ -291,52 +157,31 @@ def user_with_no_groups_gets_common_roles(self):
     ),
 )
 def user_with_no_groups_and_no_common_roles(self):
-    """A user with no groups and no ``common_roles`` SHALL authenticate but have no privileges.
-
-    Doubles as the regression for SRS 6.2.1.2.6 — *"the roles section
-    is not defined in the token section of user_directories"*: no
-    privileges to access resources is the spec's "SHALL not allow …
-    to authenticate and access resources" outcome on a token user
-    directory whose ``<common_roles>`` is omitted and whose user has
-    no IdP-side group mappings.
+    """A user with no groups and no ``common_roles`` SHALL authenticate
+    but have no privileges.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
     username = f"norole_{uid}"
 
     with Given(f"I create a user '{username}' with no group memberships"):
-        try:
-            client.OAuthProvider.create_user(username=username, password="testpass123")
-        except UnsupportedByProvider as e:
-            skip(str(e))
+        provider_user(username=username)
 
-    try:
-        with And("I configure user directories with empty common_roles"):
-            change_user_directories_config(
-                processor="keycloak",
-            )
+    with And("I configure user directories with empty common_roles"):
+        change_user_directories_config(
+            processor="keycloak",
+        )
 
-        with And(f"I get a token for '{username}'"):
-            token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with And(f"I get a token for '{username}'"):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then("ClickHouse authenticates the user"):
-            access_clickhouse(token=token, status_code=200)
+    with Then("ClickHouse authenticates the user"):
+        access_clickhouse(token=token, status_code=200)
 
-        with And("but the user has no privileges"):
-            body = access_clickhouse(
-                token=token,
-                status_code=500,
-                query="SELECT * FROM system.users LIMIT 1",
-            )
-            assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
-    finally:
-        with Finally(f"I clean up user '{username}'"):
-            try:
-                client.OAuthProvider.delete_user(username=username)
-            except UnsupportedByProvider:
-                pass
+    with And("but the user has no privileges"):
+        assert_query_denied(token=token, query="SELECT * FROM system.users LIMIT 1")
 
 
 @TestScenario
@@ -346,13 +191,6 @@ def user_with_no_groups_and_no_common_roles(self):
 def user_in_multiple_groups(self):
     """A user in multiple matching groups SHALL receive the union of all
     mapped role privileges.
-
-    To prove union (rather than just one of the roles being mapped), we
-    exercise a privilege uniquely granted by each group's role with no
-    ``common_roles`` to provide a fallback:
-
-    - ``grafana-admins`` → ``SELECT ON system.users``
-    - ``can-read``       → ``SELECT ON system.roles``
     """
     client = self.context.provider_client
 
@@ -390,31 +228,12 @@ def user_in_multiple_groups(self):
     RQ_SRS_042_OAuth_Keycloak_Actions_UserRemovedFromGroup("1.0"),
 )
 def dynamic_group_membership_update(self):
-    """Adding / removing a user from a group SHALL change their effective
+    """Adding or removing a user from a group SHALL change their effective
     role set on the next token issued after the change.
 
-    For JWT-issuing IdPs (Keycloak) the ``groups`` claim lives **inside**
-    the signed token (see the ``groups_claim`` doc paragraph: "this claim
-    will be looked up in the token itself in case token is a valid JWT").
-    Once a token is signed, its claim set is frozen — no amount of cache
-    expiry on the ClickHouse side will retroactively rewrite the groups
-    encoded in an already-issued JWT. The user-visible contract is
-    therefore "the **next** token issued after a membership change
-    reflects the new groups", not "the same token flips inside the cache
-    window".
-
-    To pin both directions of that contract we:
-
-    1. Get a token while the user is **not** in ``grafana-admins`` and
-       confirm the privileged probe (``SELECT FROM system.users``,
-       granted only by ``grafana-admins`` in our fixture) is denied.
-    2. Add the user to ``grafana-admins``, get a **fresh** token, and
-       confirm the privileged probe now succeeds.
-    3. Remove the user from ``grafana-admins``, get another **fresh**
-       token, and confirm the privileged probe is denied again. The
-       previously-cached "admin" token is also exercised to show the
-       cache itself does not leak across the issued-token boundary
-       (it is allowed to keep working until it naturally expires).
+    For JWT-issuing IdPs, the ``groups`` claim is frozen at token signing
+    time, so the contract is "the next token reflects the new groups"
+    rather than "the same token updates via cache expiry".
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -423,102 +242,83 @@ def dynamic_group_membership_update(self):
     cache_lifetime = 3
     privileged_query = "SELECT count() FROM system.users"
 
-    def assert_denied(token):
-        body = access_clickhouse(token=token, status_code=500, query=privileged_query)
-        assert "ACCESS_DENIED" in body or "Not enough privileges" in body, error()
-
     with Given(f"I create user '{username}'"):
+        provider_user(username=username)
+
+    with And("I look up the created user's id"):
         try:
-            user_id = client.OAuthProvider.create_user(
-                username=username, password="testpass123"
-            )
+            user = client.OAuthProvider.get_user_by_username(username=username)
         except UnsupportedByProvider as e:
             skip(str(e))
+        assert user is not None, error()
+        user_id = user["id"]
 
-    try:
-        with And("I configure a short token-cache lifetime"):
-            _configure_short_cache(
-                self,
-                token_cache_lifetime=cache_lifetime,
-                common_roles=["general-role"],
-            )
+    with And("I configure a short token-cache lifetime"):
+        configure_openid_token_processor(
+            token_cache_lifetime=cache_lifetime,
+            common_roles=["general-role"],
+        )
 
-        with And("I look up the existing 'grafana-admins' group"):
-            try:
-                group = client.OAuthProvider.get_group_by_name(
-                    group_name="grafana-admins"
-                )
-            except UnsupportedByProvider as e:
-                skip(str(e))
-            assert group is not None, error()
-            group_id = group["id"]
+    with And("I look up the existing 'grafana-admins' group"):
+        try:
+            group = client.OAuthProvider.get_group_by_name(group_name="grafana-admins")
+        except UnsupportedByProvider as e:
+            skip(str(e))
+        assert group is not None, error()
+        group_id = group["id"]
 
-        with When("I get a token before adding the user to any group"):
-            token_before = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with When("I get a token before adding the user to any group"):
+        token_before = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then(
-            "the privileged query is denied "
-            "(user has only common_roles → general-role)"
-        ):
-            assert_denied(token_before)
+    with Then(
+        "the privileged query is denied " "(user has only common_roles → general-role)"
+    ):
+        assert_query_denied(token=token_before, query=privileged_query)
 
-        with When(f"I add '{username}' to 'grafana-admins'"):
-            client.OAuthProvider.assign_user_to_group(
-                user_id=user_id, group_id=group_id
-            )
+    with When(f"I add '{username}' to 'grafana-admins'"):
+        client.OAuthProvider.assign_user_to_group(user_id=user_id, group_id=group_id)
 
-        with And(
-            "I get a fresh token after the group assignment "
-            "(JWT groups claim reflects current membership at issue time)"
-        ):
-            token_admin = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with And(
+        "I get a fresh token after the group assignment "
+        "(JWT groups claim reflects current membership at issue time)"
+    ):
+        token_admin = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then(
-            "the privileged query succeeds with the new token "
-            "(user is now in grafana-admins)"
-        ):
-            access_clickhouse(
-                token=token_admin, status_code=200, query=privileged_query
-            )
+    with Then(
+        "the privileged query succeeds with the new token "
+        "(user is now in grafana-admins)"
+    ):
+        access_clickhouse(token=token_admin, status_code=200, query=privileged_query)
 
-        with When(f"I remove '{username}' from 'grafana-admins'"):
-            client.OAuthProvider.remove_user_from_group(
-                user_id=user_id, group_id=group_id
-            )
+    with When(f"I remove '{username}' from 'grafana-admins'"):
+        client.OAuthProvider.remove_user_from_group(user_id=user_id, group_id=group_id)
 
-        with And(
-            "I wait past the token cache lifetime "
-            f"({cache_lifetime + 1}s) so the cached entry for "
-            "token_admin would be re-validated on use"
-        ):
-            time.sleep(cache_lifetime + 1)
+    with And(
+        "I wait past the token cache lifetime "
+        f"({cache_lifetime + 1}s) so the cached entry for "
+        "token_admin would be re-validated on use"
+    ):
+        time.sleep(cache_lifetime + 1)
 
-        with And("I get a fresh token after the group removal"):
-            token_after = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123"
-            ).access_token
+    with And("I get a fresh token after the group removal"):
+        token_after = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123"
+        ).access_token
 
-        with Then(
-            "the fresh token sees the membership change: "
-            "the privileged query is denied"
-        ):
-            assert_denied(token_after)
+    with Then(
+        "the fresh token sees the membership change: " "the privileged query is denied"
+    ):
+        assert_query_denied(token=token_after, query=privileged_query)
 
-        with And(
-            "basic auth still works on the fresh token "
-            "(the user still exists at the IdP)"
-        ):
-            access_clickhouse(token=token_after, status_code=200)
-    finally:
-        with Finally("I clean up"):
-            try:
-                client.OAuthProvider.delete_user(username=username)
-            except UnsupportedByProvider:
-                pass
+    with And(
+        "basic auth still works on the fresh token "
+        "(the user still exists at the IdP)"
+    ):
+        access_clickhouse(token=token_after, status_code=200)
 
 
 @TestScenario
@@ -528,22 +328,6 @@ def dynamic_group_membership_update(self):
 def disabled_user_rejected_after_cache(self):
     """A disabled IdP user's previously-cached token SHALL be rejected
     after the token cache expires.
-
-    Real test of the cache-eviction path:
-
-    1. Configure ``token_cache_lifetime=3`` **without** ``jwks_uri`` so
-       cache misses re-validate via ``userinfo_endpoint`` rather than
-       re-decoding the JWT locally (see ``_configure_short_cache``
-       docstring for why ``jwks_uri`` would mask the IdP user state).
-    2. User authenticates with a valid token; first request populates the
-       cache.
-    3. Disable the user at the IdP.
-    4. Wait > cache lifetime so ClickHouse must re-validate via
-       ``userinfo`` / ``introspection``.
-    5. Same cached token MUST now be rejected. The exact rejection code
-       depends on whether re-validation surfaces as ``AUTHENTICATION_FAILED``
-       (HTTP 403) or as a ``token_verification_exception`` (HTTP 500),
-       both of which are valid; ``assert_token_rejected`` accepts either.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -551,57 +335,37 @@ def disabled_user_rejected_after_cache(self):
     cache_lifetime = 3
 
     with Given(f"I create user '{username}'"):
+        provider_user(username=username)
+
+    with And(
+        "I configure a short token-cache lifetime so cache misses "
+        "re-validate against userinfo (which Keycloak makes 401 for "
+        "disabled users)"
+    ):
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
+
+    with And(
+        "I get a token while the user is enabled "
+        "(scope=openid is required for Keycloak's userinfo_endpoint)"
+    ):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123", scope="openid"
+        ).access_token
+
+    with Then("first request succeeds (populates the cache)"):
+        access_clickhouse(token=token, status_code=200)
+
+    with When(f"I disable user '{username}' at the IdP"):
         try:
-            client.OAuthProvider.create_user(username=username, password="testpass123")
+            client.OAuthProvider.disable_user(username=username)
         except UnsupportedByProvider as e:
             skip(str(e))
 
-    try:
-        with And(
-            "I configure a short token-cache lifetime with no jwks_uri so "
-            "cache misses re-validate against userinfo (which Keycloak "
-            "makes 401 for disabled users) rather than re-decoding the "
-            "JWT locally"
-        ):
-            _configure_short_cache(
-                self,
-                token_cache_lifetime=cache_lifetime,
-                include_jwks_uri=False,
-            )
+    with And(f"I wait past the cache lifetime ({cache_lifetime + 1}s)"):
+        time.sleep(cache_lifetime + 1)
 
-        with And(
-            "I get a token while the user is enabled "
-            "(scope=openid is required for Keycloak's userinfo_endpoint to "
-            "honor the token; without jwks_uri we depend on userinfo)"
-        ):
-            token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123", scope="openid"
-            ).access_token
-
-        with Then("first request succeeds (populates the cache)"):
-            access_clickhouse(token=token, status_code=200)
-
-        with When(f"I disable user '{username}' at the IdP"):
-            try:
-                client.OAuthProvider.disable_user(username=username)
-            except UnsupportedByProvider as e:
-                skip(str(e))
-
-        with And(f"I wait past the cache lifetime ({cache_lifetime + 1}s)"):
-            time.sleep(cache_lifetime + 1)
-
-        with Then("the cached token is rejected on the next request"):
-            assert_token_rejected(token=token)
-    finally:
-        with Finally("I clean up"):
-            try:
-                client.OAuthProvider.enable_user(username=username)
-            except UnsupportedByProvider:
-                pass
-            try:
-                client.OAuthProvider.delete_user(username=username)
-            except UnsupportedByProvider:
-                pass
+    with Then("the cached token is rejected on the next request"):
+        assert_token_rejected(token=token)
 
 
 @TestScenario
@@ -611,17 +375,6 @@ def disabled_user_rejected_after_cache(self):
 def deleted_user_rejected_after_cache(self):
     """A deleted IdP user's cached token SHALL be rejected after cache
     expiry.
-
-    Replaces the old ``deleted_user_cannot_get_token`` which only proved
-    Keycloak rejects the token-issuance request — that's a Keycloak
-    invariant, not a ClickHouse one. This variant proves ClickHouse's
-    cache-eviction path observes the deletion.
-
-    As with ``disabled_user_rejected_after_cache``, the processor is
-    configured **without** ``jwks_uri`` so cache misses re-validate via
-    ``userinfo_endpoint`` (which Keycloak makes 401 for deleted users)
-    instead of re-decoding the still-valid JWT locally; see
-    ``_configure_short_cache`` for the rationale.
     """
     client = self.context.provider_client
     uid = getuid()[:8]
@@ -629,55 +382,36 @@ def deleted_user_rejected_after_cache(self):
     cache_lifetime = 3
 
     with Given(f"I create user '{username}'"):
+        provider_user(username=username)
+
+    with And(
+        "I configure a short token-cache lifetime so cache misses "
+        "re-validate against userinfo (Keycloak rejects deleted users there)"
+    ):
+        configure_openid_token_processor(token_cache_lifetime=cache_lifetime)
+
+    with And(
+        f"I get a token for '{username}' "
+        "(scope=openid is required for Keycloak's userinfo_endpoint)"
+    ):
+        token = client.OAuthProvider.get_oauth_token(
+            username=username, password="testpass123", scope="openid"
+        ).access_token
+
+    with Then("first request succeeds"):
+        access_clickhouse(token=token, status_code=200)
+
+    with When(f"I delete '{username}' at the IdP"):
         try:
-            client.OAuthProvider.create_user(username=username, password="testpass123")
+            client.OAuthProvider.delete_user(username=username)
         except UnsupportedByProvider as e:
             skip(str(e))
 
-    deleted = False
-    try:
-        with And(
-            "I configure a short token-cache lifetime with no jwks_uri so "
-            "cache misses re-validate against userinfo (Keycloak rejects "
-            "deleted users there) rather than re-decoding the JWT locally"
-        ):
-            _configure_short_cache(
-                self,
-                token_cache_lifetime=cache_lifetime,
-                include_jwks_uri=False,
-            )
+    with And(f"I wait past the cache lifetime ({cache_lifetime + 1}s)"):
+        time.sleep(cache_lifetime + 1)
 
-        with And(
-            f"I get a token for '{username}' "
-            "(scope=openid is required for Keycloak's userinfo_endpoint to "
-            "honor the token; without jwks_uri we depend on userinfo)"
-        ):
-            token = client.OAuthProvider.get_oauth_token(
-                username=username, password="testpass123", scope="openid"
-            ).access_token
-
-        with Then("first request succeeds"):
-            access_clickhouse(token=token, status_code=200)
-
-        with When(f"I delete '{username}' at the IdP"):
-            try:
-                client.OAuthProvider.delete_user(username=username)
-                deleted = True
-            except UnsupportedByProvider as e:
-                skip(str(e))
-
-        with And(f"I wait past the cache lifetime ({cache_lifetime + 1}s)"):
-            time.sleep(cache_lifetime + 1)
-
-        with Then("the cached token is rejected on the next request"):
-            assert_token_rejected(token=token)
-    finally:
-        if not deleted:
-            with Finally("I clean up"):
-                try:
-                    client.OAuthProvider.delete_user(username=username)
-                except UnsupportedByProvider:
-                    pass
+    with Then("the cached token is rejected on the next request"):
+        assert_token_rejected(token=token)
 
 
 @TestFeature
@@ -688,7 +422,7 @@ def deleted_user_rejected_after_cache(self):
     RQ_SRS_042_OAuth_Keycloak_Actions_UserDeleted("1.0"),
 )
 def feature(self):
-    """Group-based role mapping and identity-management actions."""
+    """Group-based role-mapping and identity-management tests."""
     Scenario(run=group_name_matches_clickhouse_role)
     Scenario(run=roles_filter_limits_groups)
     Scenario(run=roles_filter_excludes_user_groups)

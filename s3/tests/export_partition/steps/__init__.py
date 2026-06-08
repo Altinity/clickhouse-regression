@@ -25,6 +25,7 @@ from .containers import (
 from .export_operations import (
     get_partitions,
     export_partitions,
+    export_partition_all,
     kill_export_partition,
 )
 
@@ -55,9 +56,6 @@ from .export_fields import (
     get_parts,
     get_parts_count,
     get_parts_to_do,
-    get_exception_replica,
-    get_last_exception,
-    get_exception_part,
     get_exception_count,
 )
 
@@ -77,6 +75,7 @@ from .tables import (
     create_table_with_json_column_with_hints,
     create_table_with_nested_column,
     create_table_with_complex_nested_column,
+    create_table_with_nested_array_column,
 )
 
 # Verification steps
@@ -120,6 +119,7 @@ __all__ = [
     # Export operations
     "get_partitions",
     "export_partitions",
+    "export_partition_all",
     "kill_export_partition",
     # Export status
     "get_export_events",
@@ -144,9 +144,6 @@ __all__ = [
     "get_parts",
     "get_parts_count",
     "get_parts_to_do",
-    "get_exception_replica",
-    "get_last_exception",
-    "get_exception_part",
     "get_exception_count",
     # Tables
     "create_distributed_table",
@@ -163,6 +160,7 @@ __all__ = [
     "create_table_with_json_column_with_hints",
     "create_table_with_nested_column",
     "create_table_with_complex_nested_column",
+    "create_table_with_nested_array_column",
     # Verification
     "source_matches_destination",
     "export_and_verify_columns",

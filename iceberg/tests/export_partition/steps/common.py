@@ -122,6 +122,35 @@ def get_partition_ids(self, table_name, node=None, active_only=True):
 
 
 @TestStep(When)
+def get_active_part_name(self, table_name, partition_id=None, node=None):
+    """Return one active part ``name`` for ``table_name``.
+
+    When ``partition_id`` is set, restrict to parts in that partition
+    (the form used by ``EXPORT PART '…'`` on a partitioned table).
+    """
+    if node is None:
+        node = self.context.node
+
+    where = [
+        f"table = '{table_name}'",
+        "database = currentDatabase()",
+        "active",
+    ]
+    if partition_id is not None:
+        where.append(f"partition_id = '{partition_id}'")
+    output = node.query(
+        "SELECT name FROM system.parts WHERE "
+        + " AND ".join(where)
+        + " ORDER BY name LIMIT 1"
+    ).output.strip()
+    assert output, error(
+        f"No active part found for table {table_name}"
+        + (f" partition_id={partition_id!r}" if partition_id else "")
+    )
+    return output
+
+
+@TestStep(When)
 def first_partition_id(self, table_name, node=None):
     """Return a single partition_id for the source table.
 

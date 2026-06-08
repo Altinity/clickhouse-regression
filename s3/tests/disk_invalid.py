@@ -73,6 +73,8 @@ def empty_endpoint(self):
 
     if self.context.storage == "azure":
         message = "DB::Exception: Blob Storage URL is not valid"
+    elif check_clickhouse_version(">=26.5")(self):
+        message = "DB::Exception: Empty protocol in the URL."
     else:
         message = "DB::Exception: Host is empty in S3 URI"
 

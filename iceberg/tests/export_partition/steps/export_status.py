@@ -3,14 +3,9 @@
 These wrap ``system.replicated_partition_exports``, ``system.events`` and
 ``system.part_log`` so tests do not need to repeat the same polling logic.
 
-Adapted from ``s3/tests/export_partition/steps/export_status.py`` with two
-differences:
-
-* ``prefer_remote_information`` is used when available (the Iceberg PR adds a
-  dedicated setting so replicas can report a consistent status regardless of
-  which node actually committed the manifest).
-* The default timeouts are slightly higher because Iceberg commits involve an
-  extra HTTP / catalog round-trip.
+Adapted from ``s3/tests/export_partition/steps/export_status.py``. Default
+timeouts are slightly higher because Iceberg commits involve an extra HTTP /
+catalog round-trip.
 """
 
 import json
@@ -21,16 +16,6 @@ from testflows.asserts import error
 from iceberg.tests.export_partition.steps.iceberg_destination import (
     as_system_destination_table,
 )
-
-
-def _prefer_remote_settings():
-    """Setting applied to queries against ``system.replicated_partition_exports``
-    so that replicas which did not drive the export still return a meaningful
-    status.
-
-    Returns a list of ``(key, value)`` pairs suitable for ``node.query``.
-    """
-    return [("export_merge_tree_partition_system_table_prefer_remote_information", 1)]
 
 
 def _destination_where_pieces(destination=None, destination_table=None):
@@ -98,7 +83,6 @@ def get_export_row(
     destination_table=None,
     columns="status",
     node=None,
-    prefer_remote=True,
 ):
     """Return the requested columns for a single export row.
 
@@ -121,11 +105,9 @@ def get_export_row(
     where.extend(_destination_where_pieces(destination, destination_table))
     where_clause = " AND ".join(where)
 
-    settings = _prefer_remote_settings() if prefer_remote else []
     output = node.query(
         f"SELECT {columns} FROM system.replicated_partition_exports "
         f"WHERE {where_clause}",
-        settings=settings,
     ).output.strip()
 
     return output if output else None
@@ -237,7 +219,8 @@ def wait_for_exports_to_settle(
     at parse/schedule time but still leave one of the EXPORT entries
     running in the background (e.g. the
     duplicate-EXPORT-inside-one-ALTER scenario in ``concurrent_writes.py``
-    - the client sees ``BAD_ARGUMENTS`` for the second entry while the
+    - the client sees ``EXPORT_PARTITION_ALREADY_EXPORTED`` for the second
+      entry while the
     first entry's commit is still in flight, which races PyIceberg against
     the snapshot being written and produces a "snapshots=0, rows=3"
     inconsistency on the next assertion).
@@ -259,7 +242,6 @@ def wait_for_exports_to_settle(
     where.extend(_destination_where_pieces(destination, destination_table))
     where_clause = " AND ".join(where)
 
-    settings = _prefer_remote_settings()
     last_pending = None
     for attempt in retries(timeout=timeout, delay=delay):
         with attempt:
@@ -267,7 +249,6 @@ def wait_for_exports_to_settle(
                 f"SELECT count() FROM system.replicated_partition_exports "
                 f"WHERE {where_clause} "
                 f"  AND status NOT IN ('COMPLETED', 'FAILED', 'KILLED')",
-                settings=settings,
             ).output.strip()
             assert last_pending == "0", error(
                 f"Export rows for source_table='{source_table}' "

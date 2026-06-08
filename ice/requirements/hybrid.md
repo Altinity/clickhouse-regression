@@ -1,11 +1,3 @@
----
-description: 'Hybrid unions multiple data sources behind per-segment predicates so queries behave like a single table while data is migrated or tiered.'
-slug: /engines/table-engines/special/hybrid
-title: 'Hybrid Table Engine'
-sidebar_label: 'Hybrid'
-sidebar_position: 11
----
-
 # Hybrid table engine
 
 The Hybrid table engine builds on top of the [Distributed](./distributed.md) table engine. It allows exposing several data sources as one logical table and assigning every source its own predicate. This keeps all of the Distributed optimisations (remote aggregation, `skip_unused_shards`, global JOIN pushdown, and so on) while copying or migrating data across clusters, storage types, or formats.

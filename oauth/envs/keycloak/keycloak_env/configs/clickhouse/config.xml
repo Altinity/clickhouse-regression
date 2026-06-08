@@ -5,11 +5,11 @@
 <clickhouse>
     <token_processors>
         <keycloak>
-            <type>OpenID</type>
-            <userinfo_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/userinfo</userinfo_endpoint>
-            <token_introspection_endpoint>http://keycloak:8080/realms/grafana/protocol/openid-connect/token/introspect</token_introspection_endpoint>
+            <type>jwt_dynamic_jwks</type>
             <jwks_uri>http://keycloak:8080/realms/grafana/protocol/openid-connect/certs</jwks_uri>
-            <token_cache_lifetime>60</token_cache_lifetime>
+            <expected_issuer>http://localhost:8080/realms/grafana</expected_issuer>
+            <username_claim>preferred_username</username_claim>
+            <verifier_leeway>60</verifier_leeway>
         </keycloak>
     </token_processors>
     <user_directories>

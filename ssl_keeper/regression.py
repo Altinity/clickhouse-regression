@@ -8,7 +8,11 @@ append_path(sys.path, "..")
 
 from ssl_keeper.helpers.cluster import Cluster
 from helpers.argparser import argparser, CaptureClusterArgs
-from helpers.common import check_clickhouse_version, experimental_analyzer
+from helpers.common import (
+    check_clickhouse_version,
+    check_is_fips_clickhouse_build,
+    experimental_analyzer,
+)
 
 
 xfails = {
@@ -27,11 +31,20 @@ xfails = {
 }
 xflags = {}
 
+ffails = {
+    ":/fips 140-3/doc config": (
+        Skip,
+        "fips doc configs apply only to FIPS builds",
+        lambda test: not check_is_fips_clickhouse_build(test),
+    ),
+}
+
 
 @TestModule
 @ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
+@FFails(ffails)
 @Name("ssl keeper")
 @CaptureClusterArgs
 def regression(

@@ -1,21 +1,18 @@
-"""Tests for the device-authorization (``--login=device``) flow."""
-
-import time
-
 from testflows.core import *
-from testflows.asserts import error
 
 from oauth.requirements.requirements import (
     RQ_SRS_042_OAuth_Client_Login_Cache_Reuse,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication,
+    RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_NonJSONResponse,
     RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint,
 )
 from oauth.tests.steps.client_login import (
     DEFAULT_CREDS_PATH,
     approve_keycloak_device_user_code_via_bash_tools,
+    assert_client_rejected,
+    assert_device_user_code_present,
     assert_no_segfault,
-    extract_device_user_code_from_client_output,
     keycloak_enable_optional_scope,
     kill_clickhouse_oauth_background_if_alive,
     parse_background_client_exit_code,
@@ -24,19 +21,10 @@ from oauth.tests.steps.client_login import (
     run_clickhouse_client,
     start_clickhouse_oauth_client_background,
     wait_clickhouse_oauth_background_finished,
+    wait_for_device_user_code,
+    write_keycloak_device_credentials,
     write_oauth_credentials_file,
 )
-
-
-def _standard_keycloak_device_creds():
-    write_oauth_credentials_file(
-        client_id="grafana-client",
-        client_secret="grafana-secret",
-        token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
-        device_authorization_uri=(
-            "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
-        ),
-    )
 
 
 @TestScenario
@@ -46,7 +34,7 @@ def _standard_keycloak_device_creds():
 )
 @Name("device flow succeeds after Keycloak approves the user code")
 def device_flow_succeeds_when_keycloak_approves(self):
-    """Client obtains tokens via device grant and runs the query."""
+    """Device grant SHALL succeed after Keycloak approves the user code."""
 
     try:
         with Given("I reset the client state"):
@@ -56,7 +44,7 @@ def device_flow_succeeds_when_keycloak_approves(self):
             keycloak_enable_optional_scope(scope_name="offline_access")
 
         with And("I write a credentials file pointing at the Keycloak realm"):
-            _standard_keycloak_device_creds()
+            write_keycloak_device_credentials()
 
         with When("I start clickhouse-client with device login in the background"):
             start_clickhouse_oauth_client_background(
@@ -71,18 +59,8 @@ def device_flow_succeeds_when_keycloak_approves(self):
                 wall_timeout=120,
             )
 
-        user_code = None
         with And("I wait until the log contains a device user_code"):
-            for _ in range(50):
-                log_snippet = read_clickhouse_oauth_background_log()
-                user_code = extract_device_user_code_from_client_output(log_snippet)
-                if user_code:
-                    break
-                time.sleep(1)
-            assert user_code is not None, (
-                "Timed out waiting for device user_code in clickhouse-client output:\n"
-                f"{read_clickhouse_oauth_background_log()}"
-            )
+            user_code = wait_for_device_user_code()
 
         with And("I approve the device code through Keycloak"):
             approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
@@ -106,13 +84,13 @@ def device_flow_succeeds_when_keycloak_approves(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow prints verification URI and user code")
 def device_flow_prints_user_code_and_verification_uri(self):
-    """Client surfaces device authorization details before polling."""
+    """Device flow SHALL print verification URI and user code before polling."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with device login and never approve"):
         exit_code, output = run_clickhouse_client(
@@ -129,22 +107,19 @@ def device_flow_prints_user_code_and_verification_uri(self):
         )
 
     with Then("the output contains an http URL and a user code"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "http://" in ol or "https://" in ol
-        ), f"Expected a verification URL in output:\n---\n{output}\n---"
-        assert (
-            extract_device_user_code_from_client_output(output) is not None
-        ), f"Expected a device user_code in output:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("http://", "https://"),
+        )
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow fails cleanly when device_authorization_uri is unreachable")
 def device_flow_unreachable_device_authorization_uri(self):
-    """Unreachable ``device_authorization_uri`` yields a network error, not a crash."""
+    """Unreachable ``device_authorization_uri`` SHALL fail with a network error, not a crash."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -171,16 +146,37 @@ def device_flow_unreachable_device_authorization_uri(self):
             expect_error=True,
         )
 
-    with Then("the client fails without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+    with Then(
+        "the client surfaces a network error and does not crash",
+        description="""
+            Acceptable network-failure shapes from Poco / glibc / curl-style
+            diagnostics — pinning at least one is required so the scenario
+            cannot pass on an unrelated failure mode (e.g. arg-parse error).
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "could not resolve",
+                "name or service",
+                "name resolution",
+                "no such host",
+                "host not found",
+                "connection refused",
+                "network",
+                "unreachable",
+                "timed out",
+                "timeout",
+            ),
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow fails cleanly when device_authorization_uri returns 404")
 def device_flow_device_authorization_endpoint_404(self):
-    """404 from the device authorization endpoint is handled without stack traces."""
+    """404 from the device endpoint SHALL exit cleanly without a stack trace."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -211,16 +207,14 @@ def device_flow_device_authorization_endpoint_404(self):
         )
 
     with Then("the client exits with an error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        assert "Stack trace:" not in output, error()
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow rejects unknown client_id at Keycloak")
 def device_flow_unknown_client_id(self):
-    """Wrong ``client_id`` surfaces an OAuth error from the device endpoint."""
+    """Unknown ``client_id`` SHALL surface an OAuth error without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -250,30 +244,39 @@ def device_flow_unknown_client_id(self):
         )
 
     with Then("the client reports failure without crashing"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "client" in ol
-            or "unauthorized" in ol
-            or "invalid" in ol
-            or "bad_arguments" in ol
-            or "authentication_failed" in ol
-        ), f"Expected OAuth client diagnostic, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "client",
+                "unauthorized",
+                "invalid",
+                "bad_arguments",
+                "authentication_failed",
+            ),
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow rejects wrong client_secret at Keycloak")
 def device_flow_wrong_client_secret(self):
-    """Wrong ``client_secret`` fails device authorization cleanly."""
+    """Wrong ``client_secret`` SHALL fail device authorization without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
-    with And("I write a credentials file with a wrong secret"):
+    with And(
+        "I write a credentials file with a wrong secret",
+        description="""
+            ``grafana-client`` is a public client in the realm export, so
+            Keycloak ignores ``client_secret`` for it entirely. Use the
+            confidential client ``grafana-client-confidential`` so the wrong
+            secret actually trips Keycloak's authentication check.
+        """,
+    ):
         write_oauth_credentials_file(
-            client_id="grafana-client",
+            client_id="grafana-client-confidential",
             client_secret="wrong-secret-value",
             token_uri="http://keycloak:8080/realms/grafana/protocol/openid-connect/token",
             device_authorization_uri=(
@@ -295,22 +298,151 @@ def device_flow_wrong_client_secret(self):
             expect_error=True,
         )
 
-    with Then("the client exits with an error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+    with Then(
+        "the client exits with an OAuth invalid-client diagnostic",
+        description="""
+            Keycloak responds 401 with {"error":"invalid_client"} when the
+            device endpoint receives a wrong client_secret for a confidential
+            client. Pin at least one of the OAuth-spec failure markers so the
+            scenario can't silently pass on, say, a network error.
+        """,
+    ):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "invalid_client",
+                "unauthorized",
+                "401",
+                "client_secret",
+                "authentication_failed",
+            ),
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
+@Name("device flow succeeds with confidential client secret")
+def device_flow_succeeds_with_confidential_client(self):
+    """Confidential client with correct secret SHALL complete the device grant."""
+
+    try:
+        with Given("I reset the client state"):
+            reset_client_state()
+
+        with And("offline_access scope is enabled for the confidential client"):
+            keycloak_enable_optional_scope(
+                scope_name="offline_access",
+                client_id="grafana-client-confidential",
+            )
+
+        with And("I write a credentials file with the confidential client's secret"):
+            write_oauth_credentials_file(
+                client_id="grafana-client-confidential",
+                client_secret="grafana-confidential-secret",
+                token_uri=(
+                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
+                ),
+                device_authorization_uri=(
+                    "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+                ),
+            )
+
+        with When("I start clickhouse-client with device login in the background"):
+            start_clickhouse_oauth_client_background(
+                args=[
+                    "--host",
+                    "clickhouse1",
+                    "--login=device",
+                    "--oauth-credentials",
+                    DEFAULT_CREDS_PATH,
+                ],
+                query="SELECT currentUser()",
+                wall_timeout=120,
+            )
+
+        with And("I wait until the log contains a device user_code"):
+            user_code = wait_for_device_user_code()
+
+        with And("I approve the device code through Keycloak"):
+            approve_keycloak_device_user_code_via_bash_tools(user_code=user_code)
+
+        with Then("the background client finishes successfully"):
+            wait_clickhouse_oauth_background_finished(timeout_sec=90)
+            full_log = read_clickhouse_oauth_background_log()
+            ec = parse_background_client_exit_code(full_log)
+            assert ec == 0, (
+                f"Expected exit code 0 after device approval with confidential "
+                f"client, got {ec!r}:\n---\n{full_log}\n---"
+            )
+            assert_no_segfault(output=full_log, exit_code=ec)
+
+    finally:
+        with Finally("I stop any stray background client"):
+            kill_clickhouse_oauth_background_if_alive()
+
+
+@TestScenario
+@Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_ConfidentialClient("1.0"))
+@Name("device flow rejects missing client_secret at confidential client")
+def device_flow_missing_client_secret_at_confidential_client(self):
+    """Confidential client without ``client_secret`` SHALL be refused without crashing."""
+
+    with Given("I reset the client state"):
+        reset_client_state()
+
+    with And("I omit client_secret and point at the confidential client"):
+        write_oauth_credentials_file(
+            client_id="grafana-client-confidential",
+            client_secret=None,
+            token_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/token"
+            ),
+            device_authorization_uri=(
+                "http://keycloak:8080/realms/grafana/protocol/openid-connect/auth/device"
+            ),
+        )
+
+    with When("I run clickhouse-client with device login"):
+        exit_code, output = run_clickhouse_client(
+            args=[
+                "--host",
+                "clickhouse1",
+                "--login=device",
+                "--oauth-credentials",
+                DEFAULT_CREDS_PATH,
+            ],
+            query="SELECT 1",
+            timeout=15,
+            expect_error=True,
+        )
+
+    with Then("the client refuses cleanly without crashing"):
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=(
+                "secret",
+                "bad_arguments",
+                "invalid_client",
+                "unauthorized",
+                "401",
+                "authentication_failed",
+            ),
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device flow timeout message is actionable")
 def device_flow_timeout_message_is_actionable(self):
-    """Expired device sessions mention timeout or expiry without low-level exceptions."""
+    """Expired device sessions SHALL report timeout or expiry without C++ leaks."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client until device polling exhausts"):
         exit_code, output = run_clickhouse_client(
@@ -327,12 +459,12 @@ def device_flow_timeout_message_is_actionable(self):
         )
 
     with Then("stderr mentions timeout or expiry without C++ leaks"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("timeout", "timed out", "expired", "expire"),
+        )
         ol = output.lower()
-        assert (
-            "timeout" in ol or "timed out" in ol or "expired" in ol or "expire" in ol
-        ), f"Expected timeout/expiry wording, got:\n---\n{output}\n---"
         for bad in ("std::bad_cast", "std::exception", "poco::", "stack trace:"):
             assert bad not in ol, f"Unexpected low-level marker {bad!r} in:\n{output}"
 
@@ -341,13 +473,13 @@ def device_flow_timeout_message_is_actionable(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login with explicit --port reaches OAuth stage without crash")
 def device_flow_with_explicit_tcp_port(self):
-    """Explicit native ``--port`` must not break reaching the device-authorization step."""
+    """Explicit ``--port`` SHALL not block reaching device authorization."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with explicit tcp_port matching compose"):
         exit_code, output = run_clickhouse_client(
@@ -366,24 +498,25 @@ def device_flow_with_explicit_tcp_port(self):
         )
 
     with Then("the client shows device-flow hints without crashing"):
-        assert_no_segfault(output=output, exit_code=exit_code)
-        ol = output.lower()
-        assert (
-            "http://" in ol or "https://" in ol
-        ), f"Expected verification URI in output, got:\n---\n{output}\n---"
+        assert_client_rejected(
+            output=output,
+            exit_code=exit_code,
+            markers=("http://", "https://"),
+            require_nonzero_exit=False,
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login does not crash when targeting clickhouse2")
 def device_flow_against_second_cluster_node(self):
-    """OAuth device negotiation works when the TCP host is ``clickhouse2``."""
+    """Device flow SHALL work when ``--host`` is ``clickhouse2``."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client against clickhouse2"):
         exit_code, output = run_clickhouse_client(
@@ -399,21 +532,30 @@ def device_flow_against_second_cluster_node(self):
             expect_error=True,
         )
 
-    with Then("the client stays alive through device polling"):
-        assert_no_segfault(output=output, exit_code=exit_code)
+    with Then(
+        "device authorization details appear against the second node",
+        description="""
+            OAuth happens before the TCP connection — the device user_code
+            MUST appear regardless of which cluster node is named on --host.
+            Asserting on user_code (rather than just "no crash") catches a
+            regression where the OAuth path is short-circuited by node-
+            specific routing.
+        """,
+    ):
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_Authentication("1.0"))
 @Name("device login with --secure does not crash")
 def device_flow_with_secure_transport_flag(self):
-    """Passing ``--secure`` while using device OAuth must not segfault."""
+    """``--secure`` with device login SHALL reach user-code display without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with --secure"):
         exit_code, output = run_clickhouse_client(
@@ -430,8 +572,18 @@ def device_flow_with_secure_transport_flag(self):
             expect_error=True,
         )
 
-    with Then("the client did not crash"):
-        assert_no_segfault(output=output, exit_code=exit_code)
+    with Then(
+        "the device-auth step runs to user_code before TLS would matter",
+        description="""
+            ``--secure`` only matters AFTER OAuth produces a token; in this
+            ~12s window the device endpoint must still print the user_code
+            so we know --secure didn't break the OAuth-front half of
+            --login=device. The eventual TLS handshake failure (server is
+            plaintext) is not observable in this timeout window and is not
+            what this scenario is regressing.
+        """,
+    ):
+        assert_device_user_code_present(output=output, exit_code=exit_code)
 
 
 @TestScenario
@@ -441,13 +593,13 @@ def device_flow_with_secure_transport_flag(self):
 )
 @Name("device flow times out cleanly when token endpoint never returns id_token")
 def device_flow_token_endpoint_eventually_times_out(self):
-    """Device flow exits without ``std::bad_cast`` when no approval comes."""
+    """Unapproved device flow SHALL exit without ``std::bad_cast``."""
 
     with Given("I reset the client state"):
         reset_client_state()
 
     with And("I write a credentials file pointing at the Keycloak realm"):
-        _standard_keycloak_device_creds()
+        write_keycloak_device_credentials()
 
     with When("I run clickhouse-client with --login=device and never approve"):
         exit_code, output = run_clickhouse_client(
@@ -464,8 +616,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
         )
 
     with Then("the client exits cleanly without a Poco bad_cast"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
         assert (
             "bad_cast" not in output and "std::bad_cast" not in output
         ), f"Device flow leaked Poco bad_cast:\n---\n{output}\n---"
@@ -475,7 +626,7 @@ def device_flow_token_endpoint_eventually_times_out(self):
 @Requirements(RQ_SRS_042_OAuth_Client_Login_DeviceFlow_UnreachableEndpoint("1.0"))
 @Name("device flow handles invalid token endpoint URL")
 def device_flow_invalid_token_endpoint(self):
-    """Unreachable ``token_uri`` fails cleanly without a crash."""
+    """Unreachable ``token_uri`` SHALL fail cleanly without crashing."""
 
     with Given("I reset the client state"):
         reset_client_state()
@@ -507,8 +658,7 @@ def device_flow_invalid_token_endpoint(self):
         )
 
     with Then("the client exits with a recognisable error and no crash"):
-        assert exit_code != 0, error()
-        assert_no_segfault(output=output, exit_code=exit_code)
+        assert_client_rejected(output=output, exit_code=exit_code)
 
 
 @TestFeature

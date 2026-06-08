@@ -1,11 +1,5 @@
-"""Token validation tests that exercise the configured token processor.
-
-JWT-mutation tests live in ``oauth.tests.jwt_manipulation``. This file
-focuses on processor-configuration behaviour (OpenID discovery, invalid
-JWKS endpoint, etc.) so we don't double-count the same coverage.
-"""
-
 from oauth.tests.steps.clikhouse import *
+from oauth.tests.steps.common import *
 from testflows.asserts import *
 from oauth.requirements.requirements import *
 
@@ -15,24 +9,11 @@ from oauth.requirements.requirements import *
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
 )
 def openid_discovery_mode(self):
-    """ClickHouse SHALL validate tokens using OpenID discovery endpoints."""
+    """ClickHouse SHALL validate tokens using OpenID userinfo endpoint."""
     client = self.context.provider_client
 
     with Given("I configure a token processor with provider OpenID endpoints"):
-        endpoints = client.OAuthProvider.openid_endpoints()
-        change_token_processors(
-            processor_name="keycloak",
-            processor_type="OpenID",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
-            jwks_uri=endpoints.jwks_uri,
-        )
-
-    with And("I configure user directories"):
-        change_user_directories_config(
-            processor="keycloak",
-            common_roles=["general-role"],
-        )
+        configure_openid_token_processor()
 
     with And("I get a valid token"):
         token = client.OAuthProvider.get_oauth_token().access_token
@@ -46,17 +27,19 @@ def openid_discovery_mode(self):
     RQ_SRS_042_OAuth_Keycloak_Tokens_Configuration_Validation("1.0"),
 )
 def invalid_jwks_uri_rejected(self):
-    """ClickHouse SHALL reject tokens when ``jwks_uri`` points to a non-existent endpoint."""
+    """ClickHouse SHALL reject tokens when ``jwks_uri`` points to a non-existent endpoint.
+
+    Since antalya-26.3 the ``openid`` processor no longer accepts
+    ``jwks_uri``. This scenario uses ``jwt_dynamic_jwks`` instead to
+    verify that an unreachable JWKS endpoint causes token rejection.
+    """
     client = self.context.provider_client
 
-    with Given("I configure a processor with an invalid jwks_uri"):
-        endpoints = client.OAuthProvider.openid_endpoints()
+    with Given("I configure a jwt_dynamic_jwks processor with an invalid jwks_uri"):
         change_token_processors(
             processor_name="keycloak",
-            processor_type="OpenID",
+            processor_type="jwt_dynamic_jwks",
             jwks_uri="http://keycloak:8080/invalid/jwks",
-            userinfo_endpoint=endpoints.userinfo_endpoint,
-            token_introspection_endpoint=endpoints.token_introspection_endpoint,
             replace=True,
         )
 
@@ -80,6 +63,6 @@ def invalid_jwks_uri_rejected(self):
     RQ_SRS_042_OAuth_Keycloak_Tokens_OperationModes("1.0"),
 )
 def feature(self):
-    """Token-processor configuration tests."""
+    """Token validation tests that exercise the configured token processor."""
     Scenario(run=openid_discovery_mode)
     Scenario(run=invalid_jwks_uri_rejected)

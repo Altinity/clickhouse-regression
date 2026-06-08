@@ -1,6 +1,3 @@
-"""Shared helpers for client_oauth_login feature tests."""
-
-
 def connection_only_config_xml(host="clickhouse1", port=9000, name="ch_test"):
     """Return a minimal ``connections_credentials`` config with no ``--host`` source."""
 

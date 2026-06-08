@@ -25,6 +25,7 @@ from iceberg.tests.export_partition.steps.common import (
     insert_data,
 )
 from iceberg.tests.export_partition.steps.export_operations import (
+    EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
     export_partition,
 )
 from iceberg.tests.export_partition.steps.export_status import (
@@ -46,9 +47,6 @@ from iceberg.tests.export_partition.steps.verification import (
 
 SIMPLE_COLUMNS = "id Int64, year Int32"
 SIMPLE_PARTITION_BY = "year"
-
-BAD_ARGUMENTS = 36
-
 
 def _seed_source(values="(1, 2020), (2, 2020), (3, 2021), (4, 2021)"):
     """Create a ReplicatedMergeTree with two partitions (2020, 2021)."""
@@ -156,8 +154,9 @@ def duplicate_export_within_ttl_rejected(
     self, minio_root_user, minio_root_password
 ):
     """A second export of the same ``(source, destination, partition)``
-    within the manifest TTL is rejected with ``BAD_ARGUMENTS`` /
-    "Export with key ... already exported"; the snapshot log is unchanged.
+    within the manifest TTL is rejected with
+    ``EXPORT_PARTITION_ALREADY_EXPORTED`` / "Export with key ..."; the
+    snapshot log is unchanged.
     """
     source_table = _seed_source()
 
@@ -182,7 +181,7 @@ def duplicate_export_within_ttl_rejected(
             destination=destination,
             partition_id="2020",
             extra_settings=[("export_merge_tree_partition_manifest_ttl", 300)],
-            exitcode=BAD_ARGUMENTS,
+            exitcode=EXPORT_PARTITION_ALREADY_EXPORTED_CLIENT_EXITCODE,
             message="Export with key",
             wait_for_completion=False,
         )

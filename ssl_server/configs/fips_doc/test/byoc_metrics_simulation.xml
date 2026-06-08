@@ -1,0 +1,17 @@
+<clickhouse>
+    <!--
+      Test-only fixture: simulates the BYOC platform layer that exposes /metrics_all
+      on the HTTPS port. Not part of docs/fips-config.md.
+    -->
+    <http_handlers>
+        <rule>
+            <url>/metrics_all</url>
+            <methods>GET</methods>
+            <handler>
+                <type>predefined_query_handler</type>
+                <query>SELECT metric AS name, value, description FROM system.metrics FORMAT Prometheus</query>
+            </handler>
+        </rule>
+        <defaults/>
+    </http_handlers>
+</clickhouse>

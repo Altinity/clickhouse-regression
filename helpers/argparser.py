@@ -115,6 +115,7 @@ def argparser(parser):
         help="Run tests in CI/CD mode.",
     )
 
+
 def CaptureClusterArgs(func):
     """
     Collect cluster arguments from argparser into cluster_args.
