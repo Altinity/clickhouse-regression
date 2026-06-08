@@ -386,6 +386,11 @@ ffails = {
         lambda test: check_if_not_antalya_build(test)
         or check_clickhouse_version("<26.1")(test),
     ),
+    "/iceberg/export partition/*/schema evolution/rename column between exports": (
+        Skip,
+        "RENAME COLUMN on IcebergS3 destination is NOT_IMPLEMENTED before 26.3",
+        check_clickhouse_version("<26.3"),
+    ),
     # "/iceberg/iceberg engine/: catalog/feature/alter:/*": (
     #     Skip,
     #     "https://github.com/clickhouse/clickhouse/issues/86024",
