@@ -17,7 +17,7 @@ def scenario(
     self, func="quantilesTDigestWeighted({params})", table=None, snapshot_id=None
 ):
     """Check quantilesTDigestWeighted aggregate function by using the same tests as for quantileTDigestWeighted."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=26.6")
 
     if table is None:
         table = self.context.table
